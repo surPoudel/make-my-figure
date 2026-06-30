@@ -1,0 +1,16 @@
+{
+  "pmcid": "PMC12647348",
+  "doi": "10.1016/j.celrep.2025.116569",
+  "n_figures": 1,
+  "figures": [
+    {
+      "figure_id": "dfig1",
+      "image_filename": "gr2d.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/5823/12647348/3abfb3b8ad12/gr2d.jpg",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "associated_source_data": "uncertain"
+    }
+  ]
+}

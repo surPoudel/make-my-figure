@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MakeMyFigure Plot Specification",
+  "type": "object",
+  "required": [
+    "plot_type",
+    "input_table",
+    "mapping",
+    "journal_style",
+    "output"
+  ],
+  "properties": {
+    "plot_type": {
+      "type": "string"
+    },
+    "input_table": {
+      "type": "string"
+    },
+    "mapping": {
+      "type": "object",
+      "additionalProperties": {
+        "type": [
+          "string",
+          "number",
+          "boolean",
+          "null"
+        ]
+      }
+    },
+    "statistics": {
+      "type": "object"
+    },
+    "journal_style": {
+      "type": "string"
+    },
+    "layout": {
+      "type": "object"
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "formats": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "svg",
+              "pdf",
+              "png",
+              "tiff",
+              "eps"
+            ]
+          }
+        },
+        "width_mm": {
+          "type": "number"
+        },
+        "height_mm": {
+          "type": "number"
+        },
+        "dpi": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

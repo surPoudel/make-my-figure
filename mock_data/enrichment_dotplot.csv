@@ -1,0 +1,13 @@
+term,category,gene_ratio,gene_count,fdr,neg_log10_fdr
+Interferon gamma response,Hallmark,0.324,61,3.498e-04,3.456
+Oxidative phosphorylation,Hallmark,0.124,48,6.674e-03,2.176
+Epithelial migration,Hallmark,0.073,55,4.386e-03,2.358
+T cell activation,Hallmark,0.252,14,1.715e-02,1.766
+Hypoxia,Hallmark,0.291,13,1.001e-02,1.999
+DNA repair,Hallmark,0.071,67,9.530e-06,5.021
+Apoptosis,GO_Biological_Process,0.282,47,2.101e-05,4.678
+mTOR signaling,GO_Biological_Process,0.216,9,2.652e-03,2.576
+Complement cascade,GO_Biological_Process,0.137,46,1.825e-03,2.739
+Antigen processing,GO_Biological_Process,0.123,55,6.541e-05,4.184
+Cell cycle checkpoint,GO_Biological_Process,0.198,33,2.468e-04,3.608
+Extracellular matrix,GO_Biological_Process,0.214,39,6.973e-05,4.157

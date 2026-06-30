@@ -1,0 +1,21 @@
+{
+  "figure_id": "Fig3",
+  "index": 3,
+  "title": "Differences in the mean values of PC2 and the relative amounts of estimated ancestry components for the Únětice and the Unterwölbling associated individuals.",
+  "caption": "a Mean values of PC2 separated by site and genetic sex, number in brackets indicate sample size. b Relative amounts of ancestry components estimated with qpAdm for each individual grouped by site, with mean values indicated by lines. Green shading indicates groups associated with the Unterwölbling culture. Groups outside the shaded area belong to the Únětice culture.",
+  "panel_labels": [
+    "a",
+    "b"
+  ],
+  "panel_label_confidence": "heuristic_medium",
+  "panel_label_method": "caption_regex",
+  "image_filename": "41467_2025_67906_Fig3_HTML.jpg",
+  "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/c33e/12775072/4e581b41fa51/41467_2025_67906_Fig3_HTML.jpg",
+  "image_downloaded": true,
+  "image_local_path": "figures/fig03_Fig3.jpg",
+  "associated_source_data": "uncertain",
+  "associated_data_note": "Figure-to-source-data linkage not confidently established; supplementary files are stored at the paper level.",
+  "license_normalized": "CC BY",
+  "doi": "10.1038/s41467-025-67906-y",
+  "image_bytes": 123432
+}

@@ -1,0 +1,18 @@
+{
+  "figure_id": "F5",
+  "index": 5,
+  "title": "Viscoelastic microfluidics.",
+  "caption": "(A) Reynolds number–dependent focusing behavior of microspheres in inertial microfluidics. Image credits: Reused with permission from (CC BY 4.0; https://creativecommons.org/licenses/by/4.0/deed.en). (B) Hydrodynamic forces on microspheres in viscoelastic microfluidic flows. Image credits: Reused with permission from. Used with permission of Royal Society of Chemistry from; permission conveyed through Copyright Clearance Center Inc. (C) Spiral inertial and viscoelastic microfluidics for direct bacterial sorting from whole blood. Image credits: Reused with permission from (CC BY-NC 4.0; https://creativecommons.org/licenses/by-nc/4.0/). (D) A label-free isolation strategy for sEVs is realized using a viscoelasticity-based microfluidic chip, bypassing the need for biomarkers or external fields. Image credits: Reused with permission from (CC BY 4.0; https://creativecommons.org/licenses/by/4.0/deed.en). (E) Schematic of CTC enrichment from blood via viscoelastic focusing, where CTCs are selectively aligned and separated from hematopoietic cells. Image credits: Reused with permission from (CC BY 4.0; https://creativecommons.org/licenses/by/4.0/deed.en). (F) Ultrastretchable viscoelastic microfluidics enable deformability-based tumor cell sorting, extending applicability to rare cell isolation under extreme flow conditions. Image credits: Reused with permission from. Reprinted in part with permission from. Copyright 2024 American Chemical Society.",
+  "panel_labels": [],
+  "panel_label_confidence": "none",
+  "panel_label_method": "caption_regex",
+  "image_filename": "sciadv.aea6007-f5.jpg",
+  "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/21c36a2ed0e5/sciadv.aea6007-f5.jpg",
+  "image_downloaded": true,
+  "image_local_path": "figures/fig05_F5.jpg",
+  "associated_source_data": "uncertain",
+  "associated_data_note": "Figure-to-source-data linkage not confidently established; supplementary files are stored at the paper level.",
+  "license_normalized": "CC BY",
+  "doi": "10.1126/sciadv.aea6007",
+  "image_bytes": 186754
+}

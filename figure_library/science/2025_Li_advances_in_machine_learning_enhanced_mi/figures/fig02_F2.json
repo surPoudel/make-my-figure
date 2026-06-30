@@ -1,0 +1,18 @@
+{
+  "figure_id": "F2",
+  "index": 2,
+  "title": "Active cell sorting.",
+  "caption": "(A) A capillary-based microfluidic chip integrates immunomagnetic beads, with structural designs optimized for bead preparation and target cell capture. Image credits: Reprinted from, with the permission of AIP Publishing. (B) For cells with overlapping dimensions, a DEP-inertial microfluidic device achieves size-based separation through combined DEP and inertial focusing mechanisms. Image credits: Reused with permission from (CC BY-NC-ND 4.0; https://creativecommons.org/licenses/by-nc-nd/4.0/). (C) Fluorescence-activated dielectrophoretic sorting of single-cell microfluidic droplets. Image credits: Reused with permission from. Used with permission of Royal Society of Chemistry from; permission conveyed through Copyright Clearance Center Inc. (D) Acoustic microcavity platform for enrichment of submicrometer/nanoscale particles via synergistic acoustic radiation force and single-vortex streaming-induced viscous effects. Image credits: Reprinted in part with permission from. Copyright 2017 American Chemical Society. (E) Optofluidic dynamic tweezers offer precise manipulation of particles through light-driven hydrodynamic fields, demonstrating versatility in noncontact sorting applications. Image credits: Reused with permission from (CC BY-NC 3.0; https://creativecommons.org/licenses/by-nc/3.0/).",
+  "panel_labels": [],
+  "panel_label_confidence": "none",
+  "panel_label_method": "caption_regex",
+  "image_filename": "sciadv.aea6007-f2.jpg",
+  "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/659e27fc426a/sciadv.aea6007-f2.jpg",
+  "image_downloaded": true,
+  "image_local_path": "figures/fig02_F2.jpg",
+  "associated_source_data": "uncertain",
+  "associated_data_note": "Figure-to-source-data linkage not confidently established; supplementary files are stored at the paper level.",
+  "license_normalized": "CC BY",
+  "doi": "10.1126/sciadv.aea6007",
+  "image_bytes": 150046
+}

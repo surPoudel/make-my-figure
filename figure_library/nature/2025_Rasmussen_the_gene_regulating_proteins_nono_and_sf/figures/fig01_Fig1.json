@@ -1,0 +1,23 @@
+{
+  "figure_id": "Fig1",
+  "index": 1,
+  "title": "Structure of NONO/SFPQ from dimers to filaments.",
+  "caption": "a Crystal structure of the human NONO/SFPQ heterodimer (PDB: 6WMZ) showing two RNA recognition motives (RRM1, blue RRM2, pink/purple), a NonA/paraspeckle domain (NOPS, green) and a coiled-coil domain (brown). NONO is coloured in light and SFPQ in dark colours. The numbers of the N-terminal and C-terminal amino acids for NONO and SFPQ resolved in the structure are marked in the corresponding colour. A scheme of the primary sequence indicates that the conserved DBHS region (coloured the same as the structure) is flanked by disordered regions (grey) which are not conserved between NONO and SFPQ. A putative DNA binding domain (DBD) with RGG motifs is localized N-terminal of RRM1 in SFPQ. A nuclear localisation signal (NLS) can be found at the C-terminus. Sequence alignments of important regions in the coiled-coil domain between NONO and SFPQ from Cricetulus griseus are shown. b Micrographs of negatively stained NONO/SFPQ at a concentration of 50 µg/ml showing a few short chains (insert, orange line). Micrographs of vitrified samples of NONO/SFPQ at a concentration of 0.2 mg/ml c, and 1 mg/ml d. e 2D class averages of filaments shown in d. f NONO/SFPQ form a left-handed helical double strand with a turn of -20° and a rise of 10 nm. SFPQ (red) faces the other strand and NONO (green) is positioned at the outside. The repeating pattern of the filaments are two structurally non-equivalent dimers (light and dark colours) on each strand. The direction of the long α-helices from N- to C-terminus is indicated by the coloured arrows, showing that the non-equivalent dimers are orientated in opposite directions along the filament. g Electrostatic surface representation of the model. Positively charged grooves of NONO, continuing from one head to the next, are the likely location for RNA binding (green boxes). Rigid body fitting of a RNA-bound crystal structure (PDB: 7UJ1) suggests a possible RNA binding to SFPQ (pink rod) that would place the RNA between the globular domains alternating on both strands (Supplementary Fig. 17).",
+  "panel_labels": [
+    "a",
+    "b",
+    "f",
+    "g"
+  ],
+  "panel_label_confidence": "heuristic_low",
+  "panel_label_method": "caption_regex",
+  "image_filename": "42003_2025_9396_Fig1_HTML.jpg",
+  "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/2792/12848012/a08bcecf5a79/42003_2025_9396_Fig1_HTML.jpg",
+  "image_downloaded": true,
+  "image_local_path": "figures/fig01_Fig1.jpg",
+  "associated_source_data": "uncertain",
+  "associated_data_note": "Figure-to-source-data linkage not confidently established; supplementary files are stored at the paper level.",
+  "license_normalized": "CC BY",
+  "doi": "10.1038/s42003-025-09396-8",
+  "image_bytes": 362775
+}

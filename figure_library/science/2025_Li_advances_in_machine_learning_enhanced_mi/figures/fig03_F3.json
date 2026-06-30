@@ -1,0 +1,18 @@
+{
+  "figure_id": "F3",
+  "index": 3,
+  "title": "DLD.",
+  "caption": "(A) Variations in pillar configurations within DLD devices. Image credits: Reprinted from, with the permission of AIP Publishing. (B) Schematic of the DLD principle, featuring a periodic array of micrometer-sized pillars. Image credits: Reproduced/modified from. (C) Structure of a parallel inverted L-shaped DLD chip for nucleated cell sorting from whole blood, with performance characterization: Nucleated cells are collected in the “sorted” stream, while the waste stream comprises red blood cells and platelets. Image credits: Reused with permission from (CC BY-NC 3.0; https://creativecommons.org/licenses/by-nc/3.0/). (D) Filter-based highly integrated cascaded chip (CFD-Chip) for enhanced separation efficiency. Image credits: Reused with permission from. Used with permission of Royal Society of Chemistry from; permission conveyed through Copyright Clearance Center, Inc. (E) Sequential positions and fluid flow variations of identical microspheres in distinct pillar geometries: (a) I-shaped, (b) anvil-shaped, (c) inverted anvil-shaped, (d) inverted T-shaped, (e) double inverted T-shaped, (f) L-shaped, and (g) inverted L-shaped. Image credits: Reused with permission from. Used with permission of Royal Society of Chemistry from; permission conveyed through Copyright Clearance Center Inc.",
+  "panel_labels": [],
+  "panel_label_confidence": "none",
+  "panel_label_method": "caption_regex",
+  "image_filename": "sciadv.aea6007-f3.jpg",
+  "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/94b752c8c993/sciadv.aea6007-f3.jpg",
+  "image_downloaded": true,
+  "image_local_path": "figures/fig03_F3.jpg",
+  "associated_source_data": "uncertain",
+  "associated_data_note": "Figure-to-source-data linkage not confidently established; supplementary files are stored at the paper level.",
+  "license_normalized": "CC BY",
+  "doi": "10.1126/sciadv.aea6007",
+  "image_bytes": 173668
+}

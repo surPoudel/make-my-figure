@@ -1,0 +1,18 @@
+{
+  "figure_id": "F2",
+  "index": 2,
+  "title": "NatD binds RNC by contacting rRNA, nascent chain, and NAC.",
+  "caption": "(A) Cartoon of NAC, MetAP1, and NatD bound at the ribosomal tunnel exit. Dotted boxes refer to structure details shown in (B) to (E). (B) The substrate-binding cavity of NatD accommodates the N-terminal SGRG motif of the nascent polypeptide and CoA. The CoA moiety beyond the phosphate adenosine diphosphate is not resolved in our map and is modeled as in PDB 4U9W. (C) The N-terminal basic helix of NatD binds to H19 and H24 of the 28S rRNA. (D) Minor basic patch of NatD is oriented toward the 82 to 87 nt loop of the 5.8S rRNA. (E) The UBA domain of NACα binds the globular domain of NatD. The main cryo-EM map [(B) and (D)] and the map low-pass filtered to 6 Å resolution [(C) and (E)] are superimposed on the model. The structure is colored as in Fig. 1. Positively charged amino acid residues are colored blue.",
+  "panel_labels": [],
+  "panel_label_confidence": "none",
+  "panel_label_method": "caption_regex",
+  "image_filename": "sciadv.aeb1017-f2.jpg",
+  "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/49da/12716425/ee64dca741c8/sciadv.aeb1017-f2.jpg",
+  "image_downloaded": true,
+  "image_local_path": "figures/fig02_F2.jpg",
+  "associated_source_data": "uncertain",
+  "associated_data_note": "Figure-to-source-data linkage not confidently established; supplementary files are stored at the paper level.",
+  "license_normalized": "CC BY",
+  "doi": "10.1126/sciadv.aeb1017",
+  "image_bytes": 258121
+}

@@ -1,0 +1,18 @@
+{
+  "figure_id": "F4",
+  "index": 4,
+  "title": "The N-terminal zinc finger domain of MetAP1 contacts NatD when both enzymes cobind on the ribosome.",
+  "caption": "(A) The N domain of MetAP1 closes over the CoA-binding cavity of NatD. (B) N-terminal processing defects of H4 and 1433G after knockdown of METAP1 and METAP2 in human HEK293T cells. N-acetyl-antagonistic H4 phosphorylation mark at serine 1 (S1P, top panel) and 1433G still containing the initiator methionine (iMet, middle panel) were detected by immunoblotting using epitope-specific antibodies. Knockdown efficiencies of METAPs were analyzed by immunoblotting (bottom panel). (C) Summary of Kd values for NatD binding with NAC-bound RNCH4 in the presence and absence of 2 μM MetAP1, obtained from equilibrium titrations in fig. S5. Values are shown as means ± SEM, with the dots showing the values from independent titrations. * indicates that lower limits of Kd were reported. Unpaired t test is used for analyzing the statistical significance of differences in Kd values. ns indicates P > 0.05. (D and E) Equilibrium titrations to measure the binding affinity of NatD for NAC-bound RNC H4 in the presence and absence of CoA and MetAP1 (D). The lines are fits of the data to Eq. 2. The obtained Kd values are summarized in Table S2. The FRET efficiency in the RNC-NatD complex is summarized in (E). Values are shown as means ± SEM, with the dots showing the values from independent titrations. The Kd or Ki values and the number of replicate measurements for each sample are also provided in table S2.",
+  "panel_labels": [],
+  "panel_label_confidence": "none",
+  "panel_label_method": "caption_regex",
+  "image_filename": "sciadv.aeb1017-f4.jpg",
+  "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/49da/12716425/cbfa6556b6b9/sciadv.aeb1017-f4.jpg",
+  "image_downloaded": true,
+  "image_local_path": "figures/fig04_F4.jpg",
+  "associated_source_data": "uncertain",
+  "associated_data_note": "Figure-to-source-data linkage not confidently established; supplementary files are stored at the paper level.",
+  "license_normalized": "CC BY",
+  "doi": "10.1126/sciadv.aeb1017",
+  "image_bytes": 230645
+}

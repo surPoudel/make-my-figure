@@ -1,0 +1,21 @@
+{
+  "figure_id": "Fig5",
+  "index": 5,
+  "title": "Kinetic of appearance of C3 staining, CD11b and C5AR1 gene expression.",
+  "caption": "a Representative images of C3b (pink) immunofluorescence on snap-frozen mouse kidneys 0, 1, 3, 12, 24 h and 7 days after injection by glycerol, original magnification 20. b Differential expression of Itgam (CD11b, component of the complement Receptor 3) and c C5aR1 (C5a Receptor 1) by QuantiGene in snap-frozen kidney of C57Bl6 WT mice at 0, 1, 3, 12, 24 h and 7 days after injection by glycerol. Presented results are from one experiment with 5 mice at time 0, 4 mice at 1 h, 3 h, 12 hours and 24 h each, and 3 mice at day 7.",
+  "panel_labels": [
+    "a",
+    "b"
+  ],
+  "panel_label_confidence": "heuristic_medium",
+  "panel_label_method": "caption_regex",
+  "image_filename": "42003_2025_9449_Fig5_HTML.jpg",
+  "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/4ec4/12877018/d38420026530/42003_2025_9449_Fig5_HTML.jpg",
+  "image_downloaded": true,
+  "image_local_path": "figures/fig05_Fig5.jpg",
+  "associated_source_data": "uncertain",
+  "associated_data_note": "Figure-to-source-data linkage not confidently established; supplementary files are stored at the paper level.",
+  "license_normalized": "CC BY",
+  "doi": "10.1038/s42003-025-09449-y",
+  "image_bytes": 243007
+}

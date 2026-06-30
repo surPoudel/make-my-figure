@@ -1,0 +1,169 @@
+{
+  "harvested_by": "make_my_figure.harvest (HTTPS-only, license-aware)",
+  "contact": "sureshbt42@gmail.com",
+  "paper": {
+    "title": "Mechanism of cotranslational modification of histones H2A and H4 by MetAP1 and NatD.",
+    "journal": "Science advances",
+    "journal_group": "science",
+    "year": 2025,
+    "doi": "10.1126/sciadv.aeb1017",
+    "pmcid": "PMC12716425",
+    "pmid": "41417911",
+    "first_author": "Yudin",
+    "authors": "Yudin D, Jaskolowski M, Fan Z, Burg N, Chandrasekar S, Lentzsch AM, Scaiola A, Bothe A, Deuerling E, Gamerdinger M, Shan SO, Ban N.",
+    "license_raw": "cc by",
+    "license_normalized": "CC BY",
+    "is_open_access": true,
+    "first_publication_date": "2025-12-19",
+    "source_urls": [
+      "https://doi.org/10.1126/sciadv.aeb1017",
+      "https://europepmc.org/articles/PMC12716425",
+      "https://europepmc.org/articles/PMC12716425?pdf=render"
+    ]
+  },
+  "license_determination": {
+    "epmc": {
+      "raw": "cc by",
+      "klass": "permissive",
+      "normalized": "CC BY",
+      "permits_reuse": true,
+      "permits_tdm": true,
+      "note": "Attribution; reuse and TDM permitted."
+    },
+    "oa_service": {
+      "available": true,
+      "license": "CC BY",
+      "package_ftp": "ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/oa_package/c5/dc/PMC12716425.tar.gz",
+      "retracted": false
+    },
+    "policy": "Download figures/data only for CC BY / CC BY-SA / CC0."
+  },
+  "sources": {
+    "metadata": "Europe PMC REST (core)",
+    "license_confirmation": [
+      "Europe PMC",
+      "NCBI PMC OA service"
+    ],
+    "full_text": "NCBI BioC (pmcoa.cgi)",
+    "figure_image_urls": "NCBI PMC article page (cdn.ncbi.nlm.nih.gov)",
+    "supplementary": "Europe PMC supplementaryFiles"
+  },
+  "downloads": [
+    {
+      "kind": "full_text_bioc",
+      "status": "downloaded",
+      "path": "full_text/bioc.json"
+    },
+    {
+      "kind": "figure_image",
+      "figure": "F1",
+      "status": "downloaded",
+      "path": "figures/fig01_F1.jpg",
+      "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/49da/12716425/655df6594458/sciadv.aeb1017-f1.jpg"
+    },
+    {
+      "kind": "figure_image",
+      "figure": "F2",
+      "status": "downloaded",
+      "path": "figures/fig02_F2.jpg",
+      "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/49da/12716425/ee64dca741c8/sciadv.aeb1017-f2.jpg"
+    },
+    {
+      "kind": "figure_image",
+      "figure": "F3",
+      "status": "downloaded",
+      "path": "figures/fig03_F3.jpg",
+      "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/49da/12716425/2ef8f2849e9a/sciadv.aeb1017-f3.jpg"
+    },
+    {
+      "kind": "figure_image",
+      "figure": "F4",
+      "status": "downloaded",
+      "path": "figures/fig04_F4.jpg",
+      "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/49da/12716425/cbfa6556b6b9/sciadv.aeb1017-f4.jpg"
+    },
+    {
+      "kind": "figure_image",
+      "figure": "F5",
+      "status": "downloaded",
+      "path": "figures/fig05_F5.jpg",
+      "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/49da/12716425/01b572221132/sciadv.aeb1017-f5.jpg"
+    },
+    {
+      "kind": "supplementary",
+      "status": "downloaded",
+      "count": 11
+    }
+  ],
+  "figures": [
+    {
+      "figure_id": "F1",
+      "title": "NAC recruits MetAP1 and NatD to translating ribosomes.",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/49da/12716425/655df6594458/sciadv.aeb1017-f1.jpg",
+      "image_local_path": "figures/fig01_F1.jpg",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "F2",
+      "title": "NatD binds RNC by contacting rRNA, nascent chain, and NAC.",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/49da/12716425/ee64dca741c8/sciadv.aeb1017-f2.jpg",
+      "image_local_path": "figures/fig02_F2.jpg",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "F3",
+      "title": "Disruption of contacts with the ribosome and NAC impairs NatD recruitment.",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/49da/12716425/2ef8f2849e9a/sciadv.aeb1017-f3.jpg",
+      "image_local_path": "figures/fig03_F3.jpg",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "F4",
+      "title": "The N-terminal zinc finger domain of MetAP1 contacts NatD when both enzymes cobind on the ribosome.",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/49da/12716425/cbfa6556b6b9/sciadv.aeb1017-f4.jpg",
+      "image_local_path": "figures/fig04_F4.jpg",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "F5",
+      "title": "Model for recruitment of MetAP1 and NatD and cotranslational processing of histones H2A and H4.",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/49da/12716425/01b572221132/sciadv.aeb1017-f5.jpg",
+      "image_local_path": "figures/fig05_F5.jpg",
+      "associated_source_data": "uncertain"
+    }
+  ],
+  "supplementary": {
+    "available": true,
+    "files": [
+      "sciadv.aeb1017-f4.jpg",
+      "sciadv.aeb1017-f3.gif",
+      "sciadv.aeb1017_sm.pdf",
+      "sciadv.aeb1017-f5.jpg",
+      "sciadv.aeb1017-f4.gif",
+      "sciadv.aeb1017-f5.gif",
+      "sciadv.aeb1017-f2.gif",
+      "sciadv.aeb1017-f3.jpg",
+      "sciadv.aeb1017-f2.jpg",
+      "sciadv.aeb1017-f1.gif",
+      "sciadv.aeb1017-f1.jpg"
+    ]
+  },
+  "warnings": [],
+  "transport": "https-only",
+  "fabrication": "none — missing items recorded as null/unavailable"
+}

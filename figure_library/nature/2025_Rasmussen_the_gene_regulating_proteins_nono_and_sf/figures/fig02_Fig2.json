@@ -1,0 +1,18 @@
+{
+  "figure_id": "Fig2",
+  "index": 2,
+  "title": "Interactions between dimer building blocks within one strand.",
+  "caption": "The model of one of the two strands is shown in the centre for highlighting the α-helical network. Different heterodimers have different colours to explain which dimers interact with each other. NONO is shown in lighter and SFPQ in darker colours. The coiled-coil domain engages in interactions within a dimer (dimerisation region) and with other dimers within a strand (oligomerisation region). Region 1 provides interaction with the direct neighbour on the same side of the strand while regions 2 and 3 interact with dimers on the opposite side of the strand. Only one example for each interaction region is highlighted. Residue ranges for the different coiled-coils are indicated in the inserts.",
+  "panel_labels": [],
+  "panel_label_confidence": "none",
+  "panel_label_method": "caption_regex",
+  "image_filename": "42003_2025_9396_Fig2_HTML.jpg",
+  "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/2792/12848012/55b1e9d0ce92/42003_2025_9396_Fig2_HTML.jpg",
+  "image_downloaded": true,
+  "image_local_path": "figures/fig02_Fig2.jpg",
+  "associated_source_data": "uncertain",
+  "associated_data_note": "Figure-to-source-data linkage not confidently established; supplementary files are stored at the paper level.",
+  "license_normalized": "CC BY",
+  "doi": "10.1038/s42003-025-09396-8",
+  "image_bytes": 400074
+}

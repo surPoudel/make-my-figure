@@ -1,0 +1,13 @@
+sample_id,group,batch,library_size_millions
+S01,Control,Batch_2,37.76
+S02,Control,Batch_1,29.32
+S03,Control,Batch_2,32.41
+S04,Control,Batch_1,20.12
+S05,Control,Batch_2,24.31
+S06,Control,Batch_1,26.9
+S07,Treated,Batch_2,32.62
+S08,Treated,Batch_1,35.39
+S09,Treated,Batch_2,40.34
+S10,Treated,Batch_1,27.62
+S11,Treated,Batch_2,33.75
+S12,Treated,Batch_1,24.88

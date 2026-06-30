@@ -1,0 +1,23 @@
+{
+  "figure_id": "Fig3",
+  "index": 3,
+  "title": "Complement-responsive phenotype of the myeloid infiltrate in RIAKI.",
+  "caption": "Multiplexed sequential immunofluorescence (SeqIF) staining for: a C3b/iC3b (green), CD31 (cyan, endothelial cells), Megalin (white, proximal tubular cells) and CD11b (red, immune cells) on snap frozen kidneys of C57Bl6 WT mice 24 h after injection by PBS (left) or Glycerol (right), two representative images of each. b Spatial plot of proximity analyzes between C3b/iC3b positive tubules (green) and CD11b positive cells (red, immune cells). Presence of C3 and its activation fragments in the urine of glycerol-injected mice, evaluated (c) by western blot and (d) by ELISA, measuring C3, C3a and the C3a/C3 ratio for WT-PBS and WT-GLY mice at 24 h after injection of PBS or Glycerol. e Evaluation by flow cytometry of the immune infiltrate on fresh whole kidneys 24 h after glycerol injection, regarding CD45+ cells (% of Live/Dead negative cells) (left), Neutrophils (LD−/CD45+/CD11b+/CD11c−/SSC high/LY6G+) (middle left), macrophages (LD−/CD45+/CD11b+/CD11c−/LY6G−/Ly6C low) (middle), inflammatory monocytes (LD−/CD45+/CD11b+CD11c−/SSC low/LY6G−/Ly6C high) (middle right), eosinophils (LD−/CD45+/CD11b+/CD11c−/SSC high/LY6G−, right). The presented results are from 3 independent experiments with total of 14 PBS and 22 GLY injected mice. f Evaluation by flow cytometry of the Mean Fluorescence Intensity (MFI) of C5aR1 on neutrophils (left), macrophages (middle left), inflammatory monocytes (middle right), eosinophils (right). Presented results are from 3 independent experiments with total of 14 PBS and 22 GLY injected mice. g P-selectin expression measured by Quantigene. *p < 0.05, **p < 0.01, ***p < 0.001, ****p < 0.0001, Mann–Whitney test.",
+  "panel_labels": [
+    "b",
+    "e",
+    "f",
+    "g"
+  ],
+  "panel_label_confidence": "heuristic_low",
+  "panel_label_method": "caption_regex",
+  "image_filename": "42003_2025_9449_Fig3_HTML.jpg",
+  "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/4ec4/12877018/ba6b94847895/42003_2025_9449_Fig3_HTML.jpg",
+  "image_downloaded": true,
+  "image_local_path": "figures/fig03_Fig3.jpg",
+  "associated_source_data": "uncertain",
+  "associated_data_note": "Figure-to-source-data linkage not confidently established; supplementary files are stored at the paper level.",
+  "license_normalized": "CC BY",
+  "doi": "10.1038/s42003-025-09449-y",
+  "image_bytes": 177590
+}

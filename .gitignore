@@ -1,0 +1,24 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+*.egg-info/
+build/
+dist/
+# PyInstaller / packaging artifacts
+*.spec.bak
+*.AppDir/
+*.iconset/
+reports/example_figures/*.png
+reports/example_figures/*.svg
+reports/example_figures/*.plot_spec.json
+
+# Harvested figure library: keep provenance/metadata JSON + license.txt in-repo,
+# but do not commit the downloaded figure bitmaps / supplementary binaries in bulk.
+figure_library/**/figures/*.jpg
+figure_library/**/figures/*.jpeg
+figure_library/**/figures/*.png
+figure_library/**/figures/*.gif
+figure_library/**/supplementary/*
+figure_library/**/full_text/*

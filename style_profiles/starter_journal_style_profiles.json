@@ -1,0 +1,53 @@
+{
+  "notice": "Starter style tokens only. These are not official journal templates and must be refined from licensed examples and journal author guidelines.",
+  "profiles": {
+    "nature_like": {
+      "font_family": "Arial or Helvetica fallback",
+      "base_font_pt": 7,
+      "axis_font_pt": 7,
+      "title_font_pt": 8,
+      "line_width_pt": 0.75,
+      "spine_width_pt": 0.5,
+      "single_column_width_mm": 89,
+      "double_column_width_mm": 183,
+      "preferred_exports": [
+        "svg",
+        "pdf",
+        "png"
+      ],
+      "palette_role": "muted, colorblind-aware, minimal grid"
+    },
+    "science_like": {
+      "font_family": "Arial or Helvetica fallback",
+      "base_font_pt": 7,
+      "axis_font_pt": 7,
+      "title_font_pt": 8,
+      "line_width_pt": 0.75,
+      "spine_width_pt": 0.5,
+      "single_column_width_mm": 55,
+      "double_column_width_mm": 120,
+      "preferred_exports": [
+        "svg",
+        "pdf",
+        "png"
+      ],
+      "palette_role": "high-contrast but restrained; emphasize legible labels"
+    },
+    "cell_like": {
+      "font_family": "Arial or Helvetica fallback",
+      "base_font_pt": 7,
+      "axis_font_pt": 7,
+      "title_font_pt": 8,
+      "line_width_pt": 0.8,
+      "spine_width_pt": 0.6,
+      "single_column_width_mm": 85,
+      "double_column_width_mm": 180,
+      "preferred_exports": [
+        "svg",
+        "pdf",
+        "png"
+      ],
+      "palette_role": "clean axes, strong panel labels, colorblind-aware categories"
+    }
+  }
+}

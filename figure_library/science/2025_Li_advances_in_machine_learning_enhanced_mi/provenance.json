@@ -1,0 +1,206 @@
+{
+  "harvested_by": "make_my_figure.harvest (HTTPS-only, license-aware)",
+  "contact": "sureshbt42@gmail.com",
+  "paper": {
+    "title": "Advances in machine learning-enhanced microfluidic cell sorting.",
+    "journal": "Science advances",
+    "journal_group": "science",
+    "year": 2025,
+    "doi": "10.1126/sciadv.aea6007",
+    "pmcid": "PMC12716426",
+    "pmid": "41417905",
+    "first_author": "Li",
+    "authors": "Li H, Bai J, Ma X, Li L, Liu Y, Liu X, Shen S, Lim C.",
+    "license_raw": "cc by",
+    "license_normalized": "CC BY",
+    "is_open_access": true,
+    "first_publication_date": "2025-12-19",
+    "source_urls": [
+      "https://doi.org/10.1126/sciadv.aea6007",
+      "https://europepmc.org/articles/PMC12716426",
+      "https://europepmc.org/articles/PMC12716426?pdf=render"
+    ]
+  },
+  "license_determination": {
+    "epmc": {
+      "raw": "cc by",
+      "klass": "permissive",
+      "normalized": "CC BY",
+      "permits_reuse": true,
+      "permits_tdm": true,
+      "note": "Attribution; reuse and TDM permitted."
+    },
+    "oa_service": {
+      "available": true,
+      "license": "CC BY",
+      "package_ftp": "ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/oa_package/3b/76/PMC12716426.tar.gz",
+      "retracted": false
+    },
+    "policy": "Download figures/data only for CC BY / CC BY-SA / CC0."
+  },
+  "sources": {
+    "metadata": "Europe PMC REST (core)",
+    "license_confirmation": [
+      "Europe PMC",
+      "NCBI PMC OA service"
+    ],
+    "full_text": "NCBI BioC (pmcoa.cgi)",
+    "figure_image_urls": "NCBI PMC article page (cdn.ncbi.nlm.nih.gov)",
+    "supplementary": "Europe PMC supplementaryFiles"
+  },
+  "downloads": [
+    {
+      "kind": "full_text_bioc",
+      "status": "downloaded",
+      "path": "full_text/bioc.json"
+    },
+    {
+      "kind": "figure_image",
+      "figure": "F1",
+      "status": "downloaded",
+      "path": "figures/fig01_F1.jpg",
+      "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/0afe2d1b8ef5/sciadv.aea6007-f1.jpg"
+    },
+    {
+      "kind": "figure_image",
+      "figure": "F2",
+      "status": "downloaded",
+      "path": "figures/fig02_F2.jpg",
+      "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/659e27fc426a/sciadv.aea6007-f2.jpg"
+    },
+    {
+      "kind": "figure_image",
+      "figure": "F3",
+      "status": "downloaded",
+      "path": "figures/fig03_F3.jpg",
+      "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/94b752c8c993/sciadv.aea6007-f3.jpg"
+    },
+    {
+      "kind": "figure_image",
+      "figure": "F4",
+      "status": "downloaded",
+      "path": "figures/fig04_F4.jpg",
+      "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/51f4e60d71a8/sciadv.aea6007-f4.jpg"
+    },
+    {
+      "kind": "figure_image",
+      "figure": "F5",
+      "status": "downloaded",
+      "path": "figures/fig05_F5.jpg",
+      "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/21c36a2ed0e5/sciadv.aea6007-f5.jpg"
+    },
+    {
+      "kind": "figure_image",
+      "figure": "F6",
+      "status": "downloaded",
+      "path": "figures/fig06_F6.jpg",
+      "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/5cd51b2c2224/sciadv.aea6007-f6.jpg"
+    },
+    {
+      "kind": "figure_image",
+      "figure": "F7",
+      "status": "downloaded",
+      "path": "figures/fig07_F7.jpg",
+      "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/7bcc7e81ab55/sciadv.aea6007-f7.jpg"
+    },
+    {
+      "kind": "supplementary",
+      "status": "downloaded",
+      "count": 14
+    }
+  ],
+  "figures": [
+    {
+      "figure_id": "F1",
+      "title": "Schematic summary of advances in both active and passive microfluidic sorting technologies and integration of conventional ML and modern DL for intelligent cell sorting, illustrating the theme of “Advances in machine learning–enhanced microfluidic cell sorting.”",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/0afe2d1b8ef5/sciadv.aea6007-f1.jpg",
+      "image_local_path": "figures/fig01_F1.jpg",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "F2",
+      "title": "Active cell sorting.",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/659e27fc426a/sciadv.aea6007-f2.jpg",
+      "image_local_path": "figures/fig02_F2.jpg",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "F3",
+      "title": "DLD.",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/94b752c8c993/sciadv.aea6007-f3.jpg",
+      "image_local_path": "figures/fig03_F3.jpg",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "F4",
+      "title": "Inertial microfluidics.",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/51f4e60d71a8/sciadv.aea6007-f4.jpg",
+      "image_local_path": "figures/fig04_F4.jpg",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "F5",
+      "title": "Viscoelastic microfluidics.",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/21c36a2ed0e5/sciadv.aea6007-f5.jpg",
+      "image_local_path": "figures/fig05_F5.jpg",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "F6",
+      "title": "Traditional ML algorithms have been extensively integrated with microfluidic systems to enhance diagnostic and analytical capabilities.",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/5cd51b2c2224/sciadv.aea6007-f6.jpg",
+      "image_local_path": "figures/fig06_F6.jpg",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "F7",
+      "title": "DL architectures.",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/7bcc7e81ab55/sciadv.aea6007-f7.jpg",
+      "image_local_path": "figures/fig07_F7.jpg",
+      "associated_source_data": "uncertain"
+    }
+  ],
+  "supplementary": {
+    "available": true,
+    "files": [
+      "sciadv.aea6007-f3.jpg",
+      "sciadv.aea6007-f3.gif",
+      "sciadv.aea6007-f4.gif",
+      "sciadv.aea6007-f7.jpg",
+      "sciadv.aea6007-f6.gif",
+      "sciadv.aea6007-f7.gif",
+      "sciadv.aea6007-f1.jpg",
+      "sciadv.aea6007-f1.gif",
+      "sciadv.aea6007-f2.jpg",
+      "sciadv.aea6007-f2.gif",
+      "sciadv.aea6007-f5.gif",
+      "sciadv.aea6007-f5.jpg",
+      "sciadv.aea6007-f4.jpg",
+      "sciadv.aea6007-f6.jpg"
+    ]
+  },
+  "warnings": [],
+  "transport": "https-only",
+  "fabrication": "none — missing items recorded as null/unavailable"
+}

@@ -1,0 +1,9 @@
+Journal: Cell reports
+DOI: 10.1016/j.celrep.2025.116569
+License (raw): cc by
+License (normalized): CC BY
+Class: LicenseClass.PERMISSIVE
+Permits reuse: True
+Permits TDM: True
+Note: Attribution; reuse and TDM permitted.
+This determination is a conservative automated classification, not legal advice. Honor the publisher's terms.

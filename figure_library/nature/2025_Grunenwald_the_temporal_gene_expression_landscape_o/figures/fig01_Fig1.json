@@ -1,0 +1,18 @@
+{
+  "figure_id": "Fig1",
+  "index": 1,
+  "title": "Complement activation fragments increase in the urine of patients with AKI.",
+  "caption": "Ratio of complement activation fragments to creatinuria in urines of healthy donors (HD, n = 7), patients with renal ischemia reperfusion (IR, n = 3), rhabdomyolysis (Rh) without (wo) acute kidney injury (AKI), n = 4, or Rhabdomyolysis induced AKI (RIAKI, n = 27): Ba (a), Bb (b), C3a (c), C4a (d), C5a (e) and soluble C5b9 (sC5b9) (f). Ratio of complement active fragments to complement complete proteins C3a/C3 (g), C4a/C4 (h) C5a/C5 (i), and Ba/C3 (j) (*p < 0.05, **p < 0.01, ***p < 0.001, ****p < 0.0001, Kruskal–Wallis test with Dunn’s correction for multiple comparisons to HD, dotted lines represent mean of HD + 2 standard deviations).",
+  "panel_labels": [],
+  "panel_label_confidence": "none",
+  "panel_label_method": "caption_regex",
+  "image_filename": "42003_2025_9449_Fig1_HTML.jpg",
+  "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/4ec4/12877018/f56e0a2ce875/42003_2025_9449_Fig1_HTML.jpg",
+  "image_downloaded": true,
+  "image_local_path": "figures/fig01_Fig1.jpg",
+  "associated_source_data": "uncertain",
+  "associated_data_note": "Figure-to-source-data linkage not confidently established; supplementary files are stored at the paper level.",
+  "license_normalized": "CC BY",
+  "doi": "10.1038/s42003-025-09449-y",
+  "image_bytes": 99565
+}

@@ -1,0 +1,152 @@
+{
+  "harvested_by": "make_my_figure.harvest (HTTPS-only, license-aware)",
+  "contact": "sureshbt42@gmail.com",
+  "paper": {
+    "title": "Dog ownership during adolescence alters the microbiota and improves mental health.",
+    "journal": "iScience",
+    "journal_group": "cell",
+    "year": 2025,
+    "doi": "10.1016/j.isci.2025.113948",
+    "pmcid": "PMC12767183",
+    "pmid": "41497397",
+    "first_author": "Miyauchi",
+    "authors": "Miyauchi E, Yamaoka M, Kamimura I, Mizuta M, Takenaka M, Akiyama U, Kawasumi M, Sasaki N, Ohno H, Ando S, Yamasaki S, Nishida A, Mogi K, Nagasawa M, Kikusui T.",
+    "license_raw": "cc by",
+    "license_normalized": "CC BY",
+    "is_open_access": true,
+    "first_publication_date": "2025-12-03",
+    "source_urls": [
+      "https://doi.org/10.1016/j.isci.2025.113948",
+      "https://europepmc.org/articles/PMC12767183",
+      "https://europepmc.org/articles/PMC12767183?pdf=render"
+    ]
+  },
+  "license_determination": {
+    "epmc": {
+      "raw": "cc by",
+      "klass": "permissive",
+      "normalized": "CC BY",
+      "permits_reuse": true,
+      "permits_tdm": true,
+      "note": "Attribution; reuse and TDM permitted."
+    },
+    "oa_service": {
+      "available": true,
+      "license": "CC BY",
+      "package_ftp": "ftp://ftp.ncbi.nlm.nih.gov/pub/pmc/oa_package/fa/30/PMC12767183.tar.gz",
+      "retracted": false
+    },
+    "policy": "Download figures/data only for CC BY / CC BY-SA / CC0."
+  },
+  "sources": {
+    "metadata": "Europe PMC REST (core)",
+    "license_confirmation": [
+      "Europe PMC",
+      "NCBI PMC OA service"
+    ],
+    "full_text": "NCBI BioC (pmcoa.cgi)",
+    "figure_image_urls": "NCBI PMC article page (cdn.ncbi.nlm.nih.gov)",
+    "supplementary": "Europe PMC supplementaryFiles"
+  },
+  "downloads": [
+    {
+      "kind": "full_text_bioc",
+      "status": "downloaded",
+      "path": "full_text/bioc.json"
+    },
+    {
+      "kind": "figure_image",
+      "figure": "fig1",
+      "status": "downloaded",
+      "path": "figures/fig01_fig1.jpg",
+      "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/a996/12767183/3080e1981ce9/gr1.jpg"
+    },
+    {
+      "kind": "figure_image",
+      "figure": "fig2",
+      "status": "downloaded",
+      "path": "figures/fig02_fig2.jpg",
+      "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/a996/12767183/189e28a5c08c/gr2.jpg"
+    },
+    {
+      "kind": "figure_image",
+      "figure": "fig3",
+      "status": "downloaded",
+      "path": "figures/fig03_fig3.jpg",
+      "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/a996/12767183/9878a827d3f2/gr3.jpg"
+    },
+    {
+      "kind": "figure_image",
+      "figure": "fig4",
+      "status": "downloaded",
+      "path": "figures/fig04_fig4.jpg",
+      "url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/a996/12767183/3f7b64ad09f8/gr4.jpg"
+    },
+    {
+      "kind": "supplementary",
+      "status": "downloaded",
+      "count": 11
+    }
+  ],
+  "figures": [
+    {
+      "figure_id": "fig1",
+      "title": null,
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/a996/12767183/3080e1981ce9/gr1.jpg",
+      "image_local_path": "figures/fig01_fig1.jpg",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "fig2",
+      "title": null,
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/a996/12767183/189e28a5c08c/gr2.jpg",
+      "image_local_path": "figures/fig02_fig2.jpg",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "fig3",
+      "title": null,
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/a996/12767183/9878a827d3f2/gr3.jpg",
+      "image_local_path": "figures/fig03_fig3.jpg",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "fig4",
+      "title": null,
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/a996/12767183/3f7b64ad09f8/gr4.jpg",
+      "image_local_path": "figures/fig04_fig4.jpg",
+      "associated_source_data": "uncertain"
+    }
+  ],
+  "supplementary": {
+    "available": true,
+    "files": [
+      "gr4.gif",
+      "gr1.gif",
+      "gr2.jpg",
+      "gr3.jpg",
+      "gr4.jpg",
+      "gr1.jpg",
+      "gr3.gif",
+      "mmc1.pdf",
+      "fx1.jpg",
+      "fx1.gif",
+      "gr2.gif"
+    ]
+  },
+  "warnings": [],
+  "transport": "https-only",
+  "fabrication": "none — missing items recorded as null/unavailable"
+}

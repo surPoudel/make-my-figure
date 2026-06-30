@@ -1,0 +1,43 @@
+{
+  "pmcid": "PMC12767183",
+  "doi": "10.1016/j.isci.2025.113948",
+  "n_figures": 4,
+  "figures": [
+    {
+      "figure_id": "fig1",
+      "image_filename": "gr1.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/a996/12767183/3080e1981ce9/gr1.jpg",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "fig2",
+      "image_filename": "gr2.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/a996/12767183/189e28a5c08c/gr2.jpg",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "fig3",
+      "image_filename": "gr3.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/a996/12767183/9878a827d3f2/gr3.jpg",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "fig4",
+      "image_filename": "gr4.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/a996/12767183/3f7b64ad09f8/gr4.jpg",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "associated_source_data": "uncertain"
+    }
+  ]
+}

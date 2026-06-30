@@ -1,0 +1,91 @@
+{
+  "pmcid": "PMC12877018",
+  "doi": "10.1038/s42003-025-09449-y",
+  "n_figures": 7,
+  "figures": [
+    {
+      "figure_id": "Fig1",
+      "image_filename": "42003_2025_9449_Fig1_HTML.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/4ec4/12877018/f56e0a2ce875/42003_2025_9449_Fig1_HTML.jpg",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "Fig2",
+      "image_filename": "42003_2025_9449_Fig2_HTML.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/4ec4/12877018/4257455e5d2a/42003_2025_9449_Fig2_HTML.jpg",
+      "panel_labels": [
+        "c"
+      ],
+      "panel_label_confidence": "heuristic_low",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "Fig3",
+      "image_filename": "42003_2025_9449_Fig3_HTML.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/4ec4/12877018/ba6b94847895/42003_2025_9449_Fig3_HTML.jpg",
+      "panel_labels": [
+        "b",
+        "e",
+        "f",
+        "g"
+      ],
+      "panel_label_confidence": "heuristic_low",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "Fig4",
+      "image_filename": "42003_2025_9449_Fig4_HTML.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/4ec4/12877018/74be9dbfcaed/42003_2025_9449_Fig4_HTML.jpg",
+      "panel_labels": [
+        "a",
+        "b"
+      ],
+      "panel_label_confidence": "heuristic_medium",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "Fig5",
+      "image_filename": "42003_2025_9449_Fig5_HTML.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/4ec4/12877018/d38420026530/42003_2025_9449_Fig5_HTML.jpg",
+      "panel_labels": [
+        "a",
+        "b"
+      ],
+      "panel_label_confidence": "heuristic_medium",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "Fig6",
+      "image_filename": "42003_2025_9449_Fig6_HTML.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/4ec4/12877018/ba9dfdccf122/42003_2025_9449_Fig6_HTML.jpg",
+      "panel_labels": [
+        "a",
+        "c",
+        "d",
+        "e",
+        "f"
+      ],
+      "panel_label_confidence": "heuristic_low",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "Fig7",
+      "image_filename": "42003_2025_9449_Fig7_HTML.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/4ec4/12877018/6b17de27dce5/42003_2025_9449_Fig7_HTML.jpg",
+      "panel_labels": [
+        "c"
+      ],
+      "panel_label_confidence": "heuristic_low",
+      "associated_source_data": "uncertain"
+    }
+  ]
+}

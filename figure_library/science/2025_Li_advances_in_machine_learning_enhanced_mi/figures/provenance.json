@@ -1,0 +1,70 @@
+{
+  "pmcid": "PMC12716426",
+  "doi": "10.1126/sciadv.aea6007",
+  "n_figures": 7,
+  "figures": [
+    {
+      "figure_id": "F1",
+      "image_filename": "sciadv.aea6007-f1.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/0afe2d1b8ef5/sciadv.aea6007-f1.jpg",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "F2",
+      "image_filename": "sciadv.aea6007-f2.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/659e27fc426a/sciadv.aea6007-f2.jpg",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "F3",
+      "image_filename": "sciadv.aea6007-f3.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/94b752c8c993/sciadv.aea6007-f3.jpg",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "F4",
+      "image_filename": "sciadv.aea6007-f4.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/51f4e60d71a8/sciadv.aea6007-f4.jpg",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "F5",
+      "image_filename": "sciadv.aea6007-f5.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/21c36a2ed0e5/sciadv.aea6007-f5.jpg",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "F6",
+      "image_filename": "sciadv.aea6007-f6.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/5cd51b2c2224/sciadv.aea6007-f6.jpg",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "associated_source_data": "uncertain"
+    },
+    {
+      "figure_id": "F7",
+      "image_filename": "sciadv.aea6007-f7.jpg",
+      "image_downloaded": true,
+      "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/7bcc7e81ab55/sciadv.aea6007-f7.jpg",
+      "panel_labels": [],
+      "panel_label_confidence": "none",
+      "associated_source_data": "uncertain"
+    }
+  ]
+}

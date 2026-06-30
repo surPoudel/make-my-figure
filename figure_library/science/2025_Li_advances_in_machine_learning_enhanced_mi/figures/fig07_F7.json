@@ -1,0 +1,18 @@
+{
+  "figure_id": "F7",
+  "index": 7,
+  "title": "DL architectures.",
+  "caption": "(A) MLP. Image credits: Reused with permission from (CC BY-NC 4.0; https://creativecommons.org/licenses/by-nc/4.0/). (B) Using a 1D feature vector of normalized scattering intensities from three distinct wavelengths, coupled with a CNN, enables the distinction of CTCC peaks from non-CTCC peaks. Image credits: Reused with permission from (CC BY-NC 3.0; https://creativecommons.org/licenses/by-nc/3.0/). (C) YOLOv8 is used to sort HeLa cells from red blood cells, isolate cancer cells from WBCs, and distinguish WBC subtypes. Image credits: Reused with permission from (CC BY 4.0; https://creativecommons.org/licenses/by/4.0/). (D) Residual blocks are designed to facilitate complex feature learning and mitigate gradient degradation in deep networks. Image credits: Reused with permission from. Reprinted from; copyright (2024) with permission from Elsevier.",
+  "panel_labels": [],
+  "panel_label_confidence": "none",
+  "panel_label_method": "caption_regex",
+  "image_filename": "sciadv.aea6007-f7.jpg",
+  "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/1af8/12716426/7bcc7e81ab55/sciadv.aea6007-f7.jpg",
+  "image_downloaded": true,
+  "image_local_path": "figures/fig07_F7.jpg",
+  "associated_source_data": "uncertain",
+  "associated_data_note": "Figure-to-source-data linkage not confidently established; supplementary files are stored at the paper level.",
+  "license_normalized": "CC BY",
+  "doi": "10.1126/sciadv.aea6007",
+  "image_bytes": 174772
+}

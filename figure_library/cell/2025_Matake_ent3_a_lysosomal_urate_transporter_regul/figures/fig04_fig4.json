@@ -1,0 +1,18 @@
+{
+  "figure_id": "fig4",
+  "index": 4,
+  "title": null,
+  "caption": "Effect of knockdown of endogenous ENT3 on accumulation of MSU-derived urate and inflammation in differentiated THP-1 cells (A) Schematic overview of the experimental timelines. (B and C) mRNA levels of ENT3 and CD11b were quantified by real-time PCR in undifferentiated and differentiated THP-1 cells. (D) Real-time PCR analysis of ENT3 mRNA levels in differentiated control and ENT3-knocked down (ENT3-KD) THP-1 cells. (E) Accumulation of [14C]urate derived from [14C]MSU was assessed in differentiated control and ENT3-KD THP-1 cells at 0, 24, and 48 h following 2-h loading of [14C]MSU (0.2 mg/mL). (F) Proposed model of ENT3 function for lysosomal urate elimination. (G) IL-1β concentrations in culture supernatants were quantified by ELISA at 0 and 48 h following 2-h MSU loading (0.2 mg/mL). (H) Proposed model of ENT3 function for exporting adenosine across the lysosomal membrane to regulate inflammatory responses. ENT3 dysfunction leads to suppression of adenosine-dependent inflammasome activation. Data are presented as the mean ± SD from three biological replicates using separate cell preparations. Statistical significance was evaluated using Student’s t test (B–E) or two-way ANOVA followed by Bonferroni post-hoc test (G). ∗p < 0.05 versus control (B–E) or as indicated (G).",
+  "panel_labels": [],
+  "panel_label_confidence": "none",
+  "panel_label_method": "caption_regex",
+  "image_filename": "gr4.jpg",
+  "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/bc57/12752747/46cc34a0fbb8/gr4.jpg",
+  "image_downloaded": true,
+  "image_local_path": "figures/fig04_fig4.jpg",
+  "associated_source_data": "uncertain",
+  "associated_data_note": "Figure-to-source-data linkage not confidently established; supplementary files are stored at the paper level.",
+  "license_normalized": "CC BY",
+  "doi": "10.1016/j.isci.2025.114249",
+  "image_bytes": 384243
+}

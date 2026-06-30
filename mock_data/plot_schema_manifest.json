@@ -1,0 +1,363 @@
+{
+  "project": "make_my_figure",
+  "version": "0.1.0",
+  "created_utc": "2026-06-30T15:22:34Z",
+  "purpose": "Mock input tables for testing manuscript-style scientific figure generation.",
+  "replacement_rule": "Users can replace the rows with real data as long as required column names and data types are preserved, or map columns in the app UI.",
+  "datasets": [
+    {
+      "plot_type": "barplot_with_error_bar",
+      "file": "mock_data/barplot_error_raw.csv",
+      "description": "Raw replicate measurements for mean plus SEM/SD bar plots.",
+      "required_columns": [
+        "condition",
+        "replicate",
+        "measurement"
+      ],
+      "optional_columns": [
+        "unit",
+        "experiment_batch"
+      ],
+      "suggested_defaults": {
+        "x": "condition",
+        "y": "measurement",
+        "error": "sem",
+        "color": "condition"
+      },
+      "user_replacement_note": "Keep one row per replicate; replace condition labels and measurement values."
+    },
+    {
+      "plot_type": "grouped_barplot_with_error_bar",
+      "file": "mock_data/grouped_barplot_error.csv",
+      "description": "Two-factor replicate data for grouped bars with error bars.",
+      "required_columns": [
+        "genotype",
+        "treatment",
+        "replicate",
+        "expression"
+      ],
+      "optional_columns": [
+        "gene",
+        "unit"
+      ],
+      "suggested_defaults": {
+        "x": "genotype",
+        "group": "treatment",
+        "y": "expression",
+        "error": "sem"
+      },
+      "user_replacement_note": "Use one row per replicate and keep grouping variables categorical."
+    },
+    {
+      "plot_type": "boxplot_or_violin_with_points",
+      "file": "mock_data/box_violin_points.csv",
+      "description": "Sample-level distributions suitable for box, violin, swarm, or beeswarm plots.",
+      "required_columns": [
+        "sample_id",
+        "group",
+        "value"
+      ],
+      "optional_columns": [
+        "batch",
+        "sex"
+      ],
+      "suggested_defaults": {
+        "x": "group",
+        "y": "value",
+        "points": true
+      },
+      "user_replacement_note": "Use one row per biological sample or observation."
+    },
+    {
+      "plot_type": "scatterplot_with_regression",
+      "file": "mock_data/scatter_regression.csv",
+      "description": "Continuous x-y relationship with categorical grouping and optional labels.",
+      "required_columns": [
+        "sample_id",
+        "x_marker",
+        "y_response"
+      ],
+      "optional_columns": [
+        "group",
+        "label"
+      ],
+      "suggested_defaults": {
+        "x": "x_marker",
+        "y": "y_response",
+        "color": "group",
+        "fit_line": true
+      },
+      "user_replacement_note": "Use numeric columns for x and y; labels may be blank."
+    },
+    {
+      "plot_type": "lineplot_timecourse_with_error_band",
+      "file": "mock_data/line_timecourse.tsv",
+      "description": "Long-format time course data for mean lines with SEM/CI bands.",
+      "required_columns": [
+        "time_hours",
+        "treatment",
+        "replicate",
+        "signal"
+      ],
+      "optional_columns": [
+        "unit"
+      ],
+      "suggested_defaults": {
+        "x": "time_hours",
+        "y": "signal",
+        "color": "treatment",
+        "error": "sem"
+      },
+      "user_replacement_note": "Keep data in long format, one row per time point per replicate."
+    },
+    {
+      "plot_type": "heatmap_clustered_matrix",
+      "file": "mock_data/heatmap_expression_matrix.tsv",
+      "description": "Gene-by-sample matrix of z-scored expression-like values.",
+      "required_columns": [
+        "gene",
+        "sample columns..."
+      ],
+      "optional_columns": [],
+      "suggested_defaults": {
+        "row_id": "gene",
+        "cluster_rows": true,
+        "cluster_columns": true,
+        "color_scale": "diverging"
+      },
+      "user_replacement_note": "Keep the first column as row labels and use numeric values in all sample columns."
+    },
+    {
+      "plot_type": "volcano_plot",
+      "file": "mock_data/volcano_plot.csv",
+      "description": "Differential-analysis results for volcano plots.",
+      "required_columns": [
+        "gene",
+        "log2_fold_change",
+        "p_value"
+      ],
+      "optional_columns": [
+        "adjusted_p_value",
+        "gene_class",
+        "label"
+      ],
+      "suggested_defaults": {
+        "x": "log2_fold_change",
+        "p": "adjusted_p_value",
+        "label": "label",
+        "lfc_cutoff": 1.0,
+        "p_cutoff": 0.05
+      },
+      "user_replacement_note": "Use one row per feature/gene; p-values must be numeric or scientific notation."
+    },
+    {
+      "plot_type": "enrichment_dotplot",
+      "file": "mock_data/enrichment_dotplot.csv",
+      "description": "Gene-set enrichment output for dot plots.",
+      "required_columns": [
+        "term",
+        "gene_ratio",
+        "fdr"
+      ],
+      "optional_columns": [
+        "category",
+        "gene_count",
+        "neg_log10_fdr"
+      ],
+      "suggested_defaults": {
+        "y": "term",
+        "x": "gene_ratio",
+        "size": "gene_count",
+        "color": "neg_log10_fdr"
+      },
+      "user_replacement_note": "Use one row per enriched term; include FDR or -log10(FDR)."
+    },
+    {
+      "plot_type": "kaplan_meier_survival_curve",
+      "file": "mock_data/survival_km.csv",
+      "description": "Patient-level survival/censoring data for Kaplan-Meier curves.",
+      "required_columns": [
+        "sample_id",
+        "group",
+        "time_months",
+        "event"
+      ],
+      "optional_columns": [
+        "censor_reason"
+      ],
+      "suggested_defaults": {
+        "time": "time_months",
+        "event": "event",
+        "group": "group"
+      },
+      "user_replacement_note": "Use event=1 for event/death/progression and event=0 for censored observations."
+    },
+    {
+      "plot_type": "stacked_bar_composition",
+      "file": "mock_data/stacked_composition.csv",
+      "description": "Long-format cell-type fractions for stacked bars.",
+      "required_columns": [
+        "sample_id",
+        "cell_type",
+        "fraction"
+      ],
+      "optional_columns": [
+        "group"
+      ],
+      "suggested_defaults": {
+        "x": "sample_id",
+        "stack": "cell_type",
+        "y": "fraction",
+        "facet_or_sort_by": "group"
+      },
+      "user_replacement_note": "Fractions should sum to about 1 per sample."
+    },
+    {
+      "plot_type": "waterfall_plot",
+      "file": "mock_data/waterfall_response.csv",
+      "description": "Patient-level percent change values for oncology-style waterfall plots.",
+      "required_columns": [
+        "patient_id",
+        "best_percent_change"
+      ],
+      "optional_columns": [
+        "treatment_arm",
+        "response_category",
+        "duration_months"
+      ],
+      "suggested_defaults": {
+        "x": "patient_id",
+        "y": "best_percent_change",
+        "color": "response_category",
+        "sort": "ascending"
+      },
+      "user_replacement_note": "Use negative values for tumor shrinkage or reduction when applicable."
+    },
+    {
+      "plot_type": "pca_scatter_from_matrix",
+      "file": "mock_data/pca_expression_matrix.tsv + mock_data/pca_sample_metadata.csv",
+      "description": "Expression matrix plus sample metadata for PCA scatter plots.",
+      "required_columns": [
+        "gene/sample matrix",
+        "metadata sample_id"
+      ],
+      "optional_columns": [
+        "group",
+        "batch",
+        "library_size_millions"
+      ],
+      "suggested_defaults": {
+        "matrix_row_id": "gene",
+        "metadata_key": "sample_id",
+        "color": "group",
+        "shape": "batch"
+      },
+      "user_replacement_note": "Sample IDs in metadata must match matrix column names."
+    },
+    {
+      "plot_type": "oncoprint_mutation_heatmap",
+      "file": "mock_data/oncoprint_long.csv",
+      "description": "Long-format gene alteration calls for oncoprint-style mutation grids.",
+      "required_columns": [
+        "patient_id",
+        "gene",
+        "alteration_type"
+      ],
+      "optional_columns": [
+        "variant_annotation",
+        "variant_allele_fraction"
+      ],
+      "suggested_defaults": {
+        "sample": "patient_id",
+        "row": "gene",
+        "fill": "alteration_type"
+      },
+      "user_replacement_note": "Use one row per alteration; multiple rows per patient/gene can be collapsed or layered."
+    },
+    {
+      "plot_type": "lollipop_mutation_plot",
+      "file": "mock_data/lollipop_mutations.csv",
+      "description": "Protein-position mutation counts for lollipop plots.",
+      "required_columns": [
+        "gene",
+        "protein_position",
+        "sample_count"
+      ],
+      "optional_columns": [
+        "amino_acid_change",
+        "mutation_type",
+        "domain"
+      ],
+      "suggested_defaults": {
+        "x": "protein_position",
+        "y": "sample_count",
+        "color": "mutation_type",
+        "label": "amino_acid_change"
+      },
+      "user_replacement_note": "Use integer protein positions and mutation counts."
+    },
+    {
+      "plot_type": "roc_curve",
+      "file": "mock_data/roc_curve_scores.csv",
+      "description": "Binary labels and model scores for ROC/AUC curves.",
+      "required_columns": [
+        "sample_id",
+        "true_label",
+        "score_model_a"
+      ],
+      "optional_columns": [
+        "score_model_b",
+        "cohort"
+      ],
+      "suggested_defaults": {
+        "label": "true_label",
+        "score": "score_model_a",
+        "stratify": "cohort"
+      },
+      "user_replacement_note": "Use true_label as 1 for positive class and 0 for negative class."
+    },
+    {
+      "plot_type": "forest_plot",
+      "file": "mock_data/forest_plot.csv",
+      "description": "Point estimates and confidence intervals for forest plots.",
+      "required_columns": [
+        "subgroup",
+        "hazard_ratio",
+        "ci_low",
+        "ci_high"
+      ],
+      "optional_columns": [
+        "study",
+        "p_value",
+        "n"
+      ],
+      "suggested_defaults": {
+        "label": "subgroup",
+        "estimate": "hazard_ratio",
+        "lower": "ci_low",
+        "upper": "ci_high",
+        "reference": 1.0
+      },
+      "user_replacement_note": "Use consistent effect direction and confidence interval columns."
+    },
+    {
+      "plot_type": "ridge_or_density_plot",
+      "file": "mock_data/ridge_density.csv",
+      "description": "Single-cell-like distributions for density/ridge plots.",
+      "required_columns": [
+        "cell_id",
+        "condition",
+        "pseudotime"
+      ],
+      "optional_columns": [
+        "sample_id",
+        "score"
+      ],
+      "suggested_defaults": {
+        "x": "pseudotime",
+        "group": "condition"
+      },
+      "user_replacement_note": "Use one row per observation; x values should be numeric."
+    }
+  ]
+}

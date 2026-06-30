@@ -1,0 +1,18 @@
+{
+  "figure_id": "Fig2",
+  "index": 2,
+  "title": "PCA of modern West-Eurasian populations with projected ancient genomes.",
+  "caption": "Modern West-Eurasian populations are shown as grey circles and ancient genomes, shown as coloured symbols, are projected onto the same PCA space. Source data are provided as a Source Data file.",
+  "panel_labels": [],
+  "panel_label_confidence": "none",
+  "panel_label_method": "caption_regex",
+  "image_filename": "41467_2025_67906_Fig2_HTML.jpg",
+  "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/c33e/12775072/3ac0e47b582f/41467_2025_67906_Fig2_HTML.jpg",
+  "image_downloaded": true,
+  "image_local_path": "figures/fig02_Fig2.jpg",
+  "associated_source_data": "uncertain",
+  "associated_data_note": "Figure-to-source-data linkage not confidently established; supplementary files are stored at the paper level.",
+  "license_normalized": "CC BY",
+  "doi": "10.1038/s41467-025-67906-y",
+  "image_bytes": 98240
+}

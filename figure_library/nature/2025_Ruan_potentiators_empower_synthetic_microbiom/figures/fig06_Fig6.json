@@ -1,0 +1,21 @@
+{
+  "figure_id": "Fig6",
+  "index": 6,
+  "title": "Experimental validation of predicted metabolite-mediated interactions under co-contaminated conditions.",
+  "caption": "a Growth promotion by metabolite supplementation. Growth curves illustrate the responses of microbial communities to four types of combined pollution (10 mg/L each), including tetracyclines (TC and OTC), sulfonamide antibiotics (SMX and SMT), herbicides (BO and QC), and biocides (DTAC and DBAC). Various metabolite combinations were added to the culture systems and monitored at 15-min intervals for 1800 min at 30 °C using a microplate reader, resulting in 9680 growth measurement data points per treatment. The control group (Com) was cultured in basal medium (containing 10% peptone), while the experimental groups were supplemented with additional amino acids (Com+AA: L-histidine, L-glutamate, L-phenylalanine, N-formyl-L-methionine, glycine, and L-proline), vitamins (Com+Vit: vitamin B1, vitamin D2, and niacin), organic acids (Com+OA: palmitate, myristic acid, and succinate), or a combination of all key metabolites (Com+All). The top-left inset bar plot quantifies the area under each growth curve. Data are presented as mean ± SD (n = 4 biologically independent replicates). b Validation of the altruistic effects of strains B4 and S4 (including promoting microbial community growth and pollutant removal). Bar plots represent the removal efficiencies of mixed pollutants by three microbial consortia (left Y-axis). Lowercase letters above the bars indicate statistically significant differences between groups (one-way ANOVA, p < 0.05), where black letters represent differences among pollutants in orange color blocks, and gray letters represent differences among pollutants corresponding to green color blocks. Line plots represent bacterial growth (measured as absorbance at OD600; right Y-axis). **p < 0.01, ***p < 0.001. The tested consortia were: BS (strains B4 and S4), BS + ACLP (strains B4, S4, A1, C2, L3, P1), and ACPL (strains A1, C2, L3, P1). Data are presented as mean ± SD (n = 3 biologically independent replicates for degradation, n = 5 biologically independent replicates for biomass). TC tetracycline, OTC oxytetracycline, DTAC dodecyl trimethyl ammonium chloride, DBAC dodecyldimethylbenzylammonium chloride, BO bromoxynil octanoate, Bxn bromoxynil (intermediate metabolite of BO), QC quinclorac, SMX sulfamethoxazole, SMT sulfamethazine. Data are presented as mean values ± SEM. Source data for this figure is available in the Source data file.",
+  "panel_labels": [
+    "a",
+    "b"
+  ],
+  "panel_label_confidence": "heuristic_medium",
+  "panel_label_method": "caption_regex",
+  "image_filename": "41467_2025_67953_Fig6_HTML.jpg",
+  "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/a5d4/12858907/706429b0bf5b/41467_2025_67953_Fig6_HTML.jpg",
+  "image_downloaded": true,
+  "image_local_path": "figures/fig06_Fig6.jpg",
+  "associated_source_data": "uncertain",
+  "associated_data_note": "Figure-to-source-data linkage not confidently established; supplementary files are stored at the paper level.",
+  "license_normalized": "CC BY",
+  "doi": "10.1038/s41467-025-67953-5",
+  "image_bytes": 206010
+}

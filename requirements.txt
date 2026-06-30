@@ -1,0 +1,8 @@
+pandas>=1.5
+numpy>=1.23
+matplotlib>=3.6
+scipy>=1.9
+openpyxl>=3.0
+jsonschema>=4.0
+streamlit>=1.30
+pytest>=7.0

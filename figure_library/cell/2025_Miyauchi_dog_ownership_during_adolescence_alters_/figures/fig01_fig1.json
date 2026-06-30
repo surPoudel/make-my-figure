@@ -1,0 +1,18 @@
+{
+  "figure_id": "fig1",
+  "index": 1,
+  "title": null,
+  "caption": "Mental health and behavioral problems among dog-owning and non-dog-owning adolescents CBCL subscale scores were compared between dog-owning and non-dog-owning adolescents. The analysis included participants for whom both pet ownership data at age 13 and CBCL scores at age 14 were available (n = 266; dog owners = 74, non-dog owners = 192). The subscales included social withdrawal, somatic complaints, anxiety/depressed, social problems, thought problems, attention problems, delinquent behavior, and aggressive behavior. Generalized linear models (GLMs) were used to examine group differences, both before and after adjusting for covariates (sex, annual household income, number of siblings, and number of family members). Scores for social withdrawal, social problems, thought problems, delinquent behavior, and aggressive behavior were significantly lower in dog-owning adolescents. ∗p < 0.05, ∗∗p < 0.01, by GLM followed by Mann-Whitney post hoc test.",
+  "panel_labels": [],
+  "panel_label_confidence": "none",
+  "panel_label_method": "caption_regex",
+  "image_filename": "gr1.jpg",
+  "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/a996/12767183/3080e1981ce9/gr1.jpg",
+  "image_downloaded": true,
+  "image_local_path": "figures/fig01_fig1.jpg",
+  "associated_source_data": "uncertain",
+  "associated_data_note": "Figure-to-source-data linkage not confidently established; supplementary files are stored at the paper level.",
+  "license_normalized": "CC BY",
+  "doi": "10.1016/j.isci.2025.113948",
+  "image_bytes": 227057
+}

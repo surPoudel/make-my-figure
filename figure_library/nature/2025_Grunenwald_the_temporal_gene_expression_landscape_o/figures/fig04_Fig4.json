@@ -1,0 +1,21 @@
+{
+  "figure_id": "Fig4",
+  "index": 4,
+  "title": "Despite a complement-responsive myeloid infiltrate, the targeting of C5/C5aR1 axis does not prevent AKI.",
+  "caption": "a C5 inhibition does not prevent kidney injury. BUN of WT mice injected by glycerol, preventively treated by C5 inhibitor BB5.1. The presented results are from one experiment with 5 PBS/PBS,3 BB5.1/PBS, 10 PBS/GLY, 10 BB5.1/GLY injected mice. b C5aR1 inhibition does not prevent kidney injury. BUN of C57Bl6 WT mice injected by glycerol, preventively treated by C5aR1 inhibitor PMX53. The presented results are from one experiment (out of 2 performed with two different sources of PMX53) with 4 PBS, 19 GLY and 6 - preventively treated by PMX53 - GLY injected mice. (*p < 0.05, Kruskal–Wallis test with Dunn’s correction for multiple pairwise comparisons).",
+  "panel_labels": [
+    "a",
+    "b"
+  ],
+  "panel_label_confidence": "heuristic_medium",
+  "panel_label_method": "caption_regex",
+  "image_filename": "42003_2025_9449_Fig4_HTML.jpg",
+  "image_source_url": "https://cdn.ncbi.nlm.nih.gov/pmc/blobs/4ec4/12877018/74be9dbfcaed/42003_2025_9449_Fig4_HTML.jpg",
+  "image_downloaded": true,
+  "image_local_path": "figures/fig04_Fig4.jpg",
+  "associated_source_data": "uncertain",
+  "associated_data_note": "Figure-to-source-data linkage not confidently established; supplementary files are stored at the paper level.",
+  "license_normalized": "CC BY",
+  "doi": "10.1038/s42003-025-09449-y",
+  "image_bytes": 43369
+}

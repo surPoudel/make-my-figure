@@ -1,0 +1,112 @@
+name: Build desktop releases
+
+# Builds standalone desktop apps for Windows, macOS, and Linux.
+# Triggered manually or on a version tag. Does NOT publish anything publicly
+# unless a maintainer creates a release; it only uploads build artifacts.
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[desktop,build]"
+
+      - name: Generate placeholder icons
+        run: python scripts/make_icons.py
+
+      # ---- Linux ----
+      - name: Install Linux AppImage tooling
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libegl1 libgl1 libxkbcommon0 fuse || true
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O /usr/local/bin/appimagetool || true
+          chmod +x /usr/local/bin/appimagetool || true
+      - name: Build Linux app
+        if: runner.os == 'Linux'
+        run: |
+          chmod +x scripts/build_linux.sh
+          ./scripts/build_linux.sh || true
+          python -m PyInstaller packaging/make_my_figure.spec --noconfirm
+
+      # ---- macOS ----
+      - name: Build macOS app
+        if: runner.os == 'macOS'
+        env:
+          # Optional Apple signing — only used if these repository secrets exist.
+          APPLE_DEVELOPER_ID: ${{ secrets.APPLE_DEVELOPER_ID }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          chmod +x scripts/build_macos.sh
+          ./scripts/build_macos.sh
+
+      # ---- Windows ----
+      - name: Build Windows app
+        if: runner.os == 'Windows'
+        env:
+          # Optional Windows signing — only used if these repository secrets exist.
+          WINDOWS_CERT_PFX_BASE64: ${{ secrets.WINDOWS_CERT_PFX_BASE64 }}
+          WINDOWS_CERT_PASSWORD: ${{ secrets.WINDOWS_CERT_PASSWORD }}
+        shell: pwsh
+        run: |
+          ./scripts/build_windows.ps1
+
+      - name: Smoke-test built app (Linux/macOS)
+        if: runner.os != 'Windows'
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          ./dist/MakeMyFigure/MakeMyFigure --selftest
+
+      - name: Smoke-test built app (Windows)
+        if: runner.os == 'Windows'
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          .\dist\MakeMyFigure\MakeMyFigure.exe --selftest
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: MakeMyFigure-${{ matrix.os }}
+          path: |
+            dist/*.dmg
+            dist/*.AppImage
+            dist/*.exe
+            dist/*-windows.zip
+            dist/*-macos.zip
+            dist/*-linux.tar.gz
+          if-no-files-found: warn
+          retention-days: 14
+
+# Notes:
+# * Unsigned builds are expected; signing steps run only when the relevant
+#   secrets are present (see docs/CODE_SIGNING.md). Absent secrets must NOT fail
+#   the build.
+# * This workflow uploads build artifacts only. Creating a public GitHub Release
+#   is a separate, manual maintainer action.
