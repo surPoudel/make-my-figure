@@ -564,24 +564,28 @@ class MainWindow(QMainWindow):
             return
         pt = self.plot_combo.currentData()
         self._hide_example_prompt()
+
+        # When browsing bundled examples, switching plot type should show THAT
+        # plot type's own example (each example is designed for its plot type),
+        # rather than reusing the previous example's columns.
+        if self.data.is_example:
+            self._load_example_for_current_type()
+            return
+
+        # User-uploaded data: keep it if it is compatible with the new plot type;
+        # otherwise clear the stale figure and offer to load the matching example.
         self._rebuild_mapping_and_options()      # reset mappings to defaults for pt
         spec, result, err = self._try_build_and_render()
         if result is not None:
             self._display_result(spec, result)
             return
-        # Current data is incompatible with the new plot type.
-        if self.data.is_example:
-            # Cleanly switch to the new plot type's own example dataset.
-            self._load_example_for_current_type()
-        else:
-            # User-uploaded data: do not keep the stale plot; explain and offer example.
-            self._clear_figure()
-            self._current_result = None
-            self._current_spec = None
-            self._show_warning(
-                f"Your uploaded data does not have the columns required for "
-                f"“{display_name(pt)}”.\n{err}")
-            self._show_example_prompt(pt)
+        self._clear_figure()
+        self._current_result = None
+        self._current_spec = None
+        self._show_warning(
+            f"Your uploaded data does not have the columns required for "
+            f"“{display_name(pt)}”.\n{err}")
+        self._show_example_prompt(pt)
 
     # --- render ----------------------------------------------------------
     def _build_spec(self):
