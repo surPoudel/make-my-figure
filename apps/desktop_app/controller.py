@@ -47,6 +47,7 @@ class LoadedData:
     table_name: str
     aux: Dict[str, TableInfo] = field(default_factory=dict)
     source_path: Optional[str] = None
+    is_example: bool = False   # True for bundled examples, False for user uploads
 
 
 class DesktopController:
@@ -90,10 +91,11 @@ class DesktopController:
         """
         if examples_lib.has_manifest() and examples_lib.has_example(plot_type):
             info, aux, _spec = examples_lib.load_example(plot_type)
-            return LoadedData(info=info, table_name=f"{plot_type} (example)", aux=aux)
+            return LoadedData(info=info, table_name=f"{plot_type} (example)", aux=aux,
+                              is_example=True)
         info, aux = mock_data.load_sample(plot_type)
         name = mock_data.sample_filename(plot_type) or f"{plot_type}.csv"
-        return LoadedData(info=info, table_name=name, aux=aux)
+        return LoadedData(info=info, table_name=name, aux=aux, is_example=True)
 
     def example_description(self, plot_type: str) -> str:
         if examples_lib.has_manifest():

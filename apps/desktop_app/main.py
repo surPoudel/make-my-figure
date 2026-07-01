@@ -57,6 +57,7 @@ from apps.desktop_app import help_content
 from apps.desktop_app.controller import DesktopController, LoadedData
 from make_my_figure_core.io.loaders import LoaderError
 from make_my_figure_core.plots.base import RenderError
+from make_my_figure_core.plots.registry import display_name
 from make_my_figure_core.spec.validate import SpecValidationError
 
 APP_NAME = "Make My Figure"
@@ -126,6 +127,7 @@ class MainWindow(QMainWindow):
         self._current_spec = None
         self._canvas = None
         self._toolbar = None
+        self._suppress_change = False   # re-entrancy guard for plot-type changes
 
         self.setWindowTitle(APP_NAME)
         self.resize(1180, 760)
@@ -273,6 +275,11 @@ class MainWindow(QMainWindow):
         self.warn_label.setWordWrap(True)
         self.warn_label.setStyleSheet("color: #b00;")
         self.fig_layout.addWidget(self.warn_label)
+        # Shown when uploaded data is incompatible with the selected plot type.
+        self.example_prompt_btn = QPushButton("Use example data for this plot type")
+        self.example_prompt_btn.setVisible(False)
+        self.example_prompt_btn.clicked.connect(self._load_example_for_current_type)
+        self.fig_layout.addWidget(self.example_prompt_btn)
         self.fig_placeholder = QLabel("Load data, then click “Update preview”.")
         self.fig_placeholder.setAlignment(Qt.AlignCenter)
         self.fig_layout.addWidget(self.fig_placeholder)
@@ -409,11 +416,19 @@ class MainWindow(QMainWindow):
         except Exception as exc:
             QMessageBox.warning(self, "Could not load example", str(exc))
             return
-        # Switch the plot type to match the example.
-        idx = self.plot_combo.findData(plot_type)
-        if idx >= 0:
-            self.plot_combo.setCurrentIndex(idx)
+        # Switch the plot type to match the example (guard against re-entrancy so
+        # setting the combo doesn't recursively re-trigger the change handler).
+        prev = self._suppress_change
+        self._suppress_change = True
+        try:
+            idx = self.plot_combo.findData(plot_type)
+            if idx >= 0:
+                self.plot_combo.setCurrentIndex(idx)
+        finally:
+            self._suppress_change = prev
+        self._hide_example_prompt()
         self._set_data(data)
+        self.statusBar().showMessage(f"Loaded {plot_type} example data — runs locally.")
 
     def _set_data(self, data: LoadedData):
         self.data = data
@@ -536,9 +551,37 @@ class MainWindow(QMainWindow):
         return mapping
 
     def _on_plot_type_changed(self):
-        if self.data is not None:
-            self._rebuild_mapping_and_options()
-            self.render_preview()
+        """Keep plot type, dataset, mappings, PlotSpec and preview in sync.
+
+        When the plot type changes we reset the column mappings to that type's
+        defaults and try to render the *currently loaded* data. If that data is
+        not compatible with the new plot type:
+          * for bundled example data -> automatically load the new type's example;
+          * for user-uploaded data -> clear the stale figure and offer to load
+            the matching example (never keep showing the previous plot).
+        """
+        if self.data is None or self._suppress_change:
+            return
+        pt = self.plot_combo.currentData()
+        self._hide_example_prompt()
+        self._rebuild_mapping_and_options()      # reset mappings to defaults for pt
+        spec, result, err = self._try_build_and_render()
+        if result is not None:
+            self._display_result(spec, result)
+            return
+        # Current data is incompatible with the new plot type.
+        if self.data.is_example:
+            # Cleanly switch to the new plot type's own example dataset.
+            self._load_example_for_current_type()
+        else:
+            # User-uploaded data: do not keep the stale plot; explain and offer example.
+            self._clear_figure()
+            self._current_result = None
+            self._current_spec = None
+            self._show_warning(
+                f"Your uploaded data does not have the columns required for "
+                f"“{display_name(pt)}”.\n{err}")
+            self._show_example_prompt(pt)
 
     # --- render ----------------------------------------------------------
     def _build_spec(self):
@@ -555,36 +598,50 @@ class MainWindow(QMainWindow):
             pt, style, self.data.table_name, self._collect_mapping(),
             layout=layout, width=self.width_combo.currentText(), dpi=self.dpi_spin.value())
 
-    def render_preview(self):
-        if self.data is None:
-            return
+    def _try_build_and_render(self):
+        """Return (spec, result, error_msg). result is None if rendering failed."""
         try:
             spec = self._build_spec()
             result = self.controller.render(spec, self.data)
+            return spec, result, None
         except (RenderError, SpecValidationError) as exc:
-            self._show_warning(str(exc))
-            return
-        except Exception as exc:
-            self._show_warning(f"Unexpected error: {exc}")
-            return
+            return None, None, str(exc)
+        except Exception as exc:  # never let a render error leave a stale figure
+            return None, None, f"Unexpected error: {exc}"
+
+    def _display_result(self, spec, result):
         self._current_spec = spec
         self._current_result = result
+        self._hide_example_prompt()
         warns = result.warnings or []
         self.warn_label.setText(("⚠ " + " | ".join(warns)) if warns else "")
         self._show_figure(result.figure)
         self.right_tabs.setCurrentIndex(1)
 
+    def render_preview(self):
+        if self.data is None:
+            return
+        spec, result, err = self._try_build_and_render()
+        if result is None:
+            # Clear the stale figure so a previous plot never lingers on error.
+            self._clear_figure()
+            self._current_result = None
+            self._current_spec = None
+            self._show_warning(err)
+            return
+        self._display_result(spec, result)
+
     def _show_warning(self, msg: str):
         self.warn_label.setText("⚠ " + msg)
         self.right_tabs.setCurrentIndex(1)
 
-    def _show_figure(self, fig):
-        # Remove old canvas/toolbar and release the previous figure to avoid leaks.
+    def _clear_figure(self, show_placeholder: bool = True):
+        """Remove the current canvas/toolbar (and release the matplotlib figure)."""
         if self._canvas is not None:
             old_fig = self._canvas.figure
             self._canvas.setParent(None)
             self._canvas = None
-            if old_fig is not None and old_fig is not fig:
+            if old_fig is not None:
                 import matplotlib.pyplot as plt
 
                 plt.close(old_fig)
@@ -594,6 +651,13 @@ class MainWindow(QMainWindow):
         if self.fig_placeholder is not None:
             self.fig_placeholder.setParent(None)
             self.fig_placeholder = None
+        if show_placeholder:
+            self.fig_placeholder = QLabel("No figure to show — see the message above.")
+            self.fig_placeholder.setAlignment(Qt.AlignCenter)
+            self.fig_layout.addWidget(self.fig_placeholder)
+
+    def _show_figure(self, fig):
+        self._clear_figure(show_placeholder=False)
         canvas = FigureCanvasQTAgg(fig)
         toolbar = NavigationToolbar2QT(canvas, self)
         self.fig_layout.addWidget(toolbar)
@@ -601,6 +665,17 @@ class MainWindow(QMainWindow):
         canvas.draw()
         self._canvas = canvas
         self._toolbar = toolbar
+
+    # --- example-data prompt (for incompatible user uploads) -------------
+    def _show_example_prompt(self, plot_type: str):
+        self.example_prompt_btn.setText(f"Load {display_name(plot_type)} example data")
+        self.example_prompt_btn.setVisible(True)
+
+    def _hide_example_prompt(self):
+        self.example_prompt_btn.setVisible(False)
+
+    def _load_example_for_current_type(self):
+        self.load_example(self.plot_combo.currentData())
 
     # --- export ----------------------------------------------------------
     def _ensure_rendered(self) -> bool:
