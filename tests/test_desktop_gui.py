@@ -20,7 +20,8 @@ _REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
 
-from PySide6.QtWidgets import QApplication  # noqa: E402
+from PySide6.QtCore import Qt  # noqa: E402
+from PySide6.QtWidgets import QApplication, QSplitter  # noqa: E402
 
 from apps.desktop_app.main import MainWindow  # noqa: E402
 from make_my_figure_core.plots.registry import available_plot_types  # noqa: E402
@@ -115,6 +116,75 @@ def test_every_plot_type_loads_and_renders_in_gui(app):
         assert win._current_result is not None, f"no figure for {pt}"
         assert win._current_result.metadata["plot_type"] == pt
         assert win._canvas is not None
+    win.close()
+
+
+def test_layout_has_resizable_splitters(app):
+    win = MainWindow()
+    assert isinstance(win.main_splitter, QSplitter)
+    assert isinstance(win.right_splitter, QSplitter)
+    assert win.main_splitter.orientation() == Qt.Horizontal   # controls | preview
+    assert win.right_splitter.orientation() == Qt.Vertical     # data/msgs — figure
+    assert win.main_splitter.count() == 2
+    assert win.right_splitter.count() == 2
+    win.close()
+
+
+def test_splitter_state_save_and_restore(app):
+    win = MainWindow()
+    state = win.right_splitter.saveState()
+    assert win.right_splitter.restoreState(state) is True
+    win._save_splitter_state()
+    assert win.settings.value("right_splitter_state") is not None
+    assert win.settings.value("main_splitter_state") is not None
+    # A fresh window restores persisted layout without error.
+    win2 = MainWindow()
+    win2._restore_splitter_state()
+    win.close()
+    win2.close()
+
+
+def test_toolbar_tracks_active_canvas_and_no_stale_refs(app):
+    win = MainWindow()
+    win.load_example("barplot_with_error_bar")
+    assert win._canvas is not None and win._toolbar is not None
+    # Toolbar is a real Qt matplotlib toolbar bound to the CURRENT canvas.
+    assert win._toolbar.canvas is win._canvas
+    assert win._canvas.figure is win._current_result.figure
+    old_canvas = win._canvas
+    _select_plot_type(win, "volcano_plot")   # example switch -> new figure
+    assert win._canvas is not old_canvas       # stale canvas replaced
+    assert win._toolbar.canvas is win._canvas  # toolbar drives the new canvas
+    win.close()
+
+
+def test_toolbar_navigation_actions_callable(app):
+    win = MainWindow()
+    win.load_example("scatterplot_with_regression")
+    tb = win._toolbar
+    # The standard NavigationToolbar2QT actions must be present and callable
+    # against the live canvas (Home/Back/Forward/Pan/Zoom/Save wiring).
+    for name in ("home", "back", "forward", "pan", "zoom"):
+        assert hasattr(tb, name)
+    tb.home()
+    tb.back()
+    tb.forward()
+    tb.pan()   # enter pan mode
+    tb.pan()   # leave pan mode
+    tb.zoom()  # enter zoom mode
+    tb.zoom()  # leave zoom mode
+    assert win._canvas is not None
+    win.close()
+
+
+def test_key_plot_types_render_live_canvas(app):
+    win = MainWindow()
+    for pt in ["scatterplot_with_regression", "volcano_plot",
+               "heatmap_clustered_matrix", "barplot_with_error_bar"]:
+        win.load_example(pt)
+        assert win._canvas is not None
+        assert win._toolbar.canvas is win._canvas          # live, connected canvas
+        assert win._current_result.metadata["plot_type"] == pt
     win.close()
 
 

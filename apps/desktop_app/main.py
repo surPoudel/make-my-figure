@@ -42,6 +42,7 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPushButton,
     QScrollArea,
+    QSizePolicy,
     QSpinBox,
     QSplitter,
     QStackedWidget,
@@ -141,6 +142,9 @@ class MainWindow(QMainWindow):
         self.stack.addWidget(self._build_workbench())  # index 1
 
         self._build_menu()
+        geom = self.settings.value("window_geometry")
+        if geom is not None:
+            self.restoreGeometry(geom)
         self.statusBar().showMessage("Runs locally — your data never leaves this computer.")
 
     # --- welcome page ----------------------------------------------------
@@ -184,7 +188,7 @@ class MainWindow(QMainWindow):
 
     # --- workbench page --------------------------------------------------
     def _build_workbench(self) -> QWidget:
-        splitter = QSplitter(Qt.Horizontal)
+        self.main_splitter = splitter = QSplitter(Qt.Horizontal)
 
         # Left: controls in a scroll area
         controls = QWidget()
@@ -253,13 +257,16 @@ class MainWindow(QMainWindow):
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         scroll.setWidget(controls)
-        scroll.setMinimumWidth(360)
-        scroll.setMaximumWidth(440)
+        scroll.setMinimumWidth(320)
+        scroll.setMaximumWidth(480)
         splitter.addWidget(scroll)
 
-        # Right: preview tabs
-        right = QTabWidget()
-        # data tab
+        # Right: RStudio-like vertical splitter.
+        #   top    = data / messages tabs
+        #   bottom = LIVE matplotlib figure (toolbar + canvas), gets most space
+        self.right_splitter = QSplitter(Qt.Vertical)
+
+        self.right_tabs = QTabWidget()
         data_tab = QWidget()
         dv = QVBoxLayout(data_tab)
         self.table_widget = QTableWidget()
@@ -267,27 +274,46 @@ class MainWindow(QMainWindow):
         self.dtype_label.setWordWrap(True)
         dv.addWidget(self.table_widget)
         dv.addWidget(self.dtype_label)
-        right.addTab(data_tab, "Data preview")
-        # figure tab
-        fig_tab = QWidget()
-        self.fig_layout = QVBoxLayout(fig_tab)
-        self.warn_label = QLabel("")
+        self.right_tabs.addTab(data_tab, "Data preview")
+
+        msg_tab = QWidget()
+        mv = QVBoxLayout(msg_tab)
+        self.warn_label = QLabel("Validation messages and warnings appear here.")
         self.warn_label.setWordWrap(True)
         self.warn_label.setStyleSheet("color: #b00;")
-        self.fig_layout.addWidget(self.warn_label)
+        mv.addWidget(self.warn_label)
         # Shown when uploaded data is incompatible with the selected plot type.
         self.example_prompt_btn = QPushButton("Use example data for this plot type")
         self.example_prompt_btn.setVisible(False)
         self.example_prompt_btn.clicked.connect(self._load_example_for_current_type)
-        self.fig_layout.addWidget(self.example_prompt_btn)
-        self.fig_placeholder = QLabel("Load data, then click “Update preview”.")
+        mv.addWidget(self.example_prompt_btn)
+        mv.addStretch(1)
+        self.right_tabs.addTab(msg_tab, "Messages")
+        self.right_splitter.addWidget(self.right_tabs)
+
+        # Bottom pane: the live figure container. The canvas (added on render)
+        # has an Expanding size policy, so it grows/shrinks with the splitter
+        # and the window automatically.
+        self.fig_container = QWidget()
+        self.fig_layout = QVBoxLayout(self.fig_container)
+        self.fig_layout.setContentsMargins(2, 2, 2, 2)
+        self.fig_placeholder = QLabel("Load data to see the live figure preview here.")
         self.fig_placeholder.setAlignment(Qt.AlignCenter)
         self.fig_layout.addWidget(self.fig_placeholder)
-        right.addTab(fig_tab, "Figure preview")
-        self.right_tabs = right
-        splitter.addWidget(right)
+        self.right_splitter.addWidget(self.fig_container)
+
+        self.right_tabs.setMinimumHeight(90)
+        self.fig_container.setMinimumHeight(220)
+        self.right_splitter.setStretchFactor(0, 0)   # tabs: keep small
+        self.right_splitter.setStretchFactor(1, 1)   # figure: most of the space
+        self.right_splitter.setSizes([220, 560])
+
+        splitter.addWidget(self.right_splitter)
+        splitter.setStretchFactor(0, 0)
         splitter.setStretchFactor(1, 1)
-        splitter.setSizes([400, 780])
+        splitter.setSizes([400, 820])
+
+        self._restore_splitter_state()
         return splitter
 
     # --- menu ------------------------------------------------------------
@@ -618,9 +644,13 @@ class MainWindow(QMainWindow):
         self._current_result = result
         self._hide_example_prompt()
         warns = result.warnings or []
-        self.warn_label.setText(("⚠ " + " | ".join(warns)) if warns else "")
-        self._show_figure(result.figure)
-        self.right_tabs.setCurrentIndex(1)
+        if warns:
+            self.warn_label.setText("⚠ " + " | ".join(warns))
+            self.right_tabs.setCurrentIndex(1)   # Messages tab
+        else:
+            self.warn_label.setText("No warnings.")
+            self.right_tabs.setCurrentIndex(0)   # Data preview tab
+        self._show_figure(result.figure)          # figure is always visible below
 
     def render_preview(self):
         if self.data is None:
@@ -661,12 +691,17 @@ class MainWindow(QMainWindow):
             self.fig_layout.addWidget(self.fig_placeholder)
 
     def _show_figure(self, fig):
+        # Replace any previous canvas/toolbar so the toolbar always drives the
+        # currently visible figure (no stale references left behind).
         self._clear_figure(show_placeholder=False)
         canvas = FigureCanvasQTAgg(fig)
-        toolbar = NavigationToolbar2QT(canvas, self)
+        canvas.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        canvas.setFocusPolicy(Qt.StrongFocus)   # needed for key/scroll interactions
+        toolbar = NavigationToolbar2QT(canvas, self.fig_container)
+        # Toolbar on top, canvas fills the rest (stretch = 1).
         self.fig_layout.addWidget(toolbar)
-        self.fig_layout.addWidget(canvas)
-        canvas.draw()
+        self.fig_layout.addWidget(canvas, 1)
+        canvas.draw_idle()
         self._canvas = canvas
         self._toolbar = toolbar
 
@@ -680,6 +715,29 @@ class MainWindow(QMainWindow):
 
     def _load_example_for_current_type(self):
         self.load_example(self.plot_combo.currentData())
+
+    # --- layout persistence (RStudio-like remembered panels) -------------
+    def _save_splitter_state(self):
+        try:
+            if getattr(self, "main_splitter", None) is not None:
+                self.settings.setValue("main_splitter_state", self.main_splitter.saveState())
+            if getattr(self, "right_splitter", None) is not None:
+                self.settings.setValue("right_splitter_state", self.right_splitter.saveState())
+            self.settings.setValue("window_geometry", self.saveGeometry())
+        except Exception:
+            pass  # never let layout persistence break the app
+
+    def _restore_splitter_state(self):
+        main_state = self.settings.value("main_splitter_state")
+        if main_state is not None and getattr(self, "main_splitter", None) is not None:
+            self.main_splitter.restoreState(main_state)
+        right_state = self.settings.value("right_splitter_state")
+        if right_state is not None and getattr(self, "right_splitter", None) is not None:
+            self.right_splitter.restoreState(right_state)
+
+    def closeEvent(self, event):
+        self._save_splitter_state()
+        super().closeEvent(event)
 
     # --- export ----------------------------------------------------------
     def _ensure_rendered(self) -> bool:

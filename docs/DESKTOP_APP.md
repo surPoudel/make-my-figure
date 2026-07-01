@@ -19,6 +19,16 @@ no Python, no terminal required.
 - **Plot workflow** — choose plot type and style (Nature-/Science-/Cell-like), map
   required columns with dropdowns, set key options, and see a **live preview**.
   Validation warnings appear before you export.
+- **Interactive figure toolbar** — the preview is a live Matplotlib canvas with the
+  standard Qt navigation toolbar: **Home** (reset view), **Back/Forward** (view
+  history), **Pan** (drag), **Zoom** (box-zoom), **Configure subplots**, and **Save**.
+  The toolbar always controls the currently displayed figure — switching plot types
+  rebuilds the canvas and toolbar together, with no stale plot left behind.
+- **RStudio-like resizable panels** — drag the divider between the left controls and
+  the right preview, and the horizontal divider between the top data/messages tabs
+  and the bottom figure area. The figure canvas grows/shrinks with the window and the
+  splitters. **Your panel layout and window size are remembered between sessions**
+  (stored via `QSettings`).
 - **Export** — SVG, PNG, PDF, PlotSpec JSON, or **all as a ZIP bundle**.
 - **Examples & templates** — every supported plot type has a bundled example
   (File → Open example). “Save template” exports an example table so you can
