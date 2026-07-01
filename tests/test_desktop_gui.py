@@ -20,10 +20,11 @@ _REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
 
-from PySide6.QtCore import Qt  # noqa: E402
+from PySide6.QtCore import Qt, QPoint  # noqa: E402
+from PySide6.QtTest import QTest  # noqa: E402
 from PySide6.QtWidgets import QApplication, QSplitter  # noqa: E402
 
-from apps.desktop_app.main import MainWindow  # noqa: E402
+from apps.desktop_app.main import MainWindow, debug_info  # noqa: E402
 from make_my_figure_core.plots.registry import available_plot_types  # noqa: E402
 
 
@@ -185,6 +186,83 @@ def test_key_plot_types_render_live_canvas(app):
         assert win._canvas is not None
         assert win._toolbar.canvas is win._canvas          # live, connected canvas
         assert win._current_result.metadata["plot_type"] == pt
+    win.close()
+
+
+def test_debug_info_fields():
+    di = debug_info()
+    for key in ("app_version", "git_commit", "desktop_app_file", "core_package_path",
+                "current_working_dir", "python_executable", "cloud_synced_folder"):
+        assert key in di
+    assert di["desktop_app_file"].endswith("main.py")
+
+
+def test_diagnose_reports_wired_canvas(app):
+    win = MainWindow()
+    win.load_example("barplot_with_error_bar")
+    d = win.diagnose()
+    assert all(d.values()), f"diagnostic failed: {d}"
+    assert d["toolbar_bound_to_current_canvas"]
+    assert d["canvas_has_result_figure"]
+    win.close()
+
+
+def test_object_names_present(app):
+    win = MainWindow()
+    win.load_example("scatterplot_with_regression")
+    tree = win.widget_tree()
+    for name in ("mainSplitter", "rightSplitter", "figurePanel",
+                 "figureCanvas", "figureToolbar", "messagePanel"):
+        assert name in tree, f"missing object name in widget tree: {name}"
+    win.close()
+
+
+def test_toolbar_zoom_with_real_mouse_events(app):
+    """Definitive interactivity check: real Qt mouse drag must box-zoom the axes."""
+    win = MainWindow()
+    win.resize(1000, 720)
+    win.show()
+    QApplication.processEvents()
+    win.load_example("barplot_with_error_bar")
+    QApplication.processEvents()
+    canvas = win._canvas
+    ax = canvas.figure.axes[0]
+    x0 = ax.get_xlim()
+    win._toolbar.zoom()
+    cw, ch = canvas.width(), canvas.height()
+    QTest.mousePress(canvas, Qt.LeftButton, Qt.NoModifier, QPoint(int(cw * 0.35), int(ch * 0.55)))
+    QApplication.processEvents()
+    QTest.mouseMove(canvas, QPoint(int(cw * 0.65), int(ch * 0.25)))
+    QApplication.processEvents()
+    QTest.mouseRelease(canvas, Qt.LeftButton, Qt.NoModifier, QPoint(int(cw * 0.65), int(ch * 0.25)))
+    QApplication.processEvents()
+    x1 = ax.get_xlim()
+    assert (abs(x1[0] - x0[0]) > 1e-6) or (abs(x1[1] - x0[1]) > 1e-6), \
+        "toolbar zoom did not change the axes view via real mouse events"
+    win.close()
+
+
+def test_view_menu_layout_actions(app):
+    win = MainWindow()
+    win.load_example("volcano_plot")
+    # Maximize figure panel shrinks the top tabs pane.
+    win.action_maximize_figure()
+    assert win.right_splitter.sizes()[0] <= win.right_tabs.minimumHeight() + 1
+    # Toggle data preview hides/shows the top tabs.
+    win.a_show_data.setChecked(False)
+    assert not win.right_tabs.isVisibleTo(win.right_splitter) or win.right_tabs.isHidden()
+    win.a_show_data.setChecked(True)
+    # Reset layout restores two visible panes.
+    win.action_reset_layout()
+    assert win.right_splitter.sizes()[0] > 0 and win.right_splitter.sizes()[1] > 0
+    win.close()
+
+
+def test_splitters_non_collapsible_and_grabbable(app):
+    win = MainWindow()
+    assert win.main_splitter.handleWidth() >= 8
+    assert win.right_splitter.handleWidth() >= 8
+    assert win.right_splitter.childrenCollapsible() is False
     win.close()
 
 

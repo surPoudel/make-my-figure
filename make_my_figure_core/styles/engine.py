@@ -88,6 +88,8 @@ class StyleProfile:
     palette: List[str] = field(default_factory=list)
     sequential_cmap: str = "viridis"
     diverging_cmap: str = "RdBu_r"
+    is_learned: bool = False
+    extra: Dict[str, Any] = field(default_factory=dict)   # learned-profile metadata
 
     def figure_size_inches(self, width: str = "single", aspect: float = 0.75) -> tuple[float, float]:
         """Return ``(width_in, height_in)`` for a column width and aspect.
@@ -161,17 +163,76 @@ def _load_raw(path: Optional[str] = None) -> Dict[str, Any]:
         return json.load(fh)
 
 
+# --- learned profiles (derived from the local reference library) ------------
+
+_LEARNED_DIR = resource_path("style_profiles", "learned")
+
+
+def _learned_files() -> List[str]:
+    if not os.path.isdir(_LEARNED_DIR):
+        return []
+    return sorted(f for f in os.listdir(_LEARNED_DIR) if f.endswith(".json"))
+
+
+@lru_cache(maxsize=1)
+def _load_learned_raw() -> Dict[str, Dict[str, Any]]:
+    """Return {profile_name: raw_dict} for every learned profile JSON."""
+    out: Dict[str, Dict[str, Any]] = {}
+    for fn in _learned_files():
+        try:
+            with open(os.path.join(_LEARNED_DIR, fn), "r", encoding="utf-8") as fh:
+                raw = json.load(fh)
+            name = raw.get("profile_name") or os.path.splitext(fn)[0]
+            out[name] = raw
+        except Exception:
+            continue
+    return out
+
+
+def _parse_learned(name: str, raw: Dict[str, Any]) -> StyleProfile:
+    typo = raw.get("typography", {})
+    lines = raw.get("lines", {})
+    layout = raw.get("layout", {})
+    color = raw.get("color", {})
+    base_name = raw.get("base_profile", "nature_like")
+    base_palette = _PALETTES.get(base_name, _OKABE_ITO)
+    return StyleProfile(
+        name=name,
+        font_family=list(typo.get("font_family", _FONT_STACK)),
+        base_font_pt=float(typo.get("base_font_pt", 7)),
+        axis_font_pt=float(typo.get("axis_font_pt", 7)),
+        title_font_pt=float(typo.get("title_font_pt", 8)),
+        line_width_pt=float(lines.get("line_width_pt", 0.75)),
+        spine_width_pt=float(lines.get("spine_width_pt", 0.5)),
+        single_column_width_mm=float(layout.get("single_column_width_mm", 89)),
+        double_column_width_mm=float(layout.get("double_column_width_mm", 183)),
+        preferred_exports=list(raw.get("export", {}).get("formats", ["svg", "pdf", "png"])),
+        palette_role=color.get("policy", "learned"),
+        palette=list(color.get("palette", base_palette)),
+        sequential_cmap=color.get("sequential_cmap", _SEQUENTIAL_CMAP.get(base_name, "viridis")),
+        diverging_cmap=color.get("diverging_cmap", _DIVERGING_CMAP.get(base_name, "RdBu_r")),
+        is_learned=True,
+        extra=raw,
+    )
+
+
 def list_profiles(path: Optional[str] = None) -> List[str]:
-    return list(_load_raw(path).get("profiles", {}).keys())
+    """Starter profiles plus any learned profiles found on disk."""
+    starters = list(_load_raw(path).get("profiles", {}).keys())
+    learned = list(_load_learned_raw().keys())
+    return starters + learned
 
 
 def load_profile(name: str, path: Optional[str] = None) -> StyleProfile:
     profiles = _load_raw(path).get("profiles", {})
-    if name not in profiles:
-        raise KeyError(
-            f"Unknown style profile '{name}'. Available: {sorted(profiles.keys())}"
-        )
-    return _parse_profile(name, profiles[name])
+    if name in profiles:
+        return _parse_profile(name, profiles[name])
+    learned = _load_learned_raw()
+    if name in learned:
+        return _parse_learned(name, learned[name])
+    raise KeyError(
+        f"Unknown style profile '{name}'. Available: {sorted(list(profiles) + list(learned))}"
+    )
 
 
 def load_all_profiles(path: Optional[str] = None) -> Dict[str, StyleProfile]:

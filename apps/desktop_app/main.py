@@ -11,6 +11,7 @@ The GUI is intentionally thin — all plotting/validation/export lives in
 from __future__ import annotations
 
 import os
+import subprocess
 import sys
 
 import matplotlib
@@ -65,6 +66,61 @@ APP_NAME = "Make My Figure"
 ORG_NAME = "MakeMyFigure"
 ICON_PATH = os.path.join(_REPO_ROOT, "assets", "icons", "icon.png")
 MAX_RECENT = 8
+
+
+def _git_commit() -> str:
+    """Return the short git commit of the loaded source, or 'unknown'."""
+    try:
+        out = subprocess.run(
+            ["git", "-C", _REPO_ROOT, "rev-parse", "--short", "HEAD"],
+            capture_output=True, text=True, timeout=5)
+        if out.returncode == 0:
+            commit = out.stdout.strip()
+            dirty = subprocess.run(
+                ["git", "-C", _REPO_ROOT, "status", "--porcelain"],
+                capture_output=True, text=True, timeout=5)
+            if dirty.returncode == 0 and dirty.stdout.strip():
+                commit += "+dirty"
+            return commit or "unknown"
+    except Exception:
+        pass
+    return "unknown"
+
+
+def _on_cloud_folder() -> bool:
+    """Heuristic: is the source under a cloud-sync folder (OneDrive/iCloud/Dropbox)?"""
+    p = _REPO_ROOT.lower()
+    return any(s in p for s in ("onedrive", "icloud", "dropbox", "google drive", "com~apple~clouddocs"))
+
+
+def debug_info() -> dict:
+    """Diagnostic facts to confirm exactly which source is running."""
+    import make_my_figure_core
+    from make_my_figure_core.version import __version__
+
+    return {
+        "app_version": __version__,
+        "git_commit": _git_commit(),
+        "desktop_app_file": os.path.abspath(__file__),
+        "core_package_path": os.path.dirname(os.path.abspath(make_my_figure_core.__file__)),
+        "repo_root": _REPO_ROOT,
+        "current_working_dir": os.getcwd(),
+        "python_executable": sys.executable,
+        "python_version": sys.version.split()[0],
+        "matplotlib": matplotlib.__version__,
+        "frozen": bool(getattr(sys, "frozen", False)),
+        "cloud_synced_folder": _on_cloud_folder(),
+    }
+
+
+def debug_info_text() -> str:
+    di = debug_info()
+    lines = [f"{APP_NAME} — debug info", "-" * 32]
+    lines += [f"{k}: {v}" for k, v in di.items()]
+    if di["cloud_synced_folder"]:
+        lines += ["", "WARNING: running from a cloud-synced folder (OneDrive/iCloud/Dropbox).",
+                  "Stale/locked files are possible. Prefer a local clone, e.g. ~/Developer/make-my-figure."]
+    return "\n".join(lines)
 
 
 # ---------------------------------------------------------------------------
@@ -145,7 +201,12 @@ class MainWindow(QMainWindow):
         geom = self.settings.value("window_geometry")
         if geom is not None:
             self.restoreGeometry(geom)
-        self.statusBar().showMessage("Runs locally — your data never leaves this computer.")
+        di = debug_info()
+        msg = (f"v{di['app_version']} ({di['git_commit']}) — src: {di['desktop_app_file']} — "
+               "runs locally, no data leaves this computer.")
+        if di["cloud_synced_folder"]:
+            msg = "⚠ cloud-synced source — " + msg
+        self.statusBar().showMessage(msg)
 
     # --- welcome page ----------------------------------------------------
     def _build_welcome(self) -> QWidget:
@@ -302,18 +363,35 @@ class MainWindow(QMainWindow):
         self.fig_layout.addWidget(self.fig_placeholder)
         self.right_splitter.addWidget(self.fig_container)
 
-        self.right_tabs.setMinimumHeight(90)
+        self.right_tabs.setMinimumHeight(80)
         self.fig_container.setMinimumHeight(220)
         self.right_splitter.setStretchFactor(0, 0)   # tabs: keep small
         self.right_splitter.setStretchFactor(1, 1)   # figure: most of the space
         self.right_splitter.setSizes([220, 560])
+        self.right_splitter.setOpaqueResize(True)
 
         splitter.addWidget(self.right_splitter)
         splitter.setStretchFactor(0, 0)
         splitter.setStretchFactor(1, 1)
         splitter.setSizes([400, 820])
+        splitter.setOpaqueResize(True)
 
+        # Object names for inspection / debugging / widget-tree dumps.
+        splitter.setObjectName("mainSplitter")
+        self.right_splitter.setObjectName("rightSplitter")
+        self.right_tabs.setObjectName("dataMessagesTabs")
+        self.table_widget.setObjectName("dataPreviewTable")
+        msg_tab.setObjectName("messagePanel")
+        self.warn_label.setObjectName("validationMessageLabel")
+        self.fig_container.setObjectName("figurePanel")
+        scroll.setObjectName("controlPanel")
+        # Restore persisted sizes first (restoreState resets handleWidth and
+        # childrenCollapsible), THEN pin wide, non-collapsible handles so the
+        # drag targets stay easy to grab across sessions.
         self._restore_splitter_state()
+        for sp in (splitter, self.right_splitter):
+            sp.setHandleWidth(10)
+            sp.setChildrenCollapsible(False)
         return splitter
 
     # --- menu ------------------------------------------------------------
@@ -341,13 +419,29 @@ class MainWindow(QMainWindow):
         a_quit.triggered.connect(self.close)
         filem.addAction(a_quit)
 
+        # View menu — layout controls.
+        viewm = m.addMenu("&View")
+        a_reset = QAction("Reset Layout", self)
+        a_reset.triggered.connect(self.action_reset_layout)
+        viewm.addAction(a_reset)
+        a_maxfig = QAction("Maximize Figure Panel", self)
+        a_maxfig.triggered.connect(self.action_maximize_figure)
+        viewm.addAction(a_maxfig)
+        self.a_show_data = QAction("Show Data Preview", self, checkable=True)
+        self.a_show_data.setChecked(True)
+        self.a_show_data.toggled.connect(self.action_toggle_data_preview)
+        viewm.addAction(self.a_show_data)
+
         helpm = m.addMenu("&Help")
         a_help = QAction("Help…", self)
         a_help.triggered.connect(self.action_help)
         helpm.addAction(a_help)
-        a_about = QAction("About", self)
+        a_about = QAction(f"About {APP_NAME}", self)
         a_about.triggered.connect(self.action_about)
         helpm.addAction(a_about)
+        a_dbg = QAction("Copy debug info", self)
+        a_dbg.triggered.connect(self.action_copy_debug_info)
+        helpm.addAction(a_dbg)
 
     # --- drag & drop -----------------------------------------------------
     def dragEnterEvent(self, event):
@@ -394,16 +488,50 @@ class MainWindow(QMainWindow):
         HelpDialog(self).exec()
 
     def action_about(self):
+        di = debug_info()
+        rows = "".join(f"<tr><td style='color:#666'>{k}</td>"
+                       f"<td><code>{v}</code></td></tr>" for k, v in di.items())
+        cloud = ("<p style='color:#b00'><b>Note:</b> running from a cloud-synced folder "
+                 "(OneDrive/iCloud/Dropbox). If changes don't seem to apply, run from a local "
+                 "clone such as <code>~/Developer/make-my-figure</code>.</p>"
+                 if di["cloud_synced_folder"] else "")
         QMessageBox.about(
             self, f"About {APP_NAME}",
             f"<h3>{APP_NAME}</h3>"
-            f"<p>Version {self.controller.version}</p>"
+            f"<p>Version {di['app_version']} (commit {di['git_commit']})</p>"
             "<p>Author: Make My Figure contributors (placeholder)</p>"
             "<p>License: MIT (placeholder)</p>"
             "<p>Website: https://example.com/make-my-figure (placeholder)</p>"
             "<p>Create publication-style scientific figures from your data — "
             "entirely on your computer.</p>"
+            f"{cloud}"
+            "<hr><b>Debug info</b> (Help → Copy debug info to copy):"
+            f"<table>{rows}</table>"
             f"<p style='color:#777'>{help_content.DISCLAIMER}</p>")
+
+    def action_copy_debug_info(self):
+        text = debug_info_text()
+        QApplication.clipboard().setText(text)
+        self.statusBar().showMessage("Debug info copied to clipboard.", 5000)
+
+    # --- View menu / layout actions --------------------------------------
+    def action_reset_layout(self):
+        self.main_splitter.setSizes([400, 820])
+        self.right_splitter.setSizes([220, 560])
+        if not self.a_show_data.isChecked():
+            self.a_show_data.setChecked(True)   # also un-hides the data panel
+        self.right_tabs.setVisible(True)
+        for key in ("main_splitter_state", "right_splitter_state", "window_geometry"):
+            self.settings.remove(key)
+        self.statusBar().showMessage("Layout reset.", 4000)
+
+    def action_maximize_figure(self):
+        total = sum(self.right_splitter.sizes()) or 780
+        self.right_splitter.setSizes([self.right_tabs.minimumHeight(), total])
+        self.statusBar().showMessage("Figure panel maximized.", 4000)
+
+    def action_toggle_data_preview(self, checked: bool):
+        self.right_tabs.setVisible(checked)
 
     def action_save_template(self):
         pt = self.plot_combo.currentData()
@@ -670,23 +798,32 @@ class MainWindow(QMainWindow):
         self.right_tabs.setCurrentIndex(1)
 
     def _clear_figure(self, show_placeholder: bool = True):
-        """Remove the current canvas/toolbar (and release the matplotlib figure)."""
+        """Remove the current canvas/toolbar and release the matplotlib figure.
+
+        Old widgets are detached AND scheduled for deletion with deleteLater()
+        so no stale canvas/toolbar lingers to intercept events or draw.
+        """
+        if self._toolbar is not None:
+            self.fig_layout.removeWidget(self._toolbar)
+            self._toolbar.setParent(None)
+            self._toolbar.deleteLater()
+            self._toolbar = None
         if self._canvas is not None:
             old_fig = self._canvas.figure
+            self.fig_layout.removeWidget(self._canvas)
             self._canvas.setParent(None)
+            self._canvas.deleteLater()
             self._canvas = None
             if old_fig is not None:
                 import matplotlib.pyplot as plt
 
                 plt.close(old_fig)
-        if self._toolbar is not None:
-            self._toolbar.setParent(None)
-            self._toolbar = None
         if self.fig_placeholder is not None:
             self.fig_placeholder.setParent(None)
+            self.fig_placeholder.deleteLater()
             self.fig_placeholder = None
         if show_placeholder:
-            self.fig_placeholder = QLabel("No figure to show — see the message above.")
+            self.fig_placeholder = QLabel("No figure to show — see the Messages tab above.")
             self.fig_placeholder.setAlignment(Qt.AlignCenter)
             self.fig_layout.addWidget(self.fig_placeholder)
 
@@ -695,15 +832,57 @@ class MainWindow(QMainWindow):
         # currently visible figure (no stale references left behind).
         self._clear_figure(show_placeholder=False)
         canvas = FigureCanvasQTAgg(fig)
+        canvas.setObjectName("figureCanvas")
         canvas.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         canvas.setFocusPolicy(Qt.StrongFocus)   # needed for key/scroll interactions
         toolbar = NavigationToolbar2QT(canvas, self.fig_container)
-        # Toolbar on top, canvas fills the rest (stretch = 1).
+        toolbar.setObjectName("figureToolbar")
+        # Toolbar on top, canvas fills the rest (stretch = 1) — nothing overlays it.
         self.fig_layout.addWidget(toolbar)
         self.fig_layout.addWidget(canvas, 1)
-        canvas.draw_idle()
         self._canvas = canvas
         self._toolbar = toolbar
+        canvas.setFocus()
+        canvas.draw_idle()
+
+    # --- diagnostics -----------------------------------------------------
+    def diagnose(self) -> dict:
+        """Verify the live figure/canvas/toolbar wiring (used by tests + --debug)."""
+        canvas = self._canvas
+        toolbar = self._toolbar
+        result = self._current_result
+        checks = {
+            "has_current_result": result is not None,
+            "has_canvas": canvas is not None,
+            "has_toolbar": toolbar is not None,
+            "canvas_is_qt_agg": canvas is not None and isinstance(canvas, FigureCanvasQTAgg),
+            "toolbar_is_qt": toolbar is not None and isinstance(toolbar, NavigationToolbar2QT),
+            "toolbar_bound_to_current_canvas": (
+                canvas is not None and toolbar is not None and toolbar.canvas is canvas),
+            "canvas_has_result_figure": (
+                canvas is not None and result is not None and canvas.figure is result.figure),
+            "toolbar_actions_present": (
+                toolbar is not None and len(toolbar.actions()) > 0),
+        }
+        return checks
+
+    def widget_tree(self, widget=None, depth: int = 0, lines=None) -> str:
+        """Return a text dump of the widget tree (class, objectName, state, geometry)."""
+        from PySide6.QtWidgets import QWidget
+
+        if lines is None:
+            lines = []
+        w = widget or self.centralWidget()
+        if isinstance(w, QWidget):
+            g = w.geometry()
+            lines.append(
+                f"{'  ' * depth}{w.metaObject().className()} "
+                f"name='{w.objectName()}' visible={w.isVisible()} enabled={w.isEnabled()} "
+                f"geom=({g.x()},{g.y()},{g.width()}x{g.height()})")
+            for child in w.children():
+                if isinstance(child, QWidget):
+                    self.widget_tree(child, depth + 1, lines)
+        return "\n".join(lines)
 
     # --- example-data prompt (for incompatible user uploads) -------------
     def _show_example_prompt(self, plot_type: str):
@@ -860,6 +1039,10 @@ def _selftest() -> int:
 def main() -> int:
     if "--selftest" in sys.argv:
         return _selftest()
+    debug = "--debug" in sys.argv
+    if debug:
+        # Print exactly which source is loaded before creating any window.
+        print(debug_info_text())
     app = QApplication.instance() or QApplication(sys.argv)
     app.setApplicationName(APP_NAME)
     app.setOrganizationName(ORG_NAME)
@@ -867,6 +1050,14 @@ def main() -> int:
         app.setWindowIcon(QIcon(ICON_PATH))
     win = MainWindow()
     win.show()
+    if debug:
+        # Load an example, then dump the diagnostic checks + widget tree.
+        win.load_example("barplot_with_error_bar")
+        print("\n[diagnose]")
+        for k, v in win.diagnose().items():
+            print(f"  {k}: {v}")
+        print("\n[widget tree]")
+        print(win.widget_tree())
     return app.exec()
 
 

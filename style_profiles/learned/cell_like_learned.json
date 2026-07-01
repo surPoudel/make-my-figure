@@ -1,0 +1,104 @@
+{
+  "profile_name": "cell_like_learned",
+  "base_profile": "cell_like",
+  "display_name": "Cell-like (learned)",
+  "provenance": {
+    "summary": "Aggregate visual conventions derived locally from 4 open-access cell-family papers (15 figures). No figure or dataset was copied; only aggregate measurements + curated journal-appropriate defaults are stored.",
+    "papers_inspected": 4,
+    "figures_inspected": 15,
+    "figure_images_measured": 15,
+    "journals": [
+      "Cell reports",
+      "iScience"
+    ],
+    "source_licenses": [
+      "CC BY"
+    ],
+    "source": "local reference library (figure_library/), harvested via scripts/harvest_library.py",
+    "date_generated": "2026-07-01",
+    "not_official_compliance": true,
+    "no_copied_figures_or_data": true
+  },
+  "typography": {
+    "font_family": [
+      "Arial",
+      "Helvetica",
+      "DejaVu Sans",
+      "sans-serif"
+    ],
+    "base_font_pt": 7.0,
+    "axis_font_pt": 7.0,
+    "title_font_pt": 8.0
+  },
+  "lines": {
+    "line_width_pt": 0.8,
+    "spine_width_pt": 0.6
+  },
+  "layout": {
+    "single_column_width_mm": 85.0,
+    "double_column_width_mm": 180.0,
+    "default_aspect": 0.8,
+    "observed_aspect_ratio_median": 0.9
+  },
+  "color": {
+    "palette": [
+      "#3B6FB6",
+      "#E8743B",
+      "#19A979",
+      "#945ECF",
+      "#ED4A7B",
+      "#13A4B4"
+    ],
+    "sequential_cmap": "magma",
+    "diverging_cmap": "PuOr_r",
+    "policy": "colorblind-aware curated palette informed by journal conventions"
+  },
+  "legend": {
+    "frameon": false,
+    "loc": "best"
+  },
+  "panel_label": {
+    "weight": "bold",
+    "case": "upper",
+    "size_pt": 8
+  },
+  "markers": {
+    "scatter_size": 13,
+    "line_marker_size": 3,
+    "lollipop_scale": 13
+  },
+  "bars": {
+    "edge_width": 0.6,
+    "width": 0.68
+  },
+  "error_bars": {
+    "style": "sem",
+    "capsize": 2.5
+  },
+  "export": {
+    "formats": [
+      "svg",
+      "pdf",
+      "png"
+    ],
+    "dpi": 300
+  },
+  "plot_type_defaults": {
+    "volcano_plot": {
+      "lfc_cutoff": 1.0,
+      "p_cutoff": 0.05,
+      "label_top_n": 15
+    },
+    "heatmap_clustered_matrix": {
+      "diverging_cmap": "PuOr_r"
+    }
+  },
+  "aggregate_observations": {
+    "aspect_ratio_median": 0.9,
+    "aspect_ratio_mean": 1.029,
+    "aspect_ratio_range": [
+      0.722,
+      1.738
+    ]
+  }
+}

@@ -33,11 +33,14 @@ from make_my_figure_core.spec.validate import (
 from make_my_figure_core.styles.engine import list_profiles, load_profile
 from make_my_figure_core.version import __version__
 
-# Friendly labels for the three starter style profiles.
+# Friendly labels for style profiles (starter + learned).
 STYLE_LABELS = {
     "nature_like": "Nature-like",
     "science_like": "Science-like",
     "cell_like": "Cell-like",
+    "nature_like_learned": "Nature-like (learned)",
+    "science_like_learned": "Science-like (learned)",
+    "cell_like_learned": "Cell-like (learned)",
 }
 
 

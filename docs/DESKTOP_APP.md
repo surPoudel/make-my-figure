@@ -35,7 +35,26 @@ no Python, no terminal required.
   replace the rows with your own data while keeping the column names.
 - **Help** — in-app Help window explaining each plot type, required columns, how to
   format your data, and the journal-like disclaimer.
-- **About** — shows the app version (single-sourced from the package).
+- **About / debug info** — About shows the version, git commit, and the exact file
+  paths of the loaded desktop app and core package (so you can confirm which source
+  is running). **Help → Copy debug info** copies it to the clipboard, and running with
+  `--debug` prints it (plus a canvas/toolbar diagnostic and widget-tree dump) to the
+  terminal. The status bar shows the version, commit, and source path at startup.
+- **View menu** — **Reset Layout**, **Maximize Figure Panel**, and **Show/Hide Data
+  Preview**.
+
+## Running from source & OneDrive/iCloud/Dropbox warning
+
+> **Run from a plain local folder.** Cloud-synced folders (OneDrive, iCloud Drive,
+> Dropbox, Google Drive) can serve **stale copies** of source files or hold file
+> **locks** during development, so you may end up running an old version of the app
+> even after editing/pulling. If the app doesn't reflect your latest changes (e.g. a
+> fix "doesn't apply"), that's the usual cause.
+>
+> Recommended: clone/run from a local path such as `~/Developer/make-my-figure`.
+> The app flags this for you: if it detects a cloud-synced source path, the status
+> bar and About dialog show a warning, and `Help → Copy debug info` includes the exact
+> loaded file paths so you can verify you're on the current source.
 
 ## Run it from source (developers)
 
@@ -59,6 +78,22 @@ pip install -e ".[desktop,build]"
 python scripts/build_desktop.py        # app folder / .app under dist/
 # then the per-OS wrapper:  scripts/build_windows.ps1 | build_macos.sh | build_linux.sh
 ```
+
+## Journal-like style profiles (starter + learned)
+
+The style selector offers six profiles: **Nature-like**, **Science-like**,
+**Cell-like**, and their **(learned)** variants. The learned profiles are derived
+from a *local* reference library of open-access (CC BY) papers by
+`scripts/build_learned_styles.py`, which extracts only **aggregate** visual
+conventions (e.g. median figure aspect ratio, panel-label style, typography and
+line-width defaults) into `style_profiles/learned/*.json`.
+
+> **How references are used.** Downloaded papers and figures are used only as local
+> visual references to derive aggregate journal-like plotting conventions. The app
+> does **not** copy published figures, does **not** reproduce copyrighted datasets
+> unless explicitly licensed, and does **not** claim official journal compliance.
+> Only aggregate measurements are stored in the repo; raw figure bitmaps stay
+> local-only. See **[STYLE_REFERENCE_AUDIT.md](STYLE_REFERENCE_AUDIT.md)**.
 
 ## Architecture
 

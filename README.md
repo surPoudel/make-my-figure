@@ -66,6 +66,18 @@ Docs: **[EXAMPLE_DATA.md](docs/EXAMPLE_DATA.md)** ·
 are used only as visual style references; bundled example data are synthetic and must
 not be cited as real findings.
 
+### Style profiles (starter + learned)
+
+Six journal-like style profiles are available (Nature-/Science-/Cell-like and their
+**learned** variants). Learned profiles encode *aggregate* visual conventions derived
+from a local open-access (CC BY) reference library — no figure or dataset is copied
+and no official journal compliance is claimed. See
+**[STYLE_REFERENCE_AUDIT.md](docs/STYLE_REFERENCE_AUDIT.md)**.
+
+```bash
+python scripts/build_learned_styles.py   # regenerate learned profiles + audit
+```
+
 **Milestone 3** adds a license-aware, HTTPS-only harvesting pipeline that builds a
 curated library of open-access, post-2020 Nature/Science/Cell-family papers,
 downloading figures + data **only** under CC BY / CC BY-SA / CC0 (license confirmed
