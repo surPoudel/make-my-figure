@@ -1,11 +1,31 @@
 .venv/
+venv/
+env/
 __pycache__/
 *.pyc
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
 .DS_Store
+Thumbs.db
 *.egg-info/
 build/
 dist/
+*.log
+*.tmp
+
+# Local editor / tool config (not part of the project)
+.claude/
+.idea/
+.vscode/
+
+# Harvested third-party paper/figure library — kept LOCAL-ONLY.
+# It contains figure captions/metadata extracted from open-access (CC BY) papers.
+# To avoid any third-party redistribution question, the whole library is excluded
+# from the repo. Regenerate locally with: python scripts/harvest_library.py
+# (see docs/REPO_EXCLUSIONS.md).
+figure_library/
 # PyInstaller / packaging artifacts
 *.spec.bak
 *.AppDir/
