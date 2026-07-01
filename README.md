@@ -1,5 +1,11 @@
 # Make My Figure
 
+![Python](https://img.shields.io/badge/python-3.9%2B-blue)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
+![Tests](https://img.shields.io/badge/tests-246%20passing-brightgreen)
+![Plot types](https://img.shields.io/badge/plot%20types-17-orange)
+![Desktop](https://img.shields.io/badge/desktop-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
+
 A research-software app that turns a CSV/TSV/XLSX table into a manuscript-style
 scientific figure with **Nature-like / Science-like / Cell-like** aesthetics, and
 exports SVG/PNG/PDF plus a reproducible `PlotSpec` JSON sidecar.
