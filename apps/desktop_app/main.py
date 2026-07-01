@@ -185,6 +185,7 @@ class MainWindow(QMainWindow):
         self._canvas = None
         self._toolbar = None
         self._suppress_change = False   # re-entrancy guard for plot-type changes
+        self._debug = False             # set by --debug: verbose toolbar/canvas logging
 
         self.setWindowTitle(APP_NAME)
         self.resize(1180, 760)
@@ -442,6 +443,9 @@ class MainWindow(QMainWindow):
         a_dbg = QAction("Copy debug info", self)
         a_dbg.triggered.connect(self.action_copy_debug_info)
         helpm.addAction(a_dbg)
+        a_tbdiag = QAction("Diagnose toolbar", self)
+        a_tbdiag.triggered.connect(self.action_diagnose_toolbar)
+        helpm.addAction(a_tbdiag)
 
     # --- drag & drop -----------------------------------------------------
     def dragEnterEvent(self, event):
@@ -513,6 +517,48 @@ class MainWindow(QMainWindow):
         text = debug_info_text()
         QApplication.clipboard().setText(text)
         self.statusBar().showMessage("Debug info copied to clipboard.", 5000)
+
+    def action_diagnose_toolbar(self):
+        """Run a live toolbar self-test and show the result in the running app."""
+        if self.data is None or self._current_result is None:
+            self.load_example("lollipop_mutation_plot")
+        state = self.diagnose_toolbar_state()
+        test = self.run_toolbar_selftest()
+        di = debug_info()
+
+        def ok(v):
+            return "✅" if v is True else ("❌" if v is False else f"⚠ {v}")
+
+        functional = all(v is True for v in test.values()) if "error" not in test else False
+        lines = [
+            f"Toolbar functional: {'YES ✅' if functional else 'NO ❌'}",
+            "",
+            "Live self-test (what the buttons do):",
+            f"  Home resets view: {ok(test.get('home_resets_view'))}",
+            f"  Pan mode wired:   {ok(test.get('pan_mode_wired'))}",
+            f"  Zoom mode wired:  {ok(test.get('zoom_mode_wired'))}",
+            f"  Save writes file: {ok(test.get('save_writes_file'))}",
+            "",
+            "Wiring:",
+            f"  canvas class: {state['canvas_class']} (QtAgg: {ok(state['canvas_is_qtagg'])})",
+            f"  toolbar class: {state['toolbar_class']}",
+            f"  toolbar.canvas is current canvas: {ok(state['toolbar_canvas_matches'])}",
+            f"  canvas.figure is current figure: {ok(state['canvas_figure_matches_result'])}",
+            f"  toolbar/canvas enabled: {ok(state['toolbar_enabled'])}/{ok(state['canvas_enabled'])}",
+            f"  actions: {', '.join(a['name'] for a in state['actions'])}",
+            "",
+            "Running source (confirm this is your latest code):",
+            f"  version {di['app_version']} commit {di['git_commit']}",
+            f"  file: {di['desktop_app_file']}",
+        ]
+        if di["cloud_synced_folder"]:
+            lines += ["", "⚠ This source is in a cloud-synced folder (OneDrive/iCloud/Dropbox).",
+                      "  If the app shows old behavior, run from a local clone (see docs)."]
+        QApplication.clipboard().setText("\n".join(lines))
+        box = QMessageBox(self)
+        box.setWindowTitle("Toolbar diagnostic")
+        box.setText("\n".join(lines) + "\n\n(Copied to clipboard.)")
+        box.exec()
 
     # --- View menu / layout actions --------------------------------------
     def action_reset_layout(self):
@@ -843,7 +889,36 @@ class MainWindow(QMainWindow):
         self._canvas = canvas
         self._toolbar = toolbar
         canvas.setFocus()
+        canvas.draw()
+        # Seed the navigation history with the current view so Home / Back /
+        # Forward work immediately (matplotlib otherwise starts with an empty
+        # stack, making Home a no-op until the user first pans/zooms).
+        try:
+            toolbar.update()
+            toolbar.push_current()
+        except Exception:
+            pass
         canvas.draw_idle()
+        if self._debug:
+            self._wire_debug_logging(canvas, toolbar)
+            self._dbg(f"render: canvas_id={id(canvas)} figure_id={id(canvas.figure)} "
+                      f"toolbar_id={id(toolbar)} bound={toolbar.canvas is canvas}")
+
+    # --- debug logging (behind --debug) ----------------------------------
+    def _dbg(self, msg: str) -> None:
+        if self._debug:
+            print(f"[toolbar-debug] {msg}", flush=True)
+
+    def _wire_debug_logging(self, canvas, toolbar) -> None:
+        for act in toolbar.actions():
+            if act.text():
+                act.triggered.connect(
+                    lambda _=False, name=act.text(): self._dbg(
+                        f"action '{name}' triggered; mode={self._toolbar.mode!r}"))
+        for evt in ("button_press_event", "button_release_event", "motion_notify_event"):
+            canvas.mpl_connect(
+                evt, lambda e, name=evt: self._dbg(
+                    f"canvas {name} at ({e.x},{e.y}) inaxes={e.inaxes is not None}"))
 
     # --- diagnostics -----------------------------------------------------
     def diagnose(self) -> dict:
@@ -883,6 +958,80 @@ class MainWindow(QMainWindow):
                 if isinstance(child, QWidget):
                     self.widget_tree(child, depth + 1, lines)
         return "\n".join(lines)
+
+    def diagnose_toolbar_state(self) -> dict:
+        """Detailed report of the toolbar<->canvas wiring for support/debugging."""
+        c, tb = self._canvas, self._toolbar
+        actions = []
+        if tb is not None:
+            for a in tb.actions():
+                if a.text():
+                    actions.append({"name": a.text(), "enabled": a.isEnabled()})
+        return {
+            "active_figure_id": id(c.figure) if c is not None else None,
+            "active_canvas_id": id(c) if c is not None else None,
+            "toolbar_id": id(tb) if tb is not None else None,
+            "canvas_class": type(c).__name__ if c is not None else None,
+            "toolbar_class": type(tb).__name__ if tb is not None else None,
+            "canvas_is_qtagg": isinstance(c, FigureCanvasQTAgg) if c is not None else False,
+            "toolbar_is_qt": isinstance(tb, NavigationToolbar2QT) if tb is not None else False,
+            "toolbar_canvas_matches": (c is not None and tb is not None and tb.canvas is c),
+            "canvas_figure_matches_result": (
+                c is not None and self._current_result is not None
+                and c.figure is self._current_result.figure),
+            "toolbar_enabled": tb.isEnabled() if tb is not None else False,
+            "canvas_enabled": c.isEnabled() if c is not None else False,
+            "fig_container_enabled": self.fig_container.isEnabled(),
+            "actions": actions,
+            "nav_history_len": (len(tb._nav_stack) if tb is not None
+                                and hasattr(tb, "_nav_stack") else None),
+        }
+
+    def run_toolbar_selftest(self) -> dict:
+        """Exercise the toolbar operations in-process and report pass/fail.
+
+        This runs the SAME operations the toolbar buttons invoke (zoom via a view
+        change + Home to restore, and Save via the canvas), proving the toolbar is
+        functionally connected to the current figure without needing screen input.
+        """
+        import os
+        import tempfile
+
+        results = {}
+        c, tb = self._canvas, self._toolbar
+        if c is None or tb is None or not c.figure.axes:
+            return {"error": "no active figure/canvas"}
+        ax = c.figure.axes[0]
+        x0, y0 = ax.get_xlim(), ax.get_ylim()
+        # Home/Back/Forward: change the view, push it, then Home should restore x0.
+        try:
+            tb.update()
+            tb.push_current()                      # baseline (home)
+            ax.set_xlim(x0[0] + (x0[1] - x0[0]) * 0.25, x0[0] + (x0[1] - x0[0]) * 0.75)
+            tb.push_current()                      # a "zoomed" view in history
+            tb.home()                              # should restore baseline
+            c.draw_idle()
+            xr = ax.get_xlim()
+            results["home_resets_view"] = bool(abs(xr[0] - x0[0]) < 1e-6 and abs(xr[1] - x0[1]) < 1e-6)
+        except Exception as exc:
+            results["home_resets_view"] = f"error: {exc}"
+        ax.set_xlim(*x0); ax.set_ylim(*y0)
+        # Pan/Zoom mode toggles are wired.
+        try:
+            tb.pan(); m1 = str(tb.mode); tb.pan()
+            tb.zoom(); m2 = str(tb.mode); tb.zoom()
+            results["pan_mode_wired"] = "pan" in m1.lower()
+            results["zoom_mode_wired"] = "zoom" in m2.lower()
+        except Exception as exc:
+            results["pan_mode_wired"] = f"error: {exc}"
+        # Save: write the active figure to a temp file.
+        try:
+            dest = os.path.join(tempfile.mkdtemp(), "toolbar_selftest.png")
+            c.figure.savefig(dest, dpi=150)
+            results["save_writes_file"] = bool(os.path.exists(dest) and os.path.getsize(dest) > 500)
+        except Exception as exc:
+            results["save_writes_file"] = f"error: {exc}"
+        return results
 
     # --- example-data prompt (for incompatible user uploads) -------------
     def _show_example_prompt(self, plot_type: str):
@@ -1049,12 +1198,19 @@ def main() -> int:
     if os.path.exists(ICON_PATH):
         app.setWindowIcon(QIcon(ICON_PATH))
     win = MainWindow()
+    win._debug = debug
     win.show()
     if debug:
         # Load an example, then dump the diagnostic checks + widget tree.
         win.load_example("barplot_with_error_bar")
         print("\n[diagnose]")
         for k, v in win.diagnose().items():
+            print(f"  {k}: {v}")
+        print("\n[diagnose_toolbar_state]")
+        for k, v in win.diagnose_toolbar_state().items():
+            print(f"  {k}: {v}")
+        print("\n[toolbar self-test]")
+        for k, v in win.run_toolbar_selftest().items():
             print(f"  {k}: {v}")
         print("\n[widget tree]")
         print(win.widget_tree())

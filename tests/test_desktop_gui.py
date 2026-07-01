@@ -34,6 +34,13 @@ def app():
     yield a
 
 
+@pytest.fixture(autouse=True)
+def _close_figures():
+    yield
+    import matplotlib.pyplot as plt
+    plt.close("all")
+
+
 def test_window_starts_on_welcome(app):
     win = MainWindow()
     assert win.stack.currentIndex() == 0  # welcome page
@@ -263,6 +270,56 @@ def test_splitters_non_collapsible_and_grabbable(app):
     assert win.main_splitter.handleWidth() >= 8
     assert win.right_splitter.handleWidth() >= 8
     assert win.right_splitter.childrenCollapsible() is False
+    win.close()
+
+
+def test_toolbar_selftest_passes(app):
+    """The in-app live self-test must confirm Home/Pan/Zoom/Save are functional."""
+    win = MainWindow()
+    win.load_example("lollipop_mutation_plot")
+    res = win.run_toolbar_selftest()
+    assert res.get("home_resets_view") is True or res.get("home_resets_view") == True  # noqa: E712
+    assert res.get("pan_mode_wired") is True
+    assert res.get("zoom_mode_wired") is True
+    assert res.get("save_writes_file") is True
+    win.close()
+
+
+def test_home_view_seeded_after_render(app):
+    win = MainWindow()
+    win.load_example("barplot_with_error_bar")
+    state = win.diagnose_toolbar_state()
+    assert state["nav_history_len"] and state["nav_history_len"] >= 1
+    assert state["toolbar_canvas_matches"] is True
+    assert all(a["enabled"] in (True, False) for a in state["actions"])
+    # Home / Pan / Zoom / Save actions all present.
+    names = {a["name"] for a in state["actions"]}
+    assert {"Home", "Pan", "Zoom", "Save"} <= names
+    win.close()
+
+
+def test_toolbar_stays_connected_across_plot_switches(app):
+    win = MainWindow()
+    for pt in ["lollipop_mutation_plot", "scatterplot_with_regression",
+               "volcano_plot", "heatmap_clustered_matrix", "barplot_with_error_bar",
+               "lollipop_mutation_plot"]:
+        win.load_example(pt)
+        assert win._toolbar.canvas is win._canvas, f"toolbar detached for {pt}"
+        assert win._canvas.figure is win._current_result.figure
+        assert win.run_toolbar_selftest().get("save_writes_file") is True
+    win.close()
+
+
+def test_validation_failure_clears_figure_toolbar_recovers(app):
+    win = MainWindow()
+    win.load_example("scatterplot_with_regression")
+    win.data.is_example = False           # treat as user upload
+    _select_plot_type(win, "volcano_plot")  # incompatible -> clears figure
+    assert win._canvas is None and win._current_result is None
+    # Recover by loading the matching example; toolbar reconnects and works.
+    win._load_example_for_current_type()
+    assert win._toolbar.canvas is win._canvas
+    assert win.run_toolbar_selftest().get("home_resets_view") is True
     win.close()
 
 

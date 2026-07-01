@@ -1,4 +1,11 @@
-"""Lollipop mutation plot: stem + marker at each protein position."""
+"""Lollipop mutation plot: stem + marker at each protein position.
+
+Publication-style layout: wide aspect, thin stems with clear marker edges,
+markers scaled by mutation/sample count, the mutation-type legend placed
+*outside* the axes (right or bottom), and top-N mutation labels drawn above the
+markers with a vertical margin and simple collision-avoidance staggering so they
+never touch markers or get clipped.
+"""
 
 from __future__ import annotations
 
@@ -27,7 +34,11 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     y = get_mapping(spec, "y", "sample_count")
     color_by = get_mapping(spec, "color", None)
     label_col = get_mapping(spec, "label", None)
-    max_labels = int(get_mapping(spec, "max_labels", 5))
+    show_labels = bool(get_mapping(spec, "show_labels", True))
+    label_top_n = int(get_mapping(spec, "label_top_n", get_mapping(spec, "max_labels", 6)))
+    legend_loc = str(get_mapping(spec, "legend_loc", "right")).lower()
+    marker_scale = float(get_mapping(spec, "marker_scale", 16.0))
+    y_margin = float(get_mapping(spec, "y_margin", 0.28))
 
     require_columns(df, [x, y], context=PLOT_TYPE)
     work = df.copy()
@@ -44,40 +55,81 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         point_colors = [style.color_for(0)] * len(work)
 
     warnings: List[str] = []
+    xs = work[x].to_numpy(dtype=float)
+    ys = work[y].to_numpy(dtype=float)
+    ymax = float(np.nanmax(ys)) if len(ys) else 1.0
 
     with style.apply():
-        fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.5))
-        xs = work[x].to_numpy(dtype=float)
-        ys = work[y].to_numpy(dtype=float)
-        ax.vlines(xs, 0, ys, color="0.6", linewidth=style.spine_width_pt, zorder=1)
-        ax.scatter(xs, ys, s=np.clip(ys * 12, 20, 200), c=point_colors,
-                   edgecolors="black", linewidths=style.spine_width_pt, zorder=3)
+        # Wide aspect suits a protein-position axis.
+        fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.42))
 
-        # Protein backbone line.
-        ax.axhline(0, color="black", lw=style.line_width_pt)
+        ax.vlines(xs, 0, ys, color="0.65", linewidth=style.line_width_pt, zorder=1)
+        sizes = np.clip(ys * marker_scale, 25, 280)
+        ax.scatter(xs, ys, s=sizes, c=point_colors, edgecolors="black",
+                   linewidths=style.spine_width_pt, zorder=3, clip_on=False)
+        ax.axhline(0, color="black", lw=style.line_width_pt)  # protein backbone
 
-        # Label the highest-count positions.
-        if label_col and label_col in work.columns:
-            top = work.sort_values(y, ascending=False).head(max_labels)
+        # --- top-N labels, staggered to avoid overlap & clipping -------------
+        n_label_levels = 1
+        if show_labels and label_col and label_col in work.columns and label_top_n > 0:
+            top = work.sort_values(y, ascending=False).head(label_top_n)
+            top = top.sort_values(x)   # place left-to-right for stagger logic
+            xrange = (xs.max() - xs.min()) or 1.0
+            min_gap = xrange * 0.12    # x-closeness threshold for staggering
+            n_levels = 4
+            last_x = None
+            level = 0
+            label_fs = max(6, style.axis_font_pt - 1)
+            step = ymax * 0.13         # vertical spacing between stagger levels
+            base = ymax * 0.07         # gap above the marker
             for _, r in top.iterrows():
                 txt = str(r[label_col]).strip()
-                if txt and txt.lower() != "nan":
-                    ax.annotate(txt, (r[x], r[y]), fontsize=style.axis_font_pt - 1,
-                                xytext=(0, 3), textcoords="offset points", ha="center")
+                if not txt or txt.lower() == "nan":
+                    continue
+                if last_x is not None and abs(r[x] - last_x) < min_gap:
+                    level = (level + 1) % n_levels
+                else:
+                    level = 0
+                last_x = r[x]
+                n_label_levels = max(n_label_levels, level + 1)
+                y_text = r[y] + base + step * level
+                ax.annotate(
+                    txt, xy=(r[x], r[y]), xytext=(r[x], y_text),
+                    fontsize=label_fs, ha="center", va="bottom", zorder=4,
+                    arrowprops=dict(arrowstyle="-", lw=style.spine_width_pt, color="0.6",
+                                    shrinkA=0, shrinkB=2))
 
-        ax.set_ylim(bottom=0)
+        # Headroom so labels are never clipped at the top.
+        head = y_margin + 0.14 * (n_label_levels - 1)
+        ax.set_ylim(0, ymax * (1.0 + head))
+        ax.set_xlim(xs.min() - 0.02 * (xs.max() - xs.min() or 1),
+                    xs.max() + 0.02 * (xs.max() - xs.min() or 1))
+
         ax.set_xlabel(spec.get("layout", {}).get("x_label", "Protein position"))
         ax.set_ylabel(spec.get("layout", {}).get("y_label", y))
         title = spec.get("layout", {}).get("title")
         if title:
             ax.set_title(title)
+        style_axes(ax)
+
+        # --- legend OUTSIDE the data area -----------------------------------
         if color_map is not None:
             handles = [Patch(facecolor=color_map[t], edgecolor="black", label=str(t))
                        for t in types]
-            ax.legend(handles=handles, title=str(color_by), frameon=False, loc="best")
-        style_axes(ax)
-        fig.tight_layout()
+            if legend_loc == "bottom":
+                ax.legend(handles=handles, title=str(color_by), frameon=False,
+                          loc="upper center", bbox_to_anchor=(0.5, -0.30),
+                          ncol=min(len(types), 4))
+                fig.subplots_adjust(left=0.1, right=0.97, top=0.92, bottom=0.36)
+            else:  # right (default)
+                ax.legend(handles=handles, title=str(color_by), frameon=False,
+                          loc="center left", bbox_to_anchor=(1.02, 0.5))
+                fig.subplots_adjust(left=0.1, right=0.78, top=0.92, bottom=0.16)
+        else:
+            fig.subplots_adjust(left=0.1, right=0.97, top=0.92, bottom=0.16)
 
     meta = base_metadata(spec, style, work, used_columns=[x, y, color_by, label_col])
     meta["n_positions"] = int(len(work))
+    meta["labels_shown"] = int(min(label_top_n, len(work))) if show_labels else 0
+    meta["legend_loc"] = legend_loc if color_map is not None else None
     return RenderResult(figure=fig, metadata=meta, warnings=warnings)

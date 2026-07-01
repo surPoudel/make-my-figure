@@ -112,6 +112,55 @@ def test_lollipop_positions(mock_dir):
     plt.close(result.figure)
 
 
+def test_lollipop_legend_outside_axes(mock_dir):
+    """The mutation-type legend must sit outside the data area (right by default)."""
+    info = _load("lollipop_mutations.csv")
+    spec = make_spec("lollipop_mutation_plot", "lollipop_mutations.csv", "nature_like")
+    result = render(spec, info.dataframe)
+    fig = result.figure
+    fig.canvas.draw()
+    ax = fig.axes[0]
+    legend = ax.get_legend()
+    assert legend is not None
+    lb = legend.get_window_extent()
+    ab = ax.get_window_extent()
+    # legend's left edge is at/after the axes' right edge => outside the plot
+    assert lb.x0 >= ab.x1 - 1, "lollipop legend overlaps the data area"
+    assert result.metadata["legend_loc"] == "right"
+    plt.close(fig)
+
+
+def test_lollipop_labels_not_clipped(mock_dir):
+    """Every mutation label must fall within the (expanded) y-limits."""
+    info = _load("lollipop_mutations.csv")
+    spec = make_spec("lollipop_mutation_plot", "lollipop_mutations.csv", "nature_like")
+    result = render(spec, info.dataframe)
+    ax = result.figure.axes[0]
+    ymax = ax.get_ylim()[1]
+    label_texts = [t for t in ax.texts if str(t.get_text()).strip()]
+    assert label_texts, "expected mutation labels"
+    for t in label_texts:
+        # annotation text is anchored at xytext (data coords); must be <= top
+        assert t.get_position()[1] <= ymax + 1e-6, "a lollipop label is clipped at the top"
+    assert result.metadata["labels_shown"] > 0
+    plt.close(result.figure)
+
+
+def test_lollipop_export_all_formats(mock_dir, tmp_path):
+    info = _load("lollipop_mutations.csv")
+    spec = make_spec("lollipop_mutation_plot", "lollipop_mutations.csv", "cell_like")
+    from make_my_figure_core.plots.registry import render_to_files
+
+    out = render_to_files(spec, info.dataframe, str(tmp_path / "lolli"),
+                          formats=["svg", "png", "pdf"])
+    assert len(out["files"]) == 3
+    for f in out["files"]:
+        assert os.path.getsize(f) > 500
+    # SVG keeps text as editable vector (svg.fonttype=none)
+    svg = [f for f in out["files"] if f.endswith(".svg")][0]
+    assert "<text" in open(svg, encoding="utf-8").read()
+
+
 def test_roc_auc_ordering(mock_dir):
     info = _load("roc_curve_scores.csv")
     spec = make_spec("roc_curve", "roc_curve_scores.csv", "nature_like")

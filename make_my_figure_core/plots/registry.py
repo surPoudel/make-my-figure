@@ -114,6 +114,11 @@ _DISPLAY_NAMES: Dict[str, str] = {
 
 _EXPORT_FORMATS = ("svg", "png", "pdf", "tiff", "eps")
 
+# rcParams that keep exported vector text EDITABLE (not converted to paths).
+# These must be applied at savefig time, which can happen outside a style's
+# rc_context, so we set them explicitly around every export.
+_VECTOR_TEXT_RC = {"svg.fonttype": "none", "pdf.fonttype": 42, "ps.fonttype": 42}
+
 
 def available_plot_types() -> List[str]:
     return list(_RENDERERS.keys())
@@ -200,20 +205,23 @@ def export_figure(fig: Figure, base_path: str, formats: List[str], dpi: int = 30
 
     Returns the list of written file paths.
     """
+    import matplotlib as mpl
+
     written: List[str] = []
     os.makedirs(os.path.dirname(os.path.abspath(base_path)) or ".", exist_ok=True)
-    for fmt in formats:
-        fmt = fmt.lower()
-        if fmt not in _EXPORT_FORMATS:
-            continue
-        out = f"{base_path}.{fmt}"
-        save_kwargs: Dict[str, Any] = {"bbox_inches": "tight"}
-        if fmt in ("png", "tiff"):
-            save_kwargs["dpi"] = dpi
-        if fmt == "tiff":
-            save_kwargs["pil_kwargs"] = {"compression": "tiff_lzw"}
-        fig.savefig(out, format=fmt, **save_kwargs)
-        written.append(out)
+    with mpl.rc_context(_VECTOR_TEXT_RC):
+        for fmt in formats:
+            fmt = fmt.lower()
+            if fmt not in _EXPORT_FORMATS:
+                continue
+            out = f"{base_path}.{fmt}"
+            save_kwargs: Dict[str, Any] = {"bbox_inches": "tight"}
+            if fmt in ("png", "tiff"):
+                save_kwargs["dpi"] = dpi
+            if fmt == "tiff":
+                save_kwargs["pil_kwargs"] = {"compression": "tiff_lzw"}
+            fig.savefig(out, format=fmt, **save_kwargs)
+            written.append(out)
     return written
 
 
@@ -230,13 +238,16 @@ def figure_to_bytes(fig: Figure, fmt: str, dpi: int = 300) -> bytes:
     """Serialize a figure to bytes in the requested format (in-memory)."""
     import io as _io
 
+    import matplotlib as mpl
+
     buf = _io.BytesIO()
     save_kwargs: Dict[str, Any] = {"format": fmt.lower(), "bbox_inches": "tight"}
     if fmt.lower() in ("png", "tiff"):
         save_kwargs["dpi"] = dpi
     if fmt.lower() == "tiff":
         save_kwargs["pil_kwargs"] = {"compression": "tiff_lzw"}
-    fig.savefig(buf, **save_kwargs)
+    with mpl.rc_context(_VECTOR_TEXT_RC):
+        fig.savefig(buf, **save_kwargs)
     return buf.getvalue()
 
 

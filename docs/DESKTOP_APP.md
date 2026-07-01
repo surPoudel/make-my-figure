@@ -19,11 +19,21 @@ no Python, no terminal required.
 - **Plot workflow** — choose plot type and style (Nature-/Science-/Cell-like), map
   required columns with dropdowns, set key options, and see a **live preview**.
   Validation warnings appear before you export.
-- **Interactive figure toolbar** — the preview is a live Matplotlib canvas with the
-  standard Qt navigation toolbar: **Home** (reset view), **Back/Forward** (view
+- **Interactive figure toolbar** — the preview is a live `FigureCanvasQTAgg` with the
+  standard `NavigationToolbar2QT`: **Home** (reset view), **Back/Forward** (view
   history), **Pan** (drag), **Zoom** (box-zoom), **Configure subplots**, and **Save**.
-  The toolbar always controls the currently displayed figure — switching plot types
-  rebuilds the canvas and toolbar together, with no stale plot left behind.
+  The home view is seeded on every render, so **Home works immediately** (before any
+  pan/zoom). The toolbar always controls the currently displayed figure — switching
+  plot types rebuilds the canvas and toolbar together, with no stale plot left behind.
+  If a button ever seems inert, use **Help → Diagnose toolbar** (below) or run with
+  `--debug` to log each action and canvas event.
+
+- **Toolbar diagnostics** — **Help → Diagnose toolbar** runs a live in-app self-test
+  (Home resets the view, Pan/Zoom modes engage, Save writes a file) and reports
+  whether the toolbar is functionally connected to the current canvas, plus the exact
+  running source file + commit (so you can confirm you're not on a stale synced copy).
+  `python -m apps.desktop_app.main --debug` prints the same diagnostics and logs every
+  toolbar action and canvas mouse event to the terminal.
 - **RStudio-like resizable panels** — drag the divider between the left controls and
   the right preview, and the horizontal divider between the top data/messages tabs
   and the bottom figure area. The figure canvas grows/shrinks with the window and the
@@ -94,6 +104,31 @@ line-width defaults) into `style_profiles/learned/*.json`.
 > unless explicitly licensed, and does **not** claim official journal compliance.
 > Only aggregate measurements are stored in the repo; raw figure bitmaps stay
 > local-only. See **[STYLE_REFERENCE_AUDIT.md](STYLE_REFERENCE_AUDIT.md)**.
+
+## Lollipop mutation plot options
+
+The lollipop renderer is tuned for publication-style output: wide aspect, thin
+stems, marker size scaled by mutation/sample count, the mutation-type legend placed
+**outside** the axes, and top-N mutation labels drawn above markers with a vertical
+margin and staggering so they never touch markers or clip at the top. Options
+(in the desktop **Options** panel and via PlotSpec `mapping`):
+
+- **Show mutation labels** (`show_labels`)
+- **Label top N mutations** (`label_top_n`, default 6) — labels only the highest-count
+  positions rather than every point.
+- **Legend position** (`legend_loc`: `right` default, or `bottom`).
+- **Marker scale** (`marker_scale`) — marker area per unit count.
+- **Top y-margin** (`y_margin`) — extra headroom above the tallest lollipop.
+
+## Recommended export formats for publication
+
+- **SVG or PDF** for vector figures with **editable text** (fonts are embedded as
+  text, not outlines — `svg.fonttype=none`, `pdf.fonttype=42`), so you can tweak
+  labels in Illustrator/Inkscape.
+- **PNG at 300–600 DPI** for raster use (slides, previews). The desktop **Raster DPI**
+  control sets PNG/TIFF resolution.
+- **PlotSpec JSON** sidecar for reproducibility.
+- Exports use tight bounding boxes so an outside legend is always fully included.
 
 ## Architecture
 
