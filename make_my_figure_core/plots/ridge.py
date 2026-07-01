@@ -85,7 +85,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         title = spec.get("layout", {}).get("title")
         if title:
             ax.set_title(title)
-        style_axes(ax)
+        style_axes(ax, style)
         ax.spines["left"].set_visible(False)
         ax.tick_params(axis="y", length=0)
         fig.tight_layout()

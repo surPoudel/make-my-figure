@@ -68,7 +68,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             ax.set_title(title)
         if series != [None]:
             ax.legend(title=str(color_by), frameon=False, loc="best")
-        style_axes(ax)
+        style_axes(ax, style)
         fig.tight_layout()
 
     meta = base_metadata(spec, style, work, used_columns=[x, y, color_by])

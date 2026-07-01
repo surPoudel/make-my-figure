@@ -13,6 +13,7 @@ from make_my_figure_core.plots.base import (
     coerce_numeric,
     figure_size,
     get_mapping,
+    place_legend,
     require_columns,
     style_axes,
 )
@@ -53,24 +54,26 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     fits: Dict[str, Any] = {}
     warnings: List[str] = []
 
-    with style.apply():
-        fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.85))
+    mk = dict(s=style.marker_size, edgecolors="white",
+              linewidths=style.marker_edge_width, alpha=style.marker_alpha)
+    has_groups = bool(color_by and color_by in work.columns)
 
-        if color_by and color_by in work.columns:
+    with style.apply():
+        fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.78))
+
+        if has_groups:
             groups = list(dict.fromkeys(work[color_by].tolist()))
             for gi, g in enumerate(groups):
                 sub = work[work[color_by] == g]
                 col = style.color_for(gi)
-                ax.scatter(sub[x], sub[y], s=12, color=col, edgecolors="none",
-                           alpha=0.85, label=str(g))
+                ax.scatter(sub[x], sub[y], color=col, label=str(g), zorder=3, **mk)
                 if fit_line:
                     fit = _fit_line(ax, sub[x].to_numpy(float), sub[y].to_numpy(float), col, style)
                     if fit:
                         fits[str(g)] = {"slope": fit[0], "intercept": fit[1], "pearson_r": fit[2]}
-            ax.legend(title=str(color_by), frameon=False, loc="best")
         else:
             col = style.color_for(0)
-            ax.scatter(work[x], work[y], s=12, color=col, edgecolors="none", alpha=0.85)
+            ax.scatter(work[x], work[y], color=col, zorder=3, **mk)
             if fit_line:
                 fit = _fit_line(ax, work[x].to_numpy(float), work[y].to_numpy(float), col, style)
                 if fit:
@@ -81,16 +84,21 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             for _, row in work.iterrows():
                 txt = str(row[label_col]).strip()
                 if txt and txt.lower() != "nan":
-                    ax.annotate(txt, (row[x], row[y]), fontsize=style.axis_font_pt - 1,
-                                xytext=(2, 2), textcoords="offset points")
+                    ax.annotate(txt, (row[x], row[y]), fontsize=style.annotation_pt,
+                                xytext=(3, 3), textcoords="offset points")
 
         ax.set_xlabel(spec.get("layout", {}).get("x_label", x))
         ax.set_ylabel(spec.get("layout", {}).get("y_label", y))
+        ax.margins(0.05)
         title = spec.get("layout", {}).get("title")
         if title:
             ax.set_title(title)
-        style_axes(ax)
-        fig.tight_layout()
+        style_axes(ax, style)
+        if has_groups:
+            # Legend outside so it never sits on top of points.
+            place_legend(ax, style, title=str(color_by), force_outside=True)
+        else:
+            fig.tight_layout()
 
     meta = base_metadata(spec, style, work, used_columns=[x, y, color_by, label_col])
     meta["fit_line"] = fit_line

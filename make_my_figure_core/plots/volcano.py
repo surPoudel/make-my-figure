@@ -17,8 +17,10 @@ from make_my_figure_core.plots.base import (
     RenderResult,
     base_metadata,
     coerce_numeric,
+    dedupe_labels_by_distance,
     figure_size,
     get_mapping,
+    place_legend,
     require_columns,
     style_axes,
 )
@@ -26,7 +28,10 @@ from make_my_figure_core.styles.engine import StyleProfile
 
 PLOT_TYPE = "volcano_plot"
 
-_NS_COLOR = "#B0B0B0"
+# Strong, colorblind-aware volcano colors (down=blue, up=red, n.s.=grey).
+_NS_COLOR = "#BBBBBB"
+_DOWN_COLOR = "#2166AC"
+_UP_COLOR = "#B2182B"
 
 
 def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
@@ -56,38 +61,57 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     ns = ~(up | down)
 
     with style.apply():
-        fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.9))
-        marker = dict(s=8, edgecolors="none", alpha=0.8)
+        fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.85))
+        sig_size = max(22.0, style.marker_size * 0.6)
+        ns_size = max(12.0, style.marker_size * 0.32)
         ax.scatter(work.loc[ns, x], work.loc[ns, "_neglog10p"], color=_NS_COLOR,
-                   label="n.s.", **marker)
-        ax.scatter(work.loc[up, x], work.loc[up, "_neglog10p"], color=style.color_for(1),
-                   label=f"Up (≥{lfc_cutoff})", **marker)
-        ax.scatter(work.loc[down, x], work.loc[down, "_neglog10p"], color=style.color_for(0),
-                   label=f"Down (≤-{lfc_cutoff})", **marker)
+                   label="n.s.", s=ns_size, edgecolors="none", alpha=0.6, zorder=1)
+        ax.scatter(work.loc[down, x], work.loc[down, "_neglog10p"], color=_DOWN_COLOR,
+                   label=f"Down (≤ -{lfc_cutoff:g})", s=sig_size, edgecolors="white",
+                   linewidths=0.4, alpha=0.95, zorder=3)
+        ax.scatter(work.loc[up, x], work.loc[up, "_neglog10p"], color=_UP_COLOR,
+                   label=f"Up (≥ {lfc_cutoff:g})", s=sig_size, edgecolors="white",
+                   linewidths=0.4, alpha=0.95, zorder=3)
 
-        ax.axvline(lfc_cutoff, ls="--", lw=style.spine_width_pt, color="0.4")
-        ax.axvline(-lfc_cutoff, ls="--", lw=style.spine_width_pt, color="0.4")
-        ax.axhline(-np.log10(p_cutoff), ls="--", lw=style.spine_width_pt, color="0.4")
+        thr_lw = max(0.8, style.spine_width_pt * 0.8)
+        ax.axvline(lfc_cutoff, ls="--", lw=thr_lw, color="0.5", zorder=0)
+        ax.axvline(-lfc_cutoff, ls="--", lw=thr_lw, color="0.5", zorder=0)
+        ax.axhline(-np.log10(p_cutoff), ls="--", lw=thr_lw, color="0.5", zorder=0)
 
-        # Label the top significant features that carry a non-empty label.
+        # Extra top headroom so labels are not clipped.
+        ymax = float(work["_neglog10p"].max())
+        ax.set_ylim(0, ymax * 1.18)
+
+        # Label top significant features, dropping ones that collide.
+        n_labeled = 0
         if label_col and label_col in work.columns:
             sig = work[(up | down)].copy()
-            sig = sig[sig[label_col].astype(str).str.strip().ne("")
-                      & sig[label_col].notna()]
+            sig = sig[sig[label_col].astype(str).str.strip().ne("") & sig[label_col].notna()]
             sig = sig.sort_values("_neglog10p", ascending=False).head(max_labels)
-            for _, row in sig.iterrows():
-                ax.annotate(str(row[label_col]), (row[x], row["_neglog10p"]),
-                            fontsize=style.axis_font_pt - 1, xytext=(2, 2),
-                            textcoords="offset points")
+            xr = (work[x].max() - work[x].min()) or 1.0
+            pts = [(float(r[x]), float(r["_neglog10p"]), str(r[label_col]))
+                   for _, r in sig.iterrows()]
+            kept = dedupe_labels_by_distance(pts, min_dx=xr * 0.06, min_dy=ymax * 0.05)
+            for lx, ly, txt in kept:
+                ax.annotate(txt, (lx, ly), fontsize=style.annotation_pt,
+                            xytext=(3, 3), textcoords="offset points", zorder=4)
+            n_labeled = len(kept)
 
-        ax.set_xlabel(spec.get("layout", {}).get("x_label", "log2 fold change"))
-        ax.set_ylabel(spec.get("layout", {}).get("y_label", "-log10(p)"))
+        ax.set_xlabel(spec.get("layout", {}).get("x_label", "log$_2$ fold change"))
+        ax.set_ylabel(spec.get("layout", {}).get("y_label", "-log$_{10}$(p)"))
         title = spec.get("layout", {}).get("title")
         if title:
             ax.set_title(title)
-        ax.legend(frameon=False, loc="best", markerscale=1.5)
-        style_axes(ax)
-        fig.tight_layout()
+        style_axes(ax, style)
+        place_legend(ax, style, force_outside=True)
+        # markerscale so legend dots read clearly
+        leg = ax.get_legend()
+        if leg is not None:
+            for h in leg.legend_handles:
+                try:
+                    h.set_sizes([40])
+                except Exception:
+                    pass
 
     meta = base_metadata(spec, style, work, used_columns=[x, p_col, label_col])
     meta["lfc_cutoff"] = lfc_cutoff
@@ -95,4 +119,5 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     meta["n_up"] = int(up.sum())
     meta["n_down"] = int(down.sum())
     meta["n_ns"] = int(ns.sum())
+    meta["n_labeled"] = n_labeled
     return RenderResult(figure=fig, metadata=meta, warnings=warnings)

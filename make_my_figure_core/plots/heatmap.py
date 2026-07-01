@@ -86,16 +86,35 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         vmin = float(np.nanmin(matrix)) if np.isfinite(matrix).any() else 0.0
         vmax = float(np.nanmax(matrix)) if np.isfinite(matrix).any() else 1.0
 
+    # Auto-scale label font to matrix size so labels stay readable but not huge.
+    def _label_fs(n: int) -> float:
+        if n <= 15:
+            return style.tick_label_pt
+        if n <= 30:
+            return max(7.0, style.tick_label_pt - 1)
+        if n <= 60:
+            return max(6.0, style.tick_label_pt - 3)
+        return 0.0  # hide
+
+    col_fs = _label_fs(len(ordered_cols))
+    row_fs = _label_fs(len(ordered_rows))
+    # Wider figure for many columns so labels don't crowd.
+    n_c = len(ordered_cols)
+    aspect = 0.95 if n_c <= 14 else min(1.4, 0.95 + 0.02 * (n_c - 14))
+
     with style.apply():
-        fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=1.0))
+        fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=aspect))
         im = ax.imshow(ordered, aspect="auto", cmap=cmap, vmin=vmin, vmax=vmax,
                        interpolation="nearest")
-        ax.set_xticks(range(len(ordered_cols)))
-        ax.set_xticklabels(ordered_cols, rotation=90)
-        # Only show row tick labels when they are few enough to read.
-        if len(ordered_rows) <= 40:
+        if col_fs > 0:
+            ax.set_xticks(range(len(ordered_cols)))
+            ax.set_xticklabels(ordered_cols, rotation=90, fontsize=col_fs)
+        else:
+            ax.set_xticks([])
+            warnings.append(f"{len(ordered_cols)} columns: labels hidden for legibility.")
+        if row_fs > 0:
             ax.set_yticks(range(len(ordered_rows)))
-            ax.set_yticklabels(ordered_rows)
+            ax.set_yticklabels(ordered_rows, fontsize=row_fs)
         else:
             ax.set_yticks([])
             warnings.append(f"{len(ordered_rows)} rows: row labels hidden for legibility.")
@@ -104,10 +123,12 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         title = spec.get("layout", {}).get("title")
         if title:
             ax.set_title(title)
-        cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
-        cbar.ax.tick_params(labelsize=style.axis_font_pt)
+        cbar = fig.colorbar(im, ax=ax, fraction=0.045, pad=0.03)
+        cbar.ax.tick_params(labelsize=style.tick_label_pt, width=style.tick_width,
+                            length=style.tick_length)
         cbar.outline.set_linewidth(style.spine_width_pt)
-        # Hide all spines for a clean heatmap frame.
+        cbar.set_label(spec.get("layout", {}).get("colorbar_label", "z-score"),
+                       fontsize=style.axis_font_pt)
         for spine in ax.spines.values():
             spine.set_visible(False)
         fig.tight_layout()

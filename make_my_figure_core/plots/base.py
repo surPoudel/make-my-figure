@@ -89,19 +89,75 @@ def summarize_error(values: np.ndarray, method: str) -> tuple[float, float]:
     return (mean, sem)
 
 
+_WIDTH_ALIASES = {"single", "onehalf", "double", "default"}
+
+
 def figure_size(spec: Dict[str, Any], style: StyleProfile, *, aspect: float) -> tuple[float, float]:
-    """Resolve figure size, honoring an optional layout['column_width'] hint."""
-    width = (spec.get("layout", {}) or {}).get("column_width", "single")
-    width = "double" if str(width).lower() == "double" else "single"
+    """Resolve figure size, honoring an optional layout['column_width'] preset.
+
+    Presets: ``default`` (comfortable medium — the out-of-box default),
+    ``single``, ``onehalf``, ``double``. An explicit numeric ``layout['aspect']``
+    overrides the renderer's aspect when provided.
+    """
+    layout = spec.get("layout", {}) or {}
+    width = str(layout.get("column_width", "default")).lower()
+    if width not in _WIDTH_ALIASES:
+        width = "default"
+    try:
+        aspect = float(layout.get("aspect", aspect))
+    except (TypeError, ValueError):
+        pass
     return style.figure_size_inches(width, aspect=aspect)
 
 
-def style_axes(ax) -> None:
-    """Apply lightweight common axis cosmetics (ticks outward, no top/right)."""
-    ax.tick_params(direction="out", length=2.5)
-    for spine in ("top", "right"):
-        if spine in ax.spines:
-            ax.spines[spine].set_visible(False)
+def style_axes(ax, style: "StyleProfile | None" = None) -> None:
+    """Apply common publication axis cosmetics driven by style tokens."""
+    if style is not None:
+        ax.tick_params(direction=style.tick_direction, length=style.tick_length,
+                       width=style.tick_width)
+        for spine, show in (("top", style.show_top_spine), ("right", style.show_right_spine)):
+            if spine in ax.spines:
+                ax.spines[spine].set_visible(show)
+    else:
+        ax.tick_params(direction="out", length=4.0)
+        for spine in ("top", "right"):
+            if spine in ax.spines:
+                ax.spines[spine].set_visible(False)
+
+
+def place_legend(ax, style, *, title=None, handles=None, labels=None,
+                 force_outside: bool = False, loc: str = None):
+    """Place a legend without overlapping data.
+
+    Outside-right by default when the profile requests it or ``force_outside``
+    is set (space is reserved via ``subplots_adjust`` so the legend is never
+    clipped on export); otherwise at the profile's preferred location.
+    """
+    outside = force_outside or getattr(style, "legend_outside", False)
+    kw = dict(frameon=getattr(style, "legend_frameon", False),
+              ncol=max(1, getattr(style, "legend_ncol", 1)), title=title)
+    args = ()
+    if handles is not None:
+        args = (handles,) if labels is None else (handles, labels)
+    if outside:
+        leg = ax.legend(*args, loc="center left", bbox_to_anchor=(1.02, 0.5), **kw)
+        ax.figure.subplots_adjust(right=0.75)
+    else:
+        leg = ax.legend(*args, loc=loc or getattr(style, "legend_loc", "best"), **kw)
+    return leg
+
+
+def dedupe_labels_by_distance(points, *, min_dx, min_dy):
+    """Greedily drop labels too close to an already-kept one (simple de-overlap).
+
+    ``points`` is a list of ``(x, y, payload)``; returns the kept subset in the
+    input order. Used to reduce gene/point-label collisions.
+    """
+    kept = []
+    for x, y, payload in points:
+        if all(abs(x - kx) > min_dx or abs(y - ky) > min_dy for kx, ky, _ in kept):
+            kept.append((x, y, payload))
+    return kept
 
 
 def base_metadata(spec: Dict[str, Any], style: StyleProfile, df: pd.DataFrame,

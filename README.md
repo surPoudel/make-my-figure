@@ -66,6 +66,22 @@ Docs: **[EXAMPLE_DATA.md](docs/EXAMPLE_DATA.md)** ·
 are used only as visual style references; bundled example data are synthetic and must
 not be cited as real findings.
 
+### Publication-ready by default
+
+Every plot is **publication-styled out of the box** — readable fonts (12 pt axis
+labels, 10 pt ticks), strong colorblind-aware contrast, clean axes, visible
+markers, and non-overlapping legends — via one shared style engine used by both
+apps. A **Style** panel (desktop) and **Formatting** expander (Streamlit) let you
+refine palette, font sizes, line widths, markers, legend placement, figure size,
+and DPI, with **Reset to publication defaults**. After each render a
+**publication-readiness check** flags small text / overlap / clipping (advisory).
+Docs: **[STYLE_PROFILES.md](docs/STYLE_PROFILES.md)** ·
+**[EXPORTING_PUBLICATION_FIGURES.md](docs/EXPORTING_PUBLICATION_FIGURES.md)**.
+
+```bash
+python scripts/generate_style_qa_gallery.py   # visual QA gallery (outputs/, git-ignored)
+```
+
 ### Style profiles (starter + learned)
 
 Six journal-like style profiles are available (Nature-/Science-/Cell-like and their

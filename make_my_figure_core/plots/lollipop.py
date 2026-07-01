@@ -115,7 +115,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         title = spec.get("layout", {}).get("title")
         if title:
             ax.set_title(title)
-        style_axes(ax)
+        style_axes(ax, style)
 
         # --- legend OUTSIDE the data area -----------------------------------
         if color_map is not None:

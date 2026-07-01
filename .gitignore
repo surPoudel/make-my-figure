@@ -30,6 +30,9 @@ figure_library/
 *.spec.bak
 *.AppDir/
 *.iconset/
+
+# Generated QA gallery / large outputs (regenerate via scripts/)
+outputs/
 reports/example_figures/*.png
 reports/example_figures/*.svg
 reports/example_figures/*.plot_spec.json

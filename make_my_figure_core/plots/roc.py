@@ -83,7 +83,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if title:
             ax.set_title(title)
         ax.legend(frameon=False, loc="lower right")
-        style_axes(ax)
+        style_axes(ax, style)
         fig.tight_layout()
 
     meta = base_metadata(spec, style, work, used_columns=[label_col] + models)

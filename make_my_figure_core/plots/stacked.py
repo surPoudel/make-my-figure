@@ -68,7 +68,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             ax.set_title(title)
         ax.legend(title=str(stack), frameon=False, loc="center left",
                   bbox_to_anchor=(1.0, 0.5))
-        style_axes(ax)
+        style_axes(ax, style)
         fig.tight_layout()
 
     meta = base_metadata(spec, style, work, used_columns=[x, stack, y, sort_by])

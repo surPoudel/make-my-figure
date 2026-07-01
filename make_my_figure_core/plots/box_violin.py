@@ -81,7 +81,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         title = spec.get("layout", {}).get("title")
         if title:
             ax.set_title(title)
-        style_axes(ax)
+        style_axes(ax, style)
         fig.tight_layout()
 
     meta = base_metadata(spec, style, work, used_columns=[x, y])

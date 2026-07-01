@@ -13,6 +13,7 @@ from make_my_figure_core.plots.base import (
     coerce_numeric,
     figure_size,
     get_mapping,
+    place_legend,
     require_columns,
     style_axes,
     summarize_error,
@@ -59,10 +60,11 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                 yerr=errors if error_method.lower() != "none" else None,
                 label=str(g),
                 color=style.color_for(gi),
-                edgecolor="black",
-                linewidth=style.spine_width_pt,
-                capsize=2.0,
-                error_kw={"elinewidth": style.spine_width_pt, "capthick": style.spine_width_pt},
+                edgecolor="#222222",
+                linewidth=style.bar_edge_width,
+                capsize=style.errorbar_capsize,
+                error_kw={"elinewidth": style.errorbar_line_width,
+                          "capthick": style.errorbar_line_width},
             )
 
         ax.set_xticks(x_idx)
@@ -72,12 +74,12 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if error_method.lower() != "none":
             ylab = f"{ylab} (mean ± {error_method.upper()})"
         ax.set_ylabel(ylab)
+        ax.margins(y=0.08)
         title = spec.get("layout", {}).get("title")
         if title:
             ax.set_title(title)
-        ax.legend(title=str(group), frameon=False, loc="best")
-        style_axes(ax)
-        fig.tight_layout()
+        style_axes(ax, style)
+        place_legend(ax, style, title=str(group), force_outside=True)
 
     meta = base_metadata(spec, style, work, used_columns=[x, group, y])
     meta["error_method"] = error_method

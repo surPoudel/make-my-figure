@@ -251,8 +251,28 @@ st.sidebar.header("5. Labels & size")
 title = st.sidebar.text_input("Title", value="")
 x_label = st.sidebar.text_input("X label (blank = auto)", value="")
 y_label = st.sidebar.text_input("Y label (blank = auto)", value="")
-column_width = st.sidebar.selectbox("Figure width", ["single", "double"], index=0)
+column_width = st.sidebar.selectbox("Figure width", ["default", "single", "onehalf", "double"], index=0)
 dpi = st.sidebar.slider("Raster DPI (PNG/TIFF)", 150, 600, 300, step=50)
+
+# --- 6. Formatting (shares the core style engine with the desktop app) -------
+from make_my_figure_core.styles.engine import NAMED_PALETTES  # noqa: E402
+
+st.sidebar.header("6. Formatting")
+style_overrides = {}
+with st.sidebar.expander("Publication style controls", expanded=False):
+    pal = st.selectbox("Palette", ["(profile default)"] + list(NAMED_PALETTES))
+    if pal != "(profile default)":
+        style_overrides["palette_name"] = pal
+    style_overrides["axis_font_pt"] = st.slider("Axis label pt", 8, 24, 12)
+    style_overrides["tick_label_pt"] = st.slider("Tick label pt", 6, 20, 10)
+    style_overrides["legend_pt"] = st.slider("Legend pt", 6, 20, 10)
+    style_overrides["annotation_pt"] = st.slider("Annotation pt", 6, 20, 10)
+    style_overrides["marker_size"] = st.slider("Marker size", 6, 200, 45)
+    style_overrides["line_width_pt"] = st.slider("Line width", 0.5, 6.0, 1.8, 0.1)
+    style_overrides["regression_line_width"] = style_overrides["line_width_pt"]
+    style_overrides["spine_width_pt"] = st.slider("Axis/spine width", 0.4, 4.0, 1.1, 0.1)
+    style_overrides["legend_outside"] = st.checkbox("Legend outside plot", value=False)
+    style_overrides["grid"] = st.checkbox("Grid", value=False)
 
 layout = {}
 if title:
@@ -263,8 +283,7 @@ if y_label:
     layout["y_label"] = y_label
 
 style = load_profile(journal_style)
-width = "double" if column_width == "double" else "single"
-w_mm = style.double_column_width_mm if width == "double" else style.single_column_width_mm
+w_mm = style.figure_size_inches(column_width)[0] * 25.4
 
 spec = make_spec(
     plot_type,
@@ -274,8 +293,8 @@ spec = make_spec(
     layout=layout or None,
     output=default_output_block(["svg", "png", "pdf"], width_mm=w_mm, dpi=dpi),
 )
-# Pass the requested column width through to renderers via statistics-free hook.
-spec["layout"] = {**spec.get("layout", {}), "column_width": width}
+spec["layout"] = {**spec.get("layout", {}), "column_width": column_width}
+spec["style"] = style_overrides
 
 
 # --- Render + preview -------------------------------------------------------
@@ -284,6 +303,11 @@ try:
     result = render(spec, table_info.dataframe, style=style, aux=pca_aux)
     fig = result.figure
     st.pyplot(fig, use_container_width=False)
+    check = result.metadata.get("publication_check", {})
+    if check.get("passed", True):
+        st.success(check.get("summary", "Publication check: passed"))
+    else:
+        st.warning(check.get("summary", "Publication check found issues"))
     for w in result.warnings:
         st.warning(w)
 

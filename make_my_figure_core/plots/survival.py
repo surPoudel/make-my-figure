@@ -94,7 +94,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             ax.set_title(title)
         if group_col is not None:
             ax.legend(title=str(group_col), frameon=False, loc="best")
-        style_axes(ax)
+        style_axes(ax, style)
         fig.tight_layout()
 
     meta = base_metadata(spec, style, work, used_columns=[time_col, event_col, group_col])

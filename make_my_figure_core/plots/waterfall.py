@@ -68,7 +68,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             handles = [Patch(facecolor=cmap[c], edgecolor="black", label=str(c))
                        for c in legend_handles]
             ax.legend(handles=handles, title=str(color_by), frameon=False, loc="best")
-        style_axes(ax)
+        style_axes(ax, style)
         fig.tight_layout()
 
     meta = base_metadata(spec, style, work, used_columns=[x, y, color_by])

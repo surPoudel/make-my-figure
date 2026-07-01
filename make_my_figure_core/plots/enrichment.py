@@ -94,7 +94,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                            label=f"{int(smin + q * span)}")
             ax.legend(title=str(size_col), frameon=False, loc="lower right",
                       labelspacing=1.0, borderpad=0.8)
-        style_axes(ax)
+        style_axes(ax, style)
         fig.tight_layout()
 
     meta = base_metadata(spec, style, work, used_columns=[y, x, size_col, color_col])

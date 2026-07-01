@@ -109,7 +109,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile,
                                           label=str(lvl)))
         if handles:
             ax.legend(handles=handles, frameon=False, loc="best", fontsize=style.axis_font_pt - 1)
-        style_axes(ax)
+        style_axes(ax, style)
         fig.tight_layout()
 
     meta = base_metadata(spec, style, df, used_columns=[row_id] + sample_cols)

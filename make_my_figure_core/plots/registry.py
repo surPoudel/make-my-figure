@@ -190,6 +190,8 @@ def render(
 
     if style is None:
         style = load_profile(spec["journal_style"])
+    # Apply GUI/PlotSpec style refinements (fonts, widths, markers, palette, ...).
+    style = style.with_overrides(spec.get("style"))
 
     if "aux" in inspect.signature(renderer).parameters:
         result = renderer(spec, df, style, aux=aux or {})
@@ -197,6 +199,16 @@ def render(
         result = renderer(spec, df, style)
     # Stamp the spec into metadata for a reproducibility sidecar.
     result.metadata.setdefault("spec", spec)
+    # Publication-readiness check (advisory; never blocks rendering/export).
+    try:
+        from make_my_figure_core.qa.publication_check import check_publication_readiness
+
+        check = check_publication_readiness(result.figure)
+        result.metadata["publication_check"] = {
+            "passed": check.passed, "warnings": check.warnings, "summary": check.summary}
+    except Exception as exc:  # QA must never break rendering
+        result.metadata["publication_check"] = {
+            "passed": True, "warnings": [], "summary": f"Publication check skipped: {exc}"}
     return result
 
 

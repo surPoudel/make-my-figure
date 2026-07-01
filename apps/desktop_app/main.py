@@ -61,6 +61,7 @@ from make_my_figure_core.io.loaders import LoaderError
 from make_my_figure_core.plots.base import RenderError
 from make_my_figure_core.plots.registry import display_name
 from make_my_figure_core.spec.validate import SpecValidationError
+from make_my_figure_core.styles.engine import NAMED_PALETTES
 
 APP_NAME = "Make My Figure"
 ORG_NAME = "MakeMyFigure"
@@ -285,16 +286,18 @@ class MainWindow(QMainWindow):
         self.xlabel_edit = QLineEdit()
         self.ylabel_edit = QLineEdit()
         self.width_combo = QComboBox()
-        self.width_combo.addItems(["single", "double"])
+        self.width_combo.addItems(["default", "single", "onehalf", "double"])
         self.dpi_spin = QSpinBox()
         self.dpi_spin.setRange(72, 1200)
         self.dpi_spin.setValue(300)
         lb.addRow("Title", self.title_edit)
         lb.addRow("X label", self.xlabel_edit)
         lb.addRow("Y label", self.ylabel_edit)
-        lb.addRow("Width", self.width_combo)
+        lb.addRow("Figure width", self.width_combo)
         lb.addRow("Raster DPI", self.dpi_spin)
         cv.addWidget(labels_box)
+
+        cv.addWidget(self._build_style_panel())
 
         self.preview_btn = QPushButton("Update preview")
         self.preview_btn.clicked.connect(self.render_preview)
@@ -394,6 +397,88 @@ class MainWindow(QMainWindow):
             sp.setHandleWidth(10)
             sp.setChildrenCollapsible(False)
         return splitter
+
+    # --- advanced style panel -------------------------------------------
+    def _build_style_panel(self) -> QWidget:
+        box = QGroupBox("5. Style (publication defaults)")
+        box.setCheckable(True)
+        box.setChecked(False)   # collapsed-ish: unchecked disables the controls
+        form = QFormLayout(box)
+
+        self.palette_combo = QComboBox()
+        self.palette_combo.addItem("(profile default)", None)
+        for name in NAMED_PALETTES:
+            self.palette_combo.addItem(name, name)
+        self.palette_combo.currentIndexChanged.connect(self.render_preview)
+
+        def _spin(minv, maxv, val, step=1, dbl=False):
+            w = QDoubleSpinBox() if dbl else QSpinBox()
+            w.setRange(minv, maxv)
+            w.setSingleStep(step)
+            w.setValue(val)
+            w.valueChanged.connect(self.render_preview)
+            return w
+
+        self.sp_axis = _spin(8, 28, 12)
+        self.sp_tick = _spin(6, 24, 10)
+        self.sp_legend = _spin(6, 24, 10)
+        self.sp_annot = _spin(6, 24, 10)
+        self.sp_marker = _spin(6, 300, 45)
+        self.sp_linew = _spin(0.5, 6.0, 1.8, 0.1, dbl=True)
+        self.sp_spine = _spin(0.4, 4.0, 1.1, 0.1, dbl=True)
+        self.chk_legend_outside = QCheckBox()
+        self.chk_legend_outside.stateChanged.connect(self.render_preview)
+        self.chk_grid = QCheckBox()
+        self.chk_grid.stateChanged.connect(self.render_preview)
+
+        form.addRow("Palette", self.palette_combo)
+        form.addRow("Axis label pt", self.sp_axis)
+        form.addRow("Tick label pt", self.sp_tick)
+        form.addRow("Legend pt", self.sp_legend)
+        form.addRow("Annotation pt", self.sp_annot)
+        form.addRow("Marker size", self.sp_marker)
+        form.addRow("Line width", self.sp_linew)
+        form.addRow("Axis/spine width", self.sp_spine)
+        form.addRow("Legend outside", self.chk_legend_outside)
+        form.addRow("Grid", self.chk_grid)
+
+        reset = QPushButton("Reset to publication defaults")
+        reset.clicked.connect(self.action_reset_style)
+        form.addRow(reset)
+
+        box.toggled.connect(lambda _=False: self.render_preview())
+        self._style_box = box
+        return box
+
+    def _collect_style_overrides(self) -> dict:
+        """Return spec['style'] overrides from the advanced panel (or {})."""
+        if not getattr(self, "_style_box", None) or not self._style_box.isChecked():
+            return {}
+        ov = {
+            "axis_font_pt": float(self.sp_axis.value()),
+            "tick_label_pt": float(self.sp_tick.value()),
+            "legend_pt": float(self.sp_legend.value()),
+            "annotation_pt": float(self.sp_annot.value()),
+            "marker_size": float(self.sp_marker.value()),
+            "line_width_pt": float(self.sp_linew.value()),
+            "regression_line_width": float(self.sp_linew.value()),
+            "spine_width_pt": float(self.sp_spine.value()),
+            "legend_outside": self.chk_legend_outside.isChecked(),
+            "grid": self.chk_grid.isChecked(),
+        }
+        pal = self.palette_combo.currentData()
+        if pal:
+            ov["palette_name"] = pal
+        return ov
+
+    def action_reset_style(self):
+        self.palette_combo.setCurrentIndex(0)
+        self.sp_axis.setValue(12); self.sp_tick.setValue(10); self.sp_legend.setValue(10)
+        self.sp_annot.setValue(10); self.sp_marker.setValue(45)
+        self.sp_linew.setValue(1.8); self.sp_spine.setValue(1.1)
+        self.chk_legend_outside.setChecked(False); self.chk_grid.setChecked(False)
+        self.statusBar().showMessage("Style reset to publication defaults.", 4000)
+        self.render_preview()
 
     # --- menu ------------------------------------------------------------
     def _build_menu(self) -> None:
@@ -798,9 +883,13 @@ class MainWindow(QMainWindow):
             layout["x_label"] = self.xlabel_edit.text().strip()
         if self.ylabel_edit.text().strip():
             layout["y_label"] = self.ylabel_edit.text().strip()
-        return self.controller.build_spec(
+        spec = self.controller.build_spec(
             pt, style, self.data.table_name, self._collect_mapping(),
             layout=layout, width=self.width_combo.currentText(), dpi=self.dpi_spin.value())
+        overrides = self._collect_style_overrides()
+        if overrides:
+            spec["style"] = overrides
+        return spec
 
     def _try_build_and_render(self):
         """Return (spec, result, error_msg). result is None if rendering failed."""
@@ -817,13 +906,15 @@ class MainWindow(QMainWindow):
         self._current_spec = spec
         self._current_result = result
         self._hide_example_prompt()
-        warns = result.warnings or []
+        warns = list(result.warnings or [])
+        check = result.metadata.get("publication_check", {})
+        lines = [check.get("summary", "")] if check else []
         if warns:
-            self.warn_label.setText("⚠ " + " | ".join(warns))
-            self.right_tabs.setCurrentIndex(1)   # Messages tab
-        else:
-            self.warn_label.setText("No warnings.")
-            self.right_tabs.setCurrentIndex(0)   # Data preview tab
+            lines.append("⚠ " + " | ".join(warns))
+        self.warn_label.setText("\n".join([ln for ln in lines if ln]) or "No warnings.")
+        # Show the messages tab if there is anything actionable, else data preview.
+        self.right_tabs.setCurrentIndex(1 if (warns or not check.get("passed", True)) else 0)
+        self.statusBar().showMessage(check.get("summary", "Rendered."), 6000)
         self._show_figure(result.figure)          # figure is always visible below
 
     def render_preview(self):

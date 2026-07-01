@@ -47,11 +47,35 @@ _OKABE_ITO = [
     "#000000",  # black
 ]
 
+# A polished, high-contrast, colorblind-aware categorical palette used as the
+# publication default (not Matplotlib's default cycle).
+_PUBLICATION = ["#0072B2", "#D55E00", "#009E73", "#CC79A7", "#E69F00", "#56B4E9",
+                "#4B0092", "#000000"]
+_HIGH_CONTRAST = ["#000000", "#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00",
+                  "#A65628", "#F781BF"]
+_GRAYSCALE = ["#111111", "#555555", "#888888", "#AAAAAA", "#333333", "#666666"]
+
 _PALETTES: Dict[str, List[str]] = {
+    "publication": _PUBLICATION,
     "nature_like": _OKABE_ITO,
     "science_like": ["#1B1B1B", "#0072B2", "#D55E00", "#009E73", "#CC79A7", "#E69F00"],
     "cell_like": ["#3B6FB6", "#E8743B", "#19A979", "#945ECF", "#ED4A7B", "#13A4B4"],
 }
+
+# Named palettes selectable from the GUI/PlotSpec (override "palette_name").
+NAMED_PALETTES: Dict[str, List[str]] = {
+    "publication": _PUBLICATION,
+    "colorblind_safe": _OKABE_ITO,
+    "high_contrast": _HIGH_CONTRAST,
+    "grayscale": _GRAYSCALE,
+    "nature_like": _OKABE_ITO,
+    "science_like": _PALETTES["science_like"],
+    "cell_like": _PALETTES["cell_like"],
+}
+
+# Figure width presets (mm). "default" is a comfortable medium size so the very
+# first plot reads well on screen and in slides without any tweaking.
+WIDTH_PRESETS_MM = {"single": 110.0, "onehalf": 140.0, "double": 180.0, "default": 130.0}
 
 # Diverging / sequential colormaps used by heatmap-style renderers.
 _SEQUENTIAL_CMAP = {
@@ -72,39 +96,74 @@ _FONT_STACK = ["Arial", "Helvetica", "DejaVu Sans", "sans-serif"]
 
 @dataclass
 class StyleProfile:
-    """A resolved set of style tokens for one journal-like profile."""
+    """Resolved publication-style tokens for one profile.
+
+    Defaults are tuned to be *publication-ready out of the box*: readable font
+    sizes, strong axis/tick widths, visible markers, and colorblind-aware
+    high-contrast colors. GUI/PlotSpec ``style`` overrides refine these.
+    """
 
     name: str
-    font_family: List[str]
-    base_font_pt: float
-    axis_font_pt: float
-    title_font_pt: float
-    line_width_pt: float
-    spine_width_pt: float
-    single_column_width_mm: float
-    double_column_width_mm: float
-    preferred_exports: List[str]
-    palette_role: str
-    palette: List[str] = field(default_factory=list)
+    font_family: List[str] = field(default_factory=lambda: list(_FONT_STACK))
+    # --- typography (points) ---
+    base_font_pt: float = 11.0
+    axis_font_pt: float = 12.0          # axis (x/y) label size
+    tick_label_pt: float = 10.0
+    legend_pt: float = 10.0
+    legend_title_pt: float = 11.0
+    title_font_pt: float = 13.0
+    annotation_pt: float = 9.5          # gene/mutation/point labels
+    panel_label_pt: float = 13.0
+    font_weight: str = "normal"
+    text_color: str = "#1a1a1a"
+    # --- axes ---
+    spine_width_pt: float = 1.1
+    tick_width: float = 1.0
+    tick_length: float = 4.5
+    tick_direction: str = "out"
+    show_top_spine: bool = False
+    show_right_spine: bool = False
+    grid: bool = False
+    grid_width: float = 0.6
+    grid_alpha: float = 0.35
+    # --- data marks ---
+    line_width_pt: float = 1.8
+    marker_size: float = 45.0           # scatter s=
+    marker_edge_width: float = 0.6
+    marker_alpha: float = 0.9
+    regression_line_width: float = 2.0
+    errorbar_line_width: float = 1.1
+    errorbar_capsize: float = 3.5
+    bar_edge_width: float = 0.9
+    # --- legend ---
+    legend_frameon: bool = False
+    legend_loc: str = "best"
+    legend_outside: bool = False
+    legend_ncol: int = 1
+    # --- sizing / colors ---
+    single_column_width_mm: float = 110.0
+    double_column_width_mm: float = 180.0
+    default_width_mm: float = 130.0
+    export_dpi: int = 300
+    preferred_exports: List[str] = field(default_factory=lambda: ["svg", "pdf", "png"])
+    palette_role: str = "publication"
+    palette: List[str] = field(default_factory=lambda: list(_PUBLICATION))
     sequential_cmap: str = "viridis"
     diverging_cmap: str = "RdBu_r"
     is_learned: bool = False
-    extra: Dict[str, Any] = field(default_factory=dict)   # learned-profile metadata
+    extra: Dict[str, Any] = field(default_factory=dict)
 
-    def figure_size_inches(self, width: str = "single", aspect: float = 0.75) -> tuple[float, float]:
-        """Return ``(width_in, height_in)`` for a column width and aspect.
-
-        ``width`` is ``"single"`` or ``"double"``; ``aspect`` is height/width.
-        """
-        if width == "double":
-            w_mm = self.double_column_width_mm
-        else:
-            w_mm = self.single_column_width_mm
+    def figure_size_inches(self, width: str = "default", aspect: float = 0.72) -> tuple[float, float]:
+        """Return ``(width_in, height_in)`` for a width preset and aspect."""
+        w_mm = WIDTH_PRESETS_MM.get(width)
+        if w_mm is None:
+            w_mm = {"single": self.single_column_width_mm,
+                    "double": self.double_column_width_mm}.get(width, self.default_width_mm)
         w_in = mm_to_inches(w_mm)
         return (w_in, w_in * float(aspect))
 
     def color_for(self, index: int) -> str:
-        palette = self.palette or _OKABE_ITO
+        palette = self.palette or _PUBLICATION
         return palette[index % len(palette)]
 
     def rc_params(self) -> Dict[str, Any]:
@@ -113,22 +172,39 @@ class StyleProfile:
             "font.family": "sans-serif",
             "font.sans-serif": self.font_family,
             "font.size": self.base_font_pt,
+            "font.weight": self.font_weight,
+            "text.color": self.text_color,
             "axes.titlesize": self.title_font_pt,
+            "axes.titleweight": "bold",
             "axes.labelsize": self.axis_font_pt,
-            "xtick.labelsize": self.axis_font_pt,
-            "ytick.labelsize": self.axis_font_pt,
-            "legend.fontsize": self.axis_font_pt,
+            "axes.labelcolor": self.text_color,
+            "axes.labelweight": self.font_weight,
+            "axes.edgecolor": self.text_color,
+            "xtick.color": self.text_color,
+            "ytick.color": self.text_color,
+            "xtick.labelsize": self.tick_label_pt,
+            "ytick.labelsize": self.tick_label_pt,
+            "legend.fontsize": self.legend_pt,
+            "legend.title_fontsize": self.legend_title_pt,
+            "legend.frameon": self.legend_frameon,
             "axes.linewidth": self.spine_width_pt,
             "lines.linewidth": self.line_width_pt,
-            "xtick.major.width": self.spine_width_pt,
-            "ytick.major.width": self.spine_width_pt,
-            "axes.spines.top": False,
-            "axes.spines.right": False,
-            "axes.grid": False,
-            "figure.dpi": 100,
+            "xtick.major.width": self.tick_width,
+            "ytick.major.width": self.tick_width,
+            "xtick.major.size": self.tick_length,
+            "ytick.major.size": self.tick_length,
+            "xtick.direction": self.tick_direction,
+            "ytick.direction": self.tick_direction,
+            "axes.spines.top": self.show_top_spine,
+            "axes.spines.right": self.show_right_spine,
+            "axes.grid": self.grid,
+            "grid.linewidth": self.grid_width,
+            "grid.alpha": self.grid_alpha,
+            "figure.dpi": 110,
+            "savefig.dpi": self.export_dpi,
             "savefig.bbox": "tight",
-            "svg.fonttype": "none",  # keep text editable in SVG
-            "pdf.fonttype": 42,      # embed TrueType so text stays editable
+            "svg.fonttype": "none",
+            "pdf.fonttype": 42,
             "ps.fonttype": 42,
         }
 
@@ -136,23 +212,36 @@ class StyleProfile:
         """Return an rc_context that temporarily applies this profile."""
         return mpl.rc_context(rc=self.rc_params())
 
+    def with_overrides(self, overrides: Optional[Dict[str, Any]]) -> "StyleProfile":
+        """Return a copy with GUI/PlotSpec style overrides applied."""
+        import copy
+
+        if not overrides:
+            return self
+        clone = copy.deepcopy(self)
+        pal = overrides.get("palette_name")
+        if pal and pal in NAMED_PALETTES:
+            clone.palette = list(NAMED_PALETTES[pal])
+            clone.palette_role = pal
+        for key, val in overrides.items():
+            if key in ("palette_name",):
+                continue
+            if hasattr(clone, key) and val is not None:
+                setattr(clone, key, val)
+        return clone
+
 
 def _parse_profile(name: str, raw: Dict[str, Any]) -> StyleProfile:
+    # Journal print sizes in the starter JSON (~7pt) are too small for on-screen
+    # / general export use, so we keep the publication-ready dataclass defaults
+    # and only take per-profile palette, colormaps, and column widths.
     return StyleProfile(
         name=name,
-        font_family=list(_FONT_STACK),
-        base_font_pt=float(raw.get("base_font_pt", 7)),
-        axis_font_pt=float(raw.get("axis_font_pt", 7)),
-        title_font_pt=float(raw.get("title_font_pt", 8)),
-        line_width_pt=float(raw.get("line_width_pt", 0.75)),
-        spine_width_pt=float(raw.get("spine_width_pt", 0.5)),
-        single_column_width_mm=float(raw.get("single_column_width_mm", 89)),
-        double_column_width_mm=float(raw.get("double_column_width_mm", 183)),
-        preferred_exports=list(raw.get("preferred_exports", ["svg", "pdf", "png"])),
-        palette_role=str(raw.get("palette_role", "")),
-        palette=_PALETTES.get(name, _OKABE_ITO),
+        palette=_PALETTES.get(name, _PUBLICATION),
+        palette_role=str(raw.get("palette_role", name)),
         sequential_cmap=_SEQUENTIAL_CMAP.get(name, "viridis"),
         diverging_cmap=_DIVERGING_CMAP.get(name, "RdBu_r"),
+        single_column_width_mm=float(raw.get("single_column_width_mm", 110)) if float(raw.get("single_column_width_mm", 110)) >= 100 else 110.0,
     )
 
 
@@ -192,38 +281,42 @@ def _load_learned_raw() -> Dict[str, Dict[str, Any]]:
 def _parse_learned(name: str, raw: Dict[str, Any]) -> StyleProfile:
     typo = raw.get("typography", {})
     lines = raw.get("lines", {})
-    layout = raw.get("layout", {})
     color = raw.get("color", {})
     base_name = raw.get("base_profile", "nature_like")
-    base_palette = _PALETTES.get(base_name, _OKABE_ITO)
-    return StyleProfile(
-        name=name,
-        font_family=list(typo.get("font_family", _FONT_STACK)),
-        base_font_pt=float(typo.get("base_font_pt", 7)),
-        axis_font_pt=float(typo.get("axis_font_pt", 7)),
-        title_font_pt=float(typo.get("title_font_pt", 8)),
-        line_width_pt=float(lines.get("line_width_pt", 0.75)),
-        spine_width_pt=float(lines.get("spine_width_pt", 0.5)),
-        single_column_width_mm=float(layout.get("single_column_width_mm", 89)),
-        double_column_width_mm=float(layout.get("double_column_width_mm", 183)),
-        preferred_exports=list(raw.get("export", {}).get("formats", ["svg", "pdf", "png"])),
-        palette_role=color.get("policy", "learned"),
-        palette=list(color.get("palette", base_palette)),
-        sequential_cmap=color.get("sequential_cmap", _SEQUENTIAL_CMAP.get(base_name, "viridis")),
-        diverging_cmap=color.get("diverging_cmap", _DIVERGING_CMAP.get(base_name, "RdBu_r")),
-        is_learned=True,
-        extra=raw,
-    )
+    base_palette = _PALETTES.get(base_name, _PUBLICATION)
+    d = StyleProfile(name=name)   # publication-ready defaults
+    # Learned profiles refine palette/colormap; keep publication-readable type/marks
+    # (clamp any stale small font sizes up to readable minimums).
+    d.is_learned = True
+    d.extra = raw
+    d.palette = list(color.get("palette", base_palette))
+    d.palette_role = color.get("policy", "learned")
+    d.sequential_cmap = color.get("sequential_cmap", _SEQUENTIAL_CMAP.get(base_name, "viridis"))
+    d.diverging_cmap = color.get("diverging_cmap", _DIVERGING_CMAP.get(base_name, "RdBu_r"))
+    d.base_font_pt = max(float(typo.get("base_font_pt", d.base_font_pt)), 10.0)
+    d.axis_font_pt = max(float(typo.get("axis_font_pt", d.axis_font_pt)), 11.0)
+    d.title_font_pt = max(float(typo.get("title_font_pt", d.title_font_pt)), 12.0)
+    if raw.get("export", {}).get("formats"):
+        d.preferred_exports = list(raw["export"]["formats"])
+    return d
+
+
+def _publication_profile() -> StyleProfile:
+    return StyleProfile(name="publication", palette=list(_PUBLICATION),
+                        palette_role="publication", sequential_cmap="viridis",
+                        diverging_cmap="RdBu_r")
 
 
 def list_profiles(path: Optional[str] = None) -> List[str]:
-    """Starter profiles plus any learned profiles found on disk."""
+    """Publication default first, then starter profiles, then learned profiles."""
     starters = list(_load_raw(path).get("profiles", {}).keys())
     learned = list(_load_learned_raw().keys())
-    return starters + learned
+    return ["publication"] + starters + learned
 
 
 def load_profile(name: str, path: Optional[str] = None) -> StyleProfile:
+    if name == "publication":
+        return _publication_profile()
     profiles = _load_raw(path).get("profiles", {})
     if name in profiles:
         return _parse_profile(name, profiles[name])

@@ -54,11 +54,12 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             centers,
             yerr=errors if error_method.lower() != "none" else None,
             color=colors,
-            edgecolor="black",
-            linewidth=style.spine_width_pt,
-            width=0.65,
-            capsize=2.5,
-            error_kw={"elinewidth": style.spine_width_pt, "capthick": style.spine_width_pt},
+            edgecolor="#222222",
+            linewidth=style.bar_edge_width,
+            width=0.68,
+            capsize=style.errorbar_capsize,
+            error_kw={"elinewidth": style.errorbar_line_width,
+                      "capthick": style.errorbar_line_width},
         )
         ax.set_xticks(list(positions))
         ax.set_xticklabels([str(c) for c in categories])
@@ -67,10 +68,11 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if error_method.lower() != "none":
             ylab = f"{ylab} (mean ± {error_method.upper()})"
         ax.set_ylabel(ylab)
+        ax.margins(y=0.08)
         title = spec.get("layout", {}).get("title")
         if title:
             ax.set_title(title)
-        style_axes(ax)
+        style_axes(ax, style)
         fig.tight_layout()
 
     meta = base_metadata(spec, style, work, used_columns=[x, y, color_by])

@@ -15,7 +15,11 @@ def test_three_starter_profiles_present():
 
 def test_profile_tokens_and_palette():
     p = load_profile("nature_like")
-    assert p.base_font_pt == 7
+    # Publication-ready readable defaults (not tiny journal-print 7pt).
+    assert p.base_font_pt >= 10
+    assert p.axis_font_pt >= 11
+    assert p.marker_size >= 30
+    assert p.spine_width_pt >= 1.0
     assert p.palette and all(c.startswith("#") for c in p.palette)
     # colors cycle without index error
     assert p.color_for(0) == p.color_for(len(p.palette))
