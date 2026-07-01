@@ -93,11 +93,16 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                 last_x = r[x]
                 n_label_levels = max(n_label_levels, level + 1)
                 y_text = r[y] + base + step * level
-                ax.annotate(
-                    txt, xy=(r[x], r[y]), xytext=(r[x], y_text),
-                    fontsize=label_fs, ha="center", va="bottom", zorder=4,
-                    arrowprops=dict(arrowstyle="-", lw=style.spine_width_pt, color="0.6",
-                                    shrinkA=0, shrinkB=2))
+                # Label sits directly above its own pop (no leader line, so the
+                # marker stays at the TOP of its stem — not mid-stem). For a
+                # bumped-up (staggered) label, add a short faint DOTTED tick just
+                # above the marker to disambiguate, clearly distinct from the
+                # solid stem below the marker.
+                ax.text(r[x], y_text, txt, fontsize=label_fs, ha="center",
+                        va="bottom", zorder=4)
+                if level > 0:
+                    ax.plot([r[x], r[x]], [r[y] + base * 0.4, y_text - base * 0.2],
+                            ls=":", lw=style.spine_width_pt, color="0.7", zorder=2)
 
         # Headroom so labels are never clipped at the top.
         head = y_margin + 0.14 * (n_label_levels - 1)
