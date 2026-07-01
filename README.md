@@ -1,152 +1,228 @@
 # Make My Figure
 
+**Publication-style scientific figures from Excel, CSV, and TSV data — without hours of manual formatting.**
+
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
-![Tests](https://img.shields.io/badge/tests-246%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-306%20passing-brightgreen)
 ![Plot types](https://img.shields.io/badge/plot%20types-17-orange)
 ![Desktop](https://img.shields.io/badge/desktop-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 
-A research-software app that turns a CSV/TSV/XLSX table into a manuscript-style
-scientific figure with **Nature-like / Science-like / Cell-like** aesthetics, and
-exports SVG/PNG/PDF plus a reproducible `PlotSpec` JSON sidecar.
+Make My Figure is a research-software tool for scientists who need publication-ready
+figures but don't want to spend hours manually adjusting fonts, legends, colors, axes,
+figure sizes, and export settings. Load a table, choose a plot type, pick a journal-like
+style, preview the figure, fine-tune the formatting, and export a manuscript-ready file.
 
-> These are *-like style profiles only — not official journal templates, and not a
-> guarantee of submission compliance.
-
-**Milestones 1 & 2 are implemented**: loaders, schema validation, style engine,
-and **all 17 plot types** from the mock-data manifest (bar/grouped bar, box/violin,
-line/time-course, ridge, scatter, heatmap, volcano, enrichment dot plot, Kaplan-Meier,
-stacked composition, waterfall, PCA, oncoprint, lollipop, ROC, forest).
-See **[docs/QUICKSTART.md](docs/QUICKSTART.md)** to install and run, and the
-**[reports/](reports/)** summaries for status.
-
-```bash
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-streamlit run apps/streamlit_app/streamlit_app.py   # web dashboard
-pytest -q                                           # tests
-```
-
-**Milestone 4** refactors the engine into a reusable core package
-(`make_my_figure_core/`) shared by two frontends, and adds a **zero-command
-desktop app** (PySide6) for non-technical users — open a file, pick a plot type
-and style, preview, and export SVG/PNG/PDF/PlotSpec JSON. See
-**[docs/DESKTOP_APP.md](docs/DESKTOP_APP.md)** and
-**[docs/BUILD_INSTALLERS.md](docs/BUILD_INSTALLERS.md)**.
-
-```bash
-pip install -e ".[desktop]"
-python -m apps.desktop_app.main          # run desktop app from source
-python scripts/build_desktop.py          # build a standalone app (see build docs)
-```
-
-### Layout
-```
-make_my_figure_core/   reusable engine (loaders, validation, styles, renderers,
-                       export, provenance, mock-data + UI hints)
-apps/streamlit_app/    web/developer frontend
-apps/desktop_app/      PySide6 desktop frontend (controller.py + main.py)
-examples/              synthetic example/template dataset for every plot type
-```
-
-### Example / template data
-
-Every supported plot type ships with a clean **synthetic** example dataset
-(CSV/TSV/XLSX + PlotSpec + README) under `examples/by_plot_type/`, plus a combined
-workbook and a machine-readable manifest. Use them via **Use example data** in
-either app, or **Save template** to export a table and replace it with your own data.
-
-```bash
-python scripts/generate_example_data.py   # regenerate all examples (seed 42, CC0)
-```
-
-Docs: **[EXAMPLE_DATA.md](docs/EXAMPLE_DATA.md)** ·
-**[DATA_TEMPLATES.md](docs/DATA_TEMPLATES.md)** ·
-**[PLOT_TYPE_REQUIREMENTS.md](docs/PLOT_TYPE_REQUIREMENTS.md)**. Published papers/figures
-are used only as visual style references; bundled example data are synthetic and must
-not be cited as real findings.
-
-### Publication-ready by default
-
-Every plot is **publication-styled out of the box** — readable fonts (12 pt axis
-labels, 10 pt ticks), strong colorblind-aware contrast, clean axes, visible
-markers, and non-overlapping legends — via one shared style engine used by both
-apps. A **Style** panel (desktop) and **Formatting** expander (Streamlit) let you
-refine palette, font sizes, line widths, markers, legend placement, figure size,
-and DPI, with **Reset to publication defaults**. After each render a
-**publication-readiness check** flags small text / overlap / clipping (advisory).
-Docs: **[STYLE_PROFILES.md](docs/STYLE_PROFILES.md)** ·
-**[EXPORTING_PUBLICATION_FIGURES.md](docs/EXPORTING_PUBLICATION_FIGURES.md)**.
-
-```bash
-python scripts/generate_style_qa_gallery.py   # visual QA gallery (outputs/, git-ignored)
-```
-
-### Style profiles (starter + learned)
-
-Six journal-like style profiles are available (Nature-/Science-/Cell-like and their
-**learned** variants). Learned profiles encode *aggregate* visual conventions derived
-from a local open-access (CC BY) reference library — no figure or dataset is copied
-and no official journal compliance is claimed. See
-**[STYLE_REFERENCE_AUDIT.md](docs/STYLE_REFERENCE_AUDIT.md)**.
-
-```bash
-python scripts/build_learned_styles.py   # regenerate learned profiles + audit
-```
-
-**Milestone 3** adds a license-aware, HTTPS-only harvesting pipeline that builds a
-curated library of open-access, post-2020 Nature/Science/Cell-family papers,
-downloading figures + data **only** under CC BY / CC BY-SA / CC0 (license confirmed
-by two independent sources), with full provenance. See **[docs/HARVEST.md](docs/HARVEST.md)**.
-
-```bash
-python scripts/harvest_library.py --out figure_library --papers 10
-```
+> **Journal-like, not official.** The **Nature-like**, **Science-like**, and **Cell-like**
+> style profiles are visual aesthetics only. They are **not** official journal templates and
+> do **not** guarantee compliance with, or acceptance by, any journal.
 
 ---
 
-## Prompt and mock-data bundle
+## Why this exists
 
-This bundle also contains a Claude Code master prompt plus reproducible mock input tables for a manuscript-style scientific figure app.
+After the analysis is done, researchers still spend a lot of time reformatting plots to
+look publication-ready — resizing text, fixing legends that overlap the data, choosing
+readable colorblind-safe palettes, cleaning up axes, and exporting at the right size and
+resolution. It's repetitive, easy to get wrong, and hard to reproduce.
 
-## Contents
+Make My Figure aims to reduce that repetitive formatting work: it produces strong,
+readable figures **by default**, keeps the settings reproducible, and makes high-quality
+scientific figures accessible to people who would rather not write plotting code.
 
-- `claude_code/CLAUDE_CODE_MASTER_PROMPT.md` — full implementation prompt for Claude Code.
-- `claude_code/LAUNCH_PROMPT_SHORT.md` — shorter prompt that points Claude Code to the full prompt.
-- `mock_data/` — CSV/TSV examples for common high-impact biology/biomedical plot types.
-- `mock_data/plot_schema_manifest.json` — machine-readable map of plot types, file paths, required columns, and suggested defaults.
-- `schemas/plot_spec.schema.json` — starter JSON schema for figure specifications.
-- `style_profiles/starter_journal_style_profiles.json` — starter journal-like style tokens; these are not official journal templates.
-- `make_my_figure_mock_data.xlsx` — workbook version of the same mock tables for users who prefer Excel.
+## What Make My Figure can do
 
-## How users should replace mock data
+- Load **CSV, TSV, and Excel** files
+- Start from built-in **example/template datasets** for every plot type
+- Generate common **biological, biomedical, and scientific** plot types
+- Apply **publication-style defaults automatically**
+- Choose **journal-like style profiles** (Nature-/Science-/Cell-like, + a neutral publication default)
+- Adjust **font sizes, line widths, marker sizes, palettes, legends, figure size, and DPI**
+- **Preview** figures interactively
+- Export **SVG, PDF, PNG, and a PlotSpec JSON** sidecar
+- **Save templates** so you can replace the example data with your own
+- Run as a **Streamlit** web/developer app
+- Run as a **desktop app** on Windows, macOS, and Linux
+- Keep your **data local** in the desktop app (no telemetry, no cloud upload)
 
-For each table, keep the required column names and replace the rows with real data. The app should also allow users to map their own column names to the required roles. Do not assume column order; validate by column name and type.
+## Supported plot types
 
-## Plot types covered
+The current renderers (17):
 
-- barplot_with_error_bar: `mock_data/barplot_error_raw.csv`
-- grouped_barplot_with_error_bar: `mock_data/grouped_barplot_error.csv`
-- boxplot_or_violin_with_points: `mock_data/box_violin_points.csv`
-- scatterplot_with_regression: `mock_data/scatter_regression.csv`
-- lineplot_timecourse_with_error_band: `mock_data/line_timecourse.tsv`
-- heatmap_clustered_matrix: `mock_data/heatmap_expression_matrix.tsv`
-- volcano_plot: `mock_data/volcano_plot.csv`
-- enrichment_dotplot: `mock_data/enrichment_dotplot.csv`
-- kaplan_meier_survival_curve: `mock_data/survival_km.csv`
-- stacked_bar_composition: `mock_data/stacked_composition.csv`
-- waterfall_plot: `mock_data/waterfall_response.csv`
-- pca_scatter_from_matrix: `mock_data/pca_expression_matrix.tsv + mock_data/pca_sample_metadata.csv`
-- oncoprint_mutation_heatmap: `mock_data/oncoprint_long.csv`
-- lollipop_mutation_plot: `mock_data/lollipop_mutations.csv`
-- roc_curve: `mock_data/roc_curve_scores.csv`
-- forest_plot: `mock_data/forest_plot.csv`
-- ridge_or_density_plot: `mock_data/ridge_density.csv`
+- Bar plot with error bars
+- Grouped bar plot with error bars
+- Box / violin plot with points
+- Scatter plot (with optional regression line)
+- Line / time-course plot with error band
+- Clustered heatmap
+- Volcano plot
+- Enrichment dot plot
+- Kaplan–Meier survival curve
+- Stacked composition bar plot
+- Waterfall plot
+- PCA scatter (expression matrix + sample metadata)
+- Oncoprint mutation heatmap
+- Lollipop mutation plot
+- ROC curve
+- Forest plot
+- Ridge / density plot
+
+See **[docs/PLOT_TYPE_REQUIREMENTS.md](docs/PLOT_TYPE_REQUIREMENTS.md)** for the required and
+optional columns of each plot type.
+
+## Publication-style defaults
+
+Every plot is styled to be publication-ready out of the box, so the first figure you see is
+already clean:
+
+- readable fonts (≈12 pt axis labels, 10 pt ticks)
+- clean axes (thin spines, no chartjunk, top/right spines hidden)
+- **colorblind-aware, high-contrast** palettes (not the default Matplotlib cycle)
+- non-overlapping legends where possible (placed outside the data when needed)
+- sensible figure sizes and margins
+- export-safe layout (tight bounding boxes so labels/legends aren't clipped)
+- vector-friendly **SVG/PDF** output with **editable text**
+
+You can still refine everything from the app's style controls. After each render, a
+lightweight **publication-readiness check** flags likely issues (text too small, legend
+overlap, possible clipping, missing labels). It's advisory and never blocks export.
+More detail: **[docs/STYLE_PROFILES.md](docs/STYLE_PROFILES.md)**.
+
+## Example data and templates
+
+Every plot type ships with a **synthetic** example dataset. These double as **templates**:
+open one, click **Save template**, then replace the rows with your own data while keeping the
+column names. See **[docs/EXAMPLE_DATA.md](docs/EXAMPLE_DATA.md)** and
+**[docs/DATA_TEMPLATES.md](docs/DATA_TEMPLATES.md)**.
+
+> The bundled example datasets are **synthetic** and are **not** copied from published
+> papers. Published figures may be consulted as *visual style references only* where
+> licensing permits local analysis; the tool does not copy published figures and does not
+> present the synthetic examples as real biological findings.
+
+## Apps
+
+### Streamlit app
+
+```bash
+streamlit run apps/streamlit_app/streamlit_app.py
+```
+
+A browser-based interface — convenient for development, testing, and quick use.
+
+### Desktop app
+
+```bash
+python -m apps.desktop_app.main
+```
+
+A zero-command desktop application (PySide6) with a live figure preview, an interactive
+toolbar (pan/zoom/home/save), and resizable panels. Standalone installers can be built for
+Windows, macOS, and Linux so end users don't need the command line. See
+**[docs/DESKTOP_APP.md](docs/DESKTOP_APP.md)** and
+**[docs/BUILD_INSTALLERS.md](docs/BUILD_INSTALLERS.md)**.
+
+## Installation
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+For the desktop app's extra dependencies:
+
+```bash
+pip install -e ".[desktop]"
+```
+
+A step-by-step guide is in **[docs/QUICKSTART.md](docs/QUICKSTART.md)**.
+
+## Quick start
+
+1. Open the app (desktop or Streamlit).
+2. Choose **Use example data**, or upload a **CSV / TSV / XLSX** file.
+3. Select a **plot type**.
+4. Map columns to roles (if needed).
+5. Choose a **style profile**.
+6. **Preview** the figure.
+7. Adjust formatting if you like (fonts, palette, legend, size, DPI).
+8. **Export** SVG, PDF, PNG, and the PlotSpec JSON.
 
 ## Reproducibility
 
-All mock data were generated with a fixed random seed (`42`) and are synthetic. They are safe to redistribute and are not derived from real patient data or copyrighted figures.
+Each figure can be exported alongside a **PlotSpec JSON** file that records the plot type,
+column mapping, style profile, formatting options, and export settings. This makes figures
+easier to reproduce, revise, and share. See
+**[docs/EXPORTING_PUBLICATION_FIGURES.md](docs/EXPORTING_PUBLICATION_FIGURES.md)**.
 
-## Legal note for paper/figure harvesting
+## Privacy
 
-The Claude Code prompt requires open-access/license-aware harvesting. The app should not bundle third-party figures or data unless the license clearly permits it and provenance is stored.
+- The desktop app runs **entirely on your computer**.
+- Your data does not need to leave the machine.
+- There is **no telemetry and no cloud upload**. Any such feature would only ever be added
+  if explicitly implemented and clearly documented.
+
+## Roadmap
+
+Planned directions (not yet implemented unless stated elsewhere):
+
+### Statistics support (planned — v2 roadmap)
+
+Future versions may add commonly used statistical tests and figure annotations. **These are
+not implemented yet.** Planned coverage includes:
+
+- **Two-group tests:** Student's t-test, Welch's t-test, Mann–Whitney U, paired t-test,
+  Wilcoxon signed-rank
+- **Multi-group tests:** one-way ANOVA, two-way ANOVA, repeated-measures ANOVA (where
+  appropriate), Kruskal–Wallis
+- **Categorical tests:** chi-square, Fisher's exact
+- **Survival / model statistics:** log-rank test for Kaplan–Meier curves, hazard-ratio
+  display if model support is added
+- **Multiple-testing correction:** Benjamini–Hochberg (FDR), Bonferroni
+- **Figure annotations:** p-value labels, significance brackets, effect sizes, confidence
+  intervals, and automatic method reporting
+
+Any statistics feature will be **transparent and reproducible**: it will report the exact
+test used, its assumptions, the sample size, the effect size, and the correction method.
+
+### Other planned items
+
+- A Python (and possibly R) package API
+- More journal-like style profiles
+- A multi-panel figure builder
+- Better automatic label-collision avoidance
+- More biomedical plot templates
+- Smoother GraphPad/Prism-like workflows
+- Improved style auditing from open-access figures
+- PowerPoint / Illustrator-friendly SVG/PDF export
+- Batch rendering
+
+## Contributing
+
+The project is under active development and feedback is very welcome. Useful areas:
+
+- testing with real scientific workflows
+- suggesting missing plot types
+- improving example templates
+- UI/UX feedback
+- documentation
+- statistical-method review (for the planned statistics features)
+- packaging and installers
+- accessibility and colorblind-safe palettes
+
+Please open an issue or pull request to get started.
+
+## License
+
+Released under the **MIT License** — see [LICENSE](LICENSE).
+
+## Citation
+
+Citation information will be added once the project reaches a stable release.
+
+---
+
+<sub>Developer notes: internal design docs live in [`docs/`](docs/), and the original
+research-software prompt/mock-data bundle used to bootstrap the project is kept under
+[`claude_code/`](claude_code/) and [`reports/`](reports/).</sub>
