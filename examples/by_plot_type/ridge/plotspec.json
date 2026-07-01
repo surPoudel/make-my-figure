@@ -1,0 +1,23 @@
+{
+  "plot_type": "ridge_or_density_plot",
+  "input_table": "data.csv",
+  "mapping": {
+    "x": "pseudotime",
+    "group": "condition",
+    "overlap": 0.7
+  },
+  "journal_style": "nature_like",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  }
+}

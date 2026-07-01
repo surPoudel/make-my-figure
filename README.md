@@ -40,7 +40,25 @@ make_my_figure_core/   reusable engine (loaders, validation, styles, renderers,
                        export, provenance, mock-data + UI hints)
 apps/streamlit_app/    web/developer frontend
 apps/desktop_app/      PySide6 desktop frontend (controller.py + main.py)
+examples/              synthetic example/template dataset for every plot type
 ```
+
+### Example / template data
+
+Every supported plot type ships with a clean **synthetic** example dataset
+(CSV/TSV/XLSX + PlotSpec + README) under `examples/by_plot_type/`, plus a combined
+workbook and a machine-readable manifest. Use them via **Use example data** in
+either app, or **Save template** to export a table and replace it with your own data.
+
+```bash
+python scripts/generate_example_data.py   # regenerate all examples (seed 42, CC0)
+```
+
+Docs: **[EXAMPLE_DATA.md](docs/EXAMPLE_DATA.md)** ·
+**[DATA_TEMPLATES.md](docs/DATA_TEMPLATES.md)** ·
+**[PLOT_TYPE_REQUIREMENTS.md](docs/PLOT_TYPE_REQUIREMENTS.md)**. Published papers/figures
+are used only as visual style references; bundled example data are synthetic and must
+not be cited as real findings.
 
 **Milestone 3** adds a license-aware, HTTPS-only harvesting pipeline that builds a
 curated library of open-access, post-2020 Nature/Science/Cell-family papers,

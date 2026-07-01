@@ -1,0 +1,24 @@
+{
+  "plot_type": "lineplot_timecourse_with_error_band",
+  "input_table": "data.csv",
+  "mapping": {
+    "x": "time_hours",
+    "y": "signal",
+    "color": "treatment",
+    "error": "sem"
+  },
+  "journal_style": "nature_like",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  }
+}

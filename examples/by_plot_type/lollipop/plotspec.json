@@ -1,0 +1,24 @@
+{
+  "plot_type": "lollipop_mutation_plot",
+  "input_table": "data.csv",
+  "mapping": {
+    "x": "protein_position",
+    "y": "sample_count",
+    "color": "mutation_type",
+    "label": "amino_acid_change"
+  },
+  "journal_style": "nature_like",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  }
+}

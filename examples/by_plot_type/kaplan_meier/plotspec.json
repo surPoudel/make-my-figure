@@ -1,0 +1,23 @@
+{
+  "plot_type": "kaplan_meier_survival_curve",
+  "input_table": "data.csv",
+  "mapping": {
+    "time": "time_months",
+    "event": "event",
+    "group": "group"
+  },
+  "journal_style": "nature_like",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  }
+}

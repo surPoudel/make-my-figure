@@ -17,6 +17,7 @@ datas = [
     (os.path.join(ROOT, "schemas"), "schemas"),
     (os.path.join(ROOT, "style_profiles"), "style_profiles"),
     (os.path.join(ROOT, "mock_data"), "mock_data"),
+    (os.path.join(ROOT, "examples"), "examples"),
     (os.path.join(ROOT, "assets", "icons"), os.path.join("assets", "icons")),
 ]
 

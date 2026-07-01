@@ -1,0 +1,23 @@
+{
+  "plot_type": "roc_curve",
+  "input_table": "data.csv",
+  "mapping": {
+    "label": "true_label",
+    "score": "score_model_a",
+    "score2": "score_model_b"
+  },
+  "journal_style": "nature_like",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  }
+}

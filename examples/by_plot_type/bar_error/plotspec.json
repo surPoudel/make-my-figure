@@ -1,0 +1,24 @@
+{
+  "plot_type": "barplot_with_error_bar",
+  "input_table": "data.csv",
+  "mapping": {
+    "x": "condition",
+    "y": "measurement",
+    "error": "sem",
+    "color": "condition"
+  },
+  "journal_style": "nature_like",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  }
+}

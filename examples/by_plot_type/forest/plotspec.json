@@ -1,0 +1,25 @@
+{
+  "plot_type": "forest_plot",
+  "input_table": "data.csv",
+  "mapping": {
+    "label": "subgroup",
+    "estimate": "hazard_ratio",
+    "lower": "ci_low",
+    "upper": "ci_high",
+    "reference": 1.0
+  },
+  "journal_style": "nature_like",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  }
+}

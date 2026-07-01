@@ -1,0 +1,25 @@
+{
+  "plot_type": "volcano_plot",
+  "input_table": "data.csv",
+  "mapping": {
+    "x": "log2_fold_change",
+    "p": "adjusted_p_value",
+    "label": "label",
+    "lfc_cutoff": 1.0,
+    "p_cutoff": 0.05
+  },
+  "journal_style": "nature_like",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  }
+}

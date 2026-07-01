@@ -1,0 +1,13 @@
+term	category	gene_ratio	gene_count	fdr	neg_log10_fdr
+Interferon gamma response	Hallmark	0.159	62	0.001343	2.872
+Oxidative phosphorylation	Hallmark	0.237	49	0.0001602	3.795
+Epithelial migration	GO_BP	0.054	43	1.035e-05	4.985
+Cell cycle checkpoint	Reactome	0.203	58	0.01286	1.891
+Antigen processing	GO_BP	0.318	22	0.001574	2.803
+Complement cascade	Reactome	0.266	51	1.709e-05	4.767
+DNA repair	Hallmark	0.221	61	0.01014	1.994
+T cell activation	GO_BP	0.287	20	0.02296	1.639
+Apoptosis	Hallmark	0.306	49	0.0243	1.614
+mTOR signaling	Reactome	0.08	39	3.646e-05	4.438
+Extracellular matrix	GO_CC	0.224	67	0.0001314	3.881
+Hypoxia	Hallmark	0.303	63	0.004376	2.359

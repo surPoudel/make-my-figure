@@ -13,6 +13,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
 from make_my_figure_core import data as mock_data
+from make_my_figure_core import examples as examples_lib
 from make_my_figure_core import ui_hints
 from make_my_figure_core.io.loaders import LoaderError, TableInfo, load_table
 from make_my_figure_core.plots.base import RenderError
@@ -82,11 +83,30 @@ class DesktopController:
         return LoadedData(info=info, table_name=os.path.basename(path), source_path=path)
 
     def load_example(self, plot_type: str) -> LoadedData:
+        """Load the bundled example for ``plot_type``.
+
+        Prefers the rich ``examples/`` system; falls back to the simpler
+        ``mock_data`` bundle if the example manifest is unavailable.
+        """
+        if examples_lib.has_manifest() and examples_lib.has_example(plot_type):
+            info, aux, _spec = examples_lib.load_example(plot_type)
+            return LoadedData(info=info, table_name=f"{plot_type} (example)", aux=aux)
         info, aux = mock_data.load_sample(plot_type)
         name = mock_data.sample_filename(plot_type) or f"{plot_type}.csv"
         return LoadedData(info=info, table_name=name, aux=aux)
 
+    def example_description(self, plot_type: str) -> str:
+        if examples_lib.has_manifest():
+            e = examples_lib.entry(plot_type)
+            if e:
+                return e.get("use_case", "")
+        return ""
+
     def example_source_path(self, plot_type: str) -> Optional[str]:
+        if examples_lib.has_manifest():
+            p = examples_lib.template_path(plot_type, "csv")
+            if p:
+                return p
         return mock_data.sample_path(plot_type)
 
     # --- spec + render ---------------------------------------------------
@@ -133,11 +153,20 @@ class DesktopController:
         return export_bundle_bytes(spec, result, formats=formats, dpi=dpi, basename=basename)
 
     def save_template(self, plot_type: str, dest_path: str) -> str:
-        """Copy the bundled example table for ``plot_type`` to ``dest_path``."""
-        src = mock_data.sample_path(plot_type)
-        if not src or not os.path.exists(src):
-            raise FileNotFoundError(f"No bundled template for '{plot_type}'.")
+        """Copy the bundled example table for ``plot_type`` to ``dest_path``.
+
+        Picks the format (csv/tsv/xlsx) from the destination extension when an
+        example file in that format exists; otherwise copies the CSV.
+        """
         import shutil
 
+        ext = os.path.splitext(dest_path)[1].lower().lstrip(".") or "csv"
+        src = None
+        if examples_lib.has_manifest() and examples_lib.has_example(plot_type):
+            src = examples_lib.template_path(plot_type, ext) or examples_lib.template_path(plot_type, "csv")
+        if not src or not os.path.exists(src):
+            src = mock_data.sample_path(plot_type)
+        if not src or not os.path.exists(src):
+            raise FileNotFoundError(f"No bundled template for '{plot_type}'.")
         shutil.copyfile(src, dest_path)
         return dest_path

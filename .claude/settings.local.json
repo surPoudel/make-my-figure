@@ -86,7 +86,12 @@
       "Bash(git add *)",
       "Bash(grep -E \"^\\\\.venv/|^dist/|^build/|figures/.*\\\\.\\(jpg|png|gif\\)$|supplementary/|full_text/\")",
       "Bash(git diff *)",
-      "Bash(xargs -0 du -h)"
+      "Bash(xargs -0 du -h)",
+      "Bash(git commit *)",
+      "Bash(.venv/bin/python scripts/generate_example_data.py)",
+      "Bash(QT_QPA_PLATFORM=offscreen .venv/bin/python -m pytest -q tests/test_desktop_controller.py tests/test_desktop_gui.py tests/test_app_smoke.py)",
+      "Bash(.venv/bin/python -m pytest -q tests/test_examples.py)",
+      "Bash(.venv/bin/python -)"
     ]
   }
 }

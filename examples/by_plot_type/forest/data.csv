@@ -1,0 +1,10 @@
+study,subgroup,hazard_ratio,ci_low,ci_high,p_value,n
+Study_1,All patients,1.116,0.748,1.666,0.3373,378
+Study_2,Age < 65,1.055,0.789,1.411,0.1745,188
+Study_3,Age >= 65,0.862,0.615,1.208,0.1381,146
+Study_4,Male,0.71,0.402,1.256,0.3847,140
+Study_5,Female,0.618,0.389,0.981,0.0331,252
+Study_6,Biomarker high,1.315,0.874,1.981,0.1419,160
+Study_7,Biomarker low,0.847,0.477,1.503,0.2376,311
+Study_8,Prior therapy yes,1.233,0.896,1.696,0.3605,248
+Study_9,Prior therapy no,0.389,0.236,0.641,0.0327,378

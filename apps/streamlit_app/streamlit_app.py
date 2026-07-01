@@ -41,6 +41,7 @@ from make_my_figure_core.plots.registry import (
 )
 from make_my_figure_core.spec.validate import SpecValidationError, default_output_block
 from make_my_figure_core.styles.engine import list_profiles, load_profile
+from make_my_figure_core import examples
 
 MOCK_DIR = os.path.join(_REPO_ROOT, "mock_data")
 
@@ -105,19 +106,31 @@ source_mode = st.sidebar.radio("Data source", ["Bundled sample", "Upload file"])
 
 table_info = None
 table_name = None
+bundled_aux = None
+
+_use_examples = examples.has_manifest()
 
 if source_mode == "Bundled sample":
+    sample_keys = examples.plot_types_with_examples() if _use_examples else list(SAMPLE_FILES.keys())
     plot_for_sample = st.sidebar.selectbox(
-        "Sample dataset (by plot type)",
-        options=list(SAMPLE_FILES.keys()),
+        "Example dataset (by plot type)",
+        options=sample_keys,
         format_func=display_name,
     )
-    sample_path = os.path.join(MOCK_DIR, SAMPLE_FILES[plot_for_sample])
     try:
-        table_info = load_table(sample_path)
-        table_name = SAMPLE_FILES[plot_for_sample]
-    except LoaderError as exc:
-        st.sidebar.error(f"Could not load sample: {exc}")
+        if _use_examples:
+            info, aux_tables, _spec = examples.load_example(plot_for_sample)
+            table_info = info
+            table_name = f"{plot_for_sample} (example)"
+            bundled_aux = {k: v.dataframe for k, v in aux_tables.items()}
+            entry = examples.entry(plot_for_sample) or {}
+            if entry.get("use_case"):
+                st.sidebar.caption(f"Synthetic example — {entry['use_case']}")
+        else:
+            table_info = load_table(os.path.join(MOCK_DIR, SAMPLE_FILES[plot_for_sample]))
+            table_name = SAMPLE_FILES[plot_for_sample]
+    except (LoaderError, KeyError) as exc:
+        st.sidebar.error(f"Could not load example: {exc}")
     default_plot_type = plot_for_sample
 else:
     uploaded = st.sidebar.file_uploader("Upload CSV / TSV / XLSX", type=["csv", "tsv", "txt", "xlsx", "xls"])
@@ -210,12 +223,16 @@ if plot_type == "forest_plot":
 pca_aux = None
 if plot_type == "pca_scatter_from_matrix":
     if source_mode == "Bundled sample":
-        try:
-            meta_info = load_table(os.path.join(MOCK_DIR, PCA_METADATA_SAMPLE))
-            pca_aux = {"metadata": meta_info.dataframe}
-            st.sidebar.caption(f"Using bundled metadata: {PCA_METADATA_SAMPLE}")
-        except LoaderError as exc:
-            st.sidebar.error(f"Could not load PCA metadata: {exc}")
+        if bundled_aux and "metadata" in bundled_aux:
+            pca_aux = bundled_aux
+            st.sidebar.caption("Using the bundled example sample metadata.")
+        else:
+            try:
+                meta_info = load_table(os.path.join(MOCK_DIR, PCA_METADATA_SAMPLE))
+                pca_aux = {"metadata": meta_info.dataframe}
+                st.sidebar.caption(f"Using bundled metadata: {PCA_METADATA_SAMPLE}")
+            except LoaderError as exc:
+                st.sidebar.error(f"Could not load PCA metadata: {exc}")
     else:
         meta_upload = st.sidebar.file_uploader(
             "PCA sample metadata (CSV/TSV)", type=["csv", "tsv", "txt"], key="pca_meta"
