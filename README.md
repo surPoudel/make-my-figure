@@ -38,12 +38,44 @@ scientific figures accessible to people who would rather not write plotting code
 - Apply **publication-style defaults automatically**
 - Choose **journal-like style profiles** (Nature-/Science-/Cell-like, + a neutral publication default)
 - Adjust **font sizes, line widths, marker sizes, palettes, legends, figure size, and DPI**
+- Compute **publication-grade statistics** and annotate figures with significance
+  brackets, p-values, and effect sizes — with **transparent method reporting**
+  (see [docs/STATISTICS.md](docs/STATISTICS.md))
+- Build **multi-panel figures** (Figure 1A, 1B, 1C…) with the
+  [Figure Builder](docs/MULTI_PANEL_FIGURES.md)
 - **Preview** figures interactively
-- Export **SVG, PDF, PNG, and a PlotSpec JSON** sidecar
+- Export **SVG, PDF, PNG, a PlotSpec JSON, and a StatsSpec JSON** sidecar
 - **Save templates** so you can replace the example data with your own
 - Run as a **Streamlit** web/developer app
 - Run as a **desktop app** on Windows, macOS, and Linux
 - Keep your **data local** in the desktop app (no telemetry, no cloud upload)
+
+## Statistics, annotations, and multi-panel figures
+
+Make My Figure computes common statistical tests and draws publication-style
+annotations directly on figures — but it **reports every method transparently and
+never fabricates a p-value.** Each result records the exact test, the groups
+compared, the sample size, pairing, the p-value, the adjusted p-value, the
+correction method, the effect size, and (where applicable) a confidence interval.
+
+- **Tests:** Student's/Welch's t-test, Mann–Whitney U, paired t-test, Wilcoxon
+  signed-rank, one-way/two-way/repeated-measures ANOVA, Kruskal–Wallis (+ Dunn),
+  chi-square, Fisher's exact, log-rank, Cox hazard ratios, Pearson/Spearman
+  correlation, and linear regression.
+- **Corrections:** Benjamini–Hochberg FDR, Bonferroni, Holm, or none.
+- **Annotations:** auto-stacked significance brackets on bar/box/violin/grouped
+  plots, corner stats panels for scatter/survival/categorical, stars or exact
+  p-values, optional effect sizes.
+- **Reporting:** an automatic method sentence + methods paragraph, exportable as
+  Markdown/JSON and a CSV/TSV results table, plus a reproducible `StatsSpec` JSON.
+- **Multi-panel:** save plots as panels and assemble a labelled composite.
+
+> **You choose the test.** Make My Figure can compute common statistical tests,
+> but users are responsible for choosing tests appropriate to their experimental
+> design. The app flags common design issues but does **not** replace statistical
+> review. See [docs/STATISTICS.md](docs/STATISTICS.md),
+> [docs/STATISTICAL_ANNOTATIONS.md](docs/STATISTICAL_ANNOTATIONS.md), and
+> [docs/MULTI_PANEL_FIGURES.md](docs/MULTI_PANEL_FIGURES.md).
 
 ## Supported plot types
 
@@ -167,30 +199,32 @@ easier to reproduce, revise, and share. See
 
 Planned directions (not yet implemented unless stated elsewhere):
 
-### Statistics support (planned — v2 roadmap)
+### Statistics support (shipped)
 
-Future versions may add commonly used statistical tests and figure annotations. **These are
-not implemented yet.** Planned coverage includes:
+Commonly used statistical tests, figure annotations, and transparent method
+reporting are now implemented (see
+[docs/STATISTICS.md](docs/STATISTICS.md)):
 
 - **Two-group tests:** Student's t-test, Welch's t-test, Mann–Whitney U, paired t-test,
   Wilcoxon signed-rank
-- **Multi-group tests:** one-way ANOVA, two-way ANOVA, repeated-measures ANOVA (where
-  appropriate), Kruskal–Wallis
+- **Multi-group tests:** one-way ANOVA, two-way ANOVA, repeated-measures ANOVA,
+  Kruskal–Wallis (with Dunn's post-hoc)
 - **Categorical tests:** chi-square, Fisher's exact
-- **Survival / model statistics:** log-rank test for Kaplan–Meier curves, hazard-ratio
-  display if model support is added
-- **Multiple-testing correction:** Benjamini–Hochberg (FDR), Bonferroni
+- **Survival / model statistics:** log-rank test for Kaplan–Meier curves, and Cox
+  hazard-ratio display (with an explicit proportional-hazards caveat)
+- **Correlation / regression:** Pearson, Spearman, linear regression
+- **Multiple-testing correction:** Benjamini–Hochberg (FDR), Bonferroni, Holm
 - **Figure annotations:** p-value labels, significance brackets, effect sizes, confidence
   intervals, and automatic method reporting
 
-Any statistics feature will be **transparent and reproducible**: it will report the exact
-test used, its assumptions, the sample size, the effect size, and the correction method.
+Statistics are **transparent and reproducible**: each result reports the exact test used,
+its assumptions, the sample size, the effect size, and the correction method, and is saved
+in a `StatsSpec` JSON sidecar.
 
 ### Other planned items
 
 - A Python (and possibly R) package API
 - More journal-like style profiles
-- A multi-panel figure builder
 - Better automatic label-collision avoidance
 - More biomedical plot templates
 - Smoother GraphPad/Prism-like workflows

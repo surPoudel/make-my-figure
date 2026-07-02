@@ -1,0 +1,136 @@
+{
+  "license": "CC0-1.0",
+  "source": "scripts/generate_stats_examples.py",
+  "examples": [
+    {
+      "slug": "two_group_unpaired",
+      "plot_type": "boxplot_or_violin_with_points",
+      "test": "welch_t",
+      "comparison_mode": "all_pairs",
+      "n_rows": 36,
+      "columns": [
+        "group",
+        "subject",
+        "response"
+      ]
+    },
+    {
+      "slug": "two_group_paired",
+      "plot_type": "boxplot_or_violin_with_points",
+      "test": "paired_t",
+      "comparison_mode": "all_pairs",
+      "n_rows": 30,
+      "columns": [
+        "subject",
+        "timepoint",
+        "value"
+      ]
+    },
+    {
+      "slug": "one_way_anova",
+      "plot_type": "boxplot_or_violin_with_points",
+      "test": "one_way_anova",
+      "comparison_mode": "all_pairs",
+      "n_rows": 48,
+      "columns": [
+        "dose_group",
+        "measurement"
+      ]
+    },
+    {
+      "slug": "two_way_anova",
+      "plot_type": "grouped_barplot_with_error_bar",
+      "test": "two_way_anova",
+      "comparison_mode": "auto",
+      "n_rows": 32,
+      "columns": [
+        "genotype",
+        "treatment",
+        "expression"
+      ]
+    },
+    {
+      "slug": "repeated_measures",
+      "plot_type": "boxplot_or_violin_with_points",
+      "test": "rm_anova",
+      "comparison_mode": "auto",
+      "n_rows": 36,
+      "columns": [
+        "subject",
+        "time",
+        "signal"
+      ]
+    },
+    {
+      "slug": "nonparametric",
+      "plot_type": "boxplot_or_violin_with_points",
+      "test": "mann_whitney",
+      "comparison_mode": "all_pairs",
+      "n_rows": 40,
+      "columns": [
+        "group",
+        "value"
+      ]
+    },
+    {
+      "slug": "categorical_2x2",
+      "plot_type": "stacked_bar_composition",
+      "test": "fishers_exact",
+      "comparison_mode": "auto",
+      "n_rows": 60,
+      "columns": [
+        "treatment_arm",
+        "response",
+        "count"
+      ]
+    },
+    {
+      "slug": "contingency_large",
+      "plot_type": "stacked_bar_composition",
+      "test": "chi_square",
+      "comparison_mode": "auto",
+      "n_rows": 101,
+      "columns": [
+        "subtype",
+        "grade",
+        "count"
+      ]
+    },
+    {
+      "slug": "survival_km",
+      "plot_type": "kaplan_meier_survival_curve",
+      "test": "logrank",
+      "comparison_mode": "auto",
+      "n_rows": 80,
+      "columns": [
+        "patient",
+        "group",
+        "time_months",
+        "event"
+      ]
+    },
+    {
+      "slug": "scatter_correlation",
+      "plot_type": "scatterplot_with_regression",
+      "test": "pearson",
+      "comparison_mode": "auto",
+      "n_rows": 50,
+      "columns": [
+        "biomarker",
+        "outcome"
+      ]
+    },
+    {
+      "slug": "grouped_within_dose",
+      "plot_type": "grouped_barplot_with_error_bar",
+      "test": "welch_t",
+      "comparison_mode": "within_x",
+      "n_rows": 60,
+      "columns": [
+        "dose",
+        "supplement",
+        "tooth_length"
+      ]
+    }
+  ]
+}

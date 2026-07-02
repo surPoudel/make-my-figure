@@ -94,6 +94,11 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if title:
             ax.set_title(title)
         style_axes(ax, style)
+
+        from make_my_figure_core.plots.stats_integration import run_and_annotate
+
+        stats_report = run_and_annotate(spec, work, style, PLOT_TYPE, ax=ax,
+                                        mode="corner", corner_loc="upper left")
         if has_groups:
             # Legend outside so it never sits on top of points.
             place_legend(ax, style, title=str(color_by), force_outside=True)
@@ -103,4 +108,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     meta = base_metadata(spec, style, work, used_columns=[x, y, color_by, label_col])
     meta["fit_line"] = fit_line
     meta["regression"] = fits
-    return RenderResult(figure=fig, metadata=meta, warnings=warnings)
+    if stats_report is not None:
+        meta["statistics_report"] = stats_report.to_dict()
+    return RenderResult(figure=fig, metadata=meta, warnings=warnings,
+                        stats_report=stats_report)

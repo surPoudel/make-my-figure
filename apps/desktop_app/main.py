@@ -299,6 +299,15 @@ class MainWindow(QMainWindow):
 
         cv.addWidget(self._build_style_panel())
 
+        # Statistics panel (statistical tests, annotations, method reporting).
+        from apps.desktop_app.stats_panel import StatisticsPanel
+
+        self.stats_panel = StatisticsPanel(self.controller)
+        self.stats_panel.changed.connect(self.render_preview)
+        self.stats_panel.runRequested.connect(self.render_preview)
+        cv.addWidget(self.stats_panel)
+        self._saved_panels: list = []
+
         self.preview_btn = QPushButton("Update preview")
         self.preview_btn.clicked.connect(self.render_preview)
         cv.addWidget(self.preview_btn)
@@ -317,6 +326,18 @@ class MainWindow(QMainWindow):
         tmpl_btn.clicked.connect(self.action_save_template)
         eb.addWidget(tmpl_btn)
         cv.addWidget(export_box)
+
+        panel_box = QGroupBox("6. Multi-panel figure")
+        pb = QVBoxLayout(panel_box)
+        save_panel_btn = QPushButton("Save current plot as panel")
+        save_panel_btn.clicked.connect(self.action_save_panel)
+        pb.addWidget(save_panel_btn)
+        self.panel_count_label = QLabel("0 panels saved.")
+        pb.addWidget(self.panel_count_label)
+        fb_btn = QPushButton("Open Figure Builder…")
+        fb_btn.clicked.connect(self.action_figure_builder)
+        pb.addWidget(fb_btn)
+        cv.addWidget(panel_box)
         cv.addStretch(1)
 
         scroll = QScrollArea()
@@ -681,6 +702,32 @@ class MainWindow(QMainWindow):
         except Exception as exc:
             QMessageBox.warning(self, "Could not save template", str(exc))
 
+    def action_save_panel(self):
+        """Capture the current plot (spec + data) as a multi-panel builder panel."""
+        if self.data is None or getattr(self, "_current_spec", None) is None:
+            QMessageBox.information(self, "No plot", "Render a plot before saving it as a panel.")
+            return
+        import copy
+
+        aux = {k: v.dataframe for k, v in self.data.aux.items()} if self.data.aux else {}
+        title = self.title_edit.text().strip() or display_name(self.plot_combo.currentData())
+        self._saved_panels.append({
+            "plot_spec": copy.deepcopy(self._current_spec),
+            "table": self.data.info.dataframe.copy(deep=True),
+            "aux": aux,
+            "title": title,
+            "plot_type": self.plot_combo.currentData(),
+        })
+        self.panel_count_label.setText(f"{len(self._saved_panels)} panel(s) saved.")
+        self.statusBar().showMessage(f"Saved panel '{title}'.", 4000)
+
+    def action_figure_builder(self):
+        from apps.desktop_app.stats_panel import FigureBuilderDialog
+
+        dlg = FigureBuilderDialog(self.controller, self._saved_panels, self)
+        dlg.exec()
+        self.panel_count_label.setText(f"{len(self._saved_panels)} panel(s) saved.")
+
     # --- loading ---------------------------------------------------------
     def load_path(self, path: str):
         try:
@@ -791,6 +838,16 @@ class MainWindow(QMainWindow):
             self.options_form.addRow(opt.label, w)
             self._option_widgets[opt.key] = w
 
+        # statistics: refresh column choosers + advisory suggestions
+        if hasattr(self, "stats_panel"):
+            cols = [c for c in self._column_options() if c != "(none)"]
+            self.stats_panel.set_columns(cols)
+            try:
+                rec = self.controller.recommend_tests(pt, defaults, self.data)
+                self.stats_panel.set_suggestions(rec)
+            except Exception:
+                pass
+
     def _make_option_widget(self, opt) -> QWidget:
         if opt.kind == "bool":
             w = QCheckBox()
@@ -883,9 +940,11 @@ class MainWindow(QMainWindow):
             layout["x_label"] = self.xlabel_edit.text().strip()
         if self.ylabel_edit.text().strip():
             layout["y_label"] = self.ylabel_edit.text().strip()
+        stats_spec = self.stats_panel.stats_spec() if hasattr(self, "stats_panel") else None
         spec = self.controller.build_spec(
             pt, style, self.data.table_name, self._collect_mapping(),
-            layout=layout, width=self.width_combo.currentText(), dpi=self.dpi_spin.value())
+            layout=layout, width=self.width_combo.currentText(), dpi=self.dpi_spin.value(),
+            statistics=stats_spec)
         overrides = self._collect_style_overrides()
         if overrides:
             spec["style"] = overrides
@@ -915,6 +974,8 @@ class MainWindow(QMainWindow):
         # Show the messages tab if there is anything actionable, else data preview.
         self.right_tabs.setCurrentIndex(1 if (warns or not check.get("passed", True)) else 0)
         self.statusBar().showMessage(check.get("summary", "Rendered."), 6000)
+        if hasattr(self, "stats_panel"):
+            self.stats_panel.show_report(getattr(result, "stats_report", None))
         self._show_figure(result.figure)          # figure is always visible below
 
     def render_preview(self):

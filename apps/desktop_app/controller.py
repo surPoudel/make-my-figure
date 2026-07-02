@@ -126,6 +126,7 @@ class DesktopController:
         width: str = "single",
         dpi: int = 300,
         formats: Optional[List[str]] = None,
+        statistics: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         style = load_profile(style_name)
         w_mm = style.double_column_width_mm if width == "double" else style.single_column_width_mm
@@ -139,7 +140,94 @@ class DesktopController:
         merged_layout = dict(layout or {})
         merged_layout["column_width"] = width
         spec["layout"] = merged_layout
+        if statistics and statistics.get("enabled"):
+            from make_my_figure_core.statistics import normalize_stats_spec
+
+            spec["statistics"] = normalize_stats_spec(statistics)
         return spec
+
+    # --- statistics ------------------------------------------------------
+    def available_tests(self) -> List[Tuple[str, str]]:
+        """(test_id, label) for every implemented statistical test."""
+        from make_my_figure_core.statistics import TESTS
+
+        return [(tid, info.label) for tid, info in TESTS.items()]
+
+    def recommend_tests(self, plot_type: str, mapping: Dict[str, Any],
+                        data: Optional[LoadedData] = None,
+                        stats_mapping: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        from make_my_figure_core.statistics import recommend_tests
+
+        df = data.info.dataframe if data else None
+        return recommend_tests(plot_type, mapping, df=df, stats_mapping=stats_mapping)
+
+    def run_statistics(self, plot_type: str, mapping: Dict[str, Any], data: LoadedData,
+                       stats_spec: Dict[str, Any]):
+        """Run statistics for the current plot; returns a StatsReport."""
+        from make_my_figure_core.statistics import normalize_stats_spec, run_statistics
+
+        spec = normalize_stats_spec({**stats_spec, "enabled": True})
+        return run_statistics(data.info.dataframe, spec, plot_type=plot_type, mapping=mapping)
+
+    def stats_table_rows(self, report) -> List[Dict[str, Any]]:
+        """Flatten a StatsReport into rows for a results table widget."""
+        rows: List[Dict[str, Any]] = []
+        for r in report.results:
+            ci = ""
+            if r.confidence_interval_low is not None and r.confidence_interval_low == r.confidence_interval_low:
+                ci = f"[{r.confidence_interval_low:.3g}, {r.confidence_interval_high:.3g}]"
+            rows.append({
+                "comparison": r.comparison_label,
+                "test": r.test_name,
+                "statistic": "" if r.statistic is None else f"{r.statistic:.3g}",
+                "p_value": "" if r.p_value is None else f"{r.p_value:.4g}",
+                "adjusted_p": "" if r.adjusted_p_value is None else f"{r.adjusted_p_value:.4g}",
+                "effect_size": ("" if r.effect_size is None or r.effect_size != r.effect_size
+                                else f"{r.effect_size_name}={r.effect_size:.3g}"),
+                "ci": ci,
+                "n": "" if r.n_total is None else str(r.n_total),
+                "warning": "; ".join(r.warnings),
+            })
+        return rows
+
+    def export_stats_table(self, report, path: str, *, sep: str = ",") -> str:
+        """Write the results table as CSV/TSV."""
+        import csv
+
+        rows = self.stats_table_rows(report)
+        fields = ["comparison", "test", "statistic", "p_value", "adjusted_p",
+                  "effect_size", "ci", "n", "warning"]
+        with open(path, "w", newline="", encoding="utf-8") as fh:
+            w = csv.DictWriter(fh, fieldnames=fields, delimiter=sep)
+            w.writeheader()
+            for row in rows:
+                w.writerow(row)
+        return path
+
+    def export_method_report(self, report, path: str, *, fmt: str = "markdown") -> str:
+        """Write the method report as markdown/json/txt."""
+        import json as _json
+
+        if fmt == "json":
+            from make_my_figure_core.statistics.schemas import stats_sidecar_payload
+
+            payload = stats_sidecar_payload(report.config, report)
+            with open(path, "w", encoding="utf-8") as fh:
+                _json.dump(payload, fh, indent=2)
+            return path
+        lines = [f"# Statistical methods\n", report.method_paragraph, "",
+                 "## Per-comparison results", ""]
+        for r in report.results:
+            lines.append(f"- {r.method_sentence}")
+        if report.warnings:
+            lines += ["", "## Warnings", ""] + [f"- {w}" for w in report.warnings]
+        lines += ["", "## Figure legend (draft)", "", report.legend_sentence]
+        with open(path, "w", encoding="utf-8") as fh:
+            fh.write("\n".join(lines))
+        return path
+
+    def method_sentence(self, report) -> str:
+        return report.method_paragraph
 
     def render(self, spec: Dict[str, Any], data: LoadedData):
         """Render a figure. Raises RenderError / SpecValidationError on failure."""

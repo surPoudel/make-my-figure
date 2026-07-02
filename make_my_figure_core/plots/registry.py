@@ -246,6 +246,23 @@ def write_sidecar(spec: Dict[str, Any], metadata: Dict[str, Any], base_path: str
     return out
 
 
+def write_stats_sidecar(spec: Dict[str, Any], result: RenderResult, base_path: str) -> Optional[str]:
+    """Write ``base_path.stats_spec.json`` when the render produced statistics.
+
+    Returns the written path, or ``None`` when no statistics were computed.
+    """
+    report = getattr(result, "stats_report", None)
+    if report is None:
+        return None
+    from make_my_figure_core.statistics.schemas import stats_sidecar_payload
+
+    out = f"{base_path}.stats_spec.json"
+    payload = stats_sidecar_payload(spec.get("statistics") or {}, report)
+    with open(out, "w", encoding="utf-8") as fh:
+        json.dump(payload, fh, indent=2)
+    return out
+
+
 def figure_to_bytes(fig: Figure, fmt: str, dpi: int = 300) -> bytes:
     """Serialize a figure to bytes in the requested format (in-memory)."""
     import io as _io
@@ -287,6 +304,12 @@ def export_bundle_bytes(
             "render_metadata": {k: v for k, v in result.metadata.items() if k != "spec"},
         }
         zf.writestr(f"{basename}.plot_spec.json", json.dumps(sidecar, indent=2))
+        report = getattr(result, "stats_report", None)
+        if report is not None:
+            from make_my_figure_core.statistics.schemas import stats_sidecar_payload
+
+            payload = stats_sidecar_payload(spec.get("statistics") or {}, report)
+            zf.writestr(f"{basename}.stats_spec.json", json.dumps(payload, indent=2))
     return buf.getvalue()
 
 
@@ -309,9 +332,11 @@ def render_to_files(
     dpi = int(output.get("dpi", 300))
     files = export_figure(result.figure, base_path, fmts, dpi=dpi)
     sidecar = write_sidecar(spec, result.metadata, base_path)
+    stats_sidecar = write_stats_sidecar(spec, result, base_path)
     return {
         "files": files,
         "sidecar": sidecar,
+        "stats_sidecar": stats_sidecar,
         "metadata": result.metadata,
         "warnings": result.warnings,
     }

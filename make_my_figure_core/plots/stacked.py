@@ -69,9 +69,19 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         ax.legend(title=str(stack), frameon=False, loc="center left",
                   bbox_to_anchor=(1.0, 0.5))
         style_axes(ax, style)
+
+        # Categorical association test (chi-square / Fisher) as a corner panel.
+        # Defaults the contingency to x (row) vs stack (column) when not set.
+        from make_my_figure_core.plots.stats_integration import run_and_annotate
+
+        stats_report = run_and_annotate(spec, work, style, PLOT_TYPE, ax=ax,
+                                        mode="corner", corner_loc="upper right")
         fig.tight_layout()
 
     meta = base_metadata(spec, style, work, used_columns=[x, stack, y, sort_by])
     meta["components"] = [str(c) for c in components]
     meta["n_samples"] = int(len(samples))
-    return RenderResult(figure=fig, metadata=meta, warnings=warnings)
+    if stats_report is not None:
+        meta["statistics_report"] = stats_report.to_dict()
+    return RenderResult(figure=fig, metadata=meta, warnings=warnings,
+                        stats_report=stats_report)

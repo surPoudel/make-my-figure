@@ -274,6 +274,48 @@ with st.sidebar.expander("Publication style controls", expanded=False):
     style_overrides["legend_outside"] = st.checkbox("Legend outside plot", value=False)
     style_overrides["grid"] = st.checkbox("Grid", value=False)
 
+# --- 7. Statistics (shares the core statistics engine with the desktop app) --
+from make_my_figure_core.statistics import TESTS as _STAT_TESTS  # noqa: E402
+from make_my_figure_core.statistics import recommend_tests as _recommend  # noqa: E402
+
+st.sidebar.header("7. Statistics")
+stats_spec = {"enabled": False}
+with st.sidebar.expander("Statistical tests & annotations", expanded=False):
+    stats_enabled = st.checkbox("Enable statistics", value=False)
+    _cols = list(table_info.dataframe.columns)
+    _test_ids = ["auto"] + list(_STAT_TESTS.keys())
+    _test_labels = {"auto": "Auto-suggest", **{t: i.label for t, i in _STAT_TESTS.items()}}
+    try:
+        _rec = _recommend(plot_type, mapping, df=table_info.dataframe)
+        if _rec.get("notes"):
+            st.caption("Advisory: " + " ".join(_rec["notes"]))
+    except Exception:
+        pass
+    test = st.selectbox("Test", _test_ids, format_func=lambda t: _test_labels.get(t, t))
+    comparison_mode = st.selectbox(
+        "Comparison", ["auto", "all_pairs", "vs_control", "within_x", "omnibus"])
+    correction = st.selectbox(
+        "Correction", ["benjamini_hochberg", "bonferroni", "holm", "none"])
+    ann_mode = st.selectbox("Annotation", ["stars", "p", "both"])
+    show_effect = st.checkbox("Show effect size on figure", value=False)
+    posthoc = st.checkbox("Post-hoc pairwise after omnibus", value=False)
+    _none = "(none)"
+    group_column = st.selectbox("Group column", [_none] + _cols)
+    subgroup_column = st.selectbox("Subgroup column", [_none] + _cols)
+    subject_column = st.selectbox("Subject/pair ID", [_none] + _cols)
+    reference_group = st.text_input("Control group (for vs-control)", value="")
+    if stats_enabled:
+        stats_spec = {
+            "enabled": True, "test": test, "comparison_mode": comparison_mode,
+            "correction": correction, "posthoc": posthoc,
+            "group_column": None if group_column == _none else group_column,
+            "subgroup_column": None if subgroup_column == _none else subgroup_column,
+            "subject_column": None if subject_column == _none else subject_column,
+            "reference_group": reference_group or None,
+            "annotate": True,
+            "annotation": {"mode": ann_mode, "show_effect": show_effect},
+        }
+
 layout = {}
 if title:
     layout["title"] = title
@@ -295,6 +337,8 @@ spec = make_spec(
 )
 spec["layout"] = {**spec.get("layout", {}), "column_width": column_width}
 spec["style"] = style_overrides
+if stats_spec.get("enabled"):
+    spec["statistics"] = stats_spec
 
 
 # --- Render + preview -------------------------------------------------------
@@ -310,6 +354,32 @@ try:
         st.warning(check.get("summary", "Publication check found issues"))
     for w in result.warnings:
         st.warning(w)
+
+    # --- Statistics results -------------------------------------------------
+    stats_report = getattr(result, "stats_report", None)
+    if stats_report is not None and stats_report.results:
+        st.subheader("Statistics")
+        import pandas as _pd
+
+        from apps.desktop_app.controller import DesktopController as _DC
+
+        _rows = _DC().stats_table_rows(stats_report)
+        st.dataframe(_pd.DataFrame(_rows), use_container_width=True)
+        st.caption("Method: " + stats_report.method_paragraph)
+        if stats_report.warnings:
+            for _w in stats_report.warnings:
+                st.warning(_w)
+        from make_my_figure_core.statistics.schemas import stats_sidecar_payload as _ssp
+
+        st.download_button(
+            "StatsSpec JSON",
+            json.dumps(_ssp(spec.get("statistics", {}), stats_report), indent=2).encode("utf-8"),
+            file_name=f"{os.path.splitext(table_name)[0]}_{plot_type}.stats_spec.json",
+            mime="application/json",
+        )
+    elif stats_spec.get("enabled"):
+        st.info("Statistics enabled but no results were produced. Check the group/column "
+                "selection and the advisory notes above.")
 
     with st.expander("Render metadata"):
         st.json(result.metadata)

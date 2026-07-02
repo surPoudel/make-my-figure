@@ -33,9 +33,16 @@ figure_library/
 
 # Generated QA gallery / large outputs (regenerate via scripts/)
 outputs/
+reports/*.png
 reports/example_figures/*.png
 reports/example_figures/*.svg
 reports/example_figures/*.plot_spec.json
+
+# Generated statistics-example figures are reproducible from scripts/ — keep the
+# data/spec/README text in-repo, exclude any rendered images.
+examples/statistics/**/*.png
+examples/statistics/**/*.pdf
+examples/statistics/**/*.svg
 
 # Harvested figure library: keep provenance/metadata JSON + license.txt in-repo,
 # but do not commit the downloaded figure bitmaps / supplementary binaries in bulk.

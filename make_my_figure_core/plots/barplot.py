@@ -73,10 +73,24 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if title:
             ax.set_title(title)
         style_axes(ax, style)
+
+        # Statistical annotations (brackets) if requested.
+        from make_my_figure_core.plots.stats_integration import run_and_annotate
+
+        positions_map = {str(c): p for c, p in zip(categories, positions)}
+        tops_map = {}
+        for c, center, err in zip(categories, centers, errors):
+            if center == center:  # not NaN
+                tops_map[str(c)] = float(center) + (float(err) if err == err else 0.0)
+        stats_report = run_and_annotate(spec, work, style, PLOT_TYPE, ax=ax,
+                                        positions=positions_map, tops=tops_map, mode="bracket")
         fig.tight_layout()
 
     meta = base_metadata(spec, style, work, used_columns=[x, y, color_by])
     meta["error_method"] = error_method
     meta["categories"] = [str(c) for c in categories]
     meta["centers"] = [None if c != c else round(float(c), 6) for c in centers]
-    return RenderResult(figure=fig, metadata=meta, warnings=warnings)
+    if stats_report is not None:
+        meta["statistics_report"] = stats_report.to_dict()
+    return RenderResult(figure=fig, metadata=meta, warnings=warnings,
+                        stats_report=stats_report)

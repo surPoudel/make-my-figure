@@ -226,3 +226,22 @@ Stacked density (ridgeline) distributions of a value per condition.
   - `sample_id`
   - `score`
 - **Recommended styles:** nature_like, science_like, cell_like
+
+## Statistics per plot type
+
+Statistics are optional and configured via the app's Statistics panel (or the
+`statistics` block of a PlotSpec). Applicable tests by plot type:
+
+| Plot type | Applicable statistics |
+|-----------|-----------------------|
+| Bar / Box / Violin | t-tests, Mann–Whitney, paired t / Wilcoxon (with subject ID), one-way ANOVA, Kruskal–Wallis |
+| Grouped bar | two-way ANOVA, or pairwise tests within each x category |
+| Line / time-course | pairwise tests per timepoint; repeated-measures needs a subject ID |
+| Kaplan–Meier | log-rank; Cox hazard ratio |
+| Stacked / composition, Oncoprint | chi-square, Fisher's exact |
+| Scatter | Pearson, Spearman, linear regression (per group if colored) |
+| Volcano | uses supplied p-values; not recomputed |
+| Heatmap, PCA, Lollipop, Forest | no automatic tests (descriptive / input statistics) |
+
+See [STATISTICS.md](STATISTICS.md) for required columns and test selection, and
+`examples/statistics/` for a worked example of each workflow.

@@ -30,6 +30,10 @@ class RenderResult:
     figure: Figure
     metadata: Dict[str, Any] = field(default_factory=dict)
     warnings: List[str] = field(default_factory=list)
+    # Optional StatsReport (make_my_figure_core.statistics.StatsReport) when the
+    # spec requested statistics; carried out-of-band so the registry can write a
+    # StatsSpec sidecar and merge a serialized copy into metadata.
+    stats_report: Any = None
 
 
 # --- small validation helpers ------------------------------------------------

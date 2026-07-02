@@ -41,3 +41,19 @@ your custom look for reuse.
 
 > Journal-like / publication-style aesthetics only — not a guarantee of official
 > journal compliance. Bundled example data are synthetic.
+
+## Statistics and multi-panel exports
+
+When statistics are enabled, exporting also writes a `*.stats_spec.json` sidecar
+alongside the figure. It records the configuration, every result (test, groups,
+n, p-value, adjusted p-value, correction, effect size, CI), the method paragraph,
+and library versions — so the statistics are fully reproducible. The statistics
+config is also embedded in the PlotSpec under `statistics`. Results tables export
+as CSV/TSV and method reports as Markdown or JSON. See
+[STATISTICS.md](STATISTICS.md).
+
+For composite figures, the Figure Builder exports SVG/PDF/PNG plus a
+`*.figure_spec.json` sidecar (panel labels, per-panel PlotSpecs/StatsSpecs, layout,
+and a draft legend). Panel content is embedded at the chosen DPI while labels stay
+vector; each panel remains independently exportable as vector from its PlotSpec.
+See [MULTI_PANEL_FIGURES.md](MULTI_PANEL_FIGURES.md).

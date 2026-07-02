@@ -82,10 +82,21 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if title:
             ax.set_title(title)
         style_axes(ax, style)
+
+        from make_my_figure_core.plots.stats_integration import run_and_annotate
+
+        positions_map = {str(g): p for g, p in zip(groups, positions)}
+        tops_map = {str(g): (float(np.max(d)) if len(d) else float("nan"))
+                    for g, d in zip(groups, data)}
+        stats_report = run_and_annotate(spec, work, style, PLOT_TYPE, ax=ax,
+                                        positions=positions_map, tops=tops_map, mode="bracket")
         fig.tight_layout()
 
     meta = base_metadata(spec, style, work, used_columns=[x, y])
     meta["kind"] = kind
     meta["groups"] = [str(g) for g in groups]
     meta["group_n"] = {str(g): int(len(d)) for g, d in zip(groups, data)}
-    return RenderResult(figure=fig, metadata=meta, warnings=warnings)
+    if stats_report is not None:
+        meta["statistics_report"] = stats_report.to_dict()
+    return RenderResult(figure=fig, metadata=meta, warnings=warnings,
+                        stats_report=stats_report)
