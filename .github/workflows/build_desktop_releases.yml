@@ -66,6 +66,10 @@ jobs:
           ./scripts/build_macos.sh
 
       # ---- Windows ----
+      - name: Install Inno Setup (for a double-click Setup.exe)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: choco install innosetup --no-progress -y
       - name: Build Windows app
         if: runner.os == 'Windows'
         env:
