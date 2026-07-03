@@ -147,6 +147,80 @@ def test_scatter_correlation_annotation():
     plt.close(res.figure)
 
 
+def _labels_overlap(ax):
+    """Return the number of overlapping pairs among the annotation text labels."""
+    fig = ax.figure
+    fig.canvas.draw()
+    r = fig.canvas.get_renderer()
+    boxes = []
+    for t in ax.texts:
+        if t.get_text().strip():
+            boxes.append(t.get_window_extent(renderer=r))
+    overlaps = 0
+    for i in range(len(boxes)):
+        for j in range(i + 1, len(boxes)):
+            a, b = boxes[i], boxes[j]
+            # shrink slightly to tolerate touching edges
+            if (a.x0 < b.x1 - 1 and a.x1 > b.x0 + 1 and
+                    a.y0 < b.y1 - 1 and a.y1 > b.y0 + 1):
+                overlaps += 1
+    return overlaps
+
+
+def test_dense_all_pairs_labels_do_not_overlap():
+    # 4 groups -> 6 pairwise brackets with effect sizes: the hardest layout.
+    df = pd.DataFrame([{"condition": c, "measurement": float(RNG.normal(m, 0.25))}
+                       for c, m in [("Ctrl", 1.0), ("A", 1.9), ("B", 0.8), ("Comb", 2.4)]
+                       for _ in range(8)])
+    spec = make_spec("barplot_with_error_bar", "t", "publication")
+    spec["mapping"] = {"x": "condition", "y": "measurement", "error": "sem"}
+    spec["statistics"] = _stats(annotation={"mode": "both", "show_effect": True})
+    res = render(spec, df)
+    ax = res.figure.axes[0]
+    assert len(res.stats_report.results) == 6
+    assert _labels_overlap(ax) == 0, "stacked bracket labels overlap"
+    plt.close(res.figure)
+
+
+def test_grouped_within_x_wide_labels_stagger():
+    # Two clusters with wide (p + effect) labels must not collide horizontally.
+    rows = []
+    for g in ["WT", "KO"]:
+        for sub, base in [("Veh", 1.0), ("Stim", 2.0)]:
+            for _ in range(8):
+                rows.append({"genotype": g, "treatment": sub,
+                             "expr": float(RNG.normal(base, 0.2))})
+    df = pd.DataFrame(rows)
+    spec = make_spec("grouped_barplot_with_error_bar", "t", "publication")
+    spec["mapping"] = {"x": "genotype", "group": "treatment", "y": "expr", "error": "sem"}
+    spec["statistics"] = _stats(comparison_mode="within_x",
+                                annotation={"mode": "both", "show_effect": True})
+    res = render(spec, df)
+    ax = res.figure.axes[0]
+    assert len(res.stats_report.results) == 2
+    assert _labels_overlap(ax) == 0, "within-x labels overlap"
+    plt.close(res.figure)
+
+
+def test_grouped_auto_defaults_to_within_x():
+    # Two-group test + automatic comparison on a grouped plot should compare
+    # subgroups within each x category (placeable brackets), not the x-factor.
+    rows = []
+    for g in ["WT", "KO"]:
+        for sub, base in [("Veh", 1.0), ("Stim", 2.0)]:
+            for _ in range(8):
+                rows.append({"genotype": g, "treatment": sub,
+                             "expr": float(RNG.normal(base, 0.2))})
+    df = pd.DataFrame(rows)
+    spec = make_spec("grouped_barplot_with_error_bar", "t", "publication")
+    spec["mapping"] = {"x": "genotype", "group": "treatment", "y": "expr", "error": "sem"}
+    spec["statistics"] = {"enabled": True, "test": "welch_t", "comparison_mode": "auto"}
+    res = render(spec, df)
+    assert len(res.stats_report.results) == 2
+    assert all(r.extra.get("within_x") for r in res.stats_report.results)
+    plt.close(res.figure)
+
+
 def test_annotation_backed_by_stored_result():
     # Every bracket label must correspond to a stored StatResult p-value.
     df = _bar_df()

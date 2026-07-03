@@ -82,6 +82,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if title:
             ax.set_title(title)
         style_axes(ax, style)
+        fig.tight_layout()
 
         from make_my_figure_core.plots.stats_integration import run_and_annotate
 
@@ -90,7 +91,6 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                     for g, d in zip(groups, data)}
         stats_report = run_and_annotate(spec, work, style, PLOT_TYPE, ax=ax,
                                         positions=positions_map, tops=tops_map, mode="bracket")
-        fig.tight_layout()
 
     meta = base_metadata(spec, style, work, used_columns=[x, y])
     meta["kind"] = kind

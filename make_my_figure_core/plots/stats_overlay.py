@@ -60,7 +60,7 @@ def annotate_pairwise(
     yr = (ylim1 - ylim0) or 1.0
     tick_h = float(cfg.get("bracket_height_frac", 0.03)) * yr
     gap = float(cfg.get("gap_frac", 0.06)) * yr
-    top_margin = float(cfg.get("top_margin_frac", 0.12))
+    top_margin = float(cfg.get("top_margin_frac", 0.10))
     fs = cfg.get("font_size") or getattr(style, "annotation_pt", 9.5)
     lw = cfg.get("line_width") or getattr(style, "spine_width_pt", 1.1)
     text_color = getattr(style, "text_color", "#1a1a1a")
@@ -78,49 +78,125 @@ def annotate_pairwise(
             t = top_lookup(it)
             if t is not None and np.isfinite(t):
                 local_top = t
-        specs.append({"x1": x1, "x2": x2, "text": it.text, "start": local_top,
-                      "sig": it.significant})
+        specs.append({"x1": x1, "x2": x2, "text": it.text, "start": local_top})
 
     if not specs:
         return {"n_brackets": 0, "top": ylim1}
 
-    # Greedy leveling: assign each bracket the lowest level whose x-span does not
-    # overlap an already-placed bracket at that level.
-    specs.sort(key=lambda s: (s["x2"] - s["x1"], s["x1"]))
+    for s in specs:
+        s["mid"] = 0.5 * (s["x1"] + s["x2"])
+
+    # Set up a renderer so we can measure real label extents (width for
+    # horizontal leveling, height for vertical stacking).
+    fig = ax.figure
+    measure = True
+    renderer = None
+    try:
+        fig.canvas.draw()
+        renderer = fig.canvas.get_renderer()
+        inv = ax.transData.inverted()
+    except Exception:
+        measure = False
+
+    # Effective x-span of each bracket = max(bracket span, label width centered
+    # on the midpoint), so a label wider than its bracket still forces a stagger.
+    x0, x1lim = ax.get_xlim()
+    xr = abs(x1lim - x0) or 1.0
+    pad_x = 0.03 * xr
+    fp = None
+    if measure:
+        try:
+            from matplotlib.font_manager import FontProperties
+
+            fp = FontProperties(size=fs)
+
+            def _label_width_data(text):
+                w_px, _, _ = renderer.get_text_width_height_descent(text, fp, False)
+                xa = inv.transform((0.0, 0.0))[0]
+                xb = inv.transform((float(w_px), 0.0))[0]
+                return abs(xb - xa)
+        except Exception:
+            measure = False
+    for s in specs:
+        half = 0.5 * (s["x2"] - s["x1"])
+        if measure:
+            try:
+                # multi-line: widest line. Inflate a little to absorb any minor
+                # axes-geometry change (e.g. tight_layout) after measurement.
+                lw_data = max(_label_width_data(ln) for ln in s["text"].split("\n"))
+                half = max(half, 0.5 * lw_data * 1.12)
+            except Exception:
+                pass
+        s["eff_x1"] = s["mid"] - half - pad_x
+        s["eff_x2"] = s["mid"] + half + pad_x
+
+    # Greedy leveling on the effective spans (narrowest first).
+    specs.sort(key=lambda s: (s["eff_x2"] - s["eff_x1"], s["mid"]))
     levels: List[List[Tuple[float, float]]] = []
     for s in specs:
         placed = False
         for li, spans in enumerate(levels):
-            if all(s["x2"] < a - 1e-9 or s["x1"] > b + 1e-9 for a, b in spans):
-                spans.append((s["x1"], s["x2"]))
+            if all(s["eff_x2"] < a - 1e-9 or s["eff_x1"] > b + 1e-9 for a, b in spans):
+                spans.append((s["eff_x1"], s["eff_x2"]))
                 s["level"] = li
                 placed = True
                 break
         if not placed:
             s["level"] = len(levels)
-            levels.append([(s["x1"], s["x2"])])
+            levels.append([(s["eff_x1"], s["eff_x2"])])
+    n_levels = len(levels)
 
-    # Draw. Level height is relative to the max start among all brackets so a
-    # cluster of stacked brackets shares a clean baseline.
+    # Expand the y-axis FIRST (generously) so the drawing transform is fixed
+    # while we place and measure labels.
+    n_lines = max((1 + s["text"].count("\n")) for s in specs)
+    est_level = tick_h + gap + n_lines * 0.06 * yr
     global_start = max(s["start"] for s in specs)
-    line_step = tick_h + gap + 0.06 * yr
-    max_y = ylim1
-    for s in specs:
-        y = global_start + gap + s["level"] * line_step
-        y_tick = y + tick_h
-        ax.plot([s["x1"], s["x1"], s["x2"], s["x2"]],
-                [y, y_tick, y_tick, y], lw=lw, c=text_color,
-                solid_capstyle="butt", clip_on=False, zorder=6)
-        ax.text((s["x1"] + s["x2"]) / 2.0, y_tick + 0.01 * yr, s["text"],
-                ha="center", va="bottom", fontsize=fs, color=text_color,
-                zorder=7, clip_on=False)
-        # Approximate text height allowance (2 lines max).
-        text_lines = 1 + s["text"].count("\n")
-        max_y = max(max_y, y_tick + (0.05 + 0.05 * text_lines) * yr)
+    pre_top = max(ylim1, global_start + n_levels * est_level * 1.35 + top_margin * yr)
+    ax.set_ylim(ylim0, pre_top)
 
-    new_top = max(ylim1, max_y + top_margin * yr)
+    if measure:
+        try:
+            fig.canvas.draw()
+            renderer = fig.canvas.get_renderer()
+            inv = ax.transData.inverted()
+
+            def _disp_top_to_data(txt):
+                bb = txt.get_window_extent(renderer=renderer)
+                return inv.transform((bb.x0, bb.y1))[1]
+        except Exception:
+            measure = False
+
+    by_level: Dict[int, List[Dict[str, Any]]] = {}
+    for s in specs:
+        by_level.setdefault(s["level"], []).append(s)
+
+    current_base = global_start + gap
+    max_y = current_base
+    for lvl in sorted(by_level):
+        y = current_base
+        y_tick = y + tick_h
+        level_tops = []
+        for s in by_level[lvl]:
+            ax.plot([s["x1"], s["x1"], s["x2"], s["x2"]],
+                    [y, y_tick, y_tick, y], lw=lw, c=text_color,
+                    solid_capstyle="butt", clip_on=False, zorder=6)
+            txt = ax.text((s["x1"] + s["x2"]) / 2.0, y_tick + 0.006 * yr, s["text"],
+                          ha="center", va="bottom", fontsize=fs, color=text_color,
+                          zorder=7, clip_on=False)
+            if measure:
+                try:
+                    level_tops.append(_disp_top_to_data(txt))
+                except Exception:
+                    level_tops.append(y_tick + n_lines * 0.06 * yr)
+            else:
+                level_tops.append(y_tick + n_lines * 0.06 * yr)
+        # Next level starts a gap above the tallest label on this level.
+        current_base = max(level_tops) + gap
+        max_y = max(max_y, current_base)
+
+    new_top = max(pre_top, max_y + top_margin * yr)
     ax.set_ylim(ylim0, new_top)
-    return {"n_brackets": len(specs), "levels": len(levels), "top": new_top}
+    return {"n_brackets": len(specs), "levels": n_levels, "top": new_top}
 
 
 def annotate_corner(ax, lines: List[str], *, style, loc: str = "upper left",

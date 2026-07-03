@@ -1330,11 +1330,52 @@ def _selftest() -> int:
             assert blob and len(blob) > 300
         except Exception as exc:  # noqa: BLE001
             failures.append(f"{pt}: {exc}")
+    # Exercise the statistics engine end-to-end so a frozen build fails loudly if
+    # scipy/statsmodels/patsy are not bundled (two-way ANOVA needs patsy).
+    stats_ok = []
+    try:
+        import numpy as _np
+        import pandas as _pd
+
+        rng = _np.random.default_rng(0)
+        # (a) bar plot with pairwise Welch t-tests + brackets (scipy path)
+        bar = _pd.DataFrame([{"g": g, "y": float(rng.normal(m, 0.3))}
+                             for g, m in [("A", 1.0), ("B", 2.0), ("C", 1.5)] for _ in range(8)])
+        s = ctrl.build_spec("barplot_with_error_bar", "publication", "bar.csv",
+                            {"x": "g", "y": "y"},
+                            statistics={"enabled": True, "test": "welch_t",
+                                        "comparison_mode": "all_pairs"})
+        r = ctrl.render(s, _mk_loaded(bar))
+        assert r.stats_report is not None and len(r.stats_report.results) == 3
+        stats_ok.append("welch_t brackets")
+        # (b) grouped two-way ANOVA (statsmodels + patsy path)
+        gb = _pd.DataFrame([{"geno": geno, "trt": trt, "expr": float(rng.normal(b, 0.2))}
+                            for geno, trt, b in [("WT", "V", 1.0), ("WT", "D", 1.8),
+                                                 ("KO", "V", 0.9), ("KO", "D", 1.1)]
+                            for _ in range(6)])
+        s2 = ctrl.build_spec("grouped_barplot_with_error_bar", "publication", "gb.csv",
+                             {"x": "geno", "group": "trt", "y": "expr"},
+                             statistics={"enabled": True, "test": "two_way_anova"})
+        r2 = ctrl.render(s2, _mk_loaded(gb))
+        assert r2.stats_report is not None and len(r2.stats_report.results) >= 3
+        stats_ok.append("two-way ANOVA (statsmodels+patsy)")
+    except Exception as exc:  # noqa: BLE001
+        failures.append(f"statistics: {exc}")
+
     if failures:
         sys.stderr.write("SELFTEST FAILURES:\n" + "\n".join(failures) + "\n")
         return 1
-    sys.stdout.write(f"SELFTEST OK: {len(available_plot_types())} plot types rendered + exported.\n")
+    sys.stdout.write(f"SELFTEST OK: {len(available_plot_types())} plot types rendered + "
+                     f"exported; statistics OK ({', '.join(stats_ok)}).\n")
     return 0
+
+
+def _mk_loaded(df):
+    """Wrap a DataFrame as a LoadedData for controller.render in the selftest."""
+    class _Info:
+        dataframe = df
+
+    return LoadedData(info=_Info(), table_name="selftest.csv")
 
 
 def main() -> int:

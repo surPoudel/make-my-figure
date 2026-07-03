@@ -102,7 +102,16 @@ def stat_text_panel(results: List[StatResult], *, digits: int = 3,
             lines.append(f"{r.test_name}: {report.format_p(r.display_p, digits=digits)}")
         elif r.comparison_type == "omnibus":
             sn = r.statistic_name or "stat"
-            term = f" ({r.group_a})" if r.group_a else ""
-            lines.append(f"{r.test_name}{term}: {sn} = {r.statistic:.3g}, "
-                         f"{report.format_p(r.display_p, digits=digits)}")
+            if r.test_id == "two_way_anova":
+                # Compact: one header, then term-only lines (genotype / treatment
+                # / interaction) so the panel does not repeat "Two-way ANOVA".
+                if not any(ln == "Two-way ANOVA:" for ln in lines):
+                    lines.append("Two-way ANOVA:")
+                term = (r.group_a or "").split(" x ")
+                label = "interaction" if len(term) == 2 else (r.group_a or "term")
+                lines.append(f"  {label}: {sn} = {r.statistic:.3g}, "
+                             f"{report.format_p(r.display_p, digits=digits)}")
+            else:
+                lines.append(f"{r.test_name}: {sn} = {r.statistic:.3g}, "
+                             f"{report.format_p(r.display_p, digits=digits)}")
     return lines

@@ -75,6 +75,16 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                           "capthick": style.errorbar_line_width},
             )
 
+        # Also register whole-cluster positions (keyed by the x-level alone) so a
+        # comparison of the x-factor across clusters (e.g. WT vs KO) can be drawn
+        # spanning cluster centers, not just subgroup-within-cluster comparisons.
+        for xi, xl in enumerate(x_levels):
+            positions_map[str(xl)] = float(x_idx[xi])
+            cluster_tops = [tops_map[(str(xl), str(g))] for g in groups
+                            if (str(xl), str(g)) in tops_map]
+            if cluster_tops:
+                tops_map[str(xl)] = max(cluster_tops)
+
         ax.set_xticks(x_idx)
         ax.set_xticklabels([str(c) for c in x_levels])
         ax.set_xlabel(spec.get("layout", {}).get("x_label", x))
@@ -87,12 +97,14 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if title:
             ax.set_title(title)
         style_axes(ax, style)
+        # Place the legend first (it shrinks the axes width); annotate afterwards
+        # so bracket-label widths are measured against the final axes geometry.
+        place_legend(ax, style, title=str(group), force_outside=True)
 
         from make_my_figure_core.plots.stats_integration import run_and_annotate
 
         stats_report = run_and_annotate(spec, work, style, PLOT_TYPE, ax=ax,
                                         positions=positions_map, tops=tops_map, mode="bracket")
-        place_legend(ax, style, title=str(group), force_outside=True)
 
     meta = base_metadata(spec, style, work, used_columns=[x, group, y])
     meta["error_method"] = error_method

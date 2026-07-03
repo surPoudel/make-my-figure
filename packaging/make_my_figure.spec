@@ -6,7 +6,7 @@
 import os
 import sys
 
-from PyInstaller.utils.hooks import collect_submodules
+from PyInstaller.utils.hooks import collect_data_files, collect_submodules
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(SPEC)), ".."))
 
@@ -31,6 +31,16 @@ hiddenimports = [
     "PIL",
 ]
 hiddenimports += collect_submodules("scipy")
+# Statistics engine dependencies (two-way / repeated-measures ANOVA, Cox).
+# statsmodels imports many submodules lazily and ships data files; patsy is its
+# formula dependency. Without these the built app crashes on those tests.
+hiddenimports += collect_submodules("statsmodels")
+hiddenimports += collect_submodules("patsy")
+hiddenimports += ["pandas", "statsmodels.api", "statsmodels.formula.api",
+                  "statsmodels.stats.anova", "statsmodels.duration.hazard_regression"]
+
+# statsmodels/scipy bundle small data files needed at runtime.
+datas += collect_data_files("statsmodels")
 
 # Per-platform icon: Windows .ico, macOS .icns (if present), Linux uses PNG at runtime.
 icon = None

@@ -175,5 +175,22 @@ def annotation_text(r: StatResult, *, mode: str = "stars", digits: int = 3,
     else:  # both
         text = f"{star} ({format_p(pval, digits=digits, sci_threshold=sci_threshold)})"
     if show_effect and r.effect_size is not None and r.effect_size == r.effect_size:
-        text += f"\n{r.effect_size_name} = {r.effect_size:.2g}"
+        # Same line as the p-value/star to keep bracket labels short (a compact
+        # effect-size symbol avoids tall two-line labels that collide when
+        # several brackets stack).
+        text += f", {_effect_symbol(r.effect_size_name)} = {r.effect_size:.2g}"
     return text
+
+
+def _effect_symbol(name: Optional[str]) -> str:
+    """Compact symbol for an effect-size name (keeps on-figure labels short)."""
+    if not name:
+        return "effect"
+    table = {
+        "Cohen's d": "d", "Cohen's dz": "dz", "Hedges' g": "g",
+        "rank-biserial": "r", "Cliff's delta (rank-biserial)": "δ",
+        "eta-squared": "η²", "omega-squared": "ω²", "epsilon-squared": "ε²",
+        "R-squared": "R²", "Cramer's V": "V", "odds ratio": "OR",
+        "hazard ratio": "HR", "Spearman rho": "ρ",
+    }
+    return table.get(name, name)

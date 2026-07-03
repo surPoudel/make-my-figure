@@ -245,8 +245,12 @@ def _dispatch(test: str, df: pd.DataFrame, cols: Dict[str, Any], plot_type: Opti
     if info.family == "two_group":
         if not (value_col and group_col):
             raise StatsError(f"{info.label} needs a value column and a grouping column.")
-        # Grouped plot: compare subgroups within each x category.
-        if mode == "within_x" and subgroup_col:
+        # Grouped plot: compare subgroups within each x category. This is the
+        # sensible default for a grouped plot (and the only comparison whose
+        # brackets sit on the dodged bars), so 'auto' uses it when a subgroup
+        # column is present. Explicit modes (all_pairs / vs_control) still
+        # compare the x-factor across clusters.
+        if subgroup_col and mode in ("within_x", "auto", "omnibus"):
             return _run_within_x(test, df, value_col, group_col, subgroup_col,
                                  subject_col, reference, selected, alternative, alpha)
         levels = _levels(df, group_col)
