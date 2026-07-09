@@ -111,7 +111,8 @@ def check_r_environment(*, packages: Optional[List[str]] = None,
         "for (p in present) cat('PKG', p, vv[[p]], '\\n')"
     ) % ", ".join(f"'{p}'" for p in packages)
     try:
-        res = subprocess.run([rscript, "-e", probe], capture_output=True, text=True, timeout=60)
+        res = subprocess.run([rscript, "-e", probe], capture_output=True, text=True, timeout=60,
+                             env=_rscript_env(rscript))
     except Exception as exc:  # pragma: no cover - defensive
         return REnvironment(has_r=True, rscript_path=rscript, missing_packages=list(packages),
                             ready=False, message=f"Could not run Rscript: {exc}")
@@ -202,8 +203,10 @@ def run_de_pipeline(
         json.dump(run_spec, fh, indent=2)
 
     # Subprocess argument list (no shell) -> safe with spaces / OneDrive paths.
+    # On Windows a conda R needs its library dirs on PATH to load its DLLs.
     proc = subprocess.run([env.rscript_path, script_file, spec_file],
-                          capture_output=True, text=True, timeout=timeout, cwd=workdir)
+                          capture_output=True, text=True, timeout=timeout, cwd=workdir,
+                          env=_rscript_env(env.rscript_path))
     if "MMF_OK" not in proc.stdout:
         raise RuntimeError(
             "R DE pipeline failed.\nSTDOUT:\n" + proc.stdout[-4000:] +
@@ -264,3 +267,13 @@ def _read_text(path: str) -> str:
             return fh.read()
     except Exception:
         return ""
+
+
+def _rscript_env(rscript_path: Optional[str]) -> dict:
+    """Environment for invoking Rscript (adds conda DLL dirs to PATH on Windows)."""
+    try:
+        from make_my_figure_core.rnaseq.r_setup import rscript_subprocess_env
+
+        return rscript_subprocess_env(rscript_path)
+    except Exception:
+        return dict(os.environ)

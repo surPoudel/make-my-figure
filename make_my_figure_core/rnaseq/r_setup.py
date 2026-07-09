@@ -69,6 +69,47 @@ def r_env_prefix() -> str:
     return os.path.join(app_data_dir(), "r_env")
 
 
+def conda_prefix_of(rscript_path: Optional[str]) -> Optional[str]:
+    """If ``rscript_path`` lives inside a conda env, return the env prefix.
+
+    Recognized layouts: ``<prefix>/bin/Rscript`` (unix) and
+    ``<prefix>/Scripts/Rscript.exe`` or ``<prefix>/Rscript.exe`` (Windows).
+    """
+    if not rscript_path:
+        return None
+    d = os.path.dirname(os.path.abspath(rscript_path))
+    base = os.path.basename(d).lower()
+    if base in ("bin", "scripts"):
+        return os.path.dirname(d)
+    return d  # Rscript.exe directly under the prefix
+
+
+def rscript_subprocess_env(rscript_path: Optional[str]) -> dict:
+    """Return the environment for invoking a (possibly conda) Rscript.
+
+    On Windows, a conda R needs the env's library directories on PATH or its
+    DLLs fail to load (error 0xC0000135 / DLL not found). We prepend them here.
+    On Linux/macOS the env is returned unchanged (rpath handles library lookup).
+    """
+    env = dict(os.environ)
+    if not _is_windows():
+        return env
+    prefix = conda_prefix_of(rscript_path)
+    if not prefix or not os.path.isdir(prefix):
+        return env
+    dll_dirs = [
+        prefix,
+        os.path.join(prefix, "Library", "mingw-w64", "bin"),
+        os.path.join(prefix, "Library", "usr", "bin"),
+        os.path.join(prefix, "Library", "bin"),
+        os.path.join(prefix, "Scripts"),
+        os.path.join(prefix, "bin"),
+    ]
+    dll_dirs = [d for d in dll_dirs if os.path.isdir(d)]
+    env["PATH"] = os.pathsep.join(dll_dirs + [env.get("PATH", "")])
+    return env
+
+
 def _rscript_in(prefix: str) -> Optional[str]:
     for c in (os.path.join(prefix, "bin", "Rscript"),
               os.path.join(prefix, "Scripts", "Rscript.exe"),
@@ -245,8 +286,9 @@ def install_r_environment(progress: Optional[ProgressFn] = None,
     if rc == 0 and rscript and _is_windows():
         log("Installing edgeR/limma/DESeq2 via BiocManager (Windows binaries)…")
         try:
+            renv = rscript_subprocess_env(rscript)  # conda DLL dirs on PATH
             bproc = subprocess.Popen(_biocmanager_command(rscript), stdout=subprocess.PIPE,
-                                     stderr=subprocess.STDOUT, text=True, env=env)
+                                     stderr=subprocess.STDOUT, text=True, env=renv)
             for line in iter(bproc.stdout.readline, ""):
                 if line:
                     log(line.rstrip())

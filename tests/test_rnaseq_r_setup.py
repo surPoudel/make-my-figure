@@ -153,3 +153,23 @@ def test_unix_install_uses_bioconda(data_dir, monkeypatch):
     channels, packages = rs.conda_packages_for_platform()
     assert channels == ["conda-forge", "bioconda"]
     assert "bioconductor-edger" in packages and "bioconductor-deseq2" in packages
+
+
+def test_conda_prefix_and_windows_dll_path(data_dir, monkeypatch, tmp_path):
+    # prefix detection from a conda-style Rscript path
+    prefix = tmp_path / "r_env"
+    (prefix / "bin").mkdir(parents=True)
+    rscript = prefix / "bin" / "Rscript"
+    rscript.write_text("")
+    assert rs.conda_prefix_of(str(rscript)) == str(prefix)
+    # On non-Windows, env is unchanged (rpath handles DLLs)
+    monkeypatch.setattr(rs, "_is_windows", lambda: False)
+    assert rs.rscript_subprocess_env(str(rscript))["PATH"] == os.environ.get("PATH", "")
+    # On Windows, the conda library dirs are prepended to PATH
+    for sub in ("Library/bin", "Library/mingw-w64/bin", "Scripts"):
+        (prefix / sub).mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(rs, "_is_windows", lambda: True)
+    win_path = rs.rscript_subprocess_env(str(rscript))["PATH"]
+    assert str(prefix / "Library" / "bin") in win_path
+    assert str(prefix / "Scripts") in win_path
+    assert win_path.startswith(str(prefix))  # env dirs come first
