@@ -1,0 +1,43 @@
+{
+  "input_mode": "de_result",
+  "input_files": {},
+  "input_checksums": {},
+  "count_matrix_info": {},
+  "metadata_info": {},
+  "gene_annotation_info": {},
+  "condition_column": null,
+  "reference_group": null,
+  "comparison_group": null,
+  "covariates": [],
+  "batch_column": null,
+  "subject_column": null,
+  "design_formula": null,
+  "contrasts": [],
+  "filtering": {},
+  "normalization_method": null,
+  "de_method": null,
+  "de_method_id": null,
+  "r_script_path": null,
+  "r_version": null,
+  "package_versions": {},
+  "output_files": {},
+  "de_columns_used": {
+    "gene_id": "gene_id",
+    "gene_symbol": "geneSymbol",
+    "logFC": "logFC",
+    "p_value": "P.Value",
+    "adj_p": "adj.P.Val",
+    "ave_expr": "AveExpr",
+    "statistic": "t"
+  },
+  "volcano_thresholds": {
+    "lfc_cutoff": 1.0,
+    "alpha": 0.05,
+    "p_field": "p_value",
+    "use_adjusted": false
+  },
+  "heatmap_transform": null,
+  "gene_selection_method": null,
+  "software_versions": {},
+  "warnings": []
+}

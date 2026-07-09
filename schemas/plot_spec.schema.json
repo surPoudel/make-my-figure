@@ -23,9 +23,13 @@
           "string",
           "number",
           "boolean",
-          "null"
+          "null",
+          "array"
         ]
       }
+    },
+    "column_annotations": {
+      "type": "array"
     },
     "statistics": {
       "type": "object"

@@ -35,6 +35,57 @@ def _leaf_order(matrix: np.ndarray) -> List[int]:
     return list(leaves_list(z))
 
 
+# Colorblind-aware qualitative palette for annotation categories.
+_ANNOT_PALETTE = ["#0072B2", "#D55E00", "#009E73", "#CC79A7", "#E69F00", "#56B4E9",
+                  "#F0E442", "#999999", "#000000"]
+
+
+def _draw_column_annotations(fig, ax, annotations, ordered_cols, style, warnings) -> None:
+    """Draw thin categorical color strips above the heatmap (one per track).
+
+    Each track colors samples by a metadata category and adds a compact legend.
+    Missing samples are drawn as light grey.
+    """
+    from mpl_toolkits.axes_grid1 import make_axes_locatable
+
+    divider = make_axes_locatable(ax)
+    n = len(ordered_cols)
+    for track in reversed(annotations):  # append from the top down
+        label = str(track.get("label", "annotation"))
+        values = track.get("values", {}) or {}
+        cats = [str(values.get(c, "")) for c in ordered_cols]
+        levels = [c for c in dict.fromkeys(cats) if c != ""]
+        cmap_idx = {lv: i for i, lv in enumerate(levels)}
+        strip = np.full((1, n), np.nan)
+        for j, c in enumerate(cats):
+            if c in cmap_idx:
+                strip[0, j] = cmap_idx[c]
+        # No sharex: a shared x-axis would bleed the main heatmap's rotated
+        # sample labels onto the strip. imshow extents already align the columns.
+        cax = divider.append_axes("top", size="5%", pad=0.06)
+        cax.set_xlim(-0.5, n - 0.5)
+        from matplotlib.colors import ListedColormap
+
+        colors = [_ANNOT_PALETTE[i % len(_ANNOT_PALETTE)] for i in range(max(1, len(levels)))]
+        cmap = ListedColormap(colors)
+        cmap.set_bad("#EEEEEE")
+        cax.imshow(strip, aspect="auto", cmap=cmap,
+                   vmin=-0.5, vmax=max(0.5, len(levels) - 0.5), interpolation="nearest")
+        cax.set_yticks([0]); cax.set_yticklabels([label], fontsize=max(7.0, style.tick_label_pt - 1))
+        cax.set_xticks([])
+        for spine in cax.spines.values():
+            spine.set_visible(False)
+        # Legend handles for this track (kept small).
+        from matplotlib.patches import Patch
+
+        handles = [Patch(facecolor=colors[i % len(colors)], label=lv) for i, lv in enumerate(levels)]
+        if handles:
+            cax.legend(handles=handles, title=label, loc="center left",
+                       bbox_to_anchor=(1.005, 0.5), fontsize=max(6.5, style.legend_pt - 2),
+                       title_fontsize=max(7.0, style.legend_pt - 1), frameon=False,
+                       handlelength=1.0, borderpad=0.2, labelspacing=0.2)
+
+
 def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     row_id = get_mapping(spec, "row_id", None)
     if not row_id:
@@ -98,14 +149,34 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
     col_fs = _label_fs(len(ordered_cols))
     row_fs = _label_fs(len(ordered_rows))
-    # Wider figure for many columns so labels don't crowd.
     n_c = len(ordered_cols)
-    aspect = 0.95 if n_c <= 14 else min(1.4, 0.95 + 0.02 * (n_c - 14))
+    n_r = len(ordered_rows)
+
+    # Optional sample (column) annotation strips, e.g. condition/batch bars.
+    # spec['column_annotations'] = [{"label": str, "values": {sample: category}}]
+    col_annotations = spec.get("column_annotations") or []
+
+    # Figure size: width grows with columns; height grows with the number of
+    # rows when row labels are shown, so gene labels stay legible and unclipped.
+    layout = spec.get("layout", {}) or {}
+    width_preset = str(layout.get("column_width", "default")).lower()
+    w_in, _ = style.figure_size_inches(width_preset, aspect=1.0)
+    if n_c > 14:
+        w_in *= min(1.5, 1.0 + 0.02 * (n_c - 14))
+    if row_fs > 0 and n_r > 12:
+        target_h = 1.6 + 0.16 * n_r          # ~0.16 in per labeled row + margins
+    else:
+        target_h = w_in * (0.95 if n_c <= 14 else 1.15)
+    target_h += 0.5 * len(col_annotations)   # room for annotation strips
+    target_h = max(target_h, w_in * 0.6)
+    figsize = (w_in, min(target_h, 22.0))
 
     with style.apply():
-        fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=aspect))
+        fig, ax = plt.subplots(figsize=figsize)
         im = ax.imshow(ordered, aspect="auto", cmap=cmap, vmin=vmin, vmax=vmax,
                        interpolation="nearest")
+        if col_annotations:
+            _draw_column_annotations(fig, ax, col_annotations, ordered_cols, style, warnings)
         if col_fs > 0:
             ax.set_xticks(range(len(ordered_cols)))
             ax.set_xticklabels(ordered_cols, rotation=90, fontsize=col_fs)
@@ -122,7 +193,12 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         ax.set_ylabel(spec.get("layout", {}).get("y_label", str(row_id)))
         title = spec.get("layout", {}).get("title")
         if title:
-            ax.set_title(title)
+            # With annotation strips stacked above ax, a normal ax title would
+            # collide with them; use a figure-level suptitle instead.
+            if col_annotations:
+                fig.suptitle(title, fontsize=style.title_font_pt, fontweight="bold")
+            else:
+                ax.set_title(title)
         cbar = fig.colorbar(im, ax=ax, fraction=0.045, pad=0.03)
         cbar.ax.tick_params(labelsize=style.tick_label_pt, width=style.tick_width,
                             length=style.tick_length)

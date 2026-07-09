@@ -1,0 +1,25 @@
+{
+  "plot_type": "heatmap_clustered_matrix",
+  "input_table": "expression_matrix",
+  "journal_style": "publication",
+  "mapping": {
+    "row_id": "gene",
+    "cluster_rows": true,
+    "cluster_columns": true,
+    "color_scale": "diverging"
+  },
+  "layout": {
+    "colorbar_label": "row z-score",
+    "y_label": "Gene",
+    "title": "Expression heatmap"
+  },
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 150.0,
+    "dpi": 300
+  }
+}

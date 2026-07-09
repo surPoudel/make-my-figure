@@ -40,11 +40,9 @@ def build_pairwise_annotations(results: List[StatResult], annotation_cfg: Dict[s
     included only if ``show_nonsignificant`` is set.
     """
     cfg = annotation_cfg or {}
-    mode = cfg.get("mode", "stars")
-    digits = int(cfg.get("digits", 3))
-    show_effect = bool(cfg.get("show_effect", False))
-    sci = float(cfg.get("sci_threshold", 1e-3))
-    show_ns = bool(cfg.get("show_nonsignificant", True))
+    # `hide_nonsignificant` (new) and `show_nonsignificant` (legacy) both drop
+    # non-significant comparisons from the figure.
+    show_ns = bool(cfg.get("show_nonsignificant", True)) and not bool(cfg.get("hide_nonsignificant", False))
 
     items: List[AnnotationItem] = []
     for r in results:
@@ -55,8 +53,9 @@ def build_pairwise_annotations(results: List[StatResult], annotation_cfg: Dict[s
         significant = r.reject_null
         if not significant and not show_ns:
             continue
-        text = report.annotation_text(r, mode=mode, digits=digits, show_effect=show_effect,
-                                      sci_threshold=sci)
+        text = report.render_annotation(r, cfg)
+        if not text:
+            continue
         items.append(AnnotationItem(
             group_a=str(r.group_a), group_b=str(r.group_b), text=text,
             p_value=r.p_value, display_p=r.display_p, significant=significant,

@@ -36,6 +36,8 @@ pytest -k "not gui"                       # skip Qt GUI tests if PySide6 is abse
 python scripts/generate_example_data.py   # rebuilds examples/ + example_data_manifest.json
 python scripts/generate_stats_examples.py # rebuilds examples/statistics/ (11 stats workflows)
 python scripts/generate_stats_qa_gallery.py  # reports/stats_qa_gallery.png (visual QA)
+python scripts/generate_rnaseq_examples.py   # rebuilds examples/rnaseq/ (DE/matrix/raw-count)
+python scripts/generate_rnaseq_qa_gallery.py # reports/rnaseq_qa_gallery.png (visual QA)
 python scripts/build_learned_styles.py    # derives style_profiles/learned/*.json from figure_library/
 python scripts/harvest_library.py --papers 10   # CC-BY-only figure harvest (network)
 
@@ -120,6 +122,33 @@ Data flows: **loader → PlotSpec (validated) → renderer → RenderResult → 
   under `metadata["statistics"]` — don't confuse the two). Integrated in: barplot,
   box_violin, grouped_barplot (within-x brackets), scatter/survival/stacked (corner panels).
 
+- **RNA-seq** (`rnaseq/`): three input modes behind one detection entrypoint
+  (`detect.detect_input_mode`). Mode A precomputed DE table → `de_table.parse_de_table` +
+  `classify_de` + `volcano_spec_from_de` (p-values read verbatim, never recomputed). Mode B
+  normalized matrix → `expression.build_expression_matrix` + transforms/gene-selection +
+  `heatmap_spec_from_expression` (feeds the core heatmap renderer; optional sample-annotation
+  strips via `spec["column_annotations"]`). Mode C raw counts + metadata → `runner.run_de_pipeline`
+  shells out to R (subprocess **arg list**, never a shell string) running the generated
+  `rscript.RNASEQ_DE_R` = **edgeR (TMM + CPM filter) + limma-voom + eBayes moderated t-test**
+  (faithful generalization of `test_matrix/pipeline_*.R`; adds covariates/batch to the design).
+  `check_r_environment()` gates it; missing R/edgeR/limma raises `RDependencyError` with install
+  steps — **never a t-test fallback**. `spec.RnaSeqSpec` is the reproducibility record. `load_rnaseq_table`
+  promotes R's unnamed row-name (gene id) into a `gene_id` column. Loaders' index inference already
+  lands that id as the frame index; detection relies on it. R is optional and usually absent in
+  dev/CI, so R-dependent tests skip. GUI: `apps/desktop_app/rnaseq_panel.py` (`RnaSeqDialog`) and
+  `apps/streamlit_app/rnaseq_view.py`.
+
+- **Statistics annotations** (`statistics/method_reporting.py`): `render_annotation(result, cfg)`
+  is the single label builder — content modes (stars/p/p_adj/stat/effect/combos/full/flags) and a
+  custom `{token}` template via `annotation_tokens` (bare values). Only reads stored `StatResult`
+  values; hiding a field on the figure never drops it from the exported StatsSpec. Config lives in
+  the annotation block (`schemas.default_annotation`), back-compatible with the old `mode`.
+
+- **App navigation**: desktop `MainWindow.reset_to_upload()` (File → Home / Upload New Data, or the
+  workbench button) clears data/spec/result/stats/rnaseq and returns to the welcome page without
+  restart — distinct from the Matplotlib toolbar `home` (zoom/pan reset). Streamlit clears
+  `st.session_state` + reruns.
+
 - **Multi-panel** (`panels/`): `build_figure(MultiPanelFigure)` composes panels (rendered
   from their PlotSpecs) into a labelled grid; panel content is embedded as `panel_dpi`
   raster while labels stay vector. `export_multipanel` + `multipanel_sidecar` write the
@@ -137,4 +166,9 @@ Data flows: **loader → PlotSpec (validated) → renderer → RenderResult → 
   and read via `examples.py` + `example_data_manifest.json` — edit the generator, not the
   outputs. `mock_data/` holds the golden test inputs.
 - `app/` (singular) is a stale empty leftover; the live frontends are under `apps/` (plural).
-- Statistics/p-value features are on the roadmap and **not implemented** — don't fabricate them.
+- Statistics, annotations, multi-panel, and RNA-seq are **implemented** (see the sections above).
+  The invariant across all of them: **never fabricate a statistic/p-value** — every value shown
+  comes from a stored result, and RNA-seq DE never falls back to a t-test when R is absent.
+- `test_matrix/` holds the user's real RNA-seq example inputs (DE table, voom matrix, metadata,
+  config, reference R script). `examples/rnaseq/` holds small committed synthetic/derived copies
+  used by tests; R-dependent tests skip when `Rscript` is unavailable.

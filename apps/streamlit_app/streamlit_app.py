@@ -101,8 +101,25 @@ st.caption(
 
 
 # --- 1. Data source ---------------------------------------------------------
+# --- App navigation: reset / upload new data --------------------------------
+# Streamlit reruns top-to-bottom, so "return to upload" clears session state
+# (dataset, mappings, stats, RNA-seq) and reruns to a clean upload state.
+if st.sidebar.button("🏠 Reset / Upload new data", use_container_width=True,
+                     help="Clear the current dataset, plot, statistics, and RNA-seq "
+                          "results and return to a clean upload state (no restart)."):
+    for _k in list(st.session_state.keys()):
+        del st.session_state[_k]
+    st.rerun()
+
+st.sidebar.divider()
 st.sidebar.header("1. Data")
-source_mode = st.sidebar.radio("Data source", ["Bundled sample", "Upload file"])
+source_mode = st.sidebar.radio("Data source",
+                               ["Bundled sample", "Upload file", "RNA-seq"])
+if source_mode == "RNA-seq":
+    from apps.streamlit_app.rnaseq_view import render_rnaseq_workflow
+
+    render_rnaseq_workflow(st)
+    st.stop()
 
 table_info = None
 table_name = None

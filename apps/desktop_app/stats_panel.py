@@ -22,6 +22,7 @@ from PySide6.QtWidgets import (
     QGroupBox,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
     QListWidget,
     QListWidgetItem,
     QMessageBox,
@@ -55,6 +56,21 @@ CORRECTION_CHOICES = [
     ("none", "None"),
 ]
 ANNOTATION_MODES = [("stars", "Stars (*, **)"), ("p", "Exact p-values"), ("both", "Stars + p")]
+
+# Rich annotation content selector (Part 2).
+ANNOTATION_CONTENT_CHOICES = [
+    ("stars", "Stars only"),
+    ("p", "P-value only"),
+    ("p_adj", "Adjusted p-value only"),
+    ("p_stars", "P-value + stars"),
+    ("stat", "Statistic only"),
+    ("effect", "Effect size only"),
+    ("p_stat", "P-value + statistic"),
+    ("p_effect", "P-value + effect size"),
+    ("full", "Full compact"),
+    ("flags", "Custom (checkboxes)"),
+    ("custom", "Custom template"),
+]
 
 
 class StatisticsPanel(QGroupBox):
@@ -95,11 +111,22 @@ class StatisticsPanel(QGroupBox):
         self.correction_combo = self._combo(CORRECTION_CHOICES)
         form.addRow("Correction", self.correction_combo)
 
-        self.annotation_combo = self._combo(ANNOTATION_MODES)
-        form.addRow("Annotation", self.annotation_combo)
+        self.annotation_combo = self._combo(ANNOTATION_CONTENT_CHOICES)
+        form.addRow("Annotation shows", self.annotation_combo)
+        self.template_edit = QLineEdit()
+        self.template_edit.setPlaceholderText("{effect_symbol} = {effect}, p = {p}")
+        self.template_edit.setToolTip("Tokens: {p} {p_adj} {stars} {stat_symbol} {stat} "
+                                      "{effect_symbol} {effect} {ci} {test_short} {n} {comparison}")
+        self.template_edit.textChanged.connect(lambda _=None: self.changed.emit())
+        self.template_edit.setVisible(False)
+        form.addRow("Custom template", self.template_edit)
+        self.annotation_combo.currentIndexChanged.connect(self._on_content_changed)
         self.show_effect_cb = QCheckBox("Show effect size on figure")
         self.show_effect_cb.stateChanged.connect(lambda _=None: self.changed.emit())
         form.addRow(self.show_effect_cb)
+        self.hide_ns_cb = QCheckBox("Hide non-significant annotations")
+        self.hide_ns_cb.stateChanged.connect(lambda _=None: self.changed.emit())
+        form.addRow(self.hide_ns_cb)
         self.posthoc_cb = QCheckBox("Post-hoc pairwise after omnibus")
         self.posthoc_cb.stateChanged.connect(lambda _=None: self.changed.emit())
         form.addRow(self.posthoc_cb)
@@ -204,12 +231,19 @@ class StatisticsPanel(QGroupBox):
     def is_enabled(self) -> bool:
         return self.isChecked() and self.enable_cb.isChecked()
 
+    def _on_content_changed(self) -> None:
+        self.template_edit.setVisible(self.annotation_combo.currentData() == "custom")
+        self.changed.emit()
+
     def stats_spec(self) -> Dict[str, Any]:
+        content = self.annotation_combo.currentData()
         ann = default_annotation()
         ann.update({
-            "mode": self.annotation_combo.currentData(),
+            "content": content,
+            "template": self.template_edit.text().strip(),
             "digits": self.digits_spin.value(),
             "show_effect": self.show_effect_cb.isChecked(),
+            "hide_nonsignificant": self.hide_ns_cb.isChecked(),
             "font_size": self.fontsize_spin.value(),
         })
 
@@ -259,9 +293,12 @@ class StatisticsPanel(QGroupBox):
         self.mode_combo.setCurrentIndex(0)
         self.correction_combo.setCurrentIndex(0)
         self.annotation_combo.setCurrentIndex(0)
+        self.template_edit.clear()
+        self.template_edit.setVisible(False)
         self.digits_spin.setValue(3)
         self.fontsize_spin.setValue(9.5)
         self.show_effect_cb.setChecked(False)
+        self.hide_ns_cb.setChecked(False)
         self.posthoc_cb.setChecked(False)
         self.changed.emit()
 

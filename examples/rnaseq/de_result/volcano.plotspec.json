@@ -1,0 +1,29 @@
+{
+  "plot_type": "volcano_plot",
+  "input_table": "de_result.tsv",
+  "journal_style": "publication",
+  "mapping": {
+    "x": "logFC",
+    "p": "p_value",
+    "label": "gene_symbol",
+    "class_col": "_class",
+    "lfc_cutoff": 1.0,
+    "p_cutoff": 0.05,
+    "max_labels": 15,
+    "label_significant_only": true
+  },
+  "layout": {
+    "y_label": "-log$_{10}$ p-value",
+    "subtitle": "Up: 1 | Down: 1 | p < 0.05, |log2FC| >= 1",
+    "title": "Differential expression"
+  },
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 130.0,
+    "dpi": 300
+  }
+}

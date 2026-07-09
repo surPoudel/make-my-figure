@@ -183,6 +183,7 @@ class MainWindow(QMainWindow):
         self._option_widgets: dict[str, QWidget] = {}
         self._current_result = None
         self._current_spec = None
+        self._rnaseq_state = None
         self._canvas = None
         self._toolbar = None
         self._suppress_change = False   # re-entrancy guard for plot-type changes
@@ -256,6 +257,20 @@ class MainWindow(QMainWindow):
         # Left: controls in a scroll area
         controls = QWidget()
         cv = QVBoxLayout(controls)
+
+        # App-level navigation: return to the upload/welcome page without quitting.
+        # (Distinct from the Matplotlib toolbar 'home', which only resets zoom/pan.)
+        nav_row = QHBoxLayout()
+        self.home_btn = QPushButton("\U0001F3E0  Home / Upload New Data")
+        self.home_btn.setToolTip("Return to the upload page to load a different dataset "
+                                 "(clears the current data, plot, and statistics).")
+        self.home_btn.clicked.connect(self.action_home_upload)
+        nav_row.addWidget(self.home_btn)
+        self.rnaseq_btn = QPushButton("\U0001F9EC  RNA-seq…")
+        self.rnaseq_btn.setToolTip("Open the RNA-seq workflow (DE volcano, heatmap, raw-count DE).")
+        self.rnaseq_btn.clicked.connect(self.action_rnaseq)
+        nav_row.addWidget(self.rnaseq_btn)
+        cv.addLayout(nav_row)
 
         self.plot_combo = QComboBox()
         for pt, label in self.controller.plot_types():
@@ -505,6 +520,11 @@ class MainWindow(QMainWindow):
     def _build_menu(self) -> None:
         m = self.menuBar()
         filem = m.addMenu("&File")
+        a_home = QAction("Home / Upload New Data", self)
+        a_home.setShortcut("Ctrl+Shift+H")
+        a_home.triggered.connect(self.action_home_upload)
+        filem.addAction(a_home)
+        filem.addSeparator()
         a_open = QAction("Open data file…", self)
         a_open.triggered.connect(self.action_open_file)
         filem.addAction(a_open)
@@ -769,6 +789,75 @@ class MainWindow(QMainWindow):
         self._rebuild_mapping_and_options()
         self.statusBar().showMessage(f"Loaded {data.table_name} — runs locally.")
         self.render_preview()
+
+    # --- app-level navigation: return to upload page ---------------------
+    def _has_unsaved_work(self) -> bool:
+        return self.data is not None and getattr(self, "_current_spec", None) is not None
+
+    def action_home_upload(self):
+        """Return to the upload/welcome page, clearing the session after an
+        optional confirmation. Distinct from the Matplotlib toolbar 'home'."""
+        if self._has_unsaved_work():
+            box = QMessageBox(self)
+            box.setWindowTitle("Return to upload page?")
+            box.setIcon(QMessageBox.Question)
+            box.setText("Return to the upload page and clear the current data?")
+            box.setInformativeText("Your current dataset, plot, and statistics will be cleared.")
+            save_btn = box.addButton("Save PlotSpec first…", QMessageBox.ActionRole)
+            clear_btn = box.addButton("Clear and continue", QMessageBox.AcceptRole)
+            cancel_btn = box.addButton("Cancel", QMessageBox.RejectRole)
+            box.setDefaultButton(cancel_btn)
+            box.exec()
+            clicked = box.clickedButton()
+            if clicked is cancel_btn:
+                return
+            if clicked is save_btn:
+                if not self._save_plotspec_dialog():
+                    return  # save cancelled -> abort navigation
+        self.reset_to_upload()
+
+    def _save_plotspec_dialog(self) -> bool:
+        """Save the current PlotSpec JSON; returns True if written."""
+        if getattr(self, "_current_spec", None) is None:
+            return False
+        import json
+
+        pt = self.plot_combo.currentData()
+        dest, _ = QFileDialog.getSaveFileName(self, "Save PlotSpec", f"{pt}.plot_spec.json",
+                                              "PlotSpec JSON (*.json)")
+        if not dest:
+            return False
+        with open(dest, "w", encoding="utf-8") as fh:
+            json.dump(self._current_spec, fh, indent=2)
+        self.statusBar().showMessage(f"Saved PlotSpec to {dest}", 5000)
+        return True
+
+    def reset_to_upload(self):
+        """Clear the active session and show the upload/welcome page.
+
+        Clears dataset, plot spec, render result, figure preview, statistics
+        panel results, and any RNA-seq state — without restarting the app.
+        """
+        self.data = None
+        self._current_spec = None
+        self._current_result = None
+        self._rnaseq_state = None
+        self._clear_figure(show_placeholder=True)
+        if hasattr(self, "stats_panel"):
+            self.stats_panel.show_report(None)
+            self.stats_panel.enable_cb.setChecked(False)
+        if hasattr(self, "warn_label"):
+            self.warn_label.setText("Validation messages and warnings appear here.")
+        self._hide_example_prompt()
+        self.stack.setCurrentIndex(0)
+        self.statusBar().showMessage("Ready — load a data file or an example to begin.")
+
+    def action_rnaseq(self):
+        """Open the RNA-seq workflow dialog."""
+        from apps.desktop_app.rnaseq_panel import RnaSeqDialog
+
+        dlg = RnaSeqDialog(self.controller, self)
+        dlg.exec()
 
     def _populate_table(self):
         df = self.data.info.dataframe

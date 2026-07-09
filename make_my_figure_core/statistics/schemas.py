@@ -23,20 +23,54 @@ VALID_TESTS = {
 }
 VALID_MODES = {"auto", "all_pairs", "vs_control", "selected_pairs", "within_x", "omnibus"}
 VALID_ANNOTATION_MODES = {"stars", "p", "both"}
+# Rich annotation content selectors (Part 2).
+ANNOTATION_CONTENTS = {
+    "stars",        # *, **, n.s.
+    "p",            # p = 0.023
+    "p_adj",        # q = 0.041
+    "p_stars",      # p = 0.023 (*)
+    "stat",         # t = 2.43
+    "effect",       # g = 0.71
+    "p_stat",       # t = 2.43, p = 0.023
+    "p_effect",     # g = 0.71, p = 0.023
+    "full",         # Welch t = 2.43, g = 0.71, p = 0.023
+    "flags",        # driven by the show_* checkboxes
+    "custom",       # user {token} template
+}
 
 
 def default_annotation() -> Dict[str, Any]:
     return {
-        "mode": "stars",              # stars | p | both
-        "digits": 3,
-        "sci_threshold": 1e-3,
+        # Back-compat: ``mode`` (stars|p|both) still works. ``content`` is the
+        # richer selector and, when set to something other than the default,
+        # takes precedence. See ANNOTATION_CONTENTS.
+        "mode": "stars",
+        "content": "stars",           # see ANNOTATION_CONTENTS
+        "template": "",               # custom {token} template when content == 'custom'
+        # --- value formatting ---
+        "digits": 3,                  # p-value decimals
+        "sci_threshold": 1e-3,        # below this p uses scientific / p<... style
+        "stat_digits": 2,
+        "effect_digits": 2,
+        "p_less_than_style": True,    # small p -> 'p < 0.001' instead of exponent
+        "use_ns": True,               # 'n.s.' for nonsignificant (else 'ns')
+        # --- explicit show flags (used by content == 'custom_flags' / GUI checkboxes) ---
+        "show_p": False,
+        "show_p_adj": False,
+        "show_stars": False,
+        "show_stat": False,
         "show_effect": False,
-        "show_nonsignificant": True,  # draw a bracket even when ns
+        "show_ci": False,
+        "show_test_name": False,
+        "show_n": False,
+        "hide_nonsignificant": False,  # drop the whole annotation when not significant
+        "show_nonsignificant": True,   # draw a bracket even when ns (legacy alias)
+        # --- geometry (bracket engine) ---
         "font_size": None,            # None -> style.annotation_pt
         "line_width": None,           # None -> style-derived
         "bracket_height_frac": 0.03,  # bracket tick height, fraction of y-range
         "gap_frac": 0.06,             # vertical gap between stacked brackets
-        "top_margin_frac": 0.12,      # extra headroom added above the data
+        "top_margin_frac": 0.10,      # extra headroom added above the data
     }
 
 
@@ -85,6 +119,11 @@ def normalize_stats_spec(spec: Optional[Dict[str, Any]]) -> Dict[str, Any]:
     out["correction"] = canonical_method(out.get("correction"))
     if ann.get("mode") not in VALID_ANNOTATION_MODES:
         ann["mode"] = "stars"
+    # Back-compat: if only legacy 'mode' was supplied, mirror it into 'content'.
+    if "content" not in (spec.get("annotation", {}) or {}):
+        ann["content"] = {"stars": "stars", "p": "p", "both": "p_stars"}.get(ann["mode"], "stars")
+    if ann.get("content") not in ANNOTATION_CONTENTS:
+        ann["content"] = "stars"
     try:
         alpha = float(out.get("alpha", 0.05))
         out["alpha"] = alpha if 0 < alpha < 1 else 0.05

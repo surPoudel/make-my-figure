@@ -335,3 +335,135 @@ def test_export_paths(app, tmp_path, monkeypatch):
     win.export_zip()
     assert os.path.exists(dest) and os.path.getsize(dest) > 300
     win.close()
+
+
+# --- app navigation / upload reset (Part 1) --------------------------------
+
+def test_home_upload_returns_to_welcome_and_clears(app):
+    win = MainWindow()
+    win.load_example("barplot_with_error_bar")
+    assert win.stack.currentIndex() == 1 and win.data is not None
+    win.reset_to_upload()
+    assert win.stack.currentIndex() == 0          # back on welcome/upload
+    assert win.data is None                        # dataset cleared
+    assert win._current_spec is None               # plot spec cleared
+    assert win._current_result is None             # figure preview cleared
+    win.close()
+
+
+def test_swap_dataset_in_one_session(app):
+    win = MainWindow()
+    win.load_example("barplot_with_error_bar")
+    first_cols = set(win.data.info.columns)
+    # return to upload, then load a structurally different dataset
+    win.reset_to_upload()
+    win.load_example("kaplan_meier_survival_curve")
+    second_cols = set(win.data.info.columns)
+    assert second_cols != first_cols               # new data replaced old
+    assert win.stack.currentIndex() == 1
+    assert win._current_result is not None          # fresh figure rendered
+    win.close()
+
+
+def test_reset_clears_statistics(app):
+    win = MainWindow()
+    win.load_example("boxplot_or_violin_with_points")
+    win.stats_panel.setChecked(True)
+    win.stats_panel.enable_cb.setChecked(True)
+    idx = [i for i in range(win.stats_panel.test_combo.count())
+           if win.stats_panel.test_combo.itemData(i) == "welch_t"][0]
+    win.stats_panel.test_combo.setCurrentIndex(idx)
+    win.render_preview()
+    assert win.stats_panel.table.rowCount() >= 1
+    win.reset_to_upload()
+    assert win.stats_panel.table.rowCount() == 0   # stats results cleared
+    assert not win.stats_panel.enable_cb.isChecked()
+    win.close()
+
+
+def test_matplotlib_toolbar_home_still_present(app):
+    # The app-level Home button is separate from the Matplotlib toolbar 'home'
+    # (which resets zoom/pan). Both must exist independently.
+    win = MainWindow()
+    win.load_example("scatterplot_with_regression")
+    assert hasattr(win, "home_btn")                # app-level upload button
+    assert win._toolbar is not None                # matplotlib nav toolbar
+    assert hasattr(win._toolbar, "home")           # toolbar's axes-home action
+    win._toolbar.home()                            # should not raise
+    win.close()
+
+
+# --- flexible annotation panel + RNA-seq dialog (Parts 2 & 4) --------------
+
+def test_statistics_panel_annotation_content_modes(app):
+    from apps.desktop_app.stats_panel import StatisticsPanel
+    from apps.desktop_app.controller import DesktopController
+    sp = StatisticsPanel(DesktopController())
+    sp.setChecked(True); sp.enable_cb.setChecked(True)
+    # pick "custom template" -> template field becomes visible
+    idx = [i for i in range(sp.annotation_combo.count())
+           if sp.annotation_combo.itemData(i) == "custom"][0]
+    sp.annotation_combo.setCurrentIndex(idx)
+    # isHidden() reflects explicit visibility intent (offscreen widgets report
+    # isVisible()==False without a shown ancestor).
+    assert not sp.template_edit.isHidden()
+    sp.template_edit.setText("{effect_symbol} = {effect}, p = {p}")
+    spec = sp.stats_spec()
+    assert spec["annotation"]["content"] == "custom"
+    assert spec["annotation"]["template"] == "{effect_symbol} = {effect}, p = {p}"
+
+
+def test_rnaseq_dialog_de_volcano(app, tmp_path):
+    import os
+    from apps.desktop_app.rnaseq_panel import RnaSeqDialog
+    from apps.desktop_app.controller import DesktopController
+    de_file = os.path.join(os.path.dirname(__file__), "..", "test_matrix",
+                           "Ctrl_vs_Treatment_DE.txt")
+    if not os.path.exists(de_file):
+        import pytest
+        pytest.skip("DE example missing")
+    dlg = RnaSeqDialog(DesktopController())
+    dlg.info = __import__("make_my_figure_core.rnaseq", fromlist=["load_rnaseq_table"]) \
+        .load_rnaseq_table(de_file)
+    dlg._source_path = de_file
+    dlg.detection = __import__("make_my_figure_core.rnaseq", fromlist=["detect_input_mode"]) \
+        .detect_input_mode(dlg.info)
+    dlg.de_use_adj.setChecked(False)   # raw-p so there are hits
+    dlg._generate_volcano()
+    assert dlg._result is not None
+    assert dlg._de.n_up + dlg._de.n_down >= 1
+    assert dlg._rnaseq_spec is not None and dlg._rnaseq_spec.input_mode == "de_result"
+    dlg.close()
+
+
+def test_rnaseq_dialog_heatmap(app):
+    import os
+    from apps.desktop_app.rnaseq_panel import RnaSeqDialog
+    from apps.desktop_app.controller import DesktopController
+    import make_my_figure_core.rnaseq as rna
+    voom = os.path.join(os.path.dirname(__file__), "..", "test_matrix", "voom_norm_annot.txt")
+    if not os.path.exists(voom):
+        import pytest
+        pytest.skip("voom example missing")
+    dlg = RnaSeqDialog(DesktopController())
+    dlg.info = rna.load_rnaseq_table(voom)
+    dlg._source_path = voom
+    idx = dlg.mode_combo.findData("expression_matrix")
+    dlg.mode_combo.setCurrentIndex(idx)
+    dlg.hm_ngenes.setValue(30)
+    dlg._generate_heatmap()
+    assert dlg._result is not None
+    assert dlg._rnaseq_spec.input_mode == "expression_matrix"
+    dlg.close()
+
+
+def test_rnaseq_dialog_rawcounts_run_disabled_without_r(app):
+    from apps.desktop_app.rnaseq_panel import RnaSeqDialog
+    from apps.desktop_app.controller import DesktopController
+    from make_my_figure_core.rnaseq import check_r_environment
+    dlg = RnaSeqDialog(DesktopController())
+    idx = dlg.mode_combo.findData("raw_counts")
+    dlg.mode_combo.setCurrentIndex(idx)
+    # Run DE button reflects R availability
+    assert dlg.run_de_btn.isEnabled() == check_r_environment().ready
+    dlg.close()

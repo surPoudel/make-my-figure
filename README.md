@@ -77,6 +77,53 @@ correction method, the effect size, and (where applicable) a confidence interval
 > [docs/STATISTICAL_ANNOTATIONS.md](docs/STATISTICAL_ANNOTATIONS.md), and
 > [docs/MULTI_PANEL_FIGURES.md](docs/MULTI_PANEL_FIGURES.md).
 
+### Flexible statistical annotations
+
+On-figure statistics are fully configurable: show **stars**, **exact p**,
+**adjusted p (q)**, **test statistic** (`t`, `F`, `U`, `W`, `χ²`, `HR`), **effect
+size** (`d`, `g`, `r`, `η²`, `OR`), combinations, or a **custom `{token}`
+template** — with per-field decimals, `p < 0.001` style, `n.s.` labels, and a
+hide-nonsignificant option. Every value shown comes from the stored StatsSpec
+result (hiding it on the figure never removes it from the export). See
+[docs/STATISTICAL_ANNOTATION_FORMATTING.md](docs/STATISTICAL_ANNOTATION_FORMATTING.md).
+
+### RNA-seq: volcano & heatmap from counts, matrices, or DE results
+
+An **RNA-seq** workflow (desktop + Streamlit) supports three inputs and never
+fabricates DE statistics:
+
+- **Precomputed DE table** (e.g. a limma/edgeR `topTable`) → publication-grade
+  **volcano** with auto-detected columns, Up/Down/n.s. classification, threshold
+  lines, gene labels, and count subtitle.
+- **Normalized matrix** (e.g. voom) → clustered **heatmap** / PCA / correlation,
+  with transforms (z-score, log2CPM, …), gene selection, and sample-annotation
+  strips.
+- **Raw counts + metadata (+ config)** → a reproducible **edgeR + limma-voom
+  (empirical Bayes moderated t-test)** pipeline run through R, reported with its
+  exact design formula and contrasts. If R/edgeR/limma are missing, the app shows
+  install instructions and disables "Run DE" — it does **not** fall back to a
+  t-test.
+
+Exports include an `RnaSeqSpec` JSON (inputs + checksums, design, method, R/
+package versions, thresholds) and a method report. See
+[docs/RNASEQ_WORKFLOW.md](docs/RNASEQ_WORKFLOW.md),
+[docs/VOLCANO_FROM_DE_RESULTS.md](docs/VOLCANO_FROM_DE_RESULTS.md),
+[docs/RNASEQ_RAW_COUNTS_TO_VOLCANO.md](docs/RNASEQ_RAW_COUNTS_TO_VOLCANO.md), and
+[docs/HEATMAP_FROM_EXPRESSION_MATRIX.md](docs/HEATMAP_FROM_EXPRESSION_MATRIX.md).
+
+> **RNA-seq caution.** Differential expression depends on experimental design,
+> normalization, model specification, covariates, and multiple-testing
+> correction. Make My Figure reports the analysis method and design, but users
+> remain responsible for confirming that the model matches their study design.
+
+### Return to upload without restarting
+
+Loaded an example and want your own data? Use **Home / Upload New Data** (desktop:
+top-left button or File menu; Streamlit: the "Reset / Upload new data" sidebar
+button) to clear the dataset, plot, statistics, and RNA-seq results and return to
+the upload page — no restart. It's distinct from the Matplotlib toolbar "home"
+(which only resets plot zoom/pan).
+
 ## Supported plot types
 
 The current renderers (17):

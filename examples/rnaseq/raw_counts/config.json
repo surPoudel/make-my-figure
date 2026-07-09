@@ -1,0 +1,12 @@
+{
+  "comparisons": [
+    {
+      "group1": "Treatment",
+      "group2": "Ctrl"
+    }
+  ],
+  "covariates": [
+    "Age"
+  ],
+  "reference_group": "Ctrl"
+}
