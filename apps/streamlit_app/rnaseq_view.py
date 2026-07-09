@@ -177,18 +177,37 @@ def _raw_counts(st, info):
         from make_my_figure_core.rnaseq import run_de_pipeline
         from make_my_figure_core.rnaseq.runner import RDependencyError
         base = info.dataframe
-        counts = base.set_index(base.columns[0])[sample_cols]
+        gid = base.columns[0]
+        meta_cols, _ = split_expression_matrix(base)
+        counts = base.set_index(gid)[sample_cols]
+        annot_cols = [c for c in meta_cols if c != gid and c in base.columns]
+        annotation = base.set_index(gid)[annot_cols] if annot_cols else None
         sid = next((c for c in metadata.columns
                     if c.lower() in ("sampleid", "sample_id", "sample", "id")), None)
-        try:
-            res = run_de_pipeline(counts, metadata, sample_id_col=sid, group_col=group,
-                                  reference_group=ref,
-                                  comparisons=[{"group1": comp, "group2": ref}],
-                                  covariates=[c.strip() for c in covs.split(",") if c.strip()],
-                                  method=method)
-        except RDependencyError as exc:
-            st.error(str(exc)); return
-        except Exception as exc:
-            st.error(f"DE failed: {exc}"); return
+        with st.spinner("Running edgeR/limma-voom or DESeq2 in R…"):
+            try:
+                res = run_de_pipeline(counts, metadata, sample_id_col=sid, group_col=group,
+                                      reference_group=ref,
+                                      comparisons=[{"group1": comp, "group2": ref}],
+                                      covariates=[c.strip() for c in covs.split(",") if c.strip()],
+                                      annotation=annotation, method=method)
+            except RDependencyError as exc:
+                st.error(str(exc)); return
+            except Exception as exc:
+                st.error(f"DE failed: {exc}"); return
         st.success("DE complete: " + res["method"].get("de_method", ""))
-        st.code(res["log"])
+        st.caption("Design: " + str(res["method"].get("design_formula")))
+        # Download the DE table(s) and the normalized matrix; the normalized
+        # matrix can be re-uploaded under 'Normalized matrix' for heatmaps/PCA.
+        for name, path in res["de_tables"].items():
+            with open(path, "rb") as fh:
+                st.download_button(f"DE table: {name}", fh.read(),
+                                   file_name=f"{name}_DE.txt", mime="text/plain")
+        try:
+            with open(res["voom_file"], "rb") as fh:
+                st.download_button("Normalized matrix (use in 'Normalized matrix' for figures)",
+                                   fh.read(), file_name="voom_norm_annot.txt", mime="text/plain")
+        except Exception:
+            pass
+        with st.expander("Analysis log"):
+            st.code(res["log"])

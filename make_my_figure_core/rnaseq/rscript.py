@@ -46,7 +46,9 @@ counts <- read.table(spec$counts_file, sep = "\t", header = TRUE,
 counts <- as.matrix(counts)
 mode(counts) <- "numeric"
 counts[is.na(counts)] <- 0
-counts <- round(counts)
+# NOTE: do NOT round. RSEM 'expected counts' are often fractional (multi-mapping
+# reads); edgeR/limma-voom accept non-integer counts and the reference pipeline
+# does not round. Rounding would perturb CPM/TMM/voom and every DE statistic.
 
 meta <- read.csv(spec$meta_file, check.names = FALSE, stringsAsFactors = FALSE)
 sid  <- spec$sample_id_col
@@ -69,6 +71,13 @@ annot <- NULL
 if (!is.null(spec$annotation_file) && nzchar(spec$annotation_file)) {
   annot <- read.table(spec$annotation_file, sep = "\t", header = TRUE,
                        row.names = 1, check.names = FALSE, stringsAsFactors = FALSE)
+}
+
+# ---- drop ERCC spike-ins before modeling (matches the reference pipeline) ----
+ercc_mask <- grepl("^ERCC", rownames(counts))
+if (any(ercc_mask)) {
+  logmsg("Removing %d ERCC spike-in rows before DE.", sum(ercc_mask))
+  counts <- counts[!ercc_mask, , drop = FALSE]
 }
 
 # ---- edgeR: DGEList, CPM filter, TMM normalization ----
@@ -195,6 +204,8 @@ counts <- read.table(spec$counts_file, sep = "\t", header = TRUE,
 counts <- as.matrix(counts); mode(counts) <- "numeric"
 counts[is.na(counts)] <- 0
 counts <- round(counts)                     # DESeq2 requires integer counts
+ercc_mask <- grepl("^ERCC", rownames(counts))
+if (any(ercc_mask)) counts <- counts[!ercc_mask, , drop = FALSE]
 storage.mode(counts) <- "integer"
 
 meta <- read.csv(spec$meta_file, check.names = FALSE, stringsAsFactors = FALSE)

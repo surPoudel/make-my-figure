@@ -186,12 +186,31 @@ class RnaSeqDialog(QDialog):
         f.addRow("Covariates", self.rc_cov)
         self.rc_mincpm = QDoubleSpinBox(); self.rc_mincpm.setRange(0, 100); self.rc_mincpm.setValue(1.0)
         f.addRow("Filter: CPM >", self.rc_mincpm)
+        # Output folder for DE results (DE tables + normalized matrix + spec + report).
+        out_row = QHBoxLayout()
+        self.rc_outdir = QLineEdit()
+        self.rc_outdir.setPlaceholderText("(default: a temp results folder)")
+        out_row.addWidget(self.rc_outdir)
+        browse = QPushButton("Browse…"); browse.clicked.connect(self._pick_outdir)
+        out_row.addWidget(browse)
+        f.addRow("Output folder", out_row)
         valb = QPushButton("Validate input"); valb.clicked.connect(self._validate_raw)
         f.addRow(valb)
         self.run_de_btn = QPushButton("Run RNA-seq DE"); self.run_de_btn.clicked.connect(self._run_de)
         f.addRow(self.run_de_btn)
+        self.use_voom_btn = QPushButton("Send normalized matrix to figure workspace")
+        self.use_voom_btn.setToolTip("Load the DE-produced normalized (voom) matrix into the main "
+                                     "window to build heatmaps, PCA, and other figures.")
+        self.use_voom_btn.setEnabled(False)
+        self.use_voom_btn.clicked.connect(self._use_voom_in_figures)
+        f.addRow(self.use_voom_btn)
         self.rc_group.currentIndexChanged.connect(self._refresh_group_levels)
         return w
+
+    def _pick_outdir(self):
+        d = QFileDialog.getExistingDirectory(self, "Choose output folder for DE results")
+        if d:
+            self.rc_outdir.setText(d)
 
     def _current_method(self) -> str:
         return self.rc_method.currentData() if hasattr(self, "rc_method") else "edger_limma_voom"
@@ -402,32 +421,54 @@ class RnaSeqDialog(QDialog):
         if self.info is None or self.metadata is None:
             QMessageBox.information(self, "Need inputs", "Load a count matrix and metadata.")
             return
-        _, sample_cols = split_expression_matrix(self.info.dataframe)
-        # counts frame: gene id index + sample columns
         base = self.info.dataframe
         gid_col = base.columns[0]
+        meta_cols, sample_cols = split_expression_matrix(base)
         counts = base.set_index(gid_col)[sample_cols]
+        # annotation = the non-sample metadata columns (geneSymbol/bioType/...) keyed
+        # by gene id, so the voom matrix output matches the annotated template.
+        annot_cols = [c for c in meta_cols if c != gid_col and c in base.columns]
+        annotation = base.set_index(gid_col)[annot_cols] if annot_cols else None
         sid = next((c for c in self.metadata.columns
                     if c.lower() in ("sampleid", "sample_id", "sample", "id")), None)
         group = self._group_or_none()
         covs = [c.strip() for c in self.rc_cov.text().split(",") if c.strip()]
         batch = None if self.rc_batch.currentText() in (_NONE, "") else self.rc_batch.currentText()
+        outdir = self.rc_outdir.text().strip() or None
+        self._log("Running DE… (this can take a minute)")
         try:
             res = run_de_pipeline(
                 counts, self.metadata, sample_id_col=sid, group_col=group,
                 reference_group=self.rc_ref.currentText(),
                 comparisons=[{"group1": self.rc_comp.currentText(),
                               "group2": self.rc_ref.currentText()}],
-                covariates=covs, batch=batch, min_cpm=self.rc_mincpm.value(),
-                method=self._current_method())
+                covariates=covs, batch=batch, annotation=annotation,
+                min_cpm=self.rc_mincpm.value(), method=self._current_method(),
+                output_dir=outdir)
         except RDependencyError as exc:
             QMessageBox.warning(self, "R not available", str(exc)); self._log(str(exc)); return
         except Exception as exc:
             QMessageBox.critical(self, "DE failed", str(exc)); self._log(str(exc)); return
         self._rnaseq_spec = res["rnaseq_spec"]
+        self._last_results = res
+        self._voom_path = res.get("voom_file")
+        # Persist the RnaSeqSpec + method report next to the DE outputs.
+        try:
+            import json as _json
+
+            odir = res.get("output_dir", "")
+            with open(os.path.join(odir, "analysis.rnaseq_spec.json"), "w", encoding="utf-8") as fh:
+                _json.dump(self._rnaseq_spec.to_dict(), fh, indent=2)
+            with open(os.path.join(odir, "rnaseq_methods.md"), "w", encoding="utf-8") as fh:
+                fh.write(method_report_markdown(self._rnaseq_spec))
+        except Exception:
+            pass
         self._log("DE complete. " + (res.get("method", {}).get("de_method", "")) +
                   "\nDesign: " + str(res.get("method", {}).get("design_formula")) +
-                  "\nDE tables: " + ", ".join(os.path.basename(p) for p in res["de_tables"].values()))
+                  "\nResults saved to: " + res.get("output_dir", "") +
+                  "\nDE tables: " + ", ".join(os.path.basename(p) for p in res["de_tables"].values()) +
+                  "\nNormalized matrix: " + os.path.basename(res.get("voom_file", "")))
+        self.use_voom_btn.setEnabled(bool(self._voom_path and os.path.exists(self._voom_path)))
         # auto-generate a volcano from the first DE table
         first = next(iter(res["de_tables"].values()), None)
         if first:
@@ -435,6 +476,27 @@ class RnaSeqDialog(QDialog):
             self._source_path = first
             idx = self.mode_combo.findData("de_result"); self.mode_combo.setCurrentIndex(idx)
             self._generate_volcano()
+        QMessageBox.information(
+            self, "DE complete",
+            f"Differential expression finished.\n\nResults saved to:\n{res.get('output_dir','')}\n\n"
+            "Use 'Send normalized matrix to figure workspace' to make heatmaps/PCA from the "
+            "normalized matrix, or export the DE table / volcano below.")
+
+    def _use_voom_in_figures(self):
+        """Load the DE-produced normalized matrix into the main figure workspace."""
+        path = getattr(self, "_voom_path", None)
+        if not path or not os.path.exists(path):
+            QMessageBox.information(self, "No normalized matrix",
+                                    "Run DE first to produce a normalized matrix."); return
+        parent = self.parent()
+        if parent is not None and hasattr(parent, "load_path"):
+            parent.load_path(path)
+            self._log(f"Loaded normalized matrix into the figure workspace: {os.path.basename(path)}")
+            self.accept()
+        else:
+            QMessageBox.information(self, "Unavailable",
+                                    "Open this dialog from the main window to send data to the "
+                                    "figure workspace.")
 
     # ----------------------------------------------------------------- export
     def _make_spec(self, mode, **kw) -> RnaSeqSpec:

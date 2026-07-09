@@ -6,6 +6,7 @@ the live DESeq2 run are only exercised when R is present.
 """
 
 import os
+import sys
 
 import numpy as np
 import pandas as pd
@@ -57,6 +58,22 @@ def test_rscript_preference_order(data_dir, monkeypatch):
     open(override, "w").close()
     monkeypatch.setenv("MAKE_MY_FIGURE_RSCRIPT", override)
     assert find_rscript() == override
+
+
+def test_bundled_rscript_detected_via_meipass(data_dir, monkeypatch, tmp_path):
+    # Simulate a frozen build with R bundled under sys._MEIPASS/r_env.
+    meipass = tmp_path / "meipass"
+    binp = meipass / "r_env" / "bin"
+    binp.mkdir(parents=True)
+    fake = binp / "Rscript"
+    fake.write_text("")
+    monkeypatch.setattr(sys, "_MEIPASS", str(meipass), raising=False)
+    assert rs.bundled_rscript_path() == str(fake)
+    # find_rscript prefers the bundled R over PATH / managed env
+    monkeypatch.delenv("MAKE_MY_FIGURE_RSCRIPT", raising=False)
+    assert find_rscript() == str(fake)
+    monkeypatch.delattr(sys, "_MEIPASS", raising=False)
+    assert rs.bundled_rscript_path() is None
 
 
 def test_check_environment_method_packages(data_dir):

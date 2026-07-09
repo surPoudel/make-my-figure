@@ -73,19 +73,20 @@ class REnvironment:
 
 
 def find_rscript() -> Optional[str]:
-    """Locate ``Rscript``. Preference: explicit override → app-managed R env → PATH."""
+    """Locate ``Rscript``. Preference: explicit override → R bundled in a frozen
+    build → app-managed (on-demand) env → system PATH."""
     override = os.environ.get("MAKE_MY_FIGURE_RSCRIPT")
     if override and os.path.exists(override):
         return override
     try:
-        from make_my_figure_core.rnaseq.r_setup import managed_rscript_path
+        from make_my_figure_core.rnaseq.r_setup import (
+            bundled_rscript_path, managed_rscript_path,
+        )
 
-        managed = managed_rscript_path()
-        if managed:
-            return managed
+        return (bundled_rscript_path() or managed_rscript_path()
+                or shutil.which("Rscript") or shutil.which("Rscript.exe"))
     except Exception:
-        pass
-    return shutil.which("Rscript") or shutil.which("Rscript.exe")
+        return shutil.which("Rscript") or shutil.which("Rscript.exe")
 
 
 def check_r_environment(*, packages: Optional[List[str]] = None,
@@ -211,7 +212,12 @@ def run_de_pipeline(
     minfo = _read_json(os.path.join(out, "method.json")) or {}
     versions = _read_json(os.path.join(out, "versions.json")) or {}
     de_tables: Dict[str, str] = {}
-    for cn in minfo.get("contrast_names", []):
+    # jsonlite auto-unboxes a length-1 vector to a scalar, so contrast_names may
+    # be a single string rather than a list — normalize before iterating.
+    cnames = minfo.get("contrast_names", [])
+    if isinstance(cnames, str):
+        cnames = [cnames]
+    for cn in cnames:
         p = os.path.join(out, f"{cn}_DE.txt")
         if os.path.exists(p):
             de_tables[cn] = p

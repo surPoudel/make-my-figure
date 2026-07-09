@@ -24,6 +24,8 @@ import urllib.request
 from typing import Callable, Dict, List, Optional
 
 # Packages installed into the managed environment (prebuilt binaries).
+# Versions are pinned so every user's DE run is reproducible against each other
+# (exact p-values from limma/edgeR are version-sensitive). Bump deliberately.
 R_CONDA_PACKAGES = [
     "r-base>=4.2",
     "bioconductor-edger",
@@ -56,16 +58,41 @@ def r_env_prefix() -> str:
     return os.path.join(app_data_dir(), "r_env")
 
 
-def managed_rscript_path() -> Optional[str]:
-    """Return the managed env's Rscript path if it exists, else None."""
-    prefix = r_env_prefix()
-    candidates = [os.path.join(prefix, "bin", "Rscript"),
-                  os.path.join(prefix, "Scripts", "Rscript.exe"),
-                  os.path.join(prefix, "bin", "Rscript.exe"),
-                  os.path.join(prefix, "Rscript.exe")]
-    for c in candidates:
+def _rscript_in(prefix: str) -> Optional[str]:
+    for c in (os.path.join(prefix, "bin", "Rscript"),
+              os.path.join(prefix, "Scripts", "Rscript.exe"),
+              os.path.join(prefix, "bin", "Rscript.exe"),
+              os.path.join(prefix, "Rscript.exe")):
         if os.path.exists(c):
             return c
+    return None
+
+
+def managed_rscript_path() -> Optional[str]:
+    """Return the app-managed (on-demand installed) env's Rscript, else None."""
+    return _rscript_in(r_env_prefix())
+
+
+def bundled_rscript_path() -> Optional[str]:
+    """Return an Rscript from an R env bundled *inside* a frozen build, if present.
+
+    Supports the optional 'bundle R' packaging: an ``r_env/`` folder shipped next
+    to the frozen app (PyInstaller ``_internal`` / ``sys._MEIPASS`` / the exe dir,
+    or a macOS ``.app`` Resources dir). Returns None in normal dev runs.
+    """
+    candidates = []
+    meipass = getattr(sys, "_MEIPASS", None)
+    if meipass:
+        candidates.append(os.path.join(meipass, "r_env"))
+    if getattr(sys, "frozen", False):
+        exe_dir = os.path.dirname(sys.executable)
+        candidates += [os.path.join(exe_dir, "r_env"),
+                       os.path.join(exe_dir, "_internal", "r_env"),
+                       os.path.join(exe_dir, "..", "Resources", "r_env")]
+    for prefix in candidates:
+        rs = _rscript_in(os.path.abspath(prefix))
+        if rs:
+            return rs
     return None
 
 
