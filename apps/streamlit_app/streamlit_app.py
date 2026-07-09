@@ -19,6 +19,7 @@ import os
 import sys
 
 import matplotlib
+import pandas as pd
 
 matplotlib.use("Agg")  # headless backend for server-side rendering
 
@@ -165,8 +166,15 @@ if table_info is None:
     st.stop()
 
 # --- Table preview + validation messages ------------------------------------
-st.subheader(f"Table preview — {table_name}")
-st.dataframe(table_info.dataframe.head(20), use_container_width=True)
+# Editable table: edits made here feed straight into the figure below.
+st.subheader(f"Table — {table_name}")
+st.caption("Edit cells directly to update the figure. Add/remove rows with the "
+           "controls at the bottom of the table.")
+_edited = st.data_editor(table_info.dataframe, use_container_width=True,
+                         num_rows="dynamic", key="data_editor")
+if _edited is not None and len(_edited.columns) == len(table_info.dataframe.columns):
+    # Re-classify numeric columns after edits so downstream mapping stays correct.
+    table_info.dataframe = _edited
 cols = st.columns(3)
 cols[0].metric("Rows", table_info.n_rows)
 cols[1].metric("Columns", len(table_info.columns))
@@ -174,6 +182,72 @@ cols[2].metric("Numeric columns", len(table_info.numeric_columns))
 if table_info.warnings:
     for w in table_info.warnings:
         st.warning(w)
+
+# --- Define groups in-app (no metadata file) --------------------------------
+from make_my_figure_core.grouping import (
+    add_group_column as _add_group_column,
+    guess_groups_from_names as _guess_groups,
+    melt_matrix_to_long as _melt_matrix,
+)
+from make_my_figure_core.io.loaders import table_info_from_dataframe as _info_from_df
+
+with st.expander("🗂 Define groups (no metadata file needed)"):
+    st.caption("Assign sample columns to groups for a wide matrix, or label rows "
+               "by an existing column's values. The grouped table replaces the one above.")
+    gmode = st.radio("Grouping mode",
+                     ["Assign sample groups (wide matrix)", "Group by column values"],
+                     key="grouping_mode")
+    if gmode.startswith("Assign"):
+        all_cols = list(table_info.columns)
+        num = set(table_info.numeric_columns)
+        feat_default = next((c for c in all_cols if c not in num), all_cols[0])
+        feature_col = st.selectbox("Feature id column", all_cols,
+                                   index=all_cols.index(feat_default), key="grp_feat")
+        sample_cols = [c for c in all_cols if c != feature_col]
+        guess = _guess_groups(sample_cols)
+        assign_df = pd.DataFrame({"sample": sample_cols,
+                                  "group": [guess.get(s, "Group1") for s in sample_cols]})
+        edited_assign = st.data_editor(assign_df, key="grp_assign", use_container_width=True,
+                                       hide_index=True)
+        feat_values = table_info.dataframe[feature_col].astype(str).tolist()
+        chosen = st.multiselect("Features to include (empty = all)", feat_values, key="grp_feats")
+        if st.button("Create grouped table", key="grp_make_matrix"):
+            s2g = dict(zip(edited_assign["sample"].astype(str), edited_assign["group"].astype(str)))
+            try:
+                long = _melt_matrix(table_info.dataframe, sample_columns=sample_cols,
+                                    sample_to_group=s2g, feature_col=feature_col,
+                                    features=chosen or None)
+                st.session_state["_grouped_df"] = long
+                st.session_state["_grouped_name"] = f"{table_name} (grouped)"
+                st.rerun()
+            except Exception as exc:
+                st.error(str(exc))
+    else:
+        source_col = st.selectbox("Source column", list(table_info.columns), key="grp_src")
+        new_col = st.text_input("New group column name", value="group", key="grp_newcol")
+        uniq = list(dict.fromkeys(table_info.dataframe[source_col].astype(str).tolist()))
+        map_df = pd.DataFrame({"value": uniq, "group": uniq})
+        edited_map = st.data_editor(map_df, key="grp_valmap", use_container_width=True,
+                                    hide_index=True)
+        if st.button("Add group column", key="grp_make_col"):
+            mapping = {r["value"]: r["group"] for _, r in edited_map.iterrows()
+                       if str(r["group"]).strip()}
+            try:
+                out = _add_group_column(table_info.dataframe, source_col=source_col,
+                                        value_to_group=mapping, new_col=(new_col or "group"))
+                st.session_state["_grouped_df"] = out
+                st.session_state["_grouped_name"] = table_name
+                st.rerun()
+            except Exception as exc:
+                st.error(str(exc))
+
+# Adopt a grouped table produced above (persists across reruns until reset).
+if "_grouped_df" in st.session_state:
+    table_info = _info_from_df(st.session_state["_grouped_df"], st.session_state["_grouped_name"])
+    table_name = st.session_state["_grouped_name"]
+    st.success(f"Using grouped table: {table_name} "
+               f"({table_info.n_rows} rows × {len(table_info.columns)} columns). "
+               "Map its columns below; use Reset to return to the original.")
 
 
 # --- 2. Plot type + 3. style ------------------------------------------------

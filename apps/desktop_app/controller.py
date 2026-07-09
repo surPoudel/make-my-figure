@@ -15,7 +15,12 @@ from typing import Any, Dict, List, Optional, Tuple
 from make_my_figure_core import data as mock_data
 from make_my_figure_core import examples as examples_lib
 from make_my_figure_core import ui_hints
-from make_my_figure_core.io.loaders import LoaderError, TableInfo, load_table
+from make_my_figure_core.io.loaders import (
+    LoaderError,
+    TableInfo,
+    load_table,
+    table_info_from_dataframe,
+)
 from make_my_figure_core.plots.base import RenderError
 from make_my_figure_core.plots.registry import (
     available_plot_types,
@@ -99,6 +104,43 @@ class DesktopController:
         info, aux = mock_data.load_sample(plot_type)
         name = mock_data.sample_filename(plot_type) or f"{plot_type}.csv"
         return LoadedData(info=info, table_name=name, aux=aux, is_example=True)
+
+    def loaded_from_dataframe(self, df, table_name: str,
+                              *, aux: Optional[Dict[str, TableInfo]] = None) -> LoadedData:
+        """Wrap an in-memory DataFrame as a :class:`LoadedData` (a derived table).
+
+        Used after in-app transforms such as reshaping a wide matrix to long or
+        adding a grouping column, so the result flows through the normal
+        map → render → export path.
+        """
+        info = table_info_from_dataframe(df, table_name)
+        return LoadedData(info=info, table_name=table_name, aux=aux or {}, is_example=False)
+
+    # --- in-app grouping (no metadata file) ------------------------------
+    def group_from_matrix(self, data: LoadedData, *, sample_columns, sample_to_group,
+                          feature_col=None, features=None) -> LoadedData:
+        """Reshape a wide features x samples matrix to a long, group-tagged table."""
+        from make_my_figure_core.grouping import melt_matrix_to_long
+
+        long = melt_matrix_to_long(data.info.dataframe, sample_columns=sample_columns,
+                                   sample_to_group=sample_to_group, feature_col=feature_col,
+                                   features=features)
+        name = f"{data.table_name} (grouped)"
+        return self.loaded_from_dataframe(long, name)
+
+    def add_group_column(self, data: LoadedData, *, source_col, value_to_group,
+                         new_col="group", default=None) -> LoadedData:
+        """Add a derived grouping column mapped from an existing column's values."""
+        from make_my_figure_core.grouping import add_group_column
+
+        out = add_group_column(data.info.dataframe, source_col=source_col,
+                               value_to_group=value_to_group, new_col=new_col, default=default)
+        return self.loaded_from_dataframe(out, data.table_name, aux=data.aux)
+
+    def guess_sample_groups(self, sample_columns) -> Dict[str, str]:
+        from make_my_figure_core.grouping import guess_groups_from_names
+
+        return guess_groups_from_names(list(sample_columns))
 
     def example_description(self, plot_type: str) -> str:
         if examples_lib.has_manifest():

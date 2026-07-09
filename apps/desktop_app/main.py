@@ -14,6 +14,8 @@ import os
 import subprocess
 import sys
 
+import pandas as pd
+
 import matplotlib
 
 matplotlib.use("Agg")  # figures are created headless, then embedded in a Qt canvas
@@ -270,6 +272,11 @@ class MainWindow(QMainWindow):
         self.rnaseq_btn.setToolTip("Open the RNA-seq workflow (DE volcano, heatmap, raw-count DE).")
         self.rnaseq_btn.clicked.connect(self.action_rnaseq)
         nav_row.addWidget(self.rnaseq_btn)
+        self.groups_btn = QPushButton("\U0001F5C2  Define groups…")
+        self.groups_btn.setToolTip("Assign sample columns to groups (wide matrix) or label rows "
+                                   "by a column's values — no metadata file needed.")
+        self.groups_btn.clicked.connect(self.action_define_groups)
+        nav_row.addWidget(self.groups_btn)
         cv.addLayout(nav_row)
 
         self.plot_combo = QComboBox()
@@ -859,23 +866,120 @@ class MainWindow(QMainWindow):
         dlg = RnaSeqDialog(self.controller, self)
         dlg.exec()
 
+    def action_define_groups(self):
+        """Open the in-app grouping dialog and adopt the resulting table."""
+        if self.data is None:
+            self._show_warning("Load a data file first, then define groups.")
+            return
+        from apps.desktop_app.grouping_panel import GroupingDialog
+
+        dlg = GroupingDialog(self.controller, self.data, self)
+        dlg.grouped.connect(self._adopt_grouped_data)
+        dlg.exec()
+
+    def _adopt_grouped_data(self, loaded):
+        """Replace the active dataset with a derived (grouped) table and re-render."""
+        self._set_data(loaded)
+        self.statusBar().showMessage(f"Loaded {loaded.table_name} — runs locally.")
+
     def _populate_table(self):
         df = self.data.info.dataframe
-        head = df.head(50)
-        self.table_widget.clear()
-        self.table_widget.setColumnCount(len(head.columns))
-        self.table_widget.setRowCount(len(head))
-        self.table_widget.setHorizontalHeaderLabels([str(c) for c in head.columns])
-        for r in range(len(head)):
-            for c in range(len(head.columns)):
-                self.table_widget.setItem(r, c, QTableWidgetItem(str(head.iat[r, c])))
+        # Editable preview of the first rows; edits write back to the DataFrame and
+        # re-render (see _on_table_cell_edited). Signals are blocked while filling.
+        self._table_rows = min(50, len(df))
+        head = df.head(self._table_rows)
+        self.table_widget.blockSignals(True)
+        try:
+            self.table_widget.clear()
+            self.table_widget.setColumnCount(len(head.columns))
+            self.table_widget.setRowCount(len(head))
+            self.table_widget.setHorizontalHeaderLabels([str(c) for c in head.columns])
+            for r in range(len(head)):
+                for c in range(len(head.columns)):
+                    self.table_widget.setItem(r, c, QTableWidgetItem(str(head.iat[r, c])))
+        finally:
+            self.table_widget.blockSignals(False)
+        # Connect once; edits are live.
+        if not getattr(self, "_table_edit_connected", False):
+            self.table_widget.itemChanged.connect(self._on_table_cell_edited)
+            self._table_edit_connected = True
         info = self.data.info
         dtypes = ", ".join(f"{c} ({'num' if c in info.numeric_columns else 'text'})"
                            for c in info.columns)
         warns = (" | ".join(info.warnings)) if info.warnings else "none"
+        extra = "" if len(df) <= self._table_rows else \
+            f" (editing the first {self._table_rows} rows)"
         self.dtype_label.setText(
-            f"{info.n_rows} rows × {len(info.columns)} columns.\n"
+            f"{info.n_rows} rows × {len(info.columns)} columns{extra}. "
+            "Edit cells to update the figure live.\n"
             f"Detected types: {dtypes}\nWarnings: {warns}")
+
+    def _volcano_prefill(self, plot_type: str, col_opts: list) -> dict:
+        """Best-guess volcano column mapping from the current data (user confirms).
+
+        Uses the RNA-seq DE detector so edgeR (``logFC``/``P.Value``), DESeq2
+        (``log2FoldChange``/``pvalue``/``padj``), and other headers auto-map. Only
+        fills fields whose detected column exists; leaves the rest for the user.
+        """
+        if self.data is None:
+            return {}
+        try:
+            from make_my_figure_core.rnaseq.detect import detect_de_columns
+
+            det = detect_de_columns(self.data.info.dataframe)
+        except Exception:
+            return {}
+        mapping = {}
+        # x = log fold change; p = raw p-value (user can switch to adjusted p);
+        # label = gene symbol (fall back to gene id).
+        if det.get("logFC") in col_opts:
+            mapping["x"] = det["logFC"]
+        if det.get("p_value") in col_opts:
+            mapping["p"] = det["p_value"]
+        elif det.get("adj_p") in col_opts:
+            mapping["p"] = det["adj_p"]
+        lbl = det.get("gene_symbol") or det.get("gene_id")
+        if lbl in col_opts:
+            mapping["label"] = lbl
+        if mapping and hasattr(self, "warn_label"):
+            self.warn_label.setText(
+                "Detected DE columns — confirm in 'Map columns': "
+                + ", ".join(f"{k}={v}" for k, v in mapping.items())
+                + ". Change any selection if the guess is wrong.")
+        return mapping
+
+    def _on_table_cell_edited(self, item):
+        """Write an edited cell back into the DataFrame and re-render.
+
+        Numeric columns are re-coerced (a non-numeric entry becomes NaN with a
+        warning) so plots stay valid. Row r in the widget maps to df.iloc[r].
+        """
+        if self.data is None:
+            return
+        df = self.data.info.dataframe
+        r, c = item.row(), item.column()
+        if r >= len(df) or c >= len(df.columns):
+            return
+        col = df.columns[c]
+        text = item.text()
+        was_numeric = col in self.data.info.numeric_columns
+        try:
+            if was_numeric:
+                # Convert to the column's numeric type up front (invalid -> NaN),
+                # so assigning never clashes with a float column's dtype.
+                value = pd.to_numeric(pd.Series([text]), errors="coerce").iloc[0]
+                if str(text).strip() != "" and pd.isna(value):
+                    self._show_warning(f"'{text}' is not numeric for column '{col}'; set to NaN.")
+                df.iloc[r, c] = value
+            else:
+                if df[col].dtype != object:
+                    df[col] = df[col].astype(object)
+                df.iloc[r, c] = text
+        except Exception as exc:  # never let an edit crash the app
+            self._show_warning(f"Could not apply edit: {exc}")
+            return
+        # Re-render from the mutated data.
+        self.render_preview()
 
     # --- dynamic controls ------------------------------------------------
     def _clear_form(self, form: QFormLayout):
@@ -897,14 +1001,20 @@ class MainWindow(QMainWindow):
         self._clear_form(self.mapping_form)
         self._mapping_widgets = {}
         col_opts = self._column_options()
+        # For a DE/volcano table, auto-detect logFC / p-value / label columns
+        # (works for edgeR, DESeq2, and other tools) and prefill the dropdowns.
+        # The user always confirms/overrides via the selectors — we never guess
+        # silently. See _volcano_prefill.
+        prefill = self._volcano_prefill(pt, col_opts) if pt == "volcano_plot" else {}
         for field in self.controller.column_fields(pt):
             combo = QComboBox()
             combo.addItems(col_opts)
-            default = defaults.get(field)
+            default = prefill.get(field, defaults.get(field))
             if default in col_opts:
                 combo.setCurrentText(default)
             combo.currentIndexChanged.connect(self.render_preview)
-            self.mapping_form.addRow(field, combo)
+            label = field
+            self.mapping_form.addRow(label, combo)
             self._mapping_widgets[field] = combo
         # PCA metadata-based fields (color/shape)
         if self.controller.needs_metadata(pt):

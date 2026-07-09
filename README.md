@@ -117,6 +117,27 @@ package versions, thresholds) and a method report. See
 > correction. Make My Figure reports the analysis method and design, but users
 > remain responsible for confirming that the model matches their study design.
 
+### Define groups in-app — no metadata file needed
+
+Have a **count / expression matrix** (features in rows, samples in columns) but no
+separate metadata file? Use **Define groups…** (desktop button; Streamlit
+"🗂 Define groups" expander) to:
+
+- **Assign sample groups (wide matrix):** pick the feature-id column, assign each
+  sample column to a group (auto-guessed from sample names, fully editable), and
+  optionally pick features. The app reshapes the matrix to a long, group-tagged
+  table ready for **bar / box / violin plots and statistics**.
+- **Group by column values:** for a long table, map an existing column's values to
+  group labels, adding a new grouping column you can map and compare.
+
+Column mapping is also **confirmable**: for volcano plots the app auto-detects the
+log-fold-change and p-value columns across edgeR (`logFC`/`P.Value`) and DESeq2
+(`log2FoldChange`/`pvalue`/`padj`) headers, then lets you confirm or override the
+guess in "Map columns" — so mismatched headers never silently pick the wrong column.
+
+And the **preview table is editable**: change a cell (desktop) or edit rows
+(Streamlit `data_editor`) and the figure re-renders live from the updated data.
+
 ### Return to upload without restarting
 
 Loaded an example and want your own data? Use **Home / Upload New Data** (desktop:

@@ -148,6 +148,16 @@ def _post_process(df: pd.DataFrame, source_name: str, delimiter: Optional[str]) 
     )
 
 
+def table_info_from_dataframe(df: pd.DataFrame, source_name: str) -> TableInfo:
+    """Build a :class:`TableInfo` from an in-memory DataFrame.
+
+    Used when a table is produced inside the app (e.g. reshaping a wide matrix to
+    long, or adding a grouping column) rather than read from disk. Runs the same
+    column classification / missing-value analysis as a file load.
+    """
+    return _post_process(df.copy(), source_name, delimiter=None)
+
+
 def _id_dtype_overrides(columns: List[str]) -> Dict[str, str]:
     return {c: "string" for c in columns if _looks_like_id_column(c)}
 

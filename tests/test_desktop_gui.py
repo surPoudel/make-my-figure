@@ -485,3 +485,125 @@ def test_rnaseq_dialog_has_r_setup_and_methods(app):
     dlg._refresh_r_status()
     assert dlg.run_de_btn.isEnabled() == check_r_environment(method="deseq2").ready
     dlg.close()
+
+
+# --- editable data table -> live figure update (Part: simplify) ------------
+
+def test_editable_table_updates_dataframe_and_rerenders(app):
+    import pandas as pd
+    win = MainWindow()
+    win.load_example("barplot_with_error_bar")
+    df = win.data.info.dataframe
+    ycol = next(c for c in df.columns if c in win.data.info.numeric_columns)
+    cidx = list(df.columns).index(ycol)
+    before = win._current_result
+    # simulate a user editing a cell in the preview table
+    win.table_widget.item(0, cidx).setText("123.5")
+    assert float(win.data.info.dataframe.iat[0, cidx]) == 123.5   # written back
+    assert win._current_result is not None
+    assert win._current_result is not before                       # re-rendered
+    win.close()
+
+
+def test_editable_table_nonnumeric_becomes_nan(app):
+    import pandas as pd
+    win = MainWindow()
+    win.load_example("boxplot_or_violin_with_points")
+    df = win.data.info.dataframe
+    ycol = next(c for c in df.columns if c in win.data.info.numeric_columns)
+    cidx = list(df.columns).index(ycol)
+    win.table_widget.item(0, cidx).setText("not_a_number")
+    assert pd.isna(win.data.info.dataframe.iat[0, cidx])           # coerced to NaN
+    win.close()
+
+
+def test_volcano_column_prefill_edger_and_deseq2(app):
+    import pandas as pd
+    from apps.desktop_app.controller import LoadedData
+
+    def _loaded(df, numeric, cat):
+        class _I:
+            dataframe = df
+            numeric_columns = numeric
+            categorical_columns = cat
+            warnings = []
+            n_rows = len(df)
+            @property
+            def columns(self_):
+                return list(df.columns)
+        return LoadedData(info=_I(), table_name="de")
+
+    win = MainWindow()
+    # edgeR-style headers
+    edger = pd.DataFrame({"geneSymbol": ["A", "B"], "logFC": [2.0, -1.0], "AveExpr": [5, 6],
+                          "t": [3, -2], "P.Value": [1e-4, 2e-3], "adj.P.Val": [1e-3, 1e-2]})
+    win.data = _loaded(edger, ["logFC", "AveExpr", "t", "P.Value", "adj.P.Val"], ["geneSymbol"])
+    win._suppress_change = True
+    win.plot_combo.setCurrentIndex(win.plot_combo.findData("volcano_plot"))
+    win._suppress_change = False
+    win._rebuild_mapping_and_options()
+    sel = {k: v.currentText() for k, v in win._mapping_widgets.items()}
+    assert sel["x"] == "logFC" and sel["p"] == "P.Value" and sel["label"] == "geneSymbol"
+
+    # DESeq2-style headers
+    deseq = pd.DataFrame({"gene_name": ["A", "B"], "log2FoldChange": [2.0, -1.0],
+                          "baseMean": [100, 200], "stat": [4, -3], "pvalue": [1e-5, 1e-2],
+                          "padj": [1e-4, 1e-1]})
+    win.data = _loaded(deseq, ["log2FoldChange", "baseMean", "stat", "pvalue", "padj"], ["gene_name"])
+    win._rebuild_mapping_and_options()
+    sel = {k: v.currentText() for k, v in win._mapping_widgets.items()}
+    assert sel["x"] == "log2FoldChange" and sel["p"] == "pvalue" and sel["label"] == "gene_name"
+    win.close()
+
+
+def test_define_groups_matrix_to_long(app):
+    import pandas as pd
+    from apps.desktop_app.grouping_panel import GroupingDialog
+
+    win = MainWindow()
+    matrix = pd.DataFrame({
+        "gene": ["G1", "G2", "G3"],
+        "Ctrl_1": [10.0, 5, 1], "Ctrl_2": [12, 6, 2],
+        "Trt_1": [20, 15, 1], "Trt_2": [22, 16, 2],
+    })
+    win.data = win.controller.loaded_from_dataframe(matrix, "matrix.csv")
+    dlg = GroupingDialog(win.controller, win.data)
+    # feature id auto-defaults to the text column, samples auto-grouped by name
+    assert dlg.feature_combo.currentText() == "gene"
+    assert dlg.sample_table.rowCount() == 4
+    groups = {dlg.sample_table.item(r, 0).text(): dlg.sample_table.item(r, 1).text()
+              for r in range(4)}
+    assert groups["Ctrl_1"] == groups["Ctrl_2"] and groups["Trt_1"] == groups["Trt_2"]
+
+    captured = {}
+    dlg.grouped.connect(lambda loaded: captured.setdefault("loaded", loaded))
+    dlg._on_accept()
+    loaded = captured["loaded"]
+    assert set(loaded.info.dataframe.columns) == {"feature", "sample", "group", "value"}
+    # the main window adopts it and re-renders
+    win._adopt_grouped_data(loaded)
+    assert win.data is loaded
+    win.close()
+
+
+def test_define_groups_by_column_values(app):
+    import pandas as pd
+    from apps.desktop_app.grouping_panel import GroupingDialog
+
+    win = MainWindow()
+    df = pd.DataFrame({"sample": ["s1", "s2", "s3"], "cond": ["wt", "wt", "ko"], "v": [1.0, 2, 3]})
+    win.data = win.controller.loaded_from_dataframe(df, "obs.csv")
+    dlg = GroupingDialog(win.controller, win.data)
+    dlg.tabs.setCurrentIndex(1)
+    dlg.source_combo.setCurrentText("cond")
+    dlg._refresh_column_tab()
+    # relabel the two unique values
+    for r in range(dlg.value_table.rowCount()):
+        val = dlg.value_table.item(r, 0).text()
+        dlg.value_table.item(r, 1).setText("Control" if val == "wt" else "Knockout")
+    captured = {}
+    dlg.grouped.connect(lambda loaded: captured.setdefault("loaded", loaded))
+    dlg._on_accept()
+    out = captured["loaded"].info.dataframe
+    assert list(out["group"]) == ["Control", "Control", "Knockout"]
+    win.close()

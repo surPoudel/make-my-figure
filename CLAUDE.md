@@ -160,6 +160,19 @@ Data flows: **loader → PlotSpec (validated) → renderer → RenderResult → 
   figure and a `*.figure_spec.json`. Desktop UI: `apps/desktop_app/stats_panel.py` holds
   both the `StatisticsPanel` and `FigureBuilderDialog` (thin Qt over the controller/core).
 
+- **In-app grouping** (`grouping.py`): frontend-agnostic helpers to define groups without a
+  metadata file. `melt_matrix_to_long` reshapes a wide features×samples matrix to a long,
+  group-tagged frame (`feature/sample/group/value`) using an in-app sample→group assignment;
+  `add_group_column` derives a grouping column by mapping an existing column's values;
+  `guess_groups_from_names` seeds an editable initial assignment from sample-name tokens. Pure
+  pandas, never mutates input. The controller wraps results via `loaded_from_dataframe` (backed
+  by `loaders.table_info_from_dataframe`) so a derived table flows through the normal
+  map→render→export path. Desktop UI: `apps/desktop_app/grouping_panel.py` (`GroupingDialog`,
+  two tabs); Streamlit: the "Define groups" expander in `streamlit_app.py`. Both GUIs also have
+  an **editable preview table** (edits write back to the DataFrame and re-render live) and
+  **user-confirmable column mapping** (volcano DE columns auto-detected via
+  `rnaseq.detect.detect_de_columns`, then confirmed/overridden in "Map columns").
+
 - **Harvest** (`harvest/`): a license-gated, HTTPS-only pipeline that downloads figures/data
   **only** from CC BY/CC BY-SA/CC0 open-access papers into `figure_library/` (git-ignored).
   It derives *aggregate* visual conventions for learned profiles — it never copies or
