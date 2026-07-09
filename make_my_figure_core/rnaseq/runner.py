@@ -24,17 +24,24 @@ from typing import Any, Dict, List, Optional
 
 import pandas as pd
 
-from make_my_figure_core.rnaseq.rscript import RNASEQ_DE_R
+from make_my_figure_core.rnaseq.rscript import DE_SCRIPTS, RNASEQ_DE_R
 from make_my_figure_core.rnaseq.spec import DE_METHODS, RnaSeqSpec
 
 REQUIRED_R_PACKAGES = ["edgeR", "limma", "jsonlite"]
+# Packages required per DE method (jsonlite is always needed for I/O).
+METHOD_PACKAGES = {
+    "edger_limma_voom": ["edgeR", "limma", "jsonlite"],
+    "deseq2": ["DESeq2", "jsonlite"],
+}
 
 INSTALL_INSTRUCTIONS = (
-    "RNA-seq differential expression needs R with the Bioconductor packages "
-    "edgeR and limma (and jsonlite). Install R from https://www.r-project.org/, "
-    "then in an R console run:\n\n"
+    "RNA-seq differential expression needs R with Bioconductor packages "
+    "(edgeR + limma for limma-voom, DESeq2 for the DESeq2 method).\n\n"
+    "Easiest: in the app, click 'Set up R for RNA-seq' to install a self-contained "
+    "R environment automatically (no separate R install needed).\n\n"
+    "Manual alternative — install R from https://www.r-project.org/, then run:\n"
     '    if (!requireNamespace("BiocManager", quietly=TRUE)) install.packages("BiocManager")\n'
-    '    BiocManager::install(c("edgeR", "limma"))\n'
+    '    BiocManager::install(c("edgeR", "limma", "DESeq2"))\n'
     '    install.packages("jsonlite")\n\n'
     "Precomputed DE tables can still be turned into volcano plots without R."
 )
@@ -66,16 +73,30 @@ class REnvironment:
 
 
 def find_rscript() -> Optional[str]:
-    """Locate the ``Rscript`` executable (env override wins)."""
+    """Locate ``Rscript``. Preference: explicit override → app-managed R env → PATH."""
     override = os.environ.get("MAKE_MY_FIGURE_RSCRIPT")
     if override and os.path.exists(override):
         return override
+    try:
+        from make_my_figure_core.rnaseq.r_setup import managed_rscript_path
+
+        managed = managed_rscript_path()
+        if managed:
+            return managed
+    except Exception:
+        pass
     return shutil.which("Rscript") or shutil.which("Rscript.exe")
 
 
-def check_r_environment(*, packages: Optional[List[str]] = None) -> REnvironment:
-    """Probe for R + required packages. Never raises; returns a report."""
-    packages = packages or REQUIRED_R_PACKAGES
+def check_r_environment(*, packages: Optional[List[str]] = None,
+                        method: Optional[str] = None) -> REnvironment:
+    """Probe for R + required packages. Never raises; returns a report.
+
+    ``method`` (``edger_limma_voom`` | ``deseq2``) selects which packages are
+    required; ``packages`` overrides it explicitly.
+    """
+    if packages is None:
+        packages = METHOD_PACKAGES.get(method or "", REQUIRED_R_PACKAGES)
     rscript = find_rscript()
     if not rscript:
         return REnvironment(has_r=False, missing_packages=list(packages), ready=False,
@@ -132,15 +153,19 @@ def run_de_pipeline(
     batch: Optional[str] = None,
     annotation: Optional[pd.DataFrame] = None,
     min_cpm: float = 1.0,
+    method: str = "edger_limma_voom",
     output_dir: Optional[str] = None,
     timeout: int = 1800,
 ) -> Dict[str, Any]:
     """Run the DE pipeline. Returns a dict with de_tables, voom path, method,
     versions, log, and a populated :class:`RnaSeqSpec`.
 
-    Raises :class:`RDependencyError` if R/edgeR/limma are unavailable.
+    ``method`` is ``edger_limma_voom`` (default) or ``deseq2``. Raises
+    :class:`RDependencyError` if R or the method's packages are unavailable.
     """
-    env = check_r_environment()
+    if method not in DE_SCRIPTS:
+        raise ValueError(f"Unknown DE method '{method}'. Options: {sorted(DE_SCRIPTS)}")
+    env = check_r_environment(method=method)
     if not env.ready:
         raise RDependencyError(env.message, missing=env.missing_packages)
 
@@ -162,7 +187,7 @@ def run_de_pipeline(
         ann.index = pd.Index([str(i) for i in ann.index], name="gene_id")
         ann.to_csv(annotation_file, sep="\t")
     with open(script_file, "w", encoding="utf-8") as fh:
-        fh.write(RNASEQ_DE_R)
+        fh.write(DE_SCRIPTS[method])
 
     run_spec = {
         "counts_file": counts_file, "meta_file": meta_file,
@@ -170,6 +195,7 @@ def run_de_pipeline(
         "sample_id_col": sample_id_col, "group_col": group_col,
         "reference_group": reference_group, "comparisons": comparisons,
         "covariates": covariates, "batch": batch or "", "min_cpm": float(min_cpm),
+        "min_count": 10,
     }
     with open(spec_file, "w", encoding="utf-8") as fh:
         json.dump(run_spec, fh, indent=2)
@@ -182,35 +208,36 @@ def run_de_pipeline(
             "R DE pipeline failed.\nSTDOUT:\n" + proc.stdout[-4000:] +
             "\nSTDERR:\n" + proc.stderr[-4000:])
 
-    method = _read_json(os.path.join(out, "method.json")) or {}
+    minfo = _read_json(os.path.join(out, "method.json")) or {}
     versions = _read_json(os.path.join(out, "versions.json")) or {}
     de_tables: Dict[str, str] = {}
-    for cn in method.get("contrast_names", []):
+    for cn in minfo.get("contrast_names", []):
         p = os.path.join(out, f"{cn}_DE.txt")
         if os.path.exists(p):
             de_tables[cn] = p
+    voom_name = minfo.get("voom_file", "voom_norm_annot.txt")
 
     spec = RnaSeqSpec(
         input_mode="raw_counts",
         condition_column=group_col, reference_group=reference_group,
         comparison_group=(comparisons[0]["group2"] if comparisons else None),
         covariates=list(covariates), batch_column=batch,
-        design_formula=method.get("design_formula"),
-        contrasts=list((method.get("contrasts") or {}).values())
-        if isinstance(method.get("contrasts"), dict) else list(method.get("contrasts") or []),
-        filtering={"rule": method.get("filtering"), "min_cpm": float(min_cpm)},
-        normalization_method=method.get("normalization"),
-        de_method=method.get("de_method") or DE_METHODS.get("edger_limma_voom"),
-        de_method_id=method.get("de_method_id", "edger_limma_voom"),
+        design_formula=minfo.get("design_formula"),
+        contrasts=list((minfo.get("contrasts") or {}).values())
+        if isinstance(minfo.get("contrasts"), dict) else list(minfo.get("contrasts") or []),
+        filtering={"rule": minfo.get("filtering"), "min_cpm": float(min_cpm)},
+        normalization_method=minfo.get("normalization"),
+        de_method=minfo.get("de_method") or DE_METHODS.get(method),
+        de_method_id=minfo.get("de_method_id", method),
         r_script_path="rnaseq_de.R", r_version=versions.get("r_version"),
         package_versions={k: v for k, v in versions.items() if k != "r_version"},
-        output_files={"voom": os.path.join(out, method.get("voom_file", "voom_norm_annot.txt")),
+        output_files={"voom": os.path.join(out, voom_name),
                       "log": os.path.join(out, "analysis_log.txt"), **de_tables},
     )
     return {
         "de_tables": de_tables,
-        "voom_file": os.path.join(out, method.get("voom_file", "voom_norm_annot.txt")),
-        "method": method, "versions": versions,
+        "voom_file": os.path.join(out, voom_name),
+        "method": minfo, "versions": versions,
         "log": _read_text(os.path.join(out, "analysis_log.txt")),
         "stdout": proc.stdout, "stderr": proc.stderr,
         "output_dir": out, "workdir": workdir, "rnaseq_spec": spec,

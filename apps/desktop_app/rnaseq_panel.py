@@ -164,6 +164,16 @@ class RnaSeqDialog(QDialog):
         w = QWidget(); f = QFormLayout(w)
         self.r_status = QLabel(""); self.r_status.setWordWrap(True)
         f.addRow(self.r_status)
+        self.setup_r_btn = QPushButton("Set up R for RNA-seq…")
+        self.setup_r_btn.setToolTip("Install a self-contained R + edgeR/limma/DESeq2 environment "
+                                    "(prebuilt binaries; needs internet once, ~1 GB).")
+        self.setup_r_btn.clicked.connect(self._setup_r)
+        f.addRow(self.setup_r_btn)
+        self.rc_method = QComboBox()
+        self.rc_method.addItem("edgeR + limma-voom (moderated t)", "edger_limma_voom")
+        self.rc_method.addItem("DESeq2 (negative-binomial Wald)", "deseq2")
+        self.rc_method.currentIndexChanged.connect(lambda _=None: self._refresh_r_status())
+        f.addRow("DE method", self.rc_method)
         metab = QPushButton("Load sample metadata…"); metab.clicked.connect(self._load_metadata)
         f.addRow(metab)
         self.rc_group = QComboBox(); self.rc_ref = QComboBox(); self.rc_comp = QComboBox()
@@ -182,6 +192,60 @@ class RnaSeqDialog(QDialog):
         f.addRow(self.run_de_btn)
         self.rc_group.currentIndexChanged.connect(self._refresh_group_levels)
         return w
+
+    def _current_method(self) -> str:
+        return self.rc_method.currentData() if hasattr(self, "rc_method") else "edger_limma_voom"
+
+    def _refresh_r_status(self):
+        env = check_r_environment(method=self._current_method())
+        self.run_de_btn.setEnabled(env.ready)
+        self.r_status.setText(("✓ R ready: " + (env.r_version or ""))
+                              if env.ready else "⚠ " + env.message.splitlines()[0]
+                              + "  (use 'Set up R' or install R; Run DE disabled)")
+
+    def _setup_r(self):
+        from PySide6.QtCore import QThread, Signal, QObject
+
+        if QMessageBox.question(
+                self, "Set up R",
+                "Download and install a self-contained R environment with edgeR, limma, and "
+                "DESeq2?\n\nThis uses prebuilt binaries (no compiler needed), needs internet, "
+                "and downloads roughly 1 GB the first time.") != QMessageBox.Yes:
+            return
+        from make_my_figure_core.rnaseq import install_r_environment
+
+        self.setup_r_btn.setEnabled(False)
+        self._log("Setting up R environment… (this can take several minutes)")
+
+        class _Worker(QObject):
+            line = Signal(str)
+            done = Signal(dict)
+
+            def run(self):
+                res = install_r_environment(progress=self.line.emit)
+                self.done.emit(res)
+
+        self._r_thread = QThread()
+        self._r_worker = _Worker()
+        self._r_worker.moveToThread(self._r_thread)
+        self._r_thread.started.connect(self._r_worker.run)
+        self._r_worker.line.connect(self._log)
+        self._r_worker.done.connect(self._on_r_installed)
+        self._r_thread.start()
+
+    def _on_r_installed(self, res: dict):
+        self._r_thread.quit(); self._r_thread.wait()
+        self.setup_r_btn.setEnabled(True)
+        if res.get("ok"):
+            self._log("R environment ready: " + str(res.get("rscript")))
+            QMessageBox.information(self, "R ready",
+                                    "R + edgeR/limma/DESeq2 installed. You can now run DE.")
+        else:
+            self._log("R setup did not complete. See log above.")
+            QMessageBox.warning(self, "R setup failed",
+                                "Could not complete the R install. Check your internet "
+                                "connection and the log, or install R manually.")
+        self._refresh_r_status()
 
     # ------------------------------------------------------------------ file
     def _open_file(self):
@@ -208,10 +272,7 @@ class RnaSeqDialog(QDialog):
         self.stack.setCurrentIndex({"de_result": 0, "expression_matrix": 1,
                                     "raw_counts": 2}.get(mode, 0))
         if mode == "raw_counts":
-            env = check_r_environment()
-            self.run_de_btn.setEnabled(env.ready)
-            self.r_status.setText(("✓ " if env.ready else "⚠ ") + env.message.splitlines()[0]
-                                  + ("" if env.ready else "  (Run DE disabled)"))
+            self._refresh_r_status()
             if self.info is not None:
                 _, sample_cols = split_expression_matrix(self.info.dataframe)
                 self._log(f"Raw counts: {len(sample_cols)} sample columns detected. "
@@ -357,7 +418,8 @@ class RnaSeqDialog(QDialog):
                 reference_group=self.rc_ref.currentText(),
                 comparisons=[{"group1": self.rc_comp.currentText(),
                               "group2": self.rc_ref.currentText()}],
-                covariates=covs, batch=batch, min_cpm=self.rc_mincpm.value())
+                covariates=covs, batch=batch, min_cpm=self.rc_mincpm.value(),
+                method=self._current_method())
         except RDependencyError as exc:
             QMessageBox.warning(self, "R not available", str(exc)); self._log(str(exc)); return
         except Exception as exc:

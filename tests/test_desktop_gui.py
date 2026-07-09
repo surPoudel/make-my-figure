@@ -467,3 +467,21 @@ def test_rnaseq_dialog_rawcounts_run_disabled_without_r(app):
     # Run DE button reflects R availability
     assert dlg.run_de_btn.isEnabled() == check_r_environment().ready
     dlg.close()
+
+
+def test_rnaseq_dialog_has_r_setup_and_methods(app):
+    from apps.desktop_app.rnaseq_panel import RnaSeqDialog
+    from apps.desktop_app.controller import DesktopController
+    from make_my_figure_core.rnaseq import check_r_environment
+    dlg = RnaSeqDialog(DesktopController())
+    idx = dlg.mode_combo.findData("raw_counts")
+    dlg.mode_combo.setCurrentIndex(idx)
+    # DE method choices present
+    methods = [dlg.rc_method.itemData(i) for i in range(dlg.rc_method.count())]
+    assert "edger_limma_voom" in methods and "deseq2" in methods
+    # Set-up-R button exists; Run DE gated on R availability for the chosen method
+    assert hasattr(dlg, "setup_r_btn")
+    dlg.rc_method.setCurrentIndex(methods.index("deseq2"))
+    dlg._refresh_r_status()
+    assert dlg.run_de_btn.isEnabled() == check_r_environment(method="deseq2").ready
+    dlg.close()

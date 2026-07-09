@@ -89,6 +89,7 @@ DE_METHODS = {
     "edger_lrt": "edgeR likelihood-ratio test (TMM normalization)",
     "limma_ebayes": "limma empirical Bayes moderated t-test",
     "edger": "edgeR exact test (TMM normalization)",
+    "deseq2": "DESeq2 (median-of-ratios normalization, negative-binomial GLM, Wald test)",
 }
 
 

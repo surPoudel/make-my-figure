@@ -130,14 +130,32 @@ def _matrix_heatmap(st, info, name):
 
 def _raw_counts(st, info):
     st.subheader("Differential expression from raw counts")
-    env = check_r_environment()
+    method_label = st.selectbox("DE method",
+                                ["edgeR + limma-voom (moderated t)", "DESeq2 (negative-binomial Wald)"])
+    method = "deseq2" if method_label.startswith("DESeq2") else "edger_limma_voom"
+    env = check_r_environment(method=method)
     if env.ready:
         st.success("R environment ready: " + (env.r_version or ""))
     else:
-        st.error(env.message)
+        st.warning(env.message)
+        if st.button("Set up R for RNA-seq (installs R + edgeR/limma/DESeq2)"):
+            from make_my_figure_core.rnaseq import install_r_environment
+            log_box = st.empty()
+            lines = []
+
+            def _cb(msg):
+                lines.append(msg)
+                log_box.code("\n".join(lines[-25:]))
+
+            with st.spinner("Installing R environment (prebuilt binaries, ~1 GB, first time only)…"):
+                res = install_r_environment(progress=_cb)
+            if res.get("ok"):
+                st.success("R installed. Reload the page or re-run to enable DE.")
+            else:
+                st.error("R setup did not complete — check your connection and the log.")
         st.info("You can still generate volcano plots from a precomputed DE table without R.")
-    st.write("Upload sample metadata and choose the design, then run the edgeR + limma-voom "
-             "pipeline. (Running DE requires R with edgeR/limma.)")
+    st.write(f"Upload sample metadata and choose the design, then run the {method_label} "
+             "pipeline. (Running DE requires R with the method's packages.)")
     meta_up = st.file_uploader("Sample metadata", type=["csv", "tsv", "txt", "xlsx"], key="rc_meta")
     if meta_up is None:
         return
@@ -166,7 +184,8 @@ def _raw_counts(st, info):
             res = run_de_pipeline(counts, metadata, sample_id_col=sid, group_col=group,
                                   reference_group=ref,
                                   comparisons=[{"group1": comp, "group2": ref}],
-                                  covariates=[c.strip() for c in covs.split(",") if c.strip()])
+                                  covariates=[c.strip() for c in covs.split(",") if c.strip()],
+                                  method=method)
         except RDependencyError as exc:
             st.error(str(exc)); return
         except Exception as exc:

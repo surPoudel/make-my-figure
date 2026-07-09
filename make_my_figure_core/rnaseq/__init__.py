@@ -45,6 +45,12 @@ from make_my_figure_core.rnaseq.runner import (
     check_r_environment,
     run_de_pipeline,
 )
+from make_my_figure_core.rnaseq.r_setup import (
+    app_data_dir,
+    install_r_environment,
+    managed_rscript_path,
+    r_env_prefix,
+)
 
 __all__ = [
     "RNASEQ_COLUMN_ALIASES",
@@ -69,4 +75,8 @@ __all__ = [
     "RDependencyError",
     "check_r_environment",
     "run_de_pipeline",
+    "app_data_dir",
+    "install_r_environment",
+    "managed_rscript_path",
+    "r_env_prefix",
 ]

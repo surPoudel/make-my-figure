@@ -55,20 +55,42 @@ same design as the reference script
 reports the exact design formula and contrasts, and the statistic is the
 moderated *t* with Benjamini-Hochberg FDR. It is not labeled "edgeR only".
 
-## Installing R dependencies
+## DE methods
 
-Mode C needs R with Bioconductor **edgeR** and **limma** (and **jsonlite**):
+Mode C offers two count-appropriate methods (choose per analysis):
+
+- **edgeR + limma-voom** — TMM normalization + CPM filtering, voom, and an
+  empirical Bayes **moderated t-test** (the reference pipeline). DE columns:
+  `logFC, AveExpr, t, P.Value, adj.P.Val, B`.
+- **DESeq2** — median-of-ratios size factors, a negative-binomial GLM, and a
+  **Wald test**; a VST-normalized matrix is written for heatmaps/PCA. DESeq2
+  requires integer counts (values are rounded). Output columns are normalized to
+  the same schema (`logFC` = log2FoldChange, `t` = Wald stat, `adj.P.Val` = padj)
+  so the volcano/heatmap code is method-agnostic.
+
+Neither is "better" universally — report whichever you use, with its design.
+
+## Installing R — one click, or manual
+
+**Easiest (recommended):** in the RNA-seq workflow, click **"Set up R for
+RNA-seq"**. The app downloads a self-contained R environment with edgeR, limma,
+and DESeq2 using **prebuilt conda-forge/bioconda binaries** (via micromamba) —
+no separate R install, no compiler. It installs into the per-user app-data
+directory and the app auto-uses its `Rscript`. Needs internet once (~1 GB); a
+locked-down/offline machine may block it.
+
+**Manual alternative:** install R from https://www.r-project.org/, then:
 
 ```r
 if (!requireNamespace("BiocManager", quietly=TRUE)) install.packages("BiocManager")
-BiocManager::install(c("edgeR", "limma"))
+BiocManager::install(c("edgeR", "limma", "DESeq2"))
 install.packages("jsonlite")
 ```
 
-If R or a package is missing, the app shows this message, disables **Run DE**,
-and still lets you make volcano plots from a precomputed DE table. Point the app
-at a specific R with the `MAKE_MY_FIGURE_RSCRIPT` environment variable if
-`Rscript` is not on your PATH.
+`Rscript` resolution order: `MAKE_MY_FIGURE_RSCRIPT` env var → the app-managed
+environment → your system PATH. If R or a required package is missing, the app
+says so, disables **Run DE**, and still makes volcano plots from precomputed DE
+tables.
 
 ## Reproducibility — RnaSeqSpec
 

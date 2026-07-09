@@ -128,11 +128,16 @@ Data flows: **loader → PlotSpec (validated) → renderer → RenderResult → 
   normalized matrix → `expression.build_expression_matrix` + transforms/gene-selection +
   `heatmap_spec_from_expression` (feeds the core heatmap renderer; optional sample-annotation
   strips via `spec["column_annotations"]`). Mode C raw counts + metadata → `runner.run_de_pipeline`
-  shells out to R (subprocess **arg list**, never a shell string) running the generated
-  `rscript.RNASEQ_DE_R` = **edgeR (TMM + CPM filter) + limma-voom + eBayes moderated t-test**
-  (faithful generalization of `test_matrix/pipeline_*.R`; adds covariates/batch to the design).
-  `check_r_environment()` gates it; missing R/edgeR/limma raises `RDependencyError` with install
-  steps — **never a t-test fallback**. `spec.RnaSeqSpec` is the reproducibility record. `load_rnaseq_table`
+  shells out to R (subprocess **arg list**, never a shell string) running one of `rscript.DE_SCRIPTS`:
+  `edger_limma_voom` (**edgeR TMM+filter + limma-voom + eBayes moderated t**, generalizes
+  `test_matrix/pipeline_*.R`) or `deseq2` (**DESeq2 median-of-ratios + NB GLM + Wald**, VST matrix);
+  select via `run_de_pipeline(..., method=)`. Both add covariates/batch and normalize output columns
+  to one schema (`logFC/AveExpr/t/P.Value/adj.P.Val`) so plotting is method-agnostic.
+  `check_r_environment(method=)` gates it; missing R/packages raises `RDependencyError` — **never a
+  t-test fallback**. `r_setup.install_r_environment()` is the on-demand installer (downloads
+  micromamba, builds a private conda env with r-base + bioconductor-edger/limma/deseq2 in the app-data
+  dir); `find_rscript` prefers `MAKE_MY_FIGURE_RSCRIPT` → managed env → PATH, so the base installer is
+  never bloated with R. `spec.RnaSeqSpec` is the reproducibility record. `load_rnaseq_table`
   promotes R's unnamed row-name (gene id) into a `gene_id` column. Loaders' index inference already
   lands that id as the frame index; detection relies on it. R is optional and usually absent in
   dev/CI, so R-dependent tests skip. GUI: `apps/desktop_app/rnaseq_panel.py` (`RnaSeqDialog`) and

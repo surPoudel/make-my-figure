@@ -98,11 +98,12 @@ fabricates DE statistics:
 - **Normalized matrix** (e.g. voom) → clustered **heatmap** / PCA / correlation,
   with transforms (z-score, log2CPM, …), gene selection, and sample-annotation
   strips.
-- **Raw counts + metadata (+ config)** → a reproducible **edgeR + limma-voom
-  (empirical Bayes moderated t-test)** pipeline run through R, reported with its
-  exact design formula and contrasts. If R/edgeR/limma are missing, the app shows
-  install instructions and disables "Run DE" — it does **not** fall back to a
-  t-test.
+- **Raw counts + metadata (+ config)** → a reproducible DE pipeline run through
+  R — choose **edgeR + limma-voom** (empirical Bayes moderated t-test) or
+  **DESeq2** (negative-binomial Wald test) — reported with its exact design
+  formula and contrasts. If R is missing, click **"Set up R for RNA-seq"** to
+  auto-install a self-contained R + edgeR/limma/DESeq2 (prebuilt binaries, no
+  compiler); the app never falls back to a t-test.
 
 Exports include an `RnaSeqSpec` JSON (inputs + checksums, design, method, R/
 package versions, thresholds) and a method report. See
