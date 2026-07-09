@@ -73,11 +73,14 @@ Neither is "better" universally — report whichever you use, with its design.
 ## Installing R — one click, or manual
 
 **Easiest (recommended):** in the RNA-seq workflow, click **"Set up R for
-RNA-seq"**. The app downloads a self-contained R environment with edgeR, limma,
-and DESeq2 using **prebuilt conda-forge/bioconda binaries** (via micromamba) —
-no separate R install, no compiler. It installs into the per-user app-data
-directory and the app auto-uses its `Rscript`. Needs internet once (~1 GB); a
-locked-down/offline machine may block it.
+RNA-seq"**. The app downloads a self-contained R environment (via micromamba)
+into the per-user app-data directory and auto-uses its `Rscript`. Platform
+detail: on **Linux/macOS** it pulls prebuilt conda-forge/bioconda binaries; on
+**Windows** (where Bioconda has no builds) it installs `r-base` from conda-forge
+and then uses **BiocManager** to fetch Bioconductor's precompiled Windows
+binaries for edgeR/limma/DESeq2. Either way there's no separate R install and no
+compiler. Needs internet once (~1 GB); a locked-down/offline machine may block
+it.
 
 **Manual alternative:** install R from https://www.r-project.org/, then:
 

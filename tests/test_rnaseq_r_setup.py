@@ -131,3 +131,25 @@ def test_deseq2_with_r():
     de = pd.read_csv(next(iter(res["de_tables"].values())), sep="\t", index_col=0)
     for col in ("logFC", "P.Value", "adj.P.Val"):
         assert col in de.columns
+
+
+def test_windows_install_uses_biocmanager_not_bioconda(data_dir, monkeypatch):
+    # On Windows, Bioconda has no builds -> create with conda-forge + r-biocmanager,
+    # then a separate BiocManager step installs edgeR/limma/DESeq2.
+    monkeypatch.setattr(rs, "_is_windows", lambda: True)
+    channels, packages = rs.conda_packages_for_platform()
+    assert channels == ["conda-forge"]
+    assert "r-biocmanager" in packages
+    assert not any(p.startswith("bioconductor-") for p in packages)
+    bcmd = rs._biocmanager_command("/x/Rscript")
+    joined = " ".join(bcmd)
+    assert "BiocManager::install" in joined
+    for p in ("edgeR", "limma", "DESeq2"):
+        assert p in joined
+
+
+def test_unix_install_uses_bioconda(data_dir, monkeypatch):
+    monkeypatch.setattr(rs, "_is_windows", lambda: False)
+    channels, packages = rs.conda_packages_for_platform()
+    assert channels == ["conda-forge", "bioconda"]
+    assert "bioconductor-edger" in packages and "bioconductor-deseq2" in packages

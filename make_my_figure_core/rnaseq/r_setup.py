@@ -23,18 +23,29 @@ import tarfile
 import urllib.request
 from typing import Callable, Dict, List, Optional
 
-# Packages installed into the managed environment (prebuilt binaries).
-# Versions are pinned so every user's DE run is reproducible against each other
-# (exact p-values from limma/edgeR are version-sensitive). Bump deliberately.
-R_CONDA_PACKAGES = [
-    "r-base>=4.2",
-    "bioconductor-edger",
-    "bioconductor-limma",
-    "bioconductor-deseq2",
-    "r-statmod",
-    "r-jsonlite",
-]
-CONDA_CHANNELS = ["conda-forge", "bioconda"]
+# Package strategy is platform-aware because **Bioconda has no Windows builds**
+# of edgeR/limma/DESeq2 (Bioconda does not support Windows). On Linux/macOS we
+# pull prebuilt bioconda binaries directly (fast, no compiler). On Windows we
+# install r-base + BiocManager from conda-forge, then BiocManager fetches the
+# precompiled Windows Bioconductor binaries (also no compiler).
+_R_BASE_PACKAGES = ["r-base>=4.2", "r-statmod", "r-jsonlite"]
+_BIOCONDA_PACKAGES = ["bioconductor-edger", "bioconductor-limma", "bioconductor-deseq2"]
+_BIOC_PACKAGES = ["edgeR", "limma", "DESeq2"]           # BiocManager names (Windows)
+
+# Back-compat alias (some callers/tests referenced this name).
+R_CONDA_PACKAGES = _R_BASE_PACKAGES + _BIOCONDA_PACKAGES
+
+
+def _is_windows() -> bool:
+    return sys.platform.startswith("win")
+
+
+def conda_packages_for_platform() -> tuple:
+    """Return (channels, packages) for the initial micromamba create."""
+    if _is_windows():
+        # conda-forge only; Bioconductor packages come via BiocManager after.
+        return (["conda-forge"], _R_BASE_PACKAGES + ["r-biocmanager"])
+    return (["conda-forge", "bioconda"], _R_BASE_PACKAGES + _BIOCONDA_PACKAGES)
 
 ProgressFn = Callable[[str], None]
 
@@ -167,12 +178,22 @@ def download_micromamba(progress: Optional[ProgressFn] = None) -> str:
 
 
 def install_command(mamba: str, prefix: str) -> List[str]:
-    """Build the micromamba create argument list (no shell)."""
+    """Build the micromamba create argument list (no shell), platform-aware."""
+    channels, packages = conda_packages_for_platform()
     cmd = [mamba, "create", "-y", "-p", prefix]
-    for ch in CONDA_CHANNELS:
+    for ch in channels:
         cmd += ["-c", ch]
-    cmd += R_CONDA_PACKAGES
+    cmd += packages
     return cmd
+
+
+def _biocmanager_command(rscript: str) -> List[str]:
+    """R command to install the Bioconductor packages on Windows (precompiled)."""
+    pkgs = ", ".join(f'"{p}"' for p in _BIOC_PACKAGES)
+    expr = (f'if (!requireNamespace("BiocManager", quietly=TRUE)) '
+            f'install.packages("BiocManager", repos="https://cloud.r-project.org"); '
+            f'BiocManager::install(c({pkgs}), ask=FALSE, update=FALSE)')
+    return [rscript, "-e", expr]
 
 
 def install_r_environment(progress: Optional[ProgressFn] = None,
@@ -218,6 +239,23 @@ def install_r_environment(progress: Optional[ProgressFn] = None,
                 "log": "\n".join(log_lines), "error": str(exc)}
 
     rscript = managed_rscript_path()
+
+    # Windows: Bioconductor isn't on Bioconda, so fetch precompiled Windows
+    # binaries with BiocManager into the freshly-created R env.
+    if rc == 0 and rscript and _is_windows():
+        log("Installing edgeR/limma/DESeq2 via BiocManager (Windows binaries)…")
+        try:
+            bproc = subprocess.Popen(_biocmanager_command(rscript), stdout=subprocess.PIPE,
+                                     stderr=subprocess.STDOUT, text=True, env=env)
+            for line in iter(bproc.stdout.readline, ""):
+                if line:
+                    log(line.rstrip())
+            bproc.wait(timeout=timeout)
+            rc = bproc.returncode
+        except Exception as exc:
+            log(f"ERROR: BiocManager install failed: {exc}")
+            rc = 1
+
     ok = rc == 0 and rscript is not None
     log("Done." if ok else f"Install finished with code {rc}; Rscript found: {rscript is not None}")
     return {"ok": ok, "rscript": rscript, "prefix": prefix, "log": "\n".join(log_lines),
