@@ -27,8 +27,13 @@ from make_my_figure_core.styles.engine import mm_to_inches
 _VECTOR_TEXT_RC = {"svg.fonttype": "none", "pdf.fonttype": 42, "ps.fonttype": 42}
 
 
-def _render_panel_figure(panel: Panel) -> Figure:
-    """Return the panel's Figure, rendering from its PlotSpec if needed."""
+def _render_panel_figure(panel: Panel, font_overrides: Optional[Dict[str, Any]] = None) -> Figure:
+    """Return the panel's Figure, rendering from its PlotSpec if needed.
+
+    ``font_overrides`` (figure-level font sizes) are merged into the panel's
+    style overrides so the whole composite stays typographically consistent.
+    A pre-rendered figure is returned as-is (fonts were fixed at render time).
+    """
     if panel.figure is not None:
         return panel.figure
     if panel.plot_spec is None or panel.table is None:
@@ -38,6 +43,10 @@ def _render_panel_figure(panel: Panel) -> Figure:
     spec = dict(panel.plot_spec)
     if panel.stats_spec is not None and "statistics" not in spec:
         spec["statistics"] = panel.stats_spec
+    if font_overrides:
+        # Figure-level fonts win over the panel's own so panels match; a panel
+        # that set a token explicitly still keeps anything not overridden here.
+        spec["style"] = {**(spec.get("style") or {}), **font_overrides}
     aux = panel.aux or None
     result = render(spec, panel.table, aux=aux)
     return result.figure
@@ -71,12 +80,14 @@ def build_figure(mpf: MultiPanelFigure) -> Figure:
         raise ValueError("Cannot build a multi-panel figure with no panels.")
     mpf.autolabel()
 
+    font_overrides = layout.font_overrides()
+
     # Render + rasterize each panel; capture aspect (height/width).
     images: List[np.ndarray] = []
     aspects: List[float] = []
     own_figs: List[Figure] = []
     for panel in panels:
-        fig = _render_panel_figure(panel)
+        fig = _render_panel_figure(panel, font_overrides)
         img = _figure_to_image(fig, layout.panel_dpi)
         images.append(img)
         h, w = img.shape[0], img.shape[1]
@@ -88,33 +99,46 @@ def build_figure(mpf: MultiPanelFigure) -> Figure:
     n = len(panels)
     nrows, ncols = _auto_grid(n, layout)
 
-    # Row height ratios from the median panel aspect in each row (equal columns).
-    row_ratios = []
-    for r in range(nrows):
-        row_aspects = [aspects[i] for i in range(r * ncols, min((r + 1) * ncols, n))]
-        row_ratios.append(float(np.median(row_aspects)) if row_aspects else 1.0)
-    if layout.height_ratios and len(layout.height_ratios) == nrows:
-        row_ratios = list(layout.height_ratios)
+    # Effective per-panel size in inches. An unset width defaults to an even
+    # share of the figure width (so old specs keep their overall width); an
+    # unset height follows the panel's own aspect ratio, so by default a panel
+    # exactly fills its cell (no letterboxing, no distortion).
+    default_w = mm_to_inches(layout.fig_width_mm) / ncols
+    panel_w = [float(p.width_in) if p.width_in else default_w for p in panels]
+    panel_h = [float(p.height_in) if p.height_in else panel_w[i] * aspects[i]
+               for i, p in enumerate(panels)]
 
-    fig_w_in = mm_to_inches(layout.fig_width_mm)
-    col_w_in = fig_w_in / ncols
+    # Column width = widest panel in the column; row height = tallest in the row.
+    col_w = [max((panel_w[i] for i in range(c, n, ncols)), default=default_w)
+             for c in range(ncols)]
+    row_h = [max((panel_h[i] for i in range(r * ncols, min((r + 1) * ncols, n))),
+                 default=1.0) for r in range(nrows)]
+    if layout.width_ratios and len(layout.width_ratios) == ncols:
+        col_w = list(layout.width_ratios)
+    if layout.height_ratios and len(layout.height_ratios) == nrows:
+        row_h = list(layout.height_ratios)
+
+    # Approximate figure size from the grid + relative gutters. Exactness isn't
+    # required (sizes are "approximate"); gridspec distributes the ratios.
+    fig_w_in = sum(col_w) * (1.0 + layout.wspace)
     if layout.fig_height_mm:
         fig_h_in = mm_to_inches(layout.fig_height_mm)
     else:
-        fig_h_in = col_w_in * sum(row_ratios) * (1.0 + layout.hspace)
-        fig_h_in = max(fig_h_in, 1.5)
+        fig_h_in = max(sum(row_h) * (1.0 + layout.hspace), 1.5)
 
     with plt.rc_context(_VECTOR_TEXT_RC):
         comp = plt.figure(figsize=(fig_w_in, fig_h_in), facecolor=layout.background)
         gs = comp.add_gridspec(
             nrows, ncols, wspace=layout.wspace, hspace=layout.hspace,
-            width_ratios=layout.width_ratios if (layout.width_ratios and len(layout.width_ratios) == ncols) else None,
-            height_ratios=row_ratios,
+            width_ratios=col_w, height_ratios=row_h,
         )
         for i, panel in enumerate(panels):
             r, c = divmod(i, ncols)
             ax = comp.add_subplot(gs[r, c])
-            ax.imshow(images[i], aspect="auto", interpolation="antialiased")
+            # Default imshow aspect keeps square pixels => the panel image is
+            # scaled uniformly (letterboxed within its cell), never stretched.
+            ax.imshow(images[i], interpolation="antialiased")
+            ax.set_anchor("N")  # top-align within the cell so panel tops line up
             ax.set_xticks([]); ax.set_yticks([])
             for spine in ax.spines.values():
                 spine.set_visible(False)

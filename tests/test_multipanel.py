@@ -87,6 +87,68 @@ def test_draft_legend_marks_draft():
     assert "(A)" in text and "(B)" in text
 
 
+def test_titles_off_by_default():
+    """Per-panel titles must not be drawn by default (they collide with labels)."""
+    assert FigureLayout().show_titles is False
+    mpf = _build_mpf()
+    fig = build_figure(mpf)
+    assert all(ax.get_title() == "" for ax in fig.axes)
+    # ...but the title stays available for the auto-drafted legend.
+    assert "Bars" in draft_legend(mpf)
+    plt.close(fig)
+
+
+def test_per_panel_size_scales_figure():
+    """A larger requested panel size yields a proportionally larger figure."""
+    specs = _panel_specs()
+
+    def _fig(w, h):
+        mpf = MultiPanelFigure(name="F", layout=FigureLayout(ncols=2, panel_dpi=100))
+        for spec, df, title in specs:
+            mpf.add_panel(Panel(plot_spec=spec, table=df, title=title, width_in=w, height_in=h))
+        f = build_figure(mpf)
+        size = f.get_size_inches().copy()
+        plt.close(f)
+        return size
+
+    small = _fig(3.0, 3.0)
+    wide = _fig(5.0, 3.0)
+    tall = _fig(3.0, 6.0)
+    assert wide[0] > small[0] + 1.0      # wider request -> wider figure
+    assert tall[1] > small[1] + 1.0      # taller request -> taller figure
+
+
+def test_auto_height_follows_aspect_no_distortion():
+    """With height on auto, each panel cell matches its own aspect (no stretch)."""
+    spec, df, _ = _panel_specs()[0]
+    mpf = MultiPanelFigure(name="F", layout=FigureLayout(ncols=1, panel_dpi=100))
+    mpf.add_panel(Panel(plot_spec=spec, table=df, width_in=4.0))  # height auto
+    fig = build_figure(mpf)
+    ax = fig.axes[0]
+    # imshow keeps square pixels (aspect != "auto"), so the drawn aspect is 'equal'.
+    assert ax.get_aspect() in (1.0, "equal")
+    plt.close(fig)
+
+
+def test_font_overrides_reach_panel_render():
+    from make_my_figure_core.panels.builder import _render_panel_figure
+
+    spec, df, title = _panel_specs()[0]
+    panel = Panel(plot_spec=spec, table=df, title=title)
+    fig = _render_panel_figure(panel, {"axis_font_pt": 22.0})
+    # The x/y axis label should pick up the override.
+    label_sizes = [fig.axes[0].xaxis.label.get_size(), fig.axes[0].yaxis.label.get_size()]
+    assert max(label_sizes) >= 20.0
+    plt.close(fig)
+
+
+def test_layout_font_overrides_dict():
+    lay = FigureLayout(axis_font_pt=14.0, legend_pt=9.0)
+    ov = lay.font_overrides()
+    assert ov == {"axis_font_pt": 14.0, "legend_pt": 9.0}
+    assert FigureLayout().font_overrides() == {}
+
+
 def test_prerendered_figure_panel(tmp_path):
     from make_my_figure_core.plots.registry import render
 

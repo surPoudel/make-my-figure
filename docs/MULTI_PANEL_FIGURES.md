@@ -9,23 +9,34 @@ The Figure Builder assembles individual plots into a labelled composite
 2. Click **"Save current plot as panel"** — this stores the panel's PlotSpec +
    data (and StatsSpec if statistics are enabled).
 3. Repeat for each panel.
-4. Click **"Open Figure Builder…"**.
+4. Click **"Open Figure Builder…"**. The builder opens with a **live preview**
+   on the right that re-renders as you change anything — nothing is written to
+   disk until you click **Save**.
 5. Set the **figure name** (e.g. *Figure 1*, *Extended Data Figure 1*,
    *Supplementary Figure 3*).
-6. Choose the **number of columns** (Auto / 1 / 2 / 3 / 4), figure width, and
-   panel DPI.
+6. Choose the **number of columns** (Auto / 1 / 2 / 3 / 4) and the export DPI.
 7. Reorder, remove, or duplicate panels — labels A, B, C… update automatically.
-8. Click **"Build & export"** to write SVG + PDF + PNG and a
-   `*.figure_spec.json` sidecar, plus a draft legend.
+8. Select a panel and set its **approximate size in inches** (width × height,
+   like Matplotlib's `figsize` — e.g. 4×4 is square, 4×6 is taller). Leave the
+   height on **auto** to keep the panel's own aspect ratio. Panels are always
+   scaled *without distortion*, so a larger number just yields a larger version
+   of the same figure.
+9. Adjust the figure-wide **fonts** (general text, axis labels, tick numbers,
+   legend, and the bold panel letters) — sensible publication defaults are
+   pre-filled.
+10. When the layout looks right, click **"Save figure…"** to write SVG + PDF +
+    PNG and a `*.figure_spec.json` sidecar, plus a draft legend.
 
 ## Layout
 
 - **Automatic grid** by default (roughly square); or fix the column count.
-- Row heights adapt to each row's panel aspect ratios so panels are not
-  distorted.
+- Column widths and row heights follow each panel's requested size; panel
+  content is **scaled uniformly (never stretched)** and letterboxed within its
+  cell if the requested box doesn't match its natural aspect ratio.
 - Bold, top-left **panel labels** are drawn as vector text with a consistent
   offset, clear of the axes.
-- Optional per-panel titles.
+- Per-panel titles are **off by default** (the panel letter + the figure legend
+  already identify each panel); they can be re-enabled programmatically.
 - Consistent margins and spacing; unused trailing grid cells are hidden.
 
 ## Vector vs raster

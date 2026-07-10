@@ -39,6 +39,14 @@ class Panel:
     aux: Dict[str, Any] = field(default_factory=dict)
     stats_spec: Optional[Dict[str, Any]] = None
     source_name: str = ""                    # provenance label (file / example name)
+    # Approximate rendered size in inches (width x height). ``None`` means
+    # "auto": the width falls back to an even share of the figure width and the
+    # height follows the panel's own aspect ratio. The panel is always drawn
+    # WITHOUT distortion (scaled to fit its cell, letterboxed if needed), so a
+    # bigger/smaller number just yields a bigger/smaller version of the same
+    # figure rather than a stretched one.
+    width_in: Optional[float] = None
+    height_in: Optional[float] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -48,6 +56,8 @@ class Panel:
             "plot_spec": self.plot_spec,
             "stats_spec": self.stats_spec or (self.plot_spec or {}).get("statistics"),
             "source_name": self.source_name,
+            "width_in": self.width_in,
+            "height_in": self.height_in,
             "has_prerendered_figure": self.figure is not None,
         }
 
@@ -77,6 +87,19 @@ class FigureLayout:
     # with the top-left label. The title stays populated on the Panel for use in
     # the auto-drafted legend; set True only if you explicitly want it drawn.
     show_titles: bool = False
+    # Figure-level font sizes (points) applied to EVERY panel at render time so
+    # the whole composite is typographically consistent. ``None`` keeps each
+    # panel's own style-profile value. These are user-facing knobs with sensible
+    # publication defaults baked into the style profiles.
+    base_font_pt: Optional[float] = None     # general text size
+    axis_font_pt: Optional[float] = None     # x/y axis label size
+    tick_label_pt: Optional[float] = None    # tick number size
+    legend_pt: Optional[float] = None        # legend text size
+
+    def font_overrides(self) -> Dict[str, float]:
+        """Return the non-None font tokens as a style-override dict."""
+        keys = ("base_font_pt", "axis_font_pt", "tick_label_pt", "legend_pt")
+        return {k: getattr(self, k) for k in keys if getattr(self, k) is not None}
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -88,6 +111,8 @@ class FigureLayout:
             "label_size": self.label_size, "label_weight": self.label_weight,
             "panel_dpi": self.panel_dpi, "background": self.background,
             "show_titles": self.show_titles,
+            "base_font_pt": self.base_font_pt, "axis_font_pt": self.axis_font_pt,
+            "tick_label_pt": self.tick_label_pt, "legend_pt": self.legend_pt,
         }
 
 
