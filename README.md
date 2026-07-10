@@ -42,7 +42,9 @@ scientific figures accessible to people who would rather not write plotting code
   brackets, p-values, and effect sizes — with **transparent method reporting**
   (see [docs/STATISTICS.md](docs/STATISTICS.md))
 - Build **multi-panel figures** (Figure 1A, 1B, 1C…) with the
-  [Figure Builder](docs/MULTI_PANEL_FIGURES.md)
+  [Figure Builder](docs/MULTI_PANEL_FIGURES.md) — arrange panels with a **live
+  preview**, set each panel's **approximate size** and the figure-wide **fonts**,
+  and save only once the layout looks right (panels are scaled without distortion)
 - **Preview** figures interactively
 - Export **SVG, PDF, PNG, a PlotSpec JSON, and a StatsSpec JSON** sidecar
 - **Save templates** so you can replace the example data with your own
@@ -68,7 +70,11 @@ correction method, the effect size, and (where applicable) a confidence interval
   p-values, optional effect sizes.
 - **Reporting:** an automatic method sentence + methods paragraph, exportable as
   Markdown/JSON and a CSV/TSV results table, plus a reproducible `StatsSpec` JSON.
-- **Multi-panel:** save plots as panels and assemble a labelled composite.
+- **Multi-panel:** save plots as panels and assemble a labelled composite in a
+  live-preview builder. Choose each panel's approximate size (width × height in
+  inches) and the figure-wide text/axis/legend font sizes; panels are scaled
+  proportionally (never stretched), and nothing is written until you're happy
+  with the layout.
 
 > **You choose the test.** Make My Figure can compute common statistical tests,
 > but users are responsible for choosing tests appropriate to their experimental

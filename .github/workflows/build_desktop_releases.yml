@@ -106,7 +106,10 @@ jobs:
             dist/*-macos.zip
             dist/*-linux.tar.gz
           if-no-files-found: warn
-          retention-days: 14
+          # Build artifacts are large (~4 GB across all platforms per run) and
+          # regenerable from any tag/commit, so expire them quickly to avoid
+          # exhausting Actions storage. Bump only if you need older builds around.
+          retention-days: 3
 
 # Notes:
 # * Unsigned builds are expected; signing steps run only when the relevant

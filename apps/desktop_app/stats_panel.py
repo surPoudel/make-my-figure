@@ -10,7 +10,8 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from PySide6.QtCore import Qt, Signal
+from PySide6.QtCore import Qt, QTimer, Signal
+from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -28,7 +29,9 @@ from PySide6.QtWidgets import (
     QMessageBox,
     QPlainTextEdit,
     QPushButton,
+    QScrollArea,
     QSpinBox,
+    QSplitter,
     QTableWidget,
     QTableWidgetItem,
     QVBoxLayout,
@@ -333,39 +336,76 @@ class StatisticsPanel(QGroupBox):
 
 
 class FigureBuilderDialog(QDialog):
-    """Assemble saved panels into a multi-panel composite and export it."""
+    """Assemble saved panels into a multi-panel composite.
+
+    Left: controls (order, per-panel size in inches, fonts). Right: a LIVE
+    preview that re-renders on every change, so the figure can be laid out and
+    tuned before it's ever saved. Nothing is written until "Save figure...".
+    """
+
+    # Publication-ready font defaults (points), matching the style profile.
+    _FONT_DEFAULTS = {"text": 11.0, "axis": 12.0, "tick": 10.0, "legend": 10.0, "label": 14.0}
 
     def __init__(self, controller, saved_panels: List[Dict[str, Any]], parent=None):
         super().__init__(parent)
         self.setWindowTitle("Multi-panel Figure Builder")
         self.controller = controller
         self.saved_panels = saved_panels
+        # Give every panel an explicit default width so the size field matches
+        # what's drawn; height stays "auto" (follows the panel's own ratio).
+        for p in self.saved_panels:
+            p.setdefault("width_in", 3.2)
+            p.setdefault("height_in", None)
         self._composite = None
-        self.resize(560, 520)
+        self._syncing = False           # guard against feedback while loading fields
+        self.resize(980, 640)
 
-        v = QVBoxLayout(self)
+        # Debounce timer: coalesce rapid control changes into one re-render.
+        self._preview_timer = QTimer(self)
+        self._preview_timer.setSingleShot(True)
+        self._preview_timer.setInterval(250)
+        self._preview_timer.timeout.connect(self._update_preview)
+
+        split = QSplitter(Qt.Horizontal, self)
+        split.addWidget(self._build_controls())
+        split.addWidget(self._build_preview())
+        split.setStretchFactor(0, 0)
+        split.setStretchFactor(1, 1)
+
+        outer = QVBoxLayout(self)
+        outer.addWidget(split)
+
+        self._refresh_list()
+        if self.saved_panels:
+            self.list.setCurrentRow(0)
+        self._schedule_preview()
+
+    # --- construction -------------------------------------------------------
+    def _build_controls(self) -> QWidget:
+        w = QWidget()
+        v = QVBoxLayout(w)
+        v.setContentsMargins(0, 0, 0, 0)
+
         form = QFormLayout()
         self.name_combo = QComboBox()
         self.name_combo.setEditable(True)
         self.name_combo.addItems(["Figure 1", "Figure 2", "Extended Data Figure 1",
                                   "Supplementary Figure 1"])
+        self.name_combo.currentTextChanged.connect(self._schedule_preview)
         form.addRow("Figure name", self.name_combo)
         self.cols_combo = QComboBox()
         self.cols_combo.addItems(["Auto", "1", "2", "3", "4"])
+        self.cols_combo.currentTextChanged.connect(self._schedule_preview)
         form.addRow("Columns", self.cols_combo)
-        self.width_spin = QSpinBox()
-        self.width_spin.setRange(60, 400)
-        self.width_spin.setValue(180)
-        form.addRow("Figure width (mm)", self.width_spin)
         self.dpi_spin = QSpinBox()
         self.dpi_spin.setRange(72, 600)
         self.dpi_spin.setValue(300)
-        form.addRow("Panel DPI", self.dpi_spin)
+        form.addRow("Export DPI", self.dpi_spin)
         v.addLayout(form)
 
         v.addWidget(QLabel("Panels (order = A, B, C ...):"))
         self.list = QListWidget()
-        self._refresh_list()
+        self.list.currentRowChanged.connect(self._on_panel_selected)
         v.addWidget(self.list)
 
         row = QHBoxLayout()
@@ -377,20 +417,82 @@ class FigureBuilderDialog(QDialog):
             row.addWidget(b)
         v.addLayout(row)
 
+        # --- per-panel size (inches) ---
+        self.size_group = QGroupBox("Selected panel size")
+        sg = QFormLayout(self.size_group)
+        hint = QLabel("Approximate size in inches (1 in = 2.54 cm). Width × height, "
+                      "like Matplotlib's figsize — e.g. 4×4 is square, 4×6 is taller. "
+                      "The panel keeps its own proportions (never stretched), so a larger "
+                      "number just makes a larger version of the same figure.")
+        hint.setWordWrap(True)
+        hint.setStyleSheet("color: #666;")
+        sg.addRow(hint)
+        self.pw_spin = QDoubleSpinBox()
+        self.pw_spin.setRange(1.0, 12.0); self.pw_spin.setSingleStep(0.5)
+        self.pw_spin.setValue(3.2); self.pw_spin.setSuffix(" in")
+        self.pw_spin.valueChanged.connect(self._on_size_changed)
+        sg.addRow("Width", self.pw_spin)
+        self.ph_spin = QDoubleSpinBox()
+        self.ph_spin.setRange(0.0, 12.0); self.ph_spin.setSingleStep(0.5)
+        self.ph_spin.setValue(0.0); self.ph_spin.setSuffix(" in")
+        self.ph_spin.setSpecialValueText("auto (keep ratio)")
+        self.ph_spin.valueChanged.connect(self._on_size_changed)
+        sg.addRow("Height", self.ph_spin)
+        self.size_group.setEnabled(False)
+        v.addWidget(self.size_group)
+
+        # --- figure-wide fonts ---
+        font_group = QGroupBox("Fonts (points, applied to all panels)")
+        fg = QFormLayout(font_group)
+        self.text_spin = self._font_spin(self._FONT_DEFAULTS["text"])
+        self.axis_spin = self._font_spin(self._FONT_DEFAULTS["axis"])
+        self.tick_spin = self._font_spin(self._FONT_DEFAULTS["tick"])
+        self.legend_spin = self._font_spin(self._FONT_DEFAULTS["legend"])
+        self.label_spin = self._font_spin(self._FONT_DEFAULTS["label"])
+        fg.addRow("Text (general)", self.text_spin)
+        fg.addRow("Axis labels", self.axis_spin)
+        fg.addRow("Tick numbers", self.tick_spin)
+        fg.addRow("Legend", self.legend_spin)
+        fg.addRow("Panel letters (A, B ...)", self.label_spin)
+        v.addWidget(font_group)
+
         self.legend_text = QPlainTextEdit()
         self.legend_text.setReadOnly(True)
-        self.legend_text.setPlaceholderText("Draft legend appears here after building.")
-        self.legend_text.setMaximumHeight(90)
+        self.legend_text.setPlaceholderText("Draft legend appears here.")
+        self.legend_text.setMaximumHeight(80)
         v.addWidget(self.legend_text)
 
         act = QHBoxLayout()
-        build = QPushButton("Build && export"); build.clicked.connect(self._build_export)
-        act.addWidget(build)
+        save = QPushButton("Save figure..."); save.clicked.connect(self._save)
+        act.addWidget(save)
+        close = QPushButton("Close"); close.clicked.connect(self.reject)
+        act.addWidget(close)
         v.addLayout(act)
-        bb = QDialogButtonBox(QDialogButtonBox.Close)
-        bb.rejected.connect(self.reject)
-        v.addWidget(bb)
 
+        w.setMaximumWidth(430)
+        return w
+
+    def _font_spin(self, default: float) -> QDoubleSpinBox:
+        s = QDoubleSpinBox()
+        s.setRange(4.0, 40.0); s.setSingleStep(0.5); s.setValue(default); s.setSuffix(" pt")
+        s.valueChanged.connect(self._schedule_preview)
+        return s
+
+    def _build_preview(self) -> QWidget:
+        w = QWidget()
+        v = QVBoxLayout(w)
+        v.setContentsMargins(0, 0, 0, 0)
+        v.addWidget(QLabel("Live preview"))
+        self.preview_scroll = QScrollArea()
+        self.preview_scroll.setWidgetResizable(True)
+        self.preview_scroll.setStyleSheet("background: #f5f5f5;")
+        self.preview_label = QLabel("Preview appears here.")
+        self.preview_label.setAlignment(Qt.AlignCenter)
+        self.preview_scroll.setWidget(self.preview_label)
+        v.addWidget(self.preview_scroll)
+        return w
+
+    # --- panel list ---------------------------------------------------------
     def _refresh_list(self) -> None:
         self.list.clear()
         import string
@@ -400,6 +502,27 @@ class FigureBuilderDialog(QDialog):
             title = p.get("title") or p.get("plot_type", "panel")
             QListWidgetItem(f"{label}. {title}", self.list)
 
+    def _on_panel_selected(self, i: int) -> None:
+        if not (0 <= i < len(self.saved_panels)):
+            self.size_group.setEnabled(False)
+            return
+        self._syncing = True
+        p = self.saved_panels[i]
+        self.size_group.setEnabled(True)
+        self.pw_spin.setValue(float(p.get("width_in") or 3.2))
+        self.ph_spin.setValue(float(p.get("height_in") or 0.0))
+        self._syncing = False
+
+    def _on_size_changed(self, _=None) -> None:
+        if self._syncing:
+            return
+        i = self.list.currentRow()
+        if 0 <= i < len(self.saved_panels):
+            self.saved_panels[i]["width_in"] = float(self.pw_spin.value())
+            h = float(self.ph_spin.value())
+            self.saved_panels[i]["height_in"] = h if h > 0 else None
+        self._schedule_preview()
+
     def _move(self, delta: int) -> None:
         i = self.list.currentRow()
         j = i + delta
@@ -407,12 +530,14 @@ class FigureBuilderDialog(QDialog):
             self.saved_panels[i], self.saved_panels[j] = self.saved_panels[j], self.saved_panels[i]
             self._refresh_list()
             self.list.setCurrentRow(j)
+            self._schedule_preview()
 
     def _remove(self) -> None:
         i = self.list.currentRow()
         if 0 <= i < len(self.saved_panels):
             self.saved_panels.pop(i)
             self._refresh_list()
+            self._schedule_preview()
 
     def _duplicate(self) -> None:
         i = self.list.currentRow()
@@ -421,38 +546,88 @@ class FigureBuilderDialog(QDialog):
 
             self.saved_panels.insert(i + 1, copy.deepcopy(self.saved_panels[i]))
             self._refresh_list()
+            self._schedule_preview()
 
-    def _build_export(self) -> None:
+    # --- building -----------------------------------------------------------
+    def _make_layout(self):
+        from make_my_figure_core.panels import FigureLayout
+
+        ncols_txt = self.cols_combo.currentText()
+        ncols = None if ncols_txt == "Auto" else int(ncols_txt)
+        return FigureLayout(
+            ncols=ncols,
+            panel_dpi=self.dpi_spin.value(),
+            label_size=float(self.label_spin.value()),
+            base_font_pt=float(self.text_spin.value()),
+            axis_font_pt=float(self.axis_spin.value()),
+            tick_label_pt=float(self.tick_spin.value()),
+            legend_pt=float(self.legend_spin.value()),
+        )
+
+    def _build_mpf(self):
+        from make_my_figure_core.panels import MultiPanelFigure, Panel
+
+        mpf = MultiPanelFigure(name=self.name_combo.currentText(), layout=self._make_layout())
+        for p in self.saved_panels:
+            mpf.add_panel(Panel(
+                plot_spec=p.get("plot_spec"), table=p.get("table"),
+                aux=p.get("aux") or {}, title=p.get("title", ""),
+                stats_spec=(p.get("plot_spec") or {}).get("statistics"),
+                width_in=p.get("width_in"), height_in=p.get("height_in"),
+            ))
+        return mpf
+
+    def _schedule_preview(self, *args) -> None:
+        self._preview_timer.start()
+
+    def _update_preview(self) -> None:
+        import io
+
+        import matplotlib.pyplot as plt
+
+        from make_my_figure_core.panels import build_figure, draft_legend
+
+        if not self.saved_panels:
+            self.preview_label.setText("Save at least one plot as a panel first.")
+            return
+        mpf = self._build_mpf()
+        try:
+            fig = build_figure(mpf)
+        except Exception as exc:  # noqa: BLE001 - surface errors in the preview pane
+            self.preview_label.setText(f"Preview error:\n{exc}")
+            return
+        buf = io.BytesIO()
+        fig.savefig(buf, format="png", dpi=110, bbox_inches="tight",
+                    facecolor=fig.get_facecolor())
+        plt.close(fig)
+        pix = QPixmap()
+        pix.loadFromData(buf.getvalue())
+        avail = self.preview_scroll.viewport().width() - 8
+        if avail > 40 and pix.width() > avail:
+            pix = pix.scaledToWidth(avail, Qt.SmoothTransformation)
+        self.preview_label.setPixmap(pix)
+        mpf.legend_text = draft_legend(mpf)
+        self.legend_text.setPlainText(mpf.legend_text)
+
+    def _save(self) -> None:
         if not self.saved_panels:
             QMessageBox.information(self, "No panels", "Save at least one plot as a panel first.")
             return
         from make_my_figure_core.panels import (
-            FigureLayout,
-            MultiPanelFigure,
-            Panel,
             build_figure,
             draft_legend,
             export_multipanel,
             multipanel_sidecar,
         )
 
-        ncols_txt = self.cols_combo.currentText()
-        ncols = None if ncols_txt == "Auto" else int(ncols_txt)
-        layout = FigureLayout(ncols=ncols, fig_width_mm=float(self.width_spin.value()),
-                              panel_dpi=self.dpi_spin.value())
-        mpf = MultiPanelFigure(name=self.name_combo.currentText(), layout=layout)
-        for p in self.saved_panels:
-            mpf.add_panel(Panel(plot_spec=p.get("plot_spec"), table=p.get("table"),
-                                aux=p.get("aux") or {}, title=p.get("title", ""),
-                                stats_spec=(p.get("plot_spec") or {}).get("statistics")))
+        mpf = self._build_mpf()
         try:
             fig = build_figure(mpf)
         except Exception as exc:
             QMessageBox.critical(self, "Build failed", str(exc))
             return
         mpf.legend_text = draft_legend(mpf)
-        self.legend_text.setPlainText(mpf.legend_text)
-        path, _ = QFileDialog.getSaveFileName(self, "Export multi-panel figure",
+        path, _ = QFileDialog.getSaveFileName(self, "Save multi-panel figure",
                                               f"{mpf.name.replace(' ', '_')}.png",
                                               "PNG (*.png);;SVG (*.svg);;PDF (*.pdf)")
         if not path:
@@ -460,4 +635,7 @@ class FigureBuilderDialog(QDialog):
         base, ext = path.rsplit(".", 1) if "." in path else (path, "png")
         export_multipanel(fig, base, [ext.lower(), "svg", "pdf"], dpi=self.dpi_spin.value())
         multipanel_sidecar(mpf, base)
-        QMessageBox.information(self, "Exported", f"Wrote {mpf.name} and sidecar next to:\n{path}")
+        import matplotlib.pyplot as plt
+
+        plt.close(fig)
+        QMessageBox.information(self, "Saved", f"Wrote {mpf.name} and sidecar next to:\n{path}")
