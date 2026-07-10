@@ -1,8 +1,11 @@
 name: Build desktop releases
 
 # Builds standalone desktop apps for Windows, macOS, and Linux.
-# Triggered manually or on a version tag. Does NOT publish anything publicly
-# unless a maintainer creates a release; it only uploads build artifacts.
+# On a version tag (v*), the built installers are attached directly to the
+# matching GitHub Release. Release assets are stored separately from Actions
+# artifacts, so they do NOT count against the Actions artifact-storage quota.
+# A manual (workflow_dispatch) run just builds + smoke-tests; it publishes
+# nothing (tag a version to cut a release).
 on:
   workflow_dispatch:
   push:
@@ -10,7 +13,7 @@ on:
       - "v*"
 
 permissions:
-  contents: read
+  contents: write   # needed to create/upload GitHub Release assets
 
 jobs:
   build:
@@ -94,26 +97,37 @@ jobs:
         run: |
           .\dist\MakeMyFigure\MakeMyFigure.exe --selftest
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: MakeMyFigure-${{ matrix.os }}
-          path: |
-            dist/*.dmg
-            dist/*.AppImage
-            dist/*.exe
-            dist/*-windows.zip
-            dist/*-macos.zip
-            dist/*-linux.tar.gz
-          if-no-files-found: warn
-          # Build artifacts are large (~4 GB across all platforms per run) and
-          # regenerable from any tag/commit, so expire them quickly to avoid
-          # exhausting Actions storage. Bump only if you need older builds around.
-          retention-days: 3
+      - name: Publish installers to the GitHub Release
+        # Attaches this platform's installers to the Release for the tag being
+        # built. Release assets live outside the Actions artifact-storage quota,
+        # so this never hits the "Artifact storage quota" limit that previously
+        # blocked uploads. Tag builds only (a Release exists only for a tag).
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          files=(dist/*.dmg dist/*.AppImage dist/*.exe dist/*-windows.zip dist/*-macos.zip dist/*-linux.tar.gz)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No installer files found in dist/ — nothing to publish."
+            exit 0
+          fi
+          # Create the Release if it doesn't exist yet. The three matrix jobs run
+          # in parallel, so one wins the create and the others get "already
+          # exists"; '|| true' lets those proceed straight to the upload.
+          gh release create "$GITHUB_REF_NAME" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Make My Figure $GITHUB_REF_NAME" \
+            --notes "Automated build. Download the installer for your platform below." \
+            --verify-tag || true
+          gh release upload "$GITHUB_REF_NAME" "${files[@]}" --repo "$GITHUB_REPOSITORY" --clobber
 
 # Notes:
 # * Unsigned builds are expected; signing steps run only when the relevant
 #   secrets are present (see docs/CODE_SIGNING.md). Absent secrets must NOT fail
 #   the build.
-# * This workflow uploads build artifacts only. Creating a public GitHub Release
-#   is a separate, manual maintainer action.
+# * Tagging v* builds and publishes a Release with installer assets. Assets are
+#   Release storage (not Actions artifacts), so they don't consume the artifact
+#   quota. Release notes can be edited afterwards with `gh release edit <tag>`.
