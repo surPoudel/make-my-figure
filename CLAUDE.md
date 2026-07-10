@@ -36,8 +36,6 @@ pytest -k "not gui"                       # skip Qt GUI tests if PySide6 is abse
 python scripts/generate_example_data.py   # rebuilds examples/ + example_data_manifest.json
 python scripts/generate_stats_examples.py # rebuilds examples/statistics/ (11 stats workflows)
 python scripts/generate_stats_qa_gallery.py  # reports/stats_qa_gallery.png (visual QA)
-python scripts/generate_rnaseq_examples.py   # rebuilds examples/rnaseq/ (DE/matrix/raw-count)
-python scripts/generate_rnaseq_qa_gallery.py # reports/rnaseq_qa_gallery.png (visual QA)
 python scripts/build_learned_styles.py    # derives style_profiles/learned/*.json from figure_library/
 python scripts/harvest_library.py --papers 10   # CC-BY-only figure harvest (network)
 
@@ -122,26 +120,15 @@ Data flows: **loader → PlotSpec (validated) → renderer → RenderResult → 
   under `metadata["statistics"]` — don't confuse the two). Integrated in: barplot,
   box_violin, grouped_barplot (within-x brackets), scatter/survival/stacked (corner panels).
 
-- **RNA-seq** (`rnaseq/`): three input modes behind one detection entrypoint
-  (`detect.detect_input_mode`). Mode A precomputed DE table → `de_table.parse_de_table` +
-  `classify_de` + `volcano_spec_from_de` (p-values read verbatim, never recomputed). Mode B
-  normalized matrix → `expression.build_expression_matrix` + transforms/gene-selection +
-  `heatmap_spec_from_expression` (feeds the core heatmap renderer; optional sample-annotation
-  strips via `spec["column_annotations"]`). Mode C raw counts + metadata → `runner.run_de_pipeline`
-  shells out to R (subprocess **arg list**, never a shell string) running one of `rscript.DE_SCRIPTS`:
-  `edger_limma_voom` (**edgeR TMM+filter + limma-voom + eBayes moderated t**, generalizes
-  `test_matrix/pipeline_*.R`) or `deseq2` (**DESeq2 median-of-ratios + NB GLM + Wald**, VST matrix);
-  select via `run_de_pipeline(..., method=)`. Both add covariates/batch and normalize output columns
-  to one schema (`logFC/AveExpr/t/P.Value/adj.P.Val`) so plotting is method-agnostic.
-  `check_r_environment(method=)` gates it; missing R/packages raises `RDependencyError` — **never a
-  t-test fallback**. `r_setup.install_r_environment()` is the on-demand installer (downloads
-  micromamba, builds a private conda env with r-base + bioconductor-edger/limma/deseq2 in the app-data
-  dir); `find_rscript` prefers `MAKE_MY_FIGURE_RSCRIPT` → managed env → PATH, so the base installer is
-  never bloated with R. `spec.RnaSeqSpec` is the reproducibility record. `load_rnaseq_table`
-  promotes R's unnamed row-name (gene id) into a `gene_id` column. Loaders' index inference already
-  lands that id as the frame index; detection relies on it. R is optional and usually absent in
-  dev/CI, so R-dependent tests skip. GUI: `apps/desktop_app/rnaseq_panel.py` (`RnaSeqDialog`) and
-  `apps/streamlit_app/rnaseq_view.py`.
+- **DE-column detection** (`de_detect.py`): `detect_de_columns(df)` makes a best-guess
+  mapping of DE-result roles (logFC / p_value / adj_p / gene_symbol / …) to actual column
+  names via case-insensitive alias lists (`DE_COLUMN_ALIASES`), covering edgeR/limma
+  (`logFC`/`P.Value`/`adj.P.Val`) and DESeq2 (`log2FoldChange`/`pvalue`/`padj`) headers.
+  Pure pandas, no R. Unresolved roles come back `None` (never fabricated). Used by the
+  desktop volcano prefill (`main.py::_volcano_prefill`) and the Streamlit volcano mapping so
+  the user confirms/overrides the guess in "Map columns". **There is no DE pipeline**: Make My
+  Figure never computes DE statistics or runs R — it plots a DE table you already have (→
+  volcano) or a normalized matrix (→ heatmap/PCA). P-values are always read verbatim.
 
 - **Statistics annotations** (`statistics/method_reporting.py`): `render_annotation(result, cfg)`
   is the single label builder — content modes (stars/p/p_adj/stat/effect/combos/full/flags) and a
@@ -150,7 +137,7 @@ Data flows: **loader → PlotSpec (validated) → renderer → RenderResult → 
   the annotation block (`schemas.default_annotation`), back-compatible with the old `mode`.
 
 - **App navigation**: desktop `MainWindow.reset_to_upload()` (File → Home / Upload New Data, or the
-  workbench button) clears data/spec/result/stats/rnaseq and returns to the welcome page without
+  workbench button) clears data/spec/result/stats and returns to the welcome page without
   restart — distinct from the Matplotlib toolbar `home` (zoom/pan reset). Streamlit clears
   `st.session_state` + reruns.
 
@@ -171,7 +158,7 @@ Data flows: **loader → PlotSpec (validated) → renderer → RenderResult → 
   two tabs); Streamlit: the "Define groups" expander in `streamlit_app.py`. Both GUIs also have
   an **editable preview table** (edits write back to the DataFrame and re-render live) and
   **user-confirmable column mapping** (volcano DE columns auto-detected via
-  `rnaseq.detect.detect_de_columns`, then confirmed/overridden in "Map columns").
+  `de_detect.detect_de_columns`, then confirmed/overridden in "Map columns").
 
 - **Harvest** (`harvest/`): a license-gated, HTTPS-only pipeline that downloads figures/data
   **only** from CC BY/CC BY-SA/CC0 open-access papers into `figure_library/` (git-ignored).
@@ -184,9 +171,8 @@ Data flows: **loader → PlotSpec (validated) → renderer → RenderResult → 
   and read via `examples.py` + `example_data_manifest.json` — edit the generator, not the
   outputs. `mock_data/` holds the golden test inputs.
 - `app/` (singular) is a stale empty leftover; the live frontends are under `apps/` (plural).
-- Statistics, annotations, multi-panel, and RNA-seq are **implemented** (see the sections above).
-  The invariant across all of them: **never fabricate a statistic/p-value** — every value shown
-  comes from a stored result, and RNA-seq DE never falls back to a t-test when R is absent.
-- `test_matrix/` holds the user's real RNA-seq example inputs (DE table, voom matrix, metadata,
-  config, reference R script). `examples/rnaseq/` holds small committed synthetic/derived copies
-  used by tests; R-dependent tests skip when `Rscript` is unavailable.
+- Statistics, annotations, and multi-panel are **implemented** (see the sections above). The
+  invariant across all of them: **never fabricate a statistic/p-value** — every value shown
+  comes from a stored result. There is **no RNA-seq/DE pipeline and no R dependency**: the app
+  plots data you provide (a DE-result table → volcano, a normalized matrix → heatmap/PCA);
+  DE p-values are read verbatim, never recomputed.

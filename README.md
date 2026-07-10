@@ -87,35 +87,21 @@ hide-nonsignificant option. Every value shown comes from the stored StatsSpec
 result (hiding it on the figure never removes it from the export). See
 [docs/STATISTICAL_ANNOTATION_FORMATTING.md](docs/STATISTICAL_ANNOTATION_FORMATTING.md).
 
-### RNA-seq: volcano & heatmap from counts, matrices, or DE results
+### Volcano from a DE-result table (confirmable columns)
 
-An **RNA-seq** workflow (desktop + Streamlit) supports three inputs and never
-fabricates DE statistics:
+Already have a **differential-expression result table** (from edgeR/limma, DESeq2,
+or any tool)? Drop it in and pick **Volcano plot**. The app **auto-detects** the
+log-fold-change and p-value columns across the common header conventions —
+edgeR/limma (`logFC` / `P.Value` / `adj.P.Val`) and DESeq2 (`log2FoldChange` /
+`pvalue` / `padj`) — and lets you **confirm or override** each column in *Map
+columns*, so mismatched headers never silently select the wrong column. P-values
+are read verbatim from your table; Make My Figure **never computes or fabricates
+statistics**. You get Up/Down/n.s. classification, threshold lines, gene labels,
+and a count subtitle.
 
-- **Precomputed DE table** (e.g. a limma/edgeR `topTable`) → publication-grade
-  **volcano** with auto-detected columns, Up/Down/n.s. classification, threshold
-  lines, gene labels, and count subtitle.
-- **Normalized matrix** (e.g. voom) → clustered **heatmap** / PCA / correlation,
-  with transforms (z-score, log2CPM, …), gene selection, and sample-annotation
-  strips.
-- **Raw counts + metadata (+ config)** → a reproducible DE pipeline run through
-  R — choose **edgeR + limma-voom** (empirical Bayes moderated t-test) or
-  **DESeq2** (negative-binomial Wald test) — reported with its exact design
-  formula and contrasts. If R is missing, click **"Set up R for RNA-seq"** to
-  auto-install a self-contained R + edgeR/limma/DESeq2 (prebuilt binaries, no
-  compiler); the app never falls back to a t-test.
-
-Exports include an `RnaSeqSpec` JSON (inputs + checksums, design, method, R/
-package versions, thresholds) and a method report. See
-[docs/RNASEQ_WORKFLOW.md](docs/RNASEQ_WORKFLOW.md),
-[docs/VOLCANO_FROM_DE_RESULTS.md](docs/VOLCANO_FROM_DE_RESULTS.md),
-[docs/RNASEQ_RAW_COUNTS_TO_VOLCANO.md](docs/RNASEQ_RAW_COUNTS_TO_VOLCANO.md), and
-[docs/HEATMAP_FROM_EXPRESSION_MATRIX.md](docs/HEATMAP_FROM_EXPRESSION_MATRIX.md).
-
-> **RNA-seq caution.** Differential expression depends on experimental design,
-> normalization, model specification, covariates, and multiple-testing
-> correction. Make My Figure reports the analysis method and design, but users
-> remain responsible for confirming that the model matches their study design.
+> Make My Figure does not run a differential-expression pipeline — bring a
+> normalized matrix (→ heatmap / PCA) or a DE-result table (→ volcano). You remain
+> responsible for confirming the upstream analysis matches your study design.
 
 ### Define groups in-app — no metadata file needed
 
@@ -142,7 +128,7 @@ And the **preview table is editable**: change a cell (desktop) or edit rows
 
 Loaded an example and want your own data? Use **Home / Upload New Data** (desktop:
 top-left button or File menu; Streamlit: the "Reset / Upload new data" sidebar
-button) to clear the dataset, plot, statistics, and RNA-seq results and return to
+button) to clear the dataset, plot, and statistics and return to
 the upload page — no restart. It's distinct from the Matplotlib toolbar "home"
 (which only resets plot zoom/pan).
 

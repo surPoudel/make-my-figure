@@ -115,12 +115,7 @@ if st.sidebar.button("🏠 Reset / Upload new data", use_container_width=True,
 st.sidebar.divider()
 st.sidebar.header("1. Data")
 source_mode = st.sidebar.radio("Data source",
-                               ["Bundled sample", "Upload file", "RNA-seq"])
-if source_mode == "RNA-seq":
-    from apps.streamlit_app.rnaseq_view import render_rnaseq_workflow
-
-    render_rnaseq_workflow(st)
-    st.stop()
+                               ["Bundled sample", "Upload file"])
 
 table_info = None
 table_name = None

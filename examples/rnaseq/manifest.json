@@ -1,8 +1,0 @@
-{
-  "examples": [
-    "de_result",
-    "normalized_matrix",
-    "raw_counts"
-  ],
-  "note": "Derived from test_matrix/ or synthesized; synthetic and safe to commit."
-}

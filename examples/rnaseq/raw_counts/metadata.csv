@@ -1,9 +1,0 @@
-SampleID,Group,Sex,Age
-C0,Ctrl,M,5.1
-C1,Ctrl,M,4.5
-C2,Ctrl,F,5.4
-C3,Ctrl,F,5.0
-T0,Treatment,M,4.4
-T1,Treatment,F,4.8
-T2,Treatment,F,5.3
-T3,Treatment,F,5.5

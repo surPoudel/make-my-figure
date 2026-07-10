@@ -185,7 +185,6 @@ class MainWindow(QMainWindow):
         self._option_widgets: dict[str, QWidget] = {}
         self._current_result = None
         self._current_spec = None
-        self._rnaseq_state = None
         self._canvas = None
         self._toolbar = None
         self._suppress_change = False   # re-entrancy guard for plot-type changes
@@ -268,10 +267,6 @@ class MainWindow(QMainWindow):
                                  "(clears the current data, plot, and statistics).")
         self.home_btn.clicked.connect(self.action_home_upload)
         nav_row.addWidget(self.home_btn)
-        self.rnaseq_btn = QPushButton("\U0001F9EC  RNA-seq…")
-        self.rnaseq_btn.setToolTip("Open the RNA-seq workflow (DE volcano, heatmap, raw-count DE).")
-        self.rnaseq_btn.clicked.connect(self.action_rnaseq)
-        nav_row.addWidget(self.rnaseq_btn)
         self.groups_btn = QPushButton("\U0001F5C2  Define groups…")
         self.groups_btn.setToolTip("Assign sample columns to groups (wide matrix) or label rows "
                                    "by a column's values — no metadata file needed.")
@@ -842,13 +837,12 @@ class MainWindow(QMainWindow):
     def reset_to_upload(self):
         """Clear the active session and show the upload/welcome page.
 
-        Clears dataset, plot spec, render result, figure preview, statistics
-        panel results, and any RNA-seq state — without restarting the app.
+        Clears dataset, plot spec, render result, figure preview, and statistics
+        panel results — without restarting the app.
         """
         self.data = None
         self._current_spec = None
         self._current_result = None
-        self._rnaseq_state = None
         self._clear_figure(show_placeholder=True)
         if hasattr(self, "stats_panel"):
             self.stats_panel.show_report(None)
@@ -858,13 +852,6 @@ class MainWindow(QMainWindow):
         self._hide_example_prompt()
         self.stack.setCurrentIndex(0)
         self.statusBar().showMessage("Ready — load a data file or an example to begin.")
-
-    def action_rnaseq(self):
-        """Open the RNA-seq workflow dialog."""
-        from apps.desktop_app.rnaseq_panel import RnaSeqDialog
-
-        dlg = RnaSeqDialog(self.controller, self)
-        dlg.exec()
 
     def action_define_groups(self):
         """Open the in-app grouping dialog and adopt the resulting table."""
@@ -924,7 +911,7 @@ class MainWindow(QMainWindow):
         if self.data is None:
             return {}
         try:
-            from make_my_figure_core.rnaseq.detect import detect_de_columns
+            from make_my_figure_core.de_detect import detect_de_columns
 
             det = detect_de_columns(self.data.info.dataframe)
         except Exception:

@@ -5,21 +5,12 @@ name: Build desktop releases
 # unless a maintainer creates a release; it only uploads build artifacts.
 on:
   workflow_dispatch:
-    inputs:
-      bundle_r:
-        description: "Bundle a self-contained R + edgeR/limma/DESeq2 into the app (large, ~1-1.5GB installers; offline RNA-seq DE with no setup)"
-        type: boolean
-        default: false
   push:
     tags:
       - "v*"
 
 permissions:
   contents: read
-
-env:
-  # Opt-in R bundling (workflow_dispatch input). Off for tag/auto builds.
-  MMF_BUNDLE_R: ${{ github.event.inputs.bundle_r || 'false' }}
 
 jobs:
   build:
@@ -45,22 +36,6 @@ jobs:
 
       - name: Generate placeholder icons
         run: python scripts/make_icons.py
-
-      # Optional: install a self-contained R + edgeR/limma/DESeq2 and let the
-      # PyInstaller spec bundle it (via MMF_BUNDLE_R_ENV). Off by default.
-      - name: Bundle R environment (optional)
-        if: env.MMF_BUNDLE_R == 'true'
-        shell: bash
-        run: |
-          python - <<'PY'
-          import os
-          os.environ["MAKE_MY_FIGURE_DATA_DIR"] = os.environ["RUNNER_TEMP"]
-          from make_my_figure_core.rnaseq import r_setup as rs
-          res = rs.install_r_environment(progress=lambda m: print(m, flush=True))
-          assert res["ok"], "R bundle install failed"
-          print("bundled r_env at", rs.r_env_prefix())
-          PY
-          echo "MMF_BUNDLE_R_ENV=$RUNNER_TEMP/r_env" >> "$GITHUB_ENV"
 
       # ---- Linux ----
       - name: Install Linux AppImage tooling

@@ -42,18 +42,6 @@ hiddenimports += ["pandas", "statsmodels.api", "statsmodels.formula.api",
 # statsmodels/scipy bundle small data files needed at runtime.
 datas += collect_data_files("statsmodels")
 
-# Optional: bundle a self-contained R env (edgeR/limma/DESeq2) when the CI sets
-# MMF_BUNDLE_R_ENV. Shipped as data under _MEIPASS/r_env; the app's
-# rnaseq.r_setup.bundled_rscript_path() finds it at runtime. Off by default so
-# the standard installers stay small (~100-230 MB vs ~1-1.5 GB bundled).
-_r_env = os.environ.get("MMF_BUNDLE_R_ENV")
-if _r_env and os.path.isdir(_r_env):
-    for _root, _dirs, _files in os.walk(_r_env):
-        for _f in _files:
-            _abs = os.path.join(_root, _f)
-            _rel = os.path.relpath(_abs, _r_env)
-            datas.append((_abs, os.path.join("r_env", os.path.dirname(_rel))))
-
 # Per-platform icon: Windows .ico, macOS .icns (if present), Linux uses PNG at runtime.
 icon = None
 if sys.platform.startswith("win"):
