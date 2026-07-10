@@ -72,7 +72,11 @@ class FigureLayout:
     label_dy: float = 1.04
     panel_dpi: int = 300                     # raster DPI for embedded panel content
     background: str = "white"
-    show_titles: bool = True
+    # Per-panel titles are OFF by default: the panel letter (A, B, ...) plus the
+    # figure legend already identify each panel, and a centered title collides
+    # with the top-left label. The title stays populated on the Panel for use in
+    # the auto-drafted legend; set True only if you explicitly want it drawn.
+    show_titles: bool = False
 
     def to_dict(self) -> Dict[str, Any]:
         return {
