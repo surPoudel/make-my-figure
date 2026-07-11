@@ -13,6 +13,10 @@ no Python, no terminal required.
 
 ## Features
 
+- **Pop-out / pop-in panels (v0.5)** — detach the Figure, Data & Messages, or
+  Plot Controls panels into floating windows (usable on a second monitor) via the
+  **View** menu, and dock them back with state preserved. See
+  [POP_OUT_PANELS.md](POP_OUT_PANELS.md).
 - **Welcome screen** — “Open data file”, “Use example data”, “Recent files”, “Help”.
 - **Data import** — `.xlsx`, `.csv`, `.tsv`; drag-and-drop onto the window; table
   preview with detected column types; friendly error messages for malformed files.

@@ -1,0 +1,26 @@
+{
+  "plot_type": "hierarchical_clustering",
+  "input_table": "data.csv",
+  "mapping": {
+    "row_id": "gene",
+    "cluster": "rows",
+    "k": 3,
+    "scale": "row_zscore",
+    "distance_metric": "euclidean",
+    "linkage_method": "average"
+  },
+  "journal_style": "nature_like",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  }
+}

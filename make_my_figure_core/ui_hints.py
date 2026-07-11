@@ -13,7 +13,7 @@ COLUMN_FIELDS: Dict[str, List[str]] = {
     "barplot_with_error_bar": ["x", "y", "color"],
     "grouped_barplot_with_error_bar": ["x", "group", "y"],
     "heatmap_clustered_matrix": ["row_id"],
-    "volcano_plot": ["x", "p", "label"],
+    "volcano_plot": ["x", "p", "label", "id_col"],
     "scatterplot_with_regression": ["x", "y", "color", "label"],
     "boxplot_or_violin_with_points": ["x", "y"],
     "lineplot_timecourse_with_error_band": ["x", "y", "color"],
@@ -46,6 +46,9 @@ COLUMN_FIELDS: Dict[str, List[str]] = {
     "spider_plot": ["subject", "time", "value", "group"],
     "sankey_plot": ["source", "target", "value"],
     "embedding_scatter": ["x", "y", "color", "shape", "label"],
+    # --- v0.5 ---
+    "hierarchical_clustering": ["row_id"],
+    "network_graph": ["source", "target", "weight"],
 }
 
 # Mapping keys that are columns of the PCA *metadata* table, not the matrix.
@@ -75,10 +78,30 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("cluster_rows", "Cluster rows", "bool", True),
         Option("cluster_columns", "Cluster columns", "bool", True),
         Option("color_scale", "Color scale", "choice", "diverging", ["diverging", "sequential"]),
+        # v0.5 clustering + highlighting
+        Option("scale", "Scale", "choice", "none",
+               ["none", "row_zscore", "column_zscore", "center_rows", "log"]),
+        Option("distance_metric", "Distance", "choice", "euclidean",
+               ["euclidean", "correlation", "cosine", "cityblock"]),
+        Option("linkage_method", "Linkage", "choice", "average",
+               ["average", "complete", "single", "ward"]),
+        Option("cluster_k_rows", "Row clusters (k, 0=off)", "number", 0, minimum=0, maximum=20, step=1, decimals=0),
+        Option("cluster_k_columns", "Column clusters (k, 0=off)", "number", 0, minimum=0, maximum=20, step=1, decimals=0),
+        Option("sort_by_cluster", "Sort by cluster", "bool", False),
     ],
     "volcano_plot": [
         Option("lfc_cutoff", "log2FC cutoff", "number", 1.0, minimum=0.0, maximum=20.0, step=0.5, decimals=2),
         Option("p_cutoff", "p-value cutoff", "number", 0.05, minimum=0.0, maximum=1.0, step=0.01, decimals=4),
+        # v0.5 annotation controls
+        Option("annotate", "Show labels", "bool", True),
+        Option("label_mode", "Label mode", "choice", "top_fdr",
+               ["top_fdr", "top_lfc", "top_up_down", "selected", "pasted", "significant_all"]),
+        Option("top_n", "Top N labels", "number", 10, minimum=0, maximum=60, step=1, decimals=0),
+        Option("top_n_up", "Top N up", "number", 8, minimum=0, maximum=40, step=1, decimals=0),
+        Option("top_n_down", "Top N down", "number", 8, minimum=0, maximum=40, step=1, decimals=0),
+        Option("label_by", "Label by", "choice", "symbol", ["symbol", "id", "both"]),
+        Option("show_arrows", "Arrows to points", "bool", True),
+        Option("label_box", "Label background box", "bool", False),
     ],
     "scatterplot_with_regression": [Option("fit_line", "Fit regression line", "bool", True)],
     "boxplot_or_violin_with_points": [
@@ -146,6 +169,31 @@ OPTIONS: Dict[str, List[Option]] = {
     ],
     "sankey_plot": [],
     "embedding_scatter": [],
+    # --- v0.5 ---
+    "hierarchical_clustering": [
+        Option("cluster", "Cluster", "choice", "rows", ["rows", "columns"]),
+        Option("k", "Number of clusters k", "number", 3, minimum=2, maximum=20, step=1, decimals=0),
+        Option("scale", "Scale", "choice", "row_zscore",
+               ["none", "row_zscore", "column_zscore", "center_rows", "log"]),
+        Option("distance_metric", "Distance", "choice", "euclidean",
+               ["euclidean", "correlation", "cosine", "cityblock"]),
+        Option("linkage_method", "Linkage", "choice", "average",
+               ["average", "complete", "single", "ward"]),
+    ],
+    "network_graph": [
+        Option("layout", "Layout", "choice", "spring",
+               ["spring", "kamada_kawai", "circular", "shell", "spectral", "multipartite", "fixed", "random"]),
+        Option("seed", "Layout seed", "number", 42, minimum=0, maximum=99999, step=1, decimals=0),
+        Option("color_by", "Color nodes by", "choice", "group", ["group", "value", "none"]),
+        Option("size_by", "Size nodes by", "choice", "degree", ["degree", "value"]),
+        Option("min_weight", "Min edge weight", "number", 0.0, minimum=0.0, maximum=100.0, step=0.1, decimals=2),
+        Option("corr_cutoff", "|correlation| cutoff", "number", 0.3, minimum=0.0, maximum=1.0, step=0.05, decimals=2),
+        Option("top_n_edges", "Top N edges (0=all)", "number", 0, minimum=0, maximum=5000, step=10, decimals=0),
+        Option("min_degree", "Min node degree", "number", 0, minimum=0, maximum=100, step=1, decimals=0),
+        Option("remove_isolates", "Remove isolated nodes", "bool", True),
+        Option("detect_communities", "Detect communities (heuristic)", "bool", False),
+        Option("node_labels", "Show node labels", "bool", True),
+    ],
 }
 
 

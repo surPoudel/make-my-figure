@@ -31,6 +31,10 @@
     "column_annotations": {
       "type": "array"
     },
+    "annotations": {
+      "type": "array",
+      "description": "Universal manual annotation layer (v0.5); list of AnnotationSpec objects."
+    },
     "statistics": {
       "type": "object"
     },

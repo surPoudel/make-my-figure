@@ -6,7 +6,11 @@
     "p": "adjusted_p_value",
     "label": "label",
     "lfc_cutoff": 1.0,
-    "p_cutoff": 0.05
+    "p_cutoff": 0.05,
+    "annotate": true,
+    "label_mode": "top_fdr",
+    "top_n": 10,
+    "show_arrows": true
   },
   "journal_style": "nature_like",
   "output": {

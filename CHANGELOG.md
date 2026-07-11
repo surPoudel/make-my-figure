@@ -2,6 +2,52 @@
 
 All notable changes to Make My Figure are recorded here.
 
+## [0.5.0] — networks, annotations, docking & clustering
+
+Builds on v0.4 (37 plot types total). Focus: publication-ready, refine-in-app
+figures. No breaking changes — existing plots, statistics annotations, exports,
+PlotSpec, desktop app, and Streamlit app are unchanged.
+
+### Added — plot types
+- **Network graph** (`network_graph`): edge-list / adjacency-matrix /
+  correlation-network inputs; spring/kamada-kawai/circular/shell/spectral/
+  multipartite/fixed layouts (reproducible via a stored seed); filtering
+  (weight, |r|, p/FDR, top-N edges/nodes, min degree, remove isolates); node
+  metrics (degree, betweenness/closeness/eigenvector centrality) and a network
+  summary; exportable filtered edge + node-metric tables. NetworkX-based.
+- **Hierarchical clustering** (`hierarchical_clustering`): cut the tree into `k`
+  clusters, cluster color strip, exported cluster-assignment table + summary;
+  scaling (row/col z-score, center, log) and distance/linkage options.
+
+### Added — annotations
+- **Universal manual annotation layer** (`spec['annotations']`,
+  `make_my_figure_core/annotations.py`): text, arrow, callout, box, region,
+  bracket, and reference lines in data/axes/figure coordinates, drawn as vector
+  artists and applied to every plot type through the central render path.
+
+### Changed — annotations & clustering on existing plots
+- **Volcano**: labels on/off, six label modes (top-FDR / top-|log2FC| / top
+  up+down / selected / pasted list / all-significant), displaced-label arrows,
+  label boxes/colors/size, auto `Up/Down/FDR` subtitle, and a max-labels warning.
+- **Heatmap**: scaling + distance/linkage options, `cluster_k_rows` /
+  `cluster_k_columns` color strips with exported assignments, `sort_by_cluster`,
+  and gene/sample highlighting via a pasted list (bold labels when others hidden).
+
+### Added — desktop
+- **Pop-out / pop-in panels** (`apps/desktop_app/panels_dock.py`): detach the
+  Figure, Data & Messages, or Plot Controls panels to floating (multi-monitor)
+  windows and dock them back with state preserved; View-menu actions + Dock All;
+  layout persisted via `QSettings`. Additive (reparenting, not `QDockWidget`).
+
+### Added — supporting
+- Shared `make_my_figure_core/clustering.py` (scaling, metric/linkage validation,
+  k-cut, assignment table, color mapping, summary).
+- `networkx` and `adjustText` added as dependencies.
+- Docs: `V0_5_NEW_FEATURES.md`, `NETWORK_GRAPH.md`, `ANNOTATIONS.md`,
+  `VOLCANO_ANNOTATIONS.md`, `HEATMAP_HIGHLIGHTING.md`, `HIERARCHICAL_CLUSTERING.md`,
+  `POP_OUT_PANELS.md`; example data for the new types (incl. edge-list /
+  adjacency / correlation network files); v0.5 visual QA gallery.
+
 ## [0.4.0] — manuscript plot-type expansion
 
 Adds **18 new plot types** (17 → 35) covering a much broader range of

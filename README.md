@@ -4,8 +4,8 @@
 
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
-![Tests](https://img.shields.io/badge/tests-600%2B%20passing-brightgreen)
-![Plot types](https://img.shields.io/badge/plot%20types-35-orange)
+![Tests](https://img.shields.io/badge/tests-640%2B%20passing-brightgreen)
+![Plot types](https://img.shields.io/badge/plot%20types-37-orange)
 ![Desktop](https://img.shields.io/badge/desktop-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 
 Make My Figure is a research-software tool for scientists who need publication-ready
@@ -140,7 +140,7 @@ the upload page — no restart. It's distinct from the Matplotlib toolbar "home"
 
 ## Supported plot types
 
-The current renderers (35):
+The current renderers (37):
 
 **Core (17):**
 
@@ -183,9 +183,37 @@ The current renderers (35):
 - Sankey / alluvial (two-stage)
 - UMAP / t-SNE embedding scatter
 
+**New in v0.5 (2):**
+
+- Network graph / interaction network
+- Hierarchical clustering (heatmap + k clusters)
+
 See **[docs/PLOT_TYPE_REQUIREMENTS.md](docs/PLOT_TYPE_REQUIREMENTS.md)** for the required and
-optional columns of each plot type, and **[docs/V0_4_NEW_PLOT_TYPES.md](docs/V0_4_NEW_PLOT_TYPES.md)**
-for the v0.4 additions (use cases, columns, and limitations).
+optional columns of each plot type, **[docs/V0_4_NEW_PLOT_TYPES.md](docs/V0_4_NEW_PLOT_TYPES.md)**
+for the v0.4 additions, and **[docs/V0_5_NEW_FEATURES.md](docs/V0_5_NEW_FEATURES.md)** for the
+v0.5 features below.
+
+## New in v0.5: networks, annotations, docking & clustering
+
+- **Network graph** — edge-list / adjacency / correlation inputs, force-directed
+  and other layouts, filtering, centrality metrics, exportable edge/node tables
+  ([docs/NETWORK_GRAPH.md](docs/NETWORK_GRAPH.md)).
+- **Universal manual annotations** — text, arrows, callouts, highlight boxes /
+  regions, brackets on any plot, stored in the PlotSpec
+  ([docs/ANNOTATIONS.md](docs/ANNOTATIONS.md)).
+- **Volcano annotation controls** — labels on/off, top-N / selected / pasted
+  gene lists, arrows from displaced labels ([docs/VOLCANO_ANNOTATIONS.md](docs/VOLCANO_ANNOTATIONS.md)).
+- **Heatmap highlighting & clustering** — highlight a pasted gene list, cluster
+  color strips, k selection ([docs/HEATMAP_HIGHLIGHTING.md](docs/HEATMAP_HIGHLIGHTING.md),
+  [docs/HIERARCHICAL_CLUSTERING.md](docs/HIERARCHICAL_CLUSTERING.md)).
+- **Full hierarchical clustering** — clustered heatmap, dendrogram, and a
+  clustering-result view that cuts into *k* clusters and exports the assignment.
+- **Pop-out / pop-in desktop panels** — detach the figure, data, or controls to
+  another monitor and dock them back ([docs/POP_OUT_PANELS.md](docs/POP_OUT_PANELS.md)).
+
+> Clustering and network visualizations are exploratory summaries. Users are
+> responsible for interpreting biological meaning and confirming that chosen
+> distance metrics, thresholds, and filters are appropriate.
 
 ## Publication-style defaults
 
