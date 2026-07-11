@@ -1,0 +1,29 @@
+{
+  "plot_type": "network_graph",
+  "input_table": "data.csv",
+  "mapping": {
+    "source": "source",
+    "target": "target",
+    "weight": "weight",
+    "layout": "spring",
+    "color_by": "group",
+    "seed": 42
+  },
+  "journal_style": "nature_like",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  },
+  "aux_tables": {
+    "nodes": "nodes.csv"
+  }
+}

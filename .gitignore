@@ -31,8 +31,13 @@ figure_library/
 *.AppDir/
 *.iconset/
 
-# Generated QA gallery / large outputs (regenerate via scripts/)
-outputs/
+# Generated QA gallery / large outputs (regenerate via scripts/). Keep the small
+# markdown QC audit reports tracked; ignore the large image/vector artifacts.
+outputs/**/*.png
+outputs/**/*.svg
+outputs/**/*.pdf
+outputs/**/*.tif
+outputs/**/*.tiff
 reports/*.png
 reports/example_figures/*.png
 reports/example_figures/*.svg

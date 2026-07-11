@@ -30,7 +30,7 @@ One row = one record for this analysis.
 
 ## Replace with your own data
 
-Upload PRECOMPUTED coordinates (one row per cell/sample). Point color can be a category (cluster/cell type) or a continuous value; the app picks a legend or colorbar. For v0.4, upload precomputed UMAP/t-SNE coordinates as a table; direct .h5ad/AnnData support is planned for a future version.
+Upload PRECOMPUTED coordinates (one row per cell/sample). Point color can be a category (cluster/cell type) or a continuous value; the app picks a legend or colorbar. Upload precomputed UMAP/t-SNE coordinates as a table; direct .h5ad/AnnData support is planned for a future version.
 
 Keep the **required column names** above (or remap columns in the app). Column
 order does not matter — the app validates by name and type.

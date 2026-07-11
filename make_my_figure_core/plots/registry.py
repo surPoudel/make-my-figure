@@ -30,10 +30,12 @@ from make_my_figure_core.plots import (
     forest,
     grouped_barplot,
     heatmap,
+    hierarchical_clustering,
     lineplot,
     lollipop,
     ma_plot,
     manhattan,
+    network_graph,
     oncoprint,
     paired_slope,
     pca,
@@ -98,6 +100,9 @@ _RENDERERS: Dict[str, Callable[..., RenderResult]] = {
     spider.PLOT_TYPE: spider.render,
     sankey.PLOT_TYPE: sankey.render,
     embedding_scatter.PLOT_TYPE: embedding_scatter.render,
+    # --- v0.5 ---
+    hierarchical_clustering.PLOT_TYPE: hierarchical_clustering.render,
+    network_graph.PLOT_TYPE: network_graph.render,
 }
 
 # Default column mappings per plot type (mirrors the mock-data manifest).
@@ -106,7 +111,8 @@ _DEFAULT_MAPPINGS: Dict[str, Dict[str, Any]] = {
     grouped_barplot.PLOT_TYPE: {"x": "genotype", "group": "treatment", "y": "expression", "error": "sem"},
     heatmap.PLOT_TYPE: {"row_id": "gene", "cluster_rows": True, "cluster_columns": True, "color_scale": "diverging"},
     volcano.PLOT_TYPE: {"x": "log2_fold_change", "p": "adjusted_p_value", "label": "label",
-                        "lfc_cutoff": 1.0, "p_cutoff": 0.05},
+                        "lfc_cutoff": 1.0, "p_cutoff": 0.05,
+                        "annotate": True, "label_mode": "top_fdr", "top_n": 10, "show_arrows": True},
     scatter.PLOT_TYPE: {"x": "x_marker", "y": "y_response", "color": "group", "fit_line": True},
     box_violin.PLOT_TYPE: {"x": "group", "y": "value", "kind": "box", "points": True},
     lineplot.PLOT_TYPE: {"x": "time_hours", "y": "signal", "color": "treatment", "error": "sem"},
@@ -152,6 +158,12 @@ _DEFAULT_MAPPINGS: Dict[str, Dict[str, Any]] = {
                        "group": "arm", "reference": 0},
     sankey.PLOT_TYPE: {"source": "baseline_response", "target": "outcome", "value": "n_patients"},
     embedding_scatter.PLOT_TYPE: {"x": "UMAP_1", "y": "UMAP_2", "color": "cell_type"},
+    # --- v0.5 ---
+    hierarchical_clustering.PLOT_TYPE: {"row_id": "gene", "cluster": "rows", "k": 3,
+                                        "scale": "row_zscore", "distance_metric": "euclidean",
+                                        "linkage_method": "average"},
+    network_graph.PLOT_TYPE: {"source": "source", "target": "target", "weight": "weight",
+                              "layout": "spring", "color_by": "group", "seed": 42},
 }
 
 # Human-friendly labels for the UI.
@@ -192,6 +204,9 @@ _DISPLAY_NAMES: Dict[str, str] = {
     spider.PLOT_TYPE: "Spider plot (longitudinal change)",
     sankey.PLOT_TYPE: "Sankey / alluvial flow (two-stage)",
     embedding_scatter.PLOT_TYPE: "UMAP / t-SNE embedding scatter",
+    # --- v0.5 ---
+    hierarchical_clustering.PLOT_TYPE: "Hierarchical clustering (heatmap + clusters)",
+    network_graph.PLOT_TYPE: "Network graph",
 }
 
 _EXPORT_FORMATS = ("svg", "png", "pdf", "tiff", "eps")
@@ -281,6 +296,20 @@ def render(
         result = renderer(spec, df, style)
     # Stamp the spec into metadata for a reproducibility sidecar.
     result.metadata.setdefault("spec", spec)
+
+    # Universal manual annotation layer (spec['annotations']): vector overlay
+    # applied to the primary axes of ANY plot type, before the QA check so it
+    # also flags annotation-induced clipping. Reproducible via the PlotSpec.
+    try:
+        from make_my_figure_core.annotations import apply_annotations, parse_annotations
+
+        anns = parse_annotations(spec.get("annotations"))
+        if anns and result.figure.axes:
+            result.metadata["n_manual_annotations"] = apply_annotations(
+                result.figure, result.figure.axes[0], anns, style)
+    except Exception as exc:  # annotations must never break the render
+        result.warnings.append(f"Manual annotations skipped: {exc}")
+
     # Publication-readiness check (advisory; never blocks rendering/export).
     try:
         from make_my_figure_core.qa.publication_check import check_publication_readiness

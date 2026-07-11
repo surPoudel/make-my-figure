@@ -201,6 +201,20 @@ class MainWindow(QMainWindow):
         self.stack.addWidget(self._build_welcome())   # index 0
         self.stack.addWidget(self._build_workbench())  # index 1
 
+        # Pop-out / pop-in panel manager (v0.5): detach panels to another monitor
+        # and dock them back without losing state. Guarded so a failure here can
+        # never stop the app from starting.
+        self._panels = None
+        try:
+            from apps.desktop_app.panels_dock import PanelManager
+
+            self._panels = PanelManager(self, self.settings)
+            self._panels.register("figure", "Figure", self.fig_container)
+            self._panels.register("data", "Data & Messages", self.right_tabs)
+            self._panels.register("controls", "Plot Controls", self._controls_scroll)
+        except Exception:
+            self._panels = None
+
         self._build_menu()
         geom = self.settings.value("window_geometry")
         if geom is not None:
@@ -362,6 +376,7 @@ class MainWindow(QMainWindow):
         scroll.setWidget(controls)
         scroll.setMinimumWidth(320)
         scroll.setMaximumWidth(480)
+        self._controls_scroll = scroll          # referenced by the pop-out manager
         splitter.addWidget(scroll)
 
         # Right: RStudio-like vertical splitter.
@@ -561,6 +576,19 @@ class MainWindow(QMainWindow):
         self.a_show_data.toggled.connect(self.action_toggle_data_preview)
         viewm.addAction(self.a_show_data)
 
+        # Pop-out / pop-in panels (v0.5) — detach to another monitor, dock back.
+        if getattr(self, "_panels", None) is not None:
+            viewm.addSeparator()
+            for key, label in (("figure", "Pop Out Figure"),
+                               ("data", "Pop Out Data Table"),
+                               ("controls", "Pop Out Controls")):
+                act = QAction(label, self)
+                act.triggered.connect(lambda _=False, k=key: self._panels.toggle(k))
+                viewm.addAction(act)
+            a_dock_all = QAction("Dock All Panels", self)
+            a_dock_all.triggered.connect(lambda: self._panels.dock_all())
+            viewm.addAction(a_dock_all)
+
         helpm = m.addMenu("&Help")
         a_help = QAction("Help…", self)
         a_help.triggered.connect(self.action_help)
@@ -690,6 +718,11 @@ class MainWindow(QMainWindow):
 
     # --- View menu / layout actions --------------------------------------
     def action_reset_layout(self):
+        if getattr(self, "_panels", None) is not None:
+            try:
+                self._panels.reset_layout()   # dock any floating panels first
+            except Exception:
+                pass
         self.main_splitter.setSizes([400, 820])
         self.right_splitter.setSizes([220, 560])
         if not self.a_show_data.isChecked():
@@ -1403,6 +1436,12 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event):
         self._save_splitter_state()
+        try:
+            if getattr(self, "_panels", None) is not None:
+                self._panels.save_state()
+                self._panels.dock_all()   # avoid orphaned floating windows on quit
+        except Exception:
+            pass
         super().closeEvent(event)
 
     # --- export ----------------------------------------------------------

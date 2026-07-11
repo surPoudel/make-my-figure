@@ -10,6 +10,12 @@ Required and optional columns for every supported plot type. Column order does n
 > Bland-Altman, precision-recall, confusion matrix, calibration, dose-response, UpSet,
 > swimmer, spider, Sankey, UMAP/t-SNE embedding). Every type also ships a bundled
 > example dataset (**Use example data →** in either app).
+>
+> **v0.5 added the network graph (`network_graph`) and hierarchical clustering
+> (`hierarchical_clustering`)**, plus a universal manual annotation layer and
+> richer volcano/heatmap labelling — see **[V0_5_NEW_FEATURES.md](V0_5_NEW_FEATURES.md)**,
+> [NETWORK_GRAPH.md](NETWORK_GRAPH.md), [HIERARCHICAL_CLUSTERING.md](HIERARCHICAL_CLUSTERING.md),
+> [ANNOTATIONS.md](ANNOTATIONS.md), and [VOLCANO_ANNOTATIONS.md](VOLCANO_ANNOTATIONS.md).
 
 ### Bar plot with error bars  (`barplot_with_error_bar`)
 

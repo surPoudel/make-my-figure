@@ -572,6 +572,83 @@ def b_bland_altman(rng):
     return pd.DataFrame(rows), None
 
 
+# ---------------------------------------------------------------------------
+# v0.5 builders (networks + hierarchical clustering).
+# ---------------------------------------------------------------------------
+def b_network(rng):
+    # Synthetic gene-interaction network: 18 genes in 3 functional modules,
+    # edges preferentially within-module (STRING-like confidence weights).
+    modules = {"Immune": 6, "Metabolic": 6, "Signaling": 6}
+    genes, gene_group, gi = [], {}, 0
+    for mod, k in modules.items():
+        for _ in range(k):
+            g = f"GENE{gi:02d}"
+            genes.append(g)
+            gene_group[g] = mod
+            gi += 1
+    rows, seen = [], set()
+    for g in genes:
+        same = [h for h in genes if gene_group[h] == gene_group[g] and h != g]
+        for h in rng.choice(same, size=min(3, len(same)), replace=False):
+            key = tuple(sorted((g, h)))
+            if key in seen:
+                continue
+            seen.add(key)
+            rows.append({"source": key[0], "target": key[1],
+                         "weight": round(float(rng.uniform(0.55, 0.99)), 2),
+                         "interaction_type": rng.choice(["activation", "binding"])})
+    for _ in range(6):
+        a, b = rng.choice(genes, 2, replace=False)
+        key = tuple(sorted((a, b)))
+        if key in seen:
+            continue
+        seen.add(key)
+        rows.append({"source": key[0], "target": key[1],
+                     "weight": round(float(rng.uniform(0.30, 0.55)), 2),
+                     "interaction_type": "regulation"})
+    edges = pd.DataFrame(rows)
+    nodes = pd.DataFrame({"node": genes,
+                          "group": [gene_group[g] for g in genes],
+                          "value": np.round(rng.uniform(-2, 2, len(genes)), 2)})
+    return edges, nodes
+
+
+def write_network_extra_files(folder, edges, nodes, rng):
+    """Write the alternate network input formats next to data.csv/nodes.csv."""
+    edges.to_csv(os.path.join(folder, "edge_list.csv"), index=False)
+    nodes.to_csv(os.path.join(folder, "node_attributes.csv"), index=False)
+    gs = list(nodes["node"])
+    crows = []
+    for i in range(len(gs)):
+        for j in range(i + 1, len(gs)):
+            if rng.random() < 0.28:
+                crows.append({"source": gs[i], "target": gs[j],
+                              "correlation": round(float(rng.uniform(-0.95, 0.95)), 2)})
+    pd.DataFrame(crows).to_csv(os.path.join(folder, "correlation_network.csv"), index=False)
+    n = len(gs)
+    idx = {g: k for k, g in enumerate(gs)}
+    M = np.zeros((n, n))
+    for _, r in edges.iterrows():
+        a, b = idx[r["source"]], idx[r["target"]]
+        M[a, b] = M[b, a] = r["weight"]
+    adj = pd.DataFrame(M, columns=gs)
+    adj.insert(0, "node", gs)
+    adj.to_csv(os.path.join(folder, "adjacency_matrix.csv"), index=False)
+
+
+def b_hier_clustering(rng):
+    # Expression matrix: 30 genes x 12 samples with 3 clear gene modules.
+    samples = [f"{grp}_{i}" for grp in ("Ctrl", "TreatA", "TreatB") for i in range(1, 5)]
+    base = rng.normal(0, 0.6, (30, len(samples)))
+    base[:10, 0:4] += 2.2
+    base[10:20, 4:8] += 2.2
+    base[20:, 8:12] += 2.2
+    data = {"gene": [f"Gene_{i:02d}" for i in range(1, 31)]}
+    for j, s in enumerate(samples):
+        data[s] = np.round(base[:, j], 3)
+    return pd.DataFrame(data), None
+
+
 @dataclass
 class Example:
     plot_type: str
@@ -805,10 +882,29 @@ EXAMPLES: List[Example] = [
             b_embedding, ["UMAP_1", "UMAP_2"], ["cell_type", "batch", "n_genes"],
             "Upload PRECOMPUTED coordinates (one row per cell/sample). Point color can be a "
             "category (cluster/cell type) or a continuous value; the app picks a legend or colorbar. "
-            "For v0.4, upload precomputed UMAP/t-SNE coordinates as a table; direct .h5ad/AnnData "
+            "Upload precomputed UMAP/t-SNE coordinates as a table; direct .h5ad/AnnData "
             "support is planned for a future version.",
             ["Compute UMAP/t-SNE in your analysis tool first — this plots existing coordinates.",
              "Coordinate columns must be numeric (e.g. UMAP_1, UMAP_2)."]),
+    # --- v0.5 ---
+    Example("network_graph", "network", "Network",
+            "Interaction / co-expression network: nodes are genes/features, edges are "
+            "interactions or correlations, colored by module and sized by degree.",
+            b_network, ["source", "target"], ["weight", "interaction_type"],
+            "Provide an edge list (source, target, optional weight). Add a node-attributes table "
+            "(nodes.csv) with node, group, value to color/size nodes. Adjacency-matrix and "
+            "correlation-network modes are also supported (see the folder).",
+            ["Keep source/target as node names (text).",
+             "A correlation network shows association, not a mechanistic interaction."],
+            aux_name="nodes"),
+    Example("hierarchical_clustering", "hier_clustering", "Hier_clustering",
+            "Cluster a feature-by-sample matrix into k groups and export the cluster assignment table.",
+            b_hier_clustering, ["gene", "<sample columns>"], [],
+            "First column = row label (gene); other columns are numeric samples. Choose k, scaling, "
+            "distance metric, and linkage; the cluster assignment is exported as a table.",
+            ["Keep the first column as labels; every other column must be numeric.",
+             "Ward linkage requires the euclidean metric.",
+             "k must be between 2 and the number of clustered objects."]),
 ]
 
 
@@ -824,10 +920,18 @@ def _readme(ex: Example, manifest_entry: Dict[str, Any]) -> str:
     opt = "\n".join(f"  - `{c}`" for c in ex.optional_columns) or "  - (none)"
     mistakes = "\n".join(f"  - {m}" for m in ex.common_mistakes) or "  - (none)"
     aux = ""
-    if ex.aux_name:
+    if ex.aux_name == "metadata":
         aux = ("\n## Auxiliary table\n\n"
-               f"This plot also needs `metadata.csv` (sample metadata). Its `sample_id` "
+               "This plot also needs `metadata.csv` (sample metadata). Its `sample_id` "
                "values must match the sample column names in `data.*`.\n")
+    elif ex.aux_name == "nodes":
+        aux = ("\n## Auxiliary table\n\n"
+               "This plot can use `nodes.csv` (node attributes): a `node` column plus optional "
+               "`group`/`value` to color and size nodes. This folder also includes alternate "
+               "inputs: `edge_list.csv`, `node_attributes.csv`, `correlation_network.csv`, and "
+               "`adjacency_matrix.csv`.\n")
+    elif ex.aux_name:
+        aux = (f"\n## Auxiliary table\n\nThis plot also uses `{ex.aux_name}.csv`.\n")
     return f"""# {display_name(ex.plot_type)} — example data
 
 **Plot type id:** `{ex.plot_type}`
@@ -894,6 +998,9 @@ def main() -> int:
         _write_table(df, base)
         if aux is not None and ex.aux_name:
             _write_table(aux, os.path.join(folder, ex.aux_name))
+        if ex.plot_type == "network_graph" and aux is not None:
+            # Also write the alternate network input formats for the docs/QA.
+            write_network_extra_files(folder, df, aux, np.random.default_rng(SEED + 777))
 
         # PlotSpec JSON
         mapping = default_mapping(ex.plot_type)
