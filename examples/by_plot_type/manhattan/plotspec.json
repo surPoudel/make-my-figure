@@ -1,0 +1,24 @@
+{
+  "plot_type": "manhattan_plot",
+  "input_table": "data.csv",
+  "mapping": {
+    "chrom": "chromosome",
+    "pos": "position",
+    "p": "p_value",
+    "snp": "snp"
+  },
+  "journal_style": "nature_like",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  }
+}

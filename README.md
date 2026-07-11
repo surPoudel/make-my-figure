@@ -4,8 +4,8 @@
 
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-green)
-![Tests](https://img.shields.io/badge/tests-306%20passing-brightgreen)
-![Plot types](https://img.shields.io/badge/plot%20types-17-orange)
+![Tests](https://img.shields.io/badge/tests-600%2B%20passing-brightgreen)
+![Plot types](https://img.shields.io/badge/plot%20types-35-orange)
 ![Desktop](https://img.shields.io/badge/desktop-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 
 Make My Figure is a research-software tool for scientists who need publication-ready
@@ -140,7 +140,9 @@ the upload page — no restart. It's distinct from the Matplotlib toolbar "home"
 
 ## Supported plot types
 
-The current renderers (17):
+The current renderers (35):
+
+**Core (17):**
 
 - Bar plot with error bars
 - Grouped bar plot with error bars
@@ -160,8 +162,30 @@ The current renderers (17):
 - Forest plot
 - Ridge / density plot
 
+**New in v0.4 (18):**
+
+- Dot / strip plot
+- Beeswarm plot
+- Paired dot plot / slopegraph
+- Raincloud plot
+- Hierarchical clustering dendrogram
+- MA plot (differential expression)
+- Manhattan plot (GWAS)
+- Q-Q plot (p-value / quantile)
+- Bland-Altman (method agreement)
+- Precision-recall curve
+- Confusion matrix
+- Calibration plot
+- Dose-response curve
+- UpSet plot (set intersections)
+- Swimmer plot
+- Spider plot (longitudinal change)
+- Sankey / alluvial (two-stage)
+- UMAP / t-SNE embedding scatter
+
 See **[docs/PLOT_TYPE_REQUIREMENTS.md](docs/PLOT_TYPE_REQUIREMENTS.md)** for the required and
-optional columns of each plot type.
+optional columns of each plot type, and **[docs/V0_4_NEW_PLOT_TYPES.md](docs/V0_4_NEW_PLOT_TYPES.md)**
+for the v0.4 additions (use cases, columns, and limitations).
 
 ## Publication-style defaults
 

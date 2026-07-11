@@ -339,6 +339,239 @@ def b_ridge(rng):
     return pd.DataFrame(rows), None
 
 
+# ---------------------------------------------------------------------------
+# v0.4 builders (manuscript plot-type expansion). Synthetic, deterministic.
+# ---------------------------------------------------------------------------
+def b_dot_strip(rng):
+    # Individual observations per group — a readable alternative to a bar plot.
+    rows = []
+    for g, m in [("Healthy", 4.6), ("Disease", 6.1), ("Treated", 5.3)]:
+        for _ in range(26):
+            rows.append({"group": g, "value": round(float(rng.normal(m, 0.7)), 3),
+                         "cohort": rng.choice(["Discovery", "Validation"])})
+    return pd.DataFrame(rows), None
+
+
+def b_beeswarm(rng):
+    # Assay readout per dose group; each point is one well/replicate.
+    rows = []
+    for g, m in [("Vehicle", 4.2), ("Low_dose", 5.1), ("High_dose", 6.4)]:
+        for _ in range(28):
+            rows.append({"group": g, "value": round(float(rng.normal(m, 0.8)), 3),
+                         "sex": rng.choice(["M", "F"])})
+    return pd.DataFrame(rows), None
+
+
+def b_paired_slope(rng):
+    # Matched before/after: one subject measured at two timepoints.
+    rows = []
+    for s in range(22):
+        base = rng.normal(12, 2.5)
+        arm = rng.choice(["Placebo", "Active"])
+        eff = {"Placebo": 1.0, "Active": 4.0}[arm]
+        for cond, d in [("Baseline", 0.0), ("Week_12", eff)]:
+            rows.append({"subject": f"P{s + 1:02d}", "condition": cond,
+                         "value": round(float(base + d + rng.normal(0, 1)), 3),
+                         "arm": arm})
+    return pd.DataFrame(rows), None
+
+
+def b_raincloud(rng):
+    # Distribution per group: cloud (density) + box + raw points.
+    rows = []
+    for g, m, sd in [("Healthy", 4.6, 0.5), ("Disease", 6.1, 0.9), ("Treated", 5.3, 0.7)]:
+        for i in range(35):
+            rows.append({"group": g, "value": round(float(rng.normal(m, sd)), 3),
+                         "batch": f"B{1 + i % 3}"})
+    return pd.DataFrame(rows), None
+
+
+def b_dendrogram(rng):
+    # Expression matrix: 24 genes x 10 samples with clear two-block structure.
+    n_genes = 24
+    samples = [f"{grp}_{i}" for grp in ("Tumor", "Normal") for i in range(1, 6)]
+    base = rng.normal(0, 1, (n_genes, len(samples)))
+    base[:12, :5] += 2.0
+    base[12:, 5:] += 2.0
+    data = {"gene": [f"Gene_{i:02d}" for i in range(1, n_genes + 1)]}
+    for j, s in enumerate(samples):
+        data[s] = np.round(base[:, j], 3)
+    return pd.DataFrame(data), None
+
+
+def b_ma(rng):
+    # Differential-expression table: mean expression vs log2 fold change.
+    n = 600
+    ave = rng.uniform(1, 14, n)
+    lfc = rng.normal(0, 0.8, n)
+    up = rng.choice(n, 35, replace=False)
+    lfc[up] += rng.uniform(2, 5, 35)
+    dn = rng.choice([i for i in range(n) if i not in up], 35, replace=False)
+    lfc[dn] -= rng.uniform(2, 5, 35)
+    p = rng.uniform(0.2, 1, n)
+    p[up] = rng.uniform(1e-6, 0.02, 35)
+    p[dn] = rng.uniform(1e-6, 0.02, 35)
+    return pd.DataFrame({"AveExpr": np.round(ave, 3), "logFC": np.round(lfc, 3),
+                         "adj.P.Val": p, "gene": [f"GENE{i:04d}" for i in range(n)]}), None
+
+
+def b_manhattan(rng):
+    # GWAS summary statistics across chromosomes 1-22 + X, with a few real hits.
+    rows = []
+    for c in [str(i) for i in range(1, 23)] + ["X"]:
+        for _ in range(int(rng.integers(40, 90))):
+            rows.append({"chromosome": c, "position": int(rng.integers(1, 2_000_000)),
+                         "p_value": float(rng.uniform(1e-3, 1)),
+                         "snp": f"rs{rng.integers(1, 9_999_999)}"})
+    for _ in range(6):
+        rows.append({"chromosome": str(rng.integers(1, 23)),
+                     "position": int(rng.integers(1, 2_000_000)),
+                     "p_value": float(rng.uniform(1e-12, 4e-8)),
+                     "snp": f"rs{rng.integers(1, 9_999_999)}"})
+    return pd.DataFrame(rows), None
+
+
+def b_qq(rng):
+    # GWAS p-values: mostly null (uniform) with a handful of true associations.
+    n = 1200
+    p = rng.uniform(0, 1, n)
+    hits = rng.choice(n, 25, replace=False)
+    p[hits] = rng.uniform(1e-10, 1e-4, 25)
+    return pd.DataFrame({"p_value": np.clip(p, 1e-12, 1)}), None
+
+
+def b_precision_recall(rng):
+    # Two classifiers on an imbalanced binary outcome (35% positive).
+    def sigmoid(z):
+        return 1.0 / (1.0 + np.exp(-z))
+    n = 180
+    y = rng.binomial(1, 0.35, n)
+    a = sigmoid(1.8 * y + rng.normal(0, 1.0, n))      # stronger model
+    b = sigmoid(1.0 * y + rng.normal(0, 1.3, n))      # weaker model
+    return pd.DataFrame({
+        "sample_id": [f"S{i:03d}" for i in range(n)],
+        "true_label": y,
+        "score_model_a": np.round(a, 4),
+        "score_model_b": np.round(b, 4),
+        "cohort": rng.choice(["Discovery", "Validation"], n),
+    }), None
+
+
+def b_confusion(rng):
+    # 3-class diagnostic classifier with a believable, diagonal-heavy confusion.
+    classes = ["Normal", "Benign", "Malignant"]
+    conf = {"Normal": [0.85, 0.10, 0.05], "Benign": [0.12, 0.78, 0.10],
+            "Malignant": [0.04, 0.16, 0.80]}
+    rows = []
+    for i in range(240):
+        t = rng.choice(classes)
+        p = rng.choice(classes, p=conf[t])
+        rows.append({"sample_id": f"S{i:03d}", "true_label": t, "predicted_label": p})
+    return pd.DataFrame(rows), None
+
+
+def b_calibration(rng):
+    # A slightly over-confident risk model: labels drawn from a true risk,
+    # predictions are a mildly miscalibrated transform of it.
+    def sigmoid(z):
+        return 1.0 / (1.0 + np.exp(-z))
+    n = 400
+    p_true = rng.beta(2, 3, n)
+    y = rng.binomial(1, p_true)
+    logit = np.log(p_true / (1 - p_true))
+    pred = np.clip(sigmoid(1.15 * logit + 0.1), 0.001, 0.999)
+    return pd.DataFrame({
+        "sample_id": [f"S{i:03d}" for i in range(n)],
+        "true_label": y,
+        "predicted_prob": np.round(pred, 4),
+    }), None
+
+
+def b_dose_response(rng):
+    # Two drugs with sigmoidal viability response across concentration decades.
+    rows = []
+    for drug, ec50, hill in [("DrugA", 0.4, 1.2), ("DrugB", 6.0, 1.4)]:
+        for c in np.logspace(-2.5, 2.5, 10):
+            for _ in range(3):
+                resp = 100.0 / (1.0 + (c / ec50) ** hill) + rng.normal(0, 4)
+                rows.append({"drug": drug, "concentration_uM": round(float(c), 4),
+                             "viability_pct": round(float(resp), 2)})
+    return pd.DataFrame(rows), None
+
+
+def b_swimmer(rng):
+    # Per-patient oncology timelines with response category + an event marker.
+    resp = ["CR", "PR", "SD", "PD"]
+    events = ["response", "progression", "death", "ongoing"]
+    rows = []
+    for i in range(20):
+        dur = float(rng.uniform(2, 26))
+        rows.append({"patient_id": f"P{i + 1:02d}", "start_month": 0.0,
+                     "end_month": round(dur, 1), "duration_month": round(dur, 1),
+                     "response": rng.choice(resp), "event_type": rng.choice(events)})
+    return pd.DataFrame(rows), None
+
+
+def b_spider(rng):
+    # Longitudinal per-patient % change (tumor burden) by response arm.
+    arms = ["Responder", "Non-responder"]
+    rows = []
+    for i in range(14):
+        arm = rng.choice(arms)
+        base = 0.0
+        for wk in [0, 4, 8, 12, 16, 20]:
+            base += rng.normal(-7 if arm == "Responder" else 6, 4)
+            rows.append({"patient_id": f"S{i + 1:02d}", "week": wk,
+                         "pct_change": round(base, 1), "arm": arm})
+    return pd.DataFrame(rows), None
+
+
+def b_embedding(rng):
+    # Precomputed 2D embedding: Gaussian blobs per cell type (scRNA-seq-like).
+    centers = {"T_cell": (0, 0), "B_cell": (6.5, 1), "Myeloid": (3, 6.5),
+               "NK": (-4.5, 4.5), "Dendritic": (7, 7)}
+    rows = []
+    for cl, (cx, cy) in centers.items():
+        for _ in range(70):
+            rows.append({"UMAP_1": round(float(rng.normal(cx, 0.9)), 3),
+                         "UMAP_2": round(float(rng.normal(cy, 0.9)), 3),
+                         "cell_type": cl, "batch": f"batch_{rng.integers(1, 3)}",
+                         "n_genes": int(rng.integers(800, 4000))})
+    return pd.DataFrame(rows), None
+
+
+def b_upset(rng):
+    # Binary set membership: each gene is in/out of several feature sets.
+    n = 280
+    probs = {"DEG_up": 0.42, "DEG_down": 0.31, "Promoter_peak": 0.5, "Conserved": 0.36}
+    data = {"gene": [f"GENE{i:04d}" for i in range(n)]}
+    for s, p in probs.items():
+        data[s] = (rng.random(n) < p).astype(int)
+    return pd.DataFrame(data), None
+
+
+def b_sankey(rng):
+    # Flow from baseline response category to clinical outcome.
+    srcs = {"Responder": 60, "Stable": 90, "Progressor": 50}
+    tgts = ["Alive", "Deceased", "Lost to follow-up"]
+    rows = []
+    for s, tot in srcs.items():
+        w = rng.dirichlet(np.ones(3)) * tot
+        for t, v in zip(tgts, w):
+            rows.append({"baseline_response": s, "outcome": t, "n_patients": int(round(v)) + 1})
+    return pd.DataFrame(rows), None
+
+
+def b_bland_altman(rng):
+    # Two devices measuring the same quantity; device_A has a small positive bias.
+    n = 90
+    true = rng.normal(52, 11, n)
+    rows = [{"sample_id": f"S{i:03d}",
+             "device_A": round(float(true[i] + rng.normal(1.2, 3.0)), 2),
+             "device_B": round(float(true[i] + rng.normal(0, 3.0)), 2)} for i in range(n)]
+    return pd.DataFrame(rows), None
+
+
 @dataclass
 class Example:
     plot_type: str
@@ -447,6 +680,135 @@ EXAMPLES: List[Example] = [
             b_ridge, ["cell_id", "condition", "pseudotime"], ["sample_id", "score"],
             "One row per observation. The x value (pseudotime/score) must be numeric.",
             ["Provide many rows per group for smooth densities."]),
+    # --- v0.4 manuscript plot types ---
+    Example("dot_strip_plot", "dot_strip", "Dot_strip",
+            "Show every observation per group with an optional mean/median summary — a readable "
+            "alternative to a bar plot.",
+            b_dot_strip, ["group", "value"], ["cohort"],
+            "One row per observation. 'group' is categorical (x); 'value' is numeric (y). "
+            "Choose the summary overlay (mean/median with SD/SEM/CI) or turn it off.",
+            ["Give raw observations, not group means.",
+             "Keep 'group' as text and 'value' as numbers."]),
+    Example("beeswarm_plot", "beeswarm", "Beeswarm",
+            "Show every observation per group with a collision-avoiding layout — a readable "
+            "alternative to a bar plot.",
+            b_beeswarm, ["group", "value"], ["sex"],
+            "One row per observation. 'group' is categorical (x); 'value' is numeric (y). "
+            "Optionally color points by another category.",
+            ["Give raw observations, not group means.",
+             "Keep 'group' as text and 'value' as numbers."]),
+    Example("paired_slopegraph", "paired_slope", "Paired_slope",
+            "Connect matched observations across conditions/timepoints (before/after, repeated measures).",
+            b_paired_slope, ["subject", "condition", "value"], ["arm"],
+            "Long format: one row per subject per condition. 'subject' matches paired rows; "
+            "'condition' is the timepoint (x); 'value' is numeric. Optionally color by group.",
+            ["Use the same 'subject' id across conditions so lines connect.",
+             "Keep data long (one row per subject per condition), not wide."]),
+    Example("raincloud_plot", "raincloud", "Raincloud",
+            "Full distribution per group as a half-violin cloud + box summary + raw points.",
+            b_raincloud, ["group", "value"], ["batch"],
+            "One row per observation. 'group' is categorical (x); 'value' is numeric (y).",
+            ["Provide enough observations per group (>=10) for a meaningful density.",
+             "Keep 'value' numeric."]),
+    Example("hierarchical_dendrogram", "dendrogram", "Dendrogram",
+            "Hierarchical clustering of a feature-by-sample matrix as a standalone dendrogram.",
+            b_dendrogram, ["gene", "<sample columns>"], [],
+            "First column = row label (gene). All other columns are numeric samples. "
+            "Choose linkage (average/complete/single/ward) and whether to cluster rows or columns.",
+            ["Keep the first column as labels; every other column must be numeric.",
+             "Ward linkage always uses a Euclidean metric."]),
+    Example("ma_plot", "ma_plot", "MA_plot",
+            "Differential expression: average abundance (A) vs log fold change (M), colored by significance.",
+            b_ma, ["AveExpr", "logFC", "adj.P.Val"], ["gene"],
+            "One row per gene/feature. Provide average expression (AveExpr/baseMean/logCPM), "
+            "log fold change (logFC/log2FoldChange), and a p-value/FDR column (read verbatim).",
+            ["p-values must be numeric; they are never recomputed.",
+             "Column names are auto-detected but can be remapped."]),
+    Example("manhattan_plot", "manhattan", "Manhattan",
+            "Genome-wide association -log10(p) across chromosomes with significance thresholds.",
+            b_manhattan, ["chromosome", "position", "p_value"], ["snp"],
+            "One row per variant. Provide chromosome, genomic position (numeric), and p-value (numeric).",
+            ["Positions must be numeric; p-values in (0, 1].",
+             "Chromosomes may be '1'..'22','X','Y','MT' (with or without a 'chr' prefix)."]),
+    Example("qq_plot", "qq", "QQ_plot",
+            "Observed vs expected -log10(p) Q-Q plot with genomic inflation (lambda).",
+            b_qq, ["p_value"], [],
+            "For 'pvalue' mode, provide a p-value column. For 'quantile' mode, map 'observed' "
+            "to a numeric column to check normality against theoretical quantiles.",
+            ["p-values must be numeric and in (0, 1]."]),
+    Example("bland_altman_plot", "bland_altman", "Bland_Altman",
+            "Agreement between two measurement methods (bias and limits of agreement).",
+            b_bland_altman, ["device_A", "device_B"], ["sample_id"],
+            "One row per paired measurement. Map the two method/device columns; both must be numeric.",
+            ["Both method columns must be numeric.",
+             "Rows are paired measurements of the SAME samples."]),
+    Example("precision_recall_curve", "precision_recall", "Precision_recall",
+            "Precision vs recall for one or two classifiers on an imbalanced outcome, with average precision (AUPRC).",
+            b_precision_recall, ["true_label", "score_model_a"], ["score_model_b", "cohort"],
+            "true_label is 1 for the positive class, 0 for negative. Scores are continuous model outputs.",
+            ["Include both classes (some 1s and some 0s).",
+             "AUPRC is the average precision; it is computed only from valid labels+scores."]),
+    Example("confusion_matrix", "confusion_matrix", "Confusion",
+            "Classification confusion matrix (binary or multiclass) with optional row/column/total normalization.",
+            b_confusion, ["true_label", "predicted_label"], [],
+            "One row per prediction: the true class and the predicted class. Or provide a "
+            "precomputed matrix (first column = true label, other columns = predicted classes).",
+            ["Use a small, consistent set of class labels.",
+             "Switch counts vs percentages with the 'normalize' option."]),
+    Example("calibration_plot", "calibration", "Calibration",
+            "Reliability of a clinical risk model: predicted vs observed probability, binned, with a "
+            "perfect-calibration diagonal.",
+            b_calibration, ["true_label", "predicted_prob"], [],
+            "true_label is 1/0; predicted_prob is the model's probability in [0,1]. Or provide "
+            "precomputed 'predicted' and 'observed' probability columns.",
+            ["Predicted probabilities must be between 0 and 1.",
+             "The Brier score is reported in metadata, not drawn on the figure."]),
+    Example("dose_response_curve", "dose_response", "Dose_response",
+            "Drug dose-response with a 4-parameter logistic fit and EC50/IC50 per group.",
+            b_dose_response, ["concentration_uM", "viability_pct"], ["drug"],
+            "One row per well/measurement. Dose must be positive (log x-axis). Optionally group by "
+            "drug/condition. A 4PL curve is fit per group when 'fit' is on; EC50 is reported only "
+            "when the fit converges.",
+            ["Dose must be positive (non-positive doses are dropped for the log axis).",
+             "Provide several dose levels spanning the response so the fit can converge."]),
+    Example("upset_plot", "upset", "UpSet",
+            "Intersections among many sets (a scalable alternative to Venn diagrams).",
+            b_upset, ["DEG_up", "DEG_down", "Promoter_peak", "Conserved"], ["gene"],
+            "Use one 0/1 column per set (each row = one element), or long form (element + set columns). "
+            "Set mapping['sets'] to your set columns.",
+            ["Membership columns must be 0/1 (or boolean).",
+             "Provide at least 2 sets."]),
+    Example("swimmer_plot", "swimmer", "Swimmer",
+            "Per-patient treatment/follow-up timelines (oncology), colored by response with event markers.",
+            b_swimmer, ["patient_id", "end_month"],
+            ["start_month", "duration_month", "event_type", "response"],
+            "One row per patient. Provide an 'end' time (or a 'duration'); 'start' defaults to 0. "
+            "Optionally add an event-type column (progression/death/response/...) and a group column.",
+            ["Give an end time OR a duration.",
+             "Keep event/response labels to a small consistent set."]),
+    Example("spider_plot", "spider", "Spider",
+            "Longitudinal per-patient change over time (e.g. % change in tumor burden), one line per patient.",
+            b_spider, ["patient_id", "week", "pct_change"], ["arm"],
+            "Long format: one row per patient per timepoint. 'time' and 'value' must be numeric. "
+            "Optionally color by a response/treatment group; set a reference line (default 0%).",
+            ["Keep the data long (one row per patient per timepoint), not wide.",
+             "time and value must be numeric."]),
+    Example("sankey_plot", "sankey", "Sankey",
+            "Flow between two sets of categories (e.g. baseline state -> outcome).",
+            b_sankey, ["baseline_response", "outcome", "n_patients"], [],
+            "One row per source->target flow, with a numeric 'value'. Map your source, target, "
+            "and value columns.",
+            ["'value' must be numeric and positive.",
+             "v0.4 supports two-stage flows (source -> target) only."]),
+    Example("embedding_scatter", "embedding", "Embedding",
+            "Single-cell / sample embedding (UMAP or t-SNE) colored by cluster or metadata.",
+            b_embedding, ["UMAP_1", "UMAP_2"], ["cell_type", "batch", "n_genes"],
+            "Upload PRECOMPUTED coordinates (one row per cell/sample). Point color can be a "
+            "category (cluster/cell type) or a continuous value; the app picks a legend or colorbar. "
+            "For v0.4, upload precomputed UMAP/t-SNE coordinates as a table; direct .h5ad/AnnData "
+            "support is planned for a future version.",
+            ["Compute UMAP/t-SNE in your analysis tool first — this plots existing coordinates.",
+             "Coordinate columns must be numeric (e.g. UMAP_1, UMAP_2)."]),
 ]
 
 

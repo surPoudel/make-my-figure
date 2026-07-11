@@ -1,0 +1,22 @@
+{
+  "plot_type": "qq_plot",
+  "input_table": "data.csv",
+  "mapping": {
+    "mode": "pvalue",
+    "p": "p_value"
+  },
+  "journal_style": "nature_like",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  }
+}

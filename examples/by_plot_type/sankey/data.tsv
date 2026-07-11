@@ -1,0 +1,10 @@
+baseline_response	outcome	n_patients
+Responder	Alive	7
+Responder	Deceased	8
+Responder	Lost to follow-up	48
+Stable	Alive	33
+Stable	Deceased	17
+Stable	Lost to follow-up	43
+Progressor	Alive	41
+Progressor	Deceased	2
+Progressor	Lost to follow-up	10

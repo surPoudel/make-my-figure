@@ -1,0 +1,23 @@
+{
+  "plot_type": "confusion_matrix",
+  "input_table": "data.csv",
+  "mapping": {
+    "true": "true_label",
+    "predicted": "predicted_label",
+    "normalize": "none"
+  },
+  "journal_style": "nature_like",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  }
+}

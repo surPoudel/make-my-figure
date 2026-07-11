@@ -1,0 +1,26 @@
+{
+  "plot_type": "upset_plot",
+  "input_table": "data.csv",
+  "mapping": {
+    "sets": [
+      "DEG_up",
+      "DEG_down",
+      "Promoter_peak",
+      "Conserved"
+    ]
+  },
+  "journal_style": "nature_like",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  }
+}

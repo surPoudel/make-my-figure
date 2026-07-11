@@ -27,6 +27,25 @@ COLUMN_FIELDS: Dict[str, List[str]] = {
     "lollipop_mutation_plot": ["x", "y", "color", "label"],
     "roc_curve": ["label", "score", "score2"],
     "forest_plot": ["label", "estimate", "lower", "upper"],
+    # --- v0.4 manuscript plot types ---
+    "dot_strip_plot": ["x", "y", "color"],
+    "beeswarm_plot": ["x", "y", "color"],
+    "paired_slopegraph": ["subject", "condition", "value", "color"],
+    "raincloud_plot": ["x", "y"],
+    "hierarchical_dendrogram": ["row_id"],
+    "ma_plot": ["x", "y", "p", "label"],
+    "manhattan_plot": ["chrom", "pos", "p", "snp"],
+    "qq_plot": ["p"],
+    "bland_altman_plot": ["method_a", "method_b", "label"],
+    "precision_recall_curve": ["label", "score", "score2"],
+    "confusion_matrix": ["true", "predicted"],
+    "calibration_plot": ["label", "prob"],
+    "dose_response_curve": ["dose", "response", "group"],
+    "upset_plot": [],                 # membership is a list of set columns (mapping['sets'])
+    "swimmer_plot": ["subject", "start", "end", "duration", "event", "group"],
+    "spider_plot": ["subject", "time", "value", "group"],
+    "sankey_plot": ["source", "target", "value"],
+    "embedding_scatter": ["x", "y", "color", "shape", "label"],
 }
 
 # Mapping keys that are columns of the PCA *metadata* table, not the matrix.
@@ -90,6 +109,43 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("reference", "Reference line", "number", 1.0, minimum=0.0, maximum=100.0, step=0.5, decimals=2),
         Option("log_scale", "Log x-axis", "bool", True),
     ],
+    # --- v0.4 manuscript plot types ---
+    "dot_strip_plot": [
+        Option("summary", "Summary overlay", "choice", "mean", ["none", "mean", "median", "ci", "sd", "sem"]),
+        Option("jitter", "Jitter points", "bool", True),
+    ],
+    "beeswarm_plot": [
+        Option("summary", "Summary overlay", "choice", "mean", ["none", "mean", "median", "ci", "sd", "sem"]),
+    ],
+    "paired_slopegraph": [],
+    "raincloud_plot": [],
+    "hierarchical_dendrogram": [
+        Option("method", "Linkage method", "choice", "average", ["average", "complete", "single", "ward"]),
+        Option("cluster", "Cluster", "choice", "rows", ["rows", "columns"]),
+        Option("orientation", "Orientation", "choice", "top", ["top", "left"]),
+    ],
+    "ma_plot": [
+        Option("p_cutoff", "Significance cutoff", "number", 0.05, minimum=0.0, maximum=1.0, step=0.01, decimals=4),
+        Option("label_top_n", "Label top N hits", "number", 8, minimum=0, maximum=40, step=1, decimals=0),
+    ],
+    "manhattan_plot": [],
+    "qq_plot": [Option("mode", "Mode", "choice", "pvalue", ["pvalue", "quantile"])],
+    "bland_altman_plot": [Option("show_ci", "Shade 95% CI of bias", "bool", False)],
+    "precision_recall_curve": [],
+    "confusion_matrix": [
+        Option("normalize", "Normalize", "choice", "none", ["none", "row", "column", "total"]),
+    ],
+    "calibration_plot": [
+        Option("n_bins", "Number of bins", "number", 10, minimum=3, maximum=20, step=1, decimals=0),
+    ],
+    "dose_response_curve": [Option("fit", "Fit 4PL curve", "bool", True)],
+    "upset_plot": [],
+    "swimmer_plot": [],
+    "spider_plot": [
+        Option("reference", "Reference line (y)", "number", 0.0, minimum=-100.0, maximum=100.0, step=5.0, decimals=1),
+    ],
+    "sankey_plot": [],
+    "embedding_scatter": [],
 }
 
 
