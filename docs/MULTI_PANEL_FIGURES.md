@@ -72,3 +72,15 @@ mpf.add_panel(Panel(plot_spec=spec_b, table=df_b, title="Survival"))
 fig = build_figure(mpf)
 export_multipanel(fig, "Figure_1", ["svg", "pdf", "png"], dpi=300)
 ```
+
+## Imported external panels (v0.5)
+
+The Figure Builder can also import an **existing figure file** (PNG/JPG/TIFF, or
+PDF/SVG with an optional converter) and place it as a panel alongside Make My
+Figure plots — for assembling figures that mix, e.g., a generated volcano with a
+microscopy image or a Prism/BioRender export. Use **“Import panel from file…”**.
+Imported assets are copied into `figure_builder_assets/` and recorded in the
+FigureSpec (basename + checksum + dims/DPI + crop/fit settings). Imported PDF/SVG
+are rasterized in the composite. See
+**[IMPORT_EXTERNAL_PANELS.md](IMPORT_EXTERNAL_PANELS.md)** for formats, controls,
+warnings, annotations, and limitations.

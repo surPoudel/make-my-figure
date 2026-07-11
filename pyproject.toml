@@ -18,6 +18,7 @@ dependencies = [
     "jsonschema>=4.0",
     "networkx>=3.0",
     "adjustText>=1.0",
+    "pillow>=9.0",
 ]
 
 [project.optional-dependencies]
@@ -25,6 +26,9 @@ app = ["streamlit>=1.30"]
 desktop = ["PySide6>=6.5"]
 build = ["pyinstaller>=6.0", "pillow>=9.0"]
 dev = ["pytest>=7.0", "pytest-qt>=4.2"]
+# Optional: import PDF/SVG figures as Figure Builder panels (raster formats work
+# without these). PyMuPDF handles PDF; cairosvg handles SVG.
+import-panels = ["pymupdf>=1.23", "cairosvg>=2.5"]
 
 [project.urls]
 Homepage = "https://example.com/make-my-figure"   # placeholder — replace with real URL

@@ -41,6 +41,9 @@ Clustered heatmap + standalone dendrogram + a clustering-result view that cuts
 into `k` clusters, adds a cluster assignment column, color strips, and exports
 the assignment table and a cluster summary.
 
+## Import external panels into the Figure Builder
+Import an existing figure file (PNG/JPG/TIFF; PDF/SVG with an optional converter) as a panel alongside generated plots, with crop/fit/rotate/border controls, publication-readiness (resolution) warnings, per-panel annotations, and reproducible copied assets in the FigureSpec. Desktop Figure Builder. See [IMPORT_EXTERNAL_PANELS.md](IMPORT_EXTERNAL_PANELS.md).
+
 ## Pop-out / pop-in desktop panels
 Detach the Figure, Data & Messages, or Plot Controls panels into floating
 windows (multi-monitor), dock them back with state preserved, and persist the

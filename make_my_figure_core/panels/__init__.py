@@ -11,6 +11,9 @@ from make_my_figure_core.panels.builder import (
     export_multipanel,
     multipanel_sidecar,
     draft_legend,
+    import_external_panel,
+    panel_from_dict,
+    panel_warnings,
 )
 
 __all__ = [
@@ -21,4 +24,7 @@ __all__ = [
     "export_multipanel",
     "multipanel_sidecar",
     "draft_legend",
+    "import_external_panel",
+    "panel_from_dict",
+    "panel_warnings",
 ]

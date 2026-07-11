@@ -358,6 +358,10 @@ class FigureBuilderDialog(QDialog):
             p.setdefault("height_in", None)
         self._composite = None
         self._syncing = False           # guard against feedback while loading fields
+        # Managed assets folder for imported external panels (copied on import).
+        import tempfile
+
+        self._assets_dir = tempfile.mkdtemp(prefix="mmf_figure_builder_assets_")
         self.resize(980, 640)
 
         # Debounce timer: coalesce rapid control changes into one re-render.
@@ -404,6 +408,13 @@ class FigureBuilderDialog(QDialog):
         v.addLayout(form)
 
         v.addWidget(QLabel("Panels (order = A, B, C ...):"))
+        imp_row = QHBoxLayout()
+        imp_btn = QPushButton("Import panel from file…")
+        imp_btn.setToolTip("Add an existing figure (PNG/JPG/TIFF/PDF/SVG) as a panel")
+        imp_btn.clicked.connect(self._import_panel)
+        imp_row.addWidget(imp_btn)
+        imp_row.addStretch(1)
+        v.addLayout(imp_row)
         self.list = QListWidget()
         self.list.currentRowChanged.connect(self._on_panel_selected)
         v.addWidget(self.list)
@@ -569,13 +580,48 @@ class FigureBuilderDialog(QDialog):
 
         mpf = MultiPanelFigure(name=self.name_combo.currentText(), layout=self._make_layout())
         for p in self.saved_panels:
-            mpf.add_panel(Panel(
-                plot_spec=p.get("plot_spec"), table=p.get("table"),
-                aux=p.get("aux") or {}, title=p.get("title", ""),
-                stats_spec=(p.get("plot_spec") or {}).get("statistics"),
-                width_in=p.get("width_in"), height_in=p.get("height_in"),
-            ))
+            if p.get("image_path"):   # imported external-figure panel
+                mpf.add_panel(Panel(
+                    title=p.get("title", ""), width_in=p.get("width_in"),
+                    height_in=p.get("height_in"), image_path=p["image_path"],
+                    image_meta=p.get("image_meta") or {}, fit_mode=p.get("fit_mode", "contain"),
+                    border=bool(p.get("border", False)), auto_trim=bool(p.get("auto_trim", False)),
+                    rotate=int(p.get("rotate", 0)), background=p.get("background", "white"),
+                    crop=p.get("crop") or {}, annotations=p.get("annotations") or [],
+                    source_name=(p.get("image_meta") or {}).get("original_filename", "")))
+            else:
+                mpf.add_panel(Panel(
+                    plot_spec=p.get("plot_spec"), table=p.get("table"),
+                    aux=p.get("aux") or {}, title=p.get("title", ""),
+                    stats_spec=(p.get("plot_spec") or {}).get("statistics"),
+                    width_in=p.get("width_in"), height_in=p.get("height_in")))
         return mpf
+
+    def _import_panel(self) -> None:
+        """Import an external figure file (PNG/JPG/TIFF/PDF/SVG) as a new panel."""
+        from make_my_figure_core.panels import import_external_panel
+
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Import figure panel", "",
+            "Figures (*.png *.jpg *.jpeg *.tif *.tiff *.webp *.bmp *.pdf *.svg);;All files (*)")
+        if not path:
+            return
+        panel, asset = import_external_panel(path, self._assets_dir, width_in=3.2)
+        if asset.error:
+            QMessageBox.warning(self, "Could not import", asset.error)
+            return
+        meta = dict(asset.metadata)
+        meta["warnings"] = list(asset.warnings)
+        self.saved_panels.append({
+            "image_path": panel.image_path, "image_meta": meta, "width_in": 3.2,
+            "title": "", "fit_mode": "contain",
+            "plot_type": f"imported:{meta.get('file_type', 'file')}",
+        })
+        self._refresh_list()
+        self.list.setCurrentRow(len(self.saved_panels) - 1)
+        if asset.warnings:
+            QMessageBox.information(self, "Imported (with notes)", "\n".join(asset.warnings))
+        self._schedule_preview()
 
     def _schedule_preview(self, *args) -> None:
         self._preview_timer.start()
@@ -635,7 +681,21 @@ class FigureBuilderDialog(QDialog):
         base, ext = path.rsplit(".", 1) if "." in path else (path, "png")
         export_multipanel(fig, base, [ext.lower(), "svg", "pdf"], dpi=self.dpi_spin.value())
         multipanel_sidecar(mpf, base)
+        # Copy imported assets next to the figure so the FigureSpec reloads them.
+        extra = ""
+        if any(p.get("image_path") for p in self.saved_panels):
+            import os
+            import shutil
+
+            dest = os.path.join(os.path.dirname(os.path.abspath(base)), "figure_builder_assets")
+            os.makedirs(dest, exist_ok=True)
+            for p in self.saved_panels:
+                src = p.get("image_path")
+                if src and os.path.exists(src):
+                    shutil.copy2(src, os.path.join(dest, os.path.basename(src)))
+            extra = "\nImported panel assets copied to ./figure_builder_assets/ — keep this " \
+                    "folder with the FigureSpec to reload the figure."
         import matplotlib.pyplot as plt
 
         plt.close(fig)
-        QMessageBox.information(self, "Saved", f"Wrote {mpf.name} and sidecar next to:\n{path}")
+        QMessageBox.information(self, "Saved", f"Wrote {mpf.name} and sidecar next to:\n{path}{extra}")
