@@ -1,0 +1,25 @@
+{
+  "plot_type": "spider_plot",
+  "input_table": "data.csv",
+  "mapping": {
+    "subject": "patient_id",
+    "time": "week",
+    "value": "pct_change",
+    "group": "arm",
+    "reference": 0
+  },
+  "journal_style": "nature_like",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  }
+}

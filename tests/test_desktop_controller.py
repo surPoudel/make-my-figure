@@ -24,7 +24,7 @@ def controller():
 
 
 def test_catalog(controller):
-    assert len(controller.plot_types()) == 17
+    assert len(controller.plot_types()) == 35
     styles = dict(controller.styles())
     assert set(styles) >= {"nature_like", "science_like", "cell_like"}
     assert styles["nature_like"] == "Nature-like"

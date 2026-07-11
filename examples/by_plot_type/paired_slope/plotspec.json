@@ -1,0 +1,23 @@
+{
+  "plot_type": "paired_slopegraph",
+  "input_table": "data.csv",
+  "mapping": {
+    "subject": "subject",
+    "condition": "condition",
+    "value": "value"
+  },
+  "journal_style": "nature_like",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  }
+}

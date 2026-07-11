@@ -17,8 +17,9 @@ def _load(name):
     return load_table(os.path.join(MOCK_DIR, name))
 
 
-def test_all_seventeen_plot_types_registered():
-    assert len(available_plot_types()) == 17
+def test_all_plot_types_registered():
+    # 17 original + 18 v0.4 manuscript plot types.
+    assert len(available_plot_types()) == 35
 
 
 def test_box_and_violin_kinds(mock_dir):

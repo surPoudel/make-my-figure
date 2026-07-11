@@ -4,6 +4,13 @@
 
 Required and optional columns for every supported plot type. Column order does not matter — the app validates by name and type.
 
+> **v0.4 added 18 new plot types.** Their required/optional columns, use cases, and
+> limitations are documented in **[V0_4_NEW_PLOT_TYPES.md](V0_4_NEW_PLOT_TYPES.md)**
+> (dot/strip, beeswarm, paired slopegraph, raincloud, dendrogram, MA, Manhattan, Q-Q,
+> Bland-Altman, precision-recall, confusion matrix, calibration, dose-response, UpSet,
+> swimmer, spider, Sankey, UMAP/t-SNE embedding). Every type also ships a bundled
+> example dataset (**Use example data →** in either app).
+
 ### Bar plot with error bars  (`barplot_with_error_bar`)
 
 Compare a mean readout across experimental conditions with replicate error bars.

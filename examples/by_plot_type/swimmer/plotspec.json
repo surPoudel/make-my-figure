@@ -1,0 +1,25 @@
+{
+  "plot_type": "swimmer_plot",
+  "input_table": "data.csv",
+  "mapping": {
+    "subject": "patient_id",
+    "start": "start_month",
+    "end": "end_month",
+    "event": "event_type",
+    "group": "response"
+  },
+  "journal_style": "nature_like",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  }
+}
