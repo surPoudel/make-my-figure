@@ -210,6 +210,11 @@ v0.5 features below.
   clustering-result view that cuts into *k* clusters and exports the assignment.
 - **Pop-out / pop-in desktop panels** — detach the figure, data, or controls to
   another monitor and dock them back ([docs/POP_OUT_PANELS.md](docs/POP_OUT_PANELS.md)).
+- **Import external panels into the Figure Builder** — assemble existing figures
+  from R / Python / Prism / Illustrator / BioRender / microscopy (PNG/JPG/TIFF;
+  PDF/SVG with an optional converter) alongside generated plots, with crop/fit,
+  resolution warnings, annotations, and reproducible copied assets
+  ([docs/IMPORT_EXTERNAL_PANELS.md](docs/IMPORT_EXTERNAL_PANELS.md)).
 
 > Clustering and network visualizations are exploratory summaries. Users are
 > responsible for interpreting biological meaning and confirming that chosen

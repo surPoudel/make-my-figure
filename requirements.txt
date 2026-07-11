@@ -7,5 +7,6 @@ openpyxl>=3.0
 jsonschema>=4.0
 networkx>=3.0
 adjustText>=1.0
+pillow>=9.0
 streamlit>=1.30
 pytest>=7.0

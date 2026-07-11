@@ -63,6 +63,24 @@ def _figure_to_image(fig: Figure, dpi: int) -> np.ndarray:
     return img
 
 
+def _external_panel_image(panel: Panel) -> Tuple[np.ndarray, List[str]]:
+    """Load + process an imported external panel's asset into an RGBA array."""
+    from make_my_figure_core import figure_import as fi
+
+    if not panel.image_path:
+        raise ValueError(f"Panel '{panel.label}' is external but has no image_path.")
+    dpi = int(panel.image_meta.get("rasterization_dpi") or fi.DEFAULT_RASTER_DPI)
+    res = fi.import_asset(panel.image_path, os.path.dirname(panel.image_path) or ".",
+                          rasterize_dpi=dpi, pdf_page=int(panel.image_meta.get("page", 0)))
+    if res.error:
+        raise ValueError(f"Panel '{panel.label}': {res.error}")
+    arr = fi.process_image(res.image, crop=panel.crop or None, rotate=panel.rotate,
+                           flip_h=panel.flip_h, flip_v=panel.flip_v,
+                           auto_trim=panel.auto_trim, background=panel.background)
+    warns = list(res.warnings) + fi.resolution_warnings(res.metadata, panel.width_in)
+    return arr, warns
+
+
 def _auto_grid(n: int, layout: FigureLayout) -> Tuple[int, int]:
     if layout.ncols and layout.ncols > 0:
         ncols = int(layout.ncols)
@@ -81,20 +99,28 @@ def build_figure(mpf: MultiPanelFigure) -> Figure:
     mpf.autolabel()
 
     font_overrides = layout.font_overrides()
+    from make_my_figure_core.styles.engine import load_profile
 
-    # Render + rasterize each panel; capture aspect (height/width).
+    _ann_style = load_profile("publication")   # for per-panel annotation defaults
+
+    # Render + rasterize each panel; capture aspect (height/width). External
+    # (imported) panels load their asset image directly instead of rendering a plot.
     images: List[np.ndarray] = []
     aspects: List[float] = []
     own_figs: List[Figure] = []
+    panel_warnings: List[str] = []
     for panel in panels:
-        fig = _render_panel_figure(panel, font_overrides)
-        img = _figure_to_image(fig, layout.panel_dpi)
+        if panel.is_external:
+            img, warns = _external_panel_image(panel)
+            panel_warnings.extend(f"[{panel.label}] {w}" for w in warns)
+        else:
+            fig = _render_panel_figure(panel, font_overrides)
+            img = _figure_to_image(fig, layout.panel_dpi)
+            if panel.figure is None:
+                own_figs.append(fig)   # close figures we rendered ourselves
         images.append(img)
         h, w = img.shape[0], img.shape[1]
         aspects.append(h / w if w else 1.0)
-        # Close figures we rendered ourselves to free memory.
-        if panel.figure is None:
-            own_figs.append(fig)
 
     n = len(panels)
     nrows, ncols = _auto_grid(n, layout)
@@ -135,15 +161,37 @@ def build_figure(mpf: MultiPanelFigure) -> Figure:
         for i, panel in enumerate(panels):
             r, c = divmod(i, ncols)
             ax = comp.add_subplot(gs[r, c])
-            # Default imshow aspect keeps square pixels => the panel image is
-            # scaled uniformly (letterboxed within its cell), never stretched.
-            ax.imshow(images[i], interpolation="antialiased")
-            ax.set_anchor("N")  # top-align within the cell so panel tops line up
+            # Fit mode: imported panels may 'fill'/'stretch' the cell (aspect=auto)
+            # or 'contain'/'crop' preserving aspect (default). Generated panels
+            # always preserve aspect (letterboxed) so they are never distorted.
+            fill = panel.is_external and panel.fit_mode in ("fill", "stretch")
+            if fill:
+                ax.imshow(images[i], aspect="auto", interpolation="antialiased")
+                if panel.fit_mode == "stretch":
+                    panel_warnings.append(
+                        f"[{panel.label}] stretched non-proportionally; may distort the figure.")
+            else:
+                ax.imshow(images[i], interpolation="antialiased")
+                ax.set_anchor("N")  # top-align within the cell so panel tops line up
             ax.set_xticks([]); ax.set_yticks([])
+            show_border = bool(panel.is_external and panel.border)
             for spine in ax.spines.values():
-                spine.set_visible(False)
+                spine.set_visible(show_border)
+                if show_border:
+                    spine.set_linewidth(panel.border_width)
+                    spine.set_edgecolor("#000000")
             if layout.show_titles and panel.title:
                 ax.set_title(panel.title, fontsize=layout.label_size * 0.8)
+            # Per-panel manual annotations (imported panels use normalized 0..1
+            # coords => 'axes' transform, so they reproduce at any panel size).
+            if panel.annotations:
+                from make_my_figure_core.annotations import apply_annotations, parse_annotations
+
+                anns = parse_annotations(panel.annotations)
+                for a in anns:
+                    if panel.is_external and a.coords == "data":
+                        a.coords = "axes"
+                apply_annotations(comp, ax, anns, _ann_style)
             # Bold panel label, top-left, just outside the axes.
             ax.text(layout.label_dx, layout.label_dy, panel.label,
                     transform=ax.transAxes, ha="right", va="bottom",
@@ -157,7 +205,67 @@ def build_figure(mpf: MultiPanelFigure) -> Figure:
 
     for f in own_figs:
         plt.close(f)
+    # Surface imported-panel warnings (resolution/DPI/stretch/rasterization) to
+    # the caller without changing the return type.
+    comp._mmf_panel_warnings = panel_warnings  # type: ignore[attr-defined]
     return comp
+
+
+def panel_warnings(fig: Figure) -> List[str]:
+    """Imported-panel publication warnings collected during the last build."""
+    return list(getattr(fig, "_mmf_panel_warnings", []))
+
+
+def import_external_panel(src_path: str, assets_dir: str, *, label: str = "", title: str = "",
+                          width_in: Optional[float] = None, rasterize_dpi: int = 300,
+                          pdf_page: int = 0, **transform: Any):
+    """Import an external figure file and return ``(Panel, ImportedAsset)``.
+
+    The file is copied into ``assets_dir``; the Panel references the stored asset
+    (relative basename in its FigureSpec). Returns the asset too so the caller can
+    show a preview / any import error before adding the panel. On import error the
+    Panel is ``None``.
+    """
+    from make_my_figure_core import figure_import as fi
+
+    asset = fi.import_asset(src_path, assets_dir, rasterize_dpi=rasterize_dpi, pdf_page=pdf_page)
+    if asset.error:
+        return None, asset
+    meta = dict(asset.metadata)
+    meta["warnings"] = list(asset.warnings)
+    allowed = {"fit_mode", "preserve_aspect", "crop", "rotate", "flip_h", "flip_v",
+               "auto_trim", "background", "border", "border_width", "annotations"}
+    kw = {k: v for k, v in transform.items() if k in allowed}
+    panel = Panel(label=label, title=title, width_in=width_in,
+                  image_path=os.path.join(assets_dir, meta["stored_asset"]),
+                  image_meta=meta, source_name=meta.get("original_filename", ""), **kw)
+    return panel, asset
+
+
+def panel_from_dict(d: Dict[str, Any], assets_dir: Optional[str] = None) -> Panel:
+    """Reconstruct a Panel from a FigureSpec panel dict (round-trip).
+
+    For imported panels, the asset is resolved as ``assets_dir/<image_path>`` so a
+    shared FigureSpec + assets folder reload without absolute paths.
+    """
+    kind = d.get("panel_kind")
+    img_rel = d.get("image_path")
+    image_path = None
+    if img_rel:
+        image_path = os.path.join(assets_dir, img_rel) if assets_dir else img_rel
+    return Panel(
+        label=d.get("label", ""), title=d.get("title", ""), caption=d.get("caption", ""),
+        plot_spec=d.get("plot_spec"), stats_spec=d.get("stats_spec"),
+        source_name=d.get("source_name", ""),
+        width_in=d.get("width_in"), height_in=d.get("height_in"),
+        image_path=image_path, image_meta=d.get("image_meta", {}) or {},
+        fit_mode=d.get("fit_mode", "contain"), preserve_aspect=d.get("preserve_aspect", True),
+        crop=d.get("crop", {}) or {}, rotate=int(d.get("rotate", 0)),
+        flip_h=bool(d.get("flip_h", False)), flip_v=bool(d.get("flip_v", False)),
+        auto_trim=bool(d.get("auto_trim", False)), background=d.get("background", "white"),
+        border=bool(d.get("border", False)), border_width=float(d.get("border_width", 0.8)),
+        annotations=d.get("annotations", []) or [],
+    )
 
 
 def export_multipanel(fig: Figure, base_path: str, formats: List[str], dpi: int = 300) -> List[str]:

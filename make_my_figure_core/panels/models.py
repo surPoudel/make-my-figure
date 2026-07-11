@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import string
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
@@ -47,18 +48,56 @@ class Panel:
     # figure rather than a stretched one.
     width_in: Optional[float] = None
     height_in: Optional[float] = None
+    # --- imported external-figure panel (v0.5) -----------------------------
+    # When ``image_path`` is set, this is an *imported* panel backed by an
+    # external file (PNG/JPG/TIFF/SVG/PDF) copied into the assets folder, rather
+    # than a Make My Figure plot. ``image_meta`` holds the import record
+    # (original filename, dims, DPI, checksum, page, rasterization DPI). The
+    # transform fields control how the image is placed in its cell.
+    image_path: Optional[str] = None         # relative path within the assets folder
+    image_meta: Dict[str, Any] = field(default_factory=dict)
+    fit_mode: str = "contain"                # contain | fill | crop | stretch
+    preserve_aspect: bool = True
+    crop: Dict[str, float] = field(default_factory=dict)   # top/bottom/left/right fractions
+    rotate: int = 0                          # 0 | 90 | 180 | 270
+    flip_h: bool = False
+    flip_v: bool = False
+    auto_trim: bool = False
+    background: str = "white"                # white | transparent
+    border: bool = False
+    border_width: float = 0.8
+    # Per-panel manual annotations (normalized axes coords 0..1) — AnnotationSpec dicts.
+    annotations: List[Dict[str, Any]] = field(default_factory=list)
+
+    @property
+    def is_external(self) -> bool:
+        return bool(self.image_path)
+
+    def assets_base(self) -> Optional[str]:
+        return os.path.dirname(self.image_path) if self.image_path else None
 
     def to_dict(self) -> Dict[str, Any]:
         return {
             "label": self.label,
             "title": self.title,
             "caption": self.caption,
+            "panel_kind": "external_figure_panel" if self.is_external else "make_my_figure_panel",
             "plot_spec": self.plot_spec,
             "stats_spec": self.stats_spec or (self.plot_spec or {}).get("statistics"),
             "source_name": self.source_name,
             "width_in": self.width_in,
             "height_in": self.height_in,
             "has_prerendered_figure": self.figure is not None,
+            # imported-panel record (asset basename only — no private absolute paths)
+            "image_path": os.path.basename(self.image_path) if self.image_path else None,
+            "image_meta": self.image_meta or {},
+            "fit_mode": self.fit_mode,
+            "preserve_aspect": self.preserve_aspect,
+            "crop": self.crop or {},
+            "rotate": self.rotate, "flip_h": self.flip_h, "flip_v": self.flip_v,
+            "auto_trim": self.auto_trim, "background": self.background,
+            "border": self.border, "border_width": self.border_width,
+            "annotations": self.annotations or [],
         }
 
 
