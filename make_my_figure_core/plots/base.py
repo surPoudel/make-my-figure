@@ -164,6 +164,77 @@ def dedupe_labels_by_distance(points, *, min_dx, min_dy):
     return kept
 
 
+def choose_label_column(df: pd.DataFrame, candidates: List[str]) -> Optional[str]:
+    """Pick the best identifier column for click-identify/label.
+
+    Returns the first candidate column that exists and is mostly populated
+    (>=50% non-blank), else the first existing candidate, else ``None``. Using a
+    single consistent column keeps the identified name and the labelled name the
+    same, so click-to-label reliably annotates that point.
+    """
+    present = [c for c in candidates if c and c in df.columns]
+    n = max(len(df), 1)
+    for c in present:
+        vals = df[c].astype(str).str.strip()
+        nonblank = ((vals != "") & (vals.str.lower() != "nan")).sum()
+        if nonblank / n >= 0.5:
+            return c
+    return present[0] if present else None
+
+
+def resolve_point_labels(df: pd.DataFrame, column: Optional[str]) -> List[str]:
+    """Per-row identifier list from ``column`` (blank/NaN rows fall back to index)."""
+    n = len(df)
+    if not column or column not in df.columns:
+        return [str(i) for i in range(n)]
+    vals = df[column].astype(str).tolist()
+    out = []
+    for i, v in enumerate(vals):
+        s = v.strip()
+        out.append(s if (s and s.lower() != "nan") else str(i))
+    return out
+
+
+def build_pickable_points(xs, ys, labels) -> List[Dict[str, Any]]:
+    """Return a click-identify table: one record per plotted point.
+
+    Each record is ``{"x", "y", "label", "index"}`` in the axes' data coordinates,
+    so a GUI can map a click on the live canvas back to the underlying feature
+    (e.g. a gene) without the renderer knowing anything about the GUI. Non-finite
+    points are skipped. Used by the desktop "identify / label points" mode.
+    """
+    xs = np.asarray(xs, dtype=float)
+    ys = np.asarray(ys, dtype=float)
+    out: List[Dict[str, Any]] = []
+    for i in range(min(len(xs), len(ys))):
+        xv, yv = xs[i], ys[i]
+        if not (np.isfinite(xv) and np.isfinite(yv)):
+            continue
+        lab = str(labels[i]) if labels is not None and i < len(labels) else str(i)
+        out.append({"x": float(xv), "y": float(yv), "label": lab, "index": int(i)})
+    return out
+
+
+def nearest_pickable(points, xd: float, yd: float, xspan: float, yspan: float):
+    """Nearest pickable point to a click at ``(xd, yd)`` in data coords.
+
+    Distances are normalized by the axis spans so x/y are comparable. Returns
+    ``(point, normalized_distance)`` or ``(None, inf)`` if there are no points.
+    A GUI typically ignores hits whose normalized distance exceeds a small
+    threshold (a click that missed every point).
+    """
+    xspan = float(xspan) or 1.0
+    yspan = float(yspan) or 1.0
+    best, best_d = None, float("inf")
+    for p in points or []:
+        dx = (float(p["x"]) - xd) / xspan
+        dy = (float(p["y"]) - yd) / yspan
+        d = (dx * dx + dy * dy) ** 0.5
+        if d < best_d:
+            best, best_d = p, d
+    return best, best_d
+
+
 def base_metadata(spec: Dict[str, Any], style: StyleProfile, df: pd.DataFrame,
                   *, used_columns: List[str]) -> Dict[str, Any]:
     """Construct the common metadata block recorded for every figure."""

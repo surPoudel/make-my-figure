@@ -186,6 +186,9 @@ class MainWindow(QMainWindow):
         self._current_result = None
         self._current_spec = None
         self._canvas = None
+        self._identify_mode = False       # click-to-identify/label on the canvas
+        self._picked_labels = {}          # plot_type -> [labels] chosen by clicking
+        self._pick_cols = {}              # plot_type -> label column to annotate by
         self._toolbar = None
         self._suppress_change = False   # re-entrancy guard for plot-type changes
         self._debug = False             # set by --debug: verbose toolbar/canvas logging
@@ -326,6 +329,14 @@ class MainWindow(QMainWindow):
         lb.addRow("Y label", self.ylabel_edit)
         lb.addRow("Figure width", self.width_combo)
         lb.addRow("Raster DPI", self.dpi_spin)
+        # Click-to-identify / label (volcano & scatter): clicking a point shows
+        # its name in the status bar and toggles a label on it (saved in PlotSpec).
+        self.chk_click_label = QCheckBox("Click a point to identify / label it")
+        self.chk_click_label.setToolTip(
+            "Volcano & scatter: click near a point to see its gene/sample name; "
+            "clicking toggles a label on that point (stored in the PlotSpec).")
+        self.chk_click_label.toggled.connect(self._on_click_label_toggled)
+        lb.addRow("Point picking", self.chk_click_label)
         cv.addWidget(labels_box)
 
         cv.addWidget(self._build_style_panel())
@@ -819,6 +830,8 @@ class MainWindow(QMainWindow):
 
     def _set_data(self, data: LoadedData):
         self.data = data
+        self._picked_labels = {}          # clear click-to-label picks for new data
+        self._pick_cols = {}
         self.stack.setCurrentIndex(1)
         self._populate_table()
         self._rebuild_mapping_and_options()
@@ -1167,6 +1180,14 @@ class MainWindow(QMainWindow):
         overrides = self._collect_style_overrides()
         if overrides:
             spec["style"] = overrides
+        # Inject click-to-label picks for this plot type (stored in the PlotSpec
+        # so they persist through export/reload).
+        picks = self._picked_labels.get(pt)
+        if picks:
+            spec.setdefault("mapping", {})["selected_labels"] = list(picks)
+            col = self._pick_cols.get(pt)
+            if col:
+                spec["mapping"]["label"] = col
         return spec
 
     def _try_build_and_render(self):
@@ -1259,6 +1280,13 @@ class MainWindow(QMainWindow):
         self.fig_layout.addWidget(canvas, 1)
         self._canvas = canvas
         self._toolbar = toolbar
+        # Click-to-identify / label: map a click on the live canvas to a data
+        # point (volcano/scatter) and optionally label it. Guarded so a wiring
+        # issue can never break rendering.
+        try:
+            canvas.mpl_connect("button_press_event", self._on_canvas_pick)
+        except Exception:
+            pass
         canvas.setFocus()
         canvas.draw()
         # Seed the navigation history with the current view so Home / Back /
@@ -1274,6 +1302,57 @@ class MainWindow(QMainWindow):
             self._wire_debug_logging(canvas, toolbar)
             self._dbg(f"render: canvas_id={id(canvas)} figure_id={id(canvas.figure)} "
                       f"toolbar_id={id(toolbar)} bound={toolbar.canvas is canvas}")
+
+    # --- click-to-identify / label --------------------------------------
+    def _on_click_label_toggled(self, on: bool) -> None:
+        self._identify_mode = bool(on)
+        if on:
+            self.statusBar().showMessage(
+                "Point picking on: click near a point (volcano/scatter) to "
+                "identify and label it.", 5000)
+
+    def _on_canvas_pick(self, event) -> None:
+        """Map a canvas click to the nearest data point; identify + toggle a label."""
+        if not self._identify_mode or self._current_result is None:
+            return
+        if event.inaxes is None or event.xdata is None or event.ydata is None:
+            return
+        meta = self._current_result.metadata or {}
+        points = meta.get("pickable_points")
+        if not points:
+            self.statusBar().showMessage(
+                "Point picking works on volcano and scatter plots.", 4000)
+            return
+        from make_my_figure_core.plots.base import nearest_pickable
+
+        ax = event.inaxes
+        xspan = abs(ax.get_xlim()[1] - ax.get_xlim()[0]) or 1.0
+        yspan = abs(ax.get_ylim()[1] - ax.get_ylim()[0]) or 1.0
+        best, dist = nearest_pickable(points, event.xdata, event.ydata, xspan, yspan)
+        if best is None or dist > 0.05:      # click missed every point
+            self.statusBar().showMessage("No point near the click.", 3000)
+            return
+        name = best["label"]
+        self.statusBar().showMessage(
+            f"{name}   (x={best['x']:.3g}, y={best['y']:.3g})", 8000)
+        if self._current_spec is None:
+            return
+        # Toggle a label on the clicked point. Picks are kept per plot type (so
+        # they survive the spec being rebuilt from the controls) and injected in
+        # _build_spec, which stores them in the PlotSpec => persists on export.
+        plot_type = self._current_spec.get("plot_type")
+        col = meta.get("pick_label_column")
+        picks = self._picked_labels.setdefault(plot_type, [])
+        if name in picks:
+            picks.remove(name)                # click again to remove
+            action = "removed label"
+        else:
+            picks.append(name)
+            action = "labeled"
+        if col:
+            self._pick_cols[plot_type] = col
+        self.statusBar().showMessage(f"{action}: {name}", 6000)
+        self.render_preview()                 # re-render with the updated labels
 
     # --- debug logging (behind --debug) ----------------------------------
     def _dbg(self, msg: str) -> None:

@@ -210,6 +210,8 @@ v0.5 features below.
   clustering-result view that cuts into *k* clusters and exports the assignment.
 - **Pop-out / pop-in desktop panels** — detach the figure, data, or controls to
   another monitor and dock them back ([docs/POP_OUT_PANELS.md](docs/POP_OUT_PANELS.md)).
+- **Click to identify / label points (desktop)** — on volcano & scatter, click a
+  point to see its gene/sample name and toggle a label on it (saved in the PlotSpec).
 - **Import external panels into the Figure Builder** — assemble existing figures
   from R / Python / Prism / Illustrator / BioRender / microscopy (PNG/JPG/TIFF;
   PDF/SVG with an optional converter) alongside generated plots, with crop/fit,
