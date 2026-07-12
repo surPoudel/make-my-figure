@@ -175,8 +175,13 @@ def choose_label_column(df: pd.DataFrame, candidates: List[str]) -> Optional[str
     present = [c for c in candidates if c and c in df.columns]
     n = max(len(df), 1)
     for c in present:
-        vals = df[c].astype(str).str.strip()
-        nonblank = ((vals != "") & (vals.str.lower() != "nan")).sum()
+        # Pure-Python coercion (never rely on the pandas .str accessor / dtype,
+        # which can differ across versions and error on mixed/float columns).
+        nonblank = 0
+        for v in df[c].tolist():
+            s = ("" if v is None else str(v)).strip()
+            if s and s.lower() != "nan":
+                nonblank += 1
         if nonblank / n >= 0.5:
             return c
     return present[0] if present else None
@@ -187,10 +192,9 @@ def resolve_point_labels(df: pd.DataFrame, column: Optional[str]) -> List[str]:
     n = len(df)
     if not column or column not in df.columns:
         return [str(i) for i in range(n)]
-    vals = df[column].astype(str).tolist()
     out = []
-    for i, v in enumerate(vals):
-        s = v.strip()
+    for i, v in enumerate(df[column].tolist()):
+        s = ("" if v is None else str(v)).strip()
         out.append(s if (s and s.lower() != "nan") else str(i))
     return out
 

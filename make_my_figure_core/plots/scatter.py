@@ -113,15 +113,19 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             fig.tight_layout()
 
     meta = base_metadata(spec, style, work, used_columns=[x, y, color_by, label_col])
-    from make_my_figure_core.plots.base import (
-        build_pickable_points, choose_label_column, resolve_point_labels)
+    try:
+        from make_my_figure_core.plots.base import (
+            build_pickable_points, choose_label_column, resolve_point_labels)
 
-    pick_col = choose_label_column(work, [label_col, "sample_id", "id", "name", "gene"])
-    meta["pickable_points"] = build_pickable_points(
-        work[x].to_numpy(float), work[y].to_numpy(float),
-        resolve_point_labels(work, pick_col))
-    meta["pick_label_key"] = "selected_labels"   # GUI appends clicked point labels here
-    meta["pick_label_column"] = pick_col         # set mapping['label'] to this when labeling
+        pick_col = choose_label_column(work, [label_col, "sample_id", "id", "name", "gene"])
+        meta["pickable_points"] = build_pickable_points(
+            work[x].to_numpy(float), work[y].to_numpy(float),
+            resolve_point_labels(work, pick_col))
+        meta["pick_label_key"] = "selected_labels"   # GUI appends clicked point labels here
+        meta["pick_label_column"] = pick_col         # mapping['label'] set to this when labeling
+    except Exception as exc:  # noqa: BLE001
+        meta["pickable_points"] = []
+        warnings.append(f"Click-identify data unavailable: {exc}")
     meta["fit_line"] = fit_line
     meta["regression"] = fits
     if stats_report is not None:

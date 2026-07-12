@@ -42,6 +42,19 @@ def test_resolve_point_labels_falls_back_to_index():
     assert resolve_point_labels(df, None) == ["0", "1", "2"]
 
 
+def test_pick_helpers_handle_float_and_nan_columns():
+    # Regression: a float/NaN label column must never raise 'float has no
+    # attribute strip' (the helpers coerce via str() in pure Python).
+    import numpy as np
+    df = pd.DataFrame({"label": [np.nan, np.nan, np.nan, 1.5, 2.0],
+                       "gene": ["A", "B", "C", "D", "E"]})
+    assert choose_label_column(df, ["label", "gene"]) == "gene"   # label mostly NaN
+    assert resolve_point_labels(df, "label") == ["0", "1", "2", "1.5", "2.0"]
+    # an all-NaN column resolves entirely to indices, no exception
+    allnan = pd.DataFrame({"c": [np.nan, np.nan]})
+    assert resolve_point_labels(allnan, "c") == ["0", "1"]
+
+
 def test_build_pickable_points_skips_nonfinite():
     pts = build_pickable_points([1.0, float("nan"), 3.0], [0.0, 1.0, 2.0], ["a", "b", "c"])
     assert [p["label"] for p in pts] == ["a", "c"]
