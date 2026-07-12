@@ -52,3 +52,25 @@ Applied as `mapping` overrides on the volcano example:
 `adjustText` repel is best-effort — with very many crowded labels some residual
 overlap is possible; the renderer warns, caps at `max_labels_warn`, and
 recommends fewer labels or a larger figure.
+
+## Click to identify / label a point (desktop, v0.5)
+
+On the desktop app's live figure, tick **"Click a point to identify / label it"**
+(under *Labels & size*). Then, on a **volcano** or **scatter** plot:
+
+- **Click near a point** → its name (gene symbol for volcano, sample id/label for
+  scatter) and coordinates appear in the status bar — so you can see *which* point
+  that blue dot at, say, `log2FC ≈ −4, −log10p ≈ 2` actually is.
+- The click also **toggles a label** on that point. Labels you add are stored in
+  the PlotSpec (`mapping.selected_labels`), so they **persist on export/reload**
+  and are drawn on top of whatever label mode is active. Click the point again to
+  remove its label.
+
+How it works: each render emits a `pickable_points` table (data coords + name per
+point) and a `pick_label_column`; the app maps your click to the nearest point.
+Picks are kept per plot type and reset when you load new data.
+
+**Limitations:** identify/label is an interactive desktop feature (the exported
+SVG/PDF/PNG is static — only the labels you added persist). It currently covers
+volcano and scatter; other plot types label **by name** (e.g. heatmap "highlight
+gene list"). Drag-to-reposition a label/arrow is not implemented.

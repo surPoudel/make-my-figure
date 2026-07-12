@@ -45,6 +45,10 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     color_by = get_mapping(spec, "color", None)
     fit_line = bool(get_mapping(spec, "fit_line", True))
     label_col = get_mapping(spec, "label", None)
+    # When 'selected_labels' is provided (e.g. click-to-label in the desktop app),
+    # only those points are annotated; otherwise every labelled point is annotated.
+    selected_labels = get_mapping(spec, "selected_labels", None) or []
+    _sel_set = {str(s).strip().lower() for s in selected_labels}
 
     require_columns(df, [x, y], context=PLOT_TYPE)
     work = df.copy()
@@ -79,13 +83,16 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                 if fit:
                     fits["all"] = {"slope": fit[0], "intercept": fit[1], "pearson_r": fit[2]}
 
-        # Optional point labels.
+        # Optional point labels (all labelled points, or only 'selected_labels').
         if label_col and label_col in work.columns:
             for _, row in work.iterrows():
                 txt = str(row[label_col]).strip()
-                if txt and txt.lower() != "nan":
-                    ax.annotate(txt, (row[x], row[y]), fontsize=style.annotation_pt,
-                                xytext=(3, 3), textcoords="offset points")
+                if not txt or txt.lower() == "nan":
+                    continue
+                if _sel_set and txt.lower() not in _sel_set:
+                    continue
+                ax.annotate(txt, (row[x], row[y]), fontsize=style.annotation_pt,
+                            xytext=(3, 3), textcoords="offset points")
 
         ax.set_xlabel(spec.get("layout", {}).get("x_label", x))
         ax.set_ylabel(spec.get("layout", {}).get("y_label", y))
@@ -106,6 +113,15 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             fig.tight_layout()
 
     meta = base_metadata(spec, style, work, used_columns=[x, y, color_by, label_col])
+    from make_my_figure_core.plots.base import (
+        build_pickable_points, choose_label_column, resolve_point_labels)
+
+    pick_col = choose_label_column(work, [label_col, "sample_id", "id", "name", "gene"])
+    meta["pickable_points"] = build_pickable_points(
+        work[x].to_numpy(float), work[y].to_numpy(float),
+        resolve_point_labels(work, pick_col))
+    meta["pick_label_key"] = "selected_labels"   # GUI appends clicked point labels here
+    meta["pick_label_column"] = pick_col         # set mapping['label'] to this when labeling
     meta["fit_line"] = fit_line
     meta["regression"] = fits
     if stats_report is not None:

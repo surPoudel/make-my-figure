@@ -2,6 +2,26 @@
 
 All notable changes to Make My Figure are recorded here.
 
+## [0.5.1] — click to identify / label points
+
+### Added
+- **Click-to-identify / click-to-label** on the desktop live canvas for **volcano**
+  and **scatter** plots: enable *"Click a point to identify / label it"* (Labels &
+  size), then click near a point to see its gene/sample name + coordinates in the
+  status bar and toggle a label on it. Added labels are stored in the PlotSpec
+  (`mapping.selected_labels`) so they persist on export/reload; click again to
+  remove. Picks are kept per plot type and reset on new data.
+- Core (GUI-independent) helpers: `build_pickable_points`, `nearest_pickable`,
+  `choose_label_column`, `resolve_point_labels`; renderers emit
+  `metadata['pickable_points']` + `pick_label_column`. Scatter now honors
+  `selected_labels` (label only the chosen points).
+
+### Notes
+- Interactive desktop feature — exports remain static; only the labels you add
+  persist. Covers volcano + scatter (other plot types label by name). No
+  drag-to-reposition. The Qt click handler is additive/guarded but should be
+  smoke-tested in the desktop app.
+
 ## [0.5.0] — networks, annotations, docking & clustering
 
 Builds on v0.4 (37 plot types total). Focus: publication-ready, refine-in-app

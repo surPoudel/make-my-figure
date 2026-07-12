@@ -256,6 +256,17 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                     pass
 
     meta = base_metadata(spec, style, work, used_columns=[x, p_col, label_col, id_col])
+    # Click-identify table: map a click on the live canvas back to a gene.
+    from make_my_figure_core.plots.base import (
+        build_pickable_points, choose_label_column, resolve_point_labels)
+
+    pick_col = choose_label_column(
+        work, [label_col, "gene", "gene_symbol", "symbol", id_col, "gene_id"])
+    meta["pickable_points"] = build_pickable_points(
+        work[x].to_numpy(float), work["_neglog10p"].to_numpy(float),
+        resolve_point_labels(work, pick_col))
+    meta["pick_label_key"] = "selected_labels"   # GUI appends clicked genes here
+    meta["pick_label_column"] = pick_col         # set mapping['label'] to this when labeling
     meta["lfc_cutoff"] = lfc_cutoff
     meta["p_cutoff"] = p_cutoff
     meta["n_up"] = n_up

@@ -5,4 +5,4 @@ app's About dialog imports ``__version__`` from here, so the version is defined
 in exactly one place.
 """
 
-__version__ = "0.5.0"
+__version__ = "0.5.1"
