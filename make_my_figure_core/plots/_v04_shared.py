@@ -40,12 +40,14 @@ def pick_column(df: pd.DataFrame, aliases: Sequence[str], *, default: Optional[s
 
 
 def numeric_matrix(
-    df: pd.DataFrame, id_col: Optional[str] = None, *, context: str
+    df: pd.DataFrame, id_col: Optional[str] = None, *, context: str, exclude=None
 ) -> Tuple[List[str], List[str], np.ndarray, List[str]]:
     """Parse a ``features x samples`` matrix.
 
     The ``id_col`` (or the first column when unset) holds row labels; every
-    other column is coerced to numeric. Returns
+    other column is coerced to numeric. Columns named in ``exclude`` are dropped
+    (e.g. RNA-seq annotation columns like geneSymbol/bioType/annotationLevel that
+    sit before the sample columns). Returns
     ``(row_labels, value_columns, matrix, warnings)`` and never mutates ``df``.
     """
     if df.shape[1] < 2:
@@ -55,17 +57,18 @@ def numeric_matrix(
     if id_col not in df.columns:
         raise RenderError(f"{context}: label column '{id_col}' not found. Columns: {list(df.columns)}")
 
+    excluded = {str(c) for c in (exclude or [])}
     row_labels = df[id_col].astype(str).tolist()
-    value_cols = [c for c in df.columns if c != id_col]
+    value_cols = [c for c in df.columns if c != id_col and str(c) not in excluded]
     numeric = df[value_cols].apply(lambda s: pd.to_numeric(s, errors="coerce"))
     # Drop columns that are entirely non-numeric (e.g. stray text metadata columns).
     keep = [c for c in value_cols if numeric[c].notna().any()]
     if not keep:
         raise RenderError(f"{context}: no numeric value columns besides label '{id_col}'.")
-    dropped = [c for c in value_cols if c not in keep]
+    dropped = [c for c in df.columns if c != id_col and c not in keep]
     warnings: List[str] = []
     if dropped:
-        warnings.append(f"Ignored non-numeric column(s): {dropped}.")
+        warnings.append(f"Ignored non-sample column(s): {dropped}.")
     matrix = numeric[keep].to_numpy(dtype=float)
     if np.isnan(matrix).any():
         warnings.append("Matrix has missing/non-numeric entries; treated as 0 for clustering.")

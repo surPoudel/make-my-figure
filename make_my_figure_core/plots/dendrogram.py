@@ -46,7 +46,9 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     if cluster not in ("rows", "columns"):
         cluster = "rows"
 
-    row_labels, value_cols, matrix, warnings = numeric_matrix(df, row_id, context=PLOT_TYPE)
+    exclude = get_mapping(spec, "exclude_columns", None)
+    row_labels, value_cols, matrix, warnings = numeric_matrix(
+        df, row_id, context=PLOT_TYPE, exclude=exclude)
     warnings = list(warnings)
 
     if cluster == "columns":
@@ -54,6 +56,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         labels = list(value_cols)
         entity = "sample"
     else:
+        # Memory guard: cap the feature axis before the O(n^2) linkage so a huge
+        # matrix (e.g. 55k genes) can't exhaust RAM.
+        from make_my_figure_core import clustering as _clust
+
+        max_features = int(get_mapping(spec, "max_features", _clust.DEFAULT_MAX_CLUSTER_FEATURES))
+        matrix, row_labels, _cap = _clust.cap_rows_by_variance(
+            matrix, list(row_labels), max_features, warnings)
         data = matrix
         labels = list(row_labels)
         entity = "feature"

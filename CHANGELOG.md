@@ -2,6 +2,30 @@
 
 All notable changes to Make My Figure are recorded here.
 
+## [0.5.2] — memory guards for large matrices + RNA-seq parsing
+
+### Fixed
+- **Out-of-memory on large matrices.** Hierarchical clustering builds an O(n²)
+  distance matrix, so a big feature axis (e.g. a ~55k-gene RSEM count table)
+  exhausted RAM and crashed the app. The clustered heatmap, standalone
+  dendrogram, and hierarchical-clustering plot now **cap the feature (row) axis
+  to the top-N most variable rows** (default 2,000, configurable via
+  `max_features`) before clustering/display, with a clear warning. Highlighted
+  rows are always kept. PCA is unaffected (it SVDs the small samples×features
+  orientation — no O(n²) — and was already memory-safe).
+- **RNA-seq matrices with annotation columns.** Count matrices commonly carry
+  columns like `geneSymbol` / `bioType` / `annotationLevel` before the samples.
+  The heatmap/dendrogram/hierarchical-clustering now drop non-numeric annotation
+  columns automatically and accept an `exclude_columns` list for numeric-looking
+  ones; they also report exactly which columns were used as samples. PCA now
+  restricts to the columns present in the metadata's sample-id column, so
+  annotation columns are no longer mistaken for samples.
+
+### Notes
+- Defaults preserve prior output for normal-sized matrices. For a readable
+  publication heatmap, subsetting to top-variable genes was already best practice;
+  this just makes it automatic and memory-safe instead of crashing.
+
 ## [0.5.1] — click to identify / label points
 
 ### Added
