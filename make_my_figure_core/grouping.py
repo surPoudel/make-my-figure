@@ -64,6 +64,49 @@ def melt_matrix_to_long(df: pd.DataFrame, *, sample_columns: List[str],
     return long[[feature_name, sample_col, group_col, value_name]]
 
 
+def numeric_sample_columns(df: pd.DataFrame, feature_col: Optional[str] = None) -> List[str]:
+    """Candidate *sample* columns of a wide matrix: numeric, excluding the label.
+
+    Drops non-numeric annotation columns (e.g. geneSymbol / bioType) so only
+    plausible sample columns are offered for group assignment. Numeric annotation
+    columns (e.g. annotationLevel) can't be told apart by dtype — leave those
+    unassigned in the UI (unassigned columns are excluded from the output).
+    """
+    out = []
+    for c in df.columns:
+        if feature_col and c == feature_col:
+            continue
+        if pd.to_numeric(df[c], errors="coerce").notna().any():
+            out.append(c)
+    return out
+
+
+def wide_grouped_matrix(df: pd.DataFrame, *, feature_col: str, sample_columns: List[str],
+                        sample_to_group: Dict[str, str], features: Optional[List[str]] = None,
+                        group_col: str = "group"):
+    """Wide features x samples matrix restricted to the *assigned* samples.
+
+    Returns ``(wide_df, column_annotations)`` for a **heatmap** (or PCA): the wide
+    frame keeps the feature-id column plus only the samples that were assigned a
+    group (ordered by group), and ``column_annotations`` is a group color-strip
+    spec (``[{"label", "values": {sample: group}}]``) the heatmap can draw. Unlike
+    :func:`melt_matrix_to_long` (which is for bar/box/violin), this preserves the
+    matrix shape so a heatmap actually renders.
+    """
+    assigned = [s for s in sample_columns if str(sample_to_group.get(s, "")).strip() != ""]
+    if not assigned:
+        raise ValueError("No samples were assigned to a group.")
+    ordered = sorted(assigned, key=lambda s: (str(sample_to_group[s]), str(s)))
+    work = df.copy()
+    keep = ([feature_col] if feature_col in work.columns else []) + ordered
+    wide = work[keep]
+    if features and feature_col in work.columns:
+        wanted = {str(f) for f in features}
+        wide = wide[wide[feature_col].astype(str).isin(wanted)]
+    ann = [{"label": group_col, "values": {s: str(sample_to_group[s]) for s in ordered}}]
+    return wide.reset_index(drop=True), ann
+
+
 def add_group_column(df: pd.DataFrame, *, source_col: str,
                      value_to_group: Dict[Any, str], new_col: str = "group",
                      default: Optional[str] = None) -> pd.DataFrame:

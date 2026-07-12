@@ -6,8 +6,61 @@ import pytest
 
 from make_my_figure_core.grouping import (
     add_group_column, guess_groups_from_names, melt_matrix_to_long,
-    metadata_from_assignment,
+    metadata_from_assignment, numeric_sample_columns, wide_grouped_matrix,
 )
+
+
+def _rsem_matrix():
+    """A wide matrix with RNA-seq-style annotation columns before the samples."""
+    return pd.DataFrame({
+        "geneID": ["G1", "G2", "G3", "G4"],
+        "geneSymbol": ["A", "B", "C", "D"],        # non-numeric annotation
+        "bioType": ["pc", "pc", "lnc", "pc"],       # non-numeric annotation
+        "annotationLevel": [1, 2, 1, 3],            # NUMERIC annotation (looks like a sample)
+        "S1": [10.0, 5, 1, 3], "S2": [12, 6, 2, 4],
+        "S3": [20, 15, 1, 8], "S4": [22, 16, 2, 9],
+    })
+
+
+def test_numeric_sample_columns_drops_text_annotation():
+    df = _rsem_matrix()
+    cols = numeric_sample_columns(df, "geneID")
+    assert "geneSymbol" not in cols and "bioType" not in cols   # text annotation dropped
+    assert {"S1", "S2", "S3", "S4"} <= set(cols)
+    # annotationLevel is numeric so it can't be auto-excluded by dtype — it's left
+    # for the user to leave unassigned (and is then dropped from the output).
+    assert "annotationLevel" in cols
+
+
+def test_wide_grouped_matrix_keeps_only_assigned_samples_and_builds_strip():
+    df = _rsem_matrix()
+    s2g = {"S1": "Ctrl", "S2": "Ctrl", "S3": "Trt", "S4": "Trt"}  # annotationLevel unassigned
+    wide, ann = wide_grouped_matrix(
+        df, feature_col="geneID", sample_columns=numeric_sample_columns(df, "geneID"),
+        sample_to_group=s2g)
+    # matrix shape preserved (features x assigned samples), annotation cols excluded
+    assert list(wide.columns) == ["geneID", "S1", "S2", "S3", "S4"]
+    assert "annotationLevel" not in wide.columns
+    assert wide.shape == (4, 5)
+    # group color strip spec
+    assert ann[0]["values"] == s2g and set(ann[0]["values"].values()) == {"Ctrl", "Trt"}
+
+
+def test_wide_grouped_matrix_renders_a_nonblank_heatmap():
+    import matplotlib
+    matplotlib.use("Agg")
+    from make_my_figure_core.plots.registry import make_spec, render
+
+    df = _rsem_matrix()
+    s2g = {"S1": "Ctrl", "S2": "Ctrl", "S3": "Trt", "S4": "Trt"}
+    wide, ann = wide_grouped_matrix(df, feature_col="geneID",
+                                    sample_columns=numeric_sample_columns(df, "geneID"),
+                                    sample_to_group=s2g)
+    spec = make_spec("heatmap_clustered_matrix", "w.csv", "publication")
+    spec["mapping"] = dict(spec["mapping"], row_id="geneID")
+    spec["column_annotations"] = ann
+    r = render(spec, wide)
+    assert r.metadata["matrix_shape"] == [4, 4]   # 4 genes x 4 assigned samples (not 1)
 
 
 def _matrix():

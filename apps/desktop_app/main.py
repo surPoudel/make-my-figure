@@ -189,6 +189,7 @@ class MainWindow(QMainWindow):
         self._identify_mode = False       # click-to-identify/label on the canvas
         self._picked_labels = {}          # plot_type -> [labels] chosen by clicking
         self._pick_cols = {}              # plot_type -> label column to annotate by
+        self._pending_column_annotations = None   # group color strip from "Define groups"
         self._toolbar = None
         self._suppress_change = False   # re-entrancy guard for plot-type changes
         self._debug = False             # set by --debug: verbose toolbar/canvas logging
@@ -832,6 +833,7 @@ class MainWindow(QMainWindow):
         self.data = data
         self._picked_labels = {}          # clear click-to-label picks for new data
         self._pick_cols = {}
+        self._pending_column_annotations = None
         self.stack.setCurrentIndex(1)
         self._populate_table()
         self._rebuild_mapping_and_options()
@@ -909,6 +911,12 @@ class MainWindow(QMainWindow):
         dlg = GroupingDialog(self.controller, self.data, self)
         dlg.grouped.connect(self._adopt_grouped_data)
         dlg.exec()
+        # A wide (heatmap/PCA) grouping carries a group color-strip spec; apply it
+        # to the heatmap and re-render so the groups are visible.
+        ann = getattr(dlg, "column_annotations", None)
+        if ann:
+            self._pending_column_annotations = ann
+            self.render_preview()
 
     def _adopt_grouped_data(self, loaded):
         """Replace the active dataset with a derived (grouped) table and re-render."""
@@ -1188,6 +1196,9 @@ class MainWindow(QMainWindow):
             col = self._pick_cols.get(pt)
             if col:
                 spec["mapping"]["label"] = col
+        # Group color strip from "Define groups" (wide/heatmap mode).
+        if pt == "heatmap_clustered_matrix" and self._pending_column_annotations:
+            spec["column_annotations"] = self._pending_column_annotations
         return spec
 
     def _try_build_and_render(self):

@@ -48,6 +48,7 @@ class GroupingDialog(QDialog):
         super().__init__(parent)
         self.controller = controller
         self.data = data
+        self.column_annotations = None   # group color-strip spec for a heatmap (wide mode)
         self.setWindowTitle("Define groups")
         self.resize(560, 560)
 
@@ -84,11 +85,12 @@ class GroupingDialog(QDialog):
         default_feat = next((c for c in cols if c not in numeric), cols[0] if cols else "")
         if default_feat:
             self.feature_combo.setCurrentText(default_feat)
-        self.feature_combo.currentIndexChanged.connect(self._refresh_matrix_tab)
+        self.feature_combo.currentIndexChanged.connect(lambda *_: self._refresh_matrix_tab())
         form.addRow("Feature id column", self.feature_combo)
         v.addLayout(form)
 
-        v.addWidget(QLabel("Assign each sample column to a group (edit the Group column):"))
+        v.addWidget(QLabel("Assign each sample column to a group (edit the Group column; "
+                           "leave non-sample columns blank):"))
         self.sample_table = QTableWidget(0, 2)
         self.sample_table.setHorizontalHeaderLabels(["Sample column", "Group"])
         self.sample_table.horizontalHeader().setStretchLastSection(True)
@@ -97,6 +99,15 @@ class GroupingDialog(QDialog):
         auto = QPushButton("Auto-guess groups from names")
         auto.clicked.connect(self._auto_guess_groups)
         v.addWidget(auto)
+
+        # Output shape: long for bar/box/violin, or wide (matrix + group strip)
+        # for a heatmap/PCA (a long reshape would collapse a heatmap to nothing).
+        v.addWidget(QLabel("Use the grouped table for:"))
+        self.mode_long = QRadioButton("Bar / box / violin comparisons (long table)")
+        self.mode_long.setChecked(True)
+        self.mode_wide = QRadioButton("Heatmap / PCA (keep the matrix + add a group color strip)")
+        v.addWidget(self.mode_long)
+        v.addWidget(self.mode_wide)
 
         v.addWidget(QLabel("Features to include:"))
         self.all_features_radio = QRadioButton("All features")
@@ -113,19 +124,23 @@ class GroupingDialog(QDialog):
         return w
 
     def _sample_columns(self) -> list:
+        # Only numeric columns are plausible samples — drop text annotation
+        # columns (e.g. geneSymbol / bioType) so they aren't offered as samples.
         feat = self.feature_combo.currentText()
-        return [c for c in self.data.info.columns if c != feat]
+        return self.controller.numeric_sample_columns(self.data, feat)
 
-    def _refresh_matrix_tab(self):
+    def _refresh_matrix_tab(self, guess: bool = False):
         samples = self._sample_columns()
-        guess = self.controller.guess_sample_groups(samples)
+        # Groups start BLANK: assign only your real sample columns; anything left
+        # blank (e.g. a numeric annotation column like annotationLevel) is excluded.
+        guessed = self.controller.guess_sample_groups(samples) if guess else {}
         self.sample_table.blockSignals(True)
         self.sample_table.setRowCount(len(samples))
         for r, s in enumerate(samples):
             name_item = QTableWidgetItem(str(s))
             name_item.setFlags(name_item.flags() & ~Qt.ItemIsEditable)
             self.sample_table.setItem(r, 0, name_item)
-            self.sample_table.setItem(r, 1, QTableWidgetItem(str(guess.get(s, "Group1"))))
+            self.sample_table.setItem(r, 1, QTableWidgetItem(str(guessed.get(s, ""))))
         self.sample_table.blockSignals(False)
 
         # feature list from the chosen id column's values
@@ -140,7 +155,7 @@ class GroupingDialog(QDialog):
                     f"… {len(values) - _MAX_FEATURES_LISTED} more not shown"))
 
     def _auto_guess_groups(self):
-        self._refresh_matrix_tab()
+        self._refresh_matrix_tab(guess=True)
 
     def _matrix_assignment(self) -> dict:
         s2g = {}
@@ -218,10 +233,17 @@ class GroupingDialog(QDialog):
                         self, "One group",
                         "Only one group is defined — statistics need at least two. "
                         "You can still build the table.")
-                loaded = self.controller.group_from_matrix(
-                    self.data, sample_columns=self._sample_columns(),
-                    sample_to_group=s2g, feature_col=self.feature_combo.currentText(),
-                    features=self._selected_features())
+                if self.mode_wide.isChecked():
+                    # Heatmap/PCA: keep the matrix (assigned samples only) + a group strip.
+                    loaded, self.column_annotations = self.controller.group_from_matrix_wide(
+                        self.data, sample_columns=self._sample_columns(),
+                        sample_to_group=s2g, feature_col=self.feature_combo.currentText(),
+                        features=self._selected_features())
+                else:
+                    loaded = self.controller.group_from_matrix(
+                        self.data, sample_columns=self._sample_columns(),
+                        sample_to_group=s2g, feature_col=self.feature_combo.currentText(),
+                        features=self._selected_features())
             else:
                 mapping = self._value_mapping()
                 if not mapping:

@@ -2,6 +2,28 @@
 
 All notable changes to Make My Figure are recorded here.
 
+## [0.5.3] — grouped heatmaps + cleaner "Define groups"
+
+### Fixed
+- **"Define groups" listed non-sample columns.** The wide-matrix group assignment
+  showed every non-id column (including RNA-seq annotation columns like
+  `geneSymbol` / `bioType` / `annotationLevel`) and auto-assigned each a group.
+  Now only **numeric** columns are offered as samples (text annotation columns are
+  dropped), groups start **blank** (assign only your real samples; anything left
+  blank — e.g. a numeric annotation column — is excluded), and "Auto-guess from
+  names" is opt-in.
+- **Heatmap showed nothing after grouping.** Grouping only reshaped to *long*,
+  which collapses a heatmap to a single "value" column. The Define-groups dialog
+  now has an output choice: **long** (bar/box/violin) or **wide** (heatmap/PCA).
+  Wide keeps the matrix (assigned samples only) and adds a **group color strip**,
+  so a grouped heatmap actually renders. Verified end-to-end on a real 12-sample /
+  55k-gene RSEM matrix + metadata.
+
+### Added
+- `grouping.numeric_sample_columns()` and `grouping.wide_grouped_matrix()`
+  (returns the wide matrix + a column-annotation group strip); controller
+  `group_from_matrix_wide()` / `numeric_sample_columns()`.
+
 ## [0.5.2] — memory guards for large matrices + RNA-seq parsing
 
 ### Fixed
