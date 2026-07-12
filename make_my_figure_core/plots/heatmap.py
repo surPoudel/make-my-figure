@@ -155,24 +155,41 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     highlight_cols = {str(s).strip().lower() for s in (get_mapping(spec, "highlight_columns", None) or [])}
     show_row_labels = get_mapping(spec, "show_row_labels", None)
     show_col_labels = get_mapping(spec, "show_col_labels", None)
+    exclude_cols = {str(c) for c in (get_mapping(spec, "exclude_columns", None) or [])}
+    max_features = int(get_mapping(spec, "max_features", _clust.DEFAULT_MAX_CLUSTER_FEATURES))
 
     work = df.copy()
     row_labels = work[row_id].astype(str).tolist()
-    value_cols = [c for c in work.columns if c != row_id]
-    numeric = work[value_cols].apply(lambda s: pd.to_numeric(s, errors="coerce"))
-    if numeric.shape[1] == 0:
-        raise RenderError(f"{PLOT_TYPE}: no value columns besides row id '{row_id}'.")
-
-    raw_matrix = numeric.to_numpy(dtype=float)
     warnings: List[str] = []
+    # Sample columns = every non-id column that is numeric and not excluded.
+    # RNA-seq matrices often carry annotation columns (geneSymbol/bioType/
+    # annotationLevel) before the samples — drop non-numeric ones automatically
+    # and let the user exclude numeric-looking annotation columns explicitly.
+    candidate_cols = [c for c in work.columns if c != row_id and str(c) not in exclude_cols]
+    numeric = work[candidate_cols].apply(lambda s: pd.to_numeric(s, errors="coerce"))
+    sample_cols = [c for c in candidate_cols if numeric[c].notna().any()]
+    if not sample_cols:
+        raise RenderError(f"{PLOT_TYPE}: no numeric sample columns besides row id '{row_id}'.")
+    dropped = [c for c in work.columns if c != row_id and c not in sample_cols]
+    if dropped:
+        warnings.append(f"Ignored non-sample column(s): {dropped}.")
+    warnings.append(f"Using {len(sample_cols)} sample column(s): {list(sample_cols)}. "
+                    "If any of these are not samples, add them to 'exclude_columns'.")
+    raw_matrix = numeric[sample_cols].to_numpy(dtype=float)
     if np.isnan(raw_matrix).any():
         warnings.append("Matrix contains missing/non-numeric values; shown as blank cells.")
+
+    # Memory guard: cap the feature (row) axis before the O(n^2) clustering so a
+    # huge matrix (e.g. 55k genes) can't exhaust RAM. Highlighted rows are kept.
+    keep_labels = set(highlight_rows)
+    raw_matrix, row_labels, _cap_idx = _clust.cap_rows_by_variance(
+        raw_matrix, row_labels, max_features, warnings, keep_labels=keep_labels)
 
     # Scaling (default 'none' reproduces the original output).
     matrix, scale_warns = _clust.scale_matrix(raw_matrix, scale)
     warnings.extend(scale_warns)
 
-    col_labels = list(value_cols)
+    col_labels = list(sample_cols)
     filled = np.nan_to_num(matrix, nan=0.0)
 
     row_order, row_linkage = _order_and_linkage(filled, "rows", method, metric, cluster_rows, warnings)
@@ -340,7 +357,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             spine.set_visible(False)
         fig.tight_layout()
 
-    meta = base_metadata(spec, style, work, used_columns=[row_id] + value_cols)
+    meta = base_metadata(spec, style, work, used_columns=[row_id] + sample_cols)
     meta["matrix_shape"] = [int(raw_matrix.shape[0]), int(raw_matrix.shape[1])]
     meta["clustered_rows"] = cluster_rows and row_order != list(range(raw_matrix.shape[0]))
     meta["clustered_columns"] = cluster_cols and col_order != list(range(raw_matrix.shape[1]))

@@ -30,8 +30,51 @@ CLUSTER_PALETTE = ["#0072B2", "#D55E00", "#009E73", "#CC79A7", "#E69F00",
                    "#44AA99", "#332288"]
 
 
+# Hierarchical clustering builds an O(n^2) pairwise-distance matrix, so a huge
+# feature axis (e.g. 55k genes) exhausts RAM. Cap the number of clustered/shown
+# features to the most variable ones by default; users can raise it or pre-filter.
+DEFAULT_MAX_CLUSTER_FEATURES = 2000
+
+
 class ClusteringError(Exception):
     """Raised for invalid clustering configuration (friendly message)."""
+
+
+def top_variable_indices(matrix: np.ndarray, k: int) -> np.ndarray:
+    """Indices of the ``k`` highest-variance rows (original order preserved)."""
+    var = np.nanvar(np.asarray(matrix, dtype=float), axis=1)
+    var = np.nan_to_num(var, nan=-1.0)
+    k = int(min(max(k, 1), var.size))
+    if k >= var.size:
+        return np.arange(var.size)
+    idx = np.argpartition(var, var.size - k)[-k:]
+    return np.sort(idx)
+
+
+def cap_rows_by_variance(matrix: np.ndarray, labels: List[str], max_rows: Optional[int],
+                         warnings: List[str], *, keep_labels=None, what: str = "features"):
+    """Limit the row (feature) axis to the top-``max_rows`` by variance.
+
+    Prevents the O(n^2) clustering distance matrix from exhausting RAM on very
+    tall matrices. Any ``keep_labels`` (e.g. highlighted genes) are always
+    retained even if low-variance. Returns ``(matrix, labels, kept_indices)``;
+    ``kept_indices`` is ``None`` when no capping was needed.
+    """
+    n = len(labels)
+    if not max_rows or max_rows <= 0 or n <= max_rows:
+        return matrix, labels, None
+    keep = set(int(i) for i in top_variable_indices(matrix, max_rows).tolist())
+    if keep_labels:
+        wanted = {str(s).strip().lower() for s in keep_labels}
+        for i, lab in enumerate(labels):
+            if str(lab).strip().lower() in wanted:
+                keep.add(i)
+    idx = sorted(keep)
+    warnings.append(
+        f"{n} {what} exceed the {max_rows}-{what[:-1]} limit for clustering/display; "
+        f"showing the top {max_rows} by variance (plus any highlighted) to stay within "
+        f"memory. Pre-filter your matrix or raise 'max_features' to change this.")
+    return matrix[idx], [labels[i] for i in idx], np.array(idx)
 
 
 def scale_matrix(matrix: np.ndarray, scale: str) -> Tuple[np.ndarray, List[str]]:

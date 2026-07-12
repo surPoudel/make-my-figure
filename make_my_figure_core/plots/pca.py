@@ -39,13 +39,35 @@ def render(spec: Dict[str, Any], df, style: StyleProfile,
     color_by = get_mapping(spec, "color", None)
     shape_by = get_mapping(spec, "shape", None)
 
-    sample_cols = [c for c in df.columns if c != row_id]
-    if len(sample_cols) < 3:
-        raise RenderError(f"{PLOT_TYPE}: need >= 3 sample columns for a PCA.")
-
-    numeric = df[sample_cols].apply(lambda s: pd.to_numeric(s, errors="coerce"))
-    X = numeric.to_numpy(dtype=float).T  # samples x features
     warnings: List[str] = []
+    exclude = {str(c) for c in (get_mapping(spec, "exclude_columns", None) or [])}
+    sample_cols = [c for c in df.columns if c != row_id and str(c) not in exclude]
+    # Restrict to actual samples (present in the metadata's sample-id column)
+    # when metadata is supplied. This drops RNA-seq annotation columns
+    # (geneSymbol/bioType/annotationLevel) that sit before the sample columns.
+    meta_df = aux.get("metadata")
+    if meta_df is not None and meta_key in meta_df.columns:
+        ids = set(meta_df[meta_key].astype(str))
+        matched = [c for c in sample_cols if str(c) in ids]
+        if matched:
+            dropped_meta = [c for c in sample_cols if c not in matched]
+            if dropped_meta:
+                warnings.append(f"Ignored column(s) not present in metadata '{meta_key}': "
+                                f"{dropped_meta}.")
+            sample_cols = matched
+    numeric_all = df[sample_cols].apply(lambda s: pd.to_numeric(s, errors="coerce"))
+    numeric_cols = [c for c in sample_cols if numeric_all[c].notna().any()]
+    dropped_nonnum = [c for c in sample_cols if c not in numeric_cols]
+    if dropped_nonnum:
+        warnings.append(f"Ignored non-numeric column(s): {dropped_nonnum}.")
+    sample_cols = numeric_cols
+    if len(sample_cols) < 3:
+        raise RenderError(f"{PLOT_TYPE}: need >= 3 numeric sample columns for a PCA "
+                          f"(found {len(sample_cols)}). Check the metadata sample IDs match "
+                          "the matrix column headers, or set 'exclude_columns'.")
+
+    numeric = numeric_all[sample_cols]
+    X = numeric.to_numpy(dtype=float).T  # samples x features
     if np.isnan(X).any():
         warnings.append("Non-numeric/missing matrix entries replaced with feature means.")
         col_means = np.nanmean(X, axis=0)

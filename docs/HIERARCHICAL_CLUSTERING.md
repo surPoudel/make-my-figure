@@ -59,3 +59,23 @@ save this alongside the figure.
   from the matrix).
 - On the result view, only the selected axis drives cluster assignment; the
   other axis is ordered by best-effort clustering for a clean display.
+
+## Large matrices & RNA-seq count tables (v0.5.2)
+
+Hierarchical clustering builds an O(n²) distance matrix, so clustering a huge
+feature axis (e.g. a ~55,000-gene RSEM count table) can exhaust RAM. To stay
+safe and readable:
+
+- The clustered heatmap, dendrogram, and hierarchical-clustering plot **cap the
+  feature (row) axis to the top-N most variable rows** (default **2,000**, set
+  via `max_features`) before clustering, with a warning. Any `highlight_rows`
+  you specify are always kept. Pre-filtering to your genes of interest is still
+  the best practice for a readable figure.
+- **Annotation columns** common in count matrices (`geneSymbol`, `bioType`,
+  `annotationLevel`, …) are handled: non-numeric ones are dropped automatically,
+  and you can drop numeric-looking ones with **`exclude_columns`** (e.g.
+  `["annotationLevel"]`). The plot reports which columns it used as samples.
+- **PCA** is memory-safe even at 55k genes and, when you supply a metadata table,
+  uses only the columns whose names match the metadata's sample-id column — so
+  annotation columns are never mistaken for samples. Log-transform raw counts
+  (`scale: log`) for a more meaningful PCA/heatmap.

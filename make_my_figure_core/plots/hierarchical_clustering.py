@@ -64,8 +64,16 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     metric = str(get_mapping(spec, "distance_metric", "euclidean"))
     method = str(get_mapping(spec, "linkage_method", "average"))
     prefix = str(get_mapping(spec, "cluster_prefix", "Cluster"))
+    exclude = get_mapping(spec, "exclude_columns", None)
+    max_features = int(get_mapping(spec, "max_features", _clust.DEFAULT_MAX_CLUSTER_FEATURES))
 
-    row_labels, value_cols, raw_matrix, warnings = numeric_matrix(df, row_id, context=PLOT_TYPE)
+    row_labels, value_cols, raw_matrix, warnings = numeric_matrix(
+        df, row_id, context=PLOT_TYPE, exclude=exclude)
+    # Memory guard: cap the feature (row) axis before the O(n^2) clustering when
+    # clustering rows, so a huge matrix (e.g. 55k genes) can't exhaust RAM.
+    if axis == "rows":
+        raw_matrix, row_labels, _cap = _clust.cap_rows_by_variance(
+            raw_matrix, row_labels, max_features, warnings)
     matrix, scale_warns = _clust.scale_matrix(raw_matrix, scale)
     warnings.extend(scale_warns)
     filled = np.nan_to_num(matrix, nan=0.0)

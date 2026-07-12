@@ -88,6 +88,7 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("cluster_k_rows", "Row clusters (k, 0=off)", "number", 0, minimum=0, maximum=20, step=1, decimals=0),
         Option("cluster_k_columns", "Column clusters (k, 0=off)", "number", 0, minimum=0, maximum=20, step=1, decimals=0),
         Option("sort_by_cluster", "Sort by cluster", "bool", False),
+        Option("max_features", "Max features (rows) for clustering", "number", 2000, minimum=50, maximum=50000, step=100, decimals=0),
     ],
     "volcano_plot": [
         Option("lfc_cutoff", "log2FC cutoff", "number", 1.0, minimum=0.0, maximum=20.0, step=0.5, decimals=2),
@@ -179,6 +180,7 @@ OPTIONS: Dict[str, List[Option]] = {
                ["euclidean", "correlation", "cosine", "cityblock"]),
         Option("linkage_method", "Linkage", "choice", "average",
                ["average", "complete", "single", "ward"]),
+        Option("max_features", "Max features (rows) for clustering", "number", 2000, minimum=50, maximum=50000, step=100, decimals=0),
     ],
     "network_graph": [
         Option("layout", "Layout", "choice", "spring",
