@@ -128,6 +128,25 @@ class DesktopController:
         name = f"{data.table_name} (grouped)"
         return self.loaded_from_dataframe(long, name)
 
+    def group_from_matrix_wide(self, data: LoadedData, *, sample_columns, sample_to_group,
+                               feature_col=None, features=None):
+        """Keep the wide matrix (assigned samples only) + a group color-strip spec.
+
+        For heatmaps/PCA, where a long reshape would collapse the matrix and show
+        nothing. Returns ``(LoadedData, column_annotations)``.
+        """
+        from make_my_figure_core.grouping import wide_grouped_matrix
+
+        wide, ann = wide_grouped_matrix(
+            data.info.dataframe, feature_col=feature_col, sample_columns=sample_columns,
+            sample_to_group=sample_to_group, features=features)
+        return self.loaded_from_dataframe(wide, f"{data.table_name} (grouped)"), ann
+
+    def numeric_sample_columns(self, data: LoadedData, feature_col=None):
+        from make_my_figure_core.grouping import numeric_sample_columns
+
+        return numeric_sample_columns(data.info.dataframe, feature_col)
+
     def add_group_column(self, data: LoadedData, *, source_col, value_to_group,
                          new_col="group", default=None) -> LoadedData:
         """Add a derived grouping column mapped from an existing column's values."""
