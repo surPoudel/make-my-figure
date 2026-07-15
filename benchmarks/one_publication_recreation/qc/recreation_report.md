@@ -46,7 +46,7 @@ _Reference-image note:_ PLoS ONE is CC BY 4.0 and would permit storing a cropped
 - **None stored.** Article is CC BY but we keep only citation + figure number + textual target descriptions (see `source/figure_targets.md`); no image-similarity was computed.
 
 ## Known differences / limitations
-- Panel B uses a standard nonparametric pairwise test, not the paper's linear models (documented per-panel). PCA sign/rotation is arbitrary. Colours/limits are Publication defaults, not the paper's exact styling. See each panel's `differences_from_published.md`.
+- Panel B shows only the body-mass distribution — the paper models body mass with linear models (species/sex + covariates), a different method we do not reproduce, so **no statistical annotations are drawn** (documented per-panel). PCA sign/rotation is arbitrary. Colours/limits are Publication defaults, not the paper's exact styling. See each panel's `differences_from_published.md`.
 
 ## Honest conclusion
 **Publication-grade recreation** — scientifically traceable to the associated CC0 data and visually publication-grade, but not pixel-identical (no reference image; some analyses are standard equivalents of the paper's models).
