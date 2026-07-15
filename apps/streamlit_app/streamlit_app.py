@@ -249,6 +249,30 @@ with st.expander("🗂 Define groups (no metadata file needed)"):
                 st.rerun()
             except Exception as exc:
                 st.error(str(exc))
+
+        # Differential screen (2 groups -> results table with log2FC/p/FDR).
+        st.markdown("**Differential screen (2 groups)** — normalized matrix only; a basic "
+                    "per-feature test + BH FDR, *not* a count-based model (DESeq2/edgeR/voom).")
+        from make_my_figure_core.differential import TESTS as _DIFF_TESTS, _TEST_LABELS as _DIFF_LBL
+        _de_test = st.selectbox("DE test", list(_DIFF_TESTS),
+                                format_func=lambda t: _DIFF_LBL.get(t, t), key="grp_detest")
+        if st.button("Run differential screen", key="grp_run_de"):
+            s2g = dict(zip(edited_assign["sample"].astype(str), edited_assign["group"].astype(str)))
+            try:
+                from make_my_figure_core.differential import differential_screen
+                dres = differential_screen(table_info.dataframe, feature_col=feature_col,
+                                           group_labels=s2g, test=_de_test)
+                st.session_state["_grouped_df"] = dres.table
+                st.session_state["_grouped_name"] = f"{table_name.rsplit('.',1)[0]}__diff.csv"
+                st.success(dres.method_sentence())
+                for _w in dres.warnings:
+                    st.warning(_w)
+                st.download_button("Download differential results CSV",
+                                   dres.table.to_csv(index=False),
+                                   file_name="differential_results.csv", mime="text/csv")
+                st.info("Now pick Volcano plot / MA plot below (or see Recommended figures).")
+            except Exception as exc:
+                st.error(str(exc))
     else:
         source_col = st.selectbox("Source column", list(table_info.columns), key="grp_src")
         new_col = st.text_input("New group column name", value="group", key="grp_newcol")

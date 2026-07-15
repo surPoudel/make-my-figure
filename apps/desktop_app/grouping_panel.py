@@ -106,8 +106,26 @@ class GroupingDialog(QDialog):
         self.mode_long = QRadioButton("Bar / box / violin comparisons (long table)")
         self.mode_long.setChecked(True)
         self.mode_wide = QRadioButton("Heatmap / PCA (keep the matrix + add a group color strip)")
+        self.mode_diff = QRadioButton(
+            "Differential screen (exactly 2 groups → results table with log2FC / p / FDR)")
         v.addWidget(self.mode_long)
         v.addWidget(self.mode_wide)
+        v.addWidget(self.mode_diff)
+        # Differential-screen method (only the two-group tests already in the app).
+        diff_row = QHBoxLayout()
+        diff_row.addWidget(QLabel("   DE test:"))
+        self.diff_test_combo = QComboBox()
+        for tid, label in self.controller.differential_test_choices():
+            self.diff_test_combo.addItem(label, tid)
+        diff_row.addWidget(self.diff_test_combo)
+        v.addLayout(diff_row)
+        diff_note = QLabel(
+            "The differential screen expects a NORMALIZED matrix (e.g. voom / log2-CPM). "
+            "It is a basic per-feature test + BH FDR — not a count-based model "
+            "(DESeq2/edgeR/limma-voom). For raw counts, normalize first.")
+        diff_note.setStyleSheet("color:#345; font-size:11px;")
+        diff_note.setWordWrap(True)
+        v.addWidget(diff_note)
 
         v.addWidget(QLabel("Features to include:"))
         self.all_features_radio = QRadioButton("All features")
@@ -233,7 +251,34 @@ class GroupingDialog(QDialog):
                         self, "One group",
                         "Only one group is defined — statistics need at least two. "
                         "You can still build the table.")
-                if self.mode_wide.isChecked():
+                if self.mode_diff.isChecked():
+                    # Differential screen: exactly 2 groups -> results table (log2FC/p/FDR).
+                    if len({v for v in s2g.values() if v}) != 2:
+                        raise ValueError("The differential screen needs exactly 2 groups; "
+                                         "assign your samples to two groups only.")
+                    loaded, dres = self.controller.run_differential_screen(
+                        self.data, feature_col=self.feature_combo.currentText(),
+                        group_labels=s2g, test=self.diff_test_combo.currentData())
+                    # Persist the results table so it exists as a file.
+                    import os as _os
+                    import tempfile as _tempfile
+                    src = getattr(self.data, "source_path", None)
+                    outdir = _os.path.dirname(src) if src else _tempfile.gettempdir()
+                    outpath = _os.path.join(outdir, _os.path.basename(loaded.table_name))
+                    try:
+                        self.controller.save_table(loaded.info.dataframe, outpath)
+                        loaded.source_path = outpath
+                    except Exception:
+                        outpath = None
+                    msg = dres.method_sentence()
+                    if outpath:
+                        msg += f"\n\nResults saved to: {outpath}"
+                    if dres.warnings:
+                        msg += "\n\n⚠ " + "\n⚠ ".join(dres.warnings)
+                    msg += ("\n\nVolcano / MA / top-feature plots are now recommended from this "
+                            "results table.")
+                    QMessageBox.information(self, "Differential screen complete", msg)
+                elif self.mode_wide.isChecked():
                     # Heatmap/PCA: keep the matrix (assigned samples only) + a group strip.
                     loaded, self.column_annotations = self.controller.group_from_matrix_wide(
                         self.data, sample_columns=self._sample_columns(),

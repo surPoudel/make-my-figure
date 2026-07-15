@@ -150,6 +150,28 @@ class DesktopController:
         df.to_csv(path, index=False)
         return path
 
+    # --- in-app differential screen (normalized matrix; NOT count-based DE) ---
+    def differential_test_choices(self) -> List[Tuple[str, str]]:
+        """(test_id, label) for the per-feature differential-screen tests."""
+        from make_my_figure_core.differential import TESTS, _TEST_LABELS
+
+        return [(t, _TEST_LABELS.get(t, t)) for t in TESTS]
+
+    def run_differential_screen(self, data: "LoadedData", *, feature_col: str,
+                                group_labels: Dict[str, str], test: str = "welch_t",
+                                log_input: bool = True,
+                                reference_group: Optional[str] = None):
+        """Run the differential screen on a normalized matrix and wrap the results
+        table as a LoadedData. Returns ``(loaded, DifferentialResult)``."""
+        from make_my_figure_core.differential import differential_screen
+
+        result = differential_screen(
+            data.info.dataframe, feature_col=feature_col, group_labels=group_labels,
+            test=test, log_input=log_input, reference_group=reference_group)
+        base = data.table_name.rsplit(".", 1)[0] if "." in data.table_name else data.table_name
+        loaded = self.loaded_from_dataframe(result.table, f"{base}__diff.csv")
+        return loaded, result
+
     def loaded_from_dataframe(self, df, table_name: str,
                               *, aux: Optional[Dict[str, TableInfo]] = None) -> LoadedData:
         """Wrap an in-memory DataFrame as a :class:`LoadedData` (a derived table).

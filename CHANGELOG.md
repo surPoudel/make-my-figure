@@ -4,6 +4,33 @@ All notable changes to Make My Figure are recorded here. This project uses a
 single, evolving `Publication` style — it does not target or claim compliance
 with any journal.
 
+## [0.6.1] — Open PlotSpec, transform-aware recommendations, in-app differential screen
+
+### Added
+- **Open PlotSpec** (desktop File menu + Streamlit data source): reopen a saved
+  `*.plot_spec.json` (+ its data) and reproduce the exact figure — restores plot
+  type, mappings, style, and statistics.
+- **Transform-aware recommendations**: plots reachable by reshaping the data
+  (wide→long ridge/box, correlation heatmap, category-frequency bar). On Generate
+  the app reshapes the data, **saves the new CSV**, and plots it.
+- **Guidance recommendations** (informational): e.g. volcano/MA from a matrix
+  explain that a precomputed fold-change + p-value/FDR table is required and that
+  Make My Figure does not compute or fabricate those statistics.
+- **In-app differential screen** (Define groups → "Differential screen"): a basic
+  per-feature two-group test (Welch/Student's t or Mann–Whitney — the app's
+  existing two-group tests) + Benjamini–Hochberg FDR + log2 fold-change on a
+  **normalized** matrix, writing a results table (log2FC/p/FDR/AveExpr) that then
+  drives volcano/MA/top-feature recommendations. It is transparently labeled as a
+  basic screen — **NOT** a count-based model (DESeq2/edgeR/limma-voom) and **not**
+  RNA-seq-from-raw-counts; normalize before running.
+- **Heatmap `log_zscore` scale** (log then per-row z-score) + a nudge when a raw-
+  count-like matrix is left unscaled.
+
+### Fixed
+- Recommendation engine now detects unnamed categorical group columns (e.g.
+  `species`) so group/value tables get box/violin/ridge/bar suggestions; manually
+  picking a distribution plot auto-prefills x/y/group.
+
 ## [0.6.0] — Publication style, recommendations, QC, benchmarks, performance
 
 Focus: fast, polished, intelligent, publication-ready — not more plot types.

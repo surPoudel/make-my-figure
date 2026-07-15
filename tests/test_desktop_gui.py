@@ -654,3 +654,43 @@ def test_generate_transform_recommendation_reshapes_saves_and_renders(app, tmp_p
     assert win._current_result is not None
     assert any(f.endswith("__long.csv") for f in os.listdir(tmp_path))
     win.close()
+
+
+def test_differential_screen_via_grouping_dialog(app, tmp_path, monkeypatch):
+    """Define groups → Differential screen → results table (log2FC/p/FDR) saved,
+    adopted, and volcano/MA become recommended."""
+    import os
+    import numpy as np
+    import pandas as pd
+    from apps.desktop_app import grouping_panel
+    from apps.desktop_app.grouping_panel import GroupingDialog
+
+    monkeypatch.setattr(grouping_panel.QMessageBox, "information",
+                        staticmethod(lambda *a, **k: None))
+    win = MainWindow()
+    rng = np.random.default_rng(2)
+    df = pd.DataFrame({"gene": [f"g{i}" for i in range(25)]})
+    for s in ["C1", "C2", "C3"]:
+        df[s] = rng.normal(5, 1, 25)
+    for s in ["T1", "T2", "T3"]:
+        df[s] = rng.normal(6, 1, 25)
+    src = tmp_path / "norm.csv"
+    df.to_csv(src, index=False)
+    win._set_data(win.controller.load_file(str(src)))
+    dlg = GroupingDialog(win.controller, win.data)
+    dlg.feature_combo.setCurrentText("gene")
+    dlg._refresh_matrix_tab()
+    for r in range(dlg.sample_table.rowCount()):
+        s = dlg.sample_table.item(r, 0).text()
+        dlg.sample_table.item(r, 1).setText("Ctrl" if s.startswith("C") else "Treat")
+    dlg.mode_diff.setChecked(True)
+    captured = {}
+    dlg.grouped.connect(lambda ld: captured.setdefault("ld", ld))
+    dlg._on_accept()
+    ld = captured["ld"]
+    assert {"log2FoldChange", "pvalue", "padj", "AveExpr"} <= set(ld.info.columns)
+    win._adopt_grouped_data(ld)
+    rs = win.controller.recommend_for_loaded(win.data)
+    assert any(r.plot_type == "volcano_plot" and r.kind == "direct" for r in rs.recommendations)
+    assert any(f.endswith("__diff.csv") for f in os.listdir(tmp_path))
+    win.close()

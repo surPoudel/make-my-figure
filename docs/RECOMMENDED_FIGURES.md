@@ -92,3 +92,30 @@ related summaries, always reading the fold-change/p-value columns as given.
 - [docs/V0_6_NEW_FEATURES.md](V0_6_NEW_FEATURES.md)
 - [docs/PUBLICATION_QC.md](PUBLICATION_QC.md) — score a generated recommendation before export.
 - `make_my_figure_core/de_detect.py` — the DE-column alias detection used for volcano recommendations and mapping.
+
+## Transform-aware recommendations & the in-app differential screen (v0.6.1)
+
+Recommendations now include plots that require **reshaping** the data, and
+**guidance** for plots that need an analysis first:
+
+- **Transform recs** (one-click): a wide numeric matrix → long → ridge / box-violin
+  across columns; ≥3 numeric columns → a correlation heatmap; a categorical column →
+  a frequency bar. Choosing one reshapes the data, **saves the new CSV** next to the
+  source, and plots it.
+- **Guidance recs** (informational, no one-click): volcano / MA from a matrix explain
+  that you need a **precomputed** results table with log2 fold-change + p-value/FDR.
+  Make My Figure does not compute or fabricate those statistics.
+
+### Differential screen (normalized matrix only)
+**Define groups → "Differential screen (2 groups)"** runs a basic per-feature
+two-group test — Welch's / Student's t or Mann–Whitney (the app's existing
+two-group tests) — with Benjamini–Hochberg FDR and a log2 fold-change from group
+means, producing a results table (`log2FoldChange`, `pvalue`, `padj`, `AveExpr`).
+That table is saved and then drives volcano / MA / top-feature recommendations.
+
+> This is a **basic exploratory screen**, not a count-based differential-expression
+> model. It is **not** DESeq2 / edgeR / limma-voom and does not model count
+> dispersion, library size, or design covariates, and it is **not** run on raw
+> counts. Provide a **normalized** matrix (e.g. voom / log2-CPM). For
+> publication-grade differential expression, run a dedicated tool and load its
+> results table (→ volcano / MA).
