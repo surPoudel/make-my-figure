@@ -8,13 +8,18 @@
   "reference_images_stored": false,
   "reference_image_policy": "citation + figure number + textual target description only; no image-similarity",
   "style": "publication",
+  "top_level_conclusion": "This benchmark demonstrates publication-grade recreation from associated data, not pixel-identical reproduction.",
   "panels": [
-    {"panel": "A", "plot_type": "scatterplot_with_regression", "figure": "Fig 2 (culmen dimensions)",
-     "dir": "recreated_panels/panel_A"},
-    {"panel": "B", "plot_type": "boxplot_or_violin_with_points", "figure": "body-mass comparison",
-     "dir": "recreated_panels/panel_B", "statistics": "mann_whitney (all_pairs, BH)"},
+    {"panel": "A", "plot_type": "scatterplot_with_regression", "figure": "culmen dimensions by species",
+     "dir": "recreated_panels/panel_A",
+     "classification": "publication-grade recreation", "statistics_shown": "none"},
+    {"panel": "B", "plot_type": "boxplot_or_violin_with_points", "figure": "body-mass distribution by species",
+     "dir": "recreated_panels/panel_B",
+     "classification": "publication-grade visualization from the same dataset (not a statistical reproduction)",
+     "statistics_shown": "none (brackets removed; paper uses linear models, not reproduced)"},
     {"panel": "C", "plot_type": "pca_scatter_from_matrix", "figure": "morphometric separation",
-     "dir": "recreated_panels/panel_C"}
+     "dir": "recreated_panels/panel_C",
+     "classification": "new visualization from associated data", "statistics_shown": "variance explained per PC"}
   ],
   "figure_builder": {"figure_spec": "figure_builder/figure_spec.json",
                      "outputs": ["assembled_figure.png", "assembled_figure.svg", "assembled_figure.pdf"]},

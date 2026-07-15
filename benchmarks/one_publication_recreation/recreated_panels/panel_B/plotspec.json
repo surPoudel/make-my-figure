@@ -24,13 +24,5 @@
     "y_label": "Body mass (g)",
     "title": "Body mass by species",
     "legend_outside": true
-  },
-  "statistics": {
-    "enabled": true,
-    "test": "mann_whitney",
-    "comparison_mode": "all_pairs",
-    "correction": "bh",
-    "value_column": "body_mass_g",
-    "group_column": "species"
   }
 }

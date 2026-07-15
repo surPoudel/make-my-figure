@@ -43,28 +43,54 @@ def main() -> None:
     # main report
     lines = [
         "# One-publication recreation report", "",
+        "> **This benchmark demonstrates publication-grade recreation from associated "
+        "data, not pixel-identical reproduction.**", "",
         f"**Publication:** {_lib.PAPER}", f"**DOI:** {_lib.DOI}",
         "**Article license:** CC BY 4.0 · **Data license:** CC0 (Palmer Station LTER, "
         "tidied release via palmerpenguins).", "",
-        "## Panels recreated (through Make My Figure, Publication style)",
-        f"- **{npass}/{len(recs)} panels pass** scientific + visual QC (>=3 QC iterations each).", "",
-        "| panel | plot type | rows | iters | sci QC | vis QC |",
-        "|---|---|---|---|---|---|",
+        "## Panels (through Make My Figure, Publication style)",
+        f"- **{npass}/{len(recs)} panels pass** scientific + visual QC (>=3 QC iterations each).",
+        "- No panel is labelled *exact reproduction*; each is classified honestly below.", "",
+        "| panel | plot type | rows | iters | sci QC | vis QC | classification |",
+        "|---|---|---|---|---|---|---|",
     ]
     for pid, r in recs.items():
         lines.append(f"| {pid} | {r['plot_type']} | {r['rows']} | {len(r['iterations'])} | "
                      f"{'PASS' if r['scientific_qc_pass'] else 'FAIL'} | "
-                     f"{'PASS' if r['visual_qc_pass'] else 'WARN'} |")
+                     f"{'PASS' if r['visual_qc_pass'] else 'WARN'} | "
+                     f"{r.get('classification','')} |")
     lines += [
+        "", "## Method-matching table",
+        "| panel | published method | app method | same/different | acceptable | reason |",
+        "|---|---|---|---|---|---|",
+    ]
+    for pid, r in recs.items():
+        m = r.get("method_matching", {})
+        lines.append(f"| {pid} | {m.get('published_method','')} | {m.get('app_method','')} | "
+                     f"{m.get('same','')} | {m.get('acceptable','')} | {m.get('reason','')} |")
+    lines += [
+        "", "## Visual target table",
+        "| panel | reference image stored | textual target | image similarity possible | comparison method |",
+        "|---|---|---|---|---|",
+    ]
+    for pid in recs:
+        v = _lib._VISUAL_TARGET
+        lines.append(f"| {pid} | {v['reference_image_legally_stored']} | "
+                     f"{v['textual_target_available']} | {v['image_similarity_possible']} | "
+                     f"{v['visual_comparison_method']} |")
+    lines += [
+        "", f"_Reference-image note:_ {_lib._VISUAL_TARGET['note']}",
         "", "## Data sources & provenance",
         "- Raw (CC0): palmerpenguins `penguins.csv`, `penguins_raw.csv` (SHA-256 in "
         "`raw_data/checksums.json`). Measurements are Gorman et al. 2014 (Palmer LTER).",
         "- Processed: reproducible via `scripts/curate_data.py` (see "
         "`processed_data/curation_log.json`). Raw files are never modified.",
-        "", "## Statistics verified",
-        "- Panel B body-mass comparison: pairwise Mann-Whitney U (BH-corrected), every "
-        "value drawn from a stored `StatResult` via `run_statistics`. Adelie vs Chinstrap "
-        "n.s.; both vs Gentoo highly significant (Gentoo is the heavy species).",
+        "", "## Statistics",
+        "- **No statistical test from the paper is reproduced.** The paper analyses body "
+        "mass with linear models (species/sex + environmental covariates); we do not fit "
+        "that model. Panel B therefore shows only the body-mass distribution with **no** "
+        "significance brackets/p-values, and is labelled a visualization, not a statistical "
+        "reproduction. Box summaries (medians/quartiles) trace directly to the data.",
         "", "## Figure Builder",
         "- Panels A/B/C assembled via `make_my_figure_core.panels.build_figure` into a "
         "labelled 2x2 layout; exported PNG/SVG/PDF + `figure_builder/figure_spec.json`.",

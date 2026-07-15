@@ -30,9 +30,24 @@
   ],
   "color_mapping": "by species (Publication palette)",
   "legend_behavior": "species legend, placed outside the axes",
-  "annotations": "significance brackets from StatsSpec",
+  "annotations": "none",
   "panel_dimensions": "onehalf column width (Publication default)",
   "reference_image_path": null,
   "reference_image_license": "described-only (article CC BY 4.0; image not stored)",
+  "classification": "publication-grade visualization from the same dataset (not a statistical reproduction)",
+  "method_matching": {
+    "published_method": "linear models of body mass (species/sex + environmental covariates, e.g. stable-isotope terms)",
+    "app_method": "distribution box + points only; NO statistical brackets",
+    "same": "different",
+    "acceptable": "yes",
+    "reason": "the paper's linear-model analysis is not reproduced; brackets were removed and the panel is labelled a visualization, not a statistical reproduction"
+  },
+  "visual_target": {
+    "reference_image_legally_stored": "no",
+    "textual_target_available": "yes",
+    "image_similarity_possible": "no",
+    "visual_comparison_method": "checklist against the figure legend / textual target (axes, variables, group order, scale, legend) \u2014 no pixel or image-similarity comparison",
+    "note": "PLoS ONE is CC BY 4.0 and would permit storing a cropped, attributed reference panel; we deliberately store description-only to avoid figure-copyright ambiguity and because no image-similarity is claimed."
+  },
   "known_missing_information": "The paper models body mass with linear models including sex and covariates; this panel shows a standard nonparametric pairwise comparison on the same data (documented in differences)."
 }

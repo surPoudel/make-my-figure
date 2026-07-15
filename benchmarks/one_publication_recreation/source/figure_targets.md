@@ -14,7 +14,7 @@ App plot type: `scatterplot_with_regression` (per-species trend).
 Target: the distribution of body mass (g) across the three species, underpinning
 the paper's analysis of size differences/sexual dimorphism. Gentoo penguins are
 substantially heavier than Adelie and Chinstrap. App plot type:
-`boxplot_or_violin_with_points` + pairwise statistics.
+`boxplot_or_violin_with_points` (distribution only; the paper's linear-model analysis is NOT reproduced, so no significance brackets are drawn).
 
 ## Panel C — morphometric separation
 Target: multivariate separation of species by body-size measurements. App plot

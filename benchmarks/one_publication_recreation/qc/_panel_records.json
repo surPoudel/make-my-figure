@@ -32,7 +32,15 @@
       "pdf": true
     },
     "scientific_qc_pass": true,
-    "visual_qc_pass": true
+    "visual_qc_pass": true,
+    "classification": "publication-grade recreation",
+    "method_matching": {
+      "published_method": "culmen (bill) length & depth described by species (morphometric description; no per-panel inferential test)",
+      "app_method": "scatter with per-species OLS trend line (no test)",
+      "same": "different",
+      "acceptable": "yes",
+      "reason": "descriptive visualization of the same variables; no statistical claim is made, so the method difference does not misrepresent the paper"
+    }
   },
   "B": {
     "panel": "B",
@@ -60,36 +68,22 @@
       }
     ],
     "final_visual_warnings": [],
-    "stats_report": [
-      {
-        "comparison": "Adelie vs Chinstrap",
-        "test": "Mann-Whitney U test",
-        "p_value": 0.4854772721011861,
-        "adjusted_p": 0.48547727210118613,
-        "n_total": 219
-      },
-      {
-        "comparison": "Adelie vs Gentoo",
-        "test": "Mann-Whitney U test",
-        "p_value": 2.982319067322439e-42,
-        "adjusted_p": 8.946957201967317e-42,
-        "n_total": 274
-      },
-      {
-        "comparison": "Chinstrap vs Gentoo",
-        "test": "Mann-Whitney U test",
-        "p_value": 1.6723632138556386e-28,
-        "adjusted_p": 2.508544820783458e-28,
-        "n_total": 191
-      }
-    ],
+    "stats_report": null,
     "exports_ok": {
       "png": true,
       "svg": true,
       "pdf": true
     },
     "scientific_qc_pass": true,
-    "visual_qc_pass": true
+    "visual_qc_pass": true,
+    "classification": "publication-grade visualization from the same dataset (not a statistical reproduction)",
+    "method_matching": {
+      "published_method": "linear models of body mass (species/sex + environmental covariates, e.g. stable-isotope terms)",
+      "app_method": "distribution box + points only; NO statistical brackets",
+      "same": "different",
+      "acceptable": "yes",
+      "reason": "the paper's linear-model analysis is not reproduced; brackets were removed and the panel is labelled a visualization, not a statistical reproduction"
+    }
   },
   "C": {
     "panel": "C",
@@ -124,6 +118,14 @@
       "pdf": true
     },
     "scientific_qc_pass": true,
-    "visual_qc_pass": true
+    "visual_qc_pass": true,
+    "classification": "new visualization from associated data",
+    "method_matching": {
+      "published_method": "no canonical PCA panel of these four morphometrics in the article",
+      "app_method": "PCA of four z-scored morphometrics",
+      "same": "n/a (new visualization)",
+      "acceptable": "yes",
+      "reason": "explicitly labelled a new visualization from the associated data, not a recreation of a published panel"
+    }
   }
 }

@@ -110,9 +110,11 @@ def panel_configs() -> dict:
             "mapping": {"x": "species", "y": "body_mass_g", "kind": "box", "points": True},
             "labels": {"x_label": "Species", "y_label": "Body mass (g)",
                        "title": "Body mass by species"},
-            "statistics": {"enabled": True, "test": "mann_whitney",
-                           "comparison_mode": "all_pairs", "correction": "bh",
-                           "value_column": "body_mass_g", "group_column": "species"},
+            # No statistical brackets: the paper analyses body mass with linear
+            # models (species/sex + environmental covariates), a DIFFERENT method.
+            # We show only the distribution and do NOT claim a statistical
+            # reproduction (see classification / method-matching table).
+            "statistics": None,
             "aux": None,
         },
         "C": {
@@ -243,18 +245,62 @@ _TARGETS = {
 _DIFFERENCES = {
     "A": "Recreated from the associated CC0 measurements. The app fits a per-species "
          "regression trend (Publication style). Colours, marker sizes, and axis limits "
-         "are the app's Publication defaults, not the paper's exact styling. No reference "
-         "image was stored, so no pixel comparison was performed.",
-    "B": "The published analysis uses linear models (with sex and environmental "
-         "covariates) rather than a simple omnibus/pairwise test. This panel shows a "
-         "standard, fully-traceable Mann-Whitney U pairwise comparison (BH-corrected) on "
-         "the same body-mass data as a QC demonstration; it is not the paper's exact "
-         "model. Direction/relative magnitude (Gentoo >> Adelie ~ Chinstrap) matches the "
-         "biology. No reference image stored.",
-    "C": "PCA uses per-feature z-scoring (documented) so unit differences do not dominate. "
-         "PC sign/rotation is arbitrary and may be flipped vs any published ordination. "
-         "Variance-explained and species separation are reported from the app's renderer. "
+         "are the app's Publication defaults, not the paper's exact styling. No inferential "
+         "test is claimed on this panel. No reference image was stored, so no pixel "
+         "comparison was performed.",
+    "B": "The published analysis models body mass with linear models (species/sex + "
+         "environmental covariates) — a DIFFERENT method that we do not reproduce. To "
+         "avoid implying the paper's statistics, the statistical brackets/p-values have "
+         "been REMOVED; this panel shows only the body-mass distribution (a publication-"
+         "grade visualization of the same dataset, not a statistical reproduction). "
+         "Direction/relative magnitude (Gentoo >> Adelie ~ Chinstrap) matches the biology. "
          "No reference image stored.",
+    "C": "The article does not present a canonical PCA panel of these four morphometrics; "
+         "this is a NEW visualization derived from the associated data. PCA uses per-feature "
+         "z-scoring (documented); PC sign/rotation is arbitrary. Variance-explained and "
+         "species separation come from the app's renderer. No reference image stored.",
+}
+
+# Honest per-panel classification (one of the four categories requested).
+_CLASSIFICATION = {
+    "A": "publication-grade recreation",
+    "B": "publication-grade visualization from the same dataset (not a statistical reproduction)",
+    "C": "new visualization from associated data",
+}
+
+# Published method vs app method (feeds the method-matching table).
+_METHOD_MATCH = {
+    "A": {"published_method": "culmen (bill) length & depth described by species "
+                              "(morphometric description; no per-panel inferential test)",
+          "app_method": "scatter with per-species OLS trend line (no test)",
+          "same": "different", "acceptable": "yes",
+          "reason": "descriptive visualization of the same variables; no statistical "
+                    "claim is made, so the method difference does not misrepresent the paper"},
+    "B": {"published_method": "linear models of body mass (species/sex + environmental "
+                              "covariates, e.g. stable-isotope terms)",
+          "app_method": "distribution box + points only; NO statistical brackets",
+          "same": "different", "acceptable": "yes",
+          "reason": "the paper's linear-model analysis is not reproduced; brackets were "
+                    "removed and the panel is labelled a visualization, not a statistical "
+                    "reproduction"},
+    "C": {"published_method": "no canonical PCA panel of these four morphometrics in the article",
+          "app_method": "PCA of four z-scored morphometrics",
+          "same": "n/a (new visualization)", "acceptable": "yes",
+          "reason": "explicitly labelled a new visualization from the associated data, "
+                    "not a recreation of a published panel"},
+}
+
+# Visual comparison target (feeds the visual-target table). No images stored.
+_VISUAL_TARGET = {
+    "reference_image_legally_stored": "no",
+    "textual_target_available": "yes",
+    "image_similarity_possible": "no",
+    "visual_comparison_method": "checklist against the figure legend / textual target "
+                                "(axes, variables, group order, scale, legend) — no "
+                                "pixel or image-similarity comparison",
+    "note": ("PLoS ONE is CC BY 4.0 and would permit storing a cropped, attributed "
+             "reference panel; we deliberately store description-only to avoid figure-"
+             "copyright ambiguity and because no image-similarity is claimed."),
 }
 
 
@@ -281,8 +327,13 @@ def _write_target_and_differences(pid: str, cfg: dict, rec: dict) -> None:
         "panel_dimensions": "onehalf column width (Publication default)",
         "reference_image_path": None,
         "reference_image_license": "described-only (article CC BY 4.0; image not stored)",
+        "classification": _CLASSIFICATION[pid],
+        "method_matching": _METHOD_MATCH[pid],
+        "visual_target": _VISUAL_TARGET,
         "known_missing_information": t["known_missing_information"],
     }
+    rec["classification"] = _CLASSIFICATION[pid]
+    rec["method_matching"] = _METHOD_MATCH[pid]
     with open(os.path.join(pdir, "target_panel_spec.json"), "w", encoding="utf-8") as fh:
         json.dump(spec, fh, indent=2)
     with open(os.path.join(pdir, "differences_from_published.md"), "w", encoding="utf-8") as fh:
@@ -334,14 +385,14 @@ def _write_panel_qc(pid: str, cfg: dict, df: pd.DataFrame, rec: dict) -> None:
         lines.append(f"  full-dataset counts {full.to_dict()} (n=344) minus rows lacking "
                      f"body_mass_g by species {dropped} -> 342 analysed")
         lines.append("")
-        lines.append("Statistics drawn on the figure (each from a stored StatResult "
-                     "via `run_statistics`, Mann–Whitney U, BH-corrected):")
-        for s in rec.get("stats_report") or []:
-            lines.append(f"  - {s['comparison']}: {s['test']}, p={s['p_value']:.3g}, "
-                         f"adj_p={s['adjusted_p']:.3g}, n={s['n_total']}")
-        if not rec.get("stats_report"):
-            sci_pass = False
-            lines.append("  - NONE — expected pairwise results ✗")
+        lines.append("No statistical brackets are drawn (the paper uses linear models "
+                     "with covariates — a different method; not reproduced here). The "
+                     "box summaries trace directly to the data:")
+        med = df.groupby("species", observed=True)["body_mass_g"].median().reindex(SPECIES_ORDER)
+        for sp in SPECIES_ORDER:
+            lines.append(f"  - {sp}: median body mass = {med[sp]:.0f} g")
+        lines.append("  (Gentoo >> Adelie ~ Chinstrap — matches the paper's reported "
+                     "size ordering.)")
     if pid == "C":
         n_feat = int((df["feature"].nunique()))
         lines.append(f"- PCA features (rows) = {n_feat} (the 4 z-scored morphometrics) "

@@ -13,8 +13,8 @@ Article **CC BY 4.0**; associated data **CC0** (Palmer Station LTER, tidied
 release via palmerpenguins).
 
 **Panels recreated (3):** A — bill length vs depth scatter by species
-(`scatterplot_with_regression`); B — body mass by species with pairwise stats
-(`boxplot_or_violin_with_points` + Mann-Whitney/BH); C — morphometric PCA
+(`scatterplot_with_regression`); B — body mass by species, distribution only
+(`boxplot_or_violin_with_points`; **no** significance brackets — the paper's linear-model analysis is not reproduced); C — morphometric PCA
 (`pca_scatter_from_matrix`). Assembled into a labelled multi-panel figure.
 
 **Legal:** no article figure images are stored — only citation, figure numbers,
