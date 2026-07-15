@@ -19,6 +19,10 @@ kind is visually verified in the manuscript.
 - **crowley1977_heart** (Kaplan–Meier) — plausible for a survival paper, but the 1977
   article's figure could not be obtained/viewed to confirm. Dropped.
 - **liu1992_china_smoking** (forest) — plot kind not confirmed in the source; non-open.
+- **horst2022_palmerpenguins** (R Journal RJ-2022-020) — a natural candidate for a
+  penguin figure with a clearly-viewable manuscript, but **rejected on license**: the
+  R Journal states its content is "© The R Foundation", not clearly CC BY/CC0, so its
+  figures cannot be redistributed here. (Verified by fetching journal.r-project.org.)
 
 These datasets remain scientifically usable, but as *dataset illustrations*, not
 reproductions of the papers' figures — so they do not belong in a figure-recreation

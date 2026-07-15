@@ -24,8 +24,13 @@ app-reproducible match is the **isotope biplot**.
 | id | paper | article license | plot kind (confirmed in paper) | real figure stored |
 |---|---|---|---|---|
 | gorman2014_penguins | Gorman et al. 2014, *PLoS ONE* | **CC BY 4.0** | δ¹³C-vs-δ¹⁵N stable-isotope scatter (Figs 3–5) | **yes** — Fig 3 + `side_by_side/gorman2014_penguins.png` |
+| thommen2019_planaria | Thommen et al. 2019, *eLife* | **CC BY 4.0** | log–log wet-vs-dry mass allometric scatter + fit (Fig 1B) | **yes** — Fig 1B + `side_by_side/thommen2019_planaria.png` |
+| guo2019_melanoma_methylation | Guo et al. 2019, *eLife* | **CC BY 4.0** | two-group Kaplan–Meier survival curve (Fig 2C) | **yes** — Fig 2C + `side_by_side/guo2019_melanoma_methylation.png` |
 
-Only Gorman 2014 is open-access, so only its figure could be legally stored.
+All three entries are open-access (CC BY 4.0), so their figures + source data could
+be legally stored and redistributed with attribution. Each documents any
+quantitative difference from the paper honestly (e.g. fit scope, log-rank variant)
+rather than hiding it — see each panel's `differences_from_published.md`.
 
 ## Expanding
 Scaling to ~10 verified figure-matches requires sourcing more **modern

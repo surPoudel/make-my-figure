@@ -1,0 +1,16 @@
+{
+  "publication_id": "guo2019_melanoma_methylation",
+  "doi": "10.7554/eLife.44310",
+  "figure_number": "Figure 2C",
+  "plot_type": "kaplan_meier_survival_curve",
+  "panel_description": "Kaplan-Meier survival curves for low-risk vs high-risk patients (four-DNA-methylation score) in the GEO GSE51547 cohort (n=47), with censoring ticks; paper log-rank P=3.09E-2.",
+  "matches_published_figure": true,
+  "required_columns": [
+    "time",
+    "event",
+    "group"
+  ],
+  "transformations": "From Figure 2-source data 3; keep Sample, time, status (renamed event: 1=death,0=censored), group (low-risk/high-risk).",
+  "reference_image": "stored (Figure 2C, CC BY 4.0) -- reference_figures/guo2019_melanoma_methylation/",
+  "known_missing_information": "App native log-rank p=0.051 vs paper P=3.09E-2 (test-variant/tie-handling difference; KM curves identical). Paper uses dashed/solid line styles + in-panel P text; recreation uses coloured curves + a log-rank annotation."
+}

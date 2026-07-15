@@ -1,0 +1,11 @@
+{
+  "figure_id": "elife-38187-fig1",
+  "crop": "panel B (lower-left quadrant) cropped from the full 4-panel Figure 1",
+  "crop_box_fractions": {
+    "left": 0.0,
+    "top": 0.335,
+    "right": 0.455,
+    "bottom": 0.625
+  },
+  "size": "medium"
+}

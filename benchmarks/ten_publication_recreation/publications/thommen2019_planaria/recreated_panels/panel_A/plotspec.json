@@ -1,0 +1,26 @@
+{
+  "plot_type": "scatterplot_with_regression",
+  "input_table": "planaria_mass.csv",
+  "mapping": {
+    "x": "log10_dry_mass",
+    "y": "log10_wet_mass",
+    "color": "group",
+    "fit_line": true
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89.0,
+    "height_mm": 70.0,
+    "dpi": 300
+  },
+  "layout": {
+    "title": "Planarian body mass scaling",
+    "x_label": "log$_{10}$ dry mass (mg)",
+    "y_label": "log$_{10}$ wet mass (mg)"
+  }
+}

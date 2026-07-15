@@ -1,0 +1,15 @@
+{
+  "publication_id": "thommen2019_planaria",
+  "doi": "10.7554/eLife.38187",
+  "figure_number": "Figure 1B",
+  "plot_type": "scatterplot_with_regression",
+  "panel_description": "log-log scatter of wet mass vs dry mass across planarian body sizes with a linear power-law fit; the paper annotates the isometric scaling exponent 1.03 +/- 0.01.",
+  "matches_published_figure": true,
+  "required_columns": [
+    "log10_dry_mass",
+    "log10_wet_mass"
+  ],
+  "transformations": "From Figure 1-source data 1 (Wet mass mg, Dry mass mg); drop the trailing balance-readability note row; take log10 of each mass. x=log10 dry mass, y=log10 wet mass.",
+  "reference_image": "stored (Figure 1B, CC BY 4.0) -- reference_figures/thommen2019_planaria/",
+  "known_missing_information": "Paper uses log-scaled axes (decade ticks) rather than plotted log10 values; the app default OLS fit over all 28 points gives exponent 1.14 vs the paper's 1.03 for the isometric regime (dry >= 0.15 mg reproduces 1.03)."
+}

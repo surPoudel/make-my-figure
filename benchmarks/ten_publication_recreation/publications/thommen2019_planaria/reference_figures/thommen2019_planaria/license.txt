@@ -1,0 +1,6 @@
+Thommen A, Werner S, Frank O, Philipp J, Kuttler F, Quaas L, Steinbeck C, Rink JC (2019). Body size-dependent energy storage causes Kleiber's law scaling of the metabolic rate in planarians. eLife 8:e38187.
+DOI: 10.7554/eLife.38187
+Figure: Figure 1, panel B (log-log wet-mass vs dry-mass scatter, scaling exponent 1.03 +/- 0.01); figure id elife-38187-fig1
+Source: https://elifesciences.org/articles/38187 ; image https://iiif.elifesciences.org/lax/38187%2Felife-38187-fig1-v1.tif/full/full/0/default.jpg
+License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) -- (c) 2019 Thommen et al.
+Date accessed: 2026-07-15. Redistributed here (panel B cropped) with attribution under CC BY 4.0.

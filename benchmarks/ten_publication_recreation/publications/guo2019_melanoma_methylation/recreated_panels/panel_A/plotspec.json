@@ -1,0 +1,28 @@
+{
+  "plot_type": "kaplan_meier_survival_curve",
+  "input_table": "melanoma_geo_survival.csv",
+  "mapping": {
+    "time": "time",
+    "event": "event",
+    "group": "group"
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89.0,
+    "height_mm": 75.0,
+    "dpi": 300
+  },
+  "statistics": {
+    "enabled": true
+  },
+  "layout": {
+    "title": "GEO GSE51547 cohort",
+    "x_label": "Time (days)",
+    "y_label": "Proportion surviving"
+  }
+}
