@@ -1,0 +1,17 @@
+{
+  "id": "kume2024_keratin_dotplot",
+  "paper_title": "Interplay between keratinocytes and immune cells in psoriasis (eLife 13:RP97654; Kume et al. 2024)",
+  "authors": "Kume A, et al.",
+  "journal": "eLife",
+  "year": 2024,
+  "volume": "13",
+  "elocation_id": "RP97654",
+  "doi": "10.7554/eLife.97654",
+  "url": "https://elifesciences.org/articles/97654",
+  "article_license": "CC BY 4.0",
+  "target_figure": "Figure 5C (KRT16 sub-panel)",
+  "target_figure_kind": "dot_strip_plot",
+  "target_figure_description": "Dot plot (individual data points with a mean +/- SD overlay) of KRT16 expression in control (Ctl) vs psoriatic non-lesional (NL) keratinocytes; the paper marks the NL increase '**'. One of six gene sub-panels in Figure 5C.",
+  "underlying_data": "Per-sample expression values are provided in Figure 5-source data 1 (sheet 'Figure 5C', KRT16 columns); plotted verbatim.",
+  "relationship_to_other_entry": "Same article as kume2024_psoriasis_semaphorin (volcano, Figure 5A) but a distinct figure (5C) and distinct plot kind (dot_strip_plot)."
+}

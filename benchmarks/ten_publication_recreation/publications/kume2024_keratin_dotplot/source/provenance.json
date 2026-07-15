@@ -1,0 +1,14 @@
+{
+  "article_license": "CC BY 4.0",
+  "data_license": "CC BY 4.0 (Figure 5-source data 1, sheet 'Figure 5C', values plotted verbatim)",
+  "license_verified_how": "eLife API https://api.elifesciences.org/articles/97654 -> copyright.license = CC-BY-4.0; Figure 5 image (iiif.elifesciences.org) and Figure 5-source data 1 (cdn.elifesciences.org) downloaded with attribution",
+  "date_accessed": "2026-07-15",
+  "reference_image_stored": true,
+  "figure_license": "CC BY 4.0",
+  "figure_id": "elife-97654-fig5",
+  "source_data_url": "https://cdn.elifesciences.org/articles/97654/elife-97654-fig5-data1-v1.xlsx",
+  "figure_image_url": "https://iiif.elifesciences.org/lax/97654%2Felife-97654-fig5-v1.tif/full/1400,/0/default.jpg",
+  "verified_by_viewing_figure": true,
+  "verification_note": "Figure 5 was downloaded and viewed; panel C is a row of six dot plots (individual points with mean +/- SD), Ctl (blue circles) vs NL (red triangles). This entry recreates the KRT16 sub-panel. Every plotted value is read from Figure 5-source data 1 (sheet 'Figure 5C'); n=38 Ctl and n=27 NL, Ctl mean 103.3 vs NL mean 344.8.",
+  "pvalue_handling": "The paper marks KRT16 '**'. The app is not asked to compute or annotate significance here, so no p-value is fabricated or drawn."
+}

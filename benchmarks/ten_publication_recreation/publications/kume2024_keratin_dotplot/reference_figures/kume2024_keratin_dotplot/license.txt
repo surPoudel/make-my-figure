@@ -1,0 +1,6 @@
+Kume A, Kabata M, Okada H, Hamano M, Xin M, Ono E, ... Kabashima K (2024). SEMA4A-mediated crosstalk ... (see article) . eLife 13:RP97654.
+DOI: 10.7554/eLife.97654
+Figure: Figure 5, panel C (KRT16 sub-panel; dot plot of KRT16 expression in control vs psoriatic non-lesional keratinocytes with mean +/- SD); figure id elife-97654-fig5
+Source: https://elifesciences.org/articles/97654 ; image https://iiif.elifesciences.org/lax/97654%2Felife-97654-fig5-v1.tif/full/1400,/0/default.jpg
+License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) -- (c) 2024 Kume et al.
+Date accessed: 2026-07-15. Redistributed here (KRT16 sub-panel cropped) with attribution under CC BY 4.0.

@@ -1,0 +1,19 @@
+{
+  "figure_id": "elife-97654-fig5",
+  "plot_kind": "dot_strip_plot",
+  "panel": "Figure 5C, KRT16 sub-panel",
+  "y": "KRT16 expression",
+  "groups": [
+    "Ctl",
+    "NL"
+  ],
+  "n_per_group": {
+    "Ctl": 38,
+    "NL": 27
+  },
+  "group_means": {
+    "Ctl": 103.348,
+    "NL": 344.787
+  },
+  "significance_in_paper": "** (not redrawn by the app)"
+}

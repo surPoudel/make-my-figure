@@ -1,0 +1,15 @@
+{
+  "figure_id": "elife-97654-fig5",
+  "crop": "KRT16 sub-panel (4th of 6) cropped from Figure 5C",
+  "crop_box_fractions": {
+    "left": 0.417,
+    "top": 0.3,
+    "right": 0.542,
+    "bottom": 0.472
+  },
+  "full_size_px": [
+    1400,
+    1764
+  ],
+  "source_image": "https://iiif.elifesciences.org/lax/97654%2Felife-97654-fig5-v1.tif/full/1400,/0/default.jpg"
+}

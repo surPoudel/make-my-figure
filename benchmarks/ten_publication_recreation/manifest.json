@@ -1,6 +1,6 @@
 {
   "benchmark": "publication_figure_recreation",
-  "n_publications": 7,
+  "n_publications": 8,
   "verified_by_viewing_the_published_figures": true,
   "note": "Each panel reproduces the KIND of figure its source paper actually shows, confirmed by VIEWING the published figures, recreated from the paper's public data. Real figures are stored only where the article license permits (CC BY/CC0), with attribution. Not pixel-identical; never 'exact reproduction'.",
   "publications": [
@@ -18,7 +18,7 @@
       "reference_image_stored": true,
       "figure_id": "pone.0090081.g003",
       "side_by_side_path": "side_by_side/gorman2014_penguins.png",
-      "classification": "publication-grade recreation of the stable-isotope biplot (δ15N vs δ13C) — the KIND of figure in Gorman et al. 2014 (Figs 3-5); recreated from the paper's CC0 dataset. Same kind, not pixel-identical: the paper facets by year and shows per-sex mean±SE per species, here all birds are shown coloured by species in one panel.",
+      "classification": "publication-grade recreation of the stable-isotope biplot (\u03b415N vs \u03b413C) \u2014 the KIND of figure in Gorman et al. 2014 (Figs 3-5); recreated from the paper's CC0 dataset. Same kind, not pixel-identical: the paper facets by year and shows per-sex mean\u00b1SE per species, here all birds are shown coloured by species in one panel.",
       "panel_dir": "publications/gorman2014_penguins/recreated_panels/panel_A"
     },
     {
@@ -122,6 +122,23 @@
       "side_by_side_path": "publications/liu2018_cryptococcus_meiosis/side_by_side/liu2018_cryptococcus_meiosis.png",
       "classification": "publication-grade recreation of the violin-plot KIND (distributions of a continuous score across grouped categories, with the median marked) -- the KIND of figure in Liu et al. 2018 (Figure 2A), violin plots of the basidial maturation score (BMS) for five Cryptococcus neoformans strains during unisexual and bisexual development, from the article's CC BY 4.0 Figure 2-source data 1. Every plotted value is a paper datum (n=150 per strain per condition, matching the caption; group medians reproduce the figure, Bisex Wild-type highest at 1.343). Same kind, not pixel-identical: the paper colours violins by development stage (grey unisexual / dark red bisexual) with bracketed blocks and a legend, while the app has no hue channel for this plot type, so condition is encoded in the x-label (U/B) with the app's default per-violin palette; the paper's 'n.s.' marks are not redrawn (the app draws no statistic it was not asked to compute).",
       "panel_dir": "publications/liu2018_cryptococcus_meiosis/recreated_panels/panel_A"
+    },
+    {
+      "id": "kume2024_keratin_dotplot",
+      "paper_title": "Interplay between keratinocytes and immune cells in psoriasis (Kume et al. 2024)",
+      "authors": "Kume A, et al.",
+      "year": 2024,
+      "doi_or_url": "https://doi.org/10.7554/eLife.97654",
+      "article_license": "CC BY 4.0",
+      "data_license": "CC BY 4.0 (eLife Figure 5-source data 1, sheet 'Figure 5C', values plotted verbatim)",
+      "figure_license": "CC BY 4.0",
+      "plot_type": "dot_strip_plot",
+      "matches_published_figure": true,
+      "reference_image_stored": true,
+      "figure_id": "elife-97654-fig5",
+      "side_by_side_path": "side_by_side/kume2024_keratin_dotplot.png",
+      "classification": "publication-grade recreation of the dot-plot KIND (individual data points with a mean +/- SD overlay across two groups) -- the KIND of figure in Kume et al. 2024 (Figure 5C, KRT16 sub-panel), a control-vs-psoriatic-non-lesional keratinocyte expression comparison, from the article's CC BY 4.0 Figure 5-source data 1 (sheet 'Figure 5C'). Same article as kume2024_psoriasis_semaphorin (volcano, Figure 5A) but a DISTINCT figure and DISTINCT plot kind. Every plotted value is a paper datum (n=38 Ctl, n=27 NL; Ctl mean 103.3 vs NL mean 344.8), read verbatim. Same kind, not pixel-identical: the published panel is one of six gene sub-panels and marks KRT16 '**'; the app draws the KRT16 dot plot with mean +/- SD only (it never draws a statistic it was not asked to compute) and uses its default palette/marker.",
+      "panel_dir": "publications/kume2024_keratin_dotplot/recreated_panels/panel_C_KRT16"
     }
   ]
 }

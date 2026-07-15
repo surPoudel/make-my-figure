@@ -54,3 +54,23 @@ Net: eLife molecular-biology figures overwhelmingly use dot-with-mean±SD rather
 than true bar charts, and enrichment/dose-response numeric tables are frequently not
 in machine-readable source data. Added **1** rigorous new kind this batch (violin,
 Liu 2018) rather than pad with a forced or unverifiable match.
+
+## Batch 5 (dot-strip / uncovered kinds)
+
+- **Tomato ascorbate GWAS — PLoS Genetics pgen.1008149, Figure 2A (Manhattan)** — permissive
+  license, Manhattan confirmed by reading the article. REJECTED for verbatim recreation: the
+  attached S5 Table lists only the 388 *suggestive* SNPs (126 significant), not the genome-wide
+  per-SNP p-values. Rendering only those would give a sparse scatter, not the published dense
+  Manhattan skyline (full summary stats live off-site at solgenomics.net). Reproducing a Manhattan
+  faithfully needs the complete tested-SNP set; not available as a compact table → not claimed.
+- **eLife 43803 GEP-usage heatmaps (Figs 3/4/5)** — CC BY, source data shipped, but the matrices
+  are program × *all cells* (thousands of columns); not a clean, small clustered heatmap with a
+  crisp landmark. Deferred (would need a compact expression/correlation matrix).
+- **Kume 2024 Figure 5B (GO enrichment)** — CC BY, but the source-data sheet holds one value per
+  GO term (−log10 P) with no GeneRatio/count, so it is a horizontal *bar* chart of terms, not a
+  true enrichment *dot plot* (which needs a size + color channel). Kind mismatch for
+  enrichment_dotplot → not used (consistent with the earlier batch's rejection).
+
+Net: general Manhattan/enrichment-dotplot recreation is gated on machine-readable numeric tables
+that most CC-BY papers do not ship for those panels. The rigorous win this batch was a dot-strip
+(individual points + mean±SD) from Kume 2024 Fig 5C, whose per-sample values ARE in the source data.
