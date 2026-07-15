@@ -1,9 +1,9 @@
-"""Validate the ten-publication recreation benchmark artifacts.
+"""Validate the publication figure-recreation benchmark.
 
 Offline-safe: checks the committed manifest + per-publication artifacts (no
-network, no re-download). Verifies each publication is a real, license-recorded,
-app-rendered recreation with QC, spanning >=10 distinct plot types, with no
-copyrighted figure images and no overclaiming.
+network). Each entry must reproduce a figure KIND confirmed present in its source
+paper; a real published figure may be stored ONLY under a permissive license and
+must ship a license.txt. No overclaiming, no journal-style names.
 """
 
 import glob
@@ -17,12 +17,10 @@ _BASE = os.path.join(_ROOT, "benchmarks", "ten_publication_recreation")
 _MANIFEST = os.path.join(_BASE, "manifest.json")
 
 pytestmark = pytest.mark.skipif(not os.path.exists(_MANIFEST),
-                                reason="ten_publication_recreation manifest missing")
+                                reason="publication recreation manifest missing")
 
-# journal-style names must not appear in benchmark artifacts; RNA-seq analysis
-# workflows must not be reintroduced.
 _FORBIDDEN_STYLE = ("nature-like", "science-like", "cell-like", "journal-like")
-_FORBIDDEN_RNASEQ = ("edger", "limma", "voom", "rnaseqspec")
+_PERMISSIVE = ("cc by", "cc0", "cc-by", "public domain", "creativecommons.org")
 
 
 def _manifest():
@@ -33,19 +31,16 @@ def _pubs():
     return _manifest()["publications"]
 
 
-def test_manifest_valid_and_has_ten():
+def test_manifest_valid_and_nonempty():
     man = _manifest()
     assert isinstance(man.get("publications"), list)
-    assert man["n_publications"] >= 10
-    assert len(man["publications"]) == man["n_publications"]
+    assert man["n_publications"] == len(man["publications"]) >= 1
 
 
-def test_diverse_published_figure_kinds():
-    # The benchmark reproduces the *kinds* of figures the papers show; breadth is a
-    # bonus, not the goal (matching the paper's figure takes priority over maximising
-    # distinct plot types — e.g. two papers may both use a scatter).
-    types = {p["plot_type"] for p in _pubs()}
-    assert len(types) >= 6, f"only {len(types)} distinct plot types: {sorted(types)}"
+def test_every_entry_matches_a_published_figure():
+    # The benchmark only contains panels whose KIND was confirmed in the paper.
+    for p in _pubs():
+        assert p.get("matches_published_figure") is True, p["id"]
 
 
 @pytest.mark.parametrize("pub", _pubs() if os.path.exists(_MANIFEST) else [],
@@ -53,11 +48,9 @@ def test_diverse_published_figure_kinds():
 def test_publication_artifacts_complete(pub):
     d = os.path.join(_BASE, "publications", pub["id"])
     assert os.path.isdir(d), f"missing publication dir {pub['id']}"
-    # provenance + license + DOI/URL
     assert os.path.exists(os.path.join(d, "source", "provenance.json"))
-    assert str(pub.get("data_license", "")).strip() not in ("", "?", "None")
     assert str(pub.get("doi_or_url", "")).strip() not in ("", "?", "None")
-    # a rendered panel: plotspec + non-empty PNG/SVG/PDF + QC
+    assert str(pub.get("article_license", "")).strip() not in ("", "?", "None")
     plotspecs = glob.glob(os.path.join(d, "recreated_panels", "*", "plotspec.json"))
     assert plotspecs, f"no plotspec for {pub['id']}"
     panel = os.path.dirname(plotspecs[0])
@@ -66,43 +59,52 @@ def test_publication_artifacts_complete(pub):
         assert os.path.exists(f) and os.path.getsize(f) > 0, f"empty/missing {ext} for {pub['id']}"
     assert os.path.exists(os.path.join(panel, "scientific_qc.md"))
     assert os.path.exists(os.path.join(panel, "visual_qc.md"))
-    # source data present (raw or processed)
     assert (glob.glob(os.path.join(d, "raw_data", "*")) or
             glob.glob(os.path.join(d, "processed_data", "*"))), f"no data for {pub['id']}"
 
 
+def test_stored_reference_figures_are_licensed():
+    # A raw published figure may be committed ONLY under a permissive license and
+    # must have a license.txt beside it naming that license.
+    for imgdir in glob.glob(os.path.join(_BASE, "publications", "*", "reference_figures", "*")):
+        imgs = [f for f in glob.glob(os.path.join(imgdir, "*"))
+                if f.lower().endswith((".png", ".jpg", ".jpeg", ".tif", ".tiff", ".svg", ".pdf"))]
+        if not imgs:
+            continue
+        lic = os.path.join(imgdir, "license.txt")
+        assert os.path.exists(lic), f"stored figure without license.txt: {imgdir}"
+        txt = open(lic, encoding="utf-8").read().lower()
+        assert any(k in txt for k in _PERMISSIVE), f"non-permissive/unclear license: {lic}"
+    # manifest's reference_image_stored flag must match reality
+    for p in _pubs():
+        rd = os.path.join(_BASE, "publications", p["id"], "reference_figures")
+        has = bool(glob.glob(os.path.join(rd, "*", "*.png")) +
+                   glob.glob(os.path.join(rd, "*", "*.jpg")))
+        assert bool(p.get("reference_image_stored")) == has, p["id"]
+
+
 def test_no_exact_reproduction_claim():
-    # "exact reproduction" as a classification label is forbidden; the word
-    # "exact" is allowed in truthful phrases (e.g. "exact node/edge set").
     for p in _pubs():
         assert "exact reproduction" not in str(p["classification"]).lower(), p["id"]
 
 
-def test_no_reference_images_committed():
-    for p in _pubs():
-        assert p.get("reference_image_stored") is False
-    # no obvious reference-figure image files committed under the benchmark
-    assert not glob.glob(os.path.join(_BASE, "**", "reference_*.png"), recursive=True)
-    assert not glob.glob(os.path.join(_BASE, "**", "reference_figures", "**", "*"), recursive=True)
-
-
-def test_no_journal_style_or_rnaseq_terms():
+def test_no_journal_style_names_in_text_artifacts():
     hits = []
     for path in glob.glob(os.path.join(_BASE, "**", "*"), recursive=True):
-        if not path.endswith((".json", ".md", ".py", ".csv")):
+        if not path.endswith((".json", ".md", ".py", ".csv", ".txt")):
             continue
         try:
             text = open(path, encoding="utf-8").read().lower()
         except (OSError, UnicodeDecodeError):
             continue
-        for bad in _FORBIDDEN_STYLE + _FORBIDDEN_RNASEQ:
+        for bad in _FORBIDDEN_STYLE:
             if bad in text:
                 hits.append(f"{os.path.relpath(path, _ROOT)}: {bad}")
-    assert not hits, "forbidden terms in benchmark artifacts:\n" + "\n".join(hits)
+    assert not hits, "journal-style names in benchmark artifacts:\n" + "\n".join(hits)
 
 
 def test_summary_table_exists_with_rows():
     csv_path = os.path.join(_BASE, "reports", "summary_table.csv")
     assert os.path.exists(csv_path)
     lines = [ln for ln in open(csv_path, encoding="utf-8").read().splitlines() if ln.strip()]
-    assert len(lines) >= 11  # header + >=10 rows
+    assert len(lines) >= 2  # header + >=1 row

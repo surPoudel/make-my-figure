@@ -1,9 +1,0 @@
-{
-  "id": "crowley1977_heart",
-  "title": "Covariance analysis of heart transplant survival data",
-  "authors": "Crowley J, Hu M",
-  "year": 1977,
-  "venue": "JASA 72(357):27-36",
-  "doi_or_url": "https://doi.org/10.1080/01621459.1977.10479903",
-  "data_source_url": "statsmodels.datasets.heart (Stanford heart transplant)"
-}

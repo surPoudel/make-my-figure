@@ -1,10 +1,25 @@
-# Rejected / deferred candidates
+# Rejected / removed candidates
 
-Excluded because their data-use terms do not clearly permit redistribution as committed repo assets (the app supports these plot types; only license-clean data is the blocker):
+Removed because the plotted kind could **not be confirmed by viewing the source
+paper's figures**, and/or the paper is not open-access so the real figure cannot be
+obtained/redistributed. Per the benchmark rule, no panel is kept unless its figure
+kind is visually verified in the manuscript.
 
-- **TCGA COADREAD** (clustered heatmap) — Genomic Data Commons / NIH terms; not committed.
-- **TCGA Pan-Cancer Clinical Data Resource** (Kaplan-Meier; Liu et al., Cell 2018) — GDC terms; not committed.
-- **GDSC** dose-response — Sanger GDSC license/terms; not committed.
-- **MSK-IMPACT** MAF (oncoprint; Zehir et al. 2017 via cBioPortal) — cBioPortal/dataset terms; not committed.
+- **zachary1977_karate** (network graph) — Zachary 1977 (J. Anthropological Research)
+  is not open-access; its figure could not be downloaded/viewed to confirm. Dropped
+  (no assuming from fame).
+- **fisher1936_iris** (confusion matrix) — the 1936 paper predates and does not contain
+  a confusion matrix.
+- **alpaydin1998_digits** (calibration plot) — not a figure in the source paper.
+- **efron2004_diabetes** (scatter) — the LARS paper's figures are coefficient-path
+  plots, not this scatter.
+- **tenenhaus_linnerud** (heatmap) — not a figure in the source.
+- **forina_wine** (PCA) — plot kind not confirmed in the source; non-open.
+- **street1993_wdbc** (ROC) — plot kind not confirmed in the source; non-open.
+- **crowley1977_heart** (Kaplan–Meier) — plausible for a survival paper, but the 1977
+  article's figure could not be obtained/viewed to confirm. Dropped.
+- **liu1992_china_smoking** (forest) — plot kind not confirmed in the source; non-open.
 
-For each, only a citation + DOI/URL + textual target description would be stored if needed; no bytes are committed and none count toward the 10.
+These datasets remain scientifically usable, but as *dataset illustrations*, not
+reproductions of the papers' figures — so they do not belong in a figure-recreation
+benchmark.

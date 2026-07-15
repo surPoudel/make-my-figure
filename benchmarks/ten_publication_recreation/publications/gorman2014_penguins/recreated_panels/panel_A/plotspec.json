@@ -1,9 +1,9 @@
 {
   "plot_type": "scatterplot_with_regression",
-  "input_table": "penguins_culmen.csv",
+  "input_table": "penguins_isotopes.csv",
   "mapping": {
-    "x": "bill_length_mm",
-    "y": "bill_depth_mm",
+    "x": "d13C",
+    "y": "d15N",
     "color": "species"
   },
   "journal_style": "publication",
@@ -18,8 +18,8 @@
     "dpi": 300
   },
   "layout": {
-    "title": "Culmen dimensions by species",
-    "x_label": "Culmen (bill) length (mm)",
-    "y_label": "Culmen (bill) depth (mm)"
+    "title": "Stable isotope ratios",
+    "x_label": "\u03b4$^{13}$C (\u2030)",
+    "y_label": "\u03b4$^{15}$N (\u2030)"
   }
 }

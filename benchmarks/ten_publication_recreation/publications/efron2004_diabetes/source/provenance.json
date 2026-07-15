@@ -1,7 +1,0 @@
-{
-  "article_license": "publisher",
-  "data_license": "public benchmark; scikit-learn BSD-3",
-  "license_verified_how": "bundled in scikit-learn (BSD-3); standard public benchmark from the LARS paper",
-  "date_accessed": "2026-07",
-  "reference_image_stored": false
-}

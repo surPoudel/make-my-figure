@@ -1,7 +1,9 @@
 {
   "article_license": "CC BY 4.0",
-  "data_license": "CC0 1.0",
-  "license_verified_how": "PLoS ONE article CC BY 4.0; palmerpenguins data released CC0 (documented in package)",
+  "data_license": "CC0 1.0 (palmerpenguins)",
+  "license_verified_how": "PLoS ONE articles are CC BY 4.0; figure downloaded from journals.plos.org with attribution",
   "date_accessed": "2026-07",
-  "reference_image_stored": false
+  "reference_image_stored": true,
+  "figure_license": "CC BY 4.0",
+  "figure_id": "pone.0090081.g003"
 }
