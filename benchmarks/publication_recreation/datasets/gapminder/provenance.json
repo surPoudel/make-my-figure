@@ -1,0 +1,13 @@
+{
+  "dataset_id": "gapminder",
+  "title": "Gapminder (life expectancy, GDP per capita, population)",
+  "authors": "Gapminder Foundation",
+  "year": 2007,
+  "doi": "",
+  "source_url": "https://www.gapminder.org/data/",
+  "data_url": "https://raw.githubusercontent.com/plotly/datasets/master/gapminderDataFiveYear.csv",
+  "data_license": "CC-BY-4.0",
+  "license_url": "https://www.gapminder.org/free-material/",
+  "license_verified": "Gapminder data released under CC BY 4.0 (gapminder.org free material).",
+  "notes": "Country-year panel; we use year 2007."
+}

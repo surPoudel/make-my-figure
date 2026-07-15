@@ -1,0 +1,27 @@
+{
+  "plot_type": "network_graph",
+  "input_table": "karate_network.csv",
+  "mapping": {
+    "source": "source",
+    "target": "target",
+    "layout": "spring",
+    "seed": 42
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 150,
+    "height_mm": 120,
+    "dpi": 400
+  },
+  "layout": {
+    "column_width": "double"
+  },
+  "style": {
+    "legend_outside": true
+  }
+}

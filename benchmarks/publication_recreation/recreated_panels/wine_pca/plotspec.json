@@ -1,0 +1,26 @@
+{
+  "plot_type": "pca_scatter_from_matrix",
+  "input_table": "wine_pca.csv",
+  "mapping": {
+    "matrix_row_id": "feature",
+    "metadata_key": "sample_id",
+    "color": "group"
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 150,
+    "height_mm": 120,
+    "dpi": 400
+  },
+  "layout": {
+    "column_width": "double"
+  },
+  "style": {
+    "legend_outside": true
+  }
+}

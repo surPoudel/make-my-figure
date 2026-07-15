@@ -1,0 +1,27 @@
+{
+  "plot_type": "heatmap_clustered_matrix",
+  "input_table": "penguins_heatmap.csv",
+  "mapping": {
+    "row_id": "feature",
+    "cluster_rows": true,
+    "cluster_columns": true,
+    "color_scale": "diverging"
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 150,
+    "height_mm": 120,
+    "dpi": 400
+  },
+  "layout": {
+    "column_width": "double"
+  },
+  "style": {
+    "legend_outside": true
+  }
+}

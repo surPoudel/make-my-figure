@@ -1,0 +1,35 @@
+{
+  "plot_type": "boxplot_or_violin_with_points",
+  "input_table": "penguins_box.csv",
+  "mapping": {
+    "x": "species",
+    "y": "body_mass_g",
+    "kind": "box",
+    "points": true
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 120,
+    "height_mm": 95,
+    "dpi": 400
+  },
+  "layout": {
+    "x_label": "Species",
+    "y_label": "Body mass (g)",
+    "column_width": "single"
+  },
+  "statistics": {
+    "enabled": true,
+    "test": "kruskal_wallis",
+    "comparison_mode": "all_pairs",
+    "correction": "bh"
+  },
+  "style": {
+    "legend_outside": true
+  }
+}

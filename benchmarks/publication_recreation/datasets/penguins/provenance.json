@@ -1,0 +1,13 @@
+{
+  "dataset_id": "penguins",
+  "title": "Ecological sexual dimorphism ... Pygoscelis penguins (Palmer Archipelago)",
+  "authors": "Gorman KB, Williams TD, Fraser WR",
+  "year": 2014,
+  "doi": "10.1371/journal.pone.0090081",
+  "source_url": "https://doi.org/10.1371/journal.pone.0090081",
+  "data_url": "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv",
+  "data_license": "CC0-1.0",
+  "license_url": "https://github.com/allisonhorst/palmerpenguins#license",
+  "license_verified": "palmerpenguins package states data released CC0 (with Palmer LTER attribution).",
+  "notes": "Data CC0; underlying study CC BY 4.0."
+}

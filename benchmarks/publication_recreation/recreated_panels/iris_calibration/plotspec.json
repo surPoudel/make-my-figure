@@ -1,0 +1,26 @@
+{
+  "plot_type": "calibration_plot",
+  "input_table": "iris_calibration.csv",
+  "mapping": {
+    "label": "true_label",
+    "prob": "predicted_prob",
+    "n_bins": 8
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 120,
+    "height_mm": 95,
+    "dpi": 400
+  },
+  "layout": {
+    "column_width": "single"
+  },
+  "style": {
+    "legend_outside": true
+  }
+}

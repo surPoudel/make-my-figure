@@ -1,0 +1,26 @@
+{
+  "plot_type": "confusion_matrix",
+  "input_table": "iris_confusion.csv",
+  "mapping": {
+    "true": "true_label",
+    "predicted": "predicted_label",
+    "normalize": "true"
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 150,
+    "height_mm": 120,
+    "dpi": 400
+  },
+  "layout": {
+    "column_width": "double"
+  },
+  "style": {
+    "legend_outside": true
+  }
+}
