@@ -100,17 +100,27 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     label_col = get_mapping(spec, "label", None)
     id_col = get_mapping(spec, "id_col", None)
     class_col = get_mapping(spec, "class_col", None)
-    lfc_cutoff = float(get_mapping(spec, "lfc_cutoff", 1.0))
+    # fc_cutoff (EnhancedVolcano name) aliases lfc_cutoff; default log2(1.5).
+    lfc_cutoff = float(get_mapping(spec, "fc_cutoff", get_mapping(spec, "lfc_cutoff", 1.0)))
     p_cutoff = float(get_mapping(spec, "p_cutoff", 0.05))
     label_sig_only = bool(get_mapping(spec, "label_significant_only", True))
     selected_labels = get_mapping(spec, "selected_labels", None) or []
-    label_list = get_mapping(spec, "label_list", None) or []
+    # highlight_genes (EnhancedVolcano name) aliases label_list.
+    label_list = (get_mapping(spec, "highlight_genes", None)
+                  or get_mapping(spec, "label_list", None) or [])
+    # use_fdr controls the y-axis label / wording; None => infer from the p column name.
+    use_fdr = get_mapping(spec, "use_fdr", None)
+    condition = get_mapping(spec, "condition", None) or get_mapping(spec, "conditionType", None)
 
     # v0.5 annotation controls.
     annotate = bool(get_mapping(spec, "annotate", True))
     label_mode = str(get_mapping(spec, "label_mode", "top_fdr")).lower()
     if label_mode not in _LABEL_MODES:
         label_mode = "top_fdr"
+    # If the user supplied an explicit highlight_genes list and left the default
+    # mode, label exactly those genes (EnhancedVolcano's selectLab behaviour).
+    if label_list and label_mode == "top_fdr":
+        label_mode = "pasted"
     # top_n falls back to the legacy max_labels so old specs keep their count.
     top_n = int(get_mapping(spec, "top_n", get_mapping(spec, "max_labels", 10)))
     top_n_up = int(get_mapping(spec, "top_n_up", 8))
@@ -233,18 +243,29 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         else:
             ax.set_ylim(0, ymax * 1.18)
 
+        # FDR vs raw-P wording for the y-axis + subtitle; infer from column if unset.
+        _use_fdr = use_fdr
+        if _use_fdr is None:
+            _use_fdr = any(k in str(p_col).lower() for k in
+                           ("adj", "fdr", "padj", "q.val", "qval", "q_value", "q-value"))
+        p_kind = "FDR" if _use_fdr else "P"
         ax.set_xlabel(spec.get("layout", {}).get("x_label", "log$_2$ fold change"))
-        ax.set_ylabel(spec.get("layout", {}).get("y_label", "-log$_{10}$(p)"))
-        title = spec.get("layout", {}).get("title")
+        ax.set_ylabel(spec.get("layout", {}).get("y_label", f"-log$_{{10}}$ {p_kind}"))
+        title = spec.get("layout", {}).get("title") or get_mapping(spec, "title", None)
         subtitle = spec.get("layout", {}).get("subtitle")
         if auto_subtitle and not subtitle:
-            subtitle = f"Up: {n_up} | Down: {n_down} | FDR < {p_cutoff:g}, |log2FC| >= {lfc_cutoff:g}"
-        if title and subtitle:
-            ax.set_title(title + "\n" + subtitle, fontsize=style.title_font_pt)
-        elif title:
-            ax.set_title(title)
+            cond = f"{condition}  —  " if condition else ""
+            subtitle = (f"{cond}Up {n_up} · Down {n_down} · NS {n_ns}   "
+                        f"({p_kind} < {p_cutoff:g}, |log$_2$FC| ≥ {lfc_cutoff:g})")
+        # Bold title with a smaller, grey subtitle beneath it (EnhancedVolcano style).
+        if title:
+            ax.set_title(str(title), fontsize=style.title_font_pt, fontweight="bold",
+                         pad=(20 if subtitle else 8))
+            if subtitle:
+                ax.text(0.5, 1.015, subtitle, transform=ax.transAxes, ha="center",
+                        va="bottom", fontsize=max(8.5, style.annotation_pt), color="0.4")
         elif subtitle:
-            ax.set_title(subtitle, fontsize=max(9.0, style.annotation_pt))
+            ax.set_title(subtitle, fontsize=max(9.0, style.annotation_pt), color="0.4")
         style_axes(ax, style)
         place_legend(ax, style, force_outside=True)
         leg = ax.get_legend()

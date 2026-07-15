@@ -92,7 +92,8 @@ OPTIONS: Dict[str, List[Option]] = {
     ],
     "volcano_plot": [
         Option("lfc_cutoff", "log2FC cutoff", "number", 1.0, minimum=0.0, maximum=20.0, step=0.5, decimals=2),
-        Option("p_cutoff", "p-value cutoff", "number", 0.05, minimum=0.0, maximum=1.0, step=0.01, decimals=4),
+        Option("p_cutoff", "p-value / FDR cutoff", "number", 0.05, minimum=0.0, maximum=1.0, step=0.01, decimals=4),
+        Option("use_fdr", "P column is FDR/adjusted (y-axis = −log10 FDR)", "bool", False),
         # v0.5 annotation controls
         Option("annotate", "Show labels", "bool", True),
         Option("label_mode", "Label mode", "choice", "top_fdr",
