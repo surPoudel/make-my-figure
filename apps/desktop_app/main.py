@@ -1315,6 +1315,39 @@ class MainWindow(QMainWindow):
             return ["(none)"] + list(self.data.aux["metadata"].columns)
         return ["(none)"]
 
+    def _group_value_prefill(self, plot_type: str, col_opts: list) -> dict:
+        """Best-guess mapping for distribution/group-value plots so picking the
+        plot type manually doesn't leave x/y/group empty. Uses the data profiler
+        to find a grouping (categorical) column + numeric value column(s). The
+        user can always override via the selectors."""
+        GV = {"ridge_or_density_plot", "boxplot_or_violin_with_points",
+              "barplot_with_error_bar", "grouped_barplot_with_error_bar",
+              "scatterplot_with_regression"}
+        if self.data is None or plot_type not in GV:
+            return {}
+        try:
+            from make_my_figure_core.recommendations.data_profiler import profile_table
+
+            prof = profile_table(self.data.info.dataframe)
+        except Exception:
+            return {}
+        group = prof.role_column("group")
+        numerics = [c for c in prof.numeric_columns if c in col_opts]
+        m: dict = {}
+        if plot_type == "ridge_or_density_plot":
+            if numerics:
+                m["x"] = numerics[0]
+            m["group"] = group
+        elif plot_type in ("boxplot_or_violin_with_points", "barplot_with_error_bar",
+                           "grouped_barplot_with_error_bar"):
+            m["x"] = group
+            if numerics:
+                m["y"] = numerics[0]
+        elif plot_type == "scatterplot_with_regression":
+            if len(numerics) >= 2:
+                m["x"], m["y"] = numerics[0], numerics[1]
+        return {k: v for k, v in m.items() if v and v in col_opts}
+
     def _rebuild_mapping_and_options(self):
         pt = self.plot_combo.currentData()
         defaults = self.controller.default_mapping(pt)
@@ -1325,11 +1358,18 @@ class MainWindow(QMainWindow):
         # (works for edgeR, DESeq2, and other tools) and prefill the dropdowns.
         # The user always confirms/overrides via the selectors — we never guess
         # silently. See _volcano_prefill.
-        prefill = self._volcano_prefill(pt, col_opts) if pt == "volcano_plot" else {}
+        if pt == "volcano_plot":
+            prefill = self._volcano_prefill(pt, col_opts)
+        else:
+            prefill = self._group_value_prefill(pt, col_opts)
         for field in self.controller.column_fields(pt):
             combo = QComboBox()
             combo.addItems(col_opts)
-            default = prefill.get(field, defaults.get(field))
+            # Prefer the curated default when that column actually exists in the
+            # uploaded data (keeps bundled examples exact); otherwise fall back to
+            # the auto-detected prefill (volcano DE columns / group-value guess).
+            d = defaults.get(field)
+            default = d if d in col_opts else prefill.get(field, d)
             if default in col_opts:
                 combo.setCurrentText(default)
             combo.currentIndexChanged.connect(self.render_preview)

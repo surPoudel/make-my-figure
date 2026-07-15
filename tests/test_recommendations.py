@@ -238,3 +238,15 @@ def test_unnamed_categorical_group_is_recommended():
     types = {r.plot_type for r in rs.recommendations}
     assert "boxplot_or_violin_with_points" in types
     assert not any("edger" in (r.why + " ".join(r.warnings)).lower() for r in rs.recommendations)
+
+
+def test_generic_long_recommends_ridge_and_box():
+    """A group + numeric value table should offer both box/violin and ridge."""
+    import pandas as pd
+    from make_my_figure_core.recommendations import recommend_for_table
+
+    df = pd.DataFrame({"species": ["A", "B", "C"] * 8,
+                       "flipper_length_mm": [181, 195, 210, 186, 190, 205] * 4})
+    types = {r.plot_type for r in recommend_for_table(df, "p").recommendations}
+    assert "boxplot_or_violin_with_points" in types
+    assert "ridge_or_density_plot" in types

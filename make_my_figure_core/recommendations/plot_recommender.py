@@ -214,6 +214,11 @@ def recommend_plots(profile: DataProfile, schema: str, df: pd.DataFrame,
             "A grouping column and a numeric value — a box/violin plot with points compares the "
             "distribution across groups, with an appropriate statistical test.",
             cm, stats=suggest_stats("boxplot_or_violin_with_points", cm, df))
+        if yy:
+            add("ridge_or_density_plot", 0.62,
+                "A grouping column and a numeric value — a ridge / density plot shows and "
+                "compares each group's full distribution.",
+                {"x": yy, "group": profile.role_column("group"), "overlap": 0.6})
         add("barplot_with_error_bar", 0.6,
             "Compare group means with error bars.",
             {"x": profile.role_column("group"), "y": yy, "color": profile.role_column("group")},
