@@ -92,10 +92,13 @@ def _draw_column_annotations(fig, ax, annotations, ordered_cols, style, warnings
 
         handles = [Patch(facecolor=colors[i % len(colors)], label=lv) for i, lv in enumerate(levels)]
         if handles:
-            cax.legend(handles=handles, title=label, loc="center left",
-                       bbox_to_anchor=(1.005, 0.5), fontsize=max(6.5, style.legend_pt - 2),
+            # Place the category legend above the heatmap (aligned to the strip),
+            # not on the right edge where it collides with the colorbar.
+            cax.legend(handles=handles, title=label, loc="lower left",
+                       bbox_to_anchor=(0.0, 1.3), ncol=min(len(levels), 4),
+                       fontsize=max(6.5, style.legend_pt - 2),
                        title_fontsize=max(7.0, style.legend_pt - 1), frameon=False,
-                       handlelength=1.0, borderpad=0.2, labelspacing=0.2)
+                       handlelength=1.0, borderpad=0.2, labelspacing=0.2, columnspacing=1.2)
 
 
 def _draw_cluster_strip(ax, side: str, cluster_ids_in_order: np.ndarray,
@@ -157,6 +160,11 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     show_col_labels = get_mapping(spec, "show_col_labels", None)
     exclude_cols = {str(c) for c in (get_mapping(spec, "exclude_columns", None) or [])}
     max_features = int(get_mapping(spec, "max_features", _clust.DEFAULT_MAX_CLUSTER_FEATURES))
+    # Vertical separators between sample groups (from column_groups mapping or the
+    # first column-annotation track). 'auto' = on when groups are known.
+    group_separators = get_mapping(spec, "group_separators", None)
+    column_groups = get_mapping(spec, "column_groups", None)
+    cell_borders = get_mapping(spec, "cell_borders", None)   # None = auto (small matrices)
 
     work = df.copy()
     row_labels = work[row_id].astype(str).tolist()
@@ -247,6 +255,29 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         col_order = sorted(range(raw_matrix.shape[1]),
                            key=lambda j: (int(col_cluster_ids[j]), pos.get(j, j)))
 
+    # Column grouping: order columns by group so groups are contiguous, and record
+    # boundaries for vertical separator lines (group source: column_groups mapping
+    # or the first column-annotation track). 'auto' turns on when groups exist.
+    col_group_boundaries: List[int] = []
+    _group_map = None
+    if isinstance(column_groups, dict) and column_groups:
+        _group_map = {str(k): str(v) for k, v in column_groups.items()}
+    else:
+        _ann = spec.get("column_annotations") or []
+        if _ann and (_ann[0].get("values")):
+            _group_map = {str(k): str(v) for k, v in (_ann[0]["values"] or {}).items()}
+    _want_sep = (group_separators is True) or (group_separators is None and _group_map is not None)
+    if _group_map and _want_sep:
+        def _grp(j):
+            return _group_map.get(col_labels[j], "")
+        seen = list(dict.fromkeys(_grp(j) for j in range(len(col_labels))))
+        rank = {g: i for i, g in enumerate(seen)}
+        posc = {leaf: i for i, leaf in enumerate(col_order)}
+        col_order = sorted(range(len(col_labels)),
+                           key=lambda j: (rank.get(_grp(j), 0), posc.get(j, j)))
+        og = [_grp(j) for j in col_order]
+        col_group_boundaries = [i for i in range(1, len(og)) if og[i] != og[i - 1]]
+
     ordered = matrix[np.ix_(row_order, col_order)]
     ordered_rows = [row_labels[i] for i in row_order]
     ordered_cols = [col_labels[j] for j in col_order]
@@ -304,6 +335,16 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         fig, ax = plt.subplots(figsize=figsize)
         im = ax.imshow(ordered, aspect="auto", cmap=cmap, vmin=vmin, vmax=vmax,
                        interpolation="nearest")
+        # Thin cell separators (auto for small matrices; a clean publication touch).
+        show_cells = cell_borders if cell_borders is not None else (n_r <= 40 and n_c <= 40)
+        if show_cells:
+            ax.set_xticks(np.arange(-0.5, n_c, 1), minor=True)
+            ax.set_yticks(np.arange(-0.5, n_r, 1), minor=True)
+            ax.grid(which="minor", color="white", linewidth=0.6)
+            ax.tick_params(which="minor", length=0)
+        # Vertical separators between sample groups.
+        for b in col_group_boundaries:
+            ax.axvline(b - 0.5, color="#222222", linewidth=1.6)
         # Cluster color strips (drawn first so their divider axes sit outside).
         if row_color_map is not None:
             _draw_cluster_strip(ax, "left", row_cluster_ids[row_order], row_color_map,
