@@ -1,0 +1,11 @@
+{
+  "n_samples": 150,
+  "n_classes": 3,
+  "method": "5-fold cross_val_predict, multinomial LogisticRegression(max_iter=2000)",
+  "class_counts": {
+    "setosa": 50,
+    "versicolor": 50,
+    "virginica": 50
+  },
+  "accuracy": 0.9733333333333334
+}

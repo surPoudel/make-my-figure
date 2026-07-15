@@ -1,0 +1,6 @@
+{
+  "n_samples": 442,
+  "x": "bmi (body mass index)",
+  "y": "disease_progression (1yr)",
+  "note": "unscaled features (scaled=False) so BMI is in real units"
+}

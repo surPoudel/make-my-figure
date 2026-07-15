@@ -1,0 +1,5 @@
+{
+  "n_nodes": 34,
+  "n_edges": 78,
+  "note": "Zachary 1977 karate club; edge list from networkx.karate_club_graph()"
+}

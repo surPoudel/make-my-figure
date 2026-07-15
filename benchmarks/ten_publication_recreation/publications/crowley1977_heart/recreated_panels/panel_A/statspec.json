@@ -1,0 +1,5 @@
+{
+  "enabled": true,
+  "test": "logrank",
+  "comparison_mode": "all_pairs"
+}

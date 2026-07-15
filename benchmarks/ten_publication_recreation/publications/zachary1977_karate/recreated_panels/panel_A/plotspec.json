@@ -1,0 +1,26 @@
+{
+  "plot_type": "network_graph",
+  "input_table": "karate_network.csv",
+  "mapping": {
+    "source": "source",
+    "target": "target",
+    "layout": "spring",
+    "seed": 42
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89.0,
+    "height_mm": 70.0,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "onehalf",
+    "title": "Zachary karate club network",
+    "legend_outside": true
+  }
+}

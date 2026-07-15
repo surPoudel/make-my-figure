@@ -1,0 +1,7 @@
+{
+  "n_samples": 1797,
+  "task": "one-vs-rest: is digit 0",
+  "method": "5-fold CV P(digit==0); StandardScaler+LogReg",
+  "n_positive": 178,
+  "brier": 0.0026713398948047576
+}

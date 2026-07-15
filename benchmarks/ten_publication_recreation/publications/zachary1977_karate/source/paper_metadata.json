@@ -1,0 +1,9 @@
+{
+  "id": "zachary1977_karate",
+  "title": "An information flow model for conflict and fission in small groups",
+  "authors": "Zachary WW",
+  "year": 1977,
+  "venue": "J. Anthropological Research 33(4):452-473",
+  "doi_or_url": "https://doi.org/10.1086/jar.33.4.3629752",
+  "data_source_url": "networkx.karate_club_graph()"
+}

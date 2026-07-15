@@ -1,0 +1,12 @@
+{
+  "raw_rows": 344,
+  "kept_rows": 342,
+  "species_counts": {
+    "Adelie": 151,
+    "Gentoo": 123,
+    "Chinstrap": 68
+  },
+  "x": "flipper_length_mm",
+  "group": "species",
+  "note": "CC0 tidied release of Gorman 2014 data; drop rows missing flipper/species"
+}

@@ -1,0 +1,8 @@
+{
+  "n_samples": 569,
+  "positive_class": "benign(1)",
+  "method": "5-fold CV predicted P(benign); StandardScaler+LogReg",
+  "auc": 0.9941995666191005,
+  "n_malignant": 212,
+  "n_benign": 357
+}

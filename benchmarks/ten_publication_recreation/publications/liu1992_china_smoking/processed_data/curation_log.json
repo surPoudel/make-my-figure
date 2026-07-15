@@ -1,0 +1,8 @@
+{
+  "n_locations": 8,
+  "method": "per-location odds ratio (a*d)/(b*c) with Woolf 95% CI exp(logOR +/- 1.96*sqrt(1/a+1/b+1/c+1/d)) from the 2x2 counts",
+  "or_range": [
+    1.587962962962963,
+    2.8503408179631116
+  ]
+}

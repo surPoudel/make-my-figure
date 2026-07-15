@@ -1,0 +1,9 @@
+{
+  "id": "alpaydin1998_digits",
+  "title": "Cascading classifiers (Optical Recognition of Handwritten Digits)",
+  "authors": "Alpaydin E, Kaynak C",
+  "year": 1998,
+  "venue": "Kybernetika 34(4):369-374 / UCI",
+  "doi_or_url": "https://archive.ics.uci.edu/dataset/80/optical+recognition+of+handwritten+digits",
+  "data_source_url": "scikit-learn load_digits (UCI optdigits)"
+}

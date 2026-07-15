@@ -1,0 +1,9 @@
+{
+  "id": "gorman2014_penguins",
+  "title": "Ecological sexual dimorphism ... Antarctic penguins (Pygoscelis)",
+  "authors": "Gorman KB, Williams TD, Fraser WR",
+  "year": 2014,
+  "venue": "PLoS ONE 9(3):e90081",
+  "doi_or_url": "https://doi.org/10.1371/journal.pone.0090081",
+  "data_source_url": "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv"
+}

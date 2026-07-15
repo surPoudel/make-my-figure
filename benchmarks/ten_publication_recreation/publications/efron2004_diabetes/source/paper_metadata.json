@@ -1,0 +1,9 @@
+{
+  "id": "efron2004_diabetes",
+  "title": "Least angle regression (diabetes data)",
+  "authors": "Efron B, Hastie T, Johnstone I, Tibshirani R",
+  "year": 2004,
+  "venue": "Annals of Statistics 32(2):407-499",
+  "doi_or_url": "https://doi.org/10.1214/009053604000000067",
+  "data_source_url": "scikit-learn load_diabetes (Efron et al. 2004)"
+}

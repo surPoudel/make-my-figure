@@ -1,0 +1,26 @@
+{
+  "plot_type": "ridge_or_density_plot",
+  "input_table": "penguins_ridge.csv",
+  "mapping": {
+    "x": "flipper_length_mm",
+    "group": "species",
+    "overlap": 0.6
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89.0,
+    "height_mm": 70.0,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "onehalf",
+    "x_label": "Flipper length (mm)",
+    "title": "Flipper length distribution by species",
+    "legend_outside": true
+  }
+}

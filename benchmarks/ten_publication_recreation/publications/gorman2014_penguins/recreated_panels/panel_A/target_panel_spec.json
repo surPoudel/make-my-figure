@@ -1,0 +1,13 @@
+{
+  "publication_id": "gorman2014_penguins",
+  "paper_title": "Ecological sexual dimorphism ... Antarctic penguins (Pygoscelis)",
+  "doi_or_url": "https://doi.org/10.1371/journal.pone.0090081",
+  "plot_type": "ridge_or_density_plot",
+  "panel_description": "Density/ridge of flipper length per species (distinct plot type from the one-publication pilot).",
+  "source_data_files": [
+    "penguins_ridge.csv"
+  ],
+  "statistics_shown": false,
+  "reference_image_stored": false,
+  "classification": "publication-grade recreation (distribution of a real measured variable from the paper's CC0 data)"
+}

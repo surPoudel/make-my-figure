@@ -1,0 +1,9 @@
+{
+  "id": "forina_wine",
+  "title": "PARVUS: extendable package for data exploration, classification and correlation (Wine recognition data)",
+  "authors": "Forina M, et al.",
+  "year": 1991,
+  "venue": "Institute of Pharmaceutical and Food Analysis, Genoa",
+  "doi_or_url": "https://archive.ics.uci.edu/dataset/109/wine",
+  "data_source_url": "https://archive.ics.uci.edu/dataset/109/wine (via scikit-learn)"
+}

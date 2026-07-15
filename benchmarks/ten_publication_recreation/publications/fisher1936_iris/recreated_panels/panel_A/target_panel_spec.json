@@ -1,0 +1,13 @@
+{
+  "publication_id": "fisher1936_iris",
+  "paper_title": "The use of multiple measurements in taxonomic problems",
+  "doi_or_url": "https://doi.org/10.1111/j.1469-1809.1936.tb02137.x",
+  "plot_type": "confusion_matrix",
+  "panel_description": "Confusion matrix of a 5-fold cross-validated classifier on Fisher's iris measurements.",
+  "source_data_files": [
+    "iris_confusion.csv"
+  ],
+  "statistics_shown": false,
+  "reference_image_stored": false,
+  "classification": "publication-grade visualization from associated data (the 1936 paper predates the confusion-matrix panel; values trace to a documented CV method)"
+}

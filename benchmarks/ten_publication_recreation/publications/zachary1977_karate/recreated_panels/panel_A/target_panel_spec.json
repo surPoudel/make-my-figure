@@ -1,0 +1,13 @@
+{
+  "publication_id": "zachary1977_karate",
+  "paper_title": "An information flow model for conflict and fission in small groups",
+  "doi_or_url": "https://doi.org/10.1086/jar.33.4.3629752",
+  "plot_type": "network_graph",
+  "panel_description": "Social interaction network of 34 members (78 edges).",
+  "source_data_files": [
+    "karate_network.csv"
+  ],
+  "statistics_shown": false,
+  "reference_image_stored": false,
+  "classification": "scientific reproduction (exact node/edge set from the published network)"
+}

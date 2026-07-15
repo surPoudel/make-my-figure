@@ -1,0 +1,9 @@
+{
+  "id": "liu1992_china_smoking",
+  "title": "Smoking and lung cancer in China (8-city case-control)",
+  "authors": "Liu Z, et al.",
+  "year": 1992,
+  "venue": "Int. J. Epidemiology 21(2):197-201",
+  "doi_or_url": "https://doi.org/10.1093/ije/21.2.197",
+  "data_source_url": "statsmodels.datasets.china_smoking"
+}
