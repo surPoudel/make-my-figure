@@ -1,0 +1,36 @@
+{
+  "plot_type": "boxplot_or_violin_with_points",
+  "input_table": "panel_B_body_mass.csv",
+  "mapping": {
+    "x": "species",
+    "y": "body_mass_g",
+    "kind": "box",
+    "points": true
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89.0,
+    "height_mm": 70.0,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "onehalf",
+    "x_label": "Species",
+    "y_label": "Body mass (g)",
+    "title": "Body mass by species",
+    "legend_outside": true
+  },
+  "statistics": {
+    "enabled": true,
+    "test": "mann_whitney",
+    "comparison_mode": "all_pairs",
+    "correction": "bh",
+    "value_column": "body_mass_g",
+    "group_column": "species"
+  }
+}

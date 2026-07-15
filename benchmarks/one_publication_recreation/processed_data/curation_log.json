@@ -1,0 +1,21 @@
+{
+  "raw_rows": 344,
+  "raw_species_counts": {
+    "Adelie": 152,
+    "Gentoo": 124,
+    "Chinstrap": 68
+  },
+  "panel_A_rows": 342,
+  "panel_B_rows": 342,
+  "panel_C_samples": 342,
+  "panel_B_species_counts": {
+    "Adelie": 151,
+    "Chinstrap": 68,
+    "Gentoo": 123
+  },
+  "transforms": {
+    "panel_A": "drop rows missing bill_length_mm/bill_depth_mm/species",
+    "panel_B": "drop rows missing body_mass_g; order species Adelie<Chinstrap<Gentoo",
+    "panel_C": "complete-case on 4 morphometrics; per-feature z-score (mean 0, sd 1) so differing units do not dominate PCA; transpose to features x samples"
+  }
+}

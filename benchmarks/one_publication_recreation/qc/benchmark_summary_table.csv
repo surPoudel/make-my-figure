@@ -1,0 +1,4 @@
+panel,plot_type,rows,iterations,sci_qc_pass,vis_qc_pass,png,svg,pdf
+A,scatterplot_with_regression,342,3,True,True,True,True,True
+B,boxplot_or_violin_with_points,342,3,True,True,True,True,True
+C,pca_scatter_from_matrix,4,3,True,True,True,True,True

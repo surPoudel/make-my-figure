@@ -1,0 +1,19 @@
+{
+  "publication_id": "gorman_2014_penguins",
+  "title": "Ecological Sexual Dimorphism and Environmental Variability within a Community of Antarctic Penguins (Genus Pygoscelis)",
+  "authors": ["Gorman KB", "Williams TD", "Fraser WR"],
+  "year": 2014,
+  "journal": "PLoS ONE",
+  "volume_issue_article": "9(3):e90081",
+  "doi": "10.1371/journal.pone.0090081",
+  "article_url": "https://doi.org/10.1371/journal.pone.0090081",
+  "article_license": "CC BY 4.0",
+  "data_source": "Palmer Station Long Term Ecological Research (LTER); tidied CC0 release via the palmerpenguins project",
+  "data_urls": [
+    "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins.csv",
+    "https://raw.githubusercontent.com/allisonhorst/palmerpenguins/main/inst/extdata/penguins_raw.csv"
+  ],
+  "data_license": "CC0-1.0",
+  "date_accessed": "2026-07 (see raw_data/checksums.json for SHA-256)",
+  "notes": "Measurements are Gorman et al. 2014 (Palmer LTER). We use the CC0 tidied release; nothing is scraped from the paper PDF. No figure images from the article are stored."
+}

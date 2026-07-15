@@ -1,0 +1,129 @@
+{
+  "A": {
+    "panel": "A",
+    "dir": "panel_A",
+    "plot_type": "scatterplot_with_regression",
+    "rows": 342,
+    "iterations": [
+      {
+        "iteration": 1,
+        "width": "single",
+        "changes": "baseline render",
+        "visual_warnings": []
+      },
+      {
+        "iteration": 2,
+        "width": "onehalf",
+        "changes": "enlarged figure + explicit axis labels/units",
+        "visual_warnings": []
+      },
+      {
+        "iteration": 3,
+        "width": "onehalf",
+        "changes": "legend placed outside; final polish",
+        "visual_warnings": []
+      }
+    ],
+    "final_visual_warnings": [],
+    "stats_report": null,
+    "exports_ok": {
+      "png": true,
+      "svg": true,
+      "pdf": true
+    },
+    "scientific_qc_pass": true,
+    "visual_qc_pass": true
+  },
+  "B": {
+    "panel": "B",
+    "dir": "panel_B",
+    "plot_type": "boxplot_or_violin_with_points",
+    "rows": 342,
+    "iterations": [
+      {
+        "iteration": 1,
+        "width": "single",
+        "changes": "baseline render",
+        "visual_warnings": []
+      },
+      {
+        "iteration": 2,
+        "width": "onehalf",
+        "changes": "enlarged figure + explicit axis labels/units",
+        "visual_warnings": []
+      },
+      {
+        "iteration": 3,
+        "width": "onehalf",
+        "changes": "legend placed outside; final polish",
+        "visual_warnings": []
+      }
+    ],
+    "final_visual_warnings": [],
+    "stats_report": [
+      {
+        "comparison": "Adelie vs Chinstrap",
+        "test": "Mann-Whitney U test",
+        "p_value": 0.4854772721011861,
+        "adjusted_p": 0.48547727210118613,
+        "n_total": 219
+      },
+      {
+        "comparison": "Adelie vs Gentoo",
+        "test": "Mann-Whitney U test",
+        "p_value": 2.982319067322439e-42,
+        "adjusted_p": 8.946957201967317e-42,
+        "n_total": 274
+      },
+      {
+        "comparison": "Chinstrap vs Gentoo",
+        "test": "Mann-Whitney U test",
+        "p_value": 1.6723632138556386e-28,
+        "adjusted_p": 2.508544820783458e-28,
+        "n_total": 191
+      }
+    ],
+    "exports_ok": {
+      "png": true,
+      "svg": true,
+      "pdf": true
+    },
+    "scientific_qc_pass": true,
+    "visual_qc_pass": true
+  },
+  "C": {
+    "panel": "C",
+    "dir": "panel_C",
+    "plot_type": "pca_scatter_from_matrix",
+    "rows": 4,
+    "iterations": [
+      {
+        "iteration": 1,
+        "width": "single",
+        "changes": "baseline render",
+        "visual_warnings": []
+      },
+      {
+        "iteration": 2,
+        "width": "onehalf",
+        "changes": "enlarged figure + explicit axis labels/units",
+        "visual_warnings": []
+      },
+      {
+        "iteration": 3,
+        "width": "onehalf",
+        "changes": "legend placed outside; final polish",
+        "visual_warnings": []
+      }
+    ],
+    "final_visual_warnings": [],
+    "stats_report": null,
+    "exports_ok": {
+      "png": true,
+      "svg": true,
+      "pdf": true
+    },
+    "scientific_qc_pass": true,
+    "visual_qc_pass": true
+  }
+}

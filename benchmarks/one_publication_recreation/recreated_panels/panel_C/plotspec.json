@@ -1,0 +1,25 @@
+{
+  "plot_type": "pca_scatter_from_matrix",
+  "input_table": "panel_C_pca_matrix.csv",
+  "mapping": {
+    "matrix_row_id": "feature",
+    "metadata_key": "sample_id",
+    "color": "species"
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89.0,
+    "height_mm": 70.0,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "onehalf",
+    "title": "Morphometric PCA",
+    "legend_outside": true
+  }
+}

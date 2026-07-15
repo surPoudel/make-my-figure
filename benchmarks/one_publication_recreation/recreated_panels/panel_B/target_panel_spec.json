@@ -1,0 +1,38 @@
+{
+  "publication_id": "gorman_2014_penguins",
+  "paper_title": "Gorman KB, Williams TD, Fraser WR (2014). Ecological Sexual Dimorphism and Environmental Variability within a Community of Antarctic Penguins (Genus Pygoscelis). PLoS ONE 9(3):e90081.",
+  "DOI": "10.1371/journal.pone.0090081",
+  "figure_number": "body-mass / sexual-dimorphism comparison",
+  "panel_letter": "B",
+  "panel_description": "Body mass (g) distribution by species.",
+  "plot_type": "boxplot_or_violin_with_points",
+  "source_data_files": [
+    "raw_data/penguins.csv -> processed_data/panel_B_body_mass.csv"
+  ],
+  "required_columns": {
+    "x": "species",
+    "y": "body_mass_g",
+    "kind": "box",
+    "points": true
+  },
+  "transformations": "see processed_data/curation_log.json (panel B)",
+  "statistics_shown": "pairwise group comparison (recreated as Mann-Whitney U, BH-corrected)",
+  "thresholds": "significance stars at alpha=0.05",
+  "axis_labels": {
+    "x": "Species",
+    "y": "Body mass (g)"
+  },
+  "axis_scale": "linear",
+  "group_order": [
+    "Adelie",
+    "Chinstrap",
+    "Gentoo"
+  ],
+  "color_mapping": "by species (Publication palette)",
+  "legend_behavior": "species legend, placed outside the axes",
+  "annotations": "significance brackets from StatsSpec",
+  "panel_dimensions": "onehalf column width (Publication default)",
+  "reference_image_path": null,
+  "reference_image_license": "described-only (article CC BY 4.0; image not stored)",
+  "known_missing_information": "The paper models body mass with linear models including sex and covariates; this panel shows a standard nonparametric pairwise comparison on the same data (documented in differences)."
+}

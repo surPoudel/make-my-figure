@@ -1,0 +1,199 @@
+{
+  "figure": {
+    "name": "Gorman2014_penguins_recreation",
+    "panels": [
+      {
+        "label": "a",
+        "title": "Bill dimensions by species",
+        "caption": "",
+        "panel_kind": "make_my_figure_panel",
+        "plot_spec": {
+          "plot_type": "scatterplot_with_regression",
+          "input_table": "panel_A_bill_dimensions.csv",
+          "mapping": {
+            "x": "bill_length_mm",
+            "y": "bill_depth_mm",
+            "color": "species",
+            "fit_line": true
+          },
+          "journal_style": "publication",
+          "output": {
+            "formats": [
+              "svg",
+              "png",
+              "pdf"
+            ],
+            "width_mm": 89.0,
+            "height_mm": 70.0,
+            "dpi": 300
+          },
+          "layout": {
+            "column_width": "onehalf",
+            "x_label": "Bill length (mm)",
+            "y_label": "Bill depth (mm)",
+            "title": "Bill dimensions by species",
+            "legend_outside": true
+          }
+        },
+        "stats_spec": null,
+        "source_name": "",
+        "width_in": null,
+        "height_in": null,
+        "has_prerendered_figure": false,
+        "image_path": null,
+        "image_meta": {},
+        "fit_mode": "contain",
+        "preserve_aspect": true,
+        "crop": {},
+        "rotate": 0,
+        "flip_h": false,
+        "flip_v": false,
+        "auto_trim": false,
+        "background": "white",
+        "border": false,
+        "border_width": 0.8,
+        "annotations": []
+      },
+      {
+        "label": "b",
+        "title": "Body mass by species",
+        "caption": "",
+        "panel_kind": "make_my_figure_panel",
+        "plot_spec": {
+          "plot_type": "boxplot_or_violin_with_points",
+          "input_table": "panel_B_body_mass.csv",
+          "mapping": {
+            "x": "species",
+            "y": "body_mass_g",
+            "kind": "box",
+            "points": true
+          },
+          "journal_style": "publication",
+          "output": {
+            "formats": [
+              "svg",
+              "png",
+              "pdf"
+            ],
+            "width_mm": 89.0,
+            "height_mm": 70.0,
+            "dpi": 300
+          },
+          "layout": {
+            "column_width": "onehalf",
+            "x_label": "Species",
+            "y_label": "Body mass (g)",
+            "title": "Body mass by species",
+            "legend_outside": true
+          },
+          "statistics": {
+            "enabled": true,
+            "test": "mann_whitney",
+            "comparison_mode": "all_pairs",
+            "correction": "bh",
+            "value_column": "body_mass_g",
+            "group_column": "species"
+          }
+        },
+        "stats_spec": {
+          "enabled": true,
+          "test": "mann_whitney",
+          "comparison_mode": "all_pairs",
+          "correction": "bh",
+          "value_column": "body_mass_g",
+          "group_column": "species"
+        },
+        "source_name": "",
+        "width_in": null,
+        "height_in": null,
+        "has_prerendered_figure": false,
+        "image_path": null,
+        "image_meta": {},
+        "fit_mode": "contain",
+        "preserve_aspect": true,
+        "crop": {},
+        "rotate": 0,
+        "flip_h": false,
+        "flip_v": false,
+        "auto_trim": false,
+        "background": "white",
+        "border": false,
+        "border_width": 0.8,
+        "annotations": []
+      },
+      {
+        "label": "c",
+        "title": "Morphometric PCA",
+        "caption": "",
+        "panel_kind": "make_my_figure_panel",
+        "plot_spec": {
+          "plot_type": "pca_scatter_from_matrix",
+          "input_table": "panel_C_pca_matrix.csv",
+          "mapping": {
+            "matrix_row_id": "feature",
+            "metadata_key": "sample_id",
+            "color": "species"
+          },
+          "journal_style": "publication",
+          "output": {
+            "formats": [
+              "svg",
+              "png",
+              "pdf"
+            ],
+            "width_mm": 89.0,
+            "height_mm": 70.0,
+            "dpi": 300
+          },
+          "layout": {
+            "column_width": "onehalf",
+            "title": "Morphometric PCA",
+            "legend_outside": true
+          }
+        },
+        "stats_spec": null,
+        "source_name": "",
+        "width_in": null,
+        "height_in": null,
+        "has_prerendered_figure": false,
+        "image_path": null,
+        "image_meta": {},
+        "fit_mode": "contain",
+        "preserve_aspect": true,
+        "crop": {},
+        "rotate": 0,
+        "flip_h": false,
+        "flip_v": false,
+        "auto_trim": false,
+        "background": "white",
+        "border": false,
+        "border_width": 0.8,
+        "annotations": []
+      }
+    ],
+    "layout": {
+      "ncols": 2,
+      "nrows": 2,
+      "width_ratios": null,
+      "height_ratios": null,
+      "fig_width_mm": 180,
+      "fig_height_mm": 160,
+      "wspace": 0.18,
+      "hspace": 0.22,
+      "label_style": "uppercase",
+      "label_prefix": "",
+      "label_size": 14.0,
+      "label_weight": "bold",
+      "panel_dpi": 300,
+      "background": "white",
+      "show_titles": false,
+      "base_font_pt": null,
+      "axis_font_pt": null,
+      "tick_label_pt": null,
+      "legend_pt": null
+    },
+    "legend_text": ""
+  },
+  "draft_legend": "Gorman2014_penguins_recreation. (a) Bill dimensions by species. (b) Body mass by species. Statistics were computed as recorded in the panel StatsSpec. (c) Morphometric PCA. [DRAFT auto-generated legend - verify all descriptions and add biological interpretation before publication.]",
+  "disclaimer": "Multi-panel composite generated by Make My Figure. Panel content is embedded at the configured DPI; panel labels and titles are vector text. Auto-generated legend text is a draft and must be verified before publication."
+}

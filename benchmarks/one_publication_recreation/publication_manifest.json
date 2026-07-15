@@ -1,0 +1,24 @@
+{
+  "benchmark": "one_publication_recreation",
+  "publication_id": "gorman_2014_penguins",
+  "paper_title": "Ecological Sexual Dimorphism and Environmental Variability within a Community of Antarctic Penguins (Genus Pygoscelis)",
+  "doi": "10.1371/journal.pone.0090081",
+  "article_license": "CC BY 4.0",
+  "data_license": "CC0-1.0",
+  "reference_images_stored": false,
+  "reference_image_policy": "citation + figure number + textual target description only; no image-similarity",
+  "style": "publication",
+  "panels": [
+    {"panel": "A", "plot_type": "scatterplot_with_regression", "figure": "Fig 2 (culmen dimensions)",
+     "dir": "recreated_panels/panel_A"},
+    {"panel": "B", "plot_type": "boxplot_or_violin_with_points", "figure": "body-mass comparison",
+     "dir": "recreated_panels/panel_B", "statistics": "mann_whitney (all_pairs, BH)"},
+    {"panel": "C", "plot_type": "pca_scatter_from_matrix", "figure": "morphometric separation",
+     "dir": "recreated_panels/panel_C"}
+  ],
+  "figure_builder": {"figure_spec": "figure_builder/figure_spec.json",
+                     "outputs": ["assembled_figure.png", "assembled_figure.svg", "assembled_figure.pdf"]},
+  "conclusion_label": "Publication-grade recreation",
+  "no_rnaseq_workflow": true,
+  "no_journal_style_names": true
+}

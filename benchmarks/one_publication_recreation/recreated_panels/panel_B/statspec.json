@@ -1,0 +1,8 @@
+{
+  "enabled": true,
+  "test": "mann_whitney",
+  "comparison_mode": "all_pairs",
+  "correction": "bh",
+  "value_column": "body_mass_g",
+  "group_column": "species"
+}
