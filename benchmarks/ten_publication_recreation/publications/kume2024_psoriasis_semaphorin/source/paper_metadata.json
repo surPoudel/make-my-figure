@@ -1,0 +1,16 @@
+{
+  "id": "kume2024_psoriasis_semaphorin",
+  "paper_title": "Downregulation of semaphorin 4A in keratinocytes reflects the features of non-lesional psoriasis",
+  "authors": "Kume M, Koguchi-Yoshioka H, Nakai S, Matsumura Y, Tanemura A, Yokoi K, ... Watanabe R",
+  "journal": "eLife",
+  "year": 2024,
+  "volume": "13",
+  "elocation_id": "RP97654",
+  "doi": "10.7554/eLife.97654",
+  "url": "https://elifesciences.org/articles/97654",
+  "article_license": "CC BY 4.0",
+  "target_figure": "Figure 5, panel A",
+  "target_figure_kind": "volcano_plot",
+  "target_figure_description": "Volcano plot of differential gene expression in psoriatic non-lesional (NL) skin vs control (Ctl), from bulk RNA-sequencing (GSE121212), analysed with RaNA-seq. x = log2 fold-change, y = -log10 adjusted p-value; up-regulated keratinocyte/antimicrobial genes (SPRR2F, SERPINB4, DEFB4B, S100A7/8/9, PI3, CXCL8) labelled in red near top-right.",
+  "underlying_data": "GEO GSE121212 (psoriasis/atopic-dermatitis/control skin transcriptomes); the figure's own values are provided as eLife Figure 5-source data 1, sheet 'Figure 5A'."
+}

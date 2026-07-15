@@ -1,0 +1,12 @@
+{
+  "figure_id": "elife-97654-fig5",
+  "crop": "panel A (top-left) cropped from the full 6-panel Figure 5 \u2014 the volcano plot",
+  "crop_box_fractions": {
+    "left": 0.0,
+    "top": 0.0,
+    "right": 0.44,
+    "bottom": 0.285
+  },
+  "source_image": "https://iiif.elifesciences.org/lax/97654%2Felife-97654-fig5-v1.tif/full/900,/0/default.jpg",
+  "size": "width 900px"
+}

@@ -1,0 +1,49 @@
+{
+  "plot_type": "volcano_plot",
+  "input_table": "psoriasis_nl_vs_ctl_de.csv",
+  "mapping": {
+    "x": "log2FoldChange",
+    "p": "padj",
+    "label": "gene",
+    "use_fdr": true,
+    "lfc_cutoff": 1.0,
+    "p_cutoff": 0.05,
+    "highlight_genes": [
+      "SPRR2F",
+      "SERPINB4",
+      "S100A7A",
+      "CXCL8",
+      "PI3",
+      "DEFB4B",
+      "SPRR2A",
+      "S100A8",
+      "S100A9",
+      "S100A7",
+      "KRT14",
+      "DEFB4A",
+      "KRT16",
+      "SEMA4A",
+      "KRT5",
+      "KRT10"
+    ],
+    "label_mode": "pasted",
+    "show_arrows": true,
+    "label_by": "symbol"
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89.0,
+    "height_mm": 90.0,
+    "dpi": 300
+  },
+  "layout": {
+    "title": "Psoriatic NL vs control",
+    "x_label": "log$_2$ fold-change",
+    "y_label": "-log$_{10}$ padj"
+  }
+}

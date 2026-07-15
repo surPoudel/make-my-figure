@@ -1,0 +1,14 @@
+{
+  "article_license": "CC BY 4.0",
+  "data_license": "CC BY 4.0 (eLife Figure 5-source data 1, sheet 'Figure 5A')",
+  "license_verified_how": "eLife API https://api.elifesciences.org/articles/97654 -> copyright.license = CC-BY-4.0; Figure 5 image (iiif.elifesciences.org) and Figure 5-source data 1 (cdn.elifesciences.org) downloaded with attribution",
+  "date_accessed": "2026-07-15",
+  "reference_image_stored": true,
+  "figure_license": "CC BY 4.0",
+  "figure_id": "elife-97654-fig5 (panel A)",
+  "source_data_url": "https://cdn.elifesciences.org/articles/97654/elife-97654-fig5-data1-v1.xlsx",
+  "figure_image_url": "https://iiif.elifesciences.org/lax/97654%2Felife-97654-fig5-v1.tif/full/900,/0/default.jpg",
+  "verified_by_viewing_figure": true,
+  "verification_note": "Figure 5 was downloaded and viewed; panel A is unambiguously a volcano plot (log2 fold-change vs -log10 padj with red-labelled genes), matching the caption 'The volcano plot (A) ... changes in gene expression in psoriatic NL compared to Ctl.'",
+  "pvalue_handling": "READ VERBATIM. The source sheet ships -log10(padj); processed_data stores the exact lossless inverse padj = 10**(-neglog10_padj). No DE statistics were recomputed."
+}

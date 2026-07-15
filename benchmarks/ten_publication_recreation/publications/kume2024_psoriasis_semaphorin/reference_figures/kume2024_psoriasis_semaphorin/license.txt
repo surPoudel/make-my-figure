@@ -1,0 +1,6 @@
+Kume M, Koguchi-Yoshioka H, Nakai S, Matsumura Y, Tanemura A, Yokoi K, ... Watanabe R (2024). Downregulation of semaphorin 4A in keratinocytes reflects the features of non-lesional psoriasis. eLife 13:RP97654.
+DOI: 10.7554/eLife.97654
+Figure: Figure 5, panel A (volcano plot, psoriatic non-lesional vs control keratinocyte RNA-seq, GSE121212); figure id elife-97654-fig5
+Source: https://elifesciences.org/articles/97654 ; image https://iiif.elifesciences.org/lax/97654%2Felife-97654-fig5-v1.tif/full/900,/0/default.jpg
+License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) -- (c) 2024 Kume et al.
+Date accessed: 2026-07-15. Redistributed here (panel A cropped) with attribution under CC BY 4.0.

@@ -1,0 +1,16 @@
+{
+  "figure_id": "elife-97654-fig5 (panel A)",
+  "plot_kind": "volcano_plot",
+  "x": "log2 fold-change (psoriatic NL vs control Ctl)",
+  "y": "-log10 adjusted p-value (padj)",
+  "n_features": 9999,
+  "labelled_genes_in_published_panel": [
+    "SPRR2F", "SERPINB4", "S100A7A", "CXCL8", "PI3", "DEFB4B", "SPRR2A",
+    "S100A8", "S100A9", "S100A7", "KRT14", "DEFB4A", "KRT16", "SEMA4A",
+    "KRT5", "KRT10"
+  ],
+  "landmark_checks": {
+    "SPRR2F": {"log2FC_approx": 5.0, "neglog10_padj_approx": 21.5, "position": "top-right, highest point"},
+    "SEMA4A": {"note": "near origin; paper's gene of interest, ~unchanged in NL"}
+  }
+}
