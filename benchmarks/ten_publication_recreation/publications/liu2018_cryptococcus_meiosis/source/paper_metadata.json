@@ -1,0 +1,16 @@
+{
+  "id": "liu2018_cryptococcus_meiosis",
+  "paper_title": "Genetic basis for coordination of meiosis and sexual structure maturation in Cryptococcus neoformans",
+  "authors": "Liu L, He G-J, Chen L, Zheng J, Chen Y, Shen L, Tian X, Fang E, Xu Y, Wang L",
+  "journal": "eLife",
+  "year": 2018,
+  "volume": "7",
+  "elocation_id": "e38683",
+  "doi": "10.7554/eLife.38683",
+  "url": "https://elifesciences.org/articles/38683",
+  "article_license": "CC BY 4.0",
+  "target_figure": "Figure 2A",
+  "target_figure_kind": "boxplot_or_violin_with_points",
+  "target_figure_description": "Violin plots of the basidial maturation score (BMS) for five strains (Wild-type, pum1Δ, csa1Δ, csa2Δ, csa1Δ/csa2Δ) during unisexual (grey) and bisexual (dark red) development; n=150 cells per strain per condition.",
+  "underlying_data": "Per-cell BMS values are provided in Figure 2-source data 1 (sheet 'Figure 2A'); plotted verbatim."
+}

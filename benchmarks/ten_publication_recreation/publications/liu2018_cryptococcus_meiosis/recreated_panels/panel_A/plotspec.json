@@ -1,0 +1,26 @@
+{
+  "plot_type": "boxplot_or_violin_with_points",
+  "input_table": "cryptococcus_bms_violin.csv",
+  "mapping": {
+    "x": "group",
+    "y": "BMS",
+    "kind": "violin",
+    "points": false
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 180.0,
+    "height_mm": 96.0,
+    "dpi": 300
+  },
+  "layout": {
+    "title": "Basidial maturation score by strain (U = unisexual, B = bisexual development)",
+    "x_label": "Strain (development)",
+    "y_label": "BMS"
+  }
+}

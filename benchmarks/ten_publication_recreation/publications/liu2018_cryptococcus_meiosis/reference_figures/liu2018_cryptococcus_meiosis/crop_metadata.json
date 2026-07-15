@@ -1,0 +1,15 @@
+{
+  "figure_id": "elife-38683-fig2",
+  "crop": "panel A (top-left violin) cropped from multi-panel Figure 2",
+  "crop_box_fractions": {
+    "left": 0.0,
+    "top": 0.0,
+    "right": 0.57,
+    "bottom": 0.34
+  },
+  "full_size_px": [
+    4252,
+    3679
+  ],
+  "source_image": "https://iiif.elifesciences.org/lax/38683%2Felife-38683-fig2-v2.tif/full/full/0/default.jpg"
+}

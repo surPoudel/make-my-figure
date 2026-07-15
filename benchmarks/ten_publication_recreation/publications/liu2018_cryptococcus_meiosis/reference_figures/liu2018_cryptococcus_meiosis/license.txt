@@ -1,0 +1,6 @@
+Liu L, He G-J, Chen L, Zheng J, Chen Y, Shen L, Tian X, Fang E, Xu Y, Wang L (2018). Genetic basis for coordination of meiosis and sexual structure maturation in Cryptococcus neoformans. eLife 7:e38683.
+DOI: 10.7554/eLife.38683
+Figure: Figure 2, panel A (violin plots of the basidial maturation score across five strains during unisexual and bisexual development, n=150 per strain); figure id elife-38683-fig2
+Source: https://elifesciences.org/articles/38683 ; image https://iiif.elifesciences.org/lax/38683%2Felife-38683-fig2-v2.tif/full/full/0/default.jpg
+License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) -- (c) 2018 Liu et al.
+Date accessed: 2026-07-15. Redistributed here (panel A cropped) with attribution under CC BY 4.0.

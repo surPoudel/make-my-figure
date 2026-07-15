@@ -1,0 +1,31 @@
+{
+  "figure_id": "elife-38683-fig2",
+  "plot_kind": "boxplot_or_violin_with_points",
+  "y": "basidial maturation score (BMS)",
+  "groups": [
+    "WT U",
+    "pum1Δ U",
+    "csa1Δ U",
+    "csa2Δ U",
+    "csa1/2Δ U",
+    "WT B",
+    "pum1Δ B",
+    "csa1Δ B",
+    "csa2Δ B",
+    "csa1/2Δ B"
+  ],
+  "n_groups": 10,
+  "n_per_group": 150,
+  "group_medians": {
+    "WT U": 1.207,
+    "pum1Δ U": 1.084,
+    "csa1Δ U": 1.046,
+    "csa2Δ U": 1.032,
+    "csa1/2Δ U": 0.994,
+    "WT B": 1.343,
+    "pum1Δ B": 1.201,
+    "csa1Δ B": 1.049,
+    "csa2Δ B": 0.992,
+    "csa1/2Δ B": 1.007
+  }
+}

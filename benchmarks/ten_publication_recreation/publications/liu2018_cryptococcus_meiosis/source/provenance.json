@@ -1,0 +1,14 @@
+{
+  "article_license": "CC BY 4.0",
+  "data_license": "CC BY 4.0 (Figure 2-source data 1, values plotted verbatim)",
+  "license_verified_how": "eLife API https://api.elifesciences.org/articles/38683 -> copyright.license = CC-BY-4.0; Figure 2 image (iiif.elifesciences.org) and Figure 2-source data 1 (cdn.elifesciences.org) downloaded with attribution",
+  "date_accessed": "2026-07-15",
+  "reference_image_stored": true,
+  "figure_license": "CC BY 4.0",
+  "figure_id": "elife-38683-fig2",
+  "source_data_url": "https://cdn.elifesciences.org/articles/38683/elife-38683-fig2-data1-v2.xlsx",
+  "figure_image_url": "https://iiif.elifesciences.org/lax/38683%2Felife-38683-fig2-v2.tif/full/full/0/default.jpg",
+  "verified_by_viewing_figure": true,
+  "verification_note": "Figure 2 was downloaded and viewed; panel A is unambiguously a set of violin plots (BMS on the y-axis, five strains x two conditions on the x-axis). Every plotted BMS value is read from Figure 2-source data 1; n=150 per group matches the caption and the group medians match the figure (Bisex Wild-type highest at 1.343).",
+  "pvalue_handling": "No statistic is drawn. The caption marks some comparisons 'n.s.'; the app is not asked to compute or annotate significance here, so no p-value is fabricated or shown."
+}
