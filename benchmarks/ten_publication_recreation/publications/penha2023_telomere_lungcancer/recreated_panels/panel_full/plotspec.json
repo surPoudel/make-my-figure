@@ -1,0 +1,27 @@
+{
+  "plot_type": "forest_plot",
+  "input_table": "ltl_lungcancer_mr_or.csv",
+  "mapping": {
+    "label": "subgroup",
+    "estimate": "OR",
+    "lower": "ci_low",
+    "upper": "ci_high",
+    "reference": 1.0,
+    "log_scale": true
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 120.0,
+    "height_mm": 84.0,
+    "dpi": 300
+  },
+  "layout": {
+    "title": "MR: lung cancer risk per SD genetically predicted LTL",
+    "x_label": "Odds ratio (per SD increase in predicted LTL)"
+  }
+}

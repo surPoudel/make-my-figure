@@ -1,0 +1,12 @@
+{
+  "figure_id": "elife-44310-fig2",
+  "crop": "panel A (top-left) cropped from the 4-panel Figure 2 - the training-cohort ROC curve (AUC=0.822)",
+  "crop_box_fractions": {
+    "left": 0.0,
+    "top": 0.0,
+    "right": 0.5,
+    "bottom": 0.5
+  },
+  "source_image": "https://iiif.elifesciences.org/lax/44310%2Felife-44310-fig2-v1.tif/full/900,/0/default.jpg",
+  "size": "width 900px"
+}

@@ -1,0 +1,6 @@
+Penha RCC, Smith-Byrne K, Atkins JR, Haycock PC, Kar S, Codd V, ... McKay JD (2023). Common genetic variations in telomere length genes and lung cancer: a Mendelian randomisation study and its novel application in lung tumour transcriptome. eLife 12:e83118.
+DOI: 10.7554/eLife.83118
+Figure: Figure 2 (forest plot of MR odds ratios for lung cancer risk per SD increase in genetically predicted leukocyte telomere length); figure id elife-83118-fig2
+Source: https://elifesciences.org/articles/83118 ; image https://iiif.elifesciences.org/lax:83118%2Felife-83118-fig2-v1.tif/full/900,/0/default.jpg
+License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) -- (c) 2023 Penha et al.
+Date accessed: 2026-07-15. Redistributed here with attribution under CC BY 4.0.

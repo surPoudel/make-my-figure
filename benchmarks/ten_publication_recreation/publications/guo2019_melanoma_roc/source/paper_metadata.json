@@ -1,0 +1,17 @@
+{
+  "id": "guo2019_melanoma_roc",
+  "paper_title": "A four-DNA methylation biomarker is a superior predictor of survival of patients with cutaneous melanoma",
+  "authors": "Guo W, Zhu L, Zhu R, Chen Q, Wang Q, Chen J-Q",
+  "journal": "eLife",
+  "year": 2019,
+  "volume": "8",
+  "elocation_id": "e44310",
+  "doi": "10.7554/eLife.44310",
+  "url": "https://elifesciences.org/articles/44310",
+  "article_license": "CC BY 4.0",
+  "target_figure": "Figure 2, panel A",
+  "target_figure_kind": "roc_curve",
+  "target_figure_description": "ROC curve of the four-DNA methylation signature predicting overall survival in the TCGA training cohort. x = 1 - Specificity, y = Sensitivity; annotated AUC = 0.822 (95%CI 0.76-0.88), P < 0.001.",
+  "underlying_data": "TCGA cutaneous melanoma cohort; the figure's own values are eLife Figure 2-source data 1 (training cohort, n=205): per-patient overall survival time, status, risk group and the four-DNA methylation score.",
+  "relationship_to_other_entry": "Same paper as guo2019_melanoma_methylation (which recreates the KM curve, Figure 2C). This entry is a DISTINCT figure (Figure 2A) and a DISTINCT plot kind (ROC)."
+}

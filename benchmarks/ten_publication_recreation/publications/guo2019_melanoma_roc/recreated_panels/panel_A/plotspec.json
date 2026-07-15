@@ -1,0 +1,24 @@
+{
+  "plot_type": "roc_curve",
+  "input_table": "melanoma_training_roc.csv",
+  "mapping": {
+    "label": "short_survival",
+    "score": "Four-DNA methylation signature"
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89.0,
+    "height_mm": 89.0,
+    "dpi": 300
+  },
+  "layout": {
+    "title": "Training cohort",
+    "x_label": "1 \u2212 Specificity",
+    "y_label": "Sensitivity"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "article_license": "CC BY 4.0",
+  "data_license": "CC BY 4.0 (values printed on Figure 2, read verbatim)",
+  "license_verified_how": "eLife API https://api.elifesciences.org/articles/83118 -> copyright.license = CC-BY-4.0; Figure 2 image (iiif.elifesciences.org) downloaded with attribution",
+  "date_accessed": "2026-07-15",
+  "reference_image_stored": true,
+  "figure_license": "CC BY 4.0",
+  "figure_id": "elife-83118-fig2",
+  "source_data_url": "n/a (values transcribed from the figure itself)",
+  "figure_image_url": "https://iiif.elifesciences.org/lax:83118%2Felife-83118-fig2-v1.tif/full/900,/0/default.jpg",
+  "verified_by_viewing_figure": true,
+  "verification_note": "Figure 2 was downloaded and viewed; it is unambiguously a forest plot with squares/whiskers on a log-OR axis and OR/CI/P columns. Every OR and CI transcribed here matches the printed figure exactly.",
+  "pvalue_handling": "P-values are stored for traceability (verbatim from the figure's P-value column) but are NOT drawn - the app's forest_plot does not fabricate or recompute any statistic; it plots the OR point estimate and CI only."
+}

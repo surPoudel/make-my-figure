@@ -1,0 +1,20 @@
+{
+  "figure_id": "elife-44310-fig2 (panel A)",
+  "plot_kind": "roc_curve",
+  "x": "1 - Specificity (false positive rate)",
+  "y": "Sensitivity (true positive rate)",
+  "n_samples": 205,
+  "positive_class": "died within 5 years (short survival, OS<5y); n=92",
+  "predictor": "four-DNA methylation risk score",
+  "landmark_checks": {
+    "AUC": {
+      "published": 0.822,
+      "app": 0.822,
+      "match": true
+    },
+    "CI95_published": [
+      0.76,
+      0.88
+    ]
+  }
+}

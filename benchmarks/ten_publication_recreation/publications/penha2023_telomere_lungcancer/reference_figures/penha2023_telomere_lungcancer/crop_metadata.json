@@ -1,0 +1,12 @@
+{
+  "figure_id": "elife-83118-fig2",
+  "crop": "none - Figure 2 is a single-panel forest plot, stored whole",
+  "crop_box_fractions": {
+    "left": 0.0,
+    "top": 0.0,
+    "right": 1.0,
+    "bottom": 1.0
+  },
+  "source_image": "https://iiif.elifesciences.org/lax:83118%2Felife-83118-fig2-v1.tif/full/900,/0/default.jpg",
+  "size": "width 900px"
+}

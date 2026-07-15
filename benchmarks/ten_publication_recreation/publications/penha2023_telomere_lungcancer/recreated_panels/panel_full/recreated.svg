@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="458.239082pt" height="245.9226pt" viewBox="0 0 458.239082 245.9226" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-07-15T16:40:29.112569</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.8, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 245.9226 
+L 458.239082 245.9226 
+L 458.239082 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 169.90625 205.430725 
+L 340.585508 205.430725 
+L 340.585508 23.077969 
+L 169.90625 23.077969 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="matplotlib.axis_1">
+    <g id="xtick_1">
+     <g id="line2d_1">
+      <defs>
+       <path id="m1e607920de" d="M 0 0 
+L 0 4.5 
+" style="stroke: #1a1a1a"/>
+      </defs>
+      <g>
+       <use xlink:href="#m1e607920de" x="199.377525" y="205.430725" style="fill: #1a1a1a; stroke: #1a1a1a"/>
+      </g>
+     </g>
+     <g id="text_1">
+      <!-- $\mathdefault{10^{0}}$ -->
+      <g style="fill: #1a1a1a" transform="translate(190.577525 221.029162)">
+       <text>
+        <tspan x="0" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #1a1a1a">1</tspan>
+        <tspan x="6.362305" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #1a1a1a">0</tspan>
+        <tspan x="12.820312" y="-4.804688" style="font-size: 7px; font-family: 'DejaVu Sans'; fill: #1a1a1a">0</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_2">
+     <g id="line2d_2">
+      <defs>
+       <path id="ma9c1ce6482" d="M 0 0 
+L 0 2 
+" style="stroke: #1a1a1a; stroke-width: 0.6"/>
+      </defs>
+      <g>
+       <use xlink:href="#ma9c1ce6482" x="171.588307" y="205.430725" style="fill: #1a1a1a; stroke: #1a1a1a; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_3">
+     <g id="line2d_3">
+      <g>
+       <use xlink:href="#ma9c1ce6482" x="186.256436" y="205.430725" style="fill: #1a1a1a; stroke: #1a1a1a; stroke-width: 0.6"/>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_4">
+     <g id="line2d_4">
+      <g>
+       <use xlink:href="#ma9c1ce6482" x="285.698718" y="205.430725" style="fill: #1a1a1a; stroke: #1a1a1a; stroke-width: 0.6"/>
+      </g>
+     </g>
+     <g id="text_2">
+      <!-- $\mathdefault{2\times10^{0}}$ -->
+      <g style="fill: #1a1a1a" transform="translate(267.598718 218.429162)">
+       <text>
+        <tspan x="0" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #1a1a1a">2</tspan>
+        <tspan x="8.310547" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #1a1a1a">×</tspan>
+        <tspan x="18.637695" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #1a1a1a">1</tspan>
+        <tspan x="25" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #1a1a1a">0</tspan>
+        <tspan x="31.458008" y="-4.804688" style="font-size: 7px; font-family: 'DejaVu Sans'; fill: #1a1a1a">0</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="xtick_5">
+     <g id="line2d_5">
+      <g>
+       <use xlink:href="#ma9c1ce6482" x="336.19338" y="205.430725" style="fill: #1a1a1a; stroke: #1a1a1a; stroke-width: 0.6"/>
+      </g>
+     </g>
+     <g id="text_3">
+      <!-- $\mathdefault{3\times10^{0}}$ -->
+      <g style="fill: #1a1a1a" transform="translate(318.09338 218.429162)">
+       <text>
+        <tspan x="0" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #1a1a1a">3</tspan>
+        <tspan x="8.310547" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #1a1a1a">×</tspan>
+        <tspan x="18.637695" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #1a1a1a">1</tspan>
+        <tspan x="25" y="-0.976562" style="font-size: 10px; font-family: 'DejaVu Sans'; fill: #1a1a1a">0</tspan>
+        <tspan x="31.458008" y="-4.804688" style="font-size: 7px; font-family: 'DejaVu Sans'; fill: #1a1a1a">0</tspan>
+       </text>
+      </g>
+     </g>
+    </g>
+    <g id="text_4">
+     <text style="font-size: 12px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #1a1a1a" x="255.245879" y="236.226975" transform="rotate(-0 255.245879 236.226975)">Odds ratio (per SD increase in predicted LTL)</text>
+    </g>
+   </g>
+   <g id="matplotlib.axis_2">
+    <g id="ytick_1">
+     <g id="line2d_6">
+      <defs>
+       <path id="ma45c8c5f35" d="M 0 0 
+L -4.5 0 
+" style="stroke: #1a1a1a"/>
+      </defs>
+      <g>
+       <use xlink:href="#ma45c8c5f35" x="169.90625" y="31.36673" style="fill: #1a1a1a; stroke: #1a1a1a"/>
+      </g>
+     </g>
+     <g id="text_5">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #1a1a1a" x="161.90625" y="35.165949" transform="rotate(-0 161.90625 35.165949)">Lung cancer</text>
+     </g>
+    </g>
+    <g id="ytick_2">
+     <g id="line2d_7">
+      <g>
+       <use xlink:href="#ma45c8c5f35" x="169.90625" y="64.521777" style="fill: #1a1a1a; stroke: #1a1a1a"/>
+      </g>
+     </g>
+     <g id="text_6">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #1a1a1a" x="161.90625" y="68.320996" transform="rotate(-0 161.90625 68.320996)">Lung adenocarcinoma</text>
+     </g>
+    </g>
+    <g id="ytick_3">
+     <g id="line2d_8">
+      <g>
+       <use xlink:href="#ma45c8c5f35" x="169.90625" y="97.676823" style="fill: #1a1a1a; stroke: #1a1a1a"/>
+      </g>
+     </g>
+     <g id="text_7">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #1a1a1a" x="161.90625" y="101.476042" transform="rotate(-0 161.90625 101.476042)">Lung squamous cell carcinoma</text>
+     </g>
+    </g>
+    <g id="ytick_4">
+     <g id="line2d_9">
+      <g>
+       <use xlink:href="#ma45c8c5f35" x="169.90625" y="130.83187" style="fill: #1a1a1a; stroke: #1a1a1a"/>
+      </g>
+     </g>
+     <g id="text_8">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #1a1a1a" x="161.90625" y="134.631089" transform="rotate(-0 161.90625 134.631089)">Lung small cell carcinoma</text>
+     </g>
+    </g>
+    <g id="ytick_5">
+     <g id="line2d_10">
+      <g>
+       <use xlink:href="#ma45c8c5f35" x="169.90625" y="163.986916" style="fill: #1a1a1a; stroke: #1a1a1a"/>
+      </g>
+     </g>
+     <g id="text_9">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #1a1a1a" x="161.90625" y="167.786135" transform="rotate(-0 161.90625 167.786135)">Lung ever smokers</text>
+     </g>
+    </g>
+    <g id="ytick_6">
+     <g id="line2d_11">
+      <g>
+       <use xlink:href="#ma45c8c5f35" x="169.90625" y="197.141963" style="fill: #1a1a1a; stroke: #1a1a1a"/>
+      </g>
+     </g>
+     <g id="text_10">
+      <text style="font-size: 10px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: end; fill: #1a1a1a" x="161.90625" y="200.941182" transform="rotate(-0 161.90625 200.941182)">Lung never smokers</text>
+     </g>
+    </g>
+   </g>
+   <g id="LineCollection_1">
+    <path d="M 244.788412 31.36673 
+L 275.314777 31.36673 
+" clip-path="url(#p09ae053d94)" style="fill: none; stroke: #000000; stroke-width: 1.8"/>
+    <path d="M 286.937884 64.521777 
+L 332.82736 64.521777 
+" clip-path="url(#p09ae053d94)" style="fill: none; stroke: #000000; stroke-width: 1.8"/>
+    <path d="M 177.664398 97.676823 
+L 221.040827 97.676823 
+" clip-path="url(#p09ae053d94)" style="fill: none; stroke: #000000; stroke-width: 1.8"/>
+    <path d="M 183.457776 130.83187 
+L 245.650251 130.83187 
+" clip-path="url(#p09ae053d94)" style="fill: none; stroke: #000000; stroke-width: 1.8"/>
+    <path d="M 235.825181 163.986916 
+L 269.778969 163.986916 
+" clip-path="url(#p09ae053d94)" style="fill: none; stroke: #000000; stroke-width: 1.8"/>
+    <path d="M 245.650251 197.141963 
+L 328.928549 197.141963 
+" clip-path="url(#p09ae053d94)" style="fill: none; stroke: #000000; stroke-width: 1.8"/>
+   </g>
+   <g id="line2d_12">
+    <defs>
+     <path id="md1aac83cc6" d="M 0 2.5 
+L 0 -2.5 
+" style="stroke: #000000"/>
+    </defs>
+    <g clip-path="url(#p09ae053d94)">
+     <use xlink:href="#md1aac83cc6" x="244.788412" y="31.36673" style="fill: #0072b2; stroke: #000000"/>
+     <use xlink:href="#md1aac83cc6" x="286.937884" y="64.521777" style="fill: #0072b2; stroke: #000000"/>
+     <use xlink:href="#md1aac83cc6" x="177.664398" y="97.676823" style="fill: #0072b2; stroke: #000000"/>
+     <use xlink:href="#md1aac83cc6" x="183.457776" y="130.83187" style="fill: #0072b2; stroke: #000000"/>
+     <use xlink:href="#md1aac83cc6" x="235.825181" y="163.986916" style="fill: #0072b2; stroke: #000000"/>
+     <use xlink:href="#md1aac83cc6" x="245.650251" y="197.141963" style="fill: #0072b2; stroke: #000000"/>
+    </g>
+   </g>
+   <g id="line2d_13">
+    <g clip-path="url(#p09ae053d94)">
+     <use xlink:href="#md1aac83cc6" x="275.314777" y="31.36673" style="fill: #0072b2; stroke: #000000"/>
+     <use xlink:href="#md1aac83cc6" x="332.82736" y="64.521777" style="fill: #0072b2; stroke: #000000"/>
+     <use xlink:href="#md1aac83cc6" x="221.040827" y="97.676823" style="fill: #0072b2; stroke: #000000"/>
+     <use xlink:href="#md1aac83cc6" x="245.650251" y="130.83187" style="fill: #0072b2; stroke: #000000"/>
+     <use xlink:href="#md1aac83cc6" x="269.778969" y="163.986916" style="fill: #0072b2; stroke: #000000"/>
+     <use xlink:href="#md1aac83cc6" x="328.928549" y="197.141963" style="fill: #0072b2; stroke: #000000"/>
+    </g>
+   </g>
+   <g id="line2d_14">
+    <path d="M 199.377525 205.430725 
+L 199.377525 23.077969 
+" clip-path="url(#p09ae053d94)" style="fill: none; stroke-dasharray: 4.07,1.76; stroke-dashoffset: 0; stroke: #808080; stroke-width: 1.1"/>
+   </g>
+   <g id="line2d_15">
+    <defs>
+     <path id="mc6f5a5b1b4" d="M -2 2 
+L 2 2 
+L 2 -2 
+L -2 -2 
+z
+" style="stroke: #000000; stroke-linejoin: miter"/>
+    </defs>
+    <g clip-path="url(#p09ae053d94)">
+     <use xlink:href="#mc6f5a5b1b4" x="259.456541" y="31.36673" style="fill: #0072b2; stroke: #000000; stroke-linejoin: miter"/>
+     <use xlink:href="#mc6f5a5b1b4" x="309.951203" y="64.521777" style="fill: #0072b2; stroke: #000000; stroke-linejoin: miter"/>
+     <use xlink:href="#mc6f5a5b1b4" x="199.377525" y="97.676823" style="fill: #0072b2; stroke: #000000; stroke-linejoin: miter"/>
+     <use xlink:href="#mc6f5a5b1b4" x="214.597917" y="130.83187" style="fill: #0072b2; stroke: #000000; stroke-linejoin: miter"/>
+     <use xlink:href="#mc6f5a5b1b4" x="253.149616" y="163.986916" style="fill: #0072b2; stroke: #000000; stroke-linejoin: miter"/>
+     <use xlink:href="#mc6f5a5b1b4" x="286.937884" y="197.141963" style="fill: #0072b2; stroke: #000000; stroke-linejoin: miter"/>
+    </g>
+   </g>
+   <g id="patch_3">
+    <path d="M 169.90625 205.430725 
+L 169.90625 23.077969 
+" style="fill: none; stroke: #1a1a1a; stroke-width: 1.1; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 169.90625 205.430725 
+L 340.585508 205.430725 
+" style="fill: none; stroke: #1a1a1a; stroke-width: 1.1; stroke-linejoin: miter; stroke-linecap: square"/>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 13px; font-family: 'DejaVu Sans', 'Bitstream Vera Sans', 'Computer Modern Sans Serif', 'Lucida Grande', 'Verdana', 'Geneva', 'Lucid', 'Arial', 'Helvetica', 'Avant Garde', sans-serif; text-anchor: middle; fill: #1a1a1a" x="255.245879" y="17.077969" transform="rotate(-0 255.245879 17.077969)">MR: lung cancer risk per SD genetically predicted LTL</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p09ae053d94">
+   <rect x="169.90625" y="23.077969" width="170.679258" height="182.352756"/>
+  </clipPath>
+ </defs>
+</svg>

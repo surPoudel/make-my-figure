@@ -1,0 +1,14 @@
+{
+  "article_license": "CC BY 4.0",
+  "data_license": "CC BY 4.0 (eLife Figure 2-source data 1, training cohort)",
+  "license_verified_how": "eLife API https://api.elifesciences.org/articles/44310 -> copyright.license = CC-BY-4.0; Figure 2 image (iiif.elifesciences.org) and Figure 2-source data 1 (cdn.elifesciences.org) downloaded with attribution",
+  "date_accessed": "2026-07-15",
+  "reference_image_stored": true,
+  "figure_license": "CC BY 4.0",
+  "figure_id": "elife-44310-fig2 (panel A)",
+  "source_data_url": "https://cdn.elifesciences.org/articles/44310/elife-44310-fig2-data1-v1.xlsx",
+  "figure_image_url": "https://iiif.elifesciences.org/lax/44310%2Felife-44310-fig2-v1.tif/full/900,/0/default.jpg",
+  "verified_by_viewing_figure": true,
+  "verification_note": "Figure 2 was downloaded and viewed; panel A is unambiguously a ROC curve (Sensitivity vs 1 - Specificity) annotated AUC=0.822, 95%CI 0.76-0.88, matching the caption 'ROC analysis ... in training cohort, with an AUC of 0.822'.",
+  "pvalue_handling": "No p-value is drawn. The AUC is COMPUTED BY THE APP from the paper's own risk scores and the binary outcome 'died within 5 years' (OS<5y). That outcome reproduces the published AUC to three decimals (app 0.8223 -> 0.822), evidence it is the outcome the paper used. Disclosed."
+}

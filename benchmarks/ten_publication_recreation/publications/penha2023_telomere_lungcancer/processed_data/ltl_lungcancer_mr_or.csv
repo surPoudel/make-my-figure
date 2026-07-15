@@ -1,0 +1,7 @@
+subgroup,OR,ci_low,ci_high,p_value
+Lung cancer,1.62,1.44,1.84,9.91e-15
+Lung adenocarcinoma,2.43,2.02,2.92,3.76e-21
+Lung squamous cell carcinoma,1.0,0.84,1.19,9.86e-01
+Lung small cell carcinoma,1.13,0.88,1.45,3.47e-01
+Lung ever smokers,1.54,1.34,1.76,7.75e-10
+Lung never smokers,2.02,1.45,2.83,3.78e-05

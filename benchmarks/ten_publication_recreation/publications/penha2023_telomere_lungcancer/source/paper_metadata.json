@@ -1,0 +1,16 @@
+{
+  "id": "penha2023_telomere_lungcancer",
+  "paper_title": "Common genetic variations in telomere length genes and lung cancer: a Mendelian randomisation study and its novel application in lung tumour transcriptome",
+  "authors": "Penha RCC, Smith-Byrne K, Atkins JR, Haycock PC, Kar S, Codd V, ... McKay JD",
+  "journal": "eLife",
+  "year": 2023,
+  "volume": "12",
+  "elocation_id": "e83118",
+  "doi": "10.7554/eLife.83118",
+  "url": "https://elifesciences.org/articles/83118",
+  "article_license": "CC BY 4.0",
+  "target_figure": "Figure 2",
+  "target_figure_kind": "forest_plot",
+  "target_figure_description": "Forest plot of inverse-variance-weighted Mendelian-randomisation odds ratios (per SD increase in genetically predicted leukocyte telomere length) for lung cancer overall, by histology (adenocarcinoma, squamous cell, small cell) and by smoking status (ever, never), with 95% CIs on a log OR axis centred at 1.",
+  "underlying_data": "OR and 95% CI for each row are printed on the published Figure 2 and are transcribed verbatim (no machine-readable source-data file is attached to the figure)."
+}

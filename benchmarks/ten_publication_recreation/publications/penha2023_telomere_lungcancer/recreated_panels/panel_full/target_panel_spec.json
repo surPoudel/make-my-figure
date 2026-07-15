@@ -1,0 +1,70 @@
+{
+  "figure_id": "elife-83118-fig2",
+  "plot_kind": "forest_plot",
+  "x": "odds ratio (log axis, reference = 1)",
+  "rows": [
+    "Lung cancer",
+    "Lung adenocarcinoma",
+    "Lung squamous cell carcinoma",
+    "Lung small cell carcinoma",
+    "Lung ever smokers",
+    "Lung never smokers"
+  ],
+  "n_rows": 6,
+  "values_verbatim": [
+    {
+      "row": "Lung cancer",
+      "OR": 1.62,
+      "ci": [
+        1.44,
+        1.84
+      ],
+      "p_value": "9.91e-15"
+    },
+    {
+      "row": "Lung adenocarcinoma",
+      "OR": 2.43,
+      "ci": [
+        2.02,
+        2.92
+      ],
+      "p_value": "3.76e-21"
+    },
+    {
+      "row": "Lung squamous cell carcinoma",
+      "OR": 1.0,
+      "ci": [
+        0.84,
+        1.19
+      ],
+      "p_value": "9.86e-01"
+    },
+    {
+      "row": "Lung small cell carcinoma",
+      "OR": 1.13,
+      "ci": [
+        0.88,
+        1.45
+      ],
+      "p_value": "3.47e-01"
+    },
+    {
+      "row": "Lung ever smokers",
+      "OR": 1.54,
+      "ci": [
+        1.34,
+        1.76
+      ],
+      "p_value": "7.75e-10"
+    },
+    {
+      "row": "Lung never smokers",
+      "OR": 2.02,
+      "ci": [
+        1.45,
+        2.83
+      ],
+      "p_value": "3.78e-05"
+    }
+  ]
+}

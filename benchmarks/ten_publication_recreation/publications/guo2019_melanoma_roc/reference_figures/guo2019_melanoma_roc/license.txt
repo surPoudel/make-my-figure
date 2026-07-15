@@ -1,0 +1,6 @@
+Guo W, Zhu L, Zhu R, Chen Q, Wang Q, Chen J-Q (2019). A four-DNA methylation biomarker is a superior predictor of survival of patients with cutaneous melanoma. eLife 8:e44310.
+DOI: 10.7554/eLife.44310
+Figure: Figure 2, panel A (ROC curve, four-DNA methylation signature, training cohort, AUC=0.822); figure id elife-44310-fig2
+Source: https://elifesciences.org/articles/44310 ; image https://iiif.elifesciences.org/lax/44310%2Felife-44310-fig2-v1.tif/full/900,/0/default.jpg
+License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/) -- (c) 2019 Guo et al.
+Date accessed: 2026-07-15. Redistributed here (panel A cropped) with attribution under CC BY 4.0.
