@@ -30,6 +30,10 @@ with any journal.
 - Recommendation engine now detects unnamed categorical group columns (e.g.
   `species`) so group/value tables get box/violin/ridge/bar suggestions; manually
   picking a distribution plot auto-prefills x/y/group.
+- **Revert to original data**: reshaping the data (a transform recommendation,
+  grouping, or the differential screen) no longer traps you on the transformed
+  table. A "↩ Revert to original data" button appears and restores the pre-reshape
+  data and its own recommendations (the saved reshaped CSV is kept on disk).
 
 ## [0.6.0] — Publication style, recommendations, QC, benchmarks, performance
 

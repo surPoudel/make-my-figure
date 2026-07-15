@@ -192,6 +192,7 @@ class MainWindow(QMainWindow):
         self._render_timer.setInterval(180)
         self._render_timer.timeout.connect(self.render_preview)
         self._auto_recommend = True
+        self._data_before_transform = None   # original data stashed before a reshape
         self._canvas = None
         self._identify_mode = False       # click-to-identify/label on the canvas
         self._picked_labels = {}          # plot_type -> [labels] chosen by clicking
@@ -321,6 +322,16 @@ class MainWindow(QMainWindow):
         self.recommend_panel.generateRequested.connect(self._on_generate_recommendation)
         self.recommend_panel.addToBuilderRequested.connect(self._on_add_recommendation_to_builder)
         cv.addWidget(self.recommend_panel)
+
+        # Shown only after a recommendation reshapes/replaces the data (transform,
+        # grouping, or differential screen) so the user can undo it. The reshaped
+        # CSV stays on disk; this only restores the in-app table + its own recs.
+        self.revert_btn = QPushButton("↩  Revert to original data")
+        self.revert_btn.setToolTip("Restore the data you had before the last reshape / "
+                                   "grouping / differential screen (the saved CSV is kept).")
+        self.revert_btn.clicked.connect(self.action_revert_data)
+        self.revert_btn.setVisible(False)
+        cv.addWidget(self.revert_btn)
 
         self.mapping_box = QGroupBox("2. Map columns")
         self.mapping_form = QFormLayout(self.mapping_box)
@@ -866,6 +877,25 @@ class MainWindow(QMainWindow):
         self.render_preview()
         if getattr(self, "_auto_recommend", True):
             self._refresh_recommendations()
+        # Loading/setting data is a clean state — no reshape to revert (a reshape
+        # path re-marks it right after calling this).
+        self._data_before_transform = None
+        if hasattr(self, "revert_btn"):
+            self.revert_btn.setVisible(False)
+
+    def _mark_reshaped(self, original: "LoadedData | None") -> None:
+        """Remember the pre-reshape data and show the Revert button."""
+        self._data_before_transform = original
+        if hasattr(self, "revert_btn"):
+            self.revert_btn.setVisible(original is not None)
+
+    def action_revert_data(self):
+        """Restore the data as it was before the last reshape/group/differential."""
+        orig = self._data_before_transform
+        if orig is None:
+            return
+        self._set_data(orig)   # clears the stash, hides the button, re-renders + re-recommends
+        self.statusBar().showMessage("Reverted to the original data.", 5000)
 
     # --- recommended figures ---------------------------------------------
     def _refresh_recommendations(self):
@@ -895,6 +925,7 @@ class MainWindow(QMainWindow):
         if tf:
             import os as _os
             import tempfile as _tempfile
+            original = self.data   # keep so the user can revert the reshape
             try:
                 newdata = self.controller.apply_transform(self.data, tf)
             except Exception as exc:
@@ -912,6 +943,7 @@ class MainWindow(QMainWindow):
                 self._show_warning(f"Reshaped the data but could not save the CSV: {exc}")
             self.data = newdata
             self._populate_table()
+            self._mark_reshaped(original)   # enable "Revert to original data"
         if getattr(rec, "requires_confirmation", False):
             resp = QMessageBox.question(
                 self, "Generate figure?",
@@ -1223,8 +1255,12 @@ class MainWindow(QMainWindow):
             self.render_preview()
 
     def _adopt_grouped_data(self, loaded):
-        """Replace the active dataset with a derived (grouped) table and re-render."""
-        self._set_data(loaded)
+        """Replace the active dataset with a derived (grouped/differential) table.
+
+        Keeps the original data so the user can revert if they don't like it."""
+        original = self.data
+        self._set_data(loaded)             # clears the revert stash...
+        self._mark_reshaped(original)      # ...then mark this as a revertible reshape
         self.statusBar().showMessage(f"Loaded {loaded.table_name} — runs locally.")
 
     def _populate_table(self):

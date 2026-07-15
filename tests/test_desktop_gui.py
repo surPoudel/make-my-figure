@@ -694,3 +694,30 @@ def test_differential_screen_via_grouping_dialog(app, tmp_path, monkeypatch):
     assert any(r.plot_type == "volcano_plot" and r.kind == "direct" for r in rs.recommendations)
     assert any(f.endswith("__diff.csv") for f in os.listdir(tmp_path))
     win.close()
+
+
+def test_revert_restores_original_data_after_transform(app, tmp_path):
+    """After a transform recommendation reshapes the data, Revert restores it."""
+    import numpy as np
+    import pandas as pd
+    win = MainWindow()
+    rng = np.random.default_rng(3)
+    df = pd.DataFrame({"gene": [f"g{i}" for i in range(20)]})
+    for s in ["S1", "S2", "S3", "S4"]:
+        df[s] = rng.normal(5, 2, 20)
+    src = tmp_path / "m.csv"
+    df.to_csv(src, index=False)
+    win._set_data(win.controller.load_file(str(src)))
+    assert win.revert_btn.isHidden()                 # clean load: nothing to revert
+    orig_cols = set(win.data.info.columns)
+    rs = win.controller.recommend_for_loaded(win.data)
+    tf = [r for r in rs.recommendations
+          if getattr(r, "transform", None) and r.plot_type == "ridge_or_density_plot"][0]
+    win._on_generate_recommendation(tf)
+    assert set(win.data.info.columns) == {"column", "value"}   # reshaped
+    assert not win.revert_btn.isHidden()             # revert now offered
+    win.action_revert_data()
+    assert set(win.data.info.columns) == orig_cols   # back to the original table
+    assert win.revert_btn.isHidden()                 # button hidden again
+    assert win._current_result is not None or win.data is not None
+    win.close()
