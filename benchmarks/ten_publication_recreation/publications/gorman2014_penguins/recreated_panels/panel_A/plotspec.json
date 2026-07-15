@@ -1,10 +1,10 @@
 {
-  "plot_type": "ridge_or_density_plot",
-  "input_table": "penguins_ridge.csv",
+  "plot_type": "scatterplot_with_regression",
+  "input_table": "penguins_culmen.csv",
   "mapping": {
-    "x": "flipper_length_mm",
-    "group": "species",
-    "overlap": 0.6
+    "x": "bill_length_mm",
+    "y": "bill_depth_mm",
+    "color": "species"
   },
   "journal_style": "publication",
   "output": {
@@ -18,9 +18,8 @@
     "dpi": 300
   },
   "layout": {
-    "column_width": "onehalf",
-    "x_label": "Flipper length (mm)",
-    "title": "Flipper length distribution by species",
-    "legend_outside": true
+    "title": "Culmen dimensions by species",
+    "x_label": "Culmen (bill) length (mm)",
+    "y_label": "Culmen (bill) depth (mm)"
   }
 }

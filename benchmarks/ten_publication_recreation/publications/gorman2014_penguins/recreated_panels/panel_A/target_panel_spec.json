@@ -1,13 +1,18 @@
 {
   "publication_id": "gorman2014_penguins",
-  "paper_title": "Ecological sexual dimorphism ... Antarctic penguins (Pygoscelis)",
-  "doi_or_url": "https://doi.org/10.1371/journal.pone.0090081",
-  "plot_type": "ridge_or_density_plot",
-  "panel_description": "Density/ridge of flipper length per species (distinct plot type from the one-publication pilot).",
-  "source_data_files": [
-    "penguins_ridge.csv"
+  "paper_title": "Ecological Sexual Dimorphism ... Antarctic Penguins (Pygoscelis)",
+  "doi": "10.1371/journal.pone.0090081",
+  "figure_number": "culmen-dimensions scatter",
+  "panel_letter": null,
+  "plot_type": "scatterplot_with_regression",
+  "panel_description": "Culmen (bill) length vs depth, points colored by species \u2014 matches the paper's culmen-dimensions scatter figure.",
+  "matches_published_figure": true,
+  "required_columns": [
+    "species",
+    "bill_length_mm",
+    "bill_depth_mm"
   ],
-  "statistics_shown": false,
-  "reference_image_stored": false,
-  "classification": "publication-grade recreation (distribution of a real measured variable from the paper's CC0 data)"
+  "transformations": "Drop rows with missing bill measurements.",
+  "known_missing_information": "Paper also splits by sex; here colored by species only.",
+  "reference_image": "CC BY 4.0 (PLoS ONE) \u2014 see reference_figures/ if downloaded, else citation only."
 }

@@ -1,9 +1,8 @@
-# Differences from the published figure — gorman2014_penguins
+# Relationship to the published figure — gorman2014_penguins
 
-Ecological sexual dimorphism ... Antarctic penguins (Pygoscelis) (Gorman KB, Williams TD, Fraser WR, 2014). https://doi.org/10.1371/journal.pone.0090081
+Gorman KB, Williams TD, Fraser WR (2014). https://doi.org/10.1371/journal.pone.0090081 (CC BY 4.0)
 
-Classification: **publication-grade recreation (distribution of a real measured variable from the paper's CC0 data)**
+Classification: **publication-grade recreation of the culmen (bill) length-vs-depth scatter by species — the kind of figure shown in Gorman et al. 2014 (culmen dimensions); recreated from the paper's CC0 dataset, not pixel-identical.**
 
-- No reference image stored; comparison is against the citation + a textual target description (no image-similarity).
-- Colours, limits, and fonts are Make My Figure Publication defaults, not the paper's exact styling.
-- Where a statistic/derived value is shown it is computed by a documented method (see scientific_qc.md), which may differ from the paper's original analysis.
+- Same KIND as the paper's culmen (bill) length-vs-depth scatter by species.
+- Recreated from the CC0 dataset; colors/limits/fonts are Publication defaults; the paper also distinguishes sex. Not pixel-identical.

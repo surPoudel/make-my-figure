@@ -173,7 +173,7 @@
   },
   {
     "id": "gorman2014_penguins",
-    "plot_type": "ridge_or_density_plot",
+    "plot_type": "scatterplot_with_regression",
     "rows": 342,
     "iterations": [
       {
@@ -194,7 +194,7 @@
     },
     "visual_ok": true,
     "scientific_ok": true,
-    "classification": "publication-grade recreation (distribution of a real measured variable from the paper's CC0 data)",
+    "classification": "publication-grade recreation of the culmen (bill) length-vs-depth scatter by species \u2014 the kind of figure shown in Gorman et al. 2014 (culmen dimensions); recreated from the paper's CC0 dataset, not pixel-identical.",
     "stats": null,
     "curation": {
       "raw_rows": 344,

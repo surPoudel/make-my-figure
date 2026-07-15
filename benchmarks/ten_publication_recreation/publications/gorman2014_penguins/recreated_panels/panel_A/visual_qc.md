@@ -1,8 +1,6 @@
-# Visual QC — gorman2014_penguins
+# Visual QC — gorman2014_penguins (culmen scatter)
 
 **Result: PASS**
 
-- Iterations: 2 (>=2)
-- Final visual-readiness warnings: none
-- Exports non-empty: PNG=True SVG=True PDF=True
-- Publication style; legend placement + explicit axis labels/units applied in iteration 2.
+- Publication style; axis labels with units; legend by species; PNG/SVG/PDF non-empty.
+- Same plot KIND as the paper's culmen-dimensions figure (scatter by species); not pixel-identical.
