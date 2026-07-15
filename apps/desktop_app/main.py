@@ -1,7 +1,7 @@
 """Make My Figure — desktop GUI (PySide6).
 
 Zero-command app for non-technical scientists: open a data file, pick a plot
-type and journal-like style, map columns, preview, and export SVG/PNG/PDF/
+type, map columns, preview in the Publication style, and export SVG/PNG/PDF/
 PlotSpec JSON (or a ZIP of all). Runs fully locally; no telemetry.
 
 The GUI is intentionally thin — all plotting/validation/export lives in
@@ -27,7 +27,7 @@ if _REPO_ROOT not in sys.path:
 
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT
-from PySide6.QtCore import Qt, QSettings
+from PySide6.QtCore import Qt, QSettings, QTimer
 from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import (
     QApplication,
@@ -63,7 +63,7 @@ from make_my_figure_core.io.loaders import LoaderError
 from make_my_figure_core.plots.base import RenderError
 from make_my_figure_core.plots.registry import display_name
 from make_my_figure_core.spec.validate import SpecValidationError
-from make_my_figure_core.styles.engine import NAMED_PALETTES
+from make_my_figure_core.styles.engine import USER_PALETTES
 
 APP_NAME = "Make My Figure"
 ORG_NAME = "MakeMyFigure"
@@ -165,7 +165,7 @@ class HelpDialog(QDialog):
 
         disc = QTextBrowser()
         disc.setPlainText(help_content.DISCLAIMER)
-        tabs.addTab(disc, "Journal-like disclaimer")
+        tabs.addTab(disc, "Publication style disclaimer")
 
         close = QPushButton("Close")
         close.clicked.connect(self.accept)
@@ -185,6 +185,13 @@ class MainWindow(QMainWindow):
         self._option_widgets: dict[str, QWidget] = {}
         self._current_result = None
         self._current_spec = None
+        # Debounce for continuous controls (sliders/spin): coalesce a burst of
+        # value changes into one render so dragging stays responsive (esp. Windows).
+        self._render_timer = QTimer(self)
+        self._render_timer.setSingleShot(True)
+        self._render_timer.setInterval(180)
+        self._render_timer.timeout.connect(self.render_preview)
+        self._auto_recommend = True
         self._canvas = None
         self._identify_mode = False       # click-to-identify/label on the canvas
         self._picked_labels = {}          # plot_type -> [labels] chosen by clicking
@@ -304,8 +311,16 @@ class MainWindow(QMainWindow):
         type_box = QGroupBox("1. Plot type & style")
         tb = QFormLayout(type_box)
         tb.addRow("Plot type", self.plot_combo)
-        tb.addRow("Style profile", self.style_combo)
+        tb.addRow("Style", self.style_combo)
         cv.addWidget(type_box)
+
+        # Recommended figures (intelligent suggestions after upload).
+        from apps.desktop_app.recommendations_panel import RecommendationsPanel
+
+        self.recommend_panel = RecommendationsPanel()
+        self.recommend_panel.generateRequested.connect(self._on_generate_recommendation)
+        self.recommend_panel.addToBuilderRequested.connect(self._on_add_recommendation_to_builder)
+        cv.addWidget(self.recommend_panel)
 
         self.mapping_box = QGroupBox("2. Map columns")
         self.mapping_form = QFormLayout(self.mapping_box)
@@ -354,6 +369,12 @@ class MainWindow(QMainWindow):
         self.preview_btn = QPushButton("Update preview")
         self.preview_btn.clicked.connect(self.render_preview)
         cv.addWidget(self.preview_btn)
+
+        self.qc_btn = QPushButton("Publication QC")
+        self.qc_btn.setToolTip("Check the current figure for publication readiness "
+                               "and optionally auto-fix common issues before export.")
+        self.qc_btn.clicked.connect(self.action_publication_qc)
+        cv.addWidget(self.qc_btn)
 
         export_box = QGroupBox("5. Export")
         eb = QVBoxLayout(export_box)
@@ -471,8 +492,8 @@ class MainWindow(QMainWindow):
         form = QFormLayout(box)
 
         self.palette_combo = QComboBox()
-        self.palette_combo.addItem("(profile default)", None)
-        for name in NAMED_PALETTES:
+        self.palette_combo.addItem("(publication default)", None)
+        for name in USER_PALETTES:
             self.palette_combo.addItem(name, name)
         self.palette_combo.currentIndexChanged.connect(self.render_preview)
 
@@ -481,7 +502,7 @@ class MainWindow(QMainWindow):
             w.setRange(minv, maxv)
             w.setSingleStep(step)
             w.setValue(val)
-            w.valueChanged.connect(self.render_preview)
+            w.valueChanged.connect(self._schedule_render)   # debounced
             return w
 
         self.sp_axis = _spin(8, 28, 12)
@@ -839,6 +860,138 @@ class MainWindow(QMainWindow):
         self._rebuild_mapping_and_options()
         self.statusBar().showMessage(f"Loaded {data.table_name} — runs locally.")
         self.render_preview()
+        if getattr(self, "_auto_recommend", True):
+            self._refresh_recommendations()
+
+    # --- recommended figures ---------------------------------------------
+    def _refresh_recommendations(self):
+        if not hasattr(self, "recommend_panel") or self.data is None:
+            return
+        try:
+            rec_spec = self.controller.recommend_for_loaded(self.data)
+        except Exception as exc:  # recommendations must never break the app
+            self.recommend_panel.set_recommendations(None)
+            self.statusBar().showMessage(f"Recommendations unavailable: {exc}", 4000)
+            return
+        self.recommend_panel.set_recommendations(rec_spec)
+
+    def _apply_recommendation(self, rec) -> bool:
+        """Set the plot type + column mappings from a recommendation and render.
+
+        Expensive recommendations require explicit confirmation first."""
+        draft = getattr(rec, "plot_spec_draft", None)
+        if not draft:
+            self._show_warning("This recommendation has no ready-to-generate spec.")
+            return False
+        if getattr(rec, "requires_confirmation", False):
+            resp = QMessageBox.question(
+                self, "Generate figure?",
+                f"'{getattr(rec, 'display_name', rec.plot_type)}' may be slow on this "
+                "data (e.g. clustering/PCA). Generate it now?",
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            if resp != QMessageBox.Yes:
+                return False
+        pt = rec.plot_type
+        idx = self.plot_combo.findData(pt)
+        if idx < 0:
+            self._show_warning(f"Plot type '{pt}' is not available.")
+            return False
+        prev = self._suppress_change
+        self._suppress_change = True
+        try:
+            self.plot_combo.setCurrentIndex(idx)
+            self._rebuild_mapping_and_options()
+        finally:
+            self._suppress_change = prev
+        mapping = dict(draft.get("mapping", {}))
+        for key, val in mapping.items():
+            w = self._mapping_widgets.get(key)
+            if w is not None and val is not None:
+                i = w.findText(str(val))
+                if i >= 0:
+                    w.setCurrentIndex(i)
+                continue
+            ow = self._option_widgets.get(key)
+            if ow is not None:
+                try:
+                    if isinstance(ow, QCheckBox):
+                        ow.setChecked(bool(val))
+                    elif isinstance(ow, QComboBox):
+                        j = ow.findText(str(val))
+                        if j >= 0:
+                            ow.setCurrentIndex(j)
+                    elif isinstance(ow, (QSpinBox, QDoubleSpinBox)) and val is not None:
+                        ow.setValue(val)
+                except Exception:
+                    pass
+        self.render_preview()
+        return True
+
+    def _on_generate_recommendation(self, rec):
+        if self._apply_recommendation(rec):
+            self.statusBar().showMessage(
+                f"Generated {display_name(rec.plot_type)} from recommendation.", 4000)
+
+    def _on_add_recommendation_to_builder(self, rec):
+        if self._apply_recommendation(rec):
+            self.action_save_panel()
+
+    def action_publication_qc(self):
+        """Score the current figure for publication readiness; offer auto-fixes."""
+        if getattr(self, "_current_result", None) is None:
+            self._show_warning("Render a figure first, then run Publication QC.")
+            return
+        report = getattr(self._current_result, "stats_report", None)
+        score = self.controller.publication_qc(self._current_result, self._current_spec,
+                                                stats_report=report)
+        self._show_publication_qc_dialog(score)
+
+    def _show_publication_qc_dialog(self, score):
+        from PySide6.QtWidgets import QDialog, QDialogButtonBox
+
+        dlg = QDialog(self)
+        dlg.setWindowTitle(f"Publication QC — {score.level.upper()} ({score.score}/100)")
+        dlg.resize(560, 420)
+        v = QVBoxLayout(dlg)
+        head = QLabel(score.summary)
+        head.setWordWrap(True)
+        v.addWidget(head)
+        issues = score.issues() if hasattr(score, "issues") else score.checks
+        if not issues:
+            v.addWidget(QLabel("No publication-readiness issues detected. ✓"))
+        for c in issues:
+            lvl = getattr(c, "level", "warn")
+            icon = {"fail": "✗", "warn": "⚠", "pass": "✓"}.get(lvl, "•")
+            row = QLabel(f"{icon} <b>{getattr(c, 'message', '')}</b><br>"
+                         f"<span style='color:#555'>{getattr(c, 'suggestion', '')}</span>")
+            row.setTextFormat(Qt.RichText)
+            row.setWordWrap(True)
+            v.addWidget(row)
+        fixes = self.controller.qc_suggested_fixes(score, self._current_spec or {})
+        buttons = QDialogButtonBox(QDialogButtonBox.Close)
+        if fixes:
+            autofix = buttons.addButton("Auto-fix && re-render", QDialogButtonBox.ApplyRole)
+            autofix.clicked.connect(lambda: self._apply_qc_fixes([f["id"] for f in fixes], dlg))
+        buttons.rejected.connect(dlg.reject)
+        buttons.accepted.connect(dlg.accept)
+        v.addWidget(buttons)
+        dlg.exec()
+
+    def _apply_qc_fixes(self, fix_ids, dlg=None):
+        if getattr(self, "_current_spec", None) is None:
+            return
+        try:
+            new_spec = self.controller.apply_qc_fixes(self._current_spec, fix_ids)
+            result = self.controller.render(new_spec, self.data)
+        except Exception as exc:
+            self._show_warning(f"Auto-fix failed: {exc}")
+            return
+        self._current_spec = new_spec
+        self._current_result = result
+        self._display_result(result)
+        self.statusBar().showMessage("Applied publication QC auto-fixes.", 4000)
+        if dlg is not None:
+            dlg.accept()
 
     # --- app-level navigation: return to upload page ---------------------
     def _has_unsaved_work(self) -> bool:
@@ -1115,8 +1268,12 @@ class MainWindow(QMainWindow):
             w.setSingleStep(opt.step)
         if opt.default is not None:
             w.setValue(opt.default)
-        w.valueChanged.connect(self.render_preview)
+        w.valueChanged.connect(self._schedule_render)   # debounced (continuous control)
         return w
+
+    def _schedule_render(self, *_):
+        """Debounced render for continuous controls (coalesces rapid changes)."""
+        self._render_timer.start()
 
     def _collect_mapping(self) -> dict:
         mapping = {}
@@ -1639,7 +1796,7 @@ def _selftest() -> int:
     for pt in available_plot_types():
         try:
             data = ctrl.load_example(pt)
-            spec = ctrl.build_spec(pt, "nature_like", data.table_name, ctrl.default_mapping(pt))
+            spec = ctrl.build_spec(pt, "publication", data.table_name, ctrl.default_mapping(pt))
             result = ctrl.render(spec, data)
             blob = ctrl.export_bundle(spec, result, ["svg", "png", "pdf"], basename=pt)
             assert blob and len(blob) > 300

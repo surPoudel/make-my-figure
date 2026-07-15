@@ -1,6 +1,40 @@
 # Changelog
 
-All notable changes to Make My Figure are recorded here.
+All notable changes to Make My Figure are recorded here. This project uses a
+single, evolving `Publication` style — it does not target or claim compliance
+with any journal.
+
+## [0.6.0] — Publication style, recommendations, QC, benchmarks, performance
+
+Focus: fast, polished, intelligent, publication-ready — not more plot types.
+
+### Added
+- **Intelligent figure recommendations** (`make_my_figure_core/recommendations/`):
+  profiles an uploaded table and suggests appropriate figures (from the existing
+  37 plot types) with confidence, reason, detected mappings, suggested statistics,
+  and a one-click PlotSpec draft. Surfaced as a **Recommended Figures** panel
+  (desktop) and expander (Streamlit); expensive suggestions require confirmation.
+- **Publication QC** (`make_my_figure_core/qc/`): scored pass/warn/fail readiness
+  check with suggested and one-click auto-fixes. Desktop **Publication QC** button
+  + Streamlit expander.
+- **License-safe publication benchmark recreation** (`benchmarks/publication_recreation/`,
+  branch `benchmarks/publication-recreation`): recreates real-data publication-style
+  panels through the app with scientific + visual QC and full provenance.
+- **Performance:** `apps/desktop_app/workers.py` (QThreadPool background layer),
+  debounced rendering for continuous controls, `scripts/benchmark_performance.py`.
+
+### Changed
+- **Single `Publication` style identity.** Journal-named profiles (Nature-/Science-/
+  Cell-like and their "learned" variants) are removed from the UI and docs; advanced
+  appearance controls remain under Publication. Old PlotSpecs referencing removed
+  profile names are migrated to `Publication` on load, with a non-intrusive notice.
+
+### Notes
+- Make My Figure does not run RNA-seq differential expression (no R/edgeR/limma/
+  voom). It plots generic matrices (→ heatmap/PCA/clustering) and precomputed
+  differential results tables (→ volcano/MA). Users confirm that recommended
+  figures/tests match their design. The Publication style is a general
+  manuscript-ready visual style, not an official journal template.
 
 ## [0.5.3] — grouped heatmaps + cleaner "Define groups"
 

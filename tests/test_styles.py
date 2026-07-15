@@ -8,12 +8,15 @@ from make_my_figure_core.styles.engine import (
 )
 
 
-def test_three_starter_profiles_present():
+def test_publication_is_the_single_listed_profile():
     profiles = list_profiles()
-    assert {"nature_like", "science_like", "cell_like"} <= set(profiles)
+    assert "publication" in profiles
+    # v0.6: journal-named profiles are not surfaced.
+    assert not ({"nature_like", "science_like", "cell_like"} & set(profiles))
 
 
 def test_profile_tokens_and_palette():
+    # Legacy journal names migrate to Publication but still yield valid tokens.
     p = load_profile("nature_like")
     # Publication-ready readable defaults (not tiny journal-print 7pt).
     assert p.base_font_pt >= 10
@@ -42,7 +45,8 @@ def test_rc_params_keep_text_editable():
 
 def test_load_all_profiles():
     allp = load_all_profiles()
-    assert len(allp) >= 3
+    assert "publication" in allp
+    assert len(allp) >= 1
 
 
 def test_unknown_profile_raises():

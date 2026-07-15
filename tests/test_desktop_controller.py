@@ -26,8 +26,9 @@ def controller():
 def test_catalog(controller):
     assert len(controller.plot_types()) == 37
     styles = dict(controller.styles())
-    assert set(styles) >= {"nature_like", "science_like", "cell_like"}
-    assert styles["nature_like"] == "Nature-like"
+    # v0.6: a single Publication style identity (no journal-named profiles).
+    assert set(styles) == {"publication"}
+    assert styles["publication"] == "Publication"
 
 
 def test_every_example_loads_and_renders(controller):

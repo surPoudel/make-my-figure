@@ -7,7 +7,7 @@
     "cluster_columns": true,
     "color_scale": "diverging"
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",

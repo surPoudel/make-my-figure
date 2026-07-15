@@ -273,6 +273,18 @@ def render(
     aux: optional auxiliary tables (e.g. PCA sample metadata) keyed by name.
         Only passed to renderers that declare an ``aux`` parameter.
     """
+    # v0.6: migrate removed journal-named styles to Publication so old PlotSpecs
+    # keep loading. Do it before validation and record a non-fatal notice.
+    from make_my_figure_core.styles.engine import is_legacy_style_name, normalize_style_name
+
+    _style_notice = None
+    _requested_style = spec.get("journal_style")
+    if is_legacy_style_name(_requested_style):
+        spec = {**spec, "journal_style": normalize_style_name(_requested_style)}
+        _style_notice = (
+            f"This saved file used an older named style profile "
+            f"('{_requested_style}'). It has been mapped to the Publication style.")
+
     if validate:
         validate_plot_spec(
             spec,
@@ -296,6 +308,9 @@ def render(
         result = renderer(spec, df, style)
     # Stamp the spec into metadata for a reproducibility sidecar.
     result.metadata.setdefault("spec", spec)
+    if _style_notice:
+        result.warnings.append(_style_notice)
+        result.metadata["style_migration"] = _style_notice
 
     # Universal manual annotation layer (spec['annotations']): vector overlay
     # applied to the primary axes of ANY plot type, before the QA check so it

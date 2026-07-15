@@ -39,13 +39,10 @@ from make_my_figure_core.styles.engine import list_profiles, load_profile
 from make_my_figure_core.version import __version__
 
 # Friendly labels for style profiles (starter + learned).
+# v0.6: a single user-facing style identity. Advanced appearance (fonts, widths,
+# palette, legend, DPI, size) are controls under Publication, not separate profiles.
 STYLE_LABELS = {
-    "nature_like": "Nature-like",
-    "science_like": "Science-like",
-    "cell_like": "Cell-like",
-    "nature_like_learned": "Nature-like (learned)",
-    "science_like_learned": "Science-like (learned)",
-    "cell_like_learned": "Cell-like (learned)",
+    "publication": "Publication",
 }
 
 
@@ -294,6 +291,41 @@ class DesktopController:
         """Render a figure. Raises RenderError / SpecValidationError on failure."""
         aux = {k: v.dataframe for k, v in data.aux.items()} if data.aux else None
         return render(spec, data.info.dataframe, aux=aux)
+
+    # --- recommendations (intelligent figure suggestions) ----------------
+    def recommend_for_loaded(self, data: LoadedData):
+        """Profile the loaded table and return a RecommendationSpec (cheap; no
+        expensive analysis is run — recommendations marked requires_confirmation
+        must be confirmed before generating)."""
+        from make_my_figure_core.recommendations import recommend_for_table
+
+        return recommend_for_table(data.info.dataframe, table_name=data.table_name)
+
+    def recommend_after_analysis(self, data: LoadedData, *, stats_report=None,
+                                 differential: bool = False, has_matrix: bool = False):
+        from make_my_figure_core.recommendations import recommend_after_analysis
+
+        return recommend_after_analysis(
+            data.info.dataframe, stats_report=stats_report,
+            differential=differential, has_matrix=has_matrix, table_name=data.table_name)
+
+    # --- publication QC --------------------------------------------------
+    def publication_qc(self, result, spec: Optional[Dict[str, Any]] = None,
+                       stats_report=None):
+        """Score the rendered figure for publication readiness (advisory)."""
+        from make_my_figure_core.qc import score_publication
+
+        return score_publication(result=result, spec=spec, stats_report=stats_report)
+
+    def qc_suggested_fixes(self, score, spec: Dict[str, Any]):
+        from make_my_figure_core.qc import suggest_fixes
+
+        return suggest_fixes(score, spec)
+
+    def apply_qc_fixes(self, spec: Dict[str, Any], fix_ids: List[str]) -> Dict[str, Any]:
+        from make_my_figure_core.qc import apply_fixes
+
+        return apply_fixes(spec, fix_ids)
 
     # --- export ----------------------------------------------------------
     def export_files(self, spec, result, base_path: str, formats: List[str], dpi: int = 300) -> Dict[str, Any]:

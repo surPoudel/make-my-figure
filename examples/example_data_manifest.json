@@ -32,9 +32,7 @@
       "aux_tables": {},
       "excel_sheet": "Bar_error",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "barplot_with_error_bar"
@@ -82,9 +80,7 @@
       "aux_tables": {},
       "excel_sheet": "Grouped_bar",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "grouped_barplot_with_error_bar"
@@ -130,9 +126,7 @@
       "aux_tables": {},
       "excel_sheet": "Box_violin",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "boxplot_or_violin_with_points"
@@ -178,9 +172,7 @@
       "aux_tables": {},
       "excel_sheet": "Scatter",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "scatterplot_with_regression"
@@ -226,9 +218,7 @@
       "aux_tables": {},
       "excel_sheet": "Line_timecourse",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "lineplot_timecourse_with_error_band"
@@ -270,9 +260,7 @@
       "aux_tables": {},
       "excel_sheet": "Heatmap",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "heatmap_clustered_matrix"
@@ -319,9 +307,7 @@
       "aux_tables": {},
       "excel_sheet": "Volcano",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "volcano_plot"
@@ -368,9 +354,7 @@
       "aux_tables": {},
       "excel_sheet": "Enrichment_dot",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "enrichment_dotplot"
@@ -416,9 +400,7 @@
       "aux_tables": {},
       "excel_sheet": "Kaplan_Meier",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "kaplan_meier_survival_curve"
@@ -463,9 +445,7 @@
       "aux_tables": {},
       "excel_sheet": "Stacked_composition",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "stacked_bar_composition"
@@ -511,9 +491,7 @@
       "aux_tables": {},
       "excel_sheet": "Waterfall",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "waterfall_plot"
@@ -557,9 +535,7 @@
       },
       "excel_sheet": "PCA",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "pca_scatter_from_matrix"
@@ -605,9 +581,7 @@
       "aux_tables": {},
       "excel_sheet": "Oncoprint",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "oncoprint_mutation_heatmap"
@@ -654,9 +628,7 @@
       "aux_tables": {},
       "excel_sheet": "Lollipop",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "lollipop_mutation_plot"
@@ -702,9 +674,7 @@
       "aux_tables": {},
       "excel_sheet": "ROC",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "roc_curve"
@@ -752,9 +722,7 @@
       "aux_tables": {},
       "excel_sheet": "Forest",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "forest_plot"
@@ -800,9 +768,7 @@
       "aux_tables": {},
       "excel_sheet": "Ridgeline",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "ridge_or_density_plot"
@@ -846,9 +812,7 @@
       "aux_tables": {},
       "excel_sheet": "Dot_strip",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "dot_strip_plot"
@@ -893,9 +857,7 @@
       "aux_tables": {},
       "excel_sheet": "Beeswarm",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "beeswarm_plot"
@@ -941,9 +903,7 @@
       "aux_tables": {},
       "excel_sheet": "Paired_slope",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "paired_slopegraph"
@@ -988,9 +948,7 @@
       "aux_tables": {},
       "excel_sheet": "Raincloud",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "raincloud_plot"
@@ -1033,9 +991,7 @@
       "aux_tables": {},
       "excel_sheet": "Dendrogram",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "hierarchical_dendrogram"
@@ -1081,9 +1037,7 @@
       "aux_tables": {},
       "excel_sheet": "MA_plot",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "ma_plot"
@@ -1129,9 +1083,7 @@
       "aux_tables": {},
       "excel_sheet": "Manhattan",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "manhattan_plot"
@@ -1173,9 +1125,7 @@
       "aux_tables": {},
       "excel_sheet": "QQ_plot",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "qq_plot"
@@ -1219,9 +1169,7 @@
       "aux_tables": {},
       "excel_sheet": "Bland_Altman",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "bland_altman_plot"
@@ -1267,9 +1215,7 @@
       "aux_tables": {},
       "excel_sheet": "Precision_recall",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "precision_recall_curve"
@@ -1312,9 +1258,7 @@
       "aux_tables": {},
       "excel_sheet": "Confusion",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "confusion_matrix"
@@ -1357,9 +1301,7 @@
       "aux_tables": {},
       "excel_sheet": "Calibration",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "calibration_plot"
@@ -1404,9 +1346,7 @@
       "aux_tables": {},
       "excel_sheet": "Dose_response",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "dose_response_curve"
@@ -1453,9 +1393,7 @@
       "aux_tables": {},
       "excel_sheet": "UpSet",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "upset_plot"
@@ -1503,9 +1441,7 @@
       "aux_tables": {},
       "excel_sheet": "Swimmer",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "swimmer_plot"
@@ -1551,9 +1487,7 @@
       "aux_tables": {},
       "excel_sheet": "Spider",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "spider_plot"
@@ -1597,9 +1531,7 @@
       "aux_tables": {},
       "excel_sheet": "Sankey",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "sankey_plot"
@@ -1646,9 +1578,7 @@
       "aux_tables": {},
       "excel_sheet": "Embedding",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "embedding_scatter"
@@ -1696,9 +1626,7 @@
       },
       "excel_sheet": "Network",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "network_graph"
@@ -1741,9 +1669,7 @@
       "aux_tables": {},
       "excel_sheet": "Hier_clustering",
       "recommended_style_profiles": [
-        "nature_like",
-        "science_like",
-        "cell_like"
+        "publication"
       ],
       "compatible_renderers": [
         "hierarchical_clustering"

@@ -4,9 +4,10 @@ A zero-command desktop application for non-technical scientists. Download an
 installer, double-click, and create publication-style figures from your data —
 no Python, no terminal required.
 
-> **Journal-like, not official.** “Nature-like”, “Science-like”, and “Cell-like”
-> are aesthetic style profiles only. They are **not** official journal templates
-> and do **not** guarantee compliance with or acceptance by any publisher.
+> **Publication style, not an official template.** Make My Figure uses a single
+> Publication style — a general manuscript-ready visual style. It is **not** an
+> official journal template and does **not** guarantee compliance with or
+> acceptance by any publisher.
 
 > **Privacy.** The desktop app runs entirely on your computer. Your data, figures,
 > and settings never leave the machine. There is no telemetry and no cloud upload.
@@ -20,7 +21,7 @@ no Python, no terminal required.
 - **Welcome screen** — “Open data file”, “Use example data”, “Recent files”, “Help”.
 - **Data import** — `.xlsx`, `.csv`, `.tsv`; drag-and-drop onto the window; table
   preview with detected column types; friendly error messages for malformed files.
-- **Plot workflow** — choose plot type and style (Nature-/Science-/Cell-like), map
+- **Plot workflow** — choose plot type (the Publication style is applied), map
   required columns with dropdowns, set key options, and see a **live preview**.
   Validation warnings appear before you export.
 - **Interactive figure toolbar** — the preview is a live `FigureCanvasQTAgg` with the
@@ -48,7 +49,7 @@ no Python, no terminal required.
   (File → Open example). “Save template” exports an example table so you can
   replace the rows with your own data while keeping the column names.
 - **Help** — in-app Help window explaining each plot type, required columns, how to
-  format your data, and the journal-like disclaimer.
+  format your data, and the Publication-style disclaimer.
 - **About / debug info** — About shows the version, git commit, and the exact file
   paths of the loaded desktop app and core package (so you can confirm which source
   is running). **Help → Copy debug info** copies it to the clipboard, and running with
@@ -93,17 +94,18 @@ python scripts/build_desktop.py        # app folder / .app under dist/
 # then the per-OS wrapper:  scripts/build_windows.ps1 | build_macos.sh | build_linux.sh
 ```
 
-## Journal-like style profiles (starter + learned)
+## Publication style
 
-The style selector offers six profiles: **Nature-like**, **Science-like**,
-**Cell-like**, and their **(learned)** variants. The learned profiles are derived
-from a *local* reference library of open-access (CC BY) papers by
+Make My Figure uses a single **Publication** style — a polished, manuscript-ready
+visual identity. Advanced controls (fonts, palette, line/marker sizes, legend,
+figure size, DPI) adjust it without switching profiles. Aggregate design defaults
+may be informed by a *local* reference library of open-access (CC BY) papers via
 `scripts/build_learned_styles.py`, which extracts only **aggregate** visual
 conventions (e.g. median figure aspect ratio, panel-label style, typography and
-line-width defaults) into `style_profiles/learned/*.json`.
+line-width defaults) — never individual figures.
 
 > **How references are used.** Downloaded papers and figures are used only as local
-> visual references to derive aggregate journal-like plotting conventions. The app
+> visual references to derive aggregate publication plotting conventions. The app
 > does **not** copy published figures, does **not** reproduce copyrighted datasets
 > unless explicitly licensed, and does **not** claim official journal compliance.
 > Only aggregate measurements are stored in the repo; raw figure bitmaps stay

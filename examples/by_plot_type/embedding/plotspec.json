@@ -6,7 +6,7 @@
     "y": "UMAP_2",
     "color": "cell_type"
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",

@@ -8,7 +8,7 @@
     "color": "neg_log10_fdr",
     "fdr": "fdr"
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",

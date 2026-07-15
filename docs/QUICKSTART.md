@@ -1,7 +1,7 @@
 # Make My Figure — Quickstart (Milestone 1)
 
-> Nature-like / Science-like / Cell-like are **style aesthetics only**. They are
-> not official journal templates and do not guarantee submission acceptance.
+> The **Publication** style is a general manuscript-ready visual style. It is
+> not an official journal template and does not guarantee submission acceptance.
 
 ## 1. Install
 

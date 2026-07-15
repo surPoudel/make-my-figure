@@ -6,7 +6,7 @@
     "y": "value",
     "summary": "mean"
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",

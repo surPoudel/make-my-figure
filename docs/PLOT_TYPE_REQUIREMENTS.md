@@ -1,6 +1,6 @@
 # Plot Type Requirements
 
-> **Published papers and figures are used only as visual style references** for layout, typography, panel structure, legends, annotations, spacing, and journal-like formatting. The bundled example datasets are **synthetic** unless explicitly marked otherwise. Synthetic examples are not copied from published papers and must not be cited as real biological findings.
+> **Published papers and figures are used only as visual style references** for layout, typography, panel structure, legends, annotations, spacing, and general publication formatting. The bundled example datasets are **synthetic** unless explicitly marked otherwise. Synthetic examples are not copied from published papers and must not be cited as real biological findings.
 
 Required and optional columns for every supported plot type. Column order does not matter — the app validates by name and type.
 

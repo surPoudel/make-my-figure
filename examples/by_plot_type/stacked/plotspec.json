@@ -7,7 +7,7 @@
     "y": "fraction",
     "facet_or_sort_by": "group"
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",

@@ -6,13 +6,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Make My Figure turns tabular data (CSV/TSV/XLSX) into publication-style scientific
 figures. The reusable engine lives in `make_my_figure_core/` and is frontend-agnostic;
-two GUIs (`apps/streamlit_app/`, `apps/desktop_app/`) consume it. There are 17 plot
-types, journal-*like* style profiles, and a reproducibility sidecar (PlotSpec JSON).
+two GUIs (`apps/streamlit_app/`, `apps/desktop_app/`) consume it. There are 37 plot
+types, a single **Publication** style, and a reproducibility sidecar (PlotSpec JSON).
 
-> The `nature_like` / `science_like` / `cell_like` profiles are visual aesthetics only —
-> not official journal templates. Never present them as guaranteeing journal compliance.
-> This disclaimer is baked into rendered metadata (`base_metadata` in `plots/base.py`) —
-> keep it.
+> v0.6: one user-facing style identity — **Publication** (a general manuscript-ready
+> visual style; not an official journal template, never presented as guaranteeing
+> compliance). Removed journal-named profiles (`nature_like`/`science_like`/`cell_like`
+> + `*_learned`) migrate to `publication` on load (`LEGACY_STYLE_ALIASES` in
+> `styles/engine.py`). The no-official-template disclaimer is baked into rendered
+> metadata (`base_metadata` in `plots/base.py`) — keep it.
 
 ## Commands
 

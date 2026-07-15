@@ -2,7 +2,7 @@
 
 _Generated 2026-07-01 by `scripts/build_learned_styles.py`._
 
-> **How references are used.** Downloaded papers and figures are used as *local visual references* to derive aggregate journal-like plotting conventions. The app does **not** copy published figures, does **not** reproduce copyrighted datasets unless explicitly licensed, and does **not** claim official journal compliance. Only aggregate measurements (not individual figures) are stored in the repository; raw figure bitmaps remain local-only.
+> **How references are used.** Downloaded papers and figures are used as *local visual references* to derive aggregate publication plotting conventions. The app does **not** copy published figures, does **not** reproduce copyrighted datasets unless explicitly licensed, and does **not** claim official journal compliance. Only aggregate measurements (not individual figures) are stored in the repository; raw figure bitmaps remain local-only.
 
 All reference papers are open access under CC BY. See each paper's `figure_library/<group>/<paper>/provenance.json` for title, DOI, journal, year, license, and URLs.
 
@@ -19,7 +19,7 @@ All reference papers are open access under CC BY. See each paper's `figure_libra
 These are *curated, aggregate* conventions informed by the references (not pixel-measurements of any single figure), encoded in `style_profiles/learned/*.json`:
 
 - **Aspect ratios** — default panel aspect per family (see each profile's `layout`).
-- **Panel label style** — bold; lowercase (Nature-like) or uppercase (Science/Cell-like).
+- **Panel label style** — bold; consistent case across panels.
 - **Typography** — small sans-serif (Arial/Helvetica fallback), ~7 pt base / 8 pt title.
 - **Axis / spine line width** — thin (0.5–0.6 pt); top/right spines hidden; no grid.
 - **Tick style** — short, outward ticks.

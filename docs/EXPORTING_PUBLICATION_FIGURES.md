@@ -39,7 +39,7 @@ style controls (see [STYLE_PROFILES.md](STYLE_PROFILES.md)). The settings are
 carried in the PlotSpec's `style` block, so exporting the PlotSpec JSON captures
 your custom look for reuse.
 
-> Journal-like / publication-style aesthetics only — not a guarantee of official
+> Publication-style aesthetics only — not a guarantee of official
 > journal compliance. Bundled example data are synthetic.
 
 ## Statistics and multi-panel exports

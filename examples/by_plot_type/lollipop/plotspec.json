@@ -7,7 +7,7 @@
     "color": "mutation_type",
     "label": "amino_acid_change"
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",

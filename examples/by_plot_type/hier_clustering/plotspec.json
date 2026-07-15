@@ -9,7 +9,7 @@
     "distance_metric": "euclidean",
     "linkage_method": "average"
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",

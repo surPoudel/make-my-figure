@@ -4,7 +4,7 @@ Flow:
 1. Upload a CSV/TSV/XLSX file (or load a bundled sample table).
 2. Preview and validate the table.
 3. Choose a plot type and map columns.
-4. Choose a journal-like style profile (Nature-like / Science-like / Cell-like).
+4. Fine-tune the Publication style (fonts, palette, sizes) if desired.
 5. Preview the figure.
 6. Export SVG / PNG / PDF and the reproducible PlotSpec JSON.
 
@@ -95,9 +95,9 @@ COLUMN_FIELDS = {
 st.set_page_config(page_title="Make My Figure", layout="wide")
 st.title("Make My Figure")
 st.caption(
-    "Manuscript-style figures with Nature-like / Science-like / Cell-like aesthetics. "
-    "These are *-like style profiles only — not official journal templates, and not a "
-    "guarantee of submission compliance."
+    "Manuscript-ready scientific figures in a single, polished Publication style. "
+    "This is a general publication-ready visual style — not an official journal "
+    "template, and not a guarantee of submission compliance."
 )
 
 
@@ -245,6 +245,32 @@ if "_grouped_df" in st.session_state:
                "Map its columns below; use Reset to return to the original.")
 
 
+# --- Recommended figures (intelligent suggestions) --------------------------
+from make_my_figure_core.recommendations import recommend_for_table as _recommend_for_table
+
+with st.expander("🔮 Recommended figures", expanded=False):
+    st.caption("Make My Figure profiled your table and suggests figures — all use the "
+               "Publication style. Click a suggestion to load its plot type, then map "
+               "columns below. (Make My Figure does not run differential-expression "
+               "analysis; upload a precomputed results table for volcano/MA plots.)")
+    try:
+        _rec_spec = _recommend_for_table(table_info.dataframe, table_name=table_name)
+        st.markdown(f"**Detected data type:** `{_rec_spec.schema}`")
+        for _r in _rec_spec.recommendations:
+            _conf = int(round(float(_r.confidence) * 100))
+            st.markdown(f"**{_r.display_name}** · {_conf}% match  \n{_r.why}")
+            for _w in (_r.warnings or []):
+                st.caption(f"⚠ {_w}")
+            if _r.plot_spec_draft and st.button(f"Use ▸ {_r.display_name}", key=f"rec_{_r.id}"):
+                st.session_state["rec_plot_type"] = _r.plot_type
+                st.rerun()
+            st.divider()
+    except Exception as _exc:
+        st.caption(f"Recommendations unavailable: {_exc}")
+
+# A recommendation click sets the plot type once (manual choice wins after).
+default_plot_type = st.session_state.pop("rec_plot_type", default_plot_type)
+
 # --- 2. Plot type + 3. style ------------------------------------------------
 st.sidebar.header("2. Plot type")
 plot_type = st.sidebar.selectbox(
@@ -254,9 +280,11 @@ plot_type = st.sidebar.selectbox(
     format_func=display_name,
 )
 
-st.sidebar.header("3. Style profile")
+st.sidebar.header("3. Style")
 profiles = list_profiles()
-journal_style = st.sidebar.selectbox("Journal-like style", options=profiles)
+journal_style = st.sidebar.selectbox(
+    "Style", options=profiles, format_func=lambda s: "Publication" if s == "publication" else s,
+    help="Make My Figure uses a single Publication style. Adjust palette/fonts/sizes below.")
 
 st.sidebar.header("4. Column mapping")
 mapping = default_mapping(plot_type)
@@ -440,6 +468,23 @@ try:
         st.warning(check.get("summary", "Publication check found issues"))
     for w in result.warnings:
         st.warning(w)
+
+    # --- Publication QC (scored readiness) ---------------------------------
+    with st.expander("✅ Publication QC — ready-to-export checks", expanded=False):
+        from make_my_figure_core.qc import score_publication as _score_pub
+
+        _score = _score_pub(result=result, spec=spec,
+                            stats_report=getattr(result, "stats_report", None))
+        _emoji = {"pass": "🟢", "warn": "🟡", "fail": "🔴"}.get(_score.level, "⚪")
+        st.markdown(f"{_emoji} **{_score.level.upper()}** — score {_score.score}/100. {_score.summary}")
+        _issues = _score.issues() if hasattr(_score, "issues") else _score.checks
+        for _c in _issues:
+            _ic = {"fail": "✗", "warn": "⚠", "pass": "✓"}.get(getattr(_c, "level", "warn"), "•")
+            st.markdown(f"{_ic} **{getattr(_c, 'message', '')}**  \n"
+                        f"<span style='color:#666'>{getattr(_c, 'suggestion', '')}</span>",
+                        unsafe_allow_html=True)
+        if not _issues:
+            st.caption("No publication-readiness issues detected.")
 
     # --- Statistics results -------------------------------------------------
     stats_report = getattr(result, "stats_report", None)

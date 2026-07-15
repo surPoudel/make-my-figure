@@ -10,12 +10,12 @@
 
 Make My Figure is a research-software tool for scientists who need publication-ready
 figures but don't want to spend hours manually adjusting fonts, legends, colors, axes,
-figure sizes, and export settings. Load a table, choose a plot type, pick a journal-like
+figure sizes, and export settings. Load a table, choose a plot type, apply the Publication
 style, preview the figure, fine-tune the formatting, and export a manuscript-ready file.
 
-> **Journal-like, not official.** The **Nature-like**, **Science-like**, and **Cell-like**
-> style profiles are visual aesthetics only. They are **not** official journal templates and
-> do **not** guarantee compliance with, or acceptance by, any journal.
+> **Publication style, not an official template.** Make My Figure does not provide
+> official journal templates or claim compliance with any journal's formatting
+> requirements. The Publication style is a general manuscript-ready visual style.
 
 ---
 
@@ -36,7 +36,7 @@ scientific figures accessible to people who would rather not write plotting code
 - Start from built-in **example/template datasets** for every plot type
 - Generate common **biological, biomedical, and scientific** plot types
 - Apply **publication-style defaults automatically**
-- Choose **journal-like style profiles** (Nature-/Science-/Cell-like, + a neutral publication default)
+- Apply a polished **Publication style** (adjust fonts, palette, sizes, DPI)
 - Adjust **font sizes, line widths, marker sizes, palettes, legends, figure size, and DPI**
 - Compute **publication-grade statistics** and annotate figures with significance
   brackets, p-values, and effect sizes — with **transparent method reporting**
@@ -344,7 +344,7 @@ in a `StatsSpec` JSON sidecar.
 ### Other planned items
 
 - A Python (and possibly R) package API
-- More journal-like style profiles
+- More Publication style refinements
 - Better automatic label-collision avoidance
 - More biomedical plot templates
 - Smoother GraphPad/Prism-like workflows

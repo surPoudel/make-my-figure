@@ -255,7 +255,8 @@ def base_metadata(spec: Dict[str, Any], style: StyleProfile, df: pd.DataFrame,
             "dpi": output.get("dpi"),
         },
         "disclaimer": (
-            f"Formatted with '{style.name}' submission-like aesthetics. "
-            "Not an official journal template; verify against author guidelines."
+            "Formatted with the Make My Figure Publication style, a general "
+            "manuscript-ready visual style. Not an official journal template; "
+            "verify against your target journal's author guidelines."
         ),
     }

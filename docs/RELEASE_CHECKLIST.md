@@ -36,7 +36,7 @@
 - [ ] Create the GitHub Release and attach artifacts:
       `MakeMyFigure-Setup.exe`, `MakeMyFigure.dmg`, `MakeMyFigure.AppImage`
       (+ portable ZIP/tarball fallbacks).
-- [ ] Release notes: version, what changed, the journal-like disclaimer, and the
+- [ ] Release notes: version, what changed, the Publication-style disclaimer, and the
       unsigned-app guidance if applicable.
 - [ ] Update download links in the docs site if used.
 

@@ -533,3 +533,46 @@ def test_define_groups_by_column_values(app):
     out = captured["loaded"].info.dataframe
     assert list(out["group"]) == ["Control", "Control", "Knockout"]
     win.close()
+
+
+def test_recommendations_panel_populates_and_generates(app):
+    win = MainWindow()
+    win.load_example("volcano_plot")
+    # recommendations computed on load
+    assert hasattr(win, "recommend_panel")
+    rec_spec = win.controller.recommend_for_loaded(win.data)
+    assert rec_spec.recommendations, "expected at least one recommendation"
+    top = rec_spec.recommendations[0]
+    assert top.plot_type in {win.plot_combo.itemData(i) for i in range(win.plot_combo.count())}
+    # generating applies the plot type + renders
+    before = win._current_result
+    win._on_generate_recommendation(top)
+    assert win.plot_combo.currentData() == top.plot_type
+    assert win._current_result is not None and win._current_result is not before
+    win.close()
+
+
+def test_publication_qc_runs_and_scores(app):
+    win = MainWindow()
+    win.load_example("barplot_with_error_bar")
+    assert win._current_result is not None
+    score = win.controller.publication_qc(win._current_result, win._current_spec)
+    assert score.level in {"pass", "warn", "fail"}
+    assert 0 <= score.score <= 100
+    # auto-fix path returns a valid, different spec dict without raising
+    fixes = win.controller.qc_suggested_fixes(score, win._current_spec)
+    new_spec = win.controller.apply_qc_fixes(win._current_spec, [f["id"] for f in fixes])
+    assert isinstance(new_spec, dict)
+    win.close()
+
+
+def test_add_recommendation_to_figure_builder(app):
+    win = MainWindow()
+    win.load_example("scatterplot_with_regression")
+    rec_spec = win.controller.recommend_for_loaded(win.data)
+    gen = [r for r in rec_spec.recommendations if r.plot_spec_draft]
+    assert gen, "expected a generatable recommendation"
+    n_before = len(win._saved_panels)
+    win._on_add_recommendation_to_builder(gen[0])
+    assert len(win._saved_panels) == n_before + 1
+    win.close()

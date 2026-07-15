@@ -6,7 +6,7 @@
     "target": "outcome",
     "value": "n_patients"
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",

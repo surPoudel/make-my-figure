@@ -63,15 +63,22 @@ _PALETTES: Dict[str, List[str]] = {
 }
 
 # Named palettes selectable from the GUI/PlotSpec (override "palette_name").
+# The trailing journal-named entries are retained ONLY as back-compat aliases so
+# old PlotSpecs with those palette_name values still resolve; they are NOT shown
+# in the UI (see USER_PALETTES) and are not journal templates.
 NAMED_PALETTES: Dict[str, List[str]] = {
     "publication": _PUBLICATION,
     "colorblind_safe": _OKABE_ITO,
     "high_contrast": _HIGH_CONTRAST,
     "grayscale": _GRAYSCALE,
+    # --- legacy aliases (hidden) ---
     "nature_like": _OKABE_ITO,
     "science_like": _PALETTES["science_like"],
     "cell_like": _PALETTES["cell_like"],
 }
+
+# Palettes shown in the UI palette chooser (no journal names).
+USER_PALETTES: List[str] = ["publication", "colorblind_safe", "high_contrast", "grayscale"]
 
 # Figure width presets (mm). "default" is a comfortable medium size so the very
 # first plot reads well on screen and in slides without any tweaking.
@@ -307,14 +314,47 @@ def _publication_profile() -> StyleProfile:
                         diverging_cmap="RdBu_r")
 
 
+# v0.6: Make My Figure exposes ONE style identity — "Publication". Older PlotSpecs
+# and learned profiles used journal-named profiles; these are no longer separate
+# styles. They are transparently migrated to Publication on load so saved files
+# keep working. (This is a scope decision, not a claim about journal templates.)
+LEGACY_STYLE_ALIASES: Dict[str, str] = {
+    "nature_like": "publication",
+    "science_like": "publication",
+    "cell_like": "publication",
+    "nature_like_learned": "publication",
+    "science_like_learned": "publication",
+    "cell_like_learned": "publication",
+    "journal_like": "publication",
+}
+
+
+def is_legacy_style_name(name: Optional[str]) -> bool:
+    """True if ``name`` is a removed journal-named profile (migrates to Publication)."""
+    return name in LEGACY_STYLE_ALIASES
+
+
+def normalize_style_name(name: Optional[str]) -> str:
+    """Map any style name to a current one; removed journal names → 'publication'."""
+    if not name:
+        return "publication"
+    return LEGACY_STYLE_ALIASES.get(name, name)
+
+
 def list_profiles(path: Optional[str] = None) -> List[str]:
-    """Publication default first, then starter profiles, then learned profiles."""
-    starters = list(_load_raw(path).get("profiles", {}).keys())
-    learned = list(_load_learned_raw().keys())
-    return ["publication"] + starters + learned
+    """User-facing style profiles. v0.6 exposes a single 'publication' identity.
+
+    Journal-named starter/learned profiles are intentionally NOT listed. Any
+    learned profile explicitly named ``publication*`` (e.g. benchmark-derived
+    aggregate defaults) is included so it can be selected/inspected.
+    """
+    learned_publication = [n for n in _load_learned_raw().keys() if n.startswith("publication")]
+    return ["publication"] + learned_publication
 
 
 def load_profile(name: str, path: Optional[str] = None) -> StyleProfile:
+    """Load a style profile. Removed journal-named profiles migrate to Publication."""
+    name = normalize_style_name(name)
     if name == "publication":
         return _publication_profile()
     profiles = _load_raw(path).get("profiles", {})
@@ -324,7 +364,7 @@ def load_profile(name: str, path: Optional[str] = None) -> StyleProfile:
     if name in learned:
         return _parse_learned(name, learned[name])
     raise KeyError(
-        f"Unknown style profile '{name}'. Available: {sorted(list(profiles) + list(learned))}"
+        f"Unknown style profile '{name}'. Available: {sorted(['publication'] + list(learned))}"
     )
 
 

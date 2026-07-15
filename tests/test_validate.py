@@ -17,7 +17,7 @@ def test_schema_loads():
 
 
 def test_valid_spec_passes():
-    spec = make_spec("volcano_plot", "volcano_plot.csv", "nature_like")
+    spec = make_spec("volcano_plot", "volcano_plot.csv", "publication")
     out = validate_plot_spec(
         spec,
         known_plot_types=available_plot_types(),

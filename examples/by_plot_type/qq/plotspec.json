@@ -5,7 +5,7 @@
     "mode": "pvalue",
     "p": "p_value"
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",

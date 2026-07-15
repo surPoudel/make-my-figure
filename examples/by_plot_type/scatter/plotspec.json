@@ -7,7 +7,7 @@
     "color": "group",
     "fit_line": true
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",

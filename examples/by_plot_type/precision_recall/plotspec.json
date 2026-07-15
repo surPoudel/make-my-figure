@@ -6,7 +6,7 @@
     "score": "score_model_a",
     "score2": "score_model_b"
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",

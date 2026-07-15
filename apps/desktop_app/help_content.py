@@ -1,8 +1,7 @@
 """Help text for the desktop app.
 
 Plot descriptions and required columns are read from the bundled
-``plot_schema_manifest.json`` so they stay factual and in sync with the data —
-nothing about journals is invented here.
+``plot_schema_manifest.json`` so they stay factual and in sync with the data.
 """
 
 from __future__ import annotations
@@ -13,10 +12,10 @@ from make_my_figure_core import data as mock_data
 from make_my_figure_core.plots.registry import available_plot_types, display_name
 
 DISCLAIMER = (
-    "Style profiles are “journal-like” aesthetics only. “Nature-like”, "
-    "“Science-like”, and “Cell-like” are NOT official journal templates and do "
-    "NOT guarantee compliance with or acceptance by Nature, Science, Cell, or any "
-    "publisher. Always check the target journal's official author guidelines."
+    "Make My Figure uses a single Publication style designed for manuscript-ready "
+    "scientific figures. It does not provide official journal templates or claim "
+    "compliance with any journal's formatting requirements. Always check your target "
+    "journal's official author guidelines."
 )
 
 PRIVACY = (

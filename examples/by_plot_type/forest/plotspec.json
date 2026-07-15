@@ -8,7 +8,7 @@
     "upper": "ci_high",
     "reference": 1.0
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",

@@ -8,7 +8,7 @@
     "event": "event_type",
     "group": "response"
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",

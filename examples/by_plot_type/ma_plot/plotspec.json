@@ -9,7 +9,7 @@
     "p_cutoff": 0.05,
     "label_top_n": 8
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",

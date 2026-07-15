@@ -4,10 +4,11 @@ Make My Figure produces **publication-style figures by default** — the first p
 you get is already readable and clean, without manual tweaking. Formatting
 controls are for *refinement*, not for fixing bad defaults.
 
-> **Journal-like, not official.** Profiles named `publication`, `nature_like`,
-> `science_like`, `cell_like` (and their `*_learned` variants) are aesthetic
-> conventions only. They do **not** guarantee compliance with, or acceptance by,
-> any journal.
+> **Publication style, not an official template.** Make My Figure uses a single
+> `publication` style — a general manuscript-ready visual style. It does **not**
+> provide official journal templates or guarantee compliance with, or acceptance
+> by, any journal. (Older saved files that named a removed profile are migrated to
+> Publication automatically.)
 
 ## The shared style engine
 
@@ -44,7 +45,7 @@ apps never diverge. A profile carries tokens for:
 
 Colors avoid Matplotlib's default cycle; the palette is colorblind-aware and
 high-contrast. Alternative named palettes: `publication`, `colorblind_safe`,
-`high_contrast`, `grayscale`, plus the journal-like palettes.
+`high_contrast`, `grayscale`.
 
 ## Adjusting the style
 

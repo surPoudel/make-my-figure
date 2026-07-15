@@ -12,7 +12,7 @@
     "top_n": 10,
     "show_arrows": true
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",

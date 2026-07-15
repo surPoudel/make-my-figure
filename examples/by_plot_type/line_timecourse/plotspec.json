@@ -7,7 +7,7 @@
     "color": "treatment",
     "error": "sem"
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",

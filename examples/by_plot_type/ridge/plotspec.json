@@ -6,7 +6,7 @@
     "group": "condition",
     "overlap": 0.7
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",

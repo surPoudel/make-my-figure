@@ -6,7 +6,7 @@
     "predicted": "predicted_label",
     "normalize": "none"
   },
-  "journal_style": "nature_like",
+  "journal_style": "publication",
   "output": {
     "formats": [
       "svg",
