@@ -221,3 +221,20 @@ def test_recommend_after_analysis_differential():
     types = [r.plot_type for r in spec.recommendations]
     assert "volcano_plot" in types
     assert any("top-feature heatmap" in n for n in spec.notes)
+
+
+def test_unnamed_categorical_group_is_recommended():
+    """A low-cardinality categorical (not named 'group') + a numeric value column
+    should still be detected as group/value and get box/violin recommendations."""
+    import pandas as pd
+    from make_my_figure_core.recommendations import recommend_for_table
+
+    df = pd.DataFrame({
+        "species": ["A", "A", "B", "B", "C", "C"] * 5,
+        "flipper_length_mm": [181, 186, 195, 190, 210, 205] * 5,
+    })
+    rs = recommend_for_table(df, "grp_value")
+    assert rs.schema == "generic_long"
+    types = {r.plot_type for r in rs.recommendations}
+    assert "boxplot_or_violin_with_points" in types
+    assert not any("edger" in (r.why + " ".join(r.warnings)).lower() for r in rs.recommendations)

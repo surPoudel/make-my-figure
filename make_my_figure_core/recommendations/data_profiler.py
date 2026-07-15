@@ -186,6 +186,20 @@ def profile_table(df: pd.DataFrame, table_name: str = "data") -> DataProfile:
 
     # group / subject
     grp = _find([c for c in categorical], _ALIASES["group"])
+    if not grp and numeric:
+        # Fallback: any low-cardinality, non-id categorical column is a plausible
+        # grouping variable (e.g. 'species', 'tissue', 'treatment_arm') even if its
+        # name isn't in the alias list — as long as there's a numeric value column
+        # to compare across it. Prefer the fewest-level column (most group-like).
+        cands = []
+        for c in categorical:
+            if c in ids or _looks_like_id(c):
+                continue
+            n = int(df[c].dropna().nunique())
+            if 2 <= n <= 20 and n < len(df):
+                cands.append((n, c))
+        if cands:
+            grp = sorted(cands)[0][1]
     add("group", grp, 0.6, "group/condition-like categorical")
     subj = _find(columns, _ALIASES["subject"])
     if subj and subj != grp:
