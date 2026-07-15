@@ -885,8 +885,33 @@ class MainWindow(QMainWindow):
         Expensive recommendations require explicit confirmation first."""
         draft = getattr(rec, "plot_spec_draft", None)
         if not draft:
-            self._show_warning("This recommendation has no ready-to-generate spec.")
+            # guidance recs (e.g. "run stats to get p/FDR for a volcano") are
+            # informational — show the how-to instead of generating.
+            instr = getattr(rec, "instructions", None)
+            self._show_warning(instr or "This recommendation has no ready-to-generate spec.")
             return False
+        # Transform recs first reshape the data (and save the reshaped CSV), then plot.
+        tf = getattr(rec, "transform", None)
+        if tf:
+            import os as _os
+            import tempfile as _tempfile
+            try:
+                newdata = self.controller.apply_transform(self.data, tf)
+            except Exception as exc:
+                self._show_warning(f"Could not reshape the data: {exc}")
+                return False
+            outname = _os.path.basename(str(tf.get("output_filename") or newdata.table_name))
+            src = getattr(self.data, "source_path", None)
+            outdir = _os.path.dirname(src) if src else _tempfile.gettempdir()
+            outpath = _os.path.join(outdir, outname)
+            try:
+                self.controller.save_table(newdata.info.dataframe, outpath)
+                newdata.source_path = outpath
+                self.statusBar().showMessage(f"Reshaped data saved to {outpath}", 8000)
+            except Exception as exc:
+                self._show_warning(f"Reshaped the data but could not save the CSV: {exc}")
+            self.data = newdata
+            self._populate_table()
         if getattr(rec, "requires_confirmation", False):
             resp = QMessageBox.question(
                 self, "Generate figure?",

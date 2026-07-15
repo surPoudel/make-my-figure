@@ -291,9 +291,21 @@ with st.expander("🔮 Recommended figures", expanded=False):
         for _r in _rec_spec.recommendations:
             _conf = int(round(float(_r.confidence) * 100))
             st.markdown(f"**{_r.display_name}** · {_conf}% match  \n{_r.why}")
+            if getattr(_r, "instructions", None):
+                st.caption("ℹ " + _r.instructions)   # guidance rec (e.g. run stats first)
             for _w in (_r.warnings or []):
                 st.caption(f"⚠ {_w}")
-            if _r.plot_spec_draft and st.button(f"Use ▸ {_r.display_name}", key=f"rec_{_r.id}"):
+            _tf = getattr(_r, "transform", None)
+            if _tf and st.button(f"Use ▸ {_r.display_name}", key=f"rec_{_r.id}"):
+                # reshape the data, adopt it as the working table, then load the plot type
+                from make_my_figure_core.transforms import apply_transform as _apply_tf
+                st.session_state["_grouped_df"] = _apply_tf(
+                    table_info.dataframe, _tf["name"], _tf.get("params"))
+                st.session_state["_grouped_name"] = _tf.get("output_filename") or "reshaped.csv"
+                st.session_state["rec_plot_type"] = _r.plot_type
+                st.rerun()
+            elif _r.plot_spec_draft and not _tf and st.button(
+                    f"Use ▸ {_r.display_name}", key=f"rec_{_r.id}"):
                 st.session_state["rec_plot_type"] = _r.plot_type
                 st.rerun()
             st.divider()

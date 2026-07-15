@@ -107,13 +107,24 @@ class Recommendation:
     requires_confirmation: bool = False
     warnings: List[str] = field(default_factory=list)
     plot_spec_draft: Optional[Dict[str, Any]] = None
+    # kind: "direct" (map existing columns), "transform" (reshape the data first,
+    # then plot — carries a `transform` spec), or "guidance" (informational only:
+    # explains what data/analysis is needed, e.g. run stats to get p/FDR/logFC).
+    kind: str = "direct"
+    transform: Optional[Dict[str, Any]] = None   # {name, params, result_columns, output_filename}
+    instructions: Optional[str] = None           # how-to text for guidance recs
 
     @property
     def is_renderable(self) -> bool:
-        """True when the recommendation targets an implemented renderer."""
+        """True when the rec can render the CURRENT data directly (kind='direct').
+
+        Transform recs must reshape the data first; guidance recs are
+        informational — neither renders the uploaded table as-is.
+        """
         from make_my_figure_core.plots.registry import available_plot_types
 
-        return self.plot_type in available_plot_types() and self.plot_spec_draft is not None
+        return (self.kind == "direct" and self.plot_spec_draft is not None
+                and self.plot_type in available_plot_types())
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -131,6 +142,9 @@ class Recommendation:
             "requires_confirmation": self.requires_confirmation,
             "warnings": self.warnings,
             "plot_spec_draft": self.plot_spec_draft,
+            "kind": self.kind,
+            "transform": self.transform,
+            "instructions": self.instructions,
         }
 
 

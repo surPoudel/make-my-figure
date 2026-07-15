@@ -629,3 +629,28 @@ def test_open_plotspec_restores_statistics(app):
     result = win.controller.render(win._build_spec(), win.data)
     assert getattr(result, "stats_report", None) is not None
     win.close()
+
+
+def test_generate_transform_recommendation_reshapes_saves_and_renders(app, tmp_path):
+    """A transform recommendation reshapes the data, saves the new CSV, and plots it."""
+    import os
+    import numpy as np
+    import pandas as pd
+    win = MainWindow()
+    rng = np.random.default_rng(0)
+    df = pd.DataFrame({"gene": [f"g{i}" for i in range(20)]})
+    for s in ["S1", "S2", "S3", "S4"]:
+        df[s] = rng.normal(5, 2, 20)
+    src = tmp_path / "matrix.csv"
+    df.to_csv(src, index=False)
+    win._set_data(win.controller.load_file(str(src)))
+    rs = win.controller.recommend_for_loaded(win.data)
+    tf = [r for r in rs.recommendations
+          if getattr(r, "transform", None) and r.plot_type == "ridge_or_density_plot"]
+    assert tf, "expected a wide->long ridge transform recommendation"
+    win._on_generate_recommendation(tf[0])
+    # data was reshaped to long, plotted, and the reshaped CSV persisted
+    assert set(win.data.info.columns) == {"column", "value"}
+    assert win._current_result is not None
+    assert any(f.endswith("__long.csv") for f in os.listdir(tmp_path))
+    win.close()

@@ -76,6 +76,18 @@ class RecommendationsPanel(QGroupBox):
         why.setWordWrap(True)
         why.setStyleSheet("color:#333;")
         v.addWidget(why)
+        kind = getattr(rec, "kind", "direct")
+        if kind == "transform":
+            tnote = QLabel("↻ Reshapes your data and saves a new CSV, then plots it.")
+            tnote.setStyleSheet("color:#0a6; font-size:11px;")
+            tnote.setWordWrap(True)
+            v.addWidget(tnote)
+        instr = getattr(rec, "instructions", None)
+        if instr:
+            il = QLabel("ℹ " + str(instr))
+            il.setStyleSheet("color:#345; font-size:11px;")
+            il.setWordWrap(True)
+            v.addWidget(il)
         missing = getattr(rec, "missing_mappings", None) or []
         if missing:
             m = QLabel("Needs: " + ", ".join(str(x) for x in missing))

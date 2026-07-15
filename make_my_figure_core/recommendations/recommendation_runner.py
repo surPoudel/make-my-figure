@@ -24,6 +24,10 @@ from make_my_figure_core.recommendations.recommendation_models import (
 )
 from make_my_figure_core.recommendations.schema_detector import detect_schema
 from make_my_figure_core.recommendations.stat_recommender import suggest_stats
+from make_my_figure_core.recommendations.transform_recommender import (
+    recommend_guidance,
+    recommend_transforms,
+)
 
 _DE_NOTE = ("Make My Figure does not run differential-expression analysis. Upload a "
             "precomputed differential results table (fold-change + p-value/FDR) for volcano "
@@ -35,6 +39,10 @@ def recommend_for_table(df: pd.DataFrame, table_name: str = "data") -> Recommend
     profile = profile_table(df, table_name)
     schema = detect_schema(profile, df)
     recs = recommend_plots(profile, schema, df, table_name)
+    # Also: plots reachable by reshaping the data (one-click transform + save), and
+    # guidance for plots that need an analysis first (e.g. volcano/MA need stats).
+    recs = recs + recommend_transforms(profile, schema, df, table_name)
+    recs = recs + recommend_guidance(profile, schema, df)
 
     notes: List[str] = []
     if schema in ("numeric_matrix", "expression_like_matrix", "matrix_plus_metadata"):

@@ -136,6 +136,20 @@ class DesktopController:
                 data_path = hits[0]
         return spec, data_path
 
+    def apply_transform(self, data: "LoadedData", transform: Dict[str, Any]) -> "LoadedData":
+        """Apply a recommendation's transform spec to the current data and wrap the
+        reshaped frame as a new LoadedData (named after the transform output)."""
+        from make_my_figure_core.transforms import apply_transform
+
+        df = apply_transform(data.info.dataframe, transform["name"], transform.get("params"))
+        name = transform.get("output_filename") or f"{data.table_name}.transformed.csv"
+        return self.loaded_from_dataframe(df, name)
+
+    def save_table(self, df, path: str) -> str:
+        """Write a DataFrame to CSV (used to persist a transform's output)."""
+        df.to_csv(path, index=False)
+        return path
+
     def loaded_from_dataframe(self, df, table_name: str,
                               *, aux: Optional[Dict[str, TableInfo]] = None) -> LoadedData:
         """Wrap an in-memory DataFrame as a :class:`LoadedData` (a derived table).
