@@ -268,6 +268,52 @@ class StatisticsPanel(QGroupBox):
             "annotation": ann,
         }
 
+    def load_spec(self, stats: Dict[str, Any]) -> None:
+        """Populate the controls from a stored statistics spec (reverse of
+        :meth:`stats_spec`). Used when reopening a saved PlotSpec so re-rendering
+        after an edit keeps the figure's statistical annotations."""
+        if not isinstance(stats, dict):
+            return
+
+        def _set(combo, value):
+            if value in (None, "", _NONE):
+                return
+            for i in range(combo.count()):
+                if combo.itemData(i) == value:
+                    combo.setCurrentIndex(i)
+                    return
+            # a reference value not yet in the list: add it so it round-trips
+            combo.addItem(str(value), value)
+            combo.setCurrentIndex(combo.count() - 1)
+
+        self.setChecked(True)
+        self.enable_cb.setChecked(bool(stats.get("enabled", True)))
+        _set(self.test_combo, stats.get("test"))
+        _set(self.mode_combo, stats.get("comparison_mode"))
+        _set(self.correction_combo, stats.get("correction"))
+        self.posthoc_cb.setChecked(bool(stats.get("posthoc", False)))
+        _set(self.group_combo, stats.get("group_column"))
+        _set(self.subgroup_combo, stats.get("subgroup_column"))
+        _set(self.subject_combo, stats.get("subject_column"))
+        _set(self.reference_combo, stats.get("reference_group"))
+        ann = stats.get("annotation") or {}
+        _set(self.annotation_combo, ann.get("content"))
+        if ann.get("template"):
+            self.template_edit.setText(str(ann["template"]))
+        if ann.get("digits") is not None:
+            try:
+                self.digits_spin.setValue(int(ann["digits"]))
+            except (TypeError, ValueError):
+                pass
+        if ann.get("font_size") is not None:
+            try:
+                self.fontsize_spin.setValue(float(ann["font_size"]))
+            except (TypeError, ValueError):
+                pass
+        self.show_effect_cb.setChecked(bool(ann.get("show_effect", False)))
+        self.hide_ns_cb.setChecked(bool(ann.get("hide_nonsignificant", False)))
+        self._on_content_changed()
+
     def show_report(self, report) -> None:
         """Populate the table + method text from a StatsReport (or clear)."""
         self._report = report

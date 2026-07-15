@@ -20,7 +20,7 @@ import pandas as pd
 
 DISTANCE_METRICS = ("euclidean", "correlation", "cosine", "cityblock")
 LINKAGE_METHODS = ("average", "complete", "single", "ward")
-SCALES = ("none", "row_zscore", "column_zscore", "center_rows", "log")
+SCALES = ("none", "row_zscore", "column_zscore", "center_rows", "log", "log_zscore")
 # Methods that are only valid with a Euclidean metric.
 _EUCLIDEAN_ONLY = ("ward", "centroid", "median")
 
@@ -85,10 +85,18 @@ def scale_matrix(matrix: np.ndarray, scale: str) -> Tuple[np.ndarray, List[str]]
     warnings: List[str] = []
     scale = (scale or "none").lower()
     X = np.array(matrix, dtype=float)
-    if scale == "log":
+    if scale in ("log", "log_zscore"):
         if np.nanmin(X) < 0:
             warnings.append("Log scale requested but matrix has negatives; used log1p(clip>=0).")
         X = np.log1p(np.clip(X, 0, None))
+    if scale == "log_zscore":
+        # log-transform (above) then per-row (per-feature) z-score — the standard
+        # readable heatmap for raw counts: compresses dynamic range, then shows
+        # each feature's relative pattern across samples.
+        mu = np.nanmean(X, axis=1, keepdims=True)
+        sd = np.nanstd(X, axis=1, ddof=0, keepdims=True)
+        sd[sd == 0] = 1.0
+        X = (X - mu) / sd
     elif scale == "row_zscore":
         mu = np.nanmean(X, axis=1, keepdims=True)
         sd = np.nanstd(X, axis=1, ddof=0, keepdims=True)

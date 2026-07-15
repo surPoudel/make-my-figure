@@ -185,6 +185,18 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     raw_matrix, row_labels, _cap_idx = _clust.cap_rows_by_variance(
         raw_matrix, row_labels, max_features, warnings, keep_labels=keep_labels)
 
+    # Nudge: unscaled raw-count-like matrices (large, non-negative, wide dynamic
+    # range) render as a washed-out block. Suggest a readable scale.
+    if scale == "none":
+        finite = raw_matrix[np.isfinite(raw_matrix)]
+        if finite.size:
+            mx = float(np.nanmax(finite))
+            if float(np.nanmin(finite)) >= 0 and mx >= 1000 and mx > 50 * (float(np.nanmedian(finite)) + 1):
+                warnings.append(
+                    "Large non-negative values with a wide dynamic range (looks like raw "
+                    "counts): set Scale to 'log_zscore' (or 'row_zscore' / 'log') for a "
+                    "readable heatmap — 'none' will look washed out.")
+
     # Scaling (default 'none' reproduces the original output).
     matrix, scale_warns = _clust.scale_matrix(raw_matrix, scale)
     warnings.extend(scale_warns)
@@ -350,7 +362,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         cbar.ax.tick_params(labelsize=style.tick_label_pt, width=style.tick_width,
                             length=style.tick_length)
         cbar.outline.set_linewidth(style.spine_width_pt)
-        default_cbar = "z-score" if scale in ("row_zscore", "column_zscore") else "value"
+        default_cbar = "z-score" if scale in ("row_zscore", "column_zscore", "log_zscore") else "value"
         cbar.set_label(spec.get("layout", {}).get("colorbar_label", default_cbar),
                        fontsize=style.axis_font_pt)
         for spine in ax.spines.values():

@@ -1042,6 +1042,13 @@ class MainWindow(QMainWindow):
                     self.chk_legend_outside.setChecked(bool(style["legend_outside"]))
                 if "grid" in style:
                     self.chk_grid.setChecked(bool(style["grid"]))
+            # Statistics: populate the panel so annotations survive later edits.
+            stats = spec.get("statistics")
+            if stats and hasattr(self, "stats_panel"):
+                try:
+                    self.stats_panel.load_spec(stats)
+                except Exception:
+                    pass
         finally:
             self._suppress_change = prev
             self._loading_spec = False

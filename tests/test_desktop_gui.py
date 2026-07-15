@@ -603,3 +603,29 @@ def test_open_plotspec_reproduces_benchmark_panel(app):
     result = win.controller.render(spec, win.data)
     assert result.figure is not None
     win.close()
+
+
+def test_open_plotspec_restores_statistics(app):
+    """Opening a PlotSpec that carries statistics repopulates the Stats panel so
+    the annotations survive a later control edit."""
+    win = MainWindow()
+    win.load_example("boxplot_or_violin_with_points")
+    # enable statistics and build a spec that includes them
+    win.stats_panel.setChecked(True)
+    win.stats_panel.enable_cb.setChecked(True)
+    i = win.stats_panel.test_combo.findData("welch_t")
+    if i >= 0:
+        win.stats_panel.test_combo.setCurrentIndex(i)
+    spec = win._build_spec()
+    assert spec.get("statistics", {}).get("enabled") is True
+    saved_test = spec["statistics"]["test"]
+    # simulate a fresh open: clear the panel, then apply the saved spec
+    win.stats_panel.setChecked(False)
+    win.stats_panel.enable_cb.setChecked(False)
+    win._apply_plotspec_to_ui(spec)
+    assert win.stats_panel.is_enabled()                       # re-enabled
+    assert win.stats_panel.stats_spec()["test"] == saved_test  # test restored
+    # re-rendering from the (restored) widgets still produces a stats report
+    result = win.controller.render(win._build_spec(), win.data)
+    assert getattr(result, "stats_report", None) is not None
+    win.close()

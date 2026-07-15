@@ -80,7 +80,7 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("color_scale", "Color scale", "choice", "diverging", ["diverging", "sequential"]),
         # v0.5 clustering + highlighting
         Option("scale", "Scale", "choice", "none",
-               ["none", "row_zscore", "column_zscore", "center_rows", "log"]),
+               ["none", "row_zscore", "column_zscore", "center_rows", "log", "log_zscore"]),
         Option("distance_metric", "Distance", "choice", "euclidean",
                ["euclidean", "correlation", "cosine", "cityblock"]),
         Option("linkage_method", "Linkage", "choice", "average",
@@ -175,7 +175,7 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("cluster", "Cluster", "choice", "rows", ["rows", "columns"]),
         Option("k", "Number of clusters k", "number", 3, minimum=2, maximum=20, step=1, decimals=0),
         Option("scale", "Scale", "choice", "row_zscore",
-               ["none", "row_zscore", "column_zscore", "center_rows", "log"]),
+               ["none", "row_zscore", "column_zscore", "center_rows", "log", "log_zscore"]),
         Option("distance_metric", "Distance", "choice", "euclidean",
                ["euclidean", "correlation", "cosine", "cityblock"]),
         Option("linkage_method", "Linkage", "choice", "average",
