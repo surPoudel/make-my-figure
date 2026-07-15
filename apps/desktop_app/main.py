@@ -578,6 +578,10 @@ class MainWindow(QMainWindow):
         a_open = QAction("Open data file…", self)
         a_open.triggered.connect(self.action_open_file)
         filem.addAction(a_open)
+        a_open_spec = QAction("Open PlotSpec… (reproduce a saved figure)", self)
+        a_open_spec.setShortcut("Ctrl+Shift+O")
+        a_open_spec.triggered.connect(self.action_open_plotspec)
+        filem.addAction(a_open_spec)
 
         ex_menu = filem.addMenu("Open example")
         for pt, label in self.controller.plot_types():
@@ -926,6 +930,121 @@ class MainWindow(QMainWindow):
                     pass
         self.render_preview()
         return True
+
+    def action_open_plotspec(self):
+        """Open a saved PlotSpec JSON (+ its data) and reproduce the exact figure."""
+        import os as _os
+
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Open PlotSpec", "", "PlotSpec JSON (*.plot_spec.json *.json)")
+        if not path:
+            return
+        try:
+            spec, data_path = self.controller.load_plotspec(path)
+        except Exception as exc:
+            self._show_warning(f"Could not read PlotSpec: {exc}")
+            return
+        if not data_path:
+            data_path, _ = QFileDialog.getOpenFileName(
+                self, "Select the data file for this PlotSpec", _os.path.dirname(path),
+                "Data (*.csv *.tsv *.txt *.xlsx *.xls)")
+            if not data_path:
+                self._show_warning("A data file is needed to reproduce this PlotSpec.")
+                return
+        try:
+            loaded = self.controller.load_file(data_path)
+        except Exception as exc:
+            self._show_warning(f"Could not load data '{_os.path.basename(data_path)}': {exc}")
+            return
+        self.data = loaded
+        self.stack.setCurrentIndex(1)
+        self._populate_table()
+        # Best-effort: reflect the spec in the controls (so later edits round-trip).
+        self._apply_plotspec_to_ui(spec)
+        # Guarantee: render the spec exactly as saved (independent of widget round-trip).
+        try:
+            result = self.controller.render(spec, loaded)
+        except Exception as exc:
+            self._show_warning(f"Opened the PlotSpec but rendering failed: {exc}")
+            return
+        self._display_result(spec, result)
+        if getattr(self, "_auto_recommend", True):
+            self._refresh_recommendations()
+        self._add_recent(data_path)
+        self.statusBar().showMessage(
+            f"Opened PlotSpec {_os.path.basename(path)} — runs locally.", 5000)
+
+    def _apply_plotspec_to_ui(self, spec: dict):
+        """Populate the controls from a loaded PlotSpec (no intermediate renders)."""
+        self._loading_spec = True
+        prev = self._suppress_change
+        self._suppress_change = True
+        try:
+            pt = spec.get("plot_type")
+            idx = self.plot_combo.findData(pt)
+            if idx >= 0:
+                self.plot_combo.setCurrentIndex(idx)
+            self._rebuild_mapping_and_options()
+            for key, val in (spec.get("mapping") or {}).items():
+                w = self._mapping_widgets.get(key)
+                if w is not None and val is not None:
+                    i = w.findText(str(val))
+                    if i >= 0:
+                        w.setCurrentIndex(i)
+                    continue
+                ow = self._option_widgets.get(key)
+                if ow is None:
+                    continue
+                try:
+                    if isinstance(ow, QCheckBox):
+                        ow.setChecked(bool(val))
+                    elif isinstance(ow, QComboBox):
+                        j = ow.findText(str(val))
+                        if j >= 0:
+                            ow.setCurrentIndex(j)
+                    elif isinstance(ow, (QSpinBox, QDoubleSpinBox)) and val is not None:
+                        ow.setValue(val)
+                except Exception:
+                    pass
+            layout = spec.get("layout") or {}
+            self.title_edit.setText(str(layout.get("title", "") or ""))
+            self.xlabel_edit.setText(str(layout.get("x_label", "") or ""))
+            self.ylabel_edit.setText(str(layout.get("y_label", "") or ""))
+            cw = layout.get("column_width")
+            if cw:
+                k = self.width_combo.findText(str(cw))
+                if k >= 0:
+                    self.width_combo.setCurrentIndex(k)
+            dpi = (spec.get("output") or {}).get("dpi")
+            if dpi:
+                try:
+                    self.dpi_spin.setValue(int(dpi))
+                except Exception:
+                    pass
+            style = spec.get("style") or {}
+            if style and getattr(self, "_style_box", None):
+                self._style_box.setChecked(True)
+                pal = style.get("palette_name")
+                if pal:
+                    kp = self.palette_combo.findData(pal)
+                    if kp >= 0:
+                        self.palette_combo.setCurrentIndex(kp)
+                for widget, skey in [(self.sp_axis, "axis_font_pt"), (self.sp_tick, "tick_label_pt"),
+                                     (self.sp_legend, "legend_pt"), (self.sp_annot, "annotation_pt"),
+                                     (self.sp_marker, "marker_size"), (self.sp_linew, "line_width_pt"),
+                                     (self.sp_spine, "spine_width_pt")]:
+                    if skey in style:
+                        try:
+                            widget.setValue(type(widget.value())(style[skey]))
+                        except Exception:
+                            pass
+                if "legend_outside" in style:
+                    self.chk_legend_outside.setChecked(bool(style["legend_outside"]))
+                if "grid" in style:
+                    self.chk_grid.setChecked(bool(style["grid"]))
+        finally:
+            self._suppress_change = prev
+            self._loading_spec = False
 
     def _on_generate_recommendation(self, rec):
         if self._apply_recommendation(rec):
@@ -1387,7 +1506,7 @@ class MainWindow(QMainWindow):
         self._show_figure(result.figure)          # figure is always visible below
 
     def render_preview(self):
-        if self.data is None:
+        if self.data is None or getattr(self, "_loading_spec", False):
             return
         spec, result, err = self._try_build_and_render()
         if result is None:

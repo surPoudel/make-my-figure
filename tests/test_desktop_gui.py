@@ -576,3 +576,30 @@ def test_add_recommendation_to_figure_builder(app):
     win._on_add_recommendation_to_builder(gen[0])
     assert len(win._saved_panels) == n_before + 1
     win.close()
+
+
+def test_open_plotspec_reproduces_benchmark_panel(app):
+    """Open PlotSpec: load a saved plotspec.json + resolve its data + render exactly."""
+    import os
+    win = MainWindow()
+    base = os.path.join(_REPO_ROOT, "benchmarks", "ten_publication_recreation",
+                        "publications", "gorman2014_penguins", "recreated_panels", "panel_A")
+    spec_path = os.path.join(base, "plotspec.json")
+    if not os.path.exists(spec_path):
+        import pytest
+        pytest.skip("benchmark panel not present")
+    spec, data_path = win.controller.load_plotspec(spec_path)
+    assert spec["plot_type"] == "ridge_or_density_plot"
+    assert data_path and data_path.endswith("processed_data.csv")   # auto-resolved
+    win.data = win.controller.load_file(data_path)
+    win.stack.setCurrentIndex(1)
+    win._populate_table()
+    win._apply_plotspec_to_ui(spec)
+    # controls reflect the spec
+    assert win.plot_combo.currentData() == "ridge_or_density_plot"
+    assert win._mapping_widgets["x"].currentText() == spec["mapping"]["x"]
+    assert win._mapping_widgets["group"].currentText() == spec["mapping"]["group"]
+    # and it renders exactly from the loaded spec
+    result = win.controller.render(spec, win.data)
+    assert result.figure is not None
+    win.close()

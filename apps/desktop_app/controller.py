@@ -102,6 +102,40 @@ class DesktopController:
         name = mock_data.sample_filename(plot_type) or f"{plot_type}.csv"
         return LoadedData(info=info, table_name=name, aux=aux, is_example=True)
 
+    def load_plotspec(self, path: str):
+        """Read a saved PlotSpec JSON and try to locate its data file.
+
+        Returns ``(spec, data_path_or_None)``. Legacy journal style names in the
+        spec are migrated to Publication. Data resolution: the spec's
+        ``input_table`` (by basename) next to the JSON, else the sole data file in
+        the same directory. The caller prompts for the data if unresolved.
+        """
+        import glob
+        import json
+
+        with open(path, "r", encoding="utf-8") as fh:
+            spec = json.load(fh)
+        if not isinstance(spec, dict) or "plot_type" not in spec:
+            raise ValueError("This file is not a PlotSpec (no 'plot_type').")
+        from make_my_figure_core.styles.engine import normalize_style_name
+        if spec.get("journal_style"):
+            spec["journal_style"] = normalize_style_name(spec["journal_style"])
+        d = os.path.dirname(os.path.abspath(path))
+        data_path = None
+        it = spec.get("input_table")
+        if it:
+            cand = it if os.path.isabs(it) else os.path.join(d, os.path.basename(str(it)))
+            if os.path.exists(cand):
+                data_path = cand
+        if not data_path:
+            hits = []
+            for pat in ("*.csv", "*.tsv", "*.txt", "*.xlsx", "*.xls"):
+                hits += [h for h in glob.glob(os.path.join(d, pat))
+                         if not h.endswith(".json")]
+            if len(hits) == 1:
+                data_path = hits[0]
+        return spec, data_path
+
     def loaded_from_dataframe(self, df, table_name: str,
                               *, aux: Optional[Dict[str, TableInfo]] = None) -> LoadedData:
         """Wrap an in-memory DataFrame as a :class:`LoadedData` (a derived table).

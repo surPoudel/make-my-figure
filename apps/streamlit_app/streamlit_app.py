@@ -115,7 +115,39 @@ if st.sidebar.button("🏠 Reset / Upload new data", use_container_width=True,
 st.sidebar.divider()
 st.sidebar.header("1. Data")
 source_mode = st.sidebar.radio("Data source",
-                               ["Bundled sample", "Upload file"])
+                               ["Bundled sample", "Upload file", "Open PlotSpec"])
+
+# --- Open a saved PlotSpec: reproduce an exported figure from its JSON + data ---
+if source_mode == "Open PlotSpec":
+    st.subheader("Open a saved PlotSpec")
+    st.caption("Upload a `*.plot_spec.json` you exported earlier (or a benchmark "
+               "panel's plotspec.json) plus its data table to reproduce the exact "
+               "figure — no need to re-map columns.")
+    ps_file = st.file_uploader("PlotSpec JSON", type=["json"], key="ps_json")
+    data_file = st.file_uploader("Data table (CSV / TSV / XLSX)",
+                                 type=["csv", "tsv", "txt", "xlsx", "xls"], key="ps_data")
+    if ps_file is None or data_file is None:
+        st.info("Upload both the PlotSpec JSON and its data table to render.")
+        st.stop()
+    try:
+        spec = json.load(io.BytesIO(ps_file.getvalue()))
+        if not isinstance(spec, dict) or "plot_type" not in spec:
+            raise ValueError("This file is not a PlotSpec (no 'plot_type').")
+        from make_my_figure_core.styles.engine import normalize_style_name
+        if spec.get("journal_style"):
+            spec["journal_style"] = normalize_style_name(spec["journal_style"])
+        _ti = load_table(data_file.getvalue(), source_name=data_file.name)
+        result = render(spec, _ti.dataframe)
+        st.pyplot(result.figure, use_container_width=False)
+        for w in (result.warnings or []):
+            st.warning(w)
+        png = io.BytesIO(); result.figure.savefig(png, format="png", dpi=(spec.get("output") or {}).get("dpi", 300), bbox_inches="tight")
+        st.download_button("Download PNG", png.getvalue(), file_name="reproduced.png", mime="image/png")
+        st.download_button("Download PlotSpec JSON", json.dumps(spec, indent=2),
+                           file_name="reproduced.plot_spec.json", mime="application/json")
+    except Exception as exc:
+        st.error(f"Could not reproduce this PlotSpec: {exc}")
+    st.stop()
 
 table_info = None
 table_name = None
