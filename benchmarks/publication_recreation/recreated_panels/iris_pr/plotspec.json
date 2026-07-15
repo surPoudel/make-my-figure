@@ -1,0 +1,25 @@
+{
+  "plot_type": "precision_recall_curve",
+  "input_table": "iris_pr.csv",
+  "mapping": {
+    "label": "true_label",
+    "score": "score_model_a"
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 120,
+    "height_mm": 95,
+    "dpi": 400
+  },
+  "layout": {
+    "column_width": "single"
+  },
+  "style": {
+    "legend_outside": true
+  }
+}

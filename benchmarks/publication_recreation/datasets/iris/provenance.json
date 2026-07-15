@@ -1,0 +1,13 @@
+{
+  "dataset_id": "iris",
+  "title": "The use of multiple measurements in taxonomic problems",
+  "authors": "Fisher RA",
+  "year": 1936,
+  "doi": "10.1111/j.1469-1809.1936.tb02137.x",
+  "source_url": "https://archive.ics.uci.edu/dataset/53/iris",
+  "data_url": "builtin:iris",
+  "data_license": "Public-Domain (CC BY 4.0 at UCI)",
+  "license_url": "https://archive.ics.uci.edu/dataset/53/iris",
+  "license_verified": "UCI ML Repository (CC BY 4.0); bundled in scikit-learn (BSD-3).",
+  "notes": "150 samples, 3 species."
+}

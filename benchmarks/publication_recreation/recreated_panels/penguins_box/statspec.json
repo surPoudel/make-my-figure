@@ -1,0 +1,6 @@
+{
+  "enabled": true,
+  "test": "kruskal_wallis",
+  "comparison_mode": "all_pairs",
+  "correction": "bh"
+}

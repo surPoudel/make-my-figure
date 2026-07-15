@@ -1,0 +1,13 @@
+{
+  "dataset_id": "karate",
+  "title": "An Information Flow Model for Conflict and Fission in Small Groups",
+  "authors": "Zachary WW",
+  "year": 1977,
+  "doi": "10.1086/jar.33.4.3629752",
+  "source_url": "https://www.jstor.org/stable/3629752",
+  "data_url": "builtin:karate",
+  "data_license": "Public-Domain",
+  "license_url": "https://networkx.org/documentation/stable/reference/generated/networkx.generators.social.karate_club_graph.html",
+  "license_verified": "Classic public-domain network; bundled in NetworkX (BSD-3).",
+  "notes": "34 nodes, 78 edges."
+}

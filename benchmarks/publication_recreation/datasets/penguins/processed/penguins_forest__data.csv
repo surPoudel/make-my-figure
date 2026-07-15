@@ -1,0 +1,4 @@
+subgroup,mean_body_mass_g,ci_low,ci_high,n
+Adelie,3700.7,3627.5,3773.8,151
+Chinstrap,3733.1,3641.7,3824.4,68
+Gentoo,5076.0,4986.9,5165.1,123

@@ -1,0 +1,29 @@
+{
+  "plot_type": "scatterplot_with_regression",
+  "input_table": "gapminder_scatter.csv",
+  "mapping": {
+    "x": "log10_gdpPercap",
+    "y": "lifeExp",
+    "color": "continent",
+    "fit_line": true
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 120,
+    "height_mm": 95,
+    "dpi": 400
+  },
+  "layout": {
+    "x_label": "log10 GDP per capita (2007 US$)",
+    "y_label": "Life expectancy (years)",
+    "column_width": "single"
+  },
+  "style": {
+    "legend_outside": true
+  }
+}

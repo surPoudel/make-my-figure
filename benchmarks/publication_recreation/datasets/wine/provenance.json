@@ -1,0 +1,13 @@
+{
+  "dataset_id": "wine",
+  "title": "Wine recognition data (UCI)",
+  "authors": "Forina M, et al.",
+  "year": 1991,
+  "doi": "10.24432/C5PC7J",
+  "source_url": "https://archive.ics.uci.edu/dataset/109/wine",
+  "data_url": "builtin:wine",
+  "data_license": "CC BY 4.0 (UCI)",
+  "license_url": "https://archive.ics.uci.edu/dataset/109/wine",
+  "license_verified": "UCI ML Repository (CC BY 4.0); bundled in scikit-learn (BSD-3).",
+  "notes": "178 samples, 13 features, 3 cultivars."
+}
