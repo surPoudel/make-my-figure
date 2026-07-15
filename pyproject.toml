@@ -31,8 +31,8 @@ dev = ["pytest>=7.0", "pytest-qt>=4.2"]
 import-panels = ["pymupdf>=1.23", "cairosvg>=2.5"]
 
 [project.urls]
-Homepage = "https://example.com/make-my-figure"   # placeholder — replace with real URL
-Repository = "https://github.com/your-org/make-my-figure"  # placeholder
+Homepage = "https://github.com/surPoudel/make-my-figure"
+Repository = "https://github.com/surPoudel/make-my-figure"
 
 [tool.setuptools.dynamic]
 version = { attr = "make_my_figure_core.version.__version__" }
