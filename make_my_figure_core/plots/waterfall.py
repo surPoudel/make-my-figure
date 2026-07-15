@@ -67,7 +67,10 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
             handles = [Patch(facecolor=cmap[c], edgecolor="black", label=str(c))
                        for c in legend_handles]
-            ax.legend(handles=handles, title=str(color_by), frameon=False, loc="best")
+            # Outside the axes (upper right) so it never sits on top of the bars.
+            ax.legend(handles=handles, title=str(color_by), frameon=False,
+                      loc="upper left", bbox_to_anchor=(1.02, 1.0),
+                      fontsize=style.legend_pt, title_fontsize=style.legend_title_pt)
         style_axes(ax, style)
         fig.tight_layout()
 

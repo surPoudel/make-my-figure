@@ -92,8 +92,12 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                 ax.scatter([], [], s=30 + 170 * q, c="grey", edgecolors="black",
                            linewidths=style.spine_width_pt,
                            label=f"{int(smin + q * span)}")
-            ax.legend(title=str(size_col), frameon=False, loc="lower right",
-                      labelspacing=1.0, borderpad=0.8)
+            # Size key BELOW the plot (horizontal) so it clears both the data and
+            # the right-hand colorbar.
+            ax.legend(title=str(size_col), frameon=False, loc="upper center",
+                      bbox_to_anchor=(0.5, -0.16), ncol=3, labelspacing=0.6,
+                      borderpad=0.6, columnspacing=1.6, handletextpad=0.5,
+                      fontsize=style.legend_pt, title_fontsize=style.legend_title_pt)
         style_axes(ax, style)
         fig.tight_layout()
 

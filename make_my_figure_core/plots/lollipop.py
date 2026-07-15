@@ -38,7 +38,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     label_top_n = int(get_mapping(spec, "label_top_n", get_mapping(spec, "max_labels", 6)))
     legend_loc = str(get_mapping(spec, "legend_loc", "right")).lower()
     marker_scale = float(get_mapping(spec, "marker_scale", 16.0))
-    y_margin = float(get_mapping(spec, "y_margin", 0.28))
+    y_margin = float(get_mapping(spec, "y_margin", 0.42))
 
     require_columns(df, [x, y], context=PLOT_TYPE)
     work = df.copy()

@@ -128,7 +128,7 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("label_top_n", "Label top N mutations", "number", 6, minimum=0, maximum=40, step=1, decimals=0),
         Option("legend_loc", "Legend position", "choice", "right", ["right", "bottom"]),
         Option("marker_scale", "Marker scale", "number", 16.0, minimum=4.0, maximum=60.0, step=2.0, decimals=1),
-        Option("y_margin", "Top y-margin", "number", 0.28, minimum=0.05, maximum=0.6, step=0.05, decimals=2),
+        Option("y_margin", "Top y-margin", "number", 0.42, minimum=0.05, maximum=0.6, step=0.05, decimals=2),
     ],
     "roc_curve": [],
     "forest_plot": [
