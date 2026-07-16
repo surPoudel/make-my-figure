@@ -197,16 +197,24 @@ class _AspectView(QWidget):
         self._canvas = canvas
         self._aspect = aspect if aspect and aspect > 0 else 1.0
         canvas.setParent(self)
+        # Debounce the (relatively expensive) re-fit so dragging the window stays smooth.
+        self._refit_timer = QTimer(self)
+        self._refit_timer.setSingleShot(True)
+        self._refit_timer.setInterval(70)
+        self._refit_timer.timeout.connect(self._refit)
 
     def set_aspect(self, aspect: float) -> None:
         self._aspect = aspect if aspect and aspect > 0 else 1.0
-        self._relayout()
+        self._place()
+        self._refit()
 
     def resizeEvent(self, event):
-        self._relayout()
+        self._place()
+        self._refit_timer.start()      # re-fit the layout shortly after the resize settles
         super().resizeEvent(event)
 
-    def _relayout(self) -> None:
+    def _place(self) -> None:
+        """Letterbox the canvas to the figure's aspect (centred)."""
         W, H = self.width(), self.height()
         if W <= 0 or H <= 0:
             return
@@ -218,6 +226,26 @@ class _AspectView(QWidget):
         x = (W - w) // 2
         y = (H - h) // 2
         self._canvas.setGeometry(x, y, max(1, w), max(1, h))
+
+    def _refit(self) -> None:
+        """Re-run the figure's layout at the CURRENT display size so tick labels /
+        legends fit (they otherwise overflow the margins that tight_layout reserved
+        for the original figure size, clipping them on screen — the 'preview crop').
+        """
+        try:
+            import warnings as _warnings
+
+            fig = self._canvas.figure
+            dpi = fig.get_dpi() or 100.0
+            w = max(1, self._canvas.width())
+            h = max(1, self._canvas.height())
+            fig.set_size_inches(w / dpi, h / dpi, forward=False)
+            with _warnings.catch_warnings():
+                _warnings.simplefilter("ignore")
+                fig.tight_layout()
+            self._canvas.draw_idle()
+        except Exception:
+            pass
 
 
 # ---------------------------------------------------------------------------
