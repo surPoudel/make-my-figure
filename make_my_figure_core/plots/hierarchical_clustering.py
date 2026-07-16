@@ -137,7 +137,15 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     w_in, _ = style.figure_size_inches(str((spec.get("layout") or {}).get("column_width", "default")),
                                        aspect=1.0)
     n_r, n_c = len(ordered_rows), len(ordered_cols)
-    h_in = max(w_in * 0.7, min(1.8 + 0.16 * n_r, 20.0)) if n_r > 12 else w_in * 0.9
+    # Height: when per-row labels are hidden (many features), the rows are dense
+    # colour bands, so keep a COMPACT, display-friendly block (a tall strip is
+    # unreadable on screen). Only grow tall when row labels are actually shown.
+    if n_r > 60:
+        h_in = w_in * 1.2                              # compact block; all rows as bands
+    elif n_r > 12:
+        h_in = min(1.8 + 0.16 * n_r, 12.0)             # room for the visible row labels
+    else:
+        h_in = w_in * 0.9
     with style.apply():
         fig, ax = plt.subplots(figsize=(w_in, h_in))
         im = ax.imshow(ordered, aspect="auto", cmap=cmap, vmin=vmin, vmax=vmax,
