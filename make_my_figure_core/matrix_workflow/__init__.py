@@ -63,6 +63,8 @@ from make_my_figure_core.matrix_workflow.preprocessing import (
     available_methods,
     run_preprocessing,
 )
+from make_my_figure_core.matrix_workflow.qc_plots import qc_plot_catalog, qc_plot_inputs
+from make_my_figure_core.matrix_workflow.preprocessing_reports import before_after_report
 from make_my_figure_core.matrix_workflow import normalization, preprocessing, transformations
 
 __all__ = [
@@ -79,5 +81,6 @@ __all__ = [
     "PreprocessingSpec", "PreprocessingStep", "QCMetricSummary", "diagnose_matrix",
     "NormalizationRecommendation", "PreprocessingWorkflow", "recommend_preprocessing",
     "normalization_catalog", "apply_step", "run_preprocessing", "available_methods",
+    "qc_plot_catalog", "qc_plot_inputs", "before_after_report",
     "normalization", "preprocessing", "transformations",
 ]
