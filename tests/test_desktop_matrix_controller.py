@@ -70,6 +70,24 @@ def test_differential_summary_and_build_volcano(ctrl, data, spec, meta):
     assert pi.plot_type == "volcano_plot"
 
 
+def test_style_overrides_apply_to_matrix_plot(ctrl, data, spec, meta):
+    recs = ctrl.matrix_recommendations(data, spec, meta, has_differential=False)
+    rec = next(r for r in recs if r.key == "heatmap_zscore")
+    overrides = {"palette_name": "grayscale", "font_family": "DejaVu Sans",
+                 "axis_font_pt": 15.0, "tick_label_pt": 13.0, "marker_size": 60.0}
+    spec_dict, result, pi = ctrl.matrix_build_plot(
+        data, rec, spec, metadata=meta, params={"top_n": 20}, style_overrides=overrides)
+    # overrides are recorded in the spec (reproducible sidecar) ...
+    assert spec_dict["style"]["palette_name"] == "grayscale"
+    assert spec_dict["style"]["font_family"] == "DejaVu Sans"
+    # ... and actually take effect: grayscale drives the heatmap colormap.
+    from make_my_figure_core.styles.engine import load_profile
+    resolved = load_profile("publication").with_overrides(spec_dict["style"])
+    assert resolved.diverging_cmap == "gray"
+    assert resolved.axis_font_pt == 15.0
+    assert result.figure is not None
+
+
 def test_build_matrix_plots_render(ctrl, data, spec, meta):
     recs = ctrl.matrix_recommendations(data, spec, meta, has_differential=False)
     for key in ("heatmap", "pca", "box_by_group"):

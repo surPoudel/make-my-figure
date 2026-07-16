@@ -16,8 +16,10 @@ from typing import Any, Dict, List, Optional
 from PySide6.QtCore import QThread, Qt, Signal
 from PySide6.QtGui import QPixmap
 from PySide6.QtWidgets import (
+    QCheckBox,
     QComboBox,
     QDialog,
+    QDoubleSpinBox,
     QFileDialog,
     QFormLayout,
     QGroupBox,
@@ -318,6 +320,10 @@ class MatrixWizardDialog(QDialog):
         dl.addRow(self.diff_status)
         v.addWidget(diff_box)
 
+        # style controls (Publication) — same knobs as the main workbench, applied
+        # to every plot generated here.
+        v.addWidget(self._build_style_group())
+
         # recommendations
         rec_box = QGroupBox("Recommended plots")
         rl = QVBoxLayout(rec_box)
@@ -451,6 +457,45 @@ class MatrixWizardDialog(QDialog):
         self.diff_btn.setEnabled(True); self.diff_cancel.setEnabled(False)
         self.diff_status.setText("Cancelled.")
 
+    def _build_style_group(self) -> QGroupBox:
+        """Compact Publication style controls applied to every generated plot."""
+        box = QGroupBox("Style (Publication)")
+        form = QFormLayout(box)
+        self.pal_combo = QComboBox()
+        self.pal_combo.addItems(["publication", "colorblind_safe", "high_contrast", "grayscale"])
+        self.font_combo = QComboBox()
+        self.font_combo.addItems(["Arial", "Helvetica", "Liberation Sans", "DejaVu Sans",
+                                  "Times New Roman"])
+        self.axis_pt = QSpinBox(); self.axis_pt.setRange(6, 28); self.axis_pt.setValue(12)
+        self.tick_pt = QSpinBox(); self.tick_pt.setRange(6, 24); self.tick_pt.setValue(10)
+        self.legend_pt = QSpinBox(); self.legend_pt.setRange(5, 22); self.legend_pt.setValue(10)
+        self.marker_sz = QSpinBox(); self.marker_sz.setRange(4, 200); self.marker_sz.setValue(45)
+        self.line_w = QDoubleSpinBox(); self.line_w.setRange(0.2, 6.0); self.line_w.setSingleStep(0.2)
+        self.line_w.setValue(1.8)
+        self.legend_outside = QCheckBox("Legend outside")
+        form.addRow("Palette", self.pal_combo)
+        form.addRow("Font", self.font_combo)
+        form.addRow("Axis label pt", self.axis_pt)
+        form.addRow("Tick label pt", self.tick_pt)
+        form.addRow("Legend pt", self.legend_pt)
+        form.addRow("Marker size", self.marker_sz)
+        form.addRow("Line width", self.line_w)
+        form.addRow(self.legend_outside)
+        return box
+
+    def _style_overrides(self) -> dict:
+        """Collect the Style controls into a spec['style'] override dict."""
+        return {
+            "palette_name": self.pal_combo.currentText(),
+            "font_family": self.font_combo.currentText(),
+            "axis_font_pt": float(self.axis_pt.value()),
+            "tick_label_pt": float(self.tick_pt.value()),
+            "legend_pt": float(self.legend_pt.value()),
+            "marker_size": float(self.marker_sz.value()),
+            "line_width_pt": float(self.line_w.value()),
+            "legend_outside": bool(self.legend_outside.isChecked()),
+        }
+
     def _generate(self):
         rec = self.rec_combo.currentData()
         if rec is None:
@@ -462,7 +507,8 @@ class MatrixWizardDialog(QDialog):
         try:
             spec, result, pi = self.controller.matrix_build_plot(
                 self.data, rec, self.matrix_spec, metadata=self.metadata,
-                differential_table=self.diff_table, selected_features=selected, params=params)
+                differential_table=self.diff_table, selected_features=selected, params=params,
+                style_overrides=self._style_overrides())
         except Exception as exc:  # noqa: BLE001
             QMessageBox.warning(self, "Could not generate", str(exc))
             return

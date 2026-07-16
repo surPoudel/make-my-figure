@@ -247,6 +247,27 @@ def _differential_summary_section(df: pd.DataFrame, spec: mw.MatrixSpec, meta) -
                                file_name="differential_summary.csv", mime="text/csv")
 
 
+def _style_controls() -> Dict[str, Any]:
+    """Compact Publication style controls; returns a spec['style'] override dict."""
+    with st.expander("🎨 Style (Publication)"):
+        c1, c2 = st.columns(2)
+        palette = c1.selectbox("Palette",
+                               ["publication", "colorblind_safe", "high_contrast", "grayscale"],
+                               key="mw_style_pal")
+        font = c2.selectbox("Font", ["Arial", "Helvetica", "Liberation Sans", "DejaVu Sans",
+                                     "Times New Roman"], key="mw_style_font")
+        axis_pt = c1.number_input("Axis label pt", 6, 28, 12, key="mw_style_axis")
+        tick_pt = c2.number_input("Tick label pt", 6, 24, 10, key="mw_style_tick")
+        legend_pt = c1.number_input("Legend pt", 5, 22, 10, key="mw_style_legend")
+        marker = c2.number_input("Marker size", 4, 200, 45, key="mw_style_marker")
+        line_w = c1.number_input("Line width", 0.2, 6.0, 1.8, step=0.2, key="mw_style_line")
+        legend_out = c2.checkbox("Legend outside", key="mw_style_legout")
+    return {"palette_name": palette, "font_family": font, "axis_font_pt": float(axis_pt),
+            "tick_label_pt": float(tick_pt), "legend_pt": float(legend_pt),
+            "marker_size": float(marker), "line_width_pt": float(line_w),
+            "legend_outside": bool(legend_out)}
+
+
 def _generate_section(df: pd.DataFrame, spec: mw.MatrixSpec, meta, rec) -> None:
     from make_my_figure_core.matrix_workflow.plot_builder import build_plot_inputs
 
@@ -271,6 +292,7 @@ def _generate_section(df: pd.DataFrame, spec: mw.MatrixSpec, meta, rec) -> None:
     ps = make_spec(pi.plot_type, spec.source_file or "matrix", "publication", mapping=pi.mapping)
     for _k, _v in (pi.spec_extra or {}).items():   # e.g. column_annotations (group strip)
         ps[_k] = _v
+    ps["style"] = _style_controls()   # Publication style controls (colors/fonts/sizes)
     try:
         result = render(ps, pi.dataframe, aux=pi.aux or None)
     except Exception as exc:  # noqa: BLE001

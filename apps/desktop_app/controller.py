@@ -488,11 +488,14 @@ class DesktopController:
             test=test, correction=correction)
 
     def matrix_build_plot(self, data: LoadedData, rec, matrix_spec, *, metadata=None,
-                          differential_table=None, selected_features=None, params=None):
+                          differential_table=None, selected_features=None, params=None,
+                          style_overrides=None):
         """Turn a recommendation into a rendered figure.
 
-        Returns ``(spec_dict, RenderResult, PlotInputs)``; raises ValueError/RenderError
-        on missing prerequisites or render failure."""
+        ``style_overrides`` (palette_name / font_family / *_pt / marker_size / ...) is
+        recorded under ``spec['style']`` so the matrix-workflow plot honours the same
+        Publication style controls as the main workbench. Returns ``(spec_dict,
+        RenderResult, PlotInputs)``; raises ValueError/RenderError on failure."""
         import make_my_figure_core.matrix_workflow as mw
 
         pi = mw.build_plot_inputs(rec, data.info.dataframe, matrix_spec, metadata=metadata,
@@ -502,6 +505,8 @@ class DesktopController:
                          "publication", mapping=pi.mapping)
         for k, v in (pi.spec_extra or {}).items():   # e.g. column_annotations (group strip)
             spec[k] = v
+        if style_overrides:
+            spec["style"] = dict(style_overrides)
         aux = pi.aux or None
         result = render(spec, pi.dataframe, aux=aux)
         return spec, result, pi
