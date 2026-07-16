@@ -231,9 +231,18 @@ with st.expander("🗂 Define groups (no metadata file needed)"):
         feature_col = st.selectbox("Feature id column", all_cols,
                                    index=all_cols.index(feat_default), key="grp_feat")
         sample_cols = [c for c in all_cols if c != feature_col]
-        guess = _guess_groups(sample_cols)
+        # Separate per-sample VALUE columns from numeric annotation columns (e.g.
+        # annotationLevel coded 1/2/3): only value columns are pre-assigned a group;
+        # annotation columns start blank so they are not treated as measurements.
+        from make_my_figure_core.grouping import value_matrix_columns as _value_cols
+        value_cols, annot_cols = _value_cols(table_info.dataframe, feature_col)
+        value_set = {str(c) for c in value_cols}
+        guess = _guess_groups([c for c in sample_cols if str(c) in value_set])
         assign_df = pd.DataFrame({"sample": sample_cols,
-                                  "group": [guess.get(s, "Group1") for s in sample_cols]})
+                                  "group": [guess.get(s, "") for s in sample_cols]})
+        if annot_cols:
+            st.caption("Numeric column(s) detected as annotations (left blank — assign a "
+                       f"group only if they really are samples): {', '.join(map(str, annot_cols))}")
         edited_assign = st.data_editor(assign_df, key="grp_assign", use_container_width=True,
                                        hide_index=True)
         feat_values = table_info.dataframe[feature_col].astype(str).tolist()
@@ -371,6 +380,31 @@ def _column_select(label: str, key: str, default):
 
 for field in COLUMN_FIELDS.get(plot_type, []):
     mapping[field] = _column_select(field, field, mapping.get(field))
+
+# Matrix plots: let the user pick the VALUE (measurement) columns explicitly.
+# Populate every non-id column and default the selection to the auto-detected
+# value columns, so numeric annotation columns (e.g. annotationLevel) are left out
+# unless the user opts them in. Nothing is silently assumed — the selection here
+# is what gets plotted.
+_MATRIX_PLOT_TYPES = {"heatmap_clustered_matrix", "pca_scatter_from_matrix",
+                      "hierarchical_clustering", "hierarchical_dendrogram"}
+if plot_type in _MATRIX_PLOT_TYPES:
+    _id_field = "matrix_row_id" if plot_type == "pca_scatter_from_matrix" else "row_id"
+    _id_col = mapping.get(_id_field)
+    _all = [c for c in table_info.columns if c != _id_col]
+    try:
+        from make_my_figure_core.grouping import value_matrix_columns as _vmc
+        _val, _ann = _vmc(table_info.dataframe, _id_col)
+    except Exception:
+        _val, _ann = _all, []
+    _sel = st.sidebar.multiselect(
+        "Value columns (measurements)", _all,
+        default=[c for c in _all if c in set(map(str, _val)) or c in _val],
+        key=f"valcols_{plot_type}",
+        help="Numeric sample columns to plot. Annotation columns (e.g. annotationLevel) "
+             "are left out by default; add them only if they are real measurements.")
+    if _sel:
+        mapping["value_columns"] = _sel
 
 # Plot-type-specific options.
 if plot_type in ("barplot_with_error_bar", "grouped_barplot_with_error_bar"):

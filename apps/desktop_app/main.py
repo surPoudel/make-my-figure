@@ -41,6 +41,8 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QListWidget,
+    QListWidgetItem,
     QMainWindow,
     QMessageBox,
     QPushButton,
@@ -59,6 +61,15 @@ from PySide6.QtWidgets import (
 
 from apps.desktop_app import help_content
 from apps.desktop_app.controller import DesktopController, LoadedData
+
+# Plot types that consume a features x samples matrix: the user picks which columns
+# are the value (measurement) columns; numeric annotation columns are left out.
+_MATRIX_PLOT_TYPES = {
+    "heatmap_clustered_matrix",
+    "pca_scatter_from_matrix",
+    "hierarchical_clustering",
+    "hierarchical_dendrogram",
+}
 from make_my_figure_core.io.loaders import LoaderError
 from make_my_figure_core.plots.base import RenderError
 from make_my_figure_core.plots.registry import display_name
@@ -1244,9 +1255,13 @@ class MainWindow(QMainWindow):
             return
         from apps.desktop_app.grouping_panel import GroupingDialog
 
-        dlg = GroupingDialog(self.controller, self.data, self)
+        dlg = GroupingDialog(self.controller, self.data, self,
+                             initial_state=getattr(self, "_grouping_state", None))
         dlg.grouped.connect(self._adopt_grouped_data)
         dlg.exec()
+        # Remember the assignment so reopening the dialog restores prior groups.
+        if getattr(dlg, "result_state", None):
+            self._grouping_state = dlg.result_state
         # A wide (heatmap/PCA) grouping carries a group color-strip spec; apply it
         # to the heatmap and re-render so the groups are visible.
         ann = getattr(dlg, "column_annotations", None)
@@ -1437,6 +1452,33 @@ class MainWindow(QMainWindow):
             label = field
             self.mapping_form.addRow(label, combo)
             self._mapping_widgets[field] = combo
+        # Matrix plots: let the user choose which columns are the VALUE (measurement)
+        # columns. Populate every non-id column and pre-select the auto-detected
+        # value columns, so numeric annotation columns (e.g. annotationLevel coded
+        # 1/2/3) are left out unless the user opts them in.
+        self._value_cols_widget = None
+        if pt in _MATRIX_PLOT_TYPES and self.data is not None:
+            id_field = "matrix_row_id" if pt == "pca_scatter_from_matrix" else "row_id"
+            id_col = self._mapping_widgets.get(id_field)
+            id_name = id_col.currentText() if id_col else None
+            cols = [c for c in self.data.info.columns if c != id_name]
+            try:
+                from make_my_figure_core.grouping import value_matrix_columns
+                value_cols, _annot = value_matrix_columns(self.data.info.dataframe, id_name)
+            except Exception:
+                value_cols = cols
+            lw = QListWidget()
+            lw.setSelectionMode(QListWidget.ExtendedSelection)
+            lw.setMaximumHeight(150)
+            value_set = set(map(str, value_cols))
+            for c in cols:
+                it = QListWidgetItem(str(c))
+                lw.addItem(it)
+                it.setSelected(str(c) in value_set)
+            lw.itemSelectionChanged.connect(self.render_preview)
+            self.mapping_form.addRow("Value columns", lw)
+            self._value_cols_widget = lw
+
         # PCA metadata-based fields (color/shape)
         if self.controller.needs_metadata(pt):
             meta_opts = self._metadata_options()
@@ -1507,6 +1549,12 @@ class MainWindow(QMainWindow):
         for key, combo in self._mapping_widgets.items():
             val = combo.currentText()
             mapping[key] = None if val == "(none)" else val
+        # Explicit value-column selection for matrix plots (heatmap/PCA/clustering).
+        lw = getattr(self, "_value_cols_widget", None)
+        if lw is not None:
+            chosen = [i.text() for i in lw.selectedItems()]
+            if chosen:
+                mapping["value_columns"] = chosen
         for key, w in self._option_widgets.items():
             if isinstance(w, QCheckBox):
                 mapping[key] = w.isChecked()

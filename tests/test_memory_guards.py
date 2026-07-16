@@ -82,7 +82,39 @@ def test_heatmap_drops_annotation_columns_and_reports_samples():
     # only the 4 real sample columns survive (geneSymbol/bioType non-numeric, annotationLevel excluded)
     assert r.metadata["matrix_shape"][1] == 4
     assert any("Ignored non-sample column" in w for w in r.warnings)
-    assert any("Using 4 sample column" in w for w in r.warnings)
+    assert any("Using 4 value column" in w for w in r.warnings)
+
+
+def test_heatmap_auto_drops_integer_annotation_column():
+    # No explicit exclude: an integer-coded low-cardinality column (annotationLevel
+    # in {1,2,3}) must be treated as an annotation, not a value/sample column.
+    df = _rsem_like(n_genes=120, n_samples=5)
+    spec = make_spec("heatmap_clustered_matrix", "m.tsv", "publication")
+    spec["mapping"] = dict(spec["mapping"], row_id="geneID")
+    r = render(spec, df)
+    assert r.metadata["matrix_shape"][1] == 5  # only the 5 real samples
+    assert any("annotationLevel" in w and "annotation" in w for w in r.warnings)
+
+
+def test_heatmap_explicit_value_columns_selection():
+    # An explicit value-column selection wins over auto-detection.
+    df = _rsem_like(n_genes=120, n_samples=5)
+    spec = make_spec("heatmap_clustered_matrix", "m.tsv", "publication")
+    spec["mapping"] = dict(spec["mapping"], row_id="geneID",
+                           value_columns=["S1", "S2", "S3"])
+    r = render(spec, df)
+    assert r.metadata["matrix_shape"][1] == 3
+    assert any("selected value column" in w for w in r.warnings)
+
+
+def test_clustering_and_dendrogram_drop_integer_annotation_column():
+    df = _rsem_like(n_genes=120, n_samples=5)
+    for pt, extra in (("hierarchical_clustering", {}),
+                      ("hierarchical_dendrogram", {"cluster": "columns"})):
+        spec = make_spec(pt, "m.tsv", "publication")
+        spec["mapping"] = dict(spec["mapping"], row_id="geneID", **extra)
+        r = render(spec, df)
+        assert any("annotationLevel" in w and "annotation" in w for w in r.warnings), pt
 
 
 def test_heatmap_highlight_row_survives_the_cap():

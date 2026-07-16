@@ -81,6 +81,20 @@ def numeric_sample_columns(df: pd.DataFrame, feature_col: Optional[str] = None) 
     return out
 
 
+def value_matrix_columns(df: pd.DataFrame, feature_col: Optional[str] = None):
+    """Split numeric non-id columns into ``(value_columns, annotation_columns)``.
+
+    Value columns are per-sample measurements; integer-coded low-cardinality
+    numeric columns (e.g. annotationLevel in {1,2,3}) are annotations, not values.
+    UIs default the sample/value selection to ``value_columns`` while still listing
+    the annotation columns so the user can override. Never mutates ``df``.
+    """
+    from make_my_figure_core.plots._v04_shared import classify_matrix_columns
+
+    candidates = numeric_sample_columns(df, feature_col)
+    return classify_matrix_columns(df, candidates)
+
+
 def wide_grouped_matrix(df: pd.DataFrame, *, feature_col: str, sample_columns: List[str],
                         sample_to_group: Dict[str, str], features: Optional[List[str]] = None,
                         group_col: str = "group"):

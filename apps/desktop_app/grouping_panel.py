@@ -44,11 +44,15 @@ class GroupingDialog(QDialog):
 
     grouped = Signal(object)  # emits a controller.LoadedData
 
-    def __init__(self, controller, data, parent=None):
+    def __init__(self, controller, data, parent=None, initial_state=None):
         super().__init__(parent)
         self.controller = controller
         self.data = data
         self.column_annotations = None   # group color-strip spec for a heatmap (wide mode)
+        # Restore a prior assignment so reopening the dialog doesn't lose the user's
+        # work; populated back into `result_state` on accept for the caller to keep.
+        self._initial_state = dict(initial_state or {})
+        self.result_state = None
         self.setWindowTitle("Define groups")
         self.resize(560, 560)
 
@@ -83,6 +87,10 @@ class GroupingDialog(QDialog):
         # default the feature id to the first non-numeric (identifier-ish) column
         numeric = set(self.data.info.numeric_columns)
         default_feat = next((c for c in cols if c not in numeric), cols[0] if cols else "")
+        # Restore the feature column from a prior session when it still exists.
+        prev_feat = self._initial_state.get("feature_col")
+        if prev_feat in cols:
+            default_feat = prev_feat
         if default_feat:
             self.feature_combo.setCurrentText(default_feat)
         self.feature_combo.currentIndexChanged.connect(lambda *_: self._refresh_matrix_tab())
@@ -95,6 +103,12 @@ class GroupingDialog(QDialog):
         self.sample_table.setHorizontalHeaderLabels(["Sample column", "Group"])
         self.sample_table.horizontalHeader().setStretchLastSection(True)
         v.addWidget(self.sample_table)
+        # Note listing numeric columns detected as annotations (e.g. annotationLevel),
+        # which are left blank so they are not treated as sample measurements.
+        self.annot_note = QLabel("")
+        self.annot_note.setWordWrap(True)
+        self.annot_note.setStyleSheet("color:#345; font-size:11px;")
+        v.addWidget(self.annot_note)
 
         auto = QPushButton("Auto-guess groups from names")
         auto.clicked.connect(self._auto_guess_groups)
@@ -149,17 +163,35 @@ class GroupingDialog(QDialog):
 
     def _refresh_matrix_tab(self, guess: bool = False):
         samples = self._sample_columns()
-        # Groups start BLANK: assign only your real sample columns; anything left
-        # blank (e.g. a numeric annotation column like annotationLevel) is excluded.
-        guessed = self.controller.guess_sample_groups(samples) if guess else {}
+        feat = self.feature_combo.currentText()
+        # Classify numeric columns into per-sample VALUE columns vs categorical
+        # annotation columns (e.g. annotationLevel in {1,2,3}). Only value columns
+        # are auto-guessed / pre-filled; annotation columns stay blank.
+        try:
+            from make_my_figure_core.grouping import value_matrix_columns
+            value_cols, annot_cols = value_matrix_columns(self.data.info.dataframe, feat)
+        except Exception:
+            value_cols, annot_cols = samples, []
+        value_set = {str(c) for c in value_cols}
+        prev = {str(k): str(v) for k, v in (self._initial_state.get("assignment") or {}).items()}
+        guessed = (self.controller.guess_sample_groups([s for s in samples if str(s) in value_set])
+                   if guess else {})
         self.sample_table.blockSignals(True)
         self.sample_table.setRowCount(len(samples))
         for r, s in enumerate(samples):
             name_item = QTableWidgetItem(str(s))
             name_item.setFlags(name_item.flags() & ~Qt.ItemIsEditable)
             self.sample_table.setItem(r, 0, name_item)
-            self.sample_table.setItem(r, 1, QTableWidgetItem(str(guessed.get(s, ""))))
+            # Priority: fresh guess (if requested) > restored prior assignment > blank.
+            grp = guessed.get(s) if guess else None
+            if grp is None:
+                grp = prev.get(str(s), "")
+            self.sample_table.setItem(r, 1, QTableWidgetItem(str(grp)))
         self.sample_table.blockSignals(False)
+        if hasattr(self, "annot_note"):
+            self.annot_note.setText(
+                ("Numeric column(s) treated as annotations (left blank): "
+                 + ", ".join(map(str, annot_cols))) if annot_cols else "")
 
         # feature list from the chosen id column's values
         self.feature_list.clear()
@@ -244,6 +276,11 @@ class GroupingDialog(QDialog):
         try:
             if self.tabs.currentIndex() == 0:
                 s2g = self._matrix_assignment()
+                # Remember the assignment so reopening the dialog restores it.
+                self.result_state = {
+                    "feature_col": self.feature_combo.currentText(),
+                    "assignment": {k: v for k, v in s2g.items() if v},
+                }
                 if not any(v for v in s2g.values()):
                     raise ValueError("Assign at least one sample to a group.")
                 if len({v for v in s2g.values() if v}) < 2:
