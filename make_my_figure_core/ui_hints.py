@@ -75,6 +75,14 @@ _ERROR_CHOICES = ["sem", "sd", "ci95", "none"]
 _X_TICK_ROTATION = Option("x_tick_rotation", "X-axis label angle", "choice", "auto",
                           ["auto", "horizontal", "45", "vertical"])
 
+# Curated publication-grade colormaps for heatmaps/clustering. "auto" follows the
+# palette + scale (diverging RdBu_r for z-scores, viridis for unscaled). All are
+# colourblind-aware except the classic reds/greens which are intentionally omitted.
+_HEATMAP_COLORMAP = Option(
+    "colormap", "Colormap", "choice", "auto",
+    ["auto", "RdBu_r", "coolwarm", "seismic", "RdYlBu_r", "PuOr", "BrBG",
+     "viridis", "magma", "cividis", "Blues", "YlOrRd", "Greys"])
+
 # Extra (non-column) options per plot type.
 OPTIONS: Dict[str, List[Option]] = {
     "barplot_with_error_bar": [Option("error", "Error bar", "choice", "sem", _ERROR_CHOICES),
@@ -85,6 +93,7 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("cluster_rows", "Cluster rows", "bool", True),
         Option("cluster_columns", "Cluster columns", "bool", True),
         Option("color_scale", "Color scale", "choice", "diverging", ["diverging", "sequential"]),
+        _HEATMAP_COLORMAP,
         # v0.5 clustering + highlighting
         Option("scale", "Scale", "choice", "none",
                ["none", "row_zscore", "column_zscore", "center_rows", "log", "log_zscore"]),
@@ -96,6 +105,15 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("cluster_k_columns", "Column clusters (k, 0=off)", "number", 0, minimum=0, maximum=20, step=1, decimals=0),
         Option("sort_by_cluster", "Sort by cluster", "bool", False),
         Option("group_separators", "Group separator lines", "bool", True),
+        # Catchy cell grid + group-separator styling (all user-controllable).
+        Option("cell_border_color", "Cell grid color", "choice", "white",
+               ["white", "black", "#888888", "none"]),
+        Option("cell_border_width", "Cell grid width (0 = off)", "number", 0.6,
+               minimum=0.0, maximum=3.0, step=0.2, decimals=1),
+        Option("group_separator_color", "Group separator color", "choice", "#222222",
+               ["#222222", "black", "white", "#B2182B"]),
+        Option("group_separator_width", "Group separator width", "number", 1.6,
+               minimum=0.0, maximum=6.0, step=0.5, decimals=1),
         Option("max_features", "Max features (rows) for clustering", "number", 2000, minimum=50, maximum=50000, step=100, decimals=0),
     ],
     "volcano_plot": [
@@ -192,6 +210,7 @@ OPTIONS: Dict[str, List[Option]] = {
                ["euclidean", "correlation", "cosine", "cityblock"]),
         Option("linkage_method", "Linkage", "choice", "average",
                ["average", "complete", "single", "ward"]),
+        _HEATMAP_COLORMAP,
         Option("max_features", "Max features (rows) for clustering", "number", 2000, minimum=50, maximum=50000, step=100, decimals=0),
     ],
     "network_graph": [

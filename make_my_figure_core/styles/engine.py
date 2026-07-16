@@ -80,6 +80,18 @@ NAMED_PALETTES: Dict[str, List[str]] = {
 # Palettes shown in the UI palette chooser (no journal names).
 USER_PALETTES: List[str] = ["publication", "colorblind_safe", "high_contrast", "grayscale"]
 
+# Palettes also drive the continuous heatmap/colormap so the WHOLE figure (not just
+# categorical colours) follows the chosen palette. All picks are colourblind-aware.
+#   publication      -> profile defaults (viridis / RdBu_r)
+#   colorblind_safe  -> viridis + PuOr  (both colourblind-safe)
+#   high_contrast    -> inferno + seismic (punchy dynamic range / saturated diverging)
+#   grayscale        -> Greys + gray  (fully monochrome)
+_PALETTE_CMAPS: Dict[str, Dict[str, str]] = {
+    "colorblind_safe": {"sequential_cmap": "viridis", "diverging_cmap": "PuOr"},
+    "high_contrast": {"sequential_cmap": "inferno", "diverging_cmap": "seismic"},
+    "grayscale": {"sequential_cmap": "Greys", "diverging_cmap": "gray"},
+}
+
 # Figure width presets (mm). "default" is a comfortable medium size so the very
 # first plot reads well on screen and in slides without any tweaking.
 WIDTH_PRESETS_MM = {"single": 110.0, "onehalf": 140.0, "double": 180.0, "default": 130.0}
@@ -230,6 +242,12 @@ class StyleProfile:
         if pal and pal in NAMED_PALETTES:
             clone.palette = list(NAMED_PALETTES[pal])
             clone.palette_role = pal
+            # Palettes like grayscale also drive the heatmap colormaps (an explicit
+            # sequential_cmap/diverging_cmap override in the loop below still wins).
+            cmaps = _PALETTE_CMAPS.get(pal)
+            if cmaps:
+                clone.sequential_cmap = cmaps["sequential_cmap"]
+                clone.diverging_cmap = cmaps["diverging_cmap"]
         for key, val in overrides.items():
             if key in ("palette_name",):
                 continue

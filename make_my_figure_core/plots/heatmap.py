@@ -166,6 +166,11 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     group_separators = get_mapping(spec, "group_separators", None)
     column_groups = get_mapping(spec, "column_groups", None)
     cell_borders = get_mapping(spec, "cell_borders", None)   # None = auto (small matrices)
+    # User-controllable cell grid + group-separator styling (catchy publication look).
+    cell_border_color = str(get_mapping(spec, "cell_border_color", "white"))
+    cell_border_width = float(get_mapping(spec, "cell_border_width", 0.6))
+    group_sep_color = str(get_mapping(spec, "group_separator_color", "#222222"))
+    group_sep_width = float(get_mapping(spec, "group_separator_width", 1.6))
 
     work = df.copy()
     row_labels = work[row_id].astype(str).tolist()
@@ -318,6 +323,11 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         else:
             vmin, vmax = 0.0, 1.0
 
+    # Explicit publication colormap override (wins over the palette/scale default).
+    _explicit_cmap = get_mapping(spec, "colormap", None)
+    if _explicit_cmap and str(_explicit_cmap).lower() not in ("", "auto"):
+        cmap = str(_explicit_cmap)
+
     def _label_fs(n: int) -> float:
         if n <= 15:
             return style.tick_label_pt
@@ -364,14 +374,14 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                        interpolation="nearest")
         # Thin cell separators (auto for small matrices; a clean publication touch).
         show_cells = cell_borders if cell_borders is not None else (n_r <= 40 and n_c <= 40)
-        if show_cells:
+        if show_cells and cell_border_width > 0:
             ax.set_xticks(np.arange(-0.5, n_c, 1), minor=True)
             ax.set_yticks(np.arange(-0.5, n_r, 1), minor=True)
-            ax.grid(which="minor", color="white", linewidth=0.6)
+            ax.grid(which="minor", color=cell_border_color, linewidth=cell_border_width)
             ax.tick_params(which="minor", length=0)
-        # Vertical separators between sample groups.
+        # Bolder vertical separators between sample groups (controllable colour/width).
         for b in col_group_boundaries:
-            ax.axvline(b - 0.5, color="#222222", linewidth=1.6)
+            ax.axvline(b - 0.5, color=group_sep_color, linewidth=group_sep_width)
         # Cluster color strips (drawn first so their divider axes sit outside).
         if row_color_map is not None:
             _draw_cluster_strip(ax, "left", row_cluster_ids[row_order], row_color_map,

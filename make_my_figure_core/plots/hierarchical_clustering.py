@@ -31,7 +31,7 @@ from make_my_figure_core.styles.engine import StyleProfile
 PLOT_TYPE = "hierarchical_clustering"
 
 
-def _draw_cluster_strip(ax, side: str, codes: np.ndarray, colors: List[str], style) -> None:
+def _draw_cluster_strip(ax, side: str, codes: np.ndarray, colors: List[str], style):
     from matplotlib.colors import ListedColormap
     from mpl_toolkits.axes_grid1 import make_axes_locatable
 
@@ -41,17 +41,17 @@ def _draw_cluster_strip(ax, side: str, codes: np.ndarray, colors: List[str], sty
         cax = divider.append_axes("left", size="4.5%", pad=0.06)
         cax.imshow(codes.reshape(-1, 1), aspect="auto", cmap=cmap, interpolation="nearest",
                    vmin=0, vmax=max(1, len(colors) - 1))
-        cax.set_xlabel("Cluster", fontsize=max(7.5, style.tick_label_pt - 1))
     else:
         cax = divider.append_axes("top", size="4.5%", pad=0.06)
         cax.imshow(codes.reshape(1, -1), aspect="auto", cmap=cmap, interpolation="nearest",
                    vmin=0, vmax=max(1, len(colors) - 1))
-        cax.set_ylabel("Cluster", rotation=0, ha="right", va="center",
-                       fontsize=max(7.5, style.tick_label_pt - 1))
+    # No axis label on the strip — it collided with the main x/y label; the legend
+    # ("k clusters") identifies the colours instead.
     cax.set_xticks([]); cax.set_yticks([])
     cax._colorbar = True
     for spine in cax.spines.values():
         spine.set_visible(False)
+    return cax
 
 
 def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
@@ -128,6 +128,9 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     vmax = np.nanmax(np.abs(matrix)) if np.isfinite(matrix).any() else 1.0
     diverging = scale in ("row_zscore", "column_zscore", "center_rows")
     cmap = style.diverging_cmap if diverging else style.sequential_cmap
+    _explicit_cmap = get_mapping(spec, "colormap", None)
+    if _explicit_cmap and str(_explicit_cmap).lower() not in ("", "auto"):
+        cmap = str(_explicit_cmap)   # explicit publication colormap override
     if diverging:
         vmin, vmax = -vmax, vmax
     else:
@@ -150,24 +153,35 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         fig, ax = plt.subplots(figsize=(w_in, h_in))
         im = ax.imshow(ordered, aspect="auto", cmap=cmap, vmin=vmin, vmax=vmax,
                        interpolation="nearest")
-        _draw_cluster_strip(ax, "left" if axis == "rows" else "top", codes, colors, style)
+        strip_ax = _draw_cluster_strip(ax, "left" if axis == "rows" else "top",
+                                       codes, colors, style)
 
         row_fs = style.tick_label_pt if n_r <= 25 else (0.0 if n_r > 60 else max(6.0, style.tick_label_pt - 3))
         col_fs = style.tick_label_pt if n_c <= 25 else (0.0 if n_c > 60 else max(6.0, style.tick_label_pt - 3))
+        # With a LEFT cluster strip (row clustering), put the row labels + y-label on
+        # the RIGHT so the strip on the left is never overlapped/buried (seaborn-style).
+        labels_right = (axis == "rows")
         if row_fs > 0:
             ax.set_yticks(range(n_r)); ax.set_yticklabels(ordered_rows, fontsize=row_fs)
         else:
             ax.set_yticks([])
+        if labels_right:
+            ax.yaxis.tick_right()
         if col_fs > 0:
             ax.set_xticks(range(n_c)); ax.set_xticklabels(ordered_cols, rotation=90, fontsize=col_fs)
         else:
             ax.set_xticks([])
         ax.set_xlabel((spec.get("layout") or {}).get("x_label", "Sample"))
-        ax.set_ylabel((spec.get("layout") or {}).get("y_label", str(row_id or df.columns[0])))
+        y_label = (spec.get("layout") or {}).get("y_label", str(row_id or df.columns[0]))
+        if labels_right:
+            ax.yaxis.set_label_position("right")
+        ax.set_ylabel(y_label)
         title = (spec.get("layout") or {}).get("title")
         if title:
             fig.suptitle(title, fontsize=style.title_font_pt, fontweight="bold")
-        cbar = fig.colorbar(im, ax=ax, fraction=0.045, pad=0.03)
+        # More gap when row labels sit on the right, so the colorbar clears them.
+        cbar_pad = (0.16 if row_fs > 0 else 0.06) if labels_right else 0.03
+        cbar = fig.colorbar(im, ax=ax, fraction=0.045, pad=cbar_pad)
         cbar.set_label((spec.get("layout") or {}).get("colorbar_label",
                        "z-score" if diverging else "value"), fontsize=style.axis_font_pt)
         cbar.ax.tick_params(labelsize=style.tick_label_pt)
@@ -175,9 +189,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         from matplotlib.patches import Patch
 
         handles = [Patch(facecolor=color_map[lab], label=lab) for lab in ordered_labels]
-        ax.legend(handles=handles, title=f"{k} clusters", loc="upper left",
-                  bbox_to_anchor=(1.16, 1.0), frameon=False,
-                  fontsize=max(7.5, style.legend_pt - 1), title_fontsize=max(8.0, style.legend_pt))
+        # Legend ABOVE the heatmap (inside the figure) so it is never clipped on
+        # screen — a legend anchored outside the axes only shows up on tight-bbox
+        # export, not in the live preview.
+        ax.legend(handles=handles, title=f"{k} clusters", loc="lower left",
+                  bbox_to_anchor=(0.0, 1.02), frameon=False, ncol=min(len(ordered_labels), 4),
+                  fontsize=max(7.5, style.legend_pt - 1), title_fontsize=max(8.0, style.legend_pt),
+                  columnspacing=1.2, handlelength=1.2, borderpad=0.2)
         for spine in ax.spines.values():
             spine.set_visible(False)
         fig.tight_layout()
