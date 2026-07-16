@@ -7,6 +7,7 @@ from typing import Any, Dict, List
 import matplotlib.pyplot as plt
 
 from make_my_figure_core.plots.base import (
+    autorotate_xticklabels,
     RenderResult,
     base_metadata,
     coerce_numeric,
@@ -63,6 +64,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         )
         ax.set_xticks(list(positions))
         ax.set_xticklabels([str(c) for c in categories])
+        autorotate_xticklabels(ax, style, rotation=get_mapping(spec, "x_tick_rotation", "auto"))
         ax.set_xlabel(spec.get("layout", {}).get("x_label", x))
         ylab = spec.get("layout", {}).get("y_label", y)
         if error_method.lower() != "none":

@@ -15,6 +15,7 @@ import numpy as np
 
 from make_my_figure_core.plots._v04_shared import jitter, ordered_unique
 from make_my_figure_core.plots.base import (
+    autorotate_xticklabels,
     RenderResult,
     base_metadata,
     coerce_numeric,
@@ -83,6 +84,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
         ax.set_xticks(range(len(groups)))
         ax.set_xticklabels([str(g) for g in groups])
+        autorotate_xticklabels(ax, style, rotation=get_mapping(spec, "x_tick_rotation", "auto"))
         ax.set_xlim(-0.6, len(groups) - 0.15)
         ax.set_xlabel(spec.get("layout", {}).get("x_label", str(x)))
         ax.set_ylabel(spec.get("layout", {}).get("y_label", str(y)))

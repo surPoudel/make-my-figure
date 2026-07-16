@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from make_my_figure_core.plots.base import (
+    autorotate_xticklabels,
     RenderResult,
     base_metadata,
     coerce_numeric,
@@ -58,7 +59,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             bottom += vals
 
         ax.set_xticks(positions)
-        ax.set_xticklabels(samples, rotation=90)
+        ax.set_xticklabels(samples)
+        autorotate_xticklabels(ax, style, rotation=get_mapping(spec, "x_tick_rotation", "auto"))
         if len(samples) > 30:
             ax.tick_params(axis="x", labelsize=style.axis_font_pt - 2)
         ax.set_xlabel(spec.get("layout", {}).get("x_label", x))

@@ -9,6 +9,7 @@ import numpy as np
 
 from make_my_figure_core.plots.base import (
     RenderResult,
+    autorotate_xticklabels,
     base_metadata,
     coerce_numeric,
     figure_size,
@@ -76,6 +77,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
         ax.set_xticks(positions)
         ax.set_xticklabels([str(g) for g in groups])
+        autorotate_xticklabels(ax, style, rotation=get_mapping(spec, "x_tick_rotation", "auto"))
         ax.set_xlabel(spec.get("layout", {}).get("x_label", x))
         ax.set_ylabel(spec.get("layout", {}).get("y_label", y))
         title = spec.get("layout", {}).get("title")

@@ -129,6 +129,64 @@ def style_axes(ax, style: "StyleProfile | None" = None) -> None:
                 ax.spines[spine].set_visible(False)
 
 
+def autorotate_xticklabels(ax, style: "StyleProfile | None" = None, *,
+                           rotation: "str | int" = "auto") -> None:
+    """Keep categorical x tick labels readable — rotate + size them sensibly.
+
+    This makes the *default* plot readable without the user touching options: long
+    or numerous category labels (e.g. sample names) overlap when drawn horizontally,
+    so we rotate them and shrink the font as the category count grows.
+
+    ``rotation``:
+      * ``"auto"`` (default) — choose 0 / 45 / 90 from label count + length;
+      * ``"horizontal"``/``0``, ``45``, ``"vertical"``/``90`` — force that angle.
+
+    No-op when there are no text tick labels. Call it AFTER setting the tick labels
+    and BEFORE ``fig.tight_layout()`` so the layout reserves room for the labels.
+    """
+    ticklabels = ax.get_xticklabels()
+    texts = [t.get_text() for t in ticklabels]
+    texts = [t for t in texts if t != ""]
+    if not texts:
+        return
+    n = len(texts)
+    maxlen = max(len(t) for t in texts)
+
+    if rotation in ("auto", None):
+        if n <= 6 and maxlen <= 6:
+            angle = 0
+        elif n <= 16 and maxlen <= 12:
+            angle = 45
+        else:
+            angle = 90
+    else:
+        mapping = {"horizontal": 0, "vertical": 90, "none": 0}
+        try:
+            angle = int(mapping.get(str(rotation).lower(), rotation))
+        except (TypeError, ValueError):
+            angle = 0
+    ha = "right" if 0 < angle < 90 else "center"
+
+    # Rotation (not font shrinking) is what prevents overlap, so keep the font at
+    # or above the publication-readable floor (8pt) even for many categories — only
+    # trim slightly when very dense.
+    base_fs = getattr(style, "tick_label_pt", 10.0) if style is not None else 10.0
+    _FLOOR = 8.0
+    if n > 24:
+        fs = max(_FLOOR, base_fs - 2)
+    elif n > 14:
+        fs = max(_FLOOR, base_fs - 1)
+    else:
+        fs = base_fs
+
+    for t in ticklabels:
+        t.set_rotation(angle)
+        t.set_horizontalalignment(ha)
+        t.set_fontsize(fs)
+        if angle:
+            t.set_rotation_mode("anchor")
+
+
 def place_legend(ax, style, *, title=None, handles=None, labels=None,
                  force_outside: bool = False, loc: str = None):
     """Place a legend without overlapping data.
