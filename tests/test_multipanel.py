@@ -60,6 +60,25 @@ def test_build_and_export(tmp_path):
     plt.close(fig)
 
 
+def test_export_passes_dpi_to_all_formats(tmp_path):
+    # Regression: the PDF/SVG panels used to embed at matplotlib's default 100 dpi
+    # (blurry) because dpi was only passed for png/tiff. Every format must get it.
+    mpf = _build_mpf()
+    fig = build_figure(mpf)
+    seen = {}
+    orig = fig.savefig
+
+    def spy(out, **kw):
+        fmt = kw.get("format") or str(out).rsplit(".", 1)[-1]
+        seen[fmt] = kw.get("dpi")
+        return orig(out, **kw)
+
+    fig.savefig = spy  # type: ignore[assignment]
+    export_multipanel(fig, str(tmp_path / "fig"), ["png", "svg", "pdf"], dpi=300)
+    assert seen.get("pdf") == 300 and seen.get("svg") == 300 and seen.get("png") == 300
+    plt.close(fig)
+
+
 def test_sidecar_has_panel_specs(tmp_path):
     mpf = _build_mpf()
     side = multipanel_sidecar(mpf, str(tmp_path / "figure1"))

@@ -281,9 +281,11 @@ def export_multipanel(fig: Figure, base_path: str, formats: List[str], dpi: int 
             if fmt not in valid:
                 continue
             out = f"{base_path}.{fmt}"
-            kwargs: Dict[str, Any] = {"bbox_inches": "tight", "facecolor": fig.get_facecolor()}
-            if fmt in ("png", "tiff"):
-                kwargs["dpi"] = dpi
+            # Pass dpi for EVERY format: the panels are embedded as raster images,
+            # so vector outputs (pdf/svg/eps) also need a high dpi or the panels
+            # look blurry — text stays vector via _VECTOR_TEXT_RC regardless.
+            kwargs: Dict[str, Any] = {"bbox_inches": "tight", "facecolor": fig.get_facecolor(),
+                                      "dpi": dpi}
             if fmt == "tiff":
                 kwargs["pil_kwargs"] = {"compression": "tiff_lzw"}
             fig.savefig(out, format=fmt, **kwargs)
