@@ -111,3 +111,13 @@ cannot infer on your behalf; these always require a manual edit.
 - [docs/STYLE_PROFILES.md](STYLE_PROFILES.md) — the Publication style and the older, simpler advisory check it already ran before v0.6.
 - [docs/PUBLICATION_BENCHMARKS.md](PUBLICATION_BENCHMARKS.md) — QC is the scoring mechanism used across the benchmark suite.
 - `scripts/generate_v0_6_qc_gallery.py` — regenerates a QC score for every plot type's bundled example.
+
+## Matrix-workflow gallery
+
+`scripts/generate_publication_qc_gallery.py` renders **every plot type** (from its
+bundled example) **plus the matrix-workflow plots** (heatmap, clustered z-score
+heatmap, PCA, sample-correlation heatmap, volcano from a feature-level differential
+summary, and a selected-feature violin from wide->long) with the single Publication
+style, QC-scores each, and checks PNG/SVG/PDF exports. Outputs go to
+`reports/publication_qc_gallery/` (`qc_summary.csv` + `qc_report.md` are tracked; the
+images are regenerated on demand). See [MATRIX_WORKFLOW.md](MATRIX_WORKFLOW.md).

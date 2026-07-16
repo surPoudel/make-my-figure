@@ -1,0 +1,44 @@
+name,group,status,qc_level,qc_score,warnings
+barplot_with_error_bar,example,rendered,pass,100,
+grouped_barplot_with_error_bar,example,rendered,pass,100,
+heatmap_clustered_matrix,example,rendered,pass,100,
+volcano_plot,example,rendered,pass,100,
+scatterplot_with_regression,example,rendered,warn,88,Some labels may be clipped in the fixed preview (exports use a tight bounding box)
+boxplot_or_violin_with_points,example,rendered,pass,100,
+lineplot_timecourse_with_error_band,example,rendered,warn,88,Axis label 'time_hours' may be missing units.
+ridge_or_density_plot,example,rendered,warn,88,Axis label 'pseudotime' may be missing units.
+enrichment_dotplot,example,rendered,pass,100,
+kaplan_meier_survival_curve,example,rendered,warn,88,Axis label 'time_months' may be missing units.
+stacked_bar_composition,example,rendered,pass,100,
+waterfall_plot,example,rendered,pass,100,
+pca_scatter_from_matrix,example,rendered,pass,100,
+oncoprint_mutation_heatmap,example,rendered,pass,100,
+lollipop_mutation_plot,example,rendered,warn,76,Figure is small for the content; consider a larger size | Some labels may be clipped in the fixed preview (exports use a tight bounding box)
+roc_curve,example,rendered,pass,100,
+forest_plot,example,rendered,pass,100,
+dot_strip_plot,example,rendered,pass,100,
+beeswarm_plot,example,rendered,pass,100,
+paired_slopegraph,example,rendered,pass,100,
+raincloud_plot,example,rendered,pass,100,
+hierarchical_dendrogram,example,rendered,pass,100,
+ma_plot,example,rendered,warn,88,Axis label 'Average expression' may be missing units.
+manhattan_plot,example,rendered,pass,100,
+qq_plot,example,rendered,pass,100,
+bland_altman_plot,example,rendered,pass,100,
+precision_recall_curve,example,rendered,pass,100,
+confusion_matrix,example,rendered,pass,100,
+calibration_plot,example,rendered,pass,100,
+dose_response_curve,example,rendered,pass,100,
+upset_plot,example,rendered,pass,100,
+swimmer_plot,example,rendered,warn,88,Some labels may be clipped in the fixed preview (exports use a tight bounding box)
+spider_plot,example,rendered,warn,88,Some labels may be clipped in the fixed preview (exports use a tight bounding box)
+sankey_plot,example,rendered,pass,100,
+embedding_scatter,example,rendered,pass,100,
+hierarchical_clustering,example,rendered,pass,100,
+network_graph,example,rendered,pass,100,
+mw_heatmap,matrix_workflow,rendered,pass,100,
+mw_heatmap_zscore,matrix_workflow,rendered,pass,100,
+mw_pca,matrix_workflow,rendered,pass,100,
+mw_sample_correlation,matrix_workflow,rendered,pass,100,
+mw_volcano,matrix_workflow,rendered,pass,100,
+mw_selected_violin,matrix_workflow,rendered,pass,100,

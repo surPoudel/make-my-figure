@@ -52,6 +52,32 @@ scientific figures accessible to people who would rather not write plotting code
 - Run as a **desktop app** on Windows, macOS, and Linux
 - Keep your **data local** in the desktop app (no telemetry, no cloud upload)
 
+## Matrix workflow (feature-by-sample matrices)
+
+Upload a **feature matrix** (expression / protein / metabolite / any numeric
+feature-by-sample table) and:
+
+1. **map** the feature id / annotation / value columns (suggested, then *you
+   confirm* — annotation columns like a numeric `annotationLevel` are never treated
+   as measurements);
+2. **build metadata** — upload a table or assign samples to groups in-app;
+3. get **plot recommendations** based on your confirmed mapping;
+4. apply recommended **transformations** (wide→long, z-score, top-variable, PCA,
+   clustering, correlation, group means, …);
+5. generate **publication plots** (heatmap, clustered heatmap, PCA, correlation,
+   selected-feature box/violin, volcano/MA from a feature-level differential
+   summary) and add them to the Figure Builder.
+
+The app **does not guess silently** — you confirm mappings and groups. Statistics
+are **traceable** (every drawn value comes from a stored result). There is **no
+raw-count RNA-seq pipeline and no R**; precomputed differential tables are
+supported, and normalized matrices can be analysed with generic feature-level
+statistics when you choose the method. See
+[docs/MATRIX_WORKFLOW.md](docs/MATRIX_WORKFLOW.md),
+[docs/TRANSFORMATIONS.md](docs/TRANSFORMATIONS.md),
+[docs/FEATURE_LEVEL_STATISTICS.md](docs/FEATURE_LEVEL_STATISTICS.md), and
+[docs/PLOT_RECOMMENDATIONS.md](docs/PLOT_RECOMMENDATIONS.md).
+
 ## Statistics, annotations, and multi-panel figures
 
 Make My Figure computes common statistical tests and draws publication-style
