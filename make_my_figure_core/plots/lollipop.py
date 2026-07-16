@@ -69,44 +69,35 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                    linewidths=style.spine_width_pt, zorder=3, clip_on=False)
         ax.axhline(0, color="black", lw=style.line_width_pt)  # protein backbone
 
-        # --- top-N labels, staggered to avoid overlap & clipping -------------
-        n_label_levels = 1
+        # --- top-N labels above the markers, de-overlapped with leader lines -
+        # Reserve headroom first, then repel the labels (adjustText) so many
+        # close hits never overlap or clip — thin leaders tie each label to its
+        # marker. Halo keeps them readable over stems/markers.
+        head = y_margin + min(0.06 * max(0, label_top_n - 4), 0.5)
+        ax.set_ylim(0, ymax * (1.0 + head))
         if show_labels and label_col and label_col in work.columns and label_top_n > 0:
+            import matplotlib.patheffects as pe
+
             top = work.sort_values(y, ascending=False).head(label_top_n)
-            top = top.sort_values(x)   # place left-to-right for stagger logic
-            xrange = (xs.max() - xs.min()) or 1.0
-            min_gap = xrange * 0.12    # x-closeness threshold for staggering
-            n_levels = 4
-            last_x = None
-            level = 0
-            label_fs = max(6, style.axis_font_pt - 1)
-            step = ymax * 0.13         # vertical spacing between stagger levels
-            base = ymax * 0.07         # gap above the marker
+            label_fs = max(7, style.axis_font_pt - 1)
+            base = ymax * 0.05
+            texts = []
             for _, r in top.iterrows():
                 txt = str(r[label_col]).strip()
                 if not txt or txt.lower() == "nan":
                     continue
-                if last_x is not None and abs(r[x] - last_x) < min_gap:
-                    level = (level + 1) % n_levels
-                else:
-                    level = 0
-                last_x = r[x]
-                n_label_levels = max(n_label_levels, level + 1)
-                y_text = r[y] + base + step * level
-                # Label sits directly above its own pop (no leader line, so the
-                # marker stays at the TOP of its stem — not mid-stem). For a
-                # bumped-up (staggered) label, add a short faint DOTTED tick just
-                # above the marker to disambiguate, clearly distinct from the
-                # solid stem below the marker.
-                ax.text(r[x], y_text, txt, fontsize=label_fs, ha="center",
-                        va="bottom", zorder=4)
-                if level > 0:
-                    ax.plot([r[x], r[x]], [r[y] + base * 0.4, y_text - base * 0.2],
-                            ls=":", lw=style.spine_width_pt, color="0.7", zorder=2)
+                texts.append(ax.text(r[x], r[y] + base, txt, fontsize=label_fs,
+                                     ha="center", va="bottom", zorder=6,
+                                     path_effects=[pe.withStroke(linewidth=2.0,
+                                                                 foreground="white")]))
+            try:
+                from adjustText import adjust_text
 
-        # Headroom so labels are never clipped at the top.
-        head = y_margin + 0.14 * (n_label_levels - 1)
-        ax.set_ylim(0, ymax * (1.0 + head))
+                adjust_text(texts, ax=ax, only_move={"text": "xy"},
+                            expand_text=(1.05, 1.3),
+                            arrowprops=dict(arrowstyle="-", color="0.65", lw=0.6))
+            except Exception:
+                pass
         ax.set_xlim(xs.min() - 0.02 * (xs.max() - xs.min() or 1),
                     xs.max() + 0.02 * (xs.max() - xs.min() or 1))
 

@@ -290,14 +290,33 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     ordered_rows = [row_labels[i] for i in row_order]
     ordered_cols = [col_labels[j] for j in col_order]
 
-    if color_scale == "diverging":
+    finite = matrix[np.isfinite(matrix)]
+    _centering_scale = scale in ("row_zscore", "column_zscore", "center_rows", "log_zscore")
+    # A diverging map only makes sense for data centred on zero (z-scores / log
+    # ratios). For raw, all-positive values a diverging map washes to one tone —
+    # the "monotone heatmap" complaint — so fall back to sequential + robust limits.
+    _is_centred = _centering_scale or (finite.size > 0 and finite.min() < 0.0 < finite.max())
+    if color_scale == "diverging" and _is_centred:
         cmap = style.diverging_cmap
-        vmax = np.nanmax(np.abs(matrix)) if np.isfinite(matrix).any() else 1.0
+        vmax = np.nanmax(np.abs(matrix)) if finite.size else 1.0
         vmin, vmax = -vmax, vmax
     else:
         cmap = style.sequential_cmap
-        vmin = float(np.nanmin(matrix)) if np.isfinite(matrix).any() else 0.0
-        vmax = float(np.nanmax(matrix)) if np.isfinite(matrix).any() else 1.0
+        # Robust (2nd–98th percentile) limits so a few extreme cells don't flatten
+        # the map. Falls back to full range if the spread is degenerate.
+        if finite.size:
+            lo, hi = float(np.nanpercentile(finite, 2)), float(np.nanpercentile(finite, 98))
+            full_lo, full_hi = float(finite.min()), float(finite.max())
+            vmin, vmax = (lo, hi) if hi > lo else (full_lo, full_hi)
+            if color_scale == "diverging" and not _is_centred:
+                warnings.append("Values are not centred on zero — using a sequential colour "
+                                "map with robust limits. Set a scale (e.g. row_zscore) for a "
+                                "centred diverging map.")
+            elif scale == "none" and hi > lo and (lo > full_lo or hi < full_hi):
+                warnings.append("Colour scaled to the 2nd–98th percentile for contrast "
+                                "(extreme cells saturate).")
+        else:
+            vmin, vmax = 0.0, 1.0
 
     def _label_fs(n: int) -> float:
         if n <= 15:

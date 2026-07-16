@@ -282,8 +282,27 @@ def render(spec: Dict[str, Any], df, style: StyleProfile, aux=None) -> RenderRes
                 lab_nodes = [n for n, _ in sorted(degrees.items(), key=lambda kv: kv[1],
                                                   reverse=True)[:max_lab]]
                 warnings.append(f"{n_nodes} nodes: labeled the top {max_lab} by degree for legibility.")
-            nx.draw_networkx_labels(G, pos, ax=ax, labels={n: n for n in lab_nodes},
-                                    font_size=max(8.0, style.annotation_pt - 0.5))
+            # Draw labels as haloed text and de-overlap them (repel + thin leader
+            # lines) so dense graphs stay legible instead of stacking labels.
+            import matplotlib.patheffects as pe
+
+            fs = max(7.5, style.annotation_pt - 1)
+            texts = []
+            for nlab in lab_nodes:
+                x_n, y_n = pos[nlab]
+                texts.append(ax.text(x_n, y_n, str(nlab), fontsize=fs, ha="center",
+                                     va="center", zorder=6,
+                                     path_effects=[pe.withStroke(linewidth=2.5,
+                                                                 foreground="white")]))
+            try:
+                from adjustText import adjust_text
+
+                adjust_text(texts, ax=ax, only_move={"text": "xy"},
+                            expand_text=(1.1, 1.25), expand_points=(1.1, 1.25),
+                            arrowprops=dict(arrowstyle="-", color="0.6", lw=0.5),
+                            force_text=(0.3, 0.5))
+            except Exception:
+                pass
 
         if cmap_obj is not None:
             sm = plt.cm.ScalarMappable(cmap=cmap_obj)
