@@ -571,6 +571,14 @@ class MainWindow(QMainWindow):
             self.palette_combo.addItem(name, name)
         self.palette_combo.currentIndexChanged.connect(self.render_preview)
 
+        # Font family (Arial-first). "(publication default)" keeps the Arial/Helvetica/
+        # DejaVu fallback stack; a specific pick falls back safely if not installed.
+        self.font_combo = QComboBox()
+        self.font_combo.addItem("(publication default)", None)
+        for _fam in ("Arial", "Helvetica", "Liberation Sans", "DejaVu Sans", "Times New Roman"):
+            self.font_combo.addItem(_fam, _fam)
+        self.font_combo.currentIndexChanged.connect(self.render_preview)
+
         def _spin(minv, maxv, val, step=1, dbl=False):
             w = QDoubleSpinBox() if dbl else QSpinBox()
             w.setRange(minv, maxv)
@@ -592,6 +600,7 @@ class MainWindow(QMainWindow):
         self.chk_grid.stateChanged.connect(self.render_preview)
 
         form.addRow("Palette", self.palette_combo)
+        form.addRow("Font", self.font_combo)
         form.addRow("Axis label pt", self.sp_axis)
         form.addRow("Tick label pt", self.sp_tick)
         form.addRow("Legend pt", self.sp_legend)
@@ -629,10 +638,14 @@ class MainWindow(QMainWindow):
         pal = self.palette_combo.currentData()
         if pal:
             ov["palette_name"] = pal
+        font = self.font_combo.currentData()
+        if font:
+            ov["font_family"] = font
         return ov
 
     def action_reset_style(self):
         self.palette_combo.setCurrentIndex(0)
+        self.font_combo.setCurrentIndex(0)
         self.sp_axis.setValue(12); self.sp_tick.setValue(10); self.sp_legend.setValue(10)
         self.sp_annot.setValue(10); self.sp_marker.setValue(45)
         self.sp_linew.setValue(1.8); self.sp_spine.setValue(1.1)
@@ -1156,6 +1169,12 @@ class MainWindow(QMainWindow):
                     kp = self.palette_combo.findData(pal)
                     if kp >= 0:
                         self.palette_combo.setCurrentIndex(kp)
+                fam = style.get("font_family")
+                fam = fam[0] if isinstance(fam, (list, tuple)) and fam else fam
+                if fam:
+                    kf = self.font_combo.findData(fam)
+                    if kf >= 0:
+                        self.font_combo.setCurrentIndex(kf)
                 for widget, skey in [(self.sp_axis, "axis_font_pt"), (self.sp_tick, "tick_label_pt"),
                                      (self.sp_legend, "legend_pt"), (self.sp_annot, "annotation_pt"),
                                      (self.sp_marker, "marker_size"), (self.sp_linew, "line_width_pt"),
