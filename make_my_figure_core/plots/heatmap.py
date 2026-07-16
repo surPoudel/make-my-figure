@@ -429,7 +429,9 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                 warnings.append(f"{len(ordered_cols)} columns: labels hidden for legibility.")
 
         ax.set_xlabel(spec.get("layout", {}).get("x_label", "Sample"))
-        ax.set_ylabel(spec.get("layout", {}).get("y_label", str(row_id)))
+        _yrot = 0 if str(get_mapping(spec, "y_label_rotation", "vertical")).lower() in ("horizontal", "0") else 90
+        ax.set_ylabel(spec.get("layout", {}).get("y_label", str(row_id)),
+                      rotation=_yrot, ha=("right" if _yrot == 0 else "center"), va="center")
         title = spec.get("layout", {}).get("title")
         if title:
             if col_annotations or col_color_map is not None:

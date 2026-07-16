@@ -54,6 +54,29 @@ def _draw_cluster_strip(ax, side: str, codes: np.ndarray, colors: List[str], sty
     return cax
 
 
+def _draw_dendrogram(ax, z, side: str, style, size: str = "15%"):
+    """Append a monochrome dendrogram tree on the clustered side, aligned to the
+    heatmap leaf order (a seaborn-style clustermap layout)."""
+    from mpl_toolkits.axes_grid1 import make_axes_locatable
+    from scipy.cluster.hierarchy import dendrogram
+
+    divider = make_axes_locatable(ax)
+    orient = "left" if side == "left" else "top"
+    dax = divider.append_axes(orient, size=size, pad=0.04)
+    line_c = getattr(style, "text_color", "#333333")
+    dendrogram(z, orientation=orient, ax=dax, no_labels=True,
+               link_color_func=lambda _k: line_c)
+    dax.set_xticks([]); dax.set_yticks([])
+    for spine in dax.spines.values():
+        spine.set_visible(False)
+    # imshow puts row 0 at the TOP; a left dendrogram lists leaves bottom-up, so
+    # flip it to keep the tree aligned with the heatmap rows.
+    if side == "left":
+        dax.invert_yaxis()
+    dax._colorbar = True
+    return dax
+
+
 def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     row_id = get_mapping(spec, "row_id", None)
     axis = str(get_mapping(spec, "cluster", "rows")).lower()
@@ -66,6 +89,9 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     prefix = str(get_mapping(spec, "cluster_prefix", "Cluster"))
     exclude = get_mapping(spec, "exclude_columns", None)
     value_columns = get_mapping(spec, "value_columns", None)
+    show_cluster_title = bool(get_mapping(spec, "cluster_legend_title", False))
+    show_dendrogram = bool(get_mapping(spec, "show_dendrogram", False))
+    y_label_rotation = str(get_mapping(spec, "y_label_rotation", "vertical")).lower()
     max_features = int(get_mapping(spec, "max_features", _clust.DEFAULT_MAX_CLUSTER_FEATURES))
 
     row_labels, value_cols, raw_matrix, warnings = numeric_matrix(
@@ -155,6 +181,10 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                        interpolation="nearest")
         strip_ax = _draw_cluster_strip(ax, "left" if axis == "rows" else "top",
                                        codes, colors, style)
+        # Optional dendrogram tree, appended OUTSIDE the colour strip (so the layout
+        # reads [tree][cluster strip][heatmap]) and aligned to the heatmap leaves.
+        if show_dendrogram:
+            _draw_dendrogram(ax, z, "left" if axis == "rows" else "top", style)
 
         row_fs = style.tick_label_pt if n_r <= 25 else (0.0 if n_r > 60 else max(6.0, style.tick_label_pt - 3))
         col_fs = style.tick_label_pt if n_c <= 25 else (0.0 if n_c > 60 else max(6.0, style.tick_label_pt - 3))
@@ -175,7 +205,9 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         y_label = (spec.get("layout") or {}).get("y_label", str(row_id or df.columns[0]))
         if labels_right:
             ax.yaxis.set_label_position("right")
-        ax.set_ylabel(y_label)
+        _yrot = 0 if y_label_rotation in ("horizontal", "0") else 90
+        ax.set_ylabel(y_label, rotation=_yrot, ha=("left" if _yrot == 0 else "center"),
+                      va="center")
         title = (spec.get("layout") or {}).get("title")
         if title:
             fig.suptitle(title, fontsize=style.title_font_pt, fontweight="bold")
@@ -192,8 +224,9 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         # Legend ABOVE the heatmap (inside the figure) so it is never clipped on
         # screen — a legend anchored outside the axes only shows up on tight-bbox
         # export, not in the live preview.
-        ax.legend(handles=handles, title=f"{k} clusters", loc="lower left",
-                  bbox_to_anchor=(0.0, 1.02), frameon=False, ncol=min(len(ordered_labels), 4),
+        ax.legend(handles=handles, title=(f"{k} clusters" if show_cluster_title else None),
+                  loc="lower left", bbox_to_anchor=(0.0, 1.02), frameon=False,
+                  ncol=min(len(ordered_labels), 4),
                   fontsize=max(7.5, style.legend_pt - 1), title_fontsize=max(8.0, style.legend_pt),
                   columnspacing=1.2, handlelength=1.2, borderpad=0.2)
         for spine in ax.spines.values():

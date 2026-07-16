@@ -83,6 +83,11 @@ _HEATMAP_COLORMAP = Option(
     ["auto", "RdBu_r", "coolwarm", "seismic", "RdYlBu_r", "PuOr", "BrBG",
      "viridis", "magma", "cividis", "Blues", "YlOrRd", "Greys"])
 
+# Y-axis label orientation (vertical is the default; horizontal reads more easily
+# for short labels).
+_Y_LABEL_ROTATION = Option("y_label_rotation", "Y-label angle", "choice", "vertical",
+                           ["vertical", "horizontal"])
+
 # Extra (non-column) options per plot type.
 OPTIONS: Dict[str, List[Option]] = {
     "barplot_with_error_bar": [Option("error", "Error bar", "choice", "sem", _ERROR_CHOICES),
@@ -94,6 +99,7 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("cluster_columns", "Cluster columns", "bool", True),
         Option("color_scale", "Color scale", "choice", "diverging", ["diverging", "sequential"]),
         _HEATMAP_COLORMAP,
+        _Y_LABEL_ROTATION,
         # v0.5 clustering + highlighting
         Option("scale", "Scale", "choice", "none",
                ["none", "row_zscore", "column_zscore", "center_rows", "log", "log_zscore"]),
@@ -211,6 +217,9 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("linkage_method", "Linkage", "choice", "average",
                ["average", "complete", "single", "ward"]),
         _HEATMAP_COLORMAP,
+        _Y_LABEL_ROTATION,
+        Option("cluster_legend_title", "Show cluster legend title", "bool", False),
+        Option("show_dendrogram", "Show dendrogram tree", "bool", False),
         Option("max_features", "Max features (rows) for clustering", "number", 2000, minimum=50, maximum=50000, step=100, decimals=0),
     ],
     "network_graph": [

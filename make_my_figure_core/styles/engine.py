@@ -253,6 +253,13 @@ class StyleProfile:
                 continue
             if hasattr(clone, key) and val is not None:
                 setattr(clone, key, val)
+        # A font_family override may arrive as a single family name (e.g. "Arial");
+        # turn it into a proper fallback stack so matplotlib resolves it (and falls
+        # back gracefully if that font isn't installed).
+        if isinstance(clone.font_family, str):
+            fam = clone.font_family.strip()
+            clone.font_family = [f for f in (fam, "Arial", "Helvetica", "DejaVu Sans",
+                                             "sans-serif") if f]
         return clone
 
 
