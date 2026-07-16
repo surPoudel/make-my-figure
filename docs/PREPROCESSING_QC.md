@@ -3,6 +3,12 @@
 Support for **raw‑like, unnormalized, count‑like, intensity‑like, or strongly skewed**
 feature matrices — Python‑only, transparent, and **never silent**.
 
+> **In the apps:** this engine is wired into both GUIs — the Streamlit "Matrix
+> workflow (guided)" **🧪 Preprocess (raw‑like)** step and the desktop Matrix
+> workflow **③ Preprocess (raw‑like)** tab: run diagnostics, preview any QC plot,
+> pick a recommended workflow, confirm‑to‑apply to a **derived** matrix, and compare
+> before/after QC. See [RAW_COUNTS_TUTORIAL.md](RAW_COUNTS_TUTORIAL.md).
+
 `make_my_figure_core.matrix_workflow`:
 - **`diagnose_matrix(df, matrix_spec)` → `QCMetricSummary`** — reports missing values,
   zeros, negatives, integer‑likeness, dynamic range, skew, per‑sample totals/medians,

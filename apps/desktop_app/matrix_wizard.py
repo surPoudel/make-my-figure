@@ -95,12 +95,16 @@ class MatrixWizardDialog(QDialog):
         intro.setWordWrap(True)
         layout.addWidget(intro)
 
+        self._raw_data = None          # stash of the pre-preprocessing data (for revert)
+        self._raw_spec = None
+        self._prep_spec = None         # applied PreprocessingSpec (for traceable stats)
         self.tabs = QTabWidget()
         self.tabs.addTab(self._build_map_tab(), "① Map columns")
         self.tabs.addTab(self._build_groups_tab(), "② Define groups")
-        self.tabs.addTab(self._build_validate_tab(), "③ Validation")
-        self.tabs.addTab(self._build_generate_tab(), "④ Recommend & generate")
-        for i in (1, 2, 3):
+        self.tabs.addTab(self._build_preprocess_tab(), "③ Preprocess (raw-like)")
+        self.tabs.addTab(self._build_validate_tab(), "④ Validation")
+        self.tabs.addTab(self._build_generate_tab(), "⑤ Recommend & generate")
+        for i in (1, 2, 3, 4):
             self.tabs.setTabEnabled(i, False)
         self.tabs.currentChanged.connect(self._on_tab_changed)
         layout.addWidget(self.tabs)
@@ -187,9 +191,8 @@ class MatrixWizardDialog(QDialog):
         self.diff_table = None
         self.map_note.setText(f"Confirmed: {len(value_cols)} value columns; "
                               f"{len(annotation)} annotation column(s).")
-        self.tabs.setTabEnabled(1, True)
-        self.tabs.setTabEnabled(2, True)
-        self.tabs.setTabEnabled(3, True)
+        for i in (1, 2, 3, 4):
+            self.tabs.setTabEnabled(i, True)
         self._refresh_groups_tab()
 
     # --- Step 2: groups --------------------------------------------------
@@ -259,7 +262,169 @@ class MatrixWizardDialog(QDialog):
         self.groups_note.setText("Groups: " + ", ".join(f"{g} (n={n})" for g, n in sizes.items()))
         self._refresh_generate_tab()
 
-    # --- Step 3: validation ---------------------------------------------
+    # --- Step 3: preprocess (raw-like matrices) -------------------------
+    def _build_preprocess_tab(self) -> QWidget:
+        w = QWidget()
+        v = QVBoxLayout(w)
+        v.addWidget(QLabel("Optional: for raw-like / unnormalized / skewed matrices. "
+                           "Nothing is applied until you click Apply — the raw matrix is "
+                           "kept and every step is saved. Skip this step if your matrix is "
+                           "already normalized."))
+        diag_btn = QPushButton("Run diagnostics")
+        diag_btn.clicked.connect(self._diagnose)
+        v.addWidget(diag_btn)
+        self.diag_text = QTextEdit(); self.diag_text.setReadOnly(True)
+        self.diag_text.setMaximumHeight(150)
+        v.addWidget(self.diag_text)
+        # QC plot gallery: preview any QC plot of the CURRENT matrix (raw or processed).
+        qc_row = QHBoxLayout()
+        qc_row.addWidget(QLabel("QC plot:"))
+        self.qc_kind_combo = QComboBox()
+        for c in self.controller.matrix_qc_plot_catalog():
+            self.qc_kind_combo.addItem(c["label"], c["key"])
+        qc_row.addWidget(self.qc_kind_combo, 1)
+        qc_btn = QPushButton("Preview")
+        qc_btn.clicked.connect(self._preview_qc)
+        qc_row.addWidget(qc_btn)
+        v.addLayout(qc_row)
+        self.qc_preview = QLabel("Run diagnostics, then preview a QC plot.")
+        self.qc_preview.setAlignment(Qt.AlignCenter)
+        self.qc_preview.setMinimumHeight(240)
+        self.qc_preview.setStyleSheet("border:1px solid #ccc; color:#678;")
+        v.addWidget(self.qc_preview)
+        v.addWidget(QLabel("Recommended preprocessing (you choose; not applied automatically):"))
+        self.prep_combo = QComboBox()
+        self.prep_combo.currentIndexChanged.connect(self._on_prep_rec_changed)
+        v.addWidget(self.prep_combo)
+        self.prep_reason = QLabel(""); self.prep_reason.setWordWrap(True)
+        self.prep_reason.setStyleSheet("color:#345; font-size:11px;")
+        v.addWidget(self.prep_reason)
+        row = QHBoxLayout()
+        self.prep_apply = QPushButton("Apply preprocessing → use processed matrix")
+        self.prep_apply.setStyleSheet("font-weight:bold; padding:6px;")
+        self.prep_apply.clicked.connect(self._apply_preprocessing)
+        self.prep_report = QPushButton("Save before/after QC report…")
+        self.prep_report.clicked.connect(self._save_before_after)
+        row.addWidget(self.prep_apply); row.addWidget(self.prep_report)
+        v.addLayout(row)
+        self.prep_revert = QPushButton("↩ Revert to raw matrix"); self.prep_revert.setEnabled(False)
+        self.prep_revert.clicked.connect(self._revert_preprocessing)
+        v.addWidget(self.prep_revert)
+        self.prep_status = QLabel(""); self.prep_status.setWordWrap(True)
+        self.prep_status.setStyleSheet("color:#345; font-size:11px;")
+        v.addWidget(self.prep_status)
+        v.addStretch(1)
+        return self._scrollable(w)
+
+    def _refresh_preprocess_tab(self):
+        if self.matrix_spec is None or self.diag_text.toPlainText().strip():
+            return
+        self._diagnose()
+
+    def _diagnose(self):
+        if self.matrix_spec is None:
+            return
+        qc = self.controller.matrix_diagnose(self.data, self.matrix_spec)
+        lines = [f"Suspected data type: {qc.suspected_data_type}",
+                 f"Features: {qc.n_features} | Samples: {qc.n_samples}",
+                 f"Overall skew: {qc.skewness_summary.get('overall', 0):.2f} | "
+                 f"zeros: {qc.zero_fraction:.1%} | negatives: {qc.negative_value_fraction:.1%}",
+                 f"Value range: [{qc.min:.1f}, {qc.max:.1f}]", ""]
+        lines += [f"⚠ {x}" for x in qc.warnings]
+        self.diag_text.setPlainText("\n".join(lines))
+        self.prep_combo.blockSignals(True); self.prep_combo.clear()
+        for rec in self.controller.matrix_preprocessing_recommendations(qc):
+            self.prep_combo.addItem(rec.name, rec)
+        self.prep_combo.blockSignals(False)
+        self._on_prep_rec_changed()
+
+    def _on_prep_rec_changed(self, *_):
+        rec = self.prep_combo.currentData()
+        if rec is None:
+            self.prep_reason.setText(""); return
+        methods = " → ".join(s["method"] for s in rec.steps)
+        warn = ("  ⚠ " + "; ".join(rec.warnings)) if rec.warnings else ""
+        self.prep_reason.setText(f"Steps: {methods}\n{rec.reason}{warn}")
+
+    def _preview_qc(self):
+        """Render one QC plot of the current (raw or processed) matrix inline."""
+        if self.matrix_spec is None:
+            return
+        kind = self.qc_kind_combo.currentData()
+        try:
+            _spec, result = self.controller.matrix_qc_plot(
+                self.data, self.matrix_spec, kind, metadata=self.metadata)
+        except Exception as exc:  # noqa: BLE001
+            QMessageBox.warning(self, "QC plot failed", str(exc))
+            return
+        png = figure_to_bytes(result.figure, "png", dpi=130)
+        pix = QPixmap(); pix.loadFromData(png, "PNG")
+        self.qc_preview.setPixmap(pix.scaledToWidth(min(720, pix.width()),
+                                                    Qt.SmoothTransformation))
+
+    def _apply_preprocessing(self):
+        rec = self.prep_combo.currentData()
+        if rec is None or not rec.steps:
+            return
+        self.prep_apply.setEnabled(False)
+        self.prep_status.setText("Applying preprocessing…")
+        data, spec, steps = self.data, self.matrix_spec, list(rec.steps)
+        meta = self.metadata
+
+        def job():
+            return self.controller.matrix_apply_preprocessing(data, spec, steps, metadata=meta)
+
+        self._worker = _Worker(job)
+        self._worker.done.connect(self._on_prep_done)
+        self._worker.failed.connect(self._on_prep_failed)
+        self._worker.start()
+
+    def _on_prep_done(self, res):
+        derived, dspec, ps = res
+        if self._raw_data is None:                       # stash raw once
+            self._raw_data, self._raw_spec = self.data, self.matrix_spec
+        self.data, self.matrix_spec = derived, dspec
+        self._prep_spec = ps                             # for traceable differential stats
+        self.diff_table = None
+        self.prep_apply.setEnabled(True); self.prep_revert.setEnabled(True)
+        self.prep_status.setText("✓ Now using processed matrix. " + ps.method_sentence())
+        self._refresh_generate_tab()
+
+    def _on_prep_failed(self, msg):
+        self.prep_apply.setEnabled(True)
+        self.prep_status.setText("")
+        QMessageBox.warning(self, "Preprocessing failed", msg)
+
+    def _revert_preprocessing(self):
+        if self._raw_data is not None:
+            self.data, self.matrix_spec = self._raw_data, self._raw_spec
+            self._raw_data = self._raw_spec = None
+            self._prep_spec = None
+            self.diff_table = None
+            self.prep_revert.setEnabled(False)
+            self.prep_status.setText("Reverted to the raw matrix.")
+            self._refresh_generate_tab()
+
+    def _save_before_after(self):
+        rec = self.prep_combo.currentData()
+        if rec is None or not rec.steps:
+            QMessageBox.information(self, "No workflow", "Pick a preprocessing workflow first.")
+            return
+        out = QFileDialog.getExistingDirectory(self, "Choose a folder for the QC report")
+        if not out:
+            return
+        data, spec, steps, meta = self.data, self.matrix_spec, list(rec.steps), self.metadata
+        self.prep_status.setText("Building before/after QC report…")
+
+        def job():
+            return self.controller.matrix_before_after_report(data, spec, steps, out, metadata=meta)
+
+        self._worker = _Worker(job)
+        self._worker.done.connect(lambda _r, o=out: self.prep_status.setText(f"✓ QC report written to {o}"))
+        self._worker.failed.connect(lambda m: QMessageBox.warning(self, "Report failed", m))
+        self._worker.start()
+
+    # --- Step 4: validation ---------------------------------------------
     def _build_validate_tab(self) -> QWidget:
         w = QWidget()
         v = QVBoxLayout(w)
@@ -430,10 +595,16 @@ class MatrixWizardDialog(QDialog):
         self.diff_btn.setEnabled(False); self.diff_cancel.setEnabled(True)
         self.diff_status.setText("Computing differential summary…")
 
+        ps = self._prep_spec
+        prep_note = ps.method_sentence() if ps else ""
+        prep_id = ps.output_matrix_id if ps else None
+
         def job():
             return self.controller.matrix_differential_summary(
                 self.data, self.matrix_spec, self.metadata, group_a=ga, group_b=gb,
-                test=test, correction=self.corr_combo.currentText())
+                test=test, correction=self.corr_combo.currentText(),
+                preprocessing_note=prep_note, source_matrix_id=prep_id,
+                preprocessing_spec_id=prep_id)
 
         self._worker = _Worker(job)
         self._worker.done.connect(self._on_diff_done)
@@ -554,6 +725,8 @@ class MatrixWizardDialog(QDialog):
     # --- tab housekeeping ------------------------------------------------
     def _on_tab_changed(self, index: int):
         if index == 2:
-            self._refresh_validate_tab()
+            self._refresh_preprocess_tab()
         elif index == 3:
+            self._refresh_validate_tab()
+        elif index == 4:
             self._refresh_generate_tab()

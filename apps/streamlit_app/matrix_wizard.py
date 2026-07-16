@@ -60,9 +60,23 @@ def render_matrix_wizard(df: pd.DataFrame, source_name: str) -> None:
         _step_metadata(df, spec)
     meta = _meta()
     if spec and spec.confirmed_by_user:
-        _step_validate(df, spec, meta)
-        _step_recommend_and_generate(df, spec, meta)
+        _step_preprocess(df, spec, meta)
+        # Downstream steps use the processed matrix if the user applied one,
+        # otherwise the raw uploaded matrix. The original is never mutated.
+        active_df, active_spec = _active_matrix(df, spec)
+        _step_validate(active_df, active_spec, meta)
+        _step_recommend_and_generate(active_df, active_spec, meta)
     _step_figure_builder()
+
+
+def _active_matrix(df: pd.DataFrame, spec: mw.MatrixSpec):
+    """The matrix downstream steps operate on: processed if the user applied a
+    confirmed preprocessing chain, else the raw uploaded matrix."""
+    proc = _get("processed_df")
+    proc_spec = _get("processed_spec")
+    if proc is not None and proc_spec:
+        return proc, mw.MatrixSpec.from_dict(proc_spec)
+    return df, spec
 
 
 # --- Step 1: map columns -------------------------------------------------
@@ -166,6 +180,111 @@ def _step_metadata(df: pd.DataFrame, spec: mw.MatrixSpec) -> None:
                        for g, n in _meta().group_sizes().items()))
 
 
+# --- Optional step: preprocess a raw-like matrix -------------------------
+def _step_preprocess(df: pd.DataFrame, spec: mw.MatrixSpec, meta) -> None:
+    applied = _get("processed_df") is not None
+    header = "🧪 Preprocess (raw-like, optional)" + (" ✅" if applied else "")
+    with st.expander(header, expanded=False):
+        st.caption("For raw, unnormalized, skewed, count-like or intensity-like matrices. "
+                   "The app diagnoses and recommends — nothing is applied until you confirm. "
+                   "The original matrix is never changed; every step is recorded in a "
+                   "reproducible preprocessing spec. Python-only, no R.")
+
+        if st.button("Run diagnostics", key="mw_prep_diag_btn"):
+            try:
+                _set("qc", mw.diagnose_matrix(df, spec))
+            except Exception as exc:  # noqa: BLE001
+                st.error(f"Diagnostics failed: {exc}")
+
+        qc = _get("qc")
+        if qc is None:
+            st.info("Run diagnostics to see the data profile and recommended preprocessing.")
+        else:
+            _render_qc_summary(qc)
+            recs = mw.recommend_preprocessing(qc)
+            if not recs:
+                st.success("No preprocessing looks necessary for this matrix.")
+            else:
+                labels = {f"{r.name} — {r.reason}": r for r in recs}
+                choice = st.selectbox("Recommended preprocessing", list(labels), key="mw_ui_prep")
+                rec = labels[choice]
+                st.markdown("**Steps:** " + " → ".join(f"`{s['method']}`" for s in rec.steps))
+                for a in rec.assumptions:
+                    st.caption(f"• assumes: {a}")
+                for w in rec.warnings:
+                    st.warning(w)
+                confirm = st.checkbox(
+                    "I confirm applying this preprocessing chain to a derived copy",
+                    key="mw_ui_prep_confirm")
+                if st.button("Apply preprocessing", disabled=not confirm, key="mw_prep_apply_btn"):
+                    try:
+                        final_df, dspec, ps = mw.run_preprocessing(
+                            df, spec, rec.steps, metadata=meta, output_matrix_id="processed")
+                        _set("processed_df", final_df)
+                        _set("processed_spec", dspec.to_dict())
+                        _set("processed_id", ps.output_matrix_id)
+                        _set("prep_note", ps.method_sentence())
+                        # A derived matrix invalidates any differential summary on the raw one.
+                        for k in ("diff", "diff_sentence"):
+                            st.session_state.pop(f"mw_{k}", None)
+                        st.success("Applied. " + ps.method_sentence())
+                        st.rerun()
+                    except Exception as exc:  # noqa: BLE001
+                        st.error(f"Preprocessing failed: {exc}")
+
+        if _get("processed_df") is not None:
+            st.divider()
+            st.markdown("✅ **Downstream steps now use the processed matrix.** "
+                        + (_get("prep_note") or ""))
+            proc_spec = mw.MatrixSpec.from_dict(_get("processed_spec"))
+            _before_after_qc(df, spec, _get("processed_df"), proc_spec, meta)
+            if st.button("↺ Revert to raw matrix", key="mw_prep_revert_btn"):
+                for k in ("processed_df", "processed_spec", "processed_id", "prep_note",
+                          "diff", "diff_sentence"):
+                    st.session_state.pop(f"mw_{k}", None)
+                st.rerun()
+
+
+def _render_qc_summary(qc) -> None:
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Features", qc.n_features)
+    c2.metric("Samples", qc.n_samples)
+    c3.metric("Zero fraction", f"{qc.zero_fraction:.0%}")
+    skew = qc.skewness_summary.get("overall")
+    c4.metric("Skew (overall)", f"{skew:.2f}" if skew is not None else "n/a")
+    st.caption(f"Suspected data type: **{qc.suspected_data_type}** · "
+               f"negative fraction {qc.negative_value_fraction:.0%} · "
+               f"integer-like: {qc.integer_like}")
+    for w in qc.warnings:
+        st.warning(w)
+
+
+def _before_after_qc(raw_df, raw_spec, proc_df, proc_spec, meta) -> None:
+    kinds = {c["label"]: c["key"] for c in mw.qc_plot_catalog()}
+    kind_label = st.selectbox("Before/after QC plot", list(kinds), key="mw_ui_prep_qc")
+    kind = kinds[kind_label]
+    b1, b2 = st.columns(2)
+    with b1:
+        st.caption("Before (raw)")
+        _render_qc_plot(kind, raw_df, raw_spec, meta)
+    with b2:
+        st.caption("After (processed)")
+        _render_qc_plot(kind, proc_df, proc_spec, meta)
+
+
+def _render_qc_plot(kind: str, df: pd.DataFrame, spec: mw.MatrixSpec, meta) -> None:
+    try:
+        pi = mw.qc_plot_inputs(kind, df, spec, metadata=meta)
+        ps = make_spec(pi.plot_type, spec.source_file or "matrix", "publication",
+                       mapping=pi.mapping)
+        for k, v in (pi.spec_extra or {}).items():
+            ps[k] = v
+        result = render(ps, pi.dataframe, aux=pi.aux or None)
+        st.pyplot(result.figure)
+    except Exception as exc:  # noqa: BLE001
+        st.caption(f"⚠ {exc}")
+
+
 # --- Step 3: validate ----------------------------------------------------
 def _step_validate(df: pd.DataFrame, spec: mw.MatrixSpec, meta) -> None:
     with st.expander("③ Validation", expanded=False):
@@ -230,8 +349,11 @@ def _differential_summary_section(df: pd.DataFrame, spec: mw.MatrixSpec, meta) -
             gb = st.selectbox("Group B", gb_opts, key="mw_ui_gb") if gb_opts else None
         if st.button("Compute differential summary"):
             try:
-                res = mw.feature_differential_summary(df, spec, meta, group_a=ga, group_b=gb,
-                                                      test=test, correction=correction)
+                res = mw.feature_differential_summary(
+                    df, spec, meta, group_a=ga, group_b=gb, test=test, correction=correction,
+                    preprocessing_note=_get("prep_note", ""),
+                    source_matrix_id=_get("processed_id") or None,
+                    preprocessing_spec_id=_get("processed_id") or None)
                 _set("diff", res.table)
                 _set("diff_sentence", res.method_sentence())
                 st.success(res.method_sentence())
@@ -338,8 +460,13 @@ def _step_figure_builder() -> None:
                                         aux=p.get("aux") or {}, source_name=p["name"]))
                 fig = build_figure(mpf)
                 st.pyplot(fig)
-                st.download_button("Download composite PNG", figure_to_bytes(fig, "png"),
-                                   file_name="figure.png", mime="image/png")
+                fc1, fc2, fc3 = st.columns(3)
+                fc1.download_button("PNG", figure_to_bytes(fig, "png"),
+                                    file_name="figure.png", mime="image/png")
+                fc2.download_button("SVG", figure_to_bytes(fig, "svg"),
+                                    file_name="figure.svg", mime="image/svg+xml")
+                fc3.download_button("PDF", figure_to_bytes(fig, "pdf"),
+                                    file_name="figure.pdf", mime="application/pdf")
             except Exception as exc:  # noqa: BLE001
                 st.error(f"Compose failed: {exc}")
         if st.button("Clear Figure Builder"):

@@ -78,6 +78,34 @@ statistics when you choose the method. See
 [docs/FEATURE_LEVEL_STATISTICS.md](docs/FEATURE_LEVEL_STATISTICS.md), and
 [docs/PLOT_RECOMMENDATIONS.md](docs/PLOT_RECOMMENDATIONS.md).
 
+## Raw-like matrix QC and preprocessing
+
+If your matrix is **raw / unnormalized / skewed** (count-like or intensity-like),
+both apps have an optional preprocessing step — Streamlit's **🧪 Preprocess
+(raw-like)** expander and the desktop wizard's **③ Preprocess (raw-like)** tab:
+
+1. **upload** the matrix and **explicitly map** feature / annotation / value columns;
+2. **build metadata** (upload or assign groups in-app);
+3. **run QC diagnostics** and preview **QC plots** (value distribution, per-sample
+   box, per-sample total/median signal, missingness, zero fraction, sample
+   correlation, PCA, mean–variance);
+4. **choose** a recommended preprocessing workflow (e.g. total-sum/CPM → `log2(x+1)`,
+   median-scale, row z-score) — nothing is applied until you **confirm**;
+5. **compare before/after** QC and use the clearly-named **derived matrix** (e.g.
+   *total-sum + log2 matrix*) for downstream plots and statistics;
+6. **export** publication-ready figures (PNG/SVG/PDF).
+
+Guarantees: preprocessing is **never silent**; the **original matrix is preserved**;
+every derived matrix is **traceable** (recorded in a `PreprocessingSpec`); statistics
+**include the preprocessing chain in their method sentence** and record the source
+matrix / preprocessing-spec id; **no R** and **no API/AI** are required for the core
+workflow; there is **no raw RNA-seq-branded pipeline** (generic feature-matrix terms
+throughout). An optional Python-only count model (PyDESeq2, `pip install -e
+".[count-de]"`) is available but never required. See
+[docs/RAW_COUNTS_TUTORIAL.md](docs/RAW_COUNTS_TUTORIAL.md),
+[docs/PREPROCESSING_QC.md](docs/PREPROCESSING_QC.md), and
+[docs/NORMALIZATION_METHODS.md](docs/NORMALIZATION_METHODS.md).
+
 ## Statistics, annotations, and multi-panel figures
 
 Make My Figure computes common statistical tests and draws publication-style

@@ -9,9 +9,11 @@ silently**. You confirm every step; the original matrix is untouched; each deriv
 matrix + step is saved in a reproducible `PreprocessingSpec`.
 
 > Status: the preprocessing/QC engine below is available in
-> `make_my_figure_core.matrix_workflow`. A one‑click GUI wizard for it is a follow‑up;
-> today the raw‑counts path runs through this API (the desktop app already does mapping,
-> grouping, and plotting).
+> `make_my_figure_core.matrix_workflow` **and is now wired into both GUIs** — the
+> Streamlit "Matrix workflow (guided)" has an optional **🧪 Preprocess (raw‑like)**
+> step, and the desktop **Matrix workflow** wizard has a **③ Preprocess (raw‑like)**
+> tab (diagnostics, QC‑plot preview, recommendations, confirm‑to‑apply, before/after
+> QC report). The Python API below is the same engine, useful for scripting/repro.
 
 ## 1. Load + map columns (you confirm the roles)
 ```python

@@ -1403,7 +1403,7 @@ class MainWindow(QMainWindow):
     def _volcano_prefill(self, plot_type: str, col_opts: list) -> dict:
         """Best-guess volcano column mapping from the current data (user confirms).
 
-        Uses the RNA-seq DE detector so edgeR (``logFC``/``P.Value``), DESeq2
+        Uses the DE-table column detector so edgeR (``logFC``/``P.Value``), DESeq2
         (``log2FoldChange``/``pvalue``/``padj``), and other headers auto-map. Only
         fills fields whose detected column exists; leaves the rest for the user.
         """

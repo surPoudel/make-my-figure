@@ -4,6 +4,17 @@
 **generic per-feature comparison** between user-defined groups on a *normalized*
 feature matrix.
 
+> **Preprocessing provenance.** When the input is a **derived** (preprocessed)
+> matrix, pass `preprocessing_note` (the `PreprocessingSpec.method_sentence()`),
+> `source_matrix_id`, and `preprocessing_spec_id`. Both apps do this automatically
+> when you compute a differential summary after applying preprocessing, so the
+> stored result — and the method sentence drawn on volcano/MA plots — trace back to
+> the exact preprocessing chain, e.g.:
+>
+> *"Values were median-scaled across samples, transformed as log2(x + 1), and
+> compared between Ctrl and Treatment using Welch's t-test with Benjamini-Hochberg
+> FDR correction."*
+
 It is **not** a raw-count differential-expression pipeline and **not** a
 count-based model, and it uses no R. If you already have a differential table from
 another tool, use it directly (precomputed mode) — the app plots it verbatim.

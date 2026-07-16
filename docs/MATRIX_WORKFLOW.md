@@ -5,6 +5,15 @@ numeric feature matrix) into publication-ready figures — with **no silent
 guessing**. You confirm every column role and every group before anything is
 plotted or analysed.
 
+> **Optional preprocessing/QC step (raw-like matrices).** Between "define groups"
+> and "recommend plots", both apps offer an optional preprocessing step
+> (Streamlit **🧪 Preprocess (raw-like)**; desktop **③ Preprocess (raw-like)** tab):
+> QC diagnostics + QC-plot preview → recommended workflows → **confirm-to-apply** →
+> a clearly-named **derived matrix** used by all downstream steps → before/after QC.
+> The raw matrix is preserved and every step is recorded in a `PreprocessingSpec`.
+> Details: [PREPROCESSING_QC.md](PREPROCESSING_QC.md),
+> [RAW_COUNTS_TUTORIAL.md](RAW_COUNTS_TUTORIAL.md).
+
 This is a *generic feature matrix* layer. It is **not** an RNA-seq pipeline: it
 runs no raw-count differential-expression model and uses no R. Precomputed
 differential tables are supported, and normalized matrices can be analysed with

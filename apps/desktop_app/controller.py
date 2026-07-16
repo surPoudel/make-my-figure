@@ -480,12 +480,21 @@ class DesktopController:
 
     def matrix_differential_summary(self, data: LoadedData, matrix_spec, metadata, *,
                                     group_a, group_b=None, test="welch_t",
-                                    correction="benjamini_hochberg"):
+                                    correction="benjamini_hochberg",
+                                    preprocessing_note="", source_matrix_id=None,
+                                    preprocessing_spec_id=None):
+        """Feature-level differential summary.
+
+        When the input is a derived (preprocessed) matrix, pass ``preprocessing_note``
+        (``PreprocessingSpec.method_sentence()``), ``source_matrix_id`` and
+        ``preprocessing_spec_id`` so the stored result — and its method sentence — trace
+        back to the exact preprocessing chain."""
         import make_my_figure_core.matrix_workflow as mw
 
         return mw.feature_differential_summary(
             data.info.dataframe, matrix_spec, metadata, group_a=group_a, group_b=group_b,
-            test=test, correction=correction)
+            test=test, correction=correction, preprocessing_note=preprocessing_note,
+            source_matrix_id=source_matrix_id, preprocessing_spec_id=preprocessing_spec_id)
 
     def matrix_build_plot(self, data: LoadedData, rec, matrix_spec, *, metadata=None,
                           differential_table=None, selected_features=None, params=None,
@@ -510,3 +519,56 @@ class DesktopController:
         aux = pi.aux or None
         result = render(spec, pi.dataframe, aux=aux)
         return spec, result, pi
+
+    # --- raw-like matrix preprocessing / QC (GUI-free; the wizard is a thin layer) ---
+    def matrix_diagnose(self, data: LoadedData, matrix_spec):
+        import make_my_figure_core.matrix_workflow as mw
+
+        return mw.diagnose_matrix(data.info.dataframe, matrix_spec)
+
+    def matrix_preprocessing_recommendations(self, qc):
+        import make_my_figure_core.matrix_workflow as mw
+
+        return mw.recommend_preprocessing(qc)
+
+    def matrix_preprocessing_methods(self):
+        import make_my_figure_core.matrix_workflow as mw
+
+        return mw.available_methods()
+
+    def matrix_qc_plot_catalog(self):
+        import make_my_figure_core.matrix_workflow as mw
+
+        return mw.qc_plot_catalog()
+
+    def matrix_qc_plot(self, data: LoadedData, matrix_spec, kind, *, metadata=None):
+        """Render one QC plot; returns (spec, RenderResult)."""
+        import make_my_figure_core.matrix_workflow as mw
+
+        pi = mw.qc_plot_inputs(kind, data.info.dataframe, matrix_spec, metadata=metadata)
+        spec = make_spec(pi.plot_type, matrix_spec.source_file or data.table_name,
+                         "publication", mapping=pi.mapping)
+        for k, v in (pi.spec_extra or {}).items():
+            spec[k] = v
+        result = render(spec, pi.dataframe, aux=pi.aux or None)
+        return spec, result
+
+    def matrix_apply_preprocessing(self, data: LoadedData, matrix_spec, steps, *,
+                                   metadata=None, output_matrix_id="processed"):
+        """Apply a confirmed preprocessing chain; return (derived LoadedData, derived
+        MatrixSpec, PreprocessingSpec). The original data is untouched."""
+        import make_my_figure_core.matrix_workflow as mw
+
+        final_df, dspec, ps = mw.run_preprocessing(
+            data.info.dataframe, matrix_spec, steps, metadata=metadata,
+            output_matrix_id=output_matrix_id)
+        loaded = self.loaded_from_dataframe(final_df, f"{data.table_name} [{output_matrix_id}]")
+        return loaded, dspec, ps
+
+    def matrix_before_after_report(self, data: LoadedData, matrix_spec, steps, out_dir, *,
+                                   metadata=None):
+        """Write a before/after QC report; returns (final_df, dspec, PreprocessingSpec, records)."""
+        import make_my_figure_core.matrix_workflow as mw
+
+        return mw.before_after_report(data.info.dataframe, matrix_spec, steps, out_dir,
+                                      metadata=metadata)

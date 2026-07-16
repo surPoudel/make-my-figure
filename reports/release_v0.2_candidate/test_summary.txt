@@ -1,0 +1,20 @@
+Test summary — preprocessing/QC apps release candidate
+Generated on branch: main
+Command: python -m pytest -q -p "no:pytest-qt" --ignore=tests/test_desktop_gui.py
+(The bare 'pytest -q' cannot run here: the pytest-qt plugin imports Qt, which needs
+ libEGL.so.1 — absent in this WSL sandbox — and INTERNALERRORs before collection.)
+
+RESULT:
+976 passed, 5 skipped, 1 warning in 335.20s (0:05:35)
+
+Skipped (5) — environment / optional-dependency skips, not failures:
+ - test_app_smoke.py            : streamlit not installed (importorskip)
+ - test_streamlit_matrix_wizard.py: streamlit not installed (importorskip)
+ - test_pop_out_panels.py       : PySide6/Qt native libs unavailable
+ - test_performance.py          : PySide6/Qt native libs unavailable
+ - optional extra (fitz/PyMuPDF or count-de/PyDESeq2) absent
+
+Touched-file targeted runs (all passed):
+ - tests/test_desktop_matrix_controller.py : 8 passed
+ - tests/test_release_guardrails.py        : 6 passed
+ - tests/test_streamlit_matrix_wizard.py   : skipped (streamlit absent) — run in WSL
