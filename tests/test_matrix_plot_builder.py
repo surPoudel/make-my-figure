@@ -38,6 +38,8 @@ def diff(df, spec, groups):
 
 def _render_ok(pi):
     ps = make_spec(pi.plot_type, "mw.tsv", "publication", mapping=pi.mapping)
+    for k, v in (pi.spec_extra or {}).items():
+        ps[k] = v
     res = render(ps, pi.dataframe, aux=pi.aux or None)
     for fmt in ("png", "svg", "pdf"):
         assert len(figure_to_bytes(res.figure, fmt)) > 0
@@ -54,6 +56,16 @@ def test_all_ready_matrix_recs_build_and_render(df, spec, groups, diff):
                 "sample_correlation_heatmap", "pca", "top_variable_heatmap", "pca_by_group"):
         pi = build_plot_inputs(_rec(recs, key), df, spec, metadata=groups)
         _render_ok(pi)
+
+
+def test_heatmap_with_groups_gets_color_strip(df, spec, groups):
+    recs = mw.recommend_plots(spec, groups, n_features=len(df))
+    pi = build_plot_inputs(_rec(recs, "heatmap_zscore"), df, spec, metadata=groups)
+    ann = pi.spec_extra.get("column_annotations")
+    assert ann and ann[0]["label"] == "group"
+    assert set(ann[0]["values"].values()) == {"Ctrl", "Treatment"}
+    assert pi.mapping.get("group_separators") is True
+    _render_ok(pi)
 
 
 def test_group_plots_build_and_render(df, spec, groups):

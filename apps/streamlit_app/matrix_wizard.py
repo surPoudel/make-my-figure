@@ -269,6 +269,8 @@ def _generate_section(df: pd.DataFrame, spec: mw.MatrixSpec, meta, rec) -> None:
     for w in pi.warnings:
         st.caption(f"• {w}")
     ps = make_spec(pi.plot_type, spec.source_file or "matrix", "publication", mapping=pi.mapping)
+    for _k, _v in (pi.spec_extra or {}).items():   # e.g. column_annotations (group strip)
+        ps[_k] = _v
     try:
         result = render(ps, pi.dataframe, aux=pi.aux or None)
     except Exception as exc:  # noqa: BLE001

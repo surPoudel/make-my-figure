@@ -26,8 +26,20 @@ class PlotInputs:
     dataframe: pd.DataFrame
     mapping: Dict[str, Any]
     aux: Dict[str, pd.DataFrame] = field(default_factory=dict)
+    spec_extra: Dict[str, Any] = field(default_factory=dict)   # top-level spec keys (e.g. column_annotations)
     transformation_specs: List[Dict[str, Any]] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)
+
+
+def _group_strip(metadata, value_columns) -> Dict[str, Any]:
+    """A heatmap column-annotation (group color strip) from confirmed groups, or {}."""
+    if not (metadata and metadata.confirmed_by_user and metadata.sample_to_group):
+        return {}
+    vals = {s: metadata.sample_to_group[s] for s in value_columns
+            if metadata.sample_to_group.get(s)}
+    if not vals:
+        return {}
+    return {"column_annotations": [{"label": "group", "values": vals}]}
 
 
 def build_plot_inputs(rec: RecommendedPlot, df: pd.DataFrame, matrix_spec: MatrixSpec, *,
@@ -45,11 +57,17 @@ def build_plot_inputs(rec: RecommendedPlot, df: pd.DataFrame, matrix_spec: Matri
         raise ValueError("Confirm the matrix mapping (feature id + value columns) first.")
 
     # --- matrix heatmaps / clustering / pca ---
+    strip = _group_strip(metadata, vcols)
     if key == "heatmap":
-        return PlotInputs("heatmap_clustered_matrix", df, {"row_id": fid, "value_columns": vcols})
+        m = {"row_id": fid, "value_columns": vcols}
+        if strip:
+            m["group_separators"] = True
+        return PlotInputs("heatmap_clustered_matrix", df, m, spec_extra=strip)
     if key == "heatmap_zscore":
-        return PlotInputs("heatmap_clustered_matrix", df,
-                          {"row_id": fid, "value_columns": vcols, "scale": "row_zscore"})
+        m = {"row_id": fid, "value_columns": vcols, "scale": "row_zscore"}
+        if strip:
+            m["group_separators"] = True
+        return PlotInputs("heatmap_clustered_matrix", df, m, spec_extra=strip)
     if key == "clustering":
         return PlotInputs("hierarchical_clustering", df,
                           {"row_id": fid, "value_columns": vcols, "scale": "row_zscore"})
@@ -70,8 +88,10 @@ def build_plot_inputs(rec: RecommendedPlot, df: pd.DataFrame, matrix_spec: Matri
                           transformation_specs=[ts.to_dict()], warnings=list(ts.warnings))
     if key == "top_variable_heatmap":
         sub, ts = T.top_variable_features(df, matrix_spec, top_n=int(params.get("top_n", 50)))
-        return PlotInputs("heatmap_clustered_matrix", sub,
-                          {"row_id": fid, "value_columns": vcols, "scale": "row_zscore"},
+        m = {"row_id": fid, "value_columns": vcols, "scale": "row_zscore"}
+        if strip:
+            m["group_separators"] = True
+        return PlotInputs("heatmap_clustered_matrix", sub, m, spec_extra=strip,
                           transformation_specs=[ts.to_dict()], warnings=list(ts.warnings))
     if key in ("pca", "pca_by_group"):
         mapping: Dict[str, Any] = {"matrix_row_id": fid, "value_columns": vcols}

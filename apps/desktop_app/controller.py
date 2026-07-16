@@ -500,6 +500,8 @@ class DesktopController:
                                   selected_features=selected_features, params=params)
         spec = make_spec(pi.plot_type, matrix_spec.source_file or data.table_name,
                          "publication", mapping=pi.mapping)
+        for k, v in (pi.spec_extra or {}).items():   # e.g. column_annotations (group strip)
+            spec[k] = v
         aux = pi.aux or None
         result = render(spec, pi.dataframe, aux=aux)
         return spec, result, pi
