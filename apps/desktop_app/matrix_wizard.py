@@ -23,6 +23,7 @@ from PySide6.QtWidgets import (
     QGroupBox,
     QHBoxLayout,
     QLabel,
+    QLineEdit,
     QListWidget,
     QListWidgetItem,
     QMessageBox,
@@ -106,6 +107,13 @@ class MatrixWizardDialog(QDialog):
         close.clicked.connect(self.accept)
         layout.addWidget(close)
 
+    def _scrollable(self, w: QWidget) -> QScrollArea:
+        """Wrap a tab body so its buttons are never clipped (high-DPI / small screens)."""
+        sa = QScrollArea()
+        sa.setWidgetResizable(True)
+        sa.setWidget(w)
+        return sa
+
     # --- Step 1: map columns --------------------------------------------
     def _build_map_tab(self) -> QWidget:
         w = QWidget()
@@ -136,6 +144,7 @@ class MatrixWizardDialog(QDialog):
                            "measurements. Everything unselected becomes an annotation."))
         self.value_list = QListWidget()
         self.value_list.setSelectionMode(QListWidget.ExtendedSelection)
+        self.value_list.setMaximumHeight(220)
         value_set = set(map(str, sug.value_columns))
         for c in cols:
             it = QListWidgetItem(str(c))
@@ -149,9 +158,11 @@ class MatrixWizardDialog(QDialog):
         v.addWidget(self.map_note)
 
         confirm = QPushButton("Confirm mapping")
+        confirm.setStyleSheet("font-weight:bold; padding:6px;")
         confirm.clicked.connect(self._confirm_mapping)
         v.addWidget(confirm)
-        return w
+        v.addStretch(1)
+        return self._scrollable(w)
 
     def _confirm_mapping(self):
         import make_my_figure_core.matrix_workflow as mw
@@ -188,14 +199,33 @@ class MatrixWizardDialog(QDialog):
         self.group_table = QTableWidget(0, 2)
         self.group_table.setHorizontalHeaderLabels(["Sample column", "Group"])
         self.group_table.horizontalHeader().setStretchLastSection(True)
+        self.group_table.setMaximumHeight(320)
         v.addWidget(self.group_table)
+        # Quick-fill helper: apply one label to the currently selected rows.
+        fill_row = QHBoxLayout()
+        self.fill_group_edit = QLineEdit()
+        self.fill_group_edit.setPlaceholderText("group label for selected rows")
+        fill_btn = QPushButton("Apply to selected rows")
+        fill_btn.clicked.connect(self._fill_selected_group)
+        fill_row.addWidget(self.fill_group_edit)
+        fill_row.addWidget(fill_btn)
+        v.addLayout(fill_row)
         confirm = QPushButton("Confirm groups")
+        confirm.setStyleSheet("font-weight:bold; padding:6px;")
         confirm.clicked.connect(self._confirm_groups)
         v.addWidget(confirm)
         self.groups_note = QLabel("")
         self.groups_note.setStyleSheet("color:#345; font-size:11px;")
         v.addWidget(self.groups_note)
-        return w
+        v.addStretch(1)
+        return self._scrollable(w)
+
+    def _fill_selected_group(self):
+        """Write the label from the quick-fill box into the selected rows' Group cell."""
+        label = self.fill_group_edit.text().strip()
+        rows = {i.row() for i in self.group_table.selectedIndexes()}
+        for r in rows:
+            self.group_table.setItem(r, 1, QTableWidgetItem(label))
 
     def _refresh_groups_tab(self):
         if self.matrix_spec is None:
@@ -234,7 +264,7 @@ class MatrixWizardDialog(QDialog):
         self.validate_text = QTextEdit()
         self.validate_text.setReadOnly(True)
         v.addWidget(self.validate_text)
-        return w
+        return self._scrollable(w)
 
     def _refresh_validate_tab(self):
         if self.matrix_spec is None:
