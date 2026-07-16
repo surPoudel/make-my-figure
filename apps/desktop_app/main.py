@@ -309,6 +309,12 @@ class MainWindow(QMainWindow):
                                    "by a column's values — no metadata file needed.")
         self.groups_btn.clicked.connect(self.action_define_groups)
         nav_row.addWidget(self.groups_btn)
+        self.matrix_btn = QPushButton("\U0001F9EE  Matrix workflow…")
+        self.matrix_btn.setToolTip("Guided workflow for a feature-by-sample matrix: map "
+                                   "columns, define groups, get plot recommendations, and "
+                                   "generate publication plots.")
+        self.matrix_btn.clicked.connect(self.action_matrix_wizard)
+        nav_row.addWidget(self.matrix_btn)
         cv.addLayout(nav_row)
 
         self.plot_combo = QComboBox()
@@ -1268,6 +1274,18 @@ class MainWindow(QMainWindow):
         if ann:
             self._pending_column_annotations = ann
             self.render_preview()
+
+    def action_matrix_wizard(self):
+        """Open the guided matrix workflow (map -> groups -> recommend -> generate)."""
+        if self.data is None:
+            self._show_warning("Load a data file first, then open the matrix workflow.")
+            return
+        from apps.desktop_app.matrix_wizard import MatrixWizardDialog
+
+        dlg = MatrixWizardDialog(self.controller, self.data, self._saved_panels, self)
+        dlg.exec()
+        # Wizard-generated plots may have been added to the Figure Builder.
+        self.panel_count_label.setText(f"{len(self._saved_panels)} panel(s) saved.")
 
     def _adopt_grouped_data(self, loaded):
         """Replace the active dataset with a derived (grouped/differential) table.

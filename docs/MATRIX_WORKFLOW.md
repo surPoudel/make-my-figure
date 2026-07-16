@@ -58,9 +58,17 @@ In the **Streamlit** app, load a table and switch the sidebar **Workflow** toggl
 + optional differential summary + generate — and each generated plot can be
 downloaded (PNG/SVG/PDF) or added to a ⑤ Figure Builder collection to compose a
 multi-panel figure. State is kept in `st.session_state` (prefix `mw_`) so it
-survives reruns and does not reset when you change plots. The plot-building glue is
-`matrix_workflow.build_plot_inputs`, shared with tests (and reusable by the desktop
-app).
+survives reruns and does not reset when you change plots.
+
+In the **desktop** app, click **"🧮 Matrix workflow…"** (next to *Define groups*).
+The dialog has the same tabbed steps (① map → ② groups → ③ validation → ④ recommend
+& generate); the feature-level differential summary runs on a **background thread**
+(with a busy state + cancel) so the UI stays responsive, generated plots preview
+in-dialog and can be saved (PNG/SVG/PDF) or **added to the Figure Builder**.
+
+Both GUIs are thin layers over the same glue — `matrix_workflow.build_plot_inputs`
+(shared with tests) and the desktop `DesktopController.matrix_*` methods — so the
+workflow logic is identical and unit-tested independently of any GUI.
 
 ## Example fixtures
 
