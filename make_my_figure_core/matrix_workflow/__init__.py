@@ -44,7 +44,26 @@ from make_my_figure_core.matrix_workflow.plot_builder import (
     PlotInputs,
     build_plot_inputs,
 )
-from make_my_figure_core.matrix_workflow import transformations
+from make_my_figure_core.matrix_workflow.preprocessing_spec import (
+    PreprocessingSpec,
+    PreprocessingStep,
+)
+from make_my_figure_core.matrix_workflow.qc_diagnostics import (
+    QCMetricSummary,
+    diagnose_matrix,
+)
+from make_my_figure_core.matrix_workflow.transform_recommendations import (
+    NormalizationRecommendation,
+    PreprocessingWorkflow,
+    normalization_catalog,
+    recommend_preprocessing,
+)
+from make_my_figure_core.matrix_workflow.preprocessing import (
+    apply_step,
+    available_methods,
+    run_preprocessing,
+)
+from make_my_figure_core.matrix_workflow import normalization, preprocessing, transformations
 
 __all__ = [
     "MatrixSpec", "suggest_matrix_spec", "looks_log_scale",
@@ -56,5 +75,9 @@ __all__ = [
     "DifferentialSummary", "feature_differential_summary",
     "TWO_GROUP_TESTS", "MULTI_GROUP_TESTS", "CORRECTIONS",
     "PlotInputs", "build_plot_inputs",
-    "transformations",
+    # raw-like preprocessing / QC
+    "PreprocessingSpec", "PreprocessingStep", "QCMetricSummary", "diagnose_matrix",
+    "NormalizationRecommendation", "PreprocessingWorkflow", "recommend_preprocessing",
+    "normalization_catalog", "apply_step", "run_preprocessing", "available_methods",
+    "normalization", "preprocessing", "transformations",
 ]

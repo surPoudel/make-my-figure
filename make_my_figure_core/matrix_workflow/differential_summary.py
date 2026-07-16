@@ -49,6 +49,8 @@ class DifferentialSummary:
     value_type: str
     warnings: List[str] = field(default_factory=list)
     method_sentence_text: str = ""
+    source_matrix_id: Optional[str] = None       # provenance: which (derived) matrix
+    preprocessing_spec_id: Optional[str] = None  # provenance: which preprocessing chain
 
     def method_sentence(self) -> str:
         return self.method_sentence_text
@@ -70,8 +72,15 @@ def feature_differential_summary(
     df: pd.DataFrame, matrix_spec: MatrixSpec, metadata: SampleMetadataSpec, *,
     group_a: str, group_b: Optional[str] = None, test: str = "welch_t",
     correction: str = "benjamini_hochberg", pseudocount: float = 1.0,
+    preprocessing_note: str = "", source_matrix_id: Optional[str] = None,
+    preprocessing_spec_id: Optional[str] = None,
 ) -> DifferentialSummary:
-    """Compute a feature-level differential summary. See module docstring."""
+    """Compute a feature-level differential summary. See module docstring.
+
+    ``preprocessing_note`` (e.g. from ``PreprocessingSpec.method_sentence()``) is
+    prepended to the method sentence so a plot annotation traces back to how the
+    matrix was processed; ``source_matrix_id`` / ``preprocessing_spec_id`` record
+    the provenance on the returned summary."""
     if not matrix_spec.confirmed_by_user:
         raise ValueError("MatrixSpec must be confirmed before a differential summary.")
     if not metadata.confirmed_by_user:
@@ -163,13 +172,18 @@ def feature_differential_summary(
         warnings.append("Value scale is unconfirmed — ratio fold change not computed; "
                         "confirm value_type to enable log2 fold change.")
     grp = " vs ".join(used_groups)
-    sentence = (f"Feature-level differential summary ({_TEST_LABELS.get(test, test)}, "
-                f"{_CORR_LABELS.get(correction, correction)}) comparing {grp} on a "
-                f"normalized feature matrix. Not a raw-count differential-expression model. "
-                f"{scale_note}")
+    prep = ""
+    if preprocessing_note and preprocessing_note.strip() and \
+            "No preprocessing" not in preprocessing_note:
+        prep = preprocessing_note.strip().rstrip(".") + ", then "
+    sentence = (f"{prep}compared between {grp} using a feature-level differential summary "
+                f"({_TEST_LABELS.get(test, test)}, {_CORR_LABELS.get(correction, correction)}). "
+                f"Not a raw-count differential-expression model. {scale_note}").strip()
     return DifferentialSummary(table=table, test_name=test, correction_method=correction,
                                groups=used_groups, value_type=matrix_spec.value_type,
-                               warnings=warnings, method_sentence_text=sentence)
+                               warnings=warnings, method_sentence_text=sentence,
+                               source_matrix_id=source_matrix_id,
+                               preprocessing_spec_id=preprocessing_spec_id)
 
 
 def _fold_change(mean_a: float, mean_b: float, value_type: str, pseudocount: float):

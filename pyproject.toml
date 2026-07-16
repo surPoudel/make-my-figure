@@ -29,6 +29,10 @@ dev = ["pytest>=7.0", "pytest-qt>=4.2"]
 # Optional: import PDF/SVG figures as Figure Builder panels (raster formats work
 # without these). PyMuPDF handles PDF; cairosvg handles SVG.
 import-panels = ["pymupdf>=1.23", "cairosvg>=2.5"]
+# Optional, opt-in only: Python-only count-model differential analysis (PyDESeq2 —
+# no R, no rpy2). Not required for the core install or tests. See
+# docs/COUNT_MODEL_DE_INVESTIGATION.md.
+count-de = ["pydeseq2>=0.4"]
 
 [project.urls]
 Homepage = "https://github.com/surPoudel/make-my-figure"

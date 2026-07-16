@@ -1,0 +1,13 @@
+sample_id,group,batch
+SAMPLE_01,Ctrl,A
+SAMPLE_02,Ctrl,B
+SAMPLE_03,Ctrl,A
+SAMPLE_04,Ctrl,B
+SAMPLE_05,Ctrl,A
+SAMPLE_06,Ctrl,B
+SAMPLE_07,Treatment,A
+SAMPLE_08,Treatment,B
+SAMPLE_09,Treatment,A
+SAMPLE_10,Treatment,B
+SAMPLE_11,Treatment,A
+SAMPLE_12,Treatment,B
