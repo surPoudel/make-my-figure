@@ -40,6 +40,10 @@ from make_my_figure_core.matrix_workflow.differential_summary import (
     DifferentialSummary,
     feature_differential_summary,
 )
+from make_my_figure_core.matrix_workflow.plot_builder import (
+    PlotInputs,
+    build_plot_inputs,
+)
 from make_my_figure_core.matrix_workflow import transformations
 
 __all__ = [
@@ -51,5 +55,6 @@ __all__ = [
     "RecommendedPlot", "recommend_plots", "recommend_from_differential_table",
     "DifferentialSummary", "feature_differential_summary",
     "TWO_GROUP_TESTS", "MULTI_GROUP_TESTS", "CORRECTIONS",
+    "PlotInputs", "build_plot_inputs",
     "transformations",
 ]

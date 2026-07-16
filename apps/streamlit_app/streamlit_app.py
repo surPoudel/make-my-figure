@@ -192,6 +192,20 @@ if table_info is None:
     st.info("Choose a bundled sample or upload a data file to begin.")
     st.stop()
 
+# --- Workflow mode ----------------------------------------------------------
+# "Quick plot" is the classic single-plot flow below. "Matrix workflow (guided)"
+# runs the map -> groups -> validate -> recommend -> generate wizard for a
+# feature-by-sample matrix (no silent guessing; annotation columns are not values).
+st.sidebar.divider()
+workflow_mode = st.sidebar.radio(
+    "Workflow", ["Quick plot", "Matrix workflow (guided)"], key="workflow_mode",
+    help="Guided matrix workflow: map a feature matrix, define groups, get plot "
+         "recommendations, and generate publication plots.")
+if workflow_mode.startswith("Matrix"):
+    from apps.streamlit_app.matrix_wizard import render_matrix_wizard
+    render_matrix_wizard(table_info.dataframe, table_name)
+    st.stop()
+
 # --- Table preview + validation messages ------------------------------------
 # Editable table: edits made here feed straight into the figure below.
 st.subheader(f"Table — {table_name}")

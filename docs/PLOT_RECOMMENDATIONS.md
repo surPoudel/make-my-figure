@@ -28,7 +28,7 @@ Entries are ordered ready-first.
   heatmap. Large matrices carry a visual warning to default to top-variable features.
 - **After groups confirmed:** selected-feature box/violin/raincloud/bar by group,
   PCA colored by group (each lists the transform it needs, e.g. `wide_to_long`).
-- **After a differential summary:** volcano, MA plot, ranked-effect (lollipop).
+- **After a differential summary:** volcano, MA plot, ranked-effect (waterfall).
   Before one exists these show `needs_transformation` (or `needs_group_selection`)
   and list `feature_differential_summary` as required.
 
