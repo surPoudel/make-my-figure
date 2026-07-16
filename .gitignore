@@ -42,6 +42,10 @@ reports/*.png
 reports/example_figures/*.png
 reports/example_figures/*.svg
 reports/example_figures/*.plot_spec.json
+# Publication QC gallery: keep qc_summary.csv + qc_report.md, ignore the images.
+reports/publication_qc_gallery/per_plot/
+reports/publication_qc_gallery/*.png
+reports/publication_qc_gallery/*.pdf
 
 # Generated statistics-example figures are reproducible from scripts/ — keep the
 # data/spec/README text in-repo, exclude any rendered images.

@@ -41,6 +41,8 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
+    QListWidget,
+    QListWidgetItem,
     QMainWindow,
     QMessageBox,
     QPushButton,
@@ -59,6 +61,15 @@ from PySide6.QtWidgets import (
 
 from apps.desktop_app import help_content
 from apps.desktop_app.controller import DesktopController, LoadedData
+
+# Plot types that consume a features x samples matrix: the user picks which columns
+# are the value (measurement) columns; numeric annotation columns are left out.
+_MATRIX_PLOT_TYPES = {
+    "heatmap_clustered_matrix",
+    "pca_scatter_from_matrix",
+    "hierarchical_clustering",
+    "hierarchical_dendrogram",
+}
 from make_my_figure_core.io.loaders import LoaderError
 from make_my_figure_core.plots.base import RenderError
 from make_my_figure_core.plots.registry import display_name
@@ -172,6 +183,43 @@ class HelpDialog(QDialog):
         layout.addWidget(close)
 
 
+class _AspectView(QWidget):
+    """Holds a matplotlib canvas and keeps the figure's width:height ratio.
+
+    The Qt Agg canvas otherwise stretches the figure to the pane, changing its
+    aspect and clipping tight-laid-out labels/legends. This letterboxes the canvas
+    (centred, correct proportions) so the WHOLE figure is always visible — matching
+    what a saved file looks like — while staying fully interactive.
+    """
+
+    def __init__(self, canvas, aspect: float, parent=None):
+        super().__init__(parent)
+        self._canvas = canvas
+        self._aspect = aspect if aspect and aspect > 0 else 1.0
+        canvas.setParent(self)
+
+    def set_aspect(self, aspect: float) -> None:
+        self._aspect = aspect if aspect and aspect > 0 else 1.0
+        self._relayout()
+
+    def resizeEvent(self, event):
+        self._relayout()
+        super().resizeEvent(event)
+
+    def _relayout(self) -> None:
+        W, H = self.width(), self.height()
+        if W <= 0 or H <= 0:
+            return
+        w = W
+        h = int(round(w / self._aspect))
+        if h > H:
+            h = H
+            w = int(round(h * self._aspect))
+        x = (W - w) // 2
+        y = (H - h) // 2
+        self._canvas.setGeometry(x, y, max(1, w), max(1, h))
+
+
 # ---------------------------------------------------------------------------
 # Main window
 # ---------------------------------------------------------------------------
@@ -194,6 +242,7 @@ class MainWindow(QMainWindow):
         self._auto_recommend = True
         self._data_before_transform = None   # original data stashed before a reshape
         self._canvas = None
+        self._fig_view = None             # aspect-preserving holder for the canvas
         self._identify_mode = False       # click-to-identify/label on the canvas
         self._picked_labels = {}          # plot_type -> [labels] chosen by clicking
         self._pick_cols = {}              # plot_type -> label column to annotate by
@@ -298,9 +347,18 @@ class MainWindow(QMainWindow):
                                    "by a column's values — no metadata file needed.")
         self.groups_btn.clicked.connect(self.action_define_groups)
         nav_row.addWidget(self.groups_btn)
+        self.matrix_btn = QPushButton("\U0001F9EE  Matrix workflow…")
+        self.matrix_btn.setToolTip("Guided workflow for a feature-by-sample matrix: map "
+                                   "columns, define groups, get plot recommendations, and "
+                                   "generate publication plots.")
+        self.matrix_btn.clicked.connect(self.action_matrix_wizard)
+        nav_row.addWidget(self.matrix_btn)
         cv.addLayout(nav_row)
 
         self.plot_combo = QComboBox()
+        # A no-plot placeholder so uploading data does not immediately draw a chart;
+        # the user picks a plot type when ready (data=None means "nothing selected").
+        self.plot_combo.addItem("— Choose a plot type… —", None)
         for pt, label in self.controller.plot_types():
             self.plot_combo.addItem(label, pt)
         self.plot_combo.currentIndexChanged.connect(self._on_plot_type_changed)
@@ -843,6 +901,13 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "Unexpected error", str(exc))
             return
         self._add_recent(path)
+        # Uploaded data starts with NO plot selected — don't auto-draw a chart.
+        prev = self._suppress_change
+        self._suppress_change = True
+        try:
+            self.plot_combo.setCurrentIndex(0)     # the "Choose a plot type…" placeholder
+        finally:
+            self._suppress_change = prev
         self._set_data(data)
 
     def load_example(self, plot_type: str):
@@ -1244,15 +1309,31 @@ class MainWindow(QMainWindow):
             return
         from apps.desktop_app.grouping_panel import GroupingDialog
 
-        dlg = GroupingDialog(self.controller, self.data, self)
+        dlg = GroupingDialog(self.controller, self.data, self,
+                             initial_state=getattr(self, "_grouping_state", None))
         dlg.grouped.connect(self._adopt_grouped_data)
         dlg.exec()
+        # Remember the assignment so reopening the dialog restores prior groups.
+        if getattr(dlg, "result_state", None):
+            self._grouping_state = dlg.result_state
         # A wide (heatmap/PCA) grouping carries a group color-strip spec; apply it
         # to the heatmap and re-render so the groups are visible.
         ann = getattr(dlg, "column_annotations", None)
         if ann:
             self._pending_column_annotations = ann
             self.render_preview()
+
+    def action_matrix_wizard(self):
+        """Open the guided matrix workflow (map -> groups -> recommend -> generate)."""
+        if self.data is None:
+            self._show_warning("Load a data file first, then open the matrix workflow.")
+            return
+        from apps.desktop_app.matrix_wizard import MatrixWizardDialog
+
+        dlg = MatrixWizardDialog(self.controller, self.data, self._saved_panels, self)
+        dlg.exec()
+        # Wizard-generated plots may have been added to the Figure Builder.
+        self.panel_count_label.setText(f"{len(self._saved_panels)} panel(s) saved.")
 
     def _adopt_grouped_data(self, loaded):
         """Replace the active dataset with a derived (grouped/differential) table.
@@ -1411,9 +1492,15 @@ class MainWindow(QMainWindow):
 
     def _rebuild_mapping_and_options(self):
         pt = self.plot_combo.currentData()
-        defaults = self.controller.default_mapping(pt)
         self._clear_form(self.mapping_form)
         self._mapping_widgets = {}
+        self._value_cols_widget = None
+        if pt is None:
+            # No plot type selected — clear the option controls too and stop.
+            self._clear_form(self.options_form)
+            self._option_widgets = {}
+            return
+        defaults = self.controller.default_mapping(pt)
         col_opts = self._column_options()
         # For a DE/volcano table, auto-detect logFC / p-value / label columns
         # (works for edgeR, DESeq2, and other tools) and prefill the dropdowns.
@@ -1437,6 +1524,33 @@ class MainWindow(QMainWindow):
             label = field
             self.mapping_form.addRow(label, combo)
             self._mapping_widgets[field] = combo
+        # Matrix plots: let the user choose which columns are the VALUE (measurement)
+        # columns. Populate every non-id column and pre-select the auto-detected
+        # value columns, so numeric annotation columns (e.g. annotationLevel coded
+        # 1/2/3) are left out unless the user opts them in.
+        self._value_cols_widget = None
+        if pt in _MATRIX_PLOT_TYPES and self.data is not None:
+            id_field = "matrix_row_id" if pt == "pca_scatter_from_matrix" else "row_id"
+            id_col = self._mapping_widgets.get(id_field)
+            id_name = id_col.currentText() if id_col else None
+            cols = [c for c in self.data.info.columns if c != id_name]
+            try:
+                from make_my_figure_core.grouping import value_matrix_columns
+                value_cols, _annot = value_matrix_columns(self.data.info.dataframe, id_name)
+            except Exception:
+                value_cols = cols
+            lw = QListWidget()
+            lw.setSelectionMode(QListWidget.ExtendedSelection)
+            lw.setMaximumHeight(150)
+            value_set = set(map(str, value_cols))
+            for c in cols:
+                it = QListWidgetItem(str(c))
+                lw.addItem(it)
+                it.setSelected(str(c) in value_set)
+            lw.itemSelectionChanged.connect(self.render_preview)
+            self.mapping_form.addRow("Value columns", lw)
+            self._value_cols_widget = lw
+
         # PCA metadata-based fields (color/shape)
         if self.controller.needs_metadata(pt):
             meta_opts = self._metadata_options()
@@ -1507,6 +1621,12 @@ class MainWindow(QMainWindow):
         for key, combo in self._mapping_widgets.items():
             val = combo.currentText()
             mapping[key] = None if val == "(none)" else val
+        # Explicit value-column selection for matrix plots (heatmap/PCA/clustering).
+        lw = getattr(self, "_value_cols_widget", None)
+        if lw is not None:
+            chosen = [i.text() for i in lw.selectedItems()]
+            if chosen:
+                mapping["value_columns"] = chosen
         for key, w in self._option_widgets.items():
             if isinstance(w, QCheckBox):
                 mapping[key] = w.isChecked()
@@ -1530,6 +1650,12 @@ class MainWindow(QMainWindow):
             return
         pt = self.plot_combo.currentData()
         self._hide_example_prompt()
+
+        if pt is None:
+            # Back to the "no plot" placeholder — clear controls + figure, show prompt.
+            self._rebuild_mapping_and_options()
+            self.render_preview()
+            return
 
         # When browsing bundled examples, switching plot type should show THAT
         # plot type's own example (each example is designed for its plot type),
@@ -1616,6 +1742,16 @@ class MainWindow(QMainWindow):
     def render_preview(self):
         if self.data is None or getattr(self, "_loading_spec", False):
             return
+        if self.plot_combo.currentData() is None:
+            # No plot type chosen yet — show a prompt instead of drawing anything.
+            self._clear_figure(show_placeholder=True)
+            if self.fig_placeholder is not None:
+                self.fig_placeholder.setText(
+                    "Data loaded. Choose a plot type above to render a figure —\n"
+                    "or click “🧮 Matrix workflow…” for a guided feature-matrix workflow.")
+            self._current_result = None
+            self._current_spec = None
+            return
         spec, result, err = self._try_build_and_render()
         if result is None:
             # Clear the stale figure so a previous plot never lingers on error.
@@ -1643,7 +1779,15 @@ class MainWindow(QMainWindow):
             self._toolbar = None
         if self._canvas is not None:
             old_fig = self._canvas.figure
-            self.fig_layout.removeWidget(self._canvas)
+            # The canvas may live inside the aspect-view holder; remove whichever
+            # is actually in the layout.
+            if self._fig_view is not None:
+                self.fig_layout.removeWidget(self._fig_view)
+                self._fig_view.setParent(None)
+                self._fig_view.deleteLater()
+                self._fig_view = None
+            else:
+                self.fig_layout.removeWidget(self._canvas)
             self._canvas.setParent(None)
             self._canvas.deleteLater()
             self._canvas = None
@@ -1666,13 +1810,22 @@ class MainWindow(QMainWindow):
         self._clear_figure(show_placeholder=False)
         canvas = FigureCanvasQTAgg(fig)
         canvas.setObjectName("figureCanvas")
-        canvas.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         canvas.setFocusPolicy(Qt.StrongFocus)   # needed for key/scroll interactions
         toolbar = NavigationToolbar2QT(canvas, self.fig_container)
         toolbar.setObjectName("figureToolbar")
-        # Toolbar on top, canvas fills the rest (stretch = 1) — nothing overlays it.
         self.fig_layout.addWidget(toolbar)
-        self.fig_layout.addWidget(canvas, 1)
+        # Keep the figure's aspect so the WHOLE plot is visible (not stretched/clipped).
+        # Fall back to a plain expanding canvas if the aspect holder can't be built.
+        try:
+            w_in, h_in = fig.get_size_inches()
+            view = _AspectView(canvas, float(w_in) / float(h_in) if h_in else 1.0,
+                               self.fig_container)
+            self.fig_layout.addWidget(view, 1)
+            self._fig_view = view
+        except Exception:
+            canvas.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+            self.fig_layout.addWidget(canvas, 1)
+            self._fig_view = None
         self._canvas = canvas
         self._toolbar = toolbar
         # Click-to-identify / label: map a click on the live canvas to a data

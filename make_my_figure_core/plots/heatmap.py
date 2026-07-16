@@ -159,6 +159,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     show_row_labels = get_mapping(spec, "show_row_labels", None)
     show_col_labels = get_mapping(spec, "show_col_labels", None)
     exclude_cols = {str(c) for c in (get_mapping(spec, "exclude_columns", None) or [])}
+    value_columns = get_mapping(spec, "value_columns", None)
     max_features = int(get_mapping(spec, "max_features", _clust.DEFAULT_MAX_CLUSTER_FEATURES))
     # Vertical separators between sample groups (from column_groups mapping or the
     # first column-annotation track). 'auto' = on when groups are known.
@@ -173,16 +174,23 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     # RNA-seq matrices often carry annotation columns (geneSymbol/bioType/
     # annotationLevel) before the samples — drop non-numeric ones automatically
     # and let the user exclude numeric-looking annotation columns explicitly.
+    from make_my_figure_core.plots._v04_shared import resolve_value_columns
+
     candidate_cols = [c for c in work.columns if c != row_id and str(c) not in exclude_cols]
     numeric = work[candidate_cols].apply(lambda s: pd.to_numeric(s, errors="coerce"))
-    sample_cols = [c for c in candidate_cols if numeric[c].notna().any()]
-    if not sample_cols:
+    numeric_cols = [c for c in candidate_cols if numeric[c].notna().any()]
+    if not numeric_cols:
         raise RenderError(f"{PLOT_TYPE}: no numeric sample columns besides row id '{row_id}'.")
+    # Keep only per-sample VALUE columns: drop integer-coded annotation columns
+    # (e.g. annotationLevel in {1,2,3}) that are numeric but not measurements,
+    # honouring an explicit value-column selection when given.
+    sample_cols = resolve_value_columns(work, numeric_cols, value_columns=value_columns,
+                                        warnings=warnings)
     dropped = [c for c in work.columns if c != row_id and c not in sample_cols]
     if dropped:
-        warnings.append(f"Ignored non-sample column(s): {dropped}.")
-    warnings.append(f"Using {len(sample_cols)} sample column(s): {list(sample_cols)}. "
-                    "If any of these are not samples, add them to 'exclude_columns'.")
+        warnings.insert(0, f"Ignored non-sample column(s): {dropped}.")
+    warnings.append(f"Using {len(sample_cols)} value column(s): {list(sample_cols)}. "
+                    "If this is wrong, select value columns explicitly (or use 'exclude_columns').")
     raw_matrix = numeric[sample_cols].to_numpy(dtype=float)
     if np.isnan(raw_matrix).any():
         warnings.append("Matrix contains missing/non-numeric values; shown as blank cells.")

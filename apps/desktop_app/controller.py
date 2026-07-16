@@ -28,6 +28,7 @@ from make_my_figure_core.plots.registry import (
     display_name,
     export_bundle_bytes,
     export_figure,
+    make_spec,
     render,
     write_sidecar,
 )
@@ -426,3 +427,81 @@ class DesktopController:
             raise FileNotFoundError(f"No bundled template for '{plot_type}'.")
         shutil.copyfile(src, dest_path)
         return dest_path
+
+    # --- matrix workflow (GUI-free; the Qt wizard is a thin layer over these) ---
+    def matrix_suggest_spec(self, data: LoadedData):
+        """Suggest (unconfirmed) column roles for a feature matrix."""
+        import make_my_figure_core.matrix_workflow as mw
+
+        return mw.suggest_matrix_spec(data.info.dataframe, source_file=data.table_name)
+
+    def matrix_value_types(self) -> Tuple[str, ...]:
+        from make_my_figure_core.matrix_workflow.matrix_spec import VALUE_TYPES
+
+        return VALUE_TYPES
+
+    def matrix_looks_log_scale(self, data: LoadedData, value_columns) -> bool:
+        import make_my_figure_core.matrix_workflow as mw
+
+        return mw.looks_log_scale(data.info.dataframe, list(value_columns))
+
+    def matrix_metadata_from_assignment(self, sample_to_group: Dict[str, str]):
+        import make_my_figure_core.matrix_workflow as mw
+
+        return mw.metadata_from_assignment(sample_to_group)
+
+    def matrix_validate(self, data: LoadedData, matrix_spec, metadata=None):
+        import make_my_figure_core.matrix_workflow as mw
+
+        return mw.validate_matrix(data.info.dataframe, matrix_spec, metadata)
+
+    def matrix_recommendations(self, data: LoadedData, matrix_spec, metadata=None, *,
+                               has_differential: bool = False):
+        import make_my_figure_core.matrix_workflow as mw
+
+        return mw.recommend_plots(matrix_spec, metadata,
+                                  has_differential_summary=has_differential,
+                                  n_features=len(data.info.dataframe))
+
+    def matrix_stats_choices(self):
+        """Return ``(two_group_tests, multi_group_tests, corrections)`` label lists."""
+        from make_my_figure_core.matrix_workflow.differential_summary import (
+            CORRECTIONS,
+            MULTI_GROUP_TESTS,
+            TWO_GROUP_TESTS,
+        )
+
+        return TWO_GROUP_TESTS, MULTI_GROUP_TESTS, CORRECTIONS
+
+    def matrix_can_run_statistics(self, matrix_spec, metadata):
+        import make_my_figure_core.matrix_workflow as mw
+
+        return mw.require_for_statistics(matrix_spec, metadata)
+
+    def matrix_differential_summary(self, data: LoadedData, matrix_spec, metadata, *,
+                                    group_a, group_b=None, test="welch_t",
+                                    correction="benjamini_hochberg"):
+        import make_my_figure_core.matrix_workflow as mw
+
+        return mw.feature_differential_summary(
+            data.info.dataframe, matrix_spec, metadata, group_a=group_a, group_b=group_b,
+            test=test, correction=correction)
+
+    def matrix_build_plot(self, data: LoadedData, rec, matrix_spec, *, metadata=None,
+                          differential_table=None, selected_features=None, params=None):
+        """Turn a recommendation into a rendered figure.
+
+        Returns ``(spec_dict, RenderResult, PlotInputs)``; raises ValueError/RenderError
+        on missing prerequisites or render failure."""
+        import make_my_figure_core.matrix_workflow as mw
+
+        pi = mw.build_plot_inputs(rec, data.info.dataframe, matrix_spec, metadata=metadata,
+                                  differential_table=differential_table,
+                                  selected_features=selected_features, params=params)
+        spec = make_spec(pi.plot_type, matrix_spec.source_file or data.table_name,
+                         "publication", mapping=pi.mapping)
+        for k, v in (pi.spec_extra or {}).items():   # e.g. column_annotations (group strip)
+            spec[k] = v
+        aux = pi.aux or None
+        result = render(spec, pi.dataframe, aux=aux)
+        return spec, result, pi

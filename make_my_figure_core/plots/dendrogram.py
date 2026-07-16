@@ -47,8 +47,9 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         cluster = "rows"
 
     exclude = get_mapping(spec, "exclude_columns", None)
+    value_columns = get_mapping(spec, "value_columns", None)
     row_labels, value_cols, matrix, warnings = numeric_matrix(
-        df, row_id, context=PLOT_TYPE, exclude=exclude)
+        df, row_id, context=PLOT_TYPE, exclude=exclude, value_columns=value_columns)
     warnings = list(warnings)
 
     if cluster == "columns":

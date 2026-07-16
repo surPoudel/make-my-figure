@@ -24,6 +24,72 @@ SUGGESTIVE_SIG = 1e-5
 
 _LINKAGE_METHODS = ("average", "complete", "single", "ward")
 
+# A numeric column that is integer-valued with at most this many distinct values
+# is treated as a categorical ANNOTATION (e.g. annotationLevel coded 1/2/3), not
+# a per-sample measurement column. Purely a default; the user can override.
+ANNOTATION_MAX_LEVELS = 24
+
+
+def classify_matrix_columns(df: pd.DataFrame, candidate_cols: Sequence[str], *,
+                            max_levels: int = ANNOTATION_MAX_LEVELS
+                            ) -> Tuple[List[str], List[str]]:
+    """Split candidate columns into ``(value_columns, annotation_columns)``.
+
+    A **value** (per-sample measurement) column is numeric and either non-integer
+    or high-cardinality. A numeric column that is integer-valued with few distinct
+    values (``<= max_levels``) is treated as a categorical **annotation** (a level
+    / flag / class code such as ``annotationLevel`` in ``{1, 2, 3}``). Non-numeric
+    columns are annotations. This is a heuristic default only — callers always let
+    the user override via an explicit value-column selection.
+    """
+    value_cols: List[str] = []
+    annot_cols: List[str] = []
+    for c in candidate_cols:
+        vals = pd.to_numeric(df[c], errors="coerce").dropna()
+        if vals.empty:
+            annot_cols.append(c)
+            continue
+        arr = vals.to_numpy()
+        is_integer = bool(np.all(np.isfinite(arr)) and np.all(np.equal(np.mod(arr, 1), 0)))
+        if is_integer and int(vals.nunique()) <= max_levels:
+            annot_cols.append(c)
+        else:
+            value_cols.append(c)
+    return value_cols, annot_cols
+
+
+def resolve_value_columns(df: pd.DataFrame, candidate_cols: Sequence[str], *,
+                          value_columns: Optional[Sequence[str]] = None,
+                          warnings: Optional[List[str]] = None,
+                          max_levels: int = ANNOTATION_MAX_LEVELS) -> List[str]:
+    """Choose the per-sample value columns from numeric candidates.
+
+    If ``value_columns`` is given (an explicit user selection), use exactly those
+    that exist among the candidates. Otherwise auto-classify and drop integer-coded
+    low-cardinality annotation columns — but ONLY when at least one value column
+    remains (never strip everything). Appends an explanatory note to ``warnings``.
+    """
+    notes = warnings if warnings is not None else []
+    candidates = list(candidate_cols)
+    if value_columns:
+        want = {str(c) for c in value_columns}
+        chosen = [c for c in candidates if str(c) in want]
+        if chosen:
+            dropped = [c for c in candidates if c not in chosen]
+            if dropped:
+                notes.append(f"Using {len(chosen)} selected value column(s); ignored "
+                             f"{len(dropped)} other column(s): {dropped}.")
+            return chosen
+        notes.append("None of the selected value columns were found; auto-detecting instead.")
+    value_cols, annot_cols = classify_matrix_columns(df, candidates, max_levels=max_levels)
+    if value_cols and annot_cols:
+        notes.append(
+            f"Treated {len(annot_cols)} integer-coded column(s) as categorical "
+            f"annotations, not values: {annot_cols}. If any of these are measurements, "
+            "select them as value columns.")
+        return value_cols
+    return candidates
+
 
 def _norm(name: str) -> str:
     return str(name).lower().replace(" ", "").replace("_", "").replace(".", "").replace("-", "")
@@ -40,14 +106,18 @@ def pick_column(df: pd.DataFrame, aliases: Sequence[str], *, default: Optional[s
 
 
 def numeric_matrix(
-    df: pd.DataFrame, id_col: Optional[str] = None, *, context: str, exclude=None
+    df: pd.DataFrame, id_col: Optional[str] = None, *, context: str, exclude=None,
+    value_columns=None,
 ) -> Tuple[List[str], List[str], np.ndarray, List[str]]:
     """Parse a ``features x samples`` matrix.
 
     The ``id_col`` (or the first column when unset) holds row labels; every
     other column is coerced to numeric. Columns named in ``exclude`` are dropped
     (e.g. RNA-seq annotation columns like geneSymbol/bioType/annotationLevel that
-    sit before the sample columns). Returns
+    sit before the sample columns). When ``value_columns`` is given, exactly those
+    are used as the per-sample value columns; otherwise integer-coded low-
+    cardinality annotation columns (e.g. annotationLevel) are auto-detected and
+    dropped so only measurement columns are plotted. Returns
     ``(row_labels, value_columns, matrix, warnings)`` and never mutates ``df``.
     """
     if df.shape[1] < 2:
@@ -59,16 +129,19 @@ def numeric_matrix(
 
     excluded = {str(c) for c in (exclude or [])}
     row_labels = df[id_col].astype(str).tolist()
-    value_cols = [c for c in df.columns if c != id_col and str(c) not in excluded]
-    numeric = df[value_cols].apply(lambda s: pd.to_numeric(s, errors="coerce"))
+    candidates = [c for c in df.columns if c != id_col and str(c) not in excluded]
+    numeric = df[candidates].apply(lambda s: pd.to_numeric(s, errors="coerce"))
     # Drop columns that are entirely non-numeric (e.g. stray text metadata columns).
-    keep = [c for c in value_cols if numeric[c].notna().any()]
-    if not keep:
+    numeric_cols = [c for c in candidates if numeric[c].notna().any()]
+    if not numeric_cols:
         raise RenderError(f"{context}: no numeric value columns besides label '{id_col}'.")
-    dropped = [c for c in df.columns if c != id_col and c not in keep]
     warnings: List[str] = []
+    # Keep only per-sample VALUE columns (drop integer-coded annotation columns
+    # such as annotationLevel), honouring an explicit user selection when given.
+    keep = resolve_value_columns(df, numeric_cols, value_columns=value_columns, warnings=warnings)
+    dropped = [c for c in df.columns if c != id_col and c not in keep]
     if dropped:
-        warnings.append(f"Ignored non-sample column(s): {dropped}.")
+        warnings.insert(0, f"Ignored non-sample column(s): {dropped}.")
     matrix = numeric[keep].to_numpy(dtype=float)
     if np.isnan(matrix).any():
         warnings.append("Matrix has missing/non-numeric entries; treated as 0 for clustering.")

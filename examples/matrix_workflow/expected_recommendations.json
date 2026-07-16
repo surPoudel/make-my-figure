@@ -1,0 +1,214 @@
+[
+  {
+    "plot_type": "heatmap_clustered_matrix",
+    "label": "Heatmap",
+    "reason": "Visualize the whole value matrix.",
+    "required_data_shape": "matrix",
+    "required_transformations": [],
+    "required_user_inputs": [],
+    "readiness_status": "ready",
+    "scientific_warnings": [],
+    "visual_warnings": [
+      "Large matrix \u2014 defaults to top-variable features for legibility."
+    ]
+  },
+  {
+    "plot_type": "heatmap_clustered_matrix",
+    "label": "Clustered heatmap (row z-score)",
+    "reason": "Cluster features/samples on standardized values.",
+    "required_data_shape": "matrix",
+    "required_transformations": [
+      "row_zscore"
+    ],
+    "required_user_inputs": [],
+    "readiness_status": "ready",
+    "scientific_warnings": [],
+    "visual_warnings": []
+  },
+  {
+    "plot_type": "hierarchical_clustering",
+    "label": "Hierarchical clustering",
+    "reason": "Cluster and reorder the matrix.",
+    "required_data_shape": "matrix",
+    "required_transformations": [],
+    "required_user_inputs": [],
+    "readiness_status": "ready",
+    "scientific_warnings": [],
+    "visual_warnings": []
+  },
+  {
+    "plot_type": "hierarchical_dendrogram",
+    "label": "Dendrogram",
+    "reason": "Sample/feature clustering tree.",
+    "required_data_shape": "matrix",
+    "required_transformations": [],
+    "required_user_inputs": [],
+    "readiness_status": "ready",
+    "scientific_warnings": [],
+    "visual_warnings": []
+  },
+  {
+    "plot_type": "heatmap_clustered_matrix",
+    "label": "Sample correlation heatmap",
+    "reason": "Sample-by-sample correlation structure / QC.",
+    "required_data_shape": "matrix",
+    "required_transformations": [
+      "sample_correlation"
+    ],
+    "required_user_inputs": [],
+    "readiness_status": "ready",
+    "scientific_warnings": [],
+    "visual_warnings": []
+  },
+  {
+    "plot_type": "pca_scatter_from_matrix",
+    "label": "PCA scatter",
+    "reason": "Sample structure in low dimensions.",
+    "required_data_shape": "matrix",
+    "required_transformations": [
+      "pca"
+    ],
+    "required_user_inputs": [],
+    "readiness_status": "ready",
+    "scientific_warnings": [],
+    "visual_warnings": []
+  },
+  {
+    "plot_type": "hierarchical_clustering",
+    "label": "Top variable-feature heatmap",
+    "reason": "Most variable features only \u2014 good for large matrices.",
+    "required_data_shape": "matrix",
+    "required_transformations": [
+      "top_variable_features",
+      "row_zscore"
+    ],
+    "required_user_inputs": [],
+    "readiness_status": "ready",
+    "scientific_warnings": [],
+    "visual_warnings": []
+  },
+  {
+    "plot_type": "boxplot_or_violin_with_points",
+    "label": "Selected-feature box/violin by group",
+    "reason": "Compare chosen features across groups.",
+    "required_data_shape": "long",
+    "required_transformations": [
+      "wide_to_long"
+    ],
+    "required_user_inputs": [
+      "select feature(s)"
+    ],
+    "readiness_status": "ready",
+    "scientific_warnings": [],
+    "visual_warnings": []
+  },
+  {
+    "plot_type": "dot_strip_plot",
+    "label": "Selected-feature dot/strip by group",
+    "reason": "Compare chosen features across groups.",
+    "required_data_shape": "long",
+    "required_transformations": [
+      "wide_to_long"
+    ],
+    "required_user_inputs": [
+      "select feature(s)"
+    ],
+    "readiness_status": "ready",
+    "scientific_warnings": [],
+    "visual_warnings": []
+  },
+  {
+    "plot_type": "raincloud_plot",
+    "label": "Selected-feature raincloud by group",
+    "reason": "Compare chosen features across groups.",
+    "required_data_shape": "long",
+    "required_transformations": [
+      "wide_to_long"
+    ],
+    "required_user_inputs": [
+      "select feature(s)"
+    ],
+    "readiness_status": "ready",
+    "scientific_warnings": [],
+    "visual_warnings": []
+  },
+  {
+    "plot_type": "barplot_with_error_bar",
+    "label": "Selected-feature bar (mean +/- error) by group",
+    "reason": "Compare chosen features across groups.",
+    "required_data_shape": "long",
+    "required_transformations": [
+      "wide_to_long"
+    ],
+    "required_user_inputs": [
+      "select feature(s)"
+    ],
+    "readiness_status": "ready",
+    "scientific_warnings": [],
+    "visual_warnings": []
+  },
+  {
+    "plot_type": "pca_scatter_from_matrix",
+    "label": "PCA colored by group",
+    "reason": "Sample structure colored by condition.",
+    "required_data_shape": "matrix",
+    "required_transformations": [
+      "pca"
+    ],
+    "required_user_inputs": [],
+    "readiness_status": "ready",
+    "scientific_warnings": [],
+    "visual_warnings": []
+  },
+  {
+    "plot_type": "volcano_plot",
+    "label": "Volcano",
+    "reason": "Effect vs significance from a differential summary.",
+    "required_data_shape": "differential_table",
+    "required_transformations": [
+      "feature_differential_summary"
+    ],
+    "required_user_inputs": [
+      "group A",
+      "group B",
+      "confirm value scale"
+    ],
+    "readiness_status": "needs_transformation",
+    "scientific_warnings": [],
+    "visual_warnings": []
+  },
+  {
+    "plot_type": "ma_plot",
+    "label": "MA plot",
+    "reason": "Effect vs mean abundance from a differential summary.",
+    "required_data_shape": "differential_table",
+    "required_transformations": [
+      "feature_differential_summary"
+    ],
+    "required_user_inputs": [
+      "group A",
+      "group B",
+      "confirm value scale"
+    ],
+    "readiness_status": "needs_transformation",
+    "scientific_warnings": [],
+    "visual_warnings": []
+  },
+  {
+    "plot_type": "lollipop_mutation_plot",
+    "label": "Ranked effect (lollipop)",
+    "reason": "Top features by effect size.",
+    "required_data_shape": "differential_table",
+    "required_transformations": [
+      "feature_differential_summary"
+    ],
+    "required_user_inputs": [
+      "group A",
+      "group B",
+      "confirm value scale"
+    ],
+    "readiness_status": "needs_transformation",
+    "scientific_warnings": [],
+    "visual_warnings": []
+  }
+]

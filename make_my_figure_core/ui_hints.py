@@ -70,10 +70,17 @@ class Option:
 
 _ERROR_CHOICES = ["sem", "sd", "ci95", "none"]
 
+# Shared control: how to angle categorical x-axis labels. "auto" (default) keeps
+# long/numerous labels (e.g. sample names) readable without user intervention.
+_X_TICK_ROTATION = Option("x_tick_rotation", "X-axis label angle", "choice", "auto",
+                          ["auto", "horizontal", "45", "vertical"])
+
 # Extra (non-column) options per plot type.
 OPTIONS: Dict[str, List[Option]] = {
-    "barplot_with_error_bar": [Option("error", "Error bar", "choice", "sem", _ERROR_CHOICES)],
-    "grouped_barplot_with_error_bar": [Option("error", "Error bar", "choice", "sem", _ERROR_CHOICES)],
+    "barplot_with_error_bar": [Option("error", "Error bar", "choice", "sem", _ERROR_CHOICES),
+                               _X_TICK_ROTATION],
+    "grouped_barplot_with_error_bar": [Option("error", "Error bar", "choice", "sem", _ERROR_CHOICES),
+                                       _X_TICK_ROTATION],
     "heatmap_clustered_matrix": [
         Option("cluster_rows", "Cluster rows", "bool", True),
         Option("cluster_columns", "Cluster columns", "bool", True),
@@ -110,6 +117,7 @@ OPTIONS: Dict[str, List[Option]] = {
     "boxplot_or_violin_with_points": [
         Option("kind", "Kind", "choice", "box", ["box", "violin"]),
         Option("points", "Overlay points", "bool", True),
+        _X_TICK_ROTATION,
     ],
     "lineplot_timecourse_with_error_band": [Option("error", "Error band", "choice", "sem", _ERROR_CHOICES)],
     "ridge_or_density_plot": [
@@ -119,7 +127,7 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("top_n", "Top N terms", "number", 20, minimum=5, maximum=40, step=1, decimals=0),
     ],
     "kaplan_meier_survival_curve": [],
-    "stacked_bar_composition": [],
+    "stacked_bar_composition": [_X_TICK_ROTATION],
     "waterfall_plot": [Option("sort", "Sort", "choice", "ascending", ["ascending", "descending"])],
     "pca_scatter_from_matrix": [],
     "oncoprint_mutation_heatmap": [],
@@ -139,12 +147,14 @@ OPTIONS: Dict[str, List[Option]] = {
     "dot_strip_plot": [
         Option("summary", "Summary overlay", "choice", "mean", ["none", "mean", "median", "ci", "sd", "sem"]),
         Option("jitter", "Jitter points", "bool", True),
+        _X_TICK_ROTATION,
     ],
     "beeswarm_plot": [
         Option("summary", "Summary overlay", "choice", "mean", ["none", "mean", "median", "ci", "sd", "sem"]),
+        _X_TICK_ROTATION,
     ],
     "paired_slopegraph": [],
-    "raincloud_plot": [],
+    "raincloud_plot": [_X_TICK_ROTATION],
     "hierarchical_dendrogram": [
         Option("method", "Linkage method", "choice", "average", ["average", "complete", "single", "ward"]),
         Option("cluster", "Cluster", "choice", "rows", ["rows", "columns"]),

@@ -41,11 +41,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile,
 
     warnings: List[str] = []
     exclude = {str(c) for c in (get_mapping(spec, "exclude_columns", None) or [])}
+    value_columns = get_mapping(spec, "value_columns", None)
     sample_cols = [c for c in df.columns if c != row_id and str(c) not in exclude]
     # Restrict to actual samples (present in the metadata's sample-id column)
     # when metadata is supplied. This drops RNA-seq annotation columns
     # (geneSymbol/bioType/annotationLevel) that sit before the sample columns.
     meta_df = aux.get("metadata")
+    meta_restricted = False
     if meta_df is not None and meta_key in meta_df.columns:
         ids = set(meta_df[meta_key].astype(str))
         matched = [c for c in sample_cols if str(c) in ids]
@@ -55,11 +57,19 @@ def render(spec: Dict[str, Any], df, style: StyleProfile,
                 warnings.append(f"Ignored column(s) not present in metadata '{meta_key}': "
                                 f"{dropped_meta}.")
             sample_cols = matched
+            meta_restricted = True
     numeric_all = df[sample_cols].apply(lambda s: pd.to_numeric(s, errors="coerce"))
     numeric_cols = [c for c in sample_cols if numeric_all[c].notna().any()]
     dropped_nonnum = [c for c in sample_cols if c not in numeric_cols]
     if dropped_nonnum:
         warnings.append(f"Ignored non-numeric column(s): {dropped_nonnum}.")
+    # Without a metadata sample list to pin the samples, keep only per-sample VALUE
+    # columns: drop integer-coded annotation columns (e.g. annotationLevel), honouring
+    # an explicit value-column selection when given.
+    if value_columns or not meta_restricted:
+        from make_my_figure_core.plots._v04_shared import resolve_value_columns
+        numeric_cols = resolve_value_columns(df, numeric_cols, value_columns=value_columns,
+                                             warnings=warnings)
     sample_cols = numeric_cols
     if len(sample_cols) < 3:
         raise RenderError(f"{PLOT_TYPE}: need >= 3 numeric sample columns for a PCA "
