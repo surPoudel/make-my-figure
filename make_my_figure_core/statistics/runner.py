@@ -140,6 +140,23 @@ def run_statistics(df: pd.DataFrame, stats_spec: Dict[str, Any], *,
             return StatsReport(config=stats_spec, warnings=["No applicable test for this plot type."],
                                software_versions=software_versions())
 
+    # GLM regression manages its own inference (Wald tests per coefficient); it does
+    # not go through the pairwise/omnibus dispatch or family-wide correction.
+    if test == "glm":
+        from make_my_figure_core.statistics.regression import RegressionError, glm_regression
+        response = stats_spec.get("response") or cols.get("y") or mapping.get("y")
+        predictors = stats_spec.get("predictors")
+        if not predictors:
+            px = cols.get("x") or mapping.get("x")
+            predictors = [px] if px else []
+        try:
+            return glm_regression(df, response=response, predictors=list(predictors),
+                                  family=stats_spec.get("family", "gaussian"),
+                                  alpha=alpha, plot_type=plot_type)
+        except RegressionError as exc:
+            return StatsReport(config=stats_spec, warnings=[str(exc)],
+                               software_versions=software_versions())
+
     try:
         results = _dispatch(test, df, cols, plot_type, mode, reference, selected,
                             alternative, alpha, posthoc, stats_spec)

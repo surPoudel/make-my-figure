@@ -46,6 +46,7 @@ TESTS: Dict[str, TestInfo] = {
     "pearson": TestInfo("pearson", "Pearson correlation", "correlation", True),
     "spearman": TestInfo("spearman", "Spearman correlation", "correlation", False),
     "linear_regression": TestInfo("linear_regression", "Linear regression", "regression", True),
+    "glm": TestInfo("glm", "GLM regression (multi-predictor)", "regression", True),
 }
 
 

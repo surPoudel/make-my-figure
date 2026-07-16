@@ -508,6 +508,14 @@ class MatrixWizardDialog(QDialog):
         self.topn_spin = QSpinBox(); self.topn_spin.setRange(5, 200); self.topn_spin.setValue(30)
         topn_row.addWidget(self.topn_label); topn_row.addWidget(self.topn_spin); topn_row.addStretch()
         rl.addLayout(topn_row)
+        # Volcano/MA y-axis significance (user-selectable; not hard-coded FDR).
+        sig_row = QHBoxLayout()
+        self.sig_label = QLabel("Volcano y-axis:")
+        self.sig_combo = QComboBox()
+        self.sig_combo.addItem("Adjusted p-value (FDR)", "fdr")
+        self.sig_combo.addItem("Raw p-value", "pvalue")
+        sig_row.addWidget(self.sig_label); sig_row.addWidget(self.sig_combo); sig_row.addStretch()
+        rl.addLayout(sig_row)
         gen = QPushButton("Generate plot")
         gen.clicked.connect(self._generate)
         rl.addWidget(gen)
@@ -538,11 +546,16 @@ class MatrixWizardDialog(QDialog):
     def _refresh_generate_tab(self):
         # group combos for the differential summary
         groups = self.metadata.groups() if self.metadata else []
-        for combo in (self.ga_combo, self.gb_combo):
+        # Default A and B to two *distinct* groups so we never seed a same-group
+        # comparison (was platform-dependent when both combos defaulted to index 0).
+        def_a, def_b = (self.metadata.default_group_pair() if self.metadata else (None, None))
+        for combo, default in ((self.ga_combo, def_a), (self.gb_combo, def_b)):
             cur = combo.currentText()
             combo.blockSignals(True); combo.clear(); combo.addItems(groups)
             if cur in groups:
                 combo.setCurrentText(cur)
+            elif default in groups:
+                combo.setCurrentText(default)
             combo.blockSignals(False)
         # feature list for selected-feature plots
         if self.matrix_spec is not None:
@@ -675,6 +688,8 @@ class MatrixWizardDialog(QDialog):
         if rec.key in ("box_by_group", "dot_by_group", "raincloud_by_group", "bar_by_group"):
             selected = [i.text() for i in self.feature_list.selectedItems()] or None
         params = {"top_n": int(self.topn_spin.value())}
+        if rec.key in ("volcano", "ma"):
+            params["significance"] = self.sig_combo.currentData()
         try:
             spec, result, pi = self.controller.matrix_build_plot(
                 self.data, rec, self.matrix_spec, metadata=self.metadata,

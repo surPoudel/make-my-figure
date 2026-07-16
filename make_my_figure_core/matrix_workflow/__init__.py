@@ -66,6 +66,9 @@ from make_my_figure_core.matrix_workflow.preprocessing import (
 from make_my_figure_core.matrix_workflow.qc_plots import qc_plot_catalog, qc_plot_inputs
 from make_my_figure_core.matrix_workflow.preprocessing_reports import before_after_report
 from make_my_figure_core.matrix_workflow import normalization, preprocessing, transformations
+# GLM regression is a general statistics tool exposed here so the matrix framework
+# shares the exact same engine as the regular workflow.
+from make_my_figure_core.statistics.regression import glm_regression
 
 __all__ = [
     "MatrixSpec", "suggest_matrix_spec", "looks_log_scale",
@@ -82,5 +85,5 @@ __all__ = [
     "NormalizationRecommendation", "PreprocessingWorkflow", "recommend_preprocessing",
     "normalization_catalog", "apply_step", "run_preprocessing", "available_methods",
     "qc_plot_catalog", "qc_plot_inputs", "before_after_report",
-    "normalization", "preprocessing", "transformations",
+    "normalization", "preprocessing", "transformations", "glm_regression",
 ]

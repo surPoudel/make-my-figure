@@ -35,12 +35,15 @@ from make_my_figure_core.statistics.annotations import (
     stat_text_panel,
 )
 from make_my_figure_core.statistics import method_reporting
+from make_my_figure_core.statistics.regression import RegressionError, glm_regression
 
 __all__ = [
     "StatResult",
     "StatsReport",
     "StatsError",
     "run_statistics",
+    "glm_regression",
+    "RegressionError",
     "TESTS",
     "TestInfo",
     "recommend_tests",

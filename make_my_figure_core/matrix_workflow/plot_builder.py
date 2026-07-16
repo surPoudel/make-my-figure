@@ -144,9 +144,17 @@ def build_plot_inputs(rec: RecommendedPlot, df: pd.DataFrame, matrix_spec: Matri
         eff = _effect_col(tbl)
         p_adj = "adjusted_p_value" if "adjusted_p_value" in tbl.columns else _p_col(tbl)
         label = "feature_label" if "feature_label" in tbl.columns else _id_col(tbl)
+        # y-axis significance is user-selectable (not hard-coded FDR); fall back
+        # gracefully when the requested column is unavailable.
+        sig_field, use_fdr, sig_warns = _resolve_significance(tbl, params.get("significance"), p_adj)
         if key == "volcano":
-            return PlotInputs("volcano_plot", tbl,
-                              {"x": eff, "p": p_adj, "label": label, "use_fdr": True})
+            m = {"x": eff, "p": sig_field, "label": label, "use_fdr": use_fdr,
+                 "significance": "fdr" if use_fdr else "pvalue"}
+            if params.get("p_cutoff") is not None:
+                m["p_cutoff"] = float(params["p_cutoff"])
+            if params.get("lfc_cutoff") is not None:
+                m["lfc_cutoff"] = float(params["lfc_cutoff"])
+            return PlotInputs("volcano_plot", tbl, m, warnings=sig_warns)
         if key == "ma":
             tbl = tbl.copy()
             abund = _abundance_col(tbl)
@@ -154,7 +162,8 @@ def build_plot_inputs(rec: RecommendedPlot, df: pd.DataFrame, matrix_spec: Matri
                 tbl["average_abundance"] = tbl[["mean_a", "mean_b"]].mean(axis=1)
                 abund = "average_abundance"
             return PlotInputs("ma_plot", tbl,
-                              {"x": abund, "y": eff, "p": p_adj, "label": label})
+                              {"x": abund, "y": eff, "p": sig_field, "label": label,
+                               "use_fdr": use_fdr}, warnings=sig_warns)
         if key == "ranked_effect":
             tbl = tbl.copy()
             n = int(params.get("top_n", 20))
@@ -163,6 +172,29 @@ def build_plot_inputs(rec: RecommendedPlot, df: pd.DataFrame, matrix_spec: Matri
                               {"x": label, "y": eff, "sort": "descending"})
 
     raise ValueError(f"No builder for recommendation key '{key}'.")
+
+
+def _resolve_significance(tbl: pd.DataFrame, requested, p_adj_default: str):
+    """Pick the volcano/MA y-axis p-column from the user's choice, with fallback.
+
+    ``requested`` is ``"fdr"``/``"pvalue"`` (or ``None`` = prefer FDR when present).
+    Returns ``(column_name, use_fdr, warnings)``. Never fabricates a column: if the
+    requested statistic is missing it falls back to the available one and warns."""
+    warns: List[str] = []
+    has_fdr = "adjusted_p_value" in tbl.columns and tbl["adjusted_p_value"].notna().any()
+    p_raw = "p_value" if ("p_value" in tbl.columns and tbl["p_value"].notna().any()) else None
+    req = str(requested).lower() if requested else ("fdr" if has_fdr else "pvalue")
+    if req in ("fdr", "adjusted", "adj", "padj", "adjusted_p_value", "q", "qvalue"):
+        if has_fdr:
+            return "adjusted_p_value", True, warns
+        warns.append("Adjusted p-value/FDR not available in the table; using raw p-value.")
+        return (p_raw or p_adj_default), False, warns
+    if p_raw:
+        return p_raw, False, warns
+    if has_fdr:
+        warns.append("Raw p-value not available in the table; using adjusted p-value (FDR).")
+        return "adjusted_p_value", True, warns
+    return p_adj_default, False, warns
 
 
 def _id_col(tbl: pd.DataFrame) -> str:

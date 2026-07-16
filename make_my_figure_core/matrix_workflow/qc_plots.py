@@ -19,6 +19,36 @@ from make_my_figure_core.matrix_workflow.plot_builder import PlotInputs
 # Distribution QC plots can subsample features for speed on huge matrices (QC only).
 _QC_MAX_FEATURES = 4000
 
+# Long sample names (e.g. "3345023_DHP001") overlap/clip on a per-sample axis, so QC
+# plots show a short, unique label; the full names live in the report/CSV. Above this
+# many characters we abbreviate.
+_SAMPLE_LABEL_MAXLEN = 8
+
+
+def short_sample_labels(columns: List[str]) -> Dict[str, str]:
+    """Map each sample column to a short, unique display label for QC axes.
+
+    Prefers the trailing token after the last ``_`` / ``-`` / space (e.g.
+    ``3345023_DHP001`` -> ``DHP001``); falls back to zero-padded ``S01``… if that is
+    not unique or still too long. Names already short are kept as-is.
+    """
+    cols = list(columns)
+    if all(len(c) <= _SAMPLE_LABEL_MAXLEN for c in cols):
+        return {c: c for c in cols}
+    import re
+    tails = [re.split(r"[_\-\s]", c)[-1] for c in cols]
+    if len(set(tails)) == len(cols) and all(len(t) <= _SAMPLE_LABEL_MAXLEN for t in tails):
+        return dict(zip(cols, tails))
+    width = max(2, len(str(len(cols))))
+    return {c: f"S{i + 1:0{width}d}" for i, c in enumerate(cols)}
+
+
+def _relabel(frame: pd.DataFrame, sample_col: str, mapping: Dict[str, str]) -> pd.DataFrame:
+    if sample_col in frame.columns:
+        frame = frame.copy()
+        frame[sample_col] = frame[sample_col].map(lambda s: mapping.get(s, s))
+    return frame
+
 
 def qc_plot_catalog() -> List[Dict[str, str]]:
     return [
@@ -71,24 +101,31 @@ def qc_plot_inputs(kind: str, df: pd.DataFrame, matrix_spec: MatrixSpec, *,
     spec = matrix_spec
     ttl = {"title": title} if title else {}
 
+    labels = short_sample_labels(list(spec.value_columns))
+    n_samp = len(spec.value_columns)
+    # Wider canvas as sample count grows so rotated labels + bars/boxes have room.
+    wide = "double" if n_samp > 8 else ("onehalf" if n_samp > 4 else "default")
+
     if kind in ("library_size", "sample_median", "zero_fraction", "missing_fraction"):
         stat = {"library_size": "total", "sample_median": "median",
                 "zero_fraction": "zero_fraction", "missing_fraction": "missing_fraction"}[kind]
-        d = _per_sample(df, spec, stat)
+        d = _relabel(_per_sample(df, spec, stat), "sample", labels)
         ylab = {"total": "Total signal", "median": "Median value",
                 "zero_fraction": "Zero fraction", "missing_fraction": "Missing fraction"}[stat]
         return PlotInputs("barplot_with_error_bar", d,
                           {"x": "sample", "y": "value", "error": "none"},
-                          spec_extra={"layout": {**ttl, "y_label": ylab, "x_label": "Sample"}})
+                          spec_extra={"layout": {**ttl, "y_label": ylab, "x_label": "Sample",
+                                                 "column_width": wide, "aspect": 0.6}})
 
     if kind == "sample_boxplot":
-        long = _long(df, spec)
+        long = _relabel(_long(df, spec), "sample", labels)
         return PlotInputs("boxplot_or_violin_with_points", long,
                           {"x": "sample", "y": "value", "kind": "box", "points": False},
-                          spec_extra={"layout": {**ttl, "y_label": "Value", "x_label": "Sample"}})
+                          spec_extra={"layout": {**ttl, "y_label": "Value", "x_label": "Sample",
+                                                 "column_width": wide, "aspect": 0.6}})
 
     if kind == "value_density":
-        long = _long(df, spec)
+        long = _relabel(_long(df, spec), "sample", labels)
         return PlotInputs("ridge_or_density_plot", long,
                           {"x": "value", "group": "sample"},
                           spec_extra={"layout": {**ttl}})
@@ -96,6 +133,10 @@ def qc_plot_inputs(kind: str, df: pd.DataFrame, matrix_spec: MatrixSpec, *,
     if kind == "sample_correlation":
         from make_my_figure_core.matrix_workflow import transformations as T
         corr, _ts = T.sample_correlation(df, spec)
+        corr = corr.copy()
+        if "sample_id" in corr.columns:
+            corr["sample_id"] = corr["sample_id"].map(lambda s: labels.get(s, s))
+        corr = corr.rename(columns={k: v for k, v in labels.items() if k in corr.columns})
         return PlotInputs("heatmap_clustered_matrix", corr,
                           {"row_id": "sample_id", "color_scale": "sequential",
                            "cluster_rows": True, "cluster_columns": True},

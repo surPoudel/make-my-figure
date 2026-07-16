@@ -15,6 +15,28 @@ feature matrix.
 > compared between Ctrl and Treatment using Welch's t-test with Benjamini-Hochberg
 > FDR correction."*
 
+## GLM regression (regular + matrix workflows)
+
+`make_my_figure_core.statistics.glm_regression` (also re-exported as
+`matrix_workflow.glm_regression`) fits a pure-Python **generalized linear model**
+(statsmodels; no R): `response ~ predictors` for a chosen family — `gaussian`
+(identity), `binomial`/logistic (logit), `poisson` (log), `negativebinomial` (log),
+or `gamma` (log). Numeric predictors are used as-is; categorical predictors are
+one-hot encoded (first level = reference). It returns a `StatsReport` with **one
+`StatResult` per coefficient** (Wald z, p-value, CI) plus model-fit statistics
+(deviance, AIC/BIC, R² / McFadden pseudo-R²) — so every value stays traceable. It is
+reachable through the standard `run_statistics(df, {"test": "glm", "response": ...,
+"predictors": [...], "family": ...})` entrypoint used by both apps.
+
+## Scatter regression readout
+
+`scatterplot_with_regression` fits OLS via `scipy.stats.linregress` and can annotate
+**slope, intercept, Pearson r, R², p-value, n, and the fitted equation** — each
+individually toggleable (`show_slope` / `show_r` / `show_r2` / `show_p` /
+`show_intercept` / `show_n` / `show_equation`, plus `fit_stats_loc`). The full
+regression statistics are stored in `metadata["regression"]` (and thus the export
+sidecar) even when hidden on the plot.
+
 It is **not** a raw-count differential-expression pipeline and **not** a
 count-based model, and it uses no R. If you already have a differential table from
 another tool, use it directly (precomputed mode) — the app plots it verbatim.

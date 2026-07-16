@@ -27,8 +27,12 @@ _DEFAULT_QC = ["value_density", "sample_boxplot", "library_size", "mean_variance
                "pca", "sample_correlation"]
 
 
-def _render_pi(pi, out_base: str, formats=("png",)) -> Optional[str]:
-    """Render a PlotInputs to files; return the PNG path (or None on failure)."""
+def _render_pi(pi, out_base: str, formats=("png", "pdf", "svg"), dpi: int = 200) -> Optional[str]:
+    """Render a PlotInputs to files; return the PNG path (or None on failure).
+
+    Writes vector (PDF/SVG) plus a high-DPI PNG so each QC plot has a true
+    publication-quality artifact (the contact sheet is a raster overview of these).
+    """
     import matplotlib.pyplot as plt
 
     from make_my_figure_core.plots.registry import export_figure, make_spec, render
@@ -38,7 +42,7 @@ def _render_pi(pi, out_base: str, formats=("png",)) -> Optional[str]:
         for k, v in (pi.spec_extra or {}).items():
             spec[k] = v
         result = render(spec, pi.dataframe, aux=pi.aux or None)
-        export_figure(result.figure, out_base, list(formats), dpi=150)
+        export_figure(result.figure, out_base, list(formats), dpi=dpi)
         plt.close(result.figure)
         return out_base + ".png"
     except Exception:  # noqa: BLE001 - one QC plot failing must not abort the report
@@ -71,11 +75,16 @@ def before_after_report(df: pd.DataFrame, matrix_spec: MatrixSpec,
         records.append({"kind": kind, "before": pb, "after": pa})
 
     _contact_sheet(records, out_dir)
-    _write_reports(ps, qc_before, qc_after, records, out_dir)
+    from make_my_figure_core.matrix_workflow.qc_plots import short_sample_labels
+    sample_labels = short_sample_labels(list(matrix_spec.value_columns))
+    _write_reports(ps, qc_before, qc_after, records, out_dir, sample_labels=sample_labels)
     return final_df, dspec, ps, records
 
 
 def _contact_sheet(records: List[Dict[str, Any]], out_dir: str) -> Optional[str]:
+    """High-quality before/after overview: embeds the per-plot images in a
+    constrained-layout grid (no clipped titles/row labels), saved as a crisp
+    300-DPI PNG and PDF. The per-plot PDF/SVG files are the true vector artifacts."""
     import matplotlib.image as mpimg
     import matplotlib.pyplot as plt
 
@@ -83,29 +92,36 @@ def _contact_sheet(records: List[Dict[str, Any]], out_dir: str) -> Optional[str]
     if not rows:
         return None
     n = len(rows)
-    fig, axes = plt.subplots(n, 2, figsize=(9, 3.4 * n))
+    # Generous per-panel size; constrained_layout reserves room for titles/labels.
+    fig, axes = plt.subplots(n, 2, figsize=(12.0, 4.3 * n), constrained_layout=True)
     if n == 1:
         axes = axes.reshape(1, 2)
+    fig.suptitle("Preprocessing QC — before vs after", fontsize=15, fontweight="bold")
     for i, r in enumerate(rows):
         for j, key, hdr in ((0, "before", "Before"), (1, "after", "After")):
             ax = axes[i, j]
-            ax.axis("off")
+            # Keep the axes box (so the ylabel has reserved room) but hide ticks/spines.
+            ax.set_xticks([])
+            ax.set_yticks([])
+            for sp in ax.spines.values():
+                sp.set_visible(False)
             try:
                 ax.imshow(mpimg.imread(r[key]))
             except Exception:  # noqa: BLE001
                 pass
             if i == 0:
-                ax.set_title(hdr, fontsize=12, fontweight="bold")
-        axes[i, 0].set_ylabel(r["kind"], fontsize=9)
-    fig.tight_layout()
+                ax.set_title(hdr, fontsize=13, fontweight="bold")
+        pretty = str(r["kind"]).replace("_", " ").capitalize()
+        axes[i, 0].set_ylabel(pretty, fontsize=11, fontweight="bold")
     png = os.path.join(out_dir, "before_after_contact_sheet.png")
-    fig.savefig(png, dpi=130)
-    fig.savefig(os.path.join(out_dir, "before_after_contact_sheet.pdf"))
+    fig.savefig(png, dpi=300)
+    fig.savefig(os.path.join(out_dir, "before_after_contact_sheet.pdf"), dpi=300)
     plt.close(fig)
     return png
 
 
-def _write_reports(ps, qc_before, qc_after, records, out_dir: str) -> None:
+def _write_reports(ps, qc_before, qc_after, records, out_dir: str, *,
+                   sample_labels: Optional[Dict[str, str]] = None) -> None:
     with open(os.path.join(out_dir, "qc_summary.csv"), "w", newline="", encoding="utf-8") as fh:
         w = csv.writer(fh)
         keys = ["n_features", "n_samples", "missing_values", "zero_fraction",
@@ -134,7 +150,12 @@ def _write_reports(ps, qc_before, qc_after, records, out_dir: str) -> None:
     for r in records:
         lines.append(f"- **{r['kind']}** — before: `{os.path.relpath(r['before'], out_dir) if r['before'] else 'n/a'}`, "
                      f"after: `{os.path.relpath(r['after'], out_dir) if r['after'] else 'n/a'}`")
-    lines += ["", "See `before_after_contact_sheet.png`. Every step is reproducible from the "
+    if sample_labels and any(k != v for k, v in sample_labels.items()):
+        lines += ["", "## Sample labels (QC axes show the short label)",
+                  "| short | full sample name |", "| --- | --- |",
+                  *[f"| `{v}` | `{k}` |" for k, v in sample_labels.items()]]
+    lines += ["", "See `before_after_contact_sheet.png` (300-DPI overview) and the vector "
+              "per-plot files in `per_plot/` (PDF/SVG). Every step is reproducible from the "
               "PreprocessingSpec; the original matrix is unchanged."]
     with open(os.path.join(out_dir, "preprocessing_report.md"), "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines))

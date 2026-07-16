@@ -96,9 +96,13 @@ def feature_differential_summary(
     if not is_multi:
         if group_b is None:
             others = [g for g in groups if g != group_a]
-            if len(others) != 1:
-                raise ValueError("Two-group test needs exactly two groups; specify group_b.")
+            if len(others) < 1:
+                raise ValueError("Two-group test needs at least two groups; specify group_b.")
             group_b = others[0]
+        if group_a == group_b:
+            raise ValueError(
+                "Group A and Group B are the same — a two-group comparison needs two "
+                "different groups. Pick distinct groups (or choose a different test).")
         used_groups = [group_a, group_b]
     else:
         used_groups = groups

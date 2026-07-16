@@ -402,6 +402,14 @@ def _generate_section(df: pd.DataFrame, spec: mw.MatrixSpec, meta, rec) -> None:
                                   key="mw_ui_feats", max_selections=12)
     if rec.key in ("top_variable_heatmap", "ranked_effect"):
         params["top_n"] = st.slider("Top N", 5, 100, 30, key=f"mw_ui_topn_{rec.key}")
+    if rec.key in ("volcano", "ma"):
+        # y-axis significance is the user's choice, not hard-coded FDR.
+        sig = st.radio("Y-axis significance", ["adjusted p-value (FDR)", "raw p-value"],
+                       horizontal=True, key=f"mw_ui_sig_{rec.key}")
+        params["significance"] = "fdr" if sig.startswith("adjusted") else "pvalue"
+        params["p_cutoff"] = st.number_input(
+            "Significance threshold", 0.0, 1.0, 0.05, step=0.01, format="%.4f",
+            key=f"mw_ui_pcut_{rec.key}")
 
     try:
         pi = build_plot_inputs(rec, df, spec, metadata=meta, differential_table=_get("diff"),

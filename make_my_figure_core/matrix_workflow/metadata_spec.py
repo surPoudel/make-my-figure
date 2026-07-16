@@ -43,6 +43,19 @@ class SampleMetadataSpec:
                 seen.append(g)
         return seen
 
+    def default_group_pair(self):
+        """A sensible default (group_a, group_b) for a two-group comparison.
+
+        Returns the first two *distinct* groups in order, so the UI never defaults
+        both selectors to the same group. ``(only_group, None)`` if just one group
+        exists; ``(None, None)`` if none. Deterministic across platforms."""
+        gs = self.groups()
+        if len(gs) >= 2:
+            return gs[0], gs[1]
+        if len(gs) == 1:
+            return gs[0], None
+        return None, None
+
     def group_sizes(self) -> Dict[str, int]:
         out: Dict[str, int] = {}
         for g in self.sample_to_group.values():

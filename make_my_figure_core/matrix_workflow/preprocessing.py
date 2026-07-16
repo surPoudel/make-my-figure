@@ -154,13 +154,18 @@ _REGISTRY = {
     "internal_standard_columns": (_norm.internal_standard_columns, "normalization"),
     "control_features": (_norm.control_features, "normalization"),
     "reference_sample": (_norm.reference_sample, "normalization"),
+    # count-style normalizations (pure-Python; no R dependency)
+    "cpm": (_norm.cpm, "normalization"),
+    "tmm": (_norm.tmm, "normalization"),
+    "voom": (_norm.voom, "normalization"),
 }
 # z-score axis variants map to the single zscore(axis=...) function.
 _ZSCORE = {"row_zscore": "row", "column_zscore": "column", "global_zscore": "global"}
 
 
 def available_methods() -> List[str]:
-    return sorted(list(_REGISTRY) + list(_ZSCORE))
+    # "zscore" is the generic axis-parameterized variant (row | column | global).
+    return sorted(list(_REGISTRY) + list(_ZSCORE) + ["zscore"])
 
 
 def apply_step(df: pd.DataFrame, matrix_spec: MatrixSpec, method: str, *,
@@ -172,8 +177,15 @@ def apply_step(df: pd.DataFrame, matrix_spec: MatrixSpec, method: str, *,
     params = dict(params or {})
     qc_before = diagnose_matrix(df, matrix_spec).to_dict() if with_qc else None
 
-    if method in _ZSCORE:
-        new_df, p, warns = _norm.zscore(df, matrix_spec, axis=_ZSCORE[method])
+    if method == "zscore" or method in _ZSCORE:
+        # Generic "zscore" reads params['axis'] (row | column | global); the named
+        # variants (row_/column_/global_zscore) fix the axis. Default is row-wise —
+        # the convention for MS proteomics and bulk transcriptomics (per-feature).
+        axis = params.get("axis", "row") if method == "zscore" else _ZSCORE[method]
+        if axis not in ("row", "column", "global"):
+            axis = "row"
+        new_df, p, warns = _norm.zscore(df, matrix_spec, axis=axis,
+                                        ddof=int(params.get("ddof", 0)))
         step_type = "normalization"
     else:
         if method not in _REGISTRY:
@@ -187,7 +199,9 @@ def apply_step(df: pd.DataFrame, matrix_spec: MatrixSpec, method: str, *,
     # derived spec: same roles; value scale / value_columns updated as needed
     import dataclasses
     derived = dataclasses.replace(matrix_spec)
-    if method in _LOG_METHODS:
+    _p = p or {}
+    if method in _LOG_METHODS or method == "voom" or bool(_p.get("log")) \
+            or str(_p.get("output_scale", "")).startswith("log"):
         derived.value_type = "log_normalized"
     step = PreprocessingStep(
         step_id=f"{method}", step_type=step_type, method_name=method,
