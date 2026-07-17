@@ -1,6 +1,6 @@
 # Cross-platform QC report
 
-- Build: `0.6.1` · commit `4aaae44` · backend `Agg`
+- Build: `0.6.1` · commit `7a20731` · backend `Agg`
 - Platform: `Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35`
 - Plot types: 37 · rendered OK: 37 · errors: 0
 - Forbidden (journal) style labels found: 0

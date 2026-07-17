@@ -1,7 +1,7 @@
 {
   "build": {
     "version": "0.6.1",
-    "commit": "4aaae44",
+    "commit": "7a20731",
     "module_path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot",
     "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35",
     "python": "3.11.8",

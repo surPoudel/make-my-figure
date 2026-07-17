@@ -89,6 +89,7 @@ COLUMN_FIELDS = {
     "lollipop_mutation_plot": ["x", "y", "color", "label"],
     "roc_curve": ["label", "score", "score2"],
     "forest_plot": ["label", "estimate", "lower", "upper"],
+    "network_graph": ["source", "target", "weight", "interaction_type"],
 }
 
 
@@ -456,6 +457,30 @@ if plot_type == "waterfall_plot":
 if plot_type == "forest_plot":
     mapping["reference"] = st.sidebar.number_input("Reference line", value=1.0, step=0.5)
     mapping["log_scale"] = st.sidebar.checkbox("Log x-axis", value=True)
+if plot_type == "network_graph":
+    # Node/edge color + layout controls. Coloring edges by a categorical column
+    # (e.g. interaction_type) is auto-detected when that column is mapped above;
+    # you can also force it here. Group node colors honor the Publication palette.
+    mapping["color_by"] = st.sidebar.selectbox(
+        "Color nodes by", ["group", "value", "none"], index=0,
+        help="'group'/'value' need a node-attributes table; 'none' uses a single color.")
+    mapping["node_color"] = st.sidebar.selectbox(
+        "Node color (when 'none')",
+        ["(palette)", "#2166AC", "#B2182B", "#1B7837", "#762A83", "#E08214", "#333333", "black"],
+        index=0)
+    mapping["edge_color_by"] = st.sidebar.selectbox(
+        "Color edges by category", ["(auto)", "none", "interaction_type", "edge_type", "pathway", "sign"],
+        index=0, help="'(auto)' colors by interaction_type/edge_type if that column is mapped above.")
+    mapping["edge_color"] = st.sidebar.selectbox(
+        "Edge color (single)", ["#888888", "#BBBBBB", "#333333", "black"], index=0)
+    mapping["layout"] = st.sidebar.selectbox(
+        "Layout", ["spring", "kamada_kawai", "circular", "shell", "spectral",
+                   "multipartite", "fixed", "random"], index=0)
+    _ncm = st.sidebar.text_input('Custom node colors (JSON, e.g. {"g1":"#B2182B"})', value="")
+    if _ncm.strip():
+        mapping["node_color_map"] = _ncm.strip()
+    mapping["node_labels"] = st.sidebar.checkbox("Show node labels", value=True)
+    mapping["show_legend"] = st.sidebar.checkbox("Show legend", value=True)
 
 # PCA needs a second metadata table mapping sample columns to attributes.
 pca_aux = None
@@ -493,12 +518,14 @@ column_width = st.sidebar.selectbox("Figure width", ["default", "single", "oneha
 dpi = st.sidebar.slider("Raster DPI (PNG/TIFF)", 150, 600, 300, step=50)
 
 # --- 6. Formatting (shares the core style engine with the desktop app) -------
-from make_my_figure_core.styles.engine import NAMED_PALETTES  # noqa: E402
+from make_my_figure_core.styles.engine import USER_PALETTES  # noqa: E402
 
 st.sidebar.header("6. Formatting")
 style_overrides = {}
 with st.sidebar.expander("Publication style controls", expanded=False):
-    pal = st.selectbox("Palette", ["(profile default)"] + list(NAMED_PALETTES))
+    # Only the curated, user-facing palettes — never the internal journal-named
+    # entries kept in NAMED_PALETTES for backward compatibility.
+    pal = st.selectbox("Palette", ["(profile default)"] + list(USER_PALETTES))
     if pal != "(profile default)":
         style_overrides["palette_name"] = pal
     style_overrides["axis_font_pt"] = st.slider("Axis label pt", 8, 24, 12)

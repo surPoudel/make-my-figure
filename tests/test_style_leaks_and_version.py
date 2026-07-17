@@ -70,6 +70,27 @@ def test_no_forbidden_style_names_in_visible_ui_option_lists():
     assert not offenders, "forbidden style names in UI option lists:\n" + "\n".join(offenders)
 
 
+def test_user_palettes_have_no_forbidden_names():
+    # NAMED_PALETTES keeps journal-named entries for backward compat, but the
+    # user-facing USER_PALETTES must never contain them.
+    from make_my_figure_core.styles.engine import NAMED_PALETTES, USER_PALETTES
+    for p in USER_PALETTES:
+        assert not any(t in p.lower() for t in ("nature", "science", "cell", "journal"))
+    # sanity: NAMED_PALETTES still holds the legacy entries (they exist, just hidden)
+    assert "publication" in NAMED_PALETTES
+
+
+def test_apps_do_not_expose_named_palettes_directly():
+    """The palette widget must use USER_PALETTES, not list(NAMED_PALETTES) — the exact
+    anti-pattern that leaked nature_like/science_like/cell_like into the UI dropdown."""
+    for rel in ("apps/streamlit_app/streamlit_app.py",
+                "apps/streamlit_app/matrix_wizard.py",
+                "apps/desktop_app/main.py",
+                "apps/desktop_app/matrix_wizard.py"):
+        text = (ROOT / rel).read_text(encoding="utf-8", errors="ignore")
+        assert "list(NAMED_PALETTES)" not in text, f"{rel} lists NAMED_PALETTES in the UI"
+
+
 def test_build_info_reports_module_path_and_commit():
     from make_my_figure_core.version import build_banner, build_info
     info = build_info()
