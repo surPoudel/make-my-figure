@@ -1,0 +1,175 @@
+"""Plot-aware style capabilities — which Publication controls a plot type honors.
+
+The single visible style is **Publication**. Not every control applies to every
+plot: a network diagram has no axes (so axis-label padding is meaningless) and uses
+node/edge colors instead of a marker size or bar palette. This registry lets the GUI
+show the right controls, disable the rest with an honest reason, and lets the render
+path *warn* (never silently ignore) when a style key does not apply.
+
+Usage:
+  caps = get_style_capabilities("network_graph")
+  applied = filter_style_controls_for_plot("network_graph", spec_style)
+  warns = warn_ignored_style_controls("network_graph", spec_style)
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from typing import Dict, List, Tuple
+
+
+@dataclass(frozen=True)
+class PlotStyleCapabilities:
+    plot_type: str
+    supports_axes: bool = True
+    supports_x_tick_rotation: bool = True
+    supports_y_tick_rotation: bool = True
+    supports_axis_label_padding: bool = True
+    supports_legend: bool = True
+    supports_palette: bool = True            # categorical palette (bars/box/points/groups)
+    supports_group_colors: bool = True
+    supports_continuous_colormap: bool = False
+    supports_colorbar: bool = False
+    supports_node_colors: bool = False
+    supports_edge_colors: bool = False
+    supports_label_colors: bool = True
+    supports_panel_background: bool = True
+    supports_marker_size: bool = True
+    supports_line_width: bool = True
+    supports_annotation_controls: bool = True
+    unsupported_controls_reason: str = "does not apply to this plot type"
+
+
+# Map each style-spec key to the capability flag that gates it. A key mapped to
+# ``None`` is universal (font/size/figure/DPI/background/padding) and always applies.
+STYLE_CONTROL_CAPABILITY: Dict[str, str] = {
+    "palette_name": "supports_palette",
+    "marker_size": "supports_marker_size",
+    "line_width_pt": "supports_line_width",
+    "legend_pt": "supports_legend",
+    "legend_outside": "supports_legend",
+    "node_color": "supports_node_colors",
+    "node_color_map": "supports_node_colors",
+    "edge_color": "supports_edge_colors",
+    "edge_color_positive": "supports_edge_colors",
+    "edge_color_negative": "supports_edge_colors",
+    "label_color": "supports_label_colors",
+    "sequential_cmap": "supports_continuous_colormap",
+    "diverging_cmap": "supports_continuous_colormap",
+    "colorbar_label": "supports_colorbar",
+}
+
+# Universal controls — always applicable regardless of plot type.
+_UNIVERSAL = {
+    "font_family", "axis_font_pt", "tick_label_pt", "title_font_pt", "annotation_pt",
+    "dpi", "figure_width_mm", "figure_height_mm", "background", "panel_background",
+    "x_label_pad", "y_label_pad", "title_pad", "x_tick_rotation", "y_tick_rotation",
+}
+
+_DEFAULT = PlotStyleCapabilities(plot_type="_default")
+
+# Per-plot overrides (only where they differ from the axes-based default).
+_CAPS: Dict[str, PlotStyleCapabilities] = {
+    "network_graph": PlotStyleCapabilities(
+        plot_type="network_graph", supports_axes=False,
+        supports_x_tick_rotation=False, supports_y_tick_rotation=False,
+        supports_axis_label_padding=False, supports_palette=True,
+        supports_group_colors=True, supports_continuous_colormap=True,
+        supports_colorbar=True, supports_node_colors=True, supports_edge_colors=True,
+        supports_label_colors=True, supports_marker_size=False, supports_line_width=False,
+        unsupported_controls_reason="does not apply to network plots (they have no axes; "
+        "use node/edge colors, node size and edge width instead)"),
+    # colormap-driven matrices: continuous colormap + colorbar, no categorical palette/markers
+    "heatmap_clustered_matrix": PlotStyleCapabilities(
+        plot_type="heatmap_clustered_matrix", supports_palette=True,
+        supports_group_colors=False, supports_continuous_colormap=True,
+        supports_colorbar=True, supports_marker_size=False,
+        unsupported_controls_reason="heatmaps use a continuous colormap, not per-point markers"),
+    "hierarchical_clustering": PlotStyleCapabilities(
+        plot_type="hierarchical_clustering", supports_group_colors=False,
+        supports_continuous_colormap=True, supports_colorbar=True,
+        supports_marker_size=False),
+    "oncoprint_mutation_heatmap": PlotStyleCapabilities(
+        plot_type="oncoprint_mutation_heatmap", supports_continuous_colormap=False,
+        supports_colorbar=False, supports_marker_size=False,
+        unsupported_controls_reason="oncoprints use categorical mutation colors, not markers"),
+    "confusion_matrix": PlotStyleCapabilities(
+        plot_type="confusion_matrix", supports_continuous_colormap=True,
+        supports_colorbar=True, supports_marker_size=False, supports_group_colors=False),
+    # line-family plots: line width matters, markers optional
+    "kaplan_meier_survival_curve": PlotStyleCapabilities(
+        plot_type="kaplan_meier_survival_curve", supports_marker_size=False),
+    "roc_curve": PlotStyleCapabilities(plot_type="roc_curve", supports_marker_size=False),
+    "precision_recall_curve": PlotStyleCapabilities(
+        plot_type="precision_recall_curve", supports_marker_size=False),
+    # flow / composition: category colors, no markers/continuous colormap
+    "sankey_plot": PlotStyleCapabilities(
+        plot_type="sankey_plot", supports_axes=False, supports_axis_label_padding=False,
+        supports_marker_size=False),
+    "stacked_bar_composition": PlotStyleCapabilities(
+        plot_type="stacked_bar_composition", supports_marker_size=False),
+    "hierarchical_dendrogram": PlotStyleCapabilities(
+        plot_type="hierarchical_dendrogram", supports_marker_size=False,
+        supports_group_colors=False),
+}
+
+
+def get_style_capabilities(plot_type: str) -> PlotStyleCapabilities:
+    """Capabilities for ``plot_type`` (the axes-based default if unlisted)."""
+    caps = _CAPS.get(plot_type)
+    if caps is not None:
+        return caps
+    return PlotStyleCapabilities(plot_type=plot_type)
+
+
+def _supported(caps: PlotStyleCapabilities, key: str) -> bool:
+    if key in _UNIVERSAL:
+        return True
+    flag = STYLE_CONTROL_CAPABILITY.get(key)
+    if flag is None:
+        return True                      # unknown key: treat as universal (don't hide)
+    return bool(getattr(caps, flag, True))
+
+
+def filter_style_controls_for_plot(plot_type: str, style_spec: Dict) -> Dict:
+    """Return only the style keys that ``plot_type`` actually consumes."""
+    caps = get_style_capabilities(plot_type)
+    return {k: v for k, v in (style_spec or {}).items() if _supported(caps, k)}
+
+
+def validate_style_controls_for_plot(plot_type: str, style_spec: Dict
+                                     ) -> List[Tuple[str, bool, str]]:
+    """(key, is_supported, reason) for every key present in ``style_spec``."""
+    caps = get_style_capabilities(plot_type)
+    out: List[Tuple[str, bool, str]] = []
+    for k in (style_spec or {}):
+        ok = _supported(caps, k)
+        out.append((k, ok, "" if ok else caps.unsupported_controls_reason))
+    return out
+
+
+def warn_ignored_style_controls(plot_type: str, style_spec: Dict) -> List[str]:
+    """Human-readable warnings for present-but-unsupported style controls.
+
+    Used by the render path so an inapplicable control is reported, never silently
+    ignored."""
+    caps = get_style_capabilities(plot_type)
+    warns: List[str] = []
+    for k, v in (style_spec or {}).items():
+        if v is None:
+            continue
+        if not _supported(caps, k):
+            warns.append(f"Style control '{k}' {caps.unsupported_controls_reason}; it was "
+                         f"ignored for this {plot_type}.")
+    return warns
+
+
+def applicable_controls(plot_type: str, control_keys: List[str]) -> List[Tuple[str, bool, str]]:
+    """For the GUI: for each candidate control key, (key, enabled, disabled_reason).
+
+    Enabled controls should be shown; disabled ones shown greyed with the reason as a
+    tooltip (never hidden silently unless the GUI prefers to hide)."""
+    caps = get_style_capabilities(plot_type)
+    return [(k, _supported(caps, k),
+             "" if _supported(caps, k) else caps.unsupported_controls_reason)
+            for k in control_keys]

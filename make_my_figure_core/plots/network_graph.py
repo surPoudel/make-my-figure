@@ -213,29 +213,47 @@ def render(spec: Dict[str, Any], df, style: StyleProfile, aux=None) -> RenderRes
         warnings.append(f"Layout '{layout}' failed ({exc}); used spring.")
         pos = nx.spring_layout(G, seed=seed)
 
-    # --- node sizing/coloring ---
+    # --- node sizing (fixed | by degree | by value) ---
     degrees = dict(G.degree())
     size_by = str(get_mapping(spec, "size_by", "degree")).lower()
-    if size_by == "value" and any("value" in node_attr.get(n, {}) for n in G):
-        raw = np.array([float(node_attr.get(n, {}).get("value", np.nan)) for n in G], dtype=float)
-        raw = np.nan_to_num(raw, nan=np.nanmedian(raw[~np.isnan(raw)]) if np.isfinite(raw).any() else 1.0)
+    if size_by == "fixed":
+        node_sizes = np.full(G.number_of_nodes(),
+                             float(get_mapping(spec, "node_size", 300.0) or 300.0))
     else:
-        raw = np.array([degrees[n] for n in G], dtype=float)
-    lo, hi = float(np.min(raw)), float(np.max(raw))
-    norm = (raw - lo) / (hi - lo) if hi > lo else np.zeros_like(raw)
-    node_sizes = 120 + norm * 680  # ~120..800 pt^2
+        if size_by == "value" and any("value" in node_attr.get(n, {}) for n in G):
+            raw = np.array([float(node_attr.get(n, {}).get("value", np.nan)) for n in G], dtype=float)
+            raw = np.nan_to_num(raw, nan=np.nanmedian(raw[~np.isnan(raw)]) if np.isfinite(raw).any() else 1.0)
+        else:
+            raw = np.array([degrees[n] for n in G], dtype=float)
+        lo, hi = float(np.min(raw)), float(np.max(raw))
+        norm = (raw - lo) / (hi - lo) if hi > lo else np.zeros_like(raw)
+        node_sizes = 120 + norm * 680  # ~120..800 pt^2
 
+    # --- node coloring (group | value | fixed) ---
     groups = [node_attr.get(n, {}).get("group") for n in G]
     has_groups = any(g is not None for g in groups)
     color_value = [node_attr.get(n, {}).get("value") for n in G]
     color_by = str(get_mapping(spec, "color_by", "group" if has_groups else "none")).lower()
+
+    # A custom category->color map (dict or JSON string) overrides the palette.
+    node_color_map = get_mapping(spec, "node_color_map", None) or {}
+    if isinstance(node_color_map, str):
+        import json
+        try:
+            node_color_map = json.loads(node_color_map)
+        except Exception:  # noqa: BLE001
+            node_color_map = {}
 
     node_colors: Any
     legend_handles = None
     cmap_obj = None
     if color_by == "group" and has_groups:
         levels = ordered_unique([g for g in groups if g is not None])
-        cmap_lv = {lv: CLUSTER_PALETTE[i % len(CLUSTER_PALETTE)] for i, lv in enumerate(levels)}
+        # Honor the active Publication palette for group node colors (falls back to the
+        # clustering palette); a user-supplied node_color_map wins per category.
+        palette = list(getattr(style, "palette", None) or []) or list(CLUSTER_PALETTE)
+        cmap_lv = {lv: str(node_color_map.get(str(lv), palette[i % len(palette)]))
+                   for i, lv in enumerate(levels)}
         node_colors = [cmap_lv.get(g, "#BBBBBB") for g in groups]
         from matplotlib.patches import Patch
 
@@ -245,21 +263,32 @@ def render(spec: Dict[str, Any], df, style: StyleProfile, aux=None) -> RenderRes
         vals = np.array([float(v) if v is not None else np.nan for v in color_value], dtype=float)
         vals = np.nan_to_num(vals, nan=np.nanmedian(vals[~np.isnan(vals)]) if np.isfinite(vals).any() else 0.0)
         node_colors = vals
-        cmap_obj = style.sequential_cmap
+        _nc = get_mapping(spec, "node_cmap", None)
+        cmap_obj = str(_nc) if (_nc and str(_nc) != "(default)") else str(style.sequential_cmap)
     else:
-        node_colors = style.color_for(0)
+        # Fixed single node color: explicit node_color wins, else the palette's first
+        # color. Sentinels ("(default)"/"(palette)"/"") mean "use the palette".
+        nc = get_mapping(spec, "node_color", None)
+        node_colors = str(nc) if (nc and str(nc) not in ("(default)", "(palette)", "")) \
+            else str(style.color_for(0))
 
-    # --- edge widths / colors ---
+    # --- edge widths (by weight | fixed) ---
     weights = np.array([abs(G[u][v].get("weight", 1.0)) for u, v in G.edges()], dtype=float)
-    if weights.size and np.ptp(weights) > 0:
+    edge_width_by = str(get_mapping(spec, "edge_width_by", "weight")).lower()
+    if edge_width_by == "fixed":
+        ew = np.full(weights.shape, float(get_mapping(spec, "edge_width", 1.5) or 1.5))
+    elif weights.size and np.ptp(weights) > 0:
         ew = 0.5 + 2.5 * (weights - weights.min()) / np.ptp(weights)
     else:
         ew = np.full(weights.shape, 1.0)
+
+    # --- edge colors (fixed, or by sign in correlation mode) ---
     if mode == "correlation":
-        edge_colors = ["#B2182B" if G[u][v].get("weight", 0) >= 0 else "#2166AC"
-                       for u, v in G.edges()]
+        pos_c = str(get_mapping(spec, "edge_color_positive", "#B2182B"))
+        neg_c = str(get_mapping(spec, "edge_color_negative", "#2166AC"))
+        edge_colors = [pos_c if G[u][v].get("weight", 0) >= 0 else neg_c for u, v in G.edges()]
     else:
-        edge_colors = "#888888"
+        edge_colors = str(get_mapping(spec, "edge_color", "#888888"))
 
     # --- draw ---
     with style.apply():
@@ -286,12 +315,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile, aux=None) -> RenderRes
             # lines) so dense graphs stay legible instead of stacking labels.
             import matplotlib.patheffects as pe
 
-            fs = max(7.5, style.annotation_pt - 1)
+            fs = float(get_mapping(spec, "label_font_size", 0) or 0) or max(7.5, style.annotation_pt - 1)
+            lab_color = str(get_mapping(spec, "label_color", None) or style.text_color)
             texts = []
             for nlab in lab_nodes:
                 x_n, y_n = pos[nlab]
                 texts.append(ax.text(x_n, y_n, str(nlab), fontsize=fs, ha="center",
-                                     va="center", zorder=6,
+                                     va="center", zorder=6, color=lab_color,
                                      path_effects=[pe.withStroke(linewidth=2.5,
                                                                  foreground="white")]))
             try:
@@ -323,7 +353,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile, aux=None) -> RenderRes
             sp.set_visible(False)
         ax.margins(0.10)
         ax._colorbar = True  # network is a diagram: skip axis-label QA check
-        if legend_handles:
+        show_legend = bool(get_mapping(spec, "show_legend", True))
+        if legend_handles and show_legend:
             place_legend(ax, style, title=str(get_mapping(spec, "color_by", "group")),
                          handles=legend_handles, labels=[h.get_label() for h in legend_handles],
                          force_outside=True)

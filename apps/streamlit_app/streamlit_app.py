@@ -504,6 +504,16 @@ with st.sidebar.expander("Publication style controls", expanded=False):
     style_overrides["spine_width_pt"] = st.slider("Axis/spine width", 0.4, 4.0, 1.1, 0.1)
     style_overrides["legend_outside"] = st.checkbox("Legend outside plot", value=False)
     style_overrides["grid"] = st.checkbox("Grid", value=False)
+    # Honest, plot-aware note: flag controls that don't apply to the active plot
+    # (e.g. marker size / axis padding on an axis-free network) instead of silently
+    # ignoring them. Plot-specific controls (e.g. network node/edge colors) live in
+    # the per-plot options section.
+    from make_my_figure_core.styles.capabilities import (  # noqa: E402
+        warn_ignored_style_controls)
+    _ignored = warn_ignored_style_controls(plot_type, style_overrides)
+    if _ignored:
+        st.caption("ⓘ Not applicable to **" + plot_type.replace("_", " ") + "**: "
+                   + " ".join(_ignored))
 
 # --- 7. Statistics (shares the core statistics engine with the desktop app) --
 from make_my_figure_core.statistics import TESTS as _STAT_TESTS  # noqa: E402

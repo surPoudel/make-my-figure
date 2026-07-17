@@ -302,10 +302,23 @@ def render(
     # Apply GUI/PlotSpec style refinements (fonts, widths, markers, palette, ...).
     style = style.with_overrides(spec.get("style"))
 
+    # Honest style capabilities: a style control that does not apply to this plot type
+    # is reported (never silently ignored). Guarded — never blocks a render.
+    _cap_warnings: List[str] = []
+    try:
+        from make_my_figure_core.styles.capabilities import warn_ignored_style_controls
+
+        _cap_warnings = warn_ignored_style_controls(plot_type, spec.get("style") or {})
+    except Exception:  # noqa: BLE001
+        _cap_warnings = []
+
     if "aux" in inspect.signature(renderer).parameters:
         result = renderer(spec, df, style, aux=aux or {})
     else:
         result = renderer(spec, df, style)
+    for _w in _cap_warnings:
+        if _w not in result.warnings:
+            result.warnings.append(_w)
     # Stamp the spec into metadata for a reproducibility sidecar.
     result.metadata.setdefault("spec", spec)
     if _style_notice:

@@ -69,6 +69,11 @@ class Option:
 
 
 _ERROR_CHOICES = ["sem", "sd", "ci95", "none"]
+# Common publication-safe colors for network node/edge controls ("(palette)" =
+# use the active Publication palette rather than a fixed color).
+_NET_NODE_COLORS = ["(palette)", "#2166AC", "#B2182B", "#1B7837", "#762A83",
+                    "#E08214", "#333333", "#888888", "black", "white"]
+_NET_EDGE_COLORS = ["#888888", "#BBBBBB", "#333333", "black", "#2166AC", "#B2182B"]
 
 # Shared control: how to angle categorical x-axis labels. "auto" (default) keeps
 # long/numerous labels (e.g. sample names) readable without user intervention.
@@ -238,15 +243,32 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("layout", "Layout", "choice", "spring",
                ["spring", "kamada_kawai", "circular", "shell", "spectral", "multipartite", "fixed", "random"]),
         Option("seed", "Layout seed", "number", 42, minimum=0, maximum=99999, step=1, decimals=0),
+        # --- node color ---
         Option("color_by", "Color nodes by", "choice", "group", ["group", "value", "none"]),
-        Option("size_by", "Size nodes by", "choice", "degree", ["degree", "value"]),
+        Option("node_color", "Node color (when 'none')", "choice", "(palette)", _NET_NODE_COLORS),
+        Option("node_cmap", "Node colormap (when 'value')", "choice", "(default)",
+               ["(default)", "viridis", "magma", "cividis", "coolwarm", "Greys"]),
+        # --- node size ---
+        Option("size_by", "Size nodes by", "choice", "degree", ["degree", "value", "fixed"]),
+        Option("node_size", "Fixed node size (when 'fixed')", "number", 300, minimum=20, maximum=2000, step=20, decimals=0),
+        # --- edges ---
+        Option("edge_color", "Edge color", "choice", "#888888", _NET_EDGE_COLORS),
+        Option("edge_color_positive", "Edge color +corr", "choice", "#B2182B", _NET_EDGE_COLORS + ["#B2182B"]),
+        Option("edge_color_negative", "Edge color -corr", "choice", "#2166AC", _NET_EDGE_COLORS + ["#2166AC"]),
+        Option("edge_width_by", "Edge width by", "choice", "weight", ["weight", "fixed"]),
+        Option("edge_width", "Fixed edge width (when 'fixed')", "number", 1.5, minimum=0.2, maximum=8.0, step=0.2, decimals=1),
+        # --- labels / legend ---
+        Option("node_labels", "Show node labels", "bool", True),
+        Option("label_color", "Label color", "choice", "#222222", ["#222222", "black", "#555555", "#2166AC", "#B2182B"]),
+        Option("label_font_size", "Label font size (0=auto)", "number", 0, minimum=0, maximum=24, step=1, decimals=0),
+        Option("show_legend", "Show legend (grouped)", "bool", True),
+        # --- filtering / structure ---
         Option("min_weight", "Min edge weight", "number", 0.0, minimum=0.0, maximum=100.0, step=0.1, decimals=2),
         Option("corr_cutoff", "|correlation| cutoff", "number", 0.3, minimum=0.0, maximum=1.0, step=0.05, decimals=2),
         Option("top_n_edges", "Top N edges (0=all)", "number", 0, minimum=0, maximum=5000, step=10, decimals=0),
         Option("min_degree", "Min node degree", "number", 0, minimum=0, maximum=100, step=1, decimals=0),
         Option("remove_isolates", "Remove isolated nodes", "bool", True),
         Option("detect_communities", "Detect communities (heuristic)", "bool", False),
-        Option("node_labels", "Show node labels", "bool", True),
     ],
 }
 

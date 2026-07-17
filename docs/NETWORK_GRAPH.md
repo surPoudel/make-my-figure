@@ -8,6 +8,32 @@ built with NetworkX and exported as vector-safe SVG/PDF/PNG.
 > Network visualizations are exploratory summaries; you are responsible for
 > confirming thresholds/filters and interpreting biological meaning.
 
+## Style controls (node / edge / labels / legend)
+
+Network styling is **plot-aware** — the Publication palette and explicit color
+controls apply to the diagram (axis-only controls like axis-label padding or marker
+size do not, and are flagged as not applicable). All choices live in the PlotSpec
+mapping and round-trip.
+
+| Control | `mapping` key | Notes |
+|---|---|---|
+| Color nodes by | `color_by` | `group` (categorical), `value` (continuous), `none` (fixed) |
+| Fixed node color | `node_color` | used when `color_by="none"`; `(palette)` = use the palette |
+| Group colors | (Publication `palette_name`) | **honors the active palette**; falls back to the clustering palette |
+| Custom category colors | `node_color_map` | JSON string `{"group":"#hex", …}` — overrides the palette per category |
+| Continuous colormap | `node_cmap` | used when `color_by="value"` |
+| Node size | `size_by` (`degree`/`value`/`fixed`) + `node_size` | `node_size` used when `size_by="fixed"` |
+| Edge color | `edge_color` | fixed; correlation mode uses `edge_color_positive` / `edge_color_negative` |
+| Edge width | `edge_width_by` (`weight`/`fixed`) + `edge_width` | `edge_width` used when `edge_width_by="fixed"` |
+| Labels | `node_labels`, `label_color`, `label_font_size` | labels are haloed + de-overlapped |
+| Legend | `show_legend` | categorical legend shown for grouped colors |
+| Layout / seed | `layout`, `seed` | seed stored for reproducibility |
+
+The selected colors appear identically in the on-screen preview and in **PNG / PDF /
+SVG** exports (vector where practical), and are preserved in Figure Builder panels.
+If the dataset has no node attributes, "color by group/value" falls back to a single
+fixed node color.
+
 ## Input modes
 
 | Mode | `mapping.mode` | Required | Optional |
