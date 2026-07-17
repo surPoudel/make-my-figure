@@ -114,6 +114,13 @@ if st.sidebar.button("🏠 Reset / Upload new data", use_container_width=True,
     st.rerun()
 
 st.sidebar.divider()
+# Build/version indicator: lets a user confirm they run the freshly-pulled code
+# (not a stale installed package) — key for diagnosing platform-specific reports.
+try:
+    from make_my_figure_core.version import build_banner as _bb  # noqa: E402
+    st.sidebar.caption("🔖 " + _bb())
+except Exception:  # noqa: BLE001
+    pass
 st.sidebar.header("1. Data")
 source_mode = st.sidebar.radio("Data source",
                                ["Bundled sample", "Upload file", "Open PlotSpec"])

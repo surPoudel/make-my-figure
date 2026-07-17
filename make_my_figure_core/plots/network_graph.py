@@ -134,10 +134,14 @@ def render(spec: Dict[str, Any], df, style: StyleProfile, aux=None) -> RenderRes
 
     directed = bool(get_mapping(spec, "directed", False))
     G = nx.DiGraph() if directed else nx.Graph()
+    # Carry categorical edge attributes onto the graph so edges can be colored by
+    # them (e.g. interaction_type / edge_type / pathway), not just weight/sign.
+    _edge_cat_cols = [c for c in ("interaction_type", "edge_type", "sign", "pathway")
+                      if c in edges.columns]
     for _, r in edges.iterrows():
         attrs = {"weight": float(r.get("weight", 1.0))}
-        if "sign" in r:
-            attrs["sign"] = r["sign"]
+        for c in _edge_cat_cols:
+            attrs[c] = str(r[c])
         G.add_edge(str(r["source"]), str(r["target"]), **attrs)
 
     # Node attributes from an aux 'nodes' table.
@@ -282,8 +286,28 @@ def render(spec: Dict[str, Any], df, style: StyleProfile, aux=None) -> RenderRes
     else:
         ew = np.full(weights.shape, 1.0)
 
-    # --- edge colors (fixed, or by sign in correlation mode) ---
-    if mode == "correlation":
+    # --- edge colors (by category | by sign in correlation mode | fixed) ---
+    edge_legend_handles = None
+    # Auto-detect: if the edge table carries interaction_type/edge_type, color by it
+    # unless the user picked otherwise. This restores the "hue by interaction_type".
+    default_ecb = next((c for c in ("interaction_type", "edge_type", "pathway")
+                        if c in _edge_cat_cols), None)
+    edge_color_by = get_mapping(spec, "edge_color_by", None)
+    if edge_color_by is None or str(edge_color_by).lower() in ("(auto)", "auto", ""):
+        edge_color_by = default_ecb                       # auto: use a category if present
+    elif str(edge_color_by).lower() == "none":
+        edge_color_by = None                              # user explicitly disabled
+
+    if edge_color_by and edge_color_by in _edge_cat_cols:
+        cats = ordered_unique([str(G[u][v].get(edge_color_by)) for u, v in G.edges()])
+        e_palette = list(getattr(style, "palette", None) or []) or list(CLUSTER_PALETTE)
+        e_map = {c: e_palette[i % len(e_palette)] for i, c in enumerate(cats)}
+        edge_colors = [e_map[str(G[u][v].get(edge_color_by))] for u, v in G.edges()]
+        from matplotlib.patches import Patch
+
+        edge_legend_handles = [Patch(facecolor=e_map[c], edgecolor="none", label=str(c))
+                               for c in cats]
+    elif mode == "correlation":
         pos_c = str(get_mapping(spec, "edge_color_positive", "#B2182B"))
         neg_c = str(get_mapping(spec, "edge_color_negative", "#2166AC"))
         edge_colors = [pos_c if G[u][v].get("weight", 0) >= 0 else neg_c for u, v in G.edges()]
@@ -354,11 +378,22 @@ def render(spec: Dict[str, Any], df, style: StyleProfile, aux=None) -> RenderRes
         ax.margins(0.10)
         ax._colorbar = True  # network is a diagram: skip axis-label QA check
         show_legend = bool(get_mapping(spec, "show_legend", True))
+        placed = False
         if legend_handles and show_legend:
             place_legend(ax, style, title=str(get_mapping(spec, "color_by", "group")),
                          handles=legend_handles, labels=[h.get_label() for h in legend_handles],
                          force_outside=True)
-        else:
+            placed = True
+        if edge_legend_handles and show_legend:
+            # Edge-category legend. If a node legend already occupies the outside slot,
+            # add this as a second legend (lower-left) via add_artist so both show.
+            edge_leg = ax.legend(handles=edge_legend_handles,
+                                 title=str(edge_color_by), loc="lower left",
+                                 fontsize=style.legend_pt, frameon=False)
+            if placed:
+                ax.add_artist(edge_leg)
+            placed = True
+        if not placed:
             fig.tight_layout()
 
     # --- metrics / summary ---

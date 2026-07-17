@@ -48,7 +48,7 @@ COLUMN_FIELDS: Dict[str, List[str]] = {
     "embedding_scatter": ["x", "y", "color", "shape", "label"],
     # --- v0.5 ---
     "hierarchical_clustering": ["row_id"],
-    "network_graph": ["source", "target", "weight"],
+    "network_graph": ["source", "target", "weight", "interaction_type"],
 }
 
 # Mapping keys that are columns of the PCA *metadata* table, not the matrix.
@@ -252,7 +252,9 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("size_by", "Size nodes by", "choice", "degree", ["degree", "value", "fixed"]),
         Option("node_size", "Fixed node size (when 'fixed')", "number", 300, minimum=20, maximum=2000, step=20, decimals=0),
         # --- edges ---
-        Option("edge_color", "Edge color", "choice", "#888888", _NET_EDGE_COLORS),
+        Option("edge_color_by", "Color edges by category", "choice", "(auto)",
+               ["(auto)", "none", "interaction_type", "edge_type", "pathway", "sign"]),
+        Option("edge_color", "Edge color (single)", "choice", "#888888", _NET_EDGE_COLORS),
         Option("edge_color_positive", "Edge color +corr", "choice", "#B2182B", _NET_EDGE_COLORS + ["#B2182B"]),
         Option("edge_color_negative", "Edge color -corr", "choice", "#2166AC", _NET_EDGE_COLORS + ["#2166AC"]),
         Option("edge_width_by", "Edge width by", "choice", "weight", ["weight", "fixed"]),

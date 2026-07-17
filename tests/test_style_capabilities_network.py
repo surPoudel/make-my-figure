@@ -108,6 +108,56 @@ def test_network_custom_category_color_map():
     assert {"#ff0000", "#00ff00", "#0000ff"} <= _node_facecolors(r)
 
 
+_ITYPE_EDGES = pd.DataFrame({
+    "source": ["A", "A", "B", "C", "D", "E", "F", "G"],
+    "target": ["B", "C", "C", "D", "E", "A", "G", "A"],
+    "weight": [1, 2, 3, 1, 2, 1, 2, 1.0],
+    "itype": ["activation", "inhibition", "activation", "binding", "inhibition",
+              "binding", "activation", "binding"]})
+
+
+def _itype_edge_colors(mapping, style=None):
+    spec = make_spec("network_graph", "n", "publication", mapping=mapping)
+    if style:
+        spec["style"] = style
+    r = render(spec, _ITYPE_EDGES)
+    lcs = [c for c in r.figure.axes[0].collections if isinstance(c, LineCollection)]
+    return [mcolors.to_hex(c) for c in lcs[0].get_colors()], r
+
+
+def test_network_edge_color_by_interaction_type_auto():
+    # The reported WSL bug: coloring by interaction_type must produce multiple hues,
+    # not a single color. Auto-detected when the column is mapped.
+    cols, r = _itype_edge_colors({"source": "source", "target": "target",
+                                  "interaction_type": "itype", "color_by": "none"})
+    assert len(set(cols)) == 3
+    lg = r.figure.axes[0].get_legend()
+    assert lg is not None
+    assert {t.get_text() for t in lg.get_texts()} == {"activation", "inhibition", "binding"}
+
+
+def test_network_interaction_type_not_single_color():
+    cols, _ = _itype_edge_colors({"source": "source", "target": "target",
+                                  "interaction_type": "itype", "color_by": "none"})
+    assert len(set(cols)) > 1, "edges collapsed to a single color despite categories"
+
+
+def test_network_edge_color_by_explicit_none_is_single():
+    cols, _ = _itype_edge_colors({"source": "source", "target": "target",
+                                  "interaction_type": "itype", "edge_color_by": "none",
+                                  "edge_color": "#777777", "color_by": "none"})
+    assert set(cols) == {"#777777"}
+
+
+def test_network_edge_categories_honor_palette():
+    from make_my_figure_core.styles.engine import NAMED_PALETTES
+    cols, _ = _itype_edge_colors({"source": "source", "target": "target",
+                                  "interaction_type": "itype", "color_by": "none"},
+                                 style={"palette_name": "grayscale"})
+    gray = {c.lower() for c in NAMED_PALETTES["grayscale"]}
+    assert {c.lower() for c in cols} & gray
+
+
 def test_network_fixed_edge_color():
     r = _net({"source": "source", "target": "target", "edge_color": "#abcdef",
               "color_by": "none"})

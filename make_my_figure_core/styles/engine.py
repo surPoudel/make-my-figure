@@ -374,6 +374,11 @@ def list_profiles(path: Optional[str] = None) -> List[str]:
     aggregate defaults) is included so it can be selected/inspected.
     """
     learned_publication = [n for n in _load_learned_raw().keys() if n.startswith("publication")]
+    # Defensive: never expose a journal-named profile even if a learned file is
+    # polluted (e.g. a stale install). The single visible identity is Publication.
+    _forbidden = ("nature", "science", "cell", "journal", "jama", "nejm", "lancet", "plos")
+    learned_publication = [n for n in learned_publication
+                           if not any(tok in n.lower() for tok in _forbidden)]
     return ["publication"] + learned_publication
 
 

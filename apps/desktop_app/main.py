@@ -258,6 +258,13 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle(APP_NAME)
         self.resize(1180, 760)
+        # Build/version banner in the status bar so a user can confirm they run the
+        # freshly-pulled code (not a stale installed package).
+        try:
+            from make_my_figure_core.version import build_banner
+            self.statusBar().showMessage(build_banner())
+        except Exception:  # noqa: BLE001
+            pass
         if os.path.exists(ICON_PATH):
             self.setWindowIcon(QIcon(ICON_PATH))
         self.setAcceptDrops(True)
