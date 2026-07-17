@@ -521,6 +521,30 @@ class DesktopController:
         return spec, result, pi
 
     # --- raw-like matrix preprocessing / QC (GUI-free; the wizard is a thin layer) ---
+    def matrix_metadata_suggest_from_file(self, path: str, value_columns):
+        """Read a metadata table (CSV/TSV/XLSX) and suggest an (unconfirmed)
+        sample->group mapping matched to the matrix value columns.
+
+        Returns ``(SampleMetadataSpec, info)`` where ``info`` summarizes the match
+        (columns used, matched / missing / extra samples) for the UI to display. The
+        user confirms in the groups table — nothing is applied silently."""
+        import make_my_figure_core.matrix_workflow as mw
+
+        info = load_table(path)                       # friendly LoaderError on failure
+        meta_df = info.dataframe
+        vcols = [str(c) for c in value_columns]
+        spec = mw.suggest_metadata_from_table(meta_df, vcols)
+        matched = set(spec.sample_to_group)
+        summary = {
+            "sample_column": spec.sample_id_column,
+            "group_column": spec.group_column,
+            "n_matched": len(matched),
+            "n_total": len(vcols),
+            "missing_samples": [c for c in vcols if c not in matched],
+            "groups": sorted({str(g) for g in spec.sample_to_group.values()}),
+        }
+        return spec, summary
+
     def matrix_diagnose(self, data: LoadedData, matrix_spec):
         import make_my_figure_core.matrix_workflow as mw
 

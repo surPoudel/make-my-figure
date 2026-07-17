@@ -201,6 +201,20 @@ class MatrixWizardDialog(QDialog):
         v = QVBoxLayout(w)
         v.addWidget(QLabel("Assign each value column to a group (edit the Group column; "
                            "leave blank to exclude a column):"))
+        # Metadata file upload (parity across Mac/Windows/Linux): fill the Group
+        # column from an uploaded table; the user still reviews + confirms.
+        up_row = QHBoxLayout()
+        up_btn = QPushButton("⬆ Upload metadata file…")
+        up_btn.setToolTip("Load a CSV/TSV/XLSX with a sample-id column and a group column; "
+                          "the app matches samples and fills the Group column for you.")
+        up_btn.clicked.connect(self._upload_metadata_file)
+        up_row.addWidget(up_btn)
+        up_row.addStretch()
+        v.addLayout(up_row)
+        self.meta_upload_note = QLabel("")
+        self.meta_upload_note.setWordWrap(True)
+        self.meta_upload_note.setStyleSheet("color:#345; font-size:11px;")
+        v.addWidget(self.meta_upload_note)
         self.group_table = QTableWidget(0, 2)
         self.group_table.setHorizontalHeaderLabels(["Sample column", "Group"])
         self.group_table.horizontalHeader().setStretchLastSection(True)
@@ -231,6 +245,39 @@ class MatrixWizardDialog(QDialog):
         rows = {i.row() for i in self.group_table.selectedIndexes()}
         for r in rows:
             self.group_table.setItem(r, 1, QTableWidgetItem(label))
+
+    def _upload_metadata_file(self):
+        """Pick a metadata table and pre-fill the Group column (user then confirms)."""
+        if self.matrix_spec is None:
+            QMessageBox.information(self, "Map columns first",
+                                    "Confirm the column mapping before uploading metadata.")
+            return
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Upload metadata file", "",
+            "Tables (*.csv *.tsv *.txt *.xlsx *.xls);;All files (*)")
+        if not path:
+            return
+        try:
+            spec, info = self.controller.matrix_metadata_suggest_from_file(
+                path, self.matrix_spec.value_columns)
+        except Exception as exc:  # noqa: BLE001
+            QMessageBox.warning(self, "Could not read metadata", str(exc))
+            return
+        s2g = spec.sample_to_group
+        # Fill the Group column for matched samples (leave others for manual entry).
+        for r in range(self.group_table.rowCount()):
+            name = self.group_table.item(r, 0).text()
+            if name in s2g:
+                self.group_table.setItem(r, 1, QTableWidgetItem(str(s2g[name])))
+        miss = info.get("missing_samples") or []
+        msg = (f"Loaded '{info.get('sample_column')}' as sample id and "
+               f"'{info.get('group_column')}' as group. Matched {info['n_matched']}/"
+               f"{info['n_total']} samples; groups: {', '.join(info.get('groups') or []) or 'none'}.")
+        if miss:
+            msg += f" Unmatched (fill manually): {', '.join(miss[:8])}" + (" …" if len(miss) > 8 else "")
+        if not info.get("sample_column") or not info.get("group_column") or info["n_matched"] == 0:
+            msg += "  ⚠ Could not auto-match — check that a column holds the sample names."
+        self.meta_upload_note.setText(msg)
 
     def _refresh_groups_tab(self):
         if self.matrix_spec is None:

@@ -169,6 +169,31 @@ def test_processed_matrix_downstream_and_traceable(ctrl, tmp_path):
     assert vres.figure is not None and vpi.plot_type == "volcano_plot"
 
 
+def test_metadata_suggest_from_file(ctrl, tmp_path):
+    """Uploading a metadata table suggests a sample->group mapping (parity feature)."""
+    cols = [f"S{i:02d}" for i in range(6)]
+    meta_csv = tmp_path / "meta.csv"
+    pd.DataFrame({"sample": cols,
+                  "condition": ["A", "A", "A", "B", "B", "B"]}).to_csv(meta_csv, index=False)
+    spec, info = ctrl.matrix_metadata_suggest_from_file(str(meta_csv), cols)
+    assert info["sample_column"] == "sample"
+    assert info["group_column"] == "condition"
+    assert info["n_matched"] == 6 and not info["missing_samples"]
+    assert spec.sample_to_group["S00"] == "A" and spec.sample_to_group["S05"] == "B"
+    assert set(info["groups"]) == {"A", "B"}
+
+
+def test_metadata_from_file_partial_match(ctrl, tmp_path):
+    cols = [f"S{i:02d}" for i in range(6)]
+    meta_csv = tmp_path / "meta.tsv"
+    # only 4 of 6 samples present in the metadata file
+    pd.DataFrame({"sample_id": cols[:4], "grp": ["x", "x", "y", "y"]}).to_csv(
+        meta_csv, sep="\t", index=False)
+    spec, info = ctrl.matrix_metadata_suggest_from_file(str(meta_csv), cols)
+    assert info["n_matched"] == 4
+    assert set(info["missing_samples"]) == {"S04", "S05"}
+
+
 def test_build_matrix_plots_render(ctrl, data, spec, meta):
     recs = ctrl.matrix_recommendations(data, spec, meta, has_differential=False)
     for key in ("heatmap", "pca", "box_by_group"):
