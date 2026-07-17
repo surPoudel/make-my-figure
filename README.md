@@ -150,23 +150,41 @@ Optional extras (only these exist):
 
 ## 10. Running the apps
 
-Streamlit (web UI):
+**Streamlit (web UI)** — no Qt required:
 
 ```bash
-streamlit run apps/streamlit_app/streamlit_app.py
+python -m pip install -e .
+streamlit run apps/streamlit_app/streamlit_app.py --server.fileWatcherType none
 ```
 
-Desktop (PySide6):
+**Desktop (PySide6)** — requires the `desktop` extra:
 
 ```bash
+python -m pip install -e ".[desktop]"
 python -m apps.desktop_app.main
 ```
 
-Build a desktop installer for your OS:
+**Desktop on WSL/Linux** also needs Qt system libraries (otherwise you'll see
+`Failed to import Qt binding modules` — the app now prints this exact guidance):
+
+```bash
+sudo apt install -y libxkbcommon0 libxkbcommon-x11-0 libgl1 libegl1 \
+    libxcb-cursor0 libxcb-xinerama0 libxcb-keysyms1 libxcb-randr0 \
+    libxcb-render-util0 libxcb-shape0 libxcb-icccm4 libxcb-image0 \
+    libxcb-xfixes0 libdbus-1-3
+python -m pip install -e ".[desktop]"
+python -m apps.desktop_app.main
+```
+
+Build a desktop installer for your OS (build/test the Windows `.exe` from native
+Windows Python, not WSL):
 
 ```bash
 python scripts/build_desktop.py
 ```
+
+Both frontends use the **same core renderer and PlotSpec**, so a figure looks the same
+whether you build it in Streamlit or the desktop app.
 
 **Performance note.** Under WSL, `/mnt/c` (Windows drive) and OneDrive-synced folders
 are slow for file I/O. For responsive development keep the repo and data on the local

@@ -17,9 +17,11 @@ def build_info() -> dict:
     """
     import os
     import platform as _plat
+    import sys as _sys
 
     info = {"version": __version__, "commit": "unknown",
             "module_path": os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            "python_executable": _sys.executable,
             "platform": "unknown", "python": _plat.python_version(), "backend": "unknown"}
     try:
         info["platform"] = _plat.platform()

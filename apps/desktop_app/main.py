@@ -25,6 +25,50 @@ _REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")
 if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
 
+# Friendly guard: the desktop app needs a Qt binding (PySide6). Importing the
+# Matplotlib Qt backend below would otherwise fail with a cryptic
+# "Failed to import Qt binding modules" message. Catch both "not installed" and
+# "installed but native libs missing" (e.g. libEGL on headless Linux/WSL) and print
+# exactly how to fix it, plus the Streamlit fallback. Tests guard with
+# importorskip("PySide6"), so this only fires on the real `-m` launch path.
+try:
+    from PySide6.QtWidgets import QApplication as _QtImportCheck  # noqa: F401
+except Exception as _qt_exc:  # noqa: BLE001
+    import sys as _sys
+
+    _low = str(_qt_exc).lower()
+    _needs_apt = any(tok in _low for tok in ("libegl", "libxkb", "libgl", "xcb", "cannot open shared object"))
+    _msg = [
+        "",
+        "Make My Figure desktop app could not start: a Qt binding (PySide6) is unavailable.",
+        f"  ({type(_qt_exc).__name__}: {_qt_exc})",
+        "",
+        "Install the desktop dependencies into THIS environment:",
+        '    python -m pip install -e ".[desktop]"',
+        "",
+    ]
+    if _needs_apt:
+        _msg += [
+            "On Linux/WSL you also need Qt system libraries:",
+            "    sudo apt install -y libxkbcommon0 libxkbcommon-x11-0 libgl1 libegl1 \\",
+            "        libxcb-cursor0 libxcb-xinerama0 libxcb-keysyms1 libxcb-randr0 \\",
+            "        libxcb-render-util0 libxcb-shape0 libxcb-icccm4 libxcb-image0 \\",
+            "        libxcb-xfixes0 libdbus-1-3",
+            "",
+        ]
+    _msg += [
+        "Or use the Streamlit app instead (no Qt required):",
+        "    streamlit run apps/streamlit_app/streamlit_app.py --server.fileWatcherType none",
+        "",
+    ]
+    _sys.stderr.write("\n".join(_msg))
+    # Clean exit when launched directly (python -m apps.desktop_app.main); re-raise
+    # the original ImportError when imported (so tests skip via importorskip exactly
+    # as before, rather than hitting an uncatchable SystemExit).
+    if __name__ == "__main__":
+        raise SystemExit(1)
+    raise
+
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT
 from PySide6.QtCore import Qt, QSettings, QTimer
@@ -113,6 +157,7 @@ def debug_info() -> dict:
     from make_my_figure_core.version import __version__
 
     return {
+        "frontend": "desktop",
         "app_version": __version__,
         "git_commit": _git_commit(),
         "desktop_app_file": os.path.abspath(__file__),
@@ -122,6 +167,7 @@ def debug_info() -> dict:
         "python_executable": sys.executable,
         "python_version": sys.version.split()[0],
         "matplotlib": matplotlib.__version__,
+        "matplotlib_backend": matplotlib.get_backend(),
         "frozen": bool(getattr(sys, "frozen", False)),
         "cloud_synced_folder": _on_cloud_folder(),
     }

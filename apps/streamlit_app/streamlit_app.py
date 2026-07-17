@@ -119,7 +119,17 @@ st.sidebar.divider()
 # (not a stale installed package) — key for diagnosing platform-specific reports.
 try:
     from make_my_figure_core.version import build_banner as _bb  # noqa: E402
+    from make_my_figure_core.version import build_info as _binfo  # noqa: E402
     st.sidebar.caption("🔖 " + _bb())
+    with st.sidebar.expander("🔧 Diagnostics", expanded=False):
+        _bi = _binfo()
+        st.write({"frontend": "streamlit", "version": _bi["version"],
+                  "commit": _bi["commit"], "platform": _bi["platform"],
+                  "python": _bi["python"], "python_executable": _bi["python_executable"],
+                  "make_my_figure_core path": _bi["module_path"],
+                  "matplotlib_backend": _bi["backend"]})
+        st.caption("If `commit` doesn't match your pulled HEAD, a stale installed "
+                   "package is shadowing the repo — run `python -m pip install -e .`.")
 except Exception:  # noqa: BLE001
     pass
 st.sidebar.header("1. Data")
@@ -458,9 +468,35 @@ if plot_type == "forest_plot":
     mapping["reference"] = st.sidebar.number_input("Reference line", value=1.0, step=0.5)
     mapping["log_scale"] = st.sidebar.checkbox("Log x-axis", value=True)
 if plot_type == "network_graph":
-    # Node/edge color + layout controls. Coloring edges by a categorical column
-    # (e.g. interaction_type) is auto-detected when that column is mapped above;
-    # you can also force it here. Group node colors honor the Publication palette.
+    # --- Edge color: by a categorical edge column (e.g. interaction_type),
+    # single fixed color, or by sign (correlation). We auto-detect a categorical
+    # edge column and map it so edges actually get colored (parity with desktop).
+    _cat_edge_cols = [c for c in table_info.columns
+                      if c not in ("source", "target", "weight")
+                      and str(table_info.dataframe[c].dtype) == "object"]
+    _default_ec = next((c for c in table_info.columns
+                        if c.lower() in ("interaction_type", "edge_type", "type",
+                                         "pathway", "category", "sign")), None)
+    _edge_mode = st.sidebar.selectbox(
+        "Edge color mode", ["By category column", "Single color", "By sign (correlation)"],
+        index=0 if _default_ec else 1)
+    if _edge_mode == "By category column":
+        _opts = _cat_edge_cols or table_info.columns[:]
+        _idx = _opts.index(_default_ec) if _default_ec in _opts else 0
+        _ec_col = st.sidebar.selectbox("Edge color column", _opts, index=_idx,
+                                       help="Categorical edge attribute to color edges by.")
+        # The renderer reads the edge category via mapping['interaction_type'];
+        # setting it here is what makes Streamlit match desktop.
+        mapping["interaction_type"] = _ec_col
+        mapping["edge_color_by"] = _ec_col
+        st.sidebar.caption(f"Edge colors: **{_ec_col}** (categorical)")
+    elif _edge_mode == "Single color":
+        mapping["edge_color_by"] = "none"
+        mapping["edge_color"] = st.sidebar.selectbox(
+            "Edge color", ["#888888", "#BBBBBB", "#333333", "black"], index=0)
+    else:
+        mapping["edge_color_by"] = "none"  # renderer uses +/- correlation colors
+    # --- Node color: group (needs node table), numeric value, or a fixed color.
     mapping["color_by"] = st.sidebar.selectbox(
         "Color nodes by", ["group", "value", "none"], index=0,
         help="'group'/'value' need a node-attributes table; 'none' uses a single color.")
@@ -468,11 +504,6 @@ if plot_type == "network_graph":
         "Node color (when 'none')",
         ["(palette)", "#2166AC", "#B2182B", "#1B7837", "#762A83", "#E08214", "#333333", "black"],
         index=0)
-    mapping["edge_color_by"] = st.sidebar.selectbox(
-        "Color edges by category", ["(auto)", "none", "interaction_type", "edge_type", "pathway", "sign"],
-        index=0, help="'(auto)' colors by interaction_type/edge_type if that column is mapped above.")
-    mapping["edge_color"] = st.sidebar.selectbox(
-        "Edge color (single)", ["#888888", "#BBBBBB", "#333333", "black"], index=0)
     mapping["layout"] = st.sidebar.selectbox(
         "Layout", ["spring", "kamada_kawai", "circular", "shell", "spectral",
                    "multipartite", "fixed", "random"], index=0)
@@ -619,7 +650,13 @@ if stats_spec.get("enabled"):
 # --- Render + preview -------------------------------------------------------
 st.subheader("Figure preview")
 try:
-    result = render(spec, table_info.dataframe, style=style, aux=pca_aux)
+    # Aux tables (node attributes for networks, sample metadata for PCA). Networks
+    # previously got no aux in Streamlit, so `color_by=group` had no node groups and
+    # collapsed to one color — desktop passed it, hence the discrepancy.
+    render_aux = pca_aux
+    if plot_type == "network_graph" and bundled_aux:
+        render_aux = bundled_aux
+    result = render(spec, table_info.dataframe, style=style, aux=render_aux)
     fig = result.figure
     st.pyplot(fig, use_container_width=False)
     check = result.metadata.get("publication_check", {})
