@@ -4,6 +4,12 @@ Make My Figure exports **SVG, PDF, PNG, and a PlotSpec JSON** sidecar. Every plo
 is publication-styled by default (readable fonts, strong contrast, clean axes,
 non-overlapping legends).
 
+> **One export path.** Figures generated from the Matrix Workflow export through the
+> exact same canonical PlotSpec + renderer as the normal workflow (the Matrix Workflow
+> hands off to the full plot editor). Matrix/preprocessing/statistics/workbook
+> provenance is recorded on the exported PlotSpec `source` block. See
+> [MATRIX_WORKFLOW.md](MATRIX_WORKFLOW.md).
+
 > **Worksheet-aware names:** when the data comes from a multi-sheet Excel workbook,
 > export filenames include the worksheet name (e.g. `Sol_24M_vs_6M_volcano.svg`) so
 > outputs from different sheets never overwrite each other, and the PlotSpec/StatsSpec

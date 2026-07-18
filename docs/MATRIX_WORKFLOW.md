@@ -5,6 +5,18 @@ numeric feature matrix) into publication-ready figures — with **no silent
 guessing**. You confirm every column role and every group before anything is
 plotted or analysed.
 
+> **One plot editor.** The Matrix Workflow prepares and validates data, then hands
+> the recommendation to the **same full plot editor** the normal workflow uses —
+> there is no second, reduced plotting UI. On the *Recommend & generate* step, pick a
+> recommended plot and click **Open in plot editor**: the plot-ready derived table
+> loads into the normal editor with the plot type and column mappings pre-populated,
+> and you get the *complete* controls — thresholds, labels, duplicate-label handling,
+> annotations, colors, marker size, colorbar/clustering, legend/axes/layout, and
+> PNG/PDF/SVG + PlotSpec export. A lightweight **Quick preview** stays for a fast
+> look. Matrix/metadata/preprocessing/statistics/workbook **provenance** travels with
+> the plot into the exported PlotSpec (`source` block), and you can **return to the
+> Matrix Workflow** without losing its state.
+
 > **Multi-sheet Excel:** if your matrix lives in one worksheet of a workbook, select
 > that sheet first (see [MULTI_SHEET_EXCEL.md](MULTI_SHEET_EXCEL.md)). The selected
 > worksheet drives the wizard, its provenance is stored on the MatrixSpec, and you may

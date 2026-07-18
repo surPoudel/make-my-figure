@@ -76,7 +76,10 @@ def test_desktop_export_names_are_sheet_aware():
 
 
 def test_desktop_build_spec_includes_source_provenance():
-    assert "source=self.data.source_provenance() or None" in _MAIN
+    # Worksheet provenance still flows into the spec source (now merged with any
+    # Matrix-Workflow handoff provenance).
+    assert "self.data.source_provenance()" in _MAIN
+    assert "source=source or None" in _MAIN
 
 
 def test_desktop_status_bar_shows_workbook_and_worksheet():

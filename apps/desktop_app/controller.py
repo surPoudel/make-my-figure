@@ -224,6 +224,14 @@ class DesktopController:
         loaded = self.loaded_from_dataframe(result.table, f"{base}__diff.csv")
         return loaded, result
 
+    def loaded_from_handoff(self, handoff) -> LoadedData:
+        """Wrap a :class:`PlotEditorHandoff` as a :class:`LoadedData` for the editor.
+
+        Converts the handoff's plot-ready DataFrame and any auxiliary tables (e.g.
+        PCA sample metadata) into the normal ``LoadedData`` the workbench renders."""
+        aux = {k: table_info_from_dataframe(v, k) for k, v in (handoff.aux or {}).items()}
+        return self.loaded_from_dataframe(handoff.data, handoff.table_name, aux=aux)
+
     def loaded_from_dataframe(self, df, table_name: str,
                               *, aux: Optional[Dict[str, TableInfo]] = None) -> LoadedData:
         """Wrap an in-memory DataFrame as a :class:`LoadedData` (a derived table).
@@ -577,6 +585,41 @@ class DesktopController:
         aux = pi.aux or None
         result = render(spec, pi.dataframe, aux=aux)
         return spec, result, pi
+
+    def matrix_plot_handoff(self, data: LoadedData, rec, matrix_spec, *, metadata=None,
+                            differential_table=None, selected_features=None, params=None,
+                            preprocessing=None, statistics=None):
+        """Prepare a canonical :class:`PlotEditorHandoff` for a recommendation.
+
+        This is the single bridge from the Matrix Workflow into the *normal* plot
+        editor: it produces the plot-ready dataset + suggested mappings (via the same
+        ``build_plot_inputs`` used everywhere) and attaches matrix / metadata /
+        preprocessing / statistics / workbook provenance. The frontend then loads it
+        into the full editor — there is no second reduced plot UI."""
+        import make_my_figure_core.matrix_workflow as mw
+        from make_my_figure_core.plots.handoff import (
+            PlotEditorHandoff, build_matrix_provenance)
+
+        pi = mw.build_plot_inputs(rec, data.info.dataframe, matrix_spec, metadata=metadata,
+                                  differential_table=differential_table,
+                                  selected_features=selected_features, params=params)
+        prov = build_matrix_provenance(
+            matrix_spec, metadata=metadata, preprocessing=preprocessing,
+            statistics=statistics,
+            workbook_name=(data.source_provenance() or {}).get("source_workbook_name"),
+            sheet_name=(data.source_provenance() or {}).get("source_sheet_name"))
+        # Suggested option defaults come from the recommendation's mapping (e.g. the
+        # significance field for volcano/MA) so the editor opens pre-configured; the
+        # user can still change every control.
+        defaults = {k: v for k, v in (pi.mapping or {}).items()
+                    if k in ("use_fdr", "significance", "p_cutoff", "lfc_cutoff", "scale",
+                             "color_scale", "cluster_rows", "cluster_columns")}
+        name = f"{matrix_spec.source_file or data.table_name} · {rec.key or pi.plot_type}"
+        return PlotEditorHandoff(
+            plot_type=pi.plot_type, data=pi.dataframe, mappings=dict(pi.mapping),
+            aux=dict(pi.aux or {}), spec_extra=dict(pi.spec_extra or {}),
+            defaults=defaults, provenance=prov, table_name=name,
+            warnings=list(pi.warnings))
 
     # --- raw-like matrix preprocessing / QC (GUI-free; the wizard is a thin layer) ---
     def metadata_file_sheets(self, path: str) -> List[str]:

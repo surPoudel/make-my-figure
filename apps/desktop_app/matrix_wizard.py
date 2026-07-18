@@ -81,8 +81,12 @@ class MatrixWizardDialog(QDialog):
         self.matrix_spec = None
         self.metadata = None
         self.diff_table = None
+        self._diff_method = None   # differential-summary method sentence (provenance)
         self._current = None      # (spec, result, PlotInputs) for the previewed plot
         self._worker: Optional[_Worker] = None
+        # Set by "Open in plot editor" so MainWindow loads the recommendation into the
+        # full plot editor after the dialog closes. None = no handoff requested.
+        self.pending_handoff = None
 
         self.setWindowTitle("Matrix workflow")
         self.resize(820, 720)
@@ -536,9 +540,8 @@ class MatrixWizardDialog(QDialog):
         dl.addRow(self.diff_status)
         v.addWidget(diff_box)
 
-        # style controls (Publication) — same knobs as the main workbench, applied
-        # to every plot generated here.
-        v.addWidget(self._build_style_group())
+        # No style controls here: styling/thresholds/labels/annotations/export all
+        # live in the one canonical plot editor. This tab prepares data + mappings.
 
         # recommendations
         rec_box = QGroupBox("Recommended plots")
@@ -567,32 +570,71 @@ class MatrixWizardDialog(QDialog):
         self.sig_combo.addItem("Raw p-value", "pvalue")
         sig_row.addWidget(self.sig_label); sig_row.addWidget(self.sig_combo); sig_row.addStretch()
         rl.addLayout(sig_row)
-        gen = QPushButton("Generate plot")
-        gen.clicked.connect(self._generate)
-        rl.addWidget(gen)
+        # Primary path: hand the recommendation to the full plot editor. A lightweight
+        # quick preview stays for a fast look, but all configuration/export is done in
+        # the editor (one source of truth — no second reduced plot UI here).
+        btn_row = QHBoxLayout()
+        open_btn = QPushButton("Open in plot editor")
+        open_btn.setToolTip("Open this recommendation in the full plot editor to adjust "
+                            "thresholds, labels, colors, annotations, layout, and export.")
+        open_btn.clicked.connect(self._open_in_editor)
+        preview_btn = QPushButton("Quick preview")
+        preview_btn.setToolTip("A fast default-style preview. Use 'Open in plot editor' "
+                               "for full control.")
+        preview_btn.clicked.connect(self._generate)
+        btn_row.addWidget(open_btn); btn_row.addWidget(preview_btn); btn_row.addStretch()
+        rl.addLayout(btn_row)
+        hint = QLabel("Open this recommendation in the full plot editor to adjust "
+                      "thresholds, labels, colors, annotations, layout, and export settings.")
+        hint.setWordWrap(True); hint.setStyleSheet("color:#345; font-size:11px;")
+        rl.addWidget(hint)
         v.addWidget(rec_box)
 
-        # preview + actions
-        self.preview = QLabel("No plot yet.")
+        # quick preview (optional; full preview/export is in the plot editor)
+        self.preview = QLabel("No preview yet. Choose a plot and click 'Open in plot "
+                              "editor' (full controls) or 'Quick preview'.")
         self.preview.setAlignment(Qt.AlignCenter)
-        self.preview.setMinimumHeight(320)
+        self.preview.setWordWrap(True)
+        self.preview.setMinimumHeight(300)
         self.preview.setStyleSheet("border:1px solid #ccc;")
         v.addWidget(self.preview)
         self.gen_warn = QLabel(""); self.gen_warn.setWordWrap(True)
         self.gen_warn.setStyleSheet("color:#345; font-size:11px;")
         v.addWidget(self.gen_warn)
-        actions = QHBoxLayout()
-        for label, fmt in (("Save PNG", "png"), ("Save SVG", "svg"), ("Save PDF", "pdf")):
-            b = QPushButton(label)
-            b.clicked.connect(lambda _=False, f=fmt: self._save(f))
-            actions.addWidget(b)
-        add_btn = QPushButton("➕ Add to Figure Builder")
-        add_btn.clicked.connect(self._add_to_builder)
-        actions.addWidget(add_btn)
-        v.addLayout(actions)
 
         outer.setWidget(w)
         return outer
+
+    def _handoff_params(self, rec):
+        """Selected features + params (top_n / significance) for a recommendation."""
+        selected = None
+        if rec.key in ("box_by_group", "dot_by_group", "raincloud_by_group", "bar_by_group"):
+            selected = [i.text() for i in self.feature_list.selectedItems()] or None
+        params: Dict[str, Any] = {"top_n": int(self.topn_spin.value())}
+        if rec.key in ("volcano", "ma"):
+            params["significance"] = self.sig_combo.currentData()
+        return selected, params
+
+    def _open_in_editor(self):
+        """Build a canonical handoff and hand it to the main plot editor."""
+        rec = self.rec_combo.currentData()
+        if rec is None:
+            QMessageBox.information(self, "No plot", "Choose a recommended plot first.")
+            return
+        selected, params = self._handoff_params(rec)
+        prep = [self._prep_spec.method_sentence()] if self._prep_spec else None
+        stats = ({"method": self._diff_method} if self._diff_method
+                 and rec.key in ("volcano", "ma", "ranked_effect") else None)
+        try:
+            handoff = self.controller.matrix_plot_handoff(
+                self.data, rec, self.matrix_spec, metadata=self.metadata,
+                differential_table=self.diff_table, selected_features=selected,
+                params=params, preprocessing=prep, statistics=stats)
+        except Exception as exc:  # noqa: BLE001
+            QMessageBox.warning(self, "Could not open in editor", str(exc))
+            return
+        self.pending_handoff = handoff
+        self.accept()   # close; MainWindow applies the handoff and keeps our state
 
     def _refresh_generate_tab(self):
         # group combos for the differential summary
@@ -678,7 +720,8 @@ class MatrixWizardDialog(QDialog):
     def _on_diff_done(self, res):
         self.diff_btn.setEnabled(True); self.diff_cancel.setEnabled(False)
         self.diff_table = res.table
-        self.diff_status.setText("✓ " + res.method_sentence())
+        self._diff_method = res.method_sentence()
+        self.diff_status.setText("✓ " + self._diff_method)
         self._refresh_recommendations()
 
     def _on_diff_failed(self, msg):
@@ -692,62 +735,18 @@ class MatrixWizardDialog(QDialog):
         self.diff_btn.setEnabled(True); self.diff_cancel.setEnabled(False)
         self.diff_status.setText("Cancelled.")
 
-    def _build_style_group(self) -> QGroupBox:
-        """Compact Publication style controls applied to every generated plot."""
-        box = QGroupBox("Style (Publication)")
-        form = QFormLayout(box)
-        self.pal_combo = QComboBox()
-        self.pal_combo.addItems(["publication", "colorblind_safe", "high_contrast", "grayscale"])
-        self.font_combo = QComboBox()
-        self.font_combo.addItems(["Arial", "Helvetica", "Liberation Sans", "DejaVu Sans",
-                                  "Times New Roman"])
-        self.axis_pt = QSpinBox(); self.axis_pt.setRange(6, 28); self.axis_pt.setValue(12)
-        self.tick_pt = QSpinBox(); self.tick_pt.setRange(6, 24); self.tick_pt.setValue(10)
-        self.legend_pt = QSpinBox(); self.legend_pt.setRange(5, 22); self.legend_pt.setValue(10)
-        self.marker_sz = QSpinBox(); self.marker_sz.setRange(4, 200); self.marker_sz.setValue(45)
-        self.line_w = QDoubleSpinBox(); self.line_w.setRange(0.2, 6.0); self.line_w.setSingleStep(0.2)
-        self.line_w.setValue(1.8)
-        self.legend_outside = QCheckBox("Legend outside")
-        form.addRow("Palette", self.pal_combo)
-        form.addRow("Font", self.font_combo)
-        form.addRow("Axis label pt", self.axis_pt)
-        form.addRow("Tick label pt", self.tick_pt)
-        form.addRow("Legend pt", self.legend_pt)
-        form.addRow("Marker size", self.marker_sz)
-        form.addRow("Line width", self.line_w)
-        form.addRow(self.legend_outside)
-        return box
-
-    def _style_overrides(self) -> dict:
-        """Collect the Style controls into a spec['style'] override dict."""
-        return {
-            "palette_name": self.pal_combo.currentText(),
-            "font_family": self.font_combo.currentText(),
-            "axis_font_pt": float(self.axis_pt.value()),
-            "tick_label_pt": float(self.tick_pt.value()),
-            "legend_pt": float(self.legend_pt.value()),
-            "marker_size": float(self.marker_sz.value()),
-            "line_width_pt": float(self.line_w.value()),
-            "legend_outside": bool(self.legend_outside.isChecked()),
-        }
-
     def _generate(self):
+        """Lightweight default-style quick preview (full config is in the editor)."""
         rec = self.rec_combo.currentData()
         if rec is None:
             return
-        selected = None
-        if rec.key in ("box_by_group", "dot_by_group", "raincloud_by_group", "bar_by_group"):
-            selected = [i.text() for i in self.feature_list.selectedItems()] or None
-        params = {"top_n": int(self.topn_spin.value())}
-        if rec.key in ("volcano", "ma"):
-            params["significance"] = self.sig_combo.currentData()
+        selected, params = self._handoff_params(rec)
         try:
             spec, result, pi = self.controller.matrix_build_plot(
                 self.data, rec, self.matrix_spec, metadata=self.metadata,
-                differential_table=self.diff_table, selected_features=selected, params=params,
-                style_overrides=self._style_overrides())
+                differential_table=self.diff_table, selected_features=selected, params=params)
         except Exception as exc:  # noqa: BLE001
-            QMessageBox.warning(self, "Could not generate", str(exc))
+            QMessageBox.warning(self, "Could not preview", str(exc))
             return
         self._current = (spec, result, pi)
         png = figure_to_bytes(result.figure, "png", dpi=150)
@@ -755,38 +754,9 @@ class MatrixWizardDialog(QDialog):
         pix.loadFromData(png, "PNG")
         self.preview.setPixmap(pix.scaledToWidth(min(760, pix.width()), Qt.SmoothTransformation))
         notes = list(pi.warnings) + list(result.warnings or [])
-        self.gen_warn.setText(" | ".join(notes) if notes else "")
-
-    def _save(self, fmt: str):
-        if self._current is None:
-            QMessageBox.information(self, "No plot", "Generate a plot first.")
-            return
-        path, _ = QFileDialog.getSaveFileName(self, f"Save {fmt.upper()}", f"figure.{fmt}",
-                                              f"{fmt.upper()} (*.{fmt})")
-        if not path:
-            return
-        base = path[:-(len(fmt) + 1)] if path.lower().endswith("." + fmt) else path
-        _spec, result, _pi = self._current
-        export_figure(result.figure, base, [fmt], dpi=300)
-        self.gen_warn.setText(f"Saved {path}")
-
-    def _add_to_builder(self):
-        if self._current is None:
-            QMessageBox.information(self, "No plot", "Generate a plot first.")
-            return
-        import copy
-
-        spec, _result, pi = self._current
-        rec = self.rec_combo.currentData()
-        self.saved_panels.append({
-            "plot_spec": copy.deepcopy(spec),
-            "table": pi.dataframe.copy(deep=True),
-            "aux": {k: v.copy(deep=True) for k, v in (pi.aux or {}).items()},
-            "title": rec.label if rec else "Matrix plot",
-            "plot_type": pi.plot_type,
-        })
-        QMessageBox.information(self, "Added",
-                                f"Added to the Figure Builder ({len(self.saved_panels)} panel(s)).")
+        self.gen_warn.setText(
+            ("Quick preview (default style). Use 'Open in plot editor' for full "
+             "control. " + " | ".join(notes)).strip())
 
     # --- tab housekeeping ------------------------------------------------
     def _on_tab_changed(self, index: int):

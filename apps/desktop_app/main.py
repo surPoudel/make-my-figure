@@ -304,6 +304,11 @@ class MainWindow(QMainWindow):
         self._point_offsets = {}          # plot_type -> {point_id: [dx, dy]} manual moves
         self._drag_label = None           # (plot_type, label) currently being dragged
         self._pending_column_annotations = None   # group color strip from "Define groups"
+        # Matrix-Workflow → plot-editor handoff: suggested mappings/defaults applied
+        # once when opening a recommendation, and provenance recorded on the PlotSpec.
+        self._handoff_mapping = {}
+        self._handoff_provenance = {}
+        self._matrix_dialog = None        # persisted so returning preserves wizard state
         self._toolbar = None
         self._suppress_change = False   # re-entrancy guard for plot-type changes
         self._debug = False             # set by --debug: verbose toolbar/canvas logging
@@ -1103,6 +1108,10 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "Unexpected error", str(exc))
             return
         self._add_recent(path)
+        # A genuinely new dataset starts a fresh Matrix Workflow + no handoff state.
+        self._handoff_mapping = {}
+        self._handoff_provenance = {}
+        self._matrix_dialog = None
         # Uploaded data starts with NO plot selected — don't auto-draw a chart.
         prev = self._suppress_change
         self._suppress_change = True
@@ -1234,6 +1243,9 @@ class MainWindow(QMainWindow):
         orig = self._data_before_transform
         if orig is None:
             return
+        # Reverting drops any Matrix-Workflow handoff provenance for the derived plot.
+        self._handoff_provenance = {}
+        self._handoff_mapping = {}
         self._set_data(orig)   # clears the stash, hides the button, re-renders + re-recommends
         self.statusBar().showMessage("Reverted to the original data.", 5000)
 
@@ -1575,6 +1587,10 @@ class MainWindow(QMainWindow):
         self._current_result = None
         # Drop multi-sheet workbook context so a new upload starts clean.
         self._current_workbook_id = None
+        # Drop Matrix-Workflow handoff/dialog state.
+        self._handoff_mapping = {}
+        self._handoff_provenance = {}
+        self._matrix_dialog = None
         if hasattr(self, "sheet_box"):
             self.sheet_box.setVisible(False)
         self._clear_figure(show_placeholder=True)
@@ -1609,16 +1625,63 @@ class MainWindow(QMainWindow):
             self.render_preview()
 
     def action_matrix_wizard(self):
-        """Open the guided matrix workflow (map -> groups -> recommend -> generate)."""
+        """Open the guided matrix workflow (map -> groups -> recommend -> generate).
+
+        The dialog instance is persisted on the window so returning to the Matrix
+        Workflow after opening a recommendation in the plot editor preserves its
+        state (mapping, groups, preprocessing, differential summary)."""
         if self.data is None:
             self._show_warning("Load a data file first, then open the matrix workflow.")
             return
         from apps.desktop_app.matrix_wizard import MatrixWizardDialog
 
-        dlg = MatrixWizardDialog(self.controller, self.data, self._saved_panels, self)
+        dlg = self._matrix_dialog
+        if dlg is None:
+            dlg = MatrixWizardDialog(self.controller, self.data, self._saved_panels, self)
+            self._matrix_dialog = dlg
+        dlg.pending_handoff = None
         dlg.exec()
         # Wizard-generated plots may have been added to the Figure Builder.
         self.panel_count_label.setText(f"{len(self._saved_panels)} panel(s) saved.")
+        # "Open in plot editor" sets a pending handoff, then closes the dialog.
+        handoff = getattr(dlg, "pending_handoff", None)
+        if handoff is not None:
+            dlg.pending_handoff = None
+            self._apply_plot_handoff(handoff)
+
+    def _apply_plot_handoff(self, handoff):
+        """Load a Matrix-Workflow recommendation into the full plot editor.
+
+        Wraps the plot-ready derived data as the active dataset, preselects the
+        recommended plot type, pre-populates the suggested mappings/option defaults,
+        and records matrix/metadata/preprocessing/stats/workbook provenance on the
+        PlotSpec — so the user gets the *same* full controls, preview, annotation,
+        export, and Figure Builder as the normal workflow."""
+        loaded = self.controller.loaded_from_handoff(handoff)
+        original = self.data
+        # Suggested mappings + option defaults are applied once by _rebuild.
+        self._handoff_mapping = {**(handoff.mappings or {}), **(handoff.defaults or {})}
+        self._handoff_provenance = dict(handoff.provenance or {})
+        col_ann = (handoff.spec_extra or {}).get("column_annotations")
+        # Preselect the plot type BEFORE _set_data so exactly one rebuild runs.
+        prev = self._suppress_change
+        self._suppress_change = True
+        try:
+            idx = self.plot_combo.findData(handoff.plot_type)
+            if idx >= 0:
+                self.plot_combo.setCurrentIndex(idx)
+        finally:
+            self._suppress_change = prev
+        self._set_data(loaded)
+        self._mark_reshaped(original)   # revertible: return to the matrix table
+        # _set_data cleared pending column annotations; restore the group strip.
+        if col_ann:
+            self._pending_column_annotations = col_ann
+            self.render_preview()
+        prov = handoff.provenance or {}
+        self.statusBar().showMessage(
+            f"Opened matrix {handoff.plot_type} in the plot editor — full controls "
+            f"available. Source: {prov.get('source_sheet_name') or prov.get('source_matrix_id', 'matrix')}.")
 
     def _adopt_grouped_data(self, loaded):
         """Replace the active dataset with a derived (grouped/differential) table.
@@ -1808,14 +1871,18 @@ class MainWindow(QMainWindow):
             prefill = self._volcano_prefill(pt, col_opts)
         else:
             prefill = self._group_value_prefill(pt, col_opts)
+        handoff_map = self._handoff_mapping or {}
         for field in self.controller.column_fields(pt):
             combo = QComboBox()
             combo.addItems(col_opts)
             # Prefer the curated default when that column actually exists in the
             # uploaded data (keeps bundled examples exact); otherwise fall back to
             # the auto-detected prefill (volcano DE columns / group-value guess).
+            # A Matrix-Workflow handoff's suggested mapping takes top priority.
             d = defaults.get(field)
             default = d if d in col_opts else prefill.get(field, d)
+            if field in handoff_map and str(handoff_map[field]) in col_opts:
+                default = str(handoff_map[field])
             if default in col_opts:
                 combo.setCurrentText(default)
             combo.currentIndexChanged.connect(self.render_preview)
@@ -1840,6 +1907,9 @@ class MainWindow(QMainWindow):
             lw = QListWidget()
             lw.setSelectionMode(QListWidget.ExtendedSelection)
             lw.setMaximumHeight(150)
+            # A handoff can pre-select the exact value columns from the matrix mapping.
+            if handoff_map.get("value_columns"):
+                value_cols = [c for c in handoff_map["value_columns"] if c in cols]
             value_set = set(map(str, value_cols))
             for c in cols:
                 it = QListWidgetItem(str(c))
@@ -1856,6 +1926,8 @@ class MainWindow(QMainWindow):
                 combo = QComboBox()
                 combo.addItems(meta_opts)
                 default = defaults.get(field)
+                if field in handoff_map and str(handoff_map[field]) in meta_opts:
+                    default = str(handoff_map[field])
                 if default in meta_opts:
                     combo.setCurrentText(default)
                 combo.currentIndexChanged.connect(self.render_preview)
@@ -1869,6 +1941,30 @@ class MainWindow(QMainWindow):
             w = self._make_option_widget(opt)
             self.options_form.addRow(opt.label, w)
             self._option_widgets[opt.key] = w
+
+        # Apply a Matrix-Workflow handoff's suggested option defaults (e.g. volcano
+        # use_fdr / heatmap scale) once, then clear so later manual edits stick.
+        if handoff_map:
+            for key, w in self._option_widgets.items():
+                if key not in handoff_map:
+                    continue
+                val = handoff_map[key]
+                prev = self._suppress_change
+                self._suppress_change = True
+                try:
+                    if isinstance(w, QCheckBox):
+                        w.setChecked(bool(val))
+                    elif isinstance(w, QComboBox):
+                        if str(val) in [w.itemText(i) for i in range(w.count())]:
+                            w.setCurrentText(str(val))
+                    elif isinstance(w, (QSpinBox, QDoubleSpinBox)):
+                        try:
+                            w.setValue(type(w.value())(val))
+                        except (TypeError, ValueError):
+                            pass
+                finally:
+                    self._suppress_change = prev
+            self._handoff_mapping = {}   # one-shot: consumed on this rebuild
 
         # statistics: refresh column choosers + advisory suggestions
         if hasattr(self, "stats_panel"):
@@ -1994,10 +2090,13 @@ class MainWindow(QMainWindow):
         _lay, _cb = self._collect_layout_controls()
         layout.update(_lay)
         mapping.update(_cb)
+        # Merge worksheet provenance with any Matrix-Workflow handoff provenance so
+        # the exported PlotSpec is traceable to its matrix/preprocessing/stats source.
+        source = {**(self.data.source_provenance() or {}), **(self._handoff_provenance or {})}
         spec = self.controller.build_spec(
             pt, style, self.data.table_name, mapping,
             layout=layout, width=self.width_combo.currentText(), dpi=self.dpi_spin.value(),
-            statistics=stats_spec, source=self.data.source_provenance() or None)
+            statistics=stats_spec, source=source or None)
         overrides = self._collect_style_overrides()
         if overrides:
             spec["style"] = overrides

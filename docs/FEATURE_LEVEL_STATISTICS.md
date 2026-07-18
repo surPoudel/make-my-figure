@@ -8,6 +8,13 @@ feature matrix.
 > resulting StatsSpec records the worksheet provenance (workbook + sheet). Switching
 > worksheets clears stale statistics. See [MULTI_SHEET_EXCEL.md](MULTI_SHEET_EXCEL.md).
 
+> **Volcano / MA from a differential summary open in the full plot editor.** After you
+> compute the differential summary, choosing Volcano/MA/ranked-effect and clicking
+> **Open in plot editor** hands the results table to the normal editor with the effect
+> and p-value/FDR columns pre-mapped and the significance field suggested — then all
+> thresholds, labels, and styling are editable there. The differential method is
+> recorded as statistics provenance on the exported PlotSpec.
+
 > **Preprocessing provenance.** When the input is a **derived** (preprocessed)
 > matrix, pass `preprocessing_note` (the `PreprocessingSpec.method_sentence()`),
 > `source_matrix_id`, and `preprocessing_spec_id`. Both apps do this automatically

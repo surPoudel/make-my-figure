@@ -316,6 +316,27 @@ if workflow_mode.startswith("Matrix"):
     render_matrix_wizard(table_info.dataframe, table_name)
     st.stop()
 
+# --- Matrix-Workflow handoff banner (this plot came from the Matrix Workflow) ----
+_ho_src = st.session_state.get("_handoff_source")
+if _ho_src:
+    _bits = [f"**Matrix Workflow → full plot editor.**"]
+    if _ho_src.get("source_sheet_name"):
+        _bits.append(f"Source: {_ho_src.get('source_workbook_name','')} · "
+                     f"{_ho_src['source_sheet_name']}")
+    if _ho_src.get("source_preprocessing"):
+        _bits.append(f"Preprocessing: {', '.join(map(str, _ho_src['source_preprocessing']))}")
+    if _ho_src.get("source_statistics"):
+        _bits.append(f"Stats: {_ho_src['source_statistics'].get('method', '')}")
+    st.info("  ·  ".join(_bits) + "  —  full thresholds, labels, colors, annotations, "
+            "layout, and export are available below.")
+    if st.button("↩ Return to Matrix Workflow", key="_handoff_return_btn"):
+        # Keep matrix state (mw_*); drop this plot's derived table + handoff context.
+        for _k in ("_grouped_df", "_grouped_name", "_handoff_source",
+                   "_handoff_defaults", "_handoff_spec_extra", "_handoff_aux"):
+            st.session_state.pop(_k, None)
+        st.session_state["workflow_mode"] = "Matrix workflow (guided)"
+        st.rerun()
+
 # --- Table preview + validation messages ------------------------------------
 # Editable table: edits made here feed straight into the figure below.
 st.subheader(f"Table — {table_name}")
@@ -505,8 +526,12 @@ def _column_select(label: str, key: str, default):
     return None if choice == "(none)" else choice
 
 
+# A Matrix-Workflow handoff supplies suggested mappings for the recommended plot;
+# they seed the selectbox defaults once (the map_* keys were cleared on handoff).
+_handoff_mappings = st.session_state.get("_handoff_mappings") or {}
 for field in COLUMN_FIELDS.get(plot_type, []):
-    mapping[field] = _column_select(field, field, mapping.get(field))
+    _default = _handoff_mappings.get(field, mapping.get(field))
+    mapping[field] = _column_select(field, field, _default)
 
 # Matrix plots: let the user pick the VALUE (measurement) columns explicitly.
 # Populate every non-id column and default the selection to the auto-detected
@@ -524,14 +549,20 @@ if plot_type in _MATRIX_PLOT_TYPES:
         _val, _ann = _vmc(table_info.dataframe, _id_col)
     except Exception:
         _val, _ann = _all, []
+    _ho_vals = _handoff_mappings.get("value_columns")
+    _vc_default = ([c for c in _all if c in set(map(str, _ho_vals))] if _ho_vals
+                   else [c for c in _all if c in set(map(str, _val)) or c in _val])
     _sel = st.sidebar.multiselect(
         "Value columns (measurements)", _all,
-        default=[c for c in _all if c in set(map(str, _val)) or c in _val],
+        default=_vc_default,
         key=f"valcols_{plot_type}",
         help="Numeric sample columns to plot. Annotation columns (e.g. annotationLevel) "
              "are left out by default; add them only if they are real measurements.")
     if _sel:
         mapping["value_columns"] = _sel
+
+# The handoff mappings are one-shot — consumed now that the mapping widgets exist.
+st.session_state.pop("_handoff_mappings", None)
 
 # Plot-type-specific options.
 if plot_type in ("barplot_with_error_bar", "grouped_barplot_with_error_bar"):
@@ -858,7 +889,14 @@ if y_label:
 style = load_profile(journal_style)
 w_mm = style.figure_size_inches(column_width)[0] * 25.4
 
-_source_prov = table_info.provenance() or None   # worksheet provenance (Excel)
+# Matrix-Workflow handoff: apply suggested option defaults for options that have no
+# dedicated widget (e.g. heatmap z-score scale), and use the handoff's provenance/aux.
+_handoff_defaults = st.session_state.get("_handoff_defaults") or {}
+for _k, _v in _handoff_defaults.items():
+    mapping.setdefault(_k, _v)
+_handoff_source = st.session_state.get("_handoff_source")
+_handoff_extra = st.session_state.get("_handoff_spec_extra") or {}
+_source_prov = _handoff_source or (table_info.provenance() or None)
 spec = make_spec(
     plot_type,
     table_name,
@@ -868,6 +906,8 @@ spec = make_spec(
     output=default_output_block(["svg", "png", "pdf"], width_mm=w_mm, dpi=dpi),
     source=_source_prov,
 )
+for _k, _v in _handoff_extra.items():   # e.g. column_annotations (group strip)
+    spec[_k] = _v
 spec["layout"] = {**spec.get("layout", {}), "column_width": column_width}
 spec["style"] = style_overrides
 if stats_spec.get("enabled"):
@@ -885,6 +925,9 @@ try:
     render_aux = pca_aux
     if plot_type == "network_graph" and bundled_aux:
         render_aux = bundled_aux
+    _handoff_aux = st.session_state.get("_handoff_aux")
+    if _handoff_aux:   # e.g. PCA sample metadata prepared by the Matrix Workflow
+        render_aux = _handoff_aux
     result = render(spec, table_info.dataframe, style=style, aux=render_aux)
     fig = result.figure
     st.pyplot(fig, use_container_width=False)

@@ -370,30 +370,16 @@ def _differential_summary_section(df: pd.DataFrame, spec: mw.MatrixSpec, meta) -
                                file_name="differential_summary.csv", mime="text/csv")
 
 
-def _style_controls() -> Dict[str, Any]:
-    """Compact Publication style controls; returns a spec['style'] override dict."""
-    with st.expander("🎨 Style (Publication)"):
-        c1, c2 = st.columns(2)
-        palette = c1.selectbox("Palette",
-                               ["publication", "colorblind_safe", "high_contrast", "grayscale"],
-                               key="mw_style_pal")
-        font = c2.selectbox("Font", ["Arial", "Helvetica", "Liberation Sans", "DejaVu Sans",
-                                     "Times New Roman"], key="mw_style_font")
-        axis_pt = c1.number_input("Axis label pt", 6, 28, 12, key="mw_style_axis")
-        tick_pt = c2.number_input("Tick label pt", 6, 24, 10, key="mw_style_tick")
-        legend_pt = c1.number_input("Legend pt", 5, 22, 10, key="mw_style_legend")
-        marker = c2.number_input("Marker size", 4, 200, 45, key="mw_style_marker")
-        line_w = c1.number_input("Line width", 0.2, 6.0, 1.8, step=0.2, key="mw_style_line")
-        legend_out = c2.checkbox("Legend outside", key="mw_style_legout")
-    return {"palette_name": palette, "font_family": font, "axis_font_pt": float(axis_pt),
-            "tick_label_pt": float(tick_pt), "legend_pt": float(legend_pt),
-            "marker_size": float(marker), "line_width_pt": float(line_w),
-            "legend_outside": bool(legend_out)}
-
-
 def _generate_section(df: pd.DataFrame, spec: mw.MatrixSpec, meta, rec) -> None:
-    from make_my_figure_core.matrix_workflow.plot_builder import build_plot_inputs
+    """Prepare mappings + hand the recommendation to the full plot editor.
 
+    This tab only prepares data + mappings and shows *why* a plot is recommended.
+    Thresholds, labels, colors, annotations, layout, and export all live in the one
+    canonical plot editor — there is no second reduced plot UI here."""
+    from make_my_figure_core.matrix_workflow.plot_builder import build_plot_inputs
+    from make_my_figure_core.plots.handoff import build_matrix_provenance
+
+    # Data-prep choices only (which features / how many / which significance column).
     params: Dict[str, Any] = {}
     selected: Optional[List[str]] = None
     if rec.key in ("box_by_group", "dot_by_group", "raincloud_by_group", "bar_by_group"):
@@ -404,13 +390,18 @@ def _generate_section(df: pd.DataFrame, spec: mw.MatrixSpec, meta, rec) -> None:
     if rec.key in ("top_variable_heatmap", "ranked_effect"):
         params["top_n"] = st.slider("Top N", 5, 100, 30, key=f"mw_ui_topn_{rec.key}")
     if rec.key in ("volcano", "ma"):
-        # y-axis significance is the user's choice, not hard-coded FDR.
-        sig = st.radio("Y-axis significance", ["adjusted p-value (FDR)", "raw p-value"],
+        # Suggested y-axis significance field (editable later in the plot editor).
+        sig = st.radio("Suggested y-axis significance", ["adjusted p-value (FDR)", "raw p-value"],
                        horizontal=True, key=f"mw_ui_sig_{rec.key}")
         params["significance"] = "fdr" if sig.startswith("adjusted") else "pvalue"
-        params["p_cutoff"] = st.number_input(
-            "Significance threshold", 0.0, 1.0, 0.05, step=0.01, format="%.4f",
-            key=f"mw_ui_pcut_{rec.key}")
+
+    st.caption("Open this recommendation in the full plot editor to adjust thresholds, "
+               "labels, colors, annotations, layout, and export settings.")
+    c1, c2 = st.columns(2)
+    open_clicked = c1.button("Open in plot editor", key=f"mw_open_{rec.key}", type="primary")
+    preview_clicked = c2.button("Quick preview", key=f"mw_prev_{rec.key}")
+    if not (open_clicked or preview_clicked):
+        return
 
     try:
         pi = build_plot_inputs(rec, df, spec, metadata=meta, differential_table=_get("diff"),
@@ -420,31 +411,51 @@ def _generate_section(df: pd.DataFrame, spec: mw.MatrixSpec, meta, rec) -> None:
         return
     for w in pi.warnings:
         st.caption(f"• {w}")
-    ps = make_spec(pi.plot_type, spec.source_file or "matrix", "publication", mapping=pi.mapping,
-                   source=st.session_state.get("_mw_source_prov"))
-    for _k, _v in (pi.spec_extra or {}).items():   # e.g. column_annotations (group strip)
+
+    if open_clicked:
+        prep = [_get("prep_note")] if _get("prep_note") else None
+        stats = ({"method": _get("diff_sentence")}
+                 if _get("diff_sentence") and rec.key in ("volcano", "ma", "ranked_effect")
+                 else None)
+        prov = build_matrix_provenance(spec, metadata=meta, preprocessing=prep,
+                                       statistics=stats)
+        base_prov = st.session_state.get("_mw_source_prov") or {}
+        prov = {**base_prov, **prov}
+        # Clear any prior plot's mapping widgets, then seed the handoff state the
+        # Quick-plot editor consumes (one source of truth for all plot controls).
+        for k in [k for k in list(st.session_state)
+                  if str(k).startswith(("map_", "valcols_", "annot_"))]:
+            del st.session_state[k]
+        st.session_state["_grouped_df"] = pi.dataframe
+        st.session_state["_grouped_name"] = f"{spec.source_file or 'matrix'} · {rec.key}"
+        st.session_state["rec_plot_type"] = pi.plot_type
+        st.session_state["_handoff_mappings"] = dict(pi.mapping)
+        st.session_state["_handoff_defaults"] = {
+            k: v for k, v in (pi.mapping or {}).items()
+            if k in ("use_fdr", "significance", "scale", "color_scale", "cluster_rows",
+                     "cluster_columns", "points", "kind", "error", "sort", "metadata_key",
+                     "group_separators")}
+        st.session_state["_handoff_spec_extra"] = dict(pi.spec_extra or {})
+        st.session_state["_handoff_aux"] = pi.aux or None
+        st.session_state["_handoff_source"] = prov
+        st.session_state["workflow_mode"] = "Quick plot"
+        st.rerun()
+        return
+
+    # Quick preview only (default Publication style; full control is in the editor).
+    ps = make_spec(pi.plot_type, spec.source_file or "matrix", "publication",
+                   mapping=pi.mapping, source=st.session_state.get("_mw_source_prov"))
+    for _k, _v in (pi.spec_extra or {}).items():
         ps[_k] = _v
-    ps["style"] = _style_controls()   # Publication style controls (colors/fonts/sizes)
     try:
         result = render(ps, pi.dataframe, aux=pi.aux or None)
     except Exception as exc:  # noqa: BLE001
         st.error(f"Render failed: {exc}")
         return
     st.pyplot(result.figure)
+    st.caption("Quick preview (default style). Use **Open in plot editor** for full control.")
     for w in (result.warnings or []):
         st.caption(f"⚠ {w}")
-    d1, d2, d3, d4 = st.columns(4)
-    d1.download_button("PNG", figure_to_bytes(result.figure, "png"),
-                       file_name=f"{rec.key}.png", mime="image/png")
-    d2.download_button("SVG", figure_to_bytes(result.figure, "svg"),
-                       file_name=f"{rec.key}.svg", mime="image/svg+xml")
-    d3.download_button("PDF", figure_to_bytes(result.figure, "pdf"),
-                       file_name=f"{rec.key}.pdf", mime="application/pdf")
-    if d4.button("➕ Add to Figure Builder"):
-        panels = _get("panels", [])
-        panels.append({"name": rec.label, "plot_spec": ps, "table": pi.dataframe, "aux": pi.aux})
-        _set("panels", panels)
-        st.success(f"Added '{rec.label}' to the Figure Builder ({len(panels)} panel(s)).")
 
 
 # --- Figure Builder ------------------------------------------------------

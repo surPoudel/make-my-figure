@@ -21,6 +21,12 @@ identically.
 
 Explicitly selected points are always labeled regardless of mode.
 
+> **From the Matrix Workflow?** Volcano/MA recommendations open in *this* full editor
+> (via **Open in plot editor**) with the effect/p-value columns pre-mapped — so every
+> control below (thresholds, labels, duplicate-label handling, annotations) is
+> available exactly as in the normal workflow. See
+> [MATRIX_WORKFLOW.md](MATRIX_WORKFLOW.md).
+
 ## Duplicate feature labels (Volcano **and** MA)
 
 A DE table often maps several rows — peptides, transcripts, probes, isoforms — to

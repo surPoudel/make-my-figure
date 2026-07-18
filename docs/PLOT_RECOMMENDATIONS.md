@@ -1,5 +1,12 @@
 # Plot recommendations
 
+> **Recommendation → full plot editor.** Selecting a recommendation opens it in the
+> **same** plot editor as the normal workflow (via a canonical
+> `PlotEditorHandoff` — `make_my_figure_core/plots/handoff.py`), with the plot type
+> and column mappings pre-populated and every standard control available. The Matrix
+> Workflow only prepares the plot-ready data + mappings; it owns no separate plot
+> controls. See [MATRIX_WORKFLOW.md](MATRIX_WORKFLOW.md).
+
 `make_my_figure_core.matrix_workflow.recommend_plots(matrix_spec, metadata,
 has_differential_summary=..., n_features=...)` returns a ranked list of
 `RecommendedPlot` entries for a confirmed matrix. Nothing is auto-generated — the
