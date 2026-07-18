@@ -615,24 +615,13 @@ class MainWindow(QMainWindow):
 
     # --- advanced style panel -------------------------------------------
     def _build_style_panel(self) -> QWidget:
-        box = QGroupBox("5. Style (publication defaults)")
+        # Grouped Publication controls: Typography / Axes & labels / Legend / Colorbar
+        # / Figure margins — mirroring the Streamlit sidebar sections. Every control
+        # maps to the shared StyleProfile or layout engine (no silent no-ops).
+        box = QGroupBox("5. Publication style")
         box.setCheckable(True)
-        box.setChecked(False)   # collapsed-ish: unchecked disables the controls
-        form = QFormLayout(box)
-
-        self.palette_combo = QComboBox()
-        self.palette_combo.addItem("(publication default)", None)
-        for name in USER_PALETTES:
-            self.palette_combo.addItem(name, name)
-        self.palette_combo.currentIndexChanged.connect(self.render_preview)
-
-        # Font family (Arial-first). "(publication default)" keeps the Arial/Helvetica/
-        # DejaVu fallback stack; a specific pick falls back safely if not installed.
-        self.font_combo = QComboBox()
-        self.font_combo.addItem("(publication default)", None)
-        for _fam in ("Arial", "Helvetica", "Liberation Sans", "DejaVu Sans", "Times New Roman"):
-            self.font_combo.addItem(_fam, _fam)
-        self.font_combo.currentIndexChanged.connect(self.render_preview)
+        box.setChecked(False)   # unchecked disables the controls (defaults apply)
+        outer = QVBoxLayout(box)
 
         def _spin(minv, maxv, val, step=1, dbl=False):
             w = QDoubleSpinBox() if dbl else QSpinBox()
@@ -642,43 +631,147 @@ class MainWindow(QMainWindow):
             w.valueChanged.connect(self._schedule_render)   # debounced
             return w
 
+        def _combo(items, connect=True):
+            c = QComboBox()
+            c.addItems(items)
+            if connect:
+                c.currentIndexChanged.connect(self.render_preview)
+            return c
+
+        # ② Typography
+        self.palette_combo = QComboBox()
+        self.palette_combo.addItem("(publication default)", None)
+        for name in USER_PALETTES:
+            self.palette_combo.addItem(name, name)
+        self.palette_combo.currentIndexChanged.connect(self.render_preview)
+        self.font_combo = QComboBox()
+        self.font_combo.addItem("(publication default)", None)
+        for _fam in ("Arial", "Helvetica", "Liberation Sans", "DejaVu Sans", "Times New Roman"):
+            self.font_combo.addItem(_fam, _fam)
+        self.font_combo.currentIndexChanged.connect(self.render_preview)
+        self.sp_title = _spin(8, 28, 14)
         self.sp_axis = _spin(8, 28, 12)
         self.sp_tick = _spin(6, 24, 10)
-        self.sp_legend = _spin(6, 24, 10)
         self.sp_annot = _spin(6, 24, 10)
         self.sp_marker = _spin(6, 300, 45)
         self.sp_linew = _spin(0.5, 6.0, 1.8, 0.1, dbl=True)
         self.sp_spine = _spin(0.4, 4.0, 1.1, 0.1, dbl=True)
-        self.chk_legend_outside = QCheckBox()
-        self.chk_legend_outside.stateChanged.connect(self.render_preview)
         self.chk_grid = QCheckBox()
         self.chk_grid.stateChanged.connect(self.render_preview)
+        typo = QGroupBox("② Typography")
+        tf = QFormLayout(typo)
+        tf.addRow("Palette", self.palette_combo)
+        tf.addRow("Font", self.font_combo)
+        tf.addRow("Title pt", self.sp_title)
+        tf.addRow("Axis label pt", self.sp_axis)
+        tf.addRow("Tick label pt", self.sp_tick)
+        tf.addRow("Annotation pt", self.sp_annot)
+        tf.addRow("Marker size", self.sp_marker)
+        tf.addRow("Line width", self.sp_linew)
+        tf.addRow("Axis/spine width", self.sp_spine)
+        tf.addRow("Grid", self.chk_grid)
+        outer.addWidget(typo)
 
-        form.addRow("Palette", self.palette_combo)
-        form.addRow("Font", self.font_combo)
-        form.addRow("Axis label pt", self.sp_axis)
-        form.addRow("Tick label pt", self.sp_tick)
-        form.addRow("Legend pt", self.sp_legend)
-        form.addRow("Annotation pt", self.sp_annot)
-        form.addRow("Marker size", self.sp_marker)
-        form.addRow("Line width", self.sp_linew)
-        form.addRow("Axis/spine width", self.sp_spine)
-        form.addRow("Legend outside", self.chk_legend_outside)
-        form.addRow("Grid", self.chk_grid)
+        # ③ Axes & labels
+        self.cmb_xrot = _combo(["auto", "0", "45", "90"])
+        self.cmb_yrot = _combo(["auto", "0", "45", "90"])
+        self.sp_xpad = _spin(0, 40, 0, 1, dbl=True)
+        self.sp_ypad = _spin(0, 40, 0, 1, dbl=True)
+        self.sp_titlepad = _spin(0, 40, 0, 1, dbl=True)
+        axesb = QGroupBox("③ Axes & labels")
+        af = QFormLayout(axesb)
+        af.addRow("X tick angle", self.cmb_xrot)
+        af.addRow("Y tick angle", self.cmb_yrot)
+        af.addRow("X label padding", self.sp_xpad)
+        af.addRow("Y label padding", self.sp_ypad)
+        af.addRow("Title padding", self.sp_titlepad)
+        outer.addWidget(axesb)
+
+        # ④ Legend
+        self.cmb_legloc = _combo(["auto", "inside upper right", "inside upper left",
+                                  "inside lower right", "inside lower left", "outside right",
+                                  "outside left", "outside top", "outside bottom"])
+        self.sp_legend = _spin(6, 24, 10)
+        self.chk_legend_outside = QCheckBox()
+        self.chk_legend_outside.stateChanged.connect(self.render_preview)
+        legb = QGroupBox("④ Legend")
+        lf = QFormLayout(legb)
+        lf.addRow("Location", self.cmb_legloc)
+        lf.addRow("Legend pt", self.sp_legend)
+        lf.addRow("Legend outside", self.chk_legend_outside)
+        outer.addWidget(legb)
+
+        # ⑤ Colorbar (heatmap / clustering / confusion / enrichment)
+        self.cmb_cbloc = _combo(["default", "right", "left", "top", "bottom"])
+        self.sp_cbpad = _spin(0.0, 0.4, 0.0, 0.02, dbl=True)
+        self.sp_cbshrink = _spin(0.3, 1.0, 1.0, 0.1, dbl=True)
+        cbb = QGroupBox("⑤ Colorbar (heatmaps etc.)")
+        cf = QFormLayout(cbb)
+        cf.addRow("Location", self.cmb_cbloc)
+        cf.addRow("Pad (0 = default)", self.sp_cbpad)
+        cf.addRow("Size", self.sp_cbshrink)
+        outer.addWidget(cbb)
+
+        # ① Figure margins + auto-fix
+        self.sp_ml = _spin(0.0, 0.5, 0.0, 0.02, dbl=True)
+        self.sp_mr = _spin(0.0, 0.5, 0.0, 0.02, dbl=True)
+        self.sp_mt = _spin(0.0, 0.5, 0.0, 0.02, dbl=True)
+        self.sp_mb = _spin(0.0, 0.5, 0.0, 0.02, dbl=True)
+        self.chk_autofix = QCheckBox()
+        self.chk_autofix.stateChanged.connect(self.render_preview)
+        figb = QGroupBox("① Figure margins")
+        gf = QFormLayout(figb)
+        gf.addRow("Left (0 = auto)", self.sp_ml)
+        gf.addRow("Right (0 = auto)", self.sp_mr)
+        gf.addRow("Top (0 = auto)", self.sp_mt)
+        gf.addRow("Bottom (0 = auto)", self.sp_mb)
+        gf.addRow("Auto-fix layout", self.chk_autofix)
+        outer.addWidget(figb)
 
         reset = QPushButton("Reset to publication defaults")
         reset.clicked.connect(self.action_reset_style)
-        form.addRow(reset)
+        outer.addWidget(reset)
 
         box.toggled.connect(lambda _=False: self.render_preview())
         self._style_box = box
         return box
+
+    def _collect_layout_controls(self):
+        """Return (layout_fragment, colorbar_mapping) from the grouped panel; empty
+        when the style box is unchecked. Layout keys feed the shared layout engine;
+        colorbar keys are read from the mapping by colorbar-capable renderers."""
+        if not getattr(self, "_style_box", None) or not self._style_box.isChecked():
+            return {}, {}
+        lay = {}
+        if self.cmb_xrot.currentText() != "auto":
+            lay["x_tick_rotation"] = int(self.cmb_xrot.currentText())
+        if self.cmb_yrot.currentText() != "auto":
+            lay["y_tick_rotation"] = int(self.cmb_yrot.currentText())
+        if self.cmb_legloc.currentText() != "auto":
+            lay["legend_location"] = self.cmb_legloc.currentText()
+        for key, w in (("x_label_pad", self.sp_xpad), ("y_label_pad", self.sp_ypad),
+                       ("title_pad", self.sp_titlepad), ("margin_left", self.sp_ml),
+                       ("margin_right", self.sp_mr), ("margin_top", self.sp_mt),
+                       ("margin_bottom", self.sp_mb)):
+            if w.value() > 0:
+                lay[key] = float(w.value())
+        if self.chk_autofix.isChecked():
+            lay["auto_fix_layout"] = True
+        cb = {}
+        if self.cmb_cbloc.currentText() != "default":
+            cb["colorbar_location"] = self.cmb_cbloc.currentText()
+        if self.sp_cbpad.value() > 0:
+            cb["colorbar_pad"] = float(self.sp_cbpad.value())
+        if self.sp_cbshrink.value() < 1.0:
+            cb["colorbar_shrink"] = float(self.sp_cbshrink.value())
+        return lay, cb
 
     def _collect_style_overrides(self) -> dict:
         """Return spec['style'] overrides from the advanced panel (or {})."""
         if not getattr(self, "_style_box", None) or not self._style_box.isChecked():
             return {}
         ov = {
+            "title_font_pt": float(self.sp_title.value()),
             "axis_font_pt": float(self.sp_axis.value()),
             "tick_label_pt": float(self.sp_tick.value()),
             "legend_pt": float(self.sp_legend.value()),
@@ -701,9 +794,17 @@ class MainWindow(QMainWindow):
     def action_reset_style(self):
         self.palette_combo.setCurrentIndex(0)
         self.font_combo.setCurrentIndex(0)
+        self.sp_title.setValue(14)
         self.sp_axis.setValue(12); self.sp_tick.setValue(10); self.sp_legend.setValue(10)
         self.sp_annot.setValue(10); self.sp_marker.setValue(45)
         self.sp_linew.setValue(1.8); self.sp_spine.setValue(1.1)
+        for _c in (self.cmb_xrot, self.cmb_yrot, self.cmb_legloc, self.cmb_cbloc):
+            _c.setCurrentIndex(0)
+        for _s in (self.sp_xpad, self.sp_ypad, self.sp_titlepad, self.sp_ml, self.sp_mr,
+                   self.sp_mt, self.sp_mb, self.sp_cbpad):
+            _s.setValue(0.0)
+        self.sp_cbshrink.setValue(1.0)
+        self.chk_autofix.setChecked(False)
         self.chk_legend_outside.setChecked(False); self.chk_grid.setChecked(False)
         self.statusBar().showMessage("Style reset to publication defaults.", 4000)
         self.render_preview()
@@ -1772,8 +1873,13 @@ class MainWindow(QMainWindow):
         if self.ylabel_edit.text().strip():
             layout["y_label"] = self.ylabel_edit.text().strip()
         stats_spec = self.stats_panel.stats_spec() if hasattr(self, "stats_panel") else None
+        mapping = self._collect_mapping()
+        # Shared layout controls (tick rotation / legend / margins / padding) + colorbar.
+        _lay, _cb = self._collect_layout_controls()
+        layout.update(_lay)
+        mapping.update(_cb)
         spec = self.controller.build_spec(
-            pt, style, self.data.table_name, self._collect_mapping(),
+            pt, style, self.data.table_name, mapping,
             layout=layout, width=self.width_combo.currentText(), dpi=self.dpi_spin.value(),
             statistics=stats_spec)
         overrides = self._collect_style_overrides()

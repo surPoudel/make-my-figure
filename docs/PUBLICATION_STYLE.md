@@ -43,5 +43,9 @@ labels** (title, x/y labels, x/y tick angle, label & title padding), **④ Legen
 (location/padding/size — heatmap, clustered heatmap, confusion matrix, enrichment dot).
 Plot-specific controls stay in the mapping section, and per-label annotation
 positioning lives in the plot's "Label points" expander. Controls that don't apply to
-the active plot are flagged, not silently ignored. (The desktop app shares the same
-engine; grouping its Qt panel identically is a follow-up.)
+the active plot are flagged, not silently ignored.
+
+The **desktop** app groups its "5. Publication style" panel into the same sections
+(② Typography, ③ Axes & labels, ④ Legend, ⑤ Colorbar, ① Figure margins) with the same
+controls — tick rotation, legend location, label/title padding, margins, colorbar
+location/pad/size, and auto-fix — routing to the identical shared engine.
