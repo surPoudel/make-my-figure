@@ -188,6 +188,15 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
         row_fs = style.tick_label_pt if n_r <= 25 else (0.0 if n_r > 60 else max(6.0, style.tick_label_pt - 3))
         col_fs = style.tick_label_pt if n_c <= 25 else (0.0 if n_c > 60 else max(6.0, style.tick_label_pt - 3))
+        # Explicit font-size + show/hide controls (parity with the clustered heatmap).
+        _rlf = get_mapping(spec, "row_label_fontsize", None)
+        if _rlf:
+            row_fs = float(_rlf)
+        _clf = get_mapping(spec, "col_label_fontsize", None)
+        if _clf:
+            col_fs = float(_clf)
+        if get_mapping(spec, "show_row_labels", None) is False:
+            row_fs = 0.0
         # With a LEFT cluster strip (row clustering), put the row labels + y-label on
         # the RIGHT so the strip on the left is never overlapped/buried (seaborn-style).
         labels_right = (axis == "rows")
@@ -208,13 +217,22 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         _yrot = 0 if y_label_rotation in ("horizontal", "0") else 90
         ax.set_ylabel(y_label, rotation=_yrot, ha=("left" if _yrot == 0 else "center"),
                       va="center")
-        title = (spec.get("layout") or {}).get("title")
+        _lay = spec.get("layout") or {}
+        ax.yaxis.labelpad = float(get_mapping(spec, "y_label_pad", _lay.get("y_label_pad", 6.0)) or 6.0)
+        title = _lay.get("title")
         if title:
             fig.suptitle(title, fontsize=style.title_font_pt, fontweight="bold")
-        # More gap when row labels sit on the right, so the colorbar clears them.
-        cbar_pad = (0.16 if row_fs > 0 else 0.06) if labels_right else 0.03
-        cbar = fig.colorbar(im, ax=ax, fraction=0.045, pad=cbar_pad)
-        cbar.set_label((spec.get("layout") or {}).get("colorbar_label",
+        # Colorbar placement + size are configurable; default gap is larger when the
+        # row labels sit on the right so the z-score bar clears them.
+        _auto_pad = (0.16 if row_fs > 0 else 0.06) if labels_right else 0.03
+        cb_loc = str(get_mapping(spec, "colorbar_location", _lay.get("colorbar_location", "right"))).lower()
+        if cb_loc not in ("right", "left", "top", "bottom"):
+            cb_loc = "right"
+        cb_pad = float(get_mapping(spec, "colorbar_pad", _lay.get("colorbar_pad", _auto_pad)) or _auto_pad)
+        cb_frac = float(get_mapping(spec, "colorbar_fraction", _lay.get("colorbar_fraction", 0.045)) or 0.045)
+        cb_shrink = float(get_mapping(spec, "colorbar_shrink", _lay.get("colorbar_shrink", 1.0)) or 1.0)
+        cbar = fig.colorbar(im, ax=ax, location=cb_loc, fraction=cb_frac, pad=cb_pad, shrink=cb_shrink)
+        cbar.set_label(_lay.get("colorbar_label",
                        "z-score" if diverging else "value"), fontsize=style.axis_font_pt)
         cbar.ax.tick_params(labelsize=style.tick_label_pt)
         # Cluster legend outside.

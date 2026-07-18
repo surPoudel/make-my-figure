@@ -89,6 +89,28 @@ def _cases():
            {"x": "log2_fold_change", "p": "adjusted_p_value", "label": "feature_label",
             "annotate": True, "label_mode": "top_fdr", "top_n": 12}, None, None)
 
+    # clustered heatmap + hierarchical clustering with long row names
+    hrows = [f"LongGeneName_{i:03d}" for i in range(20)]
+    hcols = [f"Sample_{c}" for c in range(9)]
+    hdf = pd.DataFrame({"gene": hrows})
+    for c in hcols:
+        hdf[c] = rng.normal(size=20)
+    yield ("clustered_heatmap", "heatmap_clustered_matrix", hdf,
+           {"row_id": "gene", "value_columns": hcols, "scale": "row_zscore",
+            "cluster_rows": True, "cluster_columns": True, "cluster_k_rows": 3,
+            "show_row_labels": True}, None, None)
+    yield ("hierarchical_clustering", "hierarchical_clustering", hdf,
+           {"row_id": "gene", "value_columns": hcols, "cluster": "rows", "k": 3,
+            "scale": "row_zscore", "y_label_pad": 14}, None, None)
+
+    # lollipop with aligned labels
+    ldf = pd.DataFrame({"pos": sorted(rng.integers(1, 500, 14)), "count": rng.integers(3, 10, 14),
+                        "mut": [f"p.M{i}V" for i in range(14)],
+                        "type": rng.choice(["missense", "nonsense"], 14)})
+    yield ("lollipop", "lollipop_mutation_plot", ldf,
+           {"x": "pos", "y": "count", "label": "mut", "color": "type", "label_top_n": 6},
+           None, None)
+
     # bundled examples (upset, swimmer) — real fixtures
     for pt, name in (("upset_plot", "upset"), ("swimmer_plot", "swimmer")):
         try:

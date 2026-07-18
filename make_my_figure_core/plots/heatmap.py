@@ -348,6 +348,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         col_fs = max(6.0, style.tick_label_pt - 3)
     if show_col_labels is False:
         col_fs = 0.0
+    # Explicit font-size controls (0 = keep auto/hidden decision above).
+    _rlf = get_mapping(spec, "row_label_fontsize", None)
+    if _rlf:
+        row_fs = float(_rlf)
+    _clf = get_mapping(spec, "col_label_fontsize", None)
+    if _clf:
+        col_fs = float(_clf)
     if len(highlight_rows) > 60:
         warnings.append(f"{len(highlight_rows)} highlighted rows requested; consider fewer for legibility.")
 
@@ -432,13 +439,27 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         _yrot = 0 if str(get_mapping(spec, "y_label_rotation", "vertical")).lower() in ("horizontal", "0") else 90
         ax.set_ylabel(spec.get("layout", {}).get("y_label", str(row_id)),
                       rotation=_yrot, ha=("right" if _yrot == 0 else "center"), va="center")
+        # Y-axis-label padding so the label never crowds long row names (user control).
+        ax.yaxis.labelpad = float(get_mapping(spec, "y_label_pad",
+                                              layout.get("y_label_pad", 6.0)) or 6.0)
         title = spec.get("layout", {}).get("title")
         if title:
             if col_annotations or col_color_map is not None:
                 fig.suptitle(title, fontsize=style.title_font_pt, fontweight="bold")
             else:
                 ax.set_title(title)
-        cbar = fig.colorbar(im, ax=ax, fraction=0.045, pad=0.03)
+        # Colorbar position/size are user-configurable (location: right/left/top/bottom).
+        cb_loc = str(get_mapping(spec, "colorbar_location", layout.get("colorbar_location", "right"))).lower()
+        if cb_loc not in ("right", "left", "top", "bottom"):
+            cb_loc = "right"
+        cb_frac = float(get_mapping(spec, "colorbar_fraction", layout.get("colorbar_fraction", 0.045)) or 0.045)
+        # Top/bottom colorbars need a larger default pad to clear the column tick
+        # labels + axis label (otherwise the bar collides with them).
+        _default_pad = 0.18 if (cb_loc in ("bottom", "top") and col_fs > 0) else 0.03
+        cb_pad = float(get_mapping(spec, "colorbar_pad", layout.get("colorbar_pad", _default_pad)) or _default_pad)
+        cb_shrink = float(get_mapping(spec, "colorbar_shrink", layout.get("colorbar_shrink", 1.0)) or 1.0)
+        cbar = fig.colorbar(im, ax=ax, location=cb_loc, fraction=cb_frac, pad=cb_pad,
+                            shrink=cb_shrink)
         cbar.ax.tick_params(labelsize=style.tick_label_pt, width=style.tick_width,
                             length=style.tick_length)
         cbar.outline.set_linewidth(style.spine_width_pt)

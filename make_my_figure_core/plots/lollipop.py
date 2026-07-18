@@ -79,17 +79,38 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             import matplotlib.patheffects as pe
 
             top = work.sort_values(y, ascending=False).head(label_top_n)
-            label_fs = max(7, style.axis_font_pt - 1)
-            base = ymax * 0.05
+            label_fs = float(get_mapping(spec, "label_font_size", 0) or 0) or max(7, style.axis_font_pt - 1)
+            # Per-label manual offsets (points): a listed label is placed at its offset
+            # with a leader line to its marker; the rest auto-repel. Movement of one
+            # label never disturbs the others.
+            label_offsets = get_mapping(spec, "label_offsets", None) or {}
+            if isinstance(label_offsets, str):
+                import json
+                try:
+                    label_offsets = json.loads(label_offsets)
+                except Exception:  # noqa: BLE001
+                    label_offsets = {}
             texts = []
             for _, r in top.iterrows():
                 txt = str(r[label_col]).strip()
                 if not txt or txt.lower() == "nan":
                     continue
-                texts.append(ax.text(r[x], r[y] + base, txt, fontsize=label_fs,
-                                     ha="center", va="bottom", zorder=6,
-                                     path_effects=[pe.withStroke(linewidth=2.0,
-                                                                 foreground="white")]))
+                off = label_offsets.get(txt) or label_offsets.get(txt.lower())
+                if off is not None:
+                    dx, dy = float(off[0]), float(off[1])
+                    # Leader terminates exactly at the marker (r[x], r[y]).
+                    ax.annotate(txt, xy=(r[x], r[y]), xytext=(dx, dy),
+                                textcoords="offset points", fontsize=label_fs,
+                                ha="center", va="bottom", zorder=6,
+                                arrowprops=dict(arrowstyle="-", color="0.65", lw=0.6),
+                                path_effects=[pe.withStroke(linewidth=2.0, foreground="white")])
+                else:
+                    # Start the text AT the marker so adjustText's leader points to the
+                    # marker (previously it started above the marker -> misaligned arrow).
+                    texts.append(ax.text(r[x], r[y], txt, fontsize=label_fs,
+                                         ha="center", va="bottom", zorder=6,
+                                         path_effects=[pe.withStroke(linewidth=2.0,
+                                                                     foreground="white")]))
             try:
                 from adjustText import adjust_text
 

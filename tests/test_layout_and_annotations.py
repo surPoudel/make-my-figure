@@ -242,6 +242,61 @@ def test_volcano_per_label_offset_only_affects_that_label():
     assert r1.figure is not None and r2.figure is not None  # renders with/without offsets
 
 
+# --- heatmap / hierarchical clustering controls -----------------------------
+def _heat_df(nrow=18, ncol=8):
+    rng = np.random.default_rng(0)
+    df = pd.DataFrame({"gene": [f"LongGene_{i:03d}" for i in range(nrow)]})
+    for c in [f"S{j}" for j in range(ncol)]:
+        df[c] = rng.normal(size=nrow)
+    return df, [f"S{j}" for j in range(ncol)]
+
+
+def test_heatmap_colorbar_location_and_ylabelpad_apply():
+    df, cols = _heat_df()
+    spec = make_spec("heatmap_clustered_matrix", "h", "publication",
+                     mapping={"row_id": "gene", "value_columns": cols, "scale": "row_zscore",
+                              "show_row_labels": True, "colorbar_location": "left",
+                              "y_label_pad": 20, "row_label_fontsize": 7})
+    r = render(spec, df)
+    ax = r.figure.axes[0]
+    assert ax.yaxis.labelpad == 20
+    assert {t.get_fontsize() for t in ax.get_yticklabels() if t.get_text()} == {7.0}
+    assert len(figure_to_bytes(r.figure, "pdf")) > 500
+
+
+def test_hierarchical_clustering_controls_apply():
+    df, cols = _heat_df(20, 9)
+    spec = make_spec("hierarchical_clustering", "h", "publication",
+                     mapping={"row_id": "gene", "value_columns": cols, "cluster": "rows",
+                              "k": 3, "scale": "row_zscore", "y_label_pad": 16,
+                              "colorbar_pad": 0.22, "row_label_fontsize": 8})
+    r = render(spec, df)
+    assert r.figure is not None and not any("error" in w.lower() for w in (r.warnings or []))
+    assert r.figure.axes[0].yaxis.labelpad == 16
+
+
+# --- lollipop annotation alignment ------------------------------------------
+def test_lollipop_labels_anchor_to_markers():
+    rng = np.random.default_rng(0)
+    df = pd.DataFrame({"pos": sorted(rng.integers(1, 500, 12)), "count": rng.integers(3, 10, 12),
+                       "mut": [f"p.M{i}V" for i in range(12)]})
+    spec = make_spec("lollipop_mutation_plot", "l", "publication",
+                     mapping={"x": "pos", "y": "count", "label": "mut", "label_top_n": 5})
+    r = render(spec, df)
+    assert r.metadata.get("labels_shown", 0) >= 1 and r.figure is not None
+
+
+def test_lollipop_per_label_offset_renders():
+    rng = np.random.default_rng(1)
+    df = pd.DataFrame({"pos": list(range(10)), "count": list(range(10, 0, -1)),
+                       "mut": [f"m{i}" for i in range(10)]})
+    spec = make_spec("lollipop_mutation_plot", "l", "publication",
+                     mapping={"x": "pos", "y": "count", "label": "mut", "label_top_n": 4,
+                              "label_offsets": json.dumps({"m0": [0, 45]})})
+    r = render(spec, df)
+    assert "m0" in {t.get_text() for t in r.figure.axes[0].texts}
+
+
 # --- exports + ui_hints exposure --------------------------------------------
 @pytest.mark.parametrize("fmt", ["png", "pdf", "svg"])
 def test_manhattan_exports_non_empty(fmt):

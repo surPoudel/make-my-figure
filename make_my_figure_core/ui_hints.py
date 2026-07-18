@@ -126,6 +126,12 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("group_separator_width", "Group separator width", "number", 1.6,
                minimum=0.0, maximum=6.0, step=0.5, decimals=1),
         Option("max_features", "Max features (rows) for clustering", "number", 2000, minimum=50, maximum=50000, step=100, decimals=0),
+        Option("colorbar_location", "Colorbar location", "choice", "right", ["right", "left", "top", "bottom"]),
+        Option("colorbar_pad", "Colorbar pad", "number", 0.03, minimum=0.0, maximum=0.4, step=0.01, decimals=2),
+        Option("colorbar_shrink", "Colorbar size", "number", 1.0, minimum=0.3, maximum=1.0, step=0.1, decimals=1),
+        Option("row_label_fontsize", "Row label font (0=auto)", "number", 0, minimum=0, maximum=20, step=1, decimals=0),
+        Option("col_label_fontsize", "Column label font (0=auto)", "number", 0, minimum=0, maximum=20, step=1, decimals=0),
+        Option("y_label_pad", "Y-axis label padding", "number", 6.0, minimum=0.0, maximum=40.0, step=1.0, decimals=1),
     ],
     "volcano_plot": [
         Option("lfc_cutoff", "log2FC cutoff", "number", 1.0, minimum=0.0, maximum=20.0, step=0.5, decimals=2),
@@ -178,6 +184,7 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("legend_loc", "Legend position", "choice", "right", ["right", "bottom"]),
         Option("marker_scale", "Marker scale", "number", 16.0, minimum=4.0, maximum=60.0, step=2.0, decimals=1),
         Option("y_margin", "Top y-margin", "number", 0.42, minimum=0.05, maximum=0.6, step=0.05, decimals=2),
+        Option("label_font_size", "Label font size (0=auto)", "number", 0, minimum=0, maximum=20, step=1, decimals=0),
     ],
     "roc_curve": [],
     "forest_plot": [
@@ -238,6 +245,12 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("cluster_legend_title", "Show cluster legend title", "bool", False),
         Option("show_dendrogram", "Show dendrogram tree", "bool", False),
         Option("max_features", "Max features (rows) for clustering", "number", 2000, minimum=50, maximum=50000, step=100, decimals=0),
+        Option("colorbar_location", "Colorbar location", "choice", "right", ["right", "left", "top", "bottom"]),
+        Option("colorbar_pad", "Colorbar pad", "number", 0.03, minimum=0.0, maximum=0.4, step=0.01, decimals=2),
+        Option("colorbar_shrink", "Colorbar size", "number", 1.0, minimum=0.3, maximum=1.0, step=0.1, decimals=1),
+        Option("row_label_fontsize", "Row label font (0=auto)", "number", 0, minimum=0, maximum=20, step=1, decimals=0),
+        Option("col_label_fontsize", "Column label font (0=auto)", "number", 0, minimum=0, maximum=20, step=1, decimals=0),
+        Option("y_label_pad", "Y-axis label padding", "number", 6.0, minimum=0.0, maximum=40.0, step=1.0, decimals=1),
     ],
     "network_graph": [
         Option("layout", "Layout", "choice", "spring",
