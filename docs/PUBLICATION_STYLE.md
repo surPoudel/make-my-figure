@@ -32,3 +32,16 @@ All style choices are stored in the PlotSpec (`spec["style"]`) and plot-specific
 choices in the mapping, so they round-trip and are reproduced on re-render. SVG/PDF
 text stays editable (vector); PNG/PDF/SVG exports honor the selected colors and should
 match the on-screen preview.
+
+## Publication controls layout (Streamlit)
+
+The Streamlit sidebar groups the Publication controls into clear sections: **①
+Figure** (width preset, DPI, margins, auto-fix layout), **② Typography** (palette,
+title/axis/tick/annotation sizes, marker size, line & spine width, grid), **③ Axes &
+labels** (title, x/y labels, x/y tick angle, label & title padding), **④ Legend**
+(location incl. inside/outside positions, size, outside toggle), and **⑤ Colorbar**
+(location/padding/size — heatmap, clustered heatmap, confusion matrix, enrichment dot).
+Plot-specific controls stay in the mapping section, and per-label annotation
+positioning lives in the plot's "Label points" expander. Controls that don't apply to
+the active plot are flagged, not silently ignored. (The desktop app shares the same
+engine; grouping its Qt panel identically is a follow-up.)

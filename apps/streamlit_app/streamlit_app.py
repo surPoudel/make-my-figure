@@ -583,80 +583,109 @@ if plot_type == "pca_scatter_from_matrix":
             st.sidebar.info("Upload a sample-metadata table to color the PCA.")
 
 # --- 5. Layout + output -----------------------------------------------------
-st.sidebar.header("5. Labels & size")
-title = st.sidebar.text_input("Title", value="")
-x_label = st.sidebar.text_input("X label (blank = auto)", value="")
-y_label = st.sidebar.text_input("Y label (blank = auto)", value="")
-column_width = st.sidebar.selectbox("Figure width", ["default", "single", "onehalf", "double"], index=0)
-dpi = st.sidebar.slider("Raster DPI (PNG/TIFF)", 150, 600, 300, step=50)
-# Shared layout controls (apply to every plot via the publication layout engine).
-with st.sidebar.expander("Axes & layout", expanded=False):
+# --- 5. Publication style (grouped; shares the core engine with the desktop app) ---
+from make_my_figure_core.styles.engine import USER_PALETTES  # noqa: E402
+
+st.sidebar.header("5. Publication style")
+style_overrides = {}
+_layout_controls = {}
+
+# ① Figure — dimensions, DPI, margins, auto layout.
+with st.sidebar.expander("① Figure", expanded=False):
+    column_width = st.selectbox("Figure width preset",
+                                ["default", "single", "onehalf", "double"], index=0)
+    dpi = st.slider("Raster DPI (PNG/TIFF)", 150, 600, 300, step=50)
+    _ml = st.slider("Left margin (0 = auto)", 0.0, 0.5, 0.0, step=0.02)
+    _mr = st.slider("Right margin (0 = auto)", 0.0, 0.5, 0.0, step=0.02)
+    _mt = st.slider("Top margin (0 = auto)", 0.0, 0.5, 0.0, step=0.02)
+    _mb = st.slider("Bottom margin (0 = auto)", 0.0, 0.5, 0.0, step=0.02)
+    _autofix = st.checkbox("Auto-fix layout (prevent clipping)", value=False)
+
+# ② Typography — palette, fonts/sizes, marks.
+with st.sidebar.expander("② Typography", expanded=False):
+    # Only the curated, user-facing palettes — never the internal journal-named
+    # entries kept in NAMED_PALETTES for backward compatibility.
+    pal = st.selectbox("Palette", ["(profile default)"] + list(USER_PALETTES))
+    if pal != "(profile default)":
+        style_overrides["palette_name"] = pal
+    style_overrides["title_font_pt"] = st.slider("Title pt", 8, 28, 14)
+    style_overrides["axis_font_pt"] = st.slider("Axis label pt", 8, 24, 12)
+    style_overrides["tick_label_pt"] = st.slider("Tick label pt", 6, 20, 10)
+    style_overrides["annotation_pt"] = st.slider("Annotation pt", 6, 20, 10)
+    style_overrides["marker_size"] = st.slider("Marker size", 6, 200, 45)
+    style_overrides["line_width_pt"] = st.slider("Line width", 0.5, 6.0, 1.8, 0.1)
+    style_overrides["regression_line_width"] = style_overrides["line_width_pt"]
+    style_overrides["spine_width_pt"] = st.slider("Axis/spine width", 0.4, 4.0, 1.1, 0.1)
+    style_overrides["grid"] = st.checkbox("Grid", value=False)
+
+# ③ Axes & labels — titles, tick rotation, padding.
+with st.sidebar.expander("③ Axes & labels", expanded=False):
+    title = st.text_input("Title", value="")
+    x_label = st.text_input("X label (blank = auto)", value="")
+    y_label = st.text_input("Y label (blank = auto)", value="")
     _xr = st.selectbox("X tick angle", ["auto", "0", "45", "90"], index=0)
     _yr = st.selectbox("Y tick angle", ["auto", "0", "45", "90"], index=0)
-    _legloc = st.selectbox("Legend location",
+    _xpad = st.slider("X label padding", 0.0, 30.0, 0.0, step=1.0)
+    _ypad = st.slider("Y label padding", 0.0, 30.0, 0.0, step=1.0)
+    _tpad = st.slider("Title padding", 0.0, 30.0, 0.0, step=1.0)
+
+# ④ Legend — location, size, inside/outside.
+with st.sidebar.expander("④ Legend", expanded=False):
+    _legloc = st.selectbox("Location",
                            ["auto", "inside upper right", "inside upper left",
                             "inside lower right", "inside lower left", "outside right",
                             "outside left", "outside top", "outside bottom"], index=0)
-    _ml = st.slider("Left margin (0 = auto)", 0.0, 0.5, 0.0, step=0.02)
-    _mb = st.slider("Bottom margin (0 = auto)", 0.0, 0.5, 0.0, step=0.02)
-    _xpad = st.slider("X label padding", 0.0, 30.0, 0.0, step=1.0)
-    _ypad = st.slider("Y label padding", 0.0, 30.0, 0.0, step=1.0)
-    _autofix = st.checkbox("Auto-fix layout (prevent clipping)", value=False)
-_layout_controls = {}
+    style_overrides["legend_pt"] = st.slider("Legend pt", 6, 20, 10)
+    style_overrides["legend_outside"] = st.checkbox("Legend outside plot", value=False)
+
+# ⑤ Colorbar — heatmap / clustering / confusion / enrichment only.
+with st.sidebar.expander("⑤ Colorbar", expanded=False):
+    _cbloc = st.selectbox("Location", ["default", "right", "left", "top", "bottom"], index=0)
+    _cbpad = st.slider("Padding (0 = default)", 0.0, 0.4, 0.0, step=0.02)
+    _cbshrink = st.slider("Size", 0.3, 1.0, 1.0, step=0.1)
+    st.caption("Applies to heatmap, clustered heatmap, confusion matrix, enrichment dot.")
+
+# Assemble the shared layout controls (applied to every plot by the layout engine).
 if _xr != "auto":
     _layout_controls["x_tick_rotation"] = int(_xr)
 if _yr != "auto":
     _layout_controls["y_tick_rotation"] = int(_yr)
 if _legloc != "auto":
     _layout_controls["legend_location"] = _legloc
-if _ml > 0:
-    _layout_controls["margin_left"] = _ml
-if _mb > 0:
-    _layout_controls["margin_bottom"] = _mb
+for _k, _v in (("margin_left", _ml), ("margin_right", _mr), ("margin_top", _mt),
+               ("margin_bottom", _mb)):
+    if _v > 0:
+        _layout_controls[_k] = _v
 if _xpad > 0:
     _layout_controls["x_label_pad"] = _xpad
 if _ypad > 0:
     _layout_controls["y_label_pad"] = _ypad
+if _tpad > 0:
+    _layout_controls["title_pad"] = _tpad
 if _autofix:
     _layout_controls["auto_fix_layout"] = True
+# Colorbar controls are read from the mapping by colorbar-capable renderers.
+if _cbloc != "default":
+    mapping["colorbar_location"] = _cbloc
+if _cbpad > 0:
+    mapping["colorbar_pad"] = _cbpad
+if _cbshrink < 1.0:
+    mapping["colorbar_shrink"] = _cbshrink
 
-# --- 6. Formatting (shares the core style engine with the desktop app) -------
-from make_my_figure_core.styles.engine import USER_PALETTES  # noqa: E402
+# Honest, plot-aware note: flag controls that don't apply to the active plot instead
+# of silently ignoring them (plot-specific colors live in the per-plot options above).
+from make_my_figure_core.styles.capabilities import (  # noqa: E402
+    warn_ignored_style_controls)
+_ignored = warn_ignored_style_controls(plot_type, style_overrides)
+if _ignored:
+    st.sidebar.caption("ⓘ Not applicable to **" + plot_type.replace("_", " ") + "**: "
+                       + " ".join(_ignored))
 
-st.sidebar.header("6. Formatting")
-style_overrides = {}
-with st.sidebar.expander("Publication style controls", expanded=False):
-    # Only the curated, user-facing palettes — never the internal journal-named
-    # entries kept in NAMED_PALETTES for backward compatibility.
-    pal = st.selectbox("Palette", ["(profile default)"] + list(USER_PALETTES))
-    if pal != "(profile default)":
-        style_overrides["palette_name"] = pal
-    style_overrides["axis_font_pt"] = st.slider("Axis label pt", 8, 24, 12)
-    style_overrides["tick_label_pt"] = st.slider("Tick label pt", 6, 20, 10)
-    style_overrides["legend_pt"] = st.slider("Legend pt", 6, 20, 10)
-    style_overrides["annotation_pt"] = st.slider("Annotation pt", 6, 20, 10)
-    style_overrides["marker_size"] = st.slider("Marker size", 6, 200, 45)
-    style_overrides["line_width_pt"] = st.slider("Line width", 0.5, 6.0, 1.8, 0.1)
-    style_overrides["regression_line_width"] = style_overrides["line_width_pt"]
-    style_overrides["spine_width_pt"] = st.slider("Axis/spine width", 0.4, 4.0, 1.1, 0.1)
-    style_overrides["legend_outside"] = st.checkbox("Legend outside plot", value=False)
-    style_overrides["grid"] = st.checkbox("Grid", value=False)
-    # Honest, plot-aware note: flag controls that don't apply to the active plot
-    # (e.g. marker size / axis padding on an axis-free network) instead of silently
-    # ignoring them. Plot-specific controls (e.g. network node/edge colors) live in
-    # the per-plot options section.
-    from make_my_figure_core.styles.capabilities import (  # noqa: E402
-        warn_ignored_style_controls)
-    _ignored = warn_ignored_style_controls(plot_type, style_overrides)
-    if _ignored:
-        st.caption("ⓘ Not applicable to **" + plot_type.replace("_", " ") + "**: "
-                   + " ".join(_ignored))
-
-# --- 7. Statistics (shares the core statistics engine with the desktop app) --
+# --- 6. Statistics (shares the core statistics engine with the desktop app) --
 from make_my_figure_core.statistics import TESTS as _STAT_TESTS  # noqa: E402
 from make_my_figure_core.statistics import recommend_tests as _recommend  # noqa: E402
 
-st.sidebar.header("7. Statistics")
+st.sidebar.header("6. Statistics")
 stats_spec = {"enabled": False}
 with st.sidebar.expander("Statistical tests & annotations", expanded=False):
     stats_enabled = st.checkbox("Enable statistics", value=False)
