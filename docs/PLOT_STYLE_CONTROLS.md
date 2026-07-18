@@ -51,3 +51,19 @@ not apply to a bar plot; node colors do not apply to a bar plot.
 Do **not** force every control to be global. Some are universal, some are
 plot-specific, some are irrelevant — and the UI/engine makes that explicit. See
 [PUBLICATION_STYLE.md](PUBLICATION_STYLE.md) and [NETWORK_GRAPH.md](NETWORK_GRAPH.md).
+
+## Clipping / overlap QC (advisory)
+
+Every render runs an advisory layout check (`make_my_figure_core/qa/layout_qc.py`,
+stored on the result as `metadata["layout_qc"]`). It reports likely problems as
+structured issues — `category` (clipping / overlap / font / density / missing_label /
+colorbar), `severity` (warning / fail), the affected `artist`, a `message`, a
+`suggested_fix`, and whether an **auto-fix** is available. Detection is bbox-based and
+**approximate/honest** — it flags likely issues rather than guaranteeing perfection,
+and it only inspects tick labels that are actually within the axes view (Matplotlib's
+phantom out-of-range ticks are ignored).
+
+Opt into automatic repair by setting `layout["auto_fix_layout"] = true`: the engine
+rotates overcrowded x tick labels, reserves label room via tight layout, and grows the
+figure to fit clipped content — **layout only, never changing any data, colors, or
+statistics**. Applied fixes are listed in `metadata["layout_autofix_applied"]`.

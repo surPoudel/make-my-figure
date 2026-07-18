@@ -391,6 +391,19 @@ def render(
     except Exception as exc:  # QA must never break rendering
         result.metadata["publication_check"] = {
             "passed": True, "warnings": [], "summary": f"Publication check skipped: {exc}"}
+
+    # Structured clipping/overlap QC (advisory). Optionally auto-fix layout first when
+    # the user opts in via layout['auto_fix_layout'] — layout-only, never touches data.
+    try:
+        from make_my_figure_core.qa.layout_qc import auto_fix_layout, check_layout
+
+        if (spec.get("layout") or {}).get("auto_fix_layout") and result.figure is not None:
+            fixes = auto_fix_layout(result.figure, spec=spec)
+            if fixes:
+                result.metadata["layout_autofix_applied"] = fixes
+        result.metadata["layout_qc"] = check_layout(result.figure).to_dict()
+    except Exception as exc:  # noqa: BLE001 - QA must never break rendering
+        result.metadata["layout_qc"] = {"status": "skipped", "issues": [], "error": str(exc)}
     return result
 
 
