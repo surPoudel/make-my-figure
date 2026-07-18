@@ -10,11 +10,14 @@ import numpy as np
 from make_my_figure_core.plots.base import (
     autorotate_xticklabels,
     RenderResult,
+    apply_publication_layout,
     base_metadata,
     coerce_numeric,
     figure_size,
     get_mapping,
+    place_legend,
     require_columns,
+    resolve_legend_location,
     style_axes,
 )
 from make_my_figure_core.styles.engine import StyleProfile
@@ -58,9 +61,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                    color=style.color_for(ci), edgecolor="white", linewidth=0.3)
             bottom += vals
 
+        # Ticks are centered on the bar positions; rotation from the layout control
+        # (falls back to auto). A small tick pad keeps labels off the axis line.
         ax.set_xticks(positions)
         ax.set_xticklabels(samples)
-        autorotate_xticklabels(ax, style, rotation=get_mapping(spec, "x_tick_rotation", "auto"))
+        autorotate_xticklabels(ax, style, rotation=get_mapping(spec, "x_tick_rotation",
+                               spec.get("layout", {}).get("x_tick_rotation", "auto")))
+        ax.tick_params(axis="x", pad=3)
         if len(samples) > 30:
             ax.tick_params(axis="x", labelsize=style.axis_font_pt - 2)
         ax.set_xlabel(spec.get("layout", {}).get("x_label", x))
@@ -68,8 +75,9 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         title = spec.get("layout", {}).get("title")
         if title:
             ax.set_title(title)
-        ax.legend(title=str(stack), frameon=False, loc="center left",
-                  bbox_to_anchor=(1.0, 0.5))
+        place_legend(ax, style, title=str(stack),
+                     location=resolve_legend_location(spec, style) if spec.get("layout", {}).get(
+                         "legend_location") else ("center left", (1.02, 0.5), "right"))
         style_axes(ax, style)
 
         # Categorical association test (chi-square / Fisher) as a corner panel.
@@ -79,6 +87,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         stats_report = run_and_annotate(spec, work, style, PLOT_TYPE, ax=ax,
                                         mode="corner", corner_loc="upper right")
         fig.tight_layout()
+        apply_publication_layout(fig, ax, spec, style)
 
     meta = base_metadata(spec, style, work, used_columns=[x, stack, y, sort_by])
     meta["components"] = [str(c) for c in components]

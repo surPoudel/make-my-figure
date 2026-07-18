@@ -72,11 +72,20 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             else:
                 col = style.color_for(0)
                 label = None
-            ax.plot(xs, ys, color=col, lw=style.line_width_pt,
-                    alpha=0.55 if not has_color else 0.75, zorder=2, label=label,
-                    marker="o", markersize=max(3.0, style.marker_size ** 0.5),
-                    markerfacecolor=col, markeredgecolor="white",
-                    markeredgewidth=style.marker_edge_width)
+            # Line and point colors are independently controllable — an explicit
+            # line_color / point_color overrides the group color for that element.
+            _lc = get_mapping(spec, "line_color", None)
+            _pc = get_mapping(spec, "point_color", None)
+            line_col = _lc if (_lc and str(_lc) != "(group)") else col
+            point_col = _pc if (_pc and str(_pc) != "(group)") else col
+            lw = float(get_mapping(spec, "line_width", None) or style.line_width_pt)
+            lalpha = float(get_mapping(spec, "line_alpha", None)
+                           or (0.55 if not has_color else 0.75))
+            psize = float(get_mapping(spec, "point_size", None)
+                          or max(3.0, style.marker_size ** 0.5))
+            ax.plot(xs, ys, color=line_col, lw=lw, alpha=lalpha, zorder=2, label=label,
+                    marker="o", markersize=psize, markerfacecolor=point_col,
+                    markeredgecolor="white", markeredgewidth=style.marker_edge_width)
 
         ax.set_xticks(range(len(conditions)))
         ax.set_xticklabels([str(c) for c in conditions])

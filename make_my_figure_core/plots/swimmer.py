@@ -16,11 +16,13 @@ from make_my_figure_core.plots._v04_shared import ordered_unique
 from make_my_figure_core.plots.base import (
     RenderError,
     RenderResult,
+    apply_publication_layout,
     base_metadata,
     coerce_numeric,
     get_mapping,
     place_legend,
     require_columns,
+    resolve_legend_location,
     style_axes,
 )
 from make_my_figure_core.styles.engine import StyleProfile
@@ -112,6 +114,12 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         ax.set_xlabel(spec.get("layout", {}).get("x_label", "Time (months)"))
         ax.set_ylabel(spec.get("layout", {}).get("y_label", "Patient"))
         ax.margins(x=0.02)
+        # Extra right-side headroom so ongoing-arrows and end-of-follow-up event
+        # markers are not clipped at the axes edge (user-adjustable).
+        _x0, _x1 = ax.get_xlim()
+        _rpad = float(get_mapping(spec, "right_pad_frac", 0.06) or 0.0)
+        if _x1 > _x0 and _rpad > 0:
+            ax.set_xlim(_x0, _x1 + (_x1 - _x0) * _rpad)
         title = spec.get("layout", {}).get("title")
         if title:
             ax.set_title(title)
@@ -133,9 +141,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if handles:
             title_txt = str(group_col) if group_levels else "Event"
             place_legend(ax, style, title=title_txt, handles=handles,
-                         labels=[h.get_label() for h in handles], force_outside=True)
+                         labels=[h.get_label() for h in handles],
+                         location=resolve_legend_location(spec, style)
+                         if spec.get("layout", {}).get("legend_location") else None,
+                         force_outside=not spec.get("layout", {}).get("legend_location"))
         else:
             fig.tight_layout()
+        apply_publication_layout(fig, ax, spec, style)
 
     meta = base_metadata(spec, style, work,
                          used_columns=[subject, start_col, end_col, duration_col, group_col, event_col])

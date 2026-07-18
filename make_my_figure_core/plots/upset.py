@@ -26,6 +26,7 @@ import pandas as pd
 from make_my_figure_core.plots.base import (
     RenderError,
     RenderResult,
+    apply_publication_layout,
     base_metadata,
     get_mapping,
     require_columns,
@@ -147,9 +148,16 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         for sp in ("top", "left"):
             ax_sets.spines[sp].set_visible(False)
 
+        # Reserve a left margin sized to the longest set-name label — these grow
+        # leftward and were being clipped. User margin controls override this.
+        longest = max((len(str(s)) for s in set_order), default=4)
+        fig.subplots_adjust(left=min(0.45, 0.10 + 0.012 * longest),
+                            right=0.98, bottom=0.08, top=0.90 if layout.get("title") else 0.97)
+
         title = layout.get("title")
         if title:
             fig.suptitle(title, fontsize=style.title_font_pt, fontweight="bold")
+        apply_publication_layout(fig, ax_sets, spec, style)
 
     meta = base_metadata(spec, style, df, used_columns=set_names)
     meta["n_sets"] = n_sets

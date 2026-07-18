@@ -20,11 +20,14 @@ from make_my_figure_core.plots._v04_shared import (
 from make_my_figure_core.plots.base import (
     RenderError,
     RenderResult,
+    apply_publication_layout,
     base_metadata,
     coerce_numeric,
     figure_size,
     get_mapping,
+    place_legend,
     require_columns,
+    resolve_legend_location,
     style_axes,
 )
 from make_my_figure_core.styles.engine import StyleProfile
@@ -98,17 +101,33 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             ys_all.append(y)
             colors.append(col)
 
-        # Threshold lines.
-        gw = float(neg_log10([GENOME_WIDE_SIG])[0])
-        sug = float(neg_log10([SUGGESTIVE_SIG])[0])
-        ax.axhline(gw, color="#C0392B", ls="--", lw=style.line_width_pt,
-                   label="Genome-wide (5e-8)")
-        ax.axhline(sug, color="#7F8C8D", ls=":", lw=style.line_width_pt,
-                   label="Suggestive (1e-5)")
+        # Genome-wide cutoff line — fully user-controllable (optional, editable
+        # threshold / color / width / style / label). Default threshold 5e-8.
+        show_cutoff = bool(get_mapping(spec, "show_cutoff_line", True))
+        if show_cutoff:
+            gw_thresh = float(get_mapping(spec, "genome_wide_threshold", GENOME_WIDE_SIG))
+            gw = float(neg_log10([gw_thresh])[0])
+            gw_color = str(get_mapping(spec, "cutoff_line_color", "#C0392B"))
+            gw_ls = str(get_mapping(spec, "cutoff_line_style", "--"))
+            gw_lw = float(get_mapping(spec, "cutoff_line_width", style.line_width_pt))
+            gw_label = get_mapping(spec, "cutoff_line_label", f"Genome-wide ({gw_thresh:g})")
+            ax.axhline(gw, color=gw_color, ls=gw_ls, lw=gw_lw, label=str(gw_label))
+        # Suggestive line is optional too (off by default keeps the plot clean unless asked).
+        if bool(get_mapping(spec, "show_suggestive_line", True)):
+            sug_thresh = float(get_mapping(spec, "suggestive_threshold", SUGGESTIVE_SIG))
+            sug = float(neg_log10([sug_thresh])[0])
+            ax.axhline(sug, color="#7F8C8D", ls=":", lw=style.line_width_pt,
+                       label=f"Suggestive ({sug_thresh:g})")
 
+        # X tick rotation: layout control (0/45/90/custom), else auto by chromosome count.
+        _xr = get_mapping(spec, "x_tick_rotation", spec.get("layout", {}).get("x_tick_rotation"))
+        if _xr is None or str(_xr) == "auto":
+            rot = 90 if len(tick_lab) > 12 else 0
+        else:
+            rot = {"horizontal": 0, "vertical": 90}.get(str(_xr).lower(), int(_xr))
         ax.set_xticks(tick_pos)
         ax.set_xticklabels(tick_lab, fontsize=max(style.tick_label_pt - 1, 9.0),
-                           rotation=90 if len(tick_lab) > 12 else 0)
+                           rotation=rot, ha=("right" if 0 < rot < 90 else "center"))
         ax.set_xlabel(spec.get("layout", {}).get("x_label", "Chromosome"))
         ax.set_ylabel(spec.get("layout", {}).get("y_label", "-log10(p)"))
         ax.margins(x=0.01)
@@ -117,9 +136,11 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if title:
             ax.set_title(title)
         style_axes(ax, style)
-        ax.legend(loc="upper right", frameon=getattr(style, "legend_frameon", False),
-                  fontsize=style.legend_pt)
+        if ax.get_legend_handles_labels()[0]:
+            place_legend(ax, style, location=resolve_legend_location(spec, style)
+                         if spec.get("layout", {}).get("legend_location") else ("upper right", None, None))
         fig.tight_layout()
+        apply_publication_layout(fig, ax, spec, style)
 
     meta = base_metadata(spec, style, work, used_columns=[chrom, pos, p, snp])
     meta["n_variants"] = int(len(work))

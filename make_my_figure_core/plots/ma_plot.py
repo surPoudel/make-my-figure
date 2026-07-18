@@ -17,12 +17,14 @@ from make_my_figure_core.plots._v04_shared import pick_column
 from make_my_figure_core.plots.base import (
     RenderError,
     RenderResult,
+    apply_publication_layout,
     base_metadata,
     coerce_numeric,
     figure_size,
     get_mapping,
     place_legend,
     require_columns,
+    resolve_legend_location,
     style_axes,
 )
 from make_my_figure_core.styles.engine import StyleProfile
@@ -81,24 +83,45 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if down.any():
             ax.scatter(xs[down], ys[down], color=style.color_for(0), label="Down", zorder=3, **mk)
 
-        # Label the strongest significant hits by |logFC|, dropping labels that
-        # would collide so text stays readable.
-        if label_col and label_col in work.columns and label_top_n > 0 and sig.any():
+        # Labels: click-selected points (selected_labels) when provided, otherwise the
+        # strongest significant hits by |logFC|. Per-label manual offsets (points) are
+        # honored — same interaction model as the volcano plot.
+        selected_labels = [str(s).strip().lower() for s in
+                           (get_mapping(spec, "selected_labels", None) or [])]
+        label_offsets = get_mapping(spec, "label_offsets", None) or {}
+        if isinstance(label_offsets, str):
+            import json
+            try:
+                label_offsets = json.loads(label_offsets)
+            except Exception:  # noqa: BLE001
+                label_offsets = {}
+        if label_col and label_col in work.columns and sig.any():
             from make_my_figure_core.plots.base import dedupe_labels_by_distance
 
-            sig_idx = np.where(sig)[0]
-            order = sig_idx[np.argsort(-np.abs(ys[sig_idx]))][:label_top_n]
             xr = float(np.nanmax(xs) - np.nanmin(xs)) or 1.0
             yr = float(np.nanmax(ys) - np.nanmin(ys)) or 1.0
             candidates = []
-            for i in order:
-                txt = str(work[label_col].iloc[i]).strip()
-                if txt and txt.lower() != "nan":
-                    candidates.append((float(xs[i]), float(ys[i]), txt))
-            for x_i, y_i, txt in dedupe_labels_by_distance(
-                    candidates, min_dx=0.05 * xr, min_dy=0.07 * yr):
+            if selected_labels:
+                for i in range(len(work)):
+                    txt = str(work[label_col].iloc[i]).strip()
+                    if txt.lower() in selected_labels:
+                        candidates.append((float(xs[i]), float(ys[i]), txt))
+            elif label_top_n > 0:
+                sig_idx = np.where(sig)[0]
+                order = sig_idx[np.argsort(-np.abs(ys[sig_idx]))][:label_top_n]
+                for i in order:
+                    txt = str(work[label_col].iloc[i]).strip()
+                    if txt and txt.lower() != "nan":
+                        candidates.append((float(xs[i]), float(ys[i]), txt))
+                candidates = dedupe_labels_by_distance(
+                    candidates, min_dx=0.05 * xr, min_dy=0.07 * yr)
+            for x_i, y_i, txt in candidates:
+                off = label_offsets.get(txt) or label_offsets.get(txt.lower()) or (4, 4)
+                dx, dy = float(off[0]), float(off[1])
                 ax.annotate(txt, (x_i, y_i), fontsize=style.annotation_pt,
-                            xytext=(3, 3), textcoords="offset points")
+                            xytext=(dx, dy), textcoords="offset points",
+                            arrowprops=dict(arrowstyle="-", color="0.6", lw=0.5)
+                            if (abs(dx) > 12 or abs(dy) > 12) else None)
 
         ax.set_xlabel(spec.get("layout", {}).get("x_label", "Average expression"))
         ax.set_ylabel(spec.get("layout", {}).get("y_label", "log2 fold change"))
@@ -107,11 +130,28 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if title:
             ax.set_title(title)
         style_axes(ax, style)
-        place_legend(ax, style, title="Significance", force_outside=True)
+        place_legend(ax, style, title="Significance",
+                     location=resolve_legend_location(spec, style)
+                     if spec.get("layout", {}).get("legend_location") else None,
+                     force_outside=not spec.get("layout", {}).get("legend_location"))
+        apply_publication_layout(fig, ax, spec, style)
 
     meta = base_metadata(spec, style, work, used_columns=[x, y, p, label_col])
     meta["n_up"] = int(up.sum())
     meta["n_down"] = int(down.sum())
     meta["n_ns"] = int(ns.sum())
     meta["p_cutoff"] = p_cutoff
+    # Click-identify support (parity with volcano): map a canvas click back to a point.
+    try:
+        from make_my_figure_core.plots.base import (
+            build_pickable_points, choose_label_column, resolve_point_labels)
+
+        pick_col = choose_label_column(work, [label_col, "gene", "gene_symbol", "symbol"])
+        meta["pickable_points"] = build_pickable_points(
+            xs, ys, resolve_point_labels(work, pick_col))
+        meta["pick_label_key"] = "selected_labels"
+        meta["pick_label_column"] = pick_col
+    except Exception as exc:  # noqa: BLE001
+        meta["pickable_points"] = []
+        warnings.append(f"Click-identify data unavailable: {exc}")
     return RenderResult(figure=fig, metadata=meta, warnings=warnings)

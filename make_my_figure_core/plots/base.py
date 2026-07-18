@@ -182,31 +182,160 @@ def autorotate_xticklabels(ax, style: "StyleProfile | None" = None, *,
     for t in ticklabels:
         t.set_rotation(angle)
         t.set_horizontalalignment(ha)
+        # va="top" keeps rotated labels hanging BELOW the axis. For 90° the "anchor"
+        # rotation mode pushes the label up into the plot (overlapping bars), so use
+        # the default mode there; keep anchor for slanted (0<angle<90) labels.
+        t.set_verticalalignment("top")
+        t.set_rotation_mode("anchor" if 0 < angle < 90 else "default")
         t.set_fontsize(fs)
-        if angle:
-            t.set_rotation_mode("anchor")
 
 
 def place_legend(ax, style, *, title=None, handles=None, labels=None,
-                 force_outside: bool = False, loc: str = None):
+                 force_outside: bool = False, loc: str = None, location=None):
     """Place a legend without overlapping data.
 
-    Outside-right by default when the profile requests it or ``force_outside``
-    is set (space is reserved via ``subplots_adjust`` so the legend is never
-    clipped on export); otherwise at the profile's preferred location.
-    """
-    outside = force_outside or getattr(style, "legend_outside", False)
+    ``location`` is a resolved ``(loc, bbox_to_anchor, outside_side)`` tuple (see
+    ``resolve_legend_location``) and, when given, fully controls placement —
+    reserving figure margin for whichever outside side is used so the legend is
+    never clipped on export. Otherwise falls back to outside-right (when the profile
+    / ``force_outside`` requests it) or the profile's preferred location."""
     kw = dict(frameon=getattr(style, "legend_frameon", False),
               ncol=max(1, getattr(style, "legend_ncol", 1)), title=title)
     args = ()
     if handles is not None:
         args = (handles,) if labels is None else (handles, labels)
+
+    if location is not None:
+        lloc, bbox, side = location
+        if bbox is not None:
+            leg = ax.legend(*args, loc=lloc, bbox_to_anchor=bbox, **kw)
+        else:
+            leg = ax.legend(*args, loc=lloc, **kw)
+        # Reserve room for an outside legend so it isn't clipped on export.
+        reserve = {"right": {"right": 0.75}, "left": {"left": 0.28},
+                   "top": {"top": 0.82}, "bottom": {"bottom": 0.22}}.get(side)
+        if reserve:
+            try:
+                ax.figure.subplots_adjust(**reserve)
+            except Exception:  # noqa: BLE001
+                pass
+        return leg
+
+    outside = force_outside or getattr(style, "legend_outside", False)
     if outside:
         leg = ax.legend(*args, loc="center left", bbox_to_anchor=(1.02, 0.5), **kw)
         ax.figure.subplots_adjust(right=0.75)
     else:
         leg = ax.legend(*args, loc=loc or getattr(style, "legend_loc", "best"), **kw)
     return leg
+
+
+# Named legend positions shared by all renderers (the flexible-legend requirement).
+# value: (matplotlib loc, bbox_to_anchor or None, outside-side or None).
+LEGEND_LOCATIONS: Dict[str, Any] = {
+    "auto": ("best", None, None),
+    "best": ("best", None, None),
+    "inside upper right": ("upper right", None, None),
+    "inside upper left": ("upper left", None, None),
+    "inside lower right": ("lower right", None, None),
+    "inside lower left": ("lower left", None, None),
+    "upper right": ("upper right", None, None),
+    "upper left": ("upper left", None, None),
+    "lower right": ("lower right", None, None),
+    "lower left": ("lower left", None, None),
+    "outside right": ("center left", (1.02, 0.5), "right"),
+    "outside left": ("center right", (-0.02, 0.5), "left"),
+    "outside top": ("lower center", (0.5, 1.02), "top"),
+    "outside bottom": ("upper center", (0.5, -0.18), "bottom"),
+}
+
+
+def resolve_legend_location(spec: Dict[str, Any], style: "StyleProfile | None" = None):
+    """Return (loc, bbox_to_anchor, outside_side) from layout['legend_location'].
+
+    Falls back to the style's outside preference, else 'best'. Shared so every
+    legend-capable renderer honors the same flexible location control."""
+    layout = (spec or {}).get("layout", {}) or {}
+    name = str(layout.get("legend_location", "")).strip().lower()
+    if name in LEGEND_LOCATIONS:
+        return LEGEND_LOCATIONS[name]
+    if style is not None and getattr(style, "legend_outside", False):
+        return LEGEND_LOCATIONS["outside right"]
+    return LEGEND_LOCATIONS["best"]
+
+
+def apply_publication_layout(fig, ax, spec: Dict[str, Any],
+                             style: "StyleProfile | None" = None) -> None:
+    """Apply the shared PublicationLayoutSpec (spec['layout']) to a rendered axes.
+
+    Reads only the keys present, so it is safe to call from any renderer. Handles
+    tick rotation/pad, axis-label padding, title padding, and explicit figure
+    margins. Called at the END of a renderer (after ticks/labels are set) so it can
+    reserve room and prevent clipping. Never changes data — layout only."""
+    layout = (spec or {}).get("layout", {}) or {}
+    if not layout:
+        return
+
+    def _num(key):
+        try:
+            v = layout.get(key)
+            return None if v is None else float(v)
+        except (TypeError, ValueError):
+            return None
+
+    # Tick rotation + alignment.
+    xr = layout.get("x_tick_rotation")
+    if xr is not None and xr != "auto":
+        try:
+            ang = {"horizontal": 0, "vertical": 90}.get(str(xr).lower(), int(xr))
+            ha = "right" if 0 < ang < 90 else "center"
+            for t in ax.get_xticklabels():
+                t.set_rotation(ang)
+                t.set_horizontalalignment(layout.get("x_tick_horizontal_alignment", ha))
+                t.set_verticalalignment(layout.get("x_tick_vertical_alignment", "top"))
+                # anchor mode only for slanted labels; 90° uses default so the label
+                # hangs below the axis instead of overlapping the plot.
+                t.set_rotation_mode("anchor" if 0 < ang < 90 else "default")
+        except (TypeError, ValueError):
+            pass
+    yr = layout.get("y_tick_rotation")
+    if yr is not None and yr != "auto":
+        try:
+            ang = {"horizontal": 0, "vertical": 90}.get(str(yr).lower(), int(yr))
+            for t in ax.get_yticklabels():
+                t.set_rotation(ang)
+        except (TypeError, ValueError):
+            pass
+
+    # Tick padding.
+    if _num("x_tick_pad") is not None:
+        ax.tick_params(axis="x", pad=_num("x_tick_pad"))
+    if _num("y_tick_pad") is not None:
+        ax.tick_params(axis="y", pad=_num("y_tick_pad"))
+    # Axis-label padding.
+    if _num("x_label_pad") is not None:
+        ax.xaxis.labelpad = _num("x_label_pad")
+    if _num("y_label_pad") is not None:
+        ax.yaxis.labelpad = _num("y_label_pad")
+    # Title padding (preserve current title + fontsize).
+    if _num("title_pad") is not None and ax.get_title():
+        ax.set_title(ax.get_title(), pad=_num("title_pad"),
+                     fontsize=getattr(style, "title_font_pt", None))
+
+    # Explicit figure margins (fractions). Applied last so they win over tight_layout.
+    margins = {k: _num(f"margin_{k}") for k in ("left", "right", "top", "bottom")}
+    sub = {"left": margins["left"], "right": margins["right"],
+           "top": margins["top"], "bottom": margins["bottom"]}
+    sub = {k: v for k, v in sub.items() if v is not None}
+    if _num("subplot_wspace") is not None:
+        sub["wspace"] = _num("subplot_wspace")
+    if _num("subplot_hspace") is not None:
+        sub["hspace"] = _num("subplot_hspace")
+    if sub:
+        try:
+            fig.subplots_adjust(**sub)
+        except Exception:  # noqa: BLE001 - never break a render on a bad margin combo
+            pass
 
 
 def dedupe_labels_by_distance(points, *, min_dx, min_dy):

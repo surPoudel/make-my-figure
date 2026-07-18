@@ -237,9 +237,30 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             kept = dedupe_labels_by_distance(pts, min_dx=xr * 0.045, min_dy=ymax * 0.035)
             # Extra top headroom so repelled labels are not clipped.
             ax.set_ylim(0, ymax * (1.30 if kept else 1.18))
-            n_labeled = _repel_labels(ax, kept, style, show_arrows=show_arrows, box=label_box,
-                                      color=label_color, font_size=label_font_size,
-                                      repel=repel_strength)
+            # Per-label manual offsets (points): a label listed in label_offsets is
+            # drawn at its user-set offset with a leader line and excluded from the
+            # auto-repel, so moving one label never disturbs the others.
+            label_offsets = get_mapping(spec, "label_offsets", None) or {}
+            if isinstance(label_offsets, str):
+                import json
+                try:
+                    label_offsets = json.loads(label_offsets)
+                except Exception:  # noqa: BLE001
+                    label_offsets = {}
+            manual = [(lx, ly, txt) for (lx, ly, txt) in kept
+                      if txt in label_offsets or str(txt).lower() in label_offsets]
+            auto = [p for p in kept if p not in manual]
+            fs_lab = label_font_size or style.annotation_pt
+            for lx, ly, txt in manual:
+                off = label_offsets.get(txt) or label_offsets.get(str(txt).lower())
+                dx, dy = float(off[0]), float(off[1])
+                ax.annotate(txt, (lx, ly), fontsize=fs_lab, color=label_color or style.text_color,
+                            xytext=(dx, dy), textcoords="offset points", zorder=6,
+                            arrowprops=dict(arrowstyle="-", color="0.5", lw=0.5)
+                            if (abs(dx) > 10 or abs(dy) > 10) else None)
+            n_labeled = len(manual) + _repel_labels(
+                ax, auto, style, show_arrows=show_arrows, box=label_box,
+                color=label_color, font_size=label_font_size, repel=repel_strength)
         else:
             ax.set_ylim(0, ymax * 1.18)
 

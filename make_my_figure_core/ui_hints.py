@@ -272,6 +272,29 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("remove_isolates", "Remove isolated nodes", "bool", True),
         Option("detect_communities", "Detect communities (heuristic)", "bool", False),
     ],
+    "manhattan_plot": [
+        _X_TICK_ROTATION,
+        Option("show_cutoff_line", "Genome-wide cutoff line", "bool", True),
+        Option("genome_wide_threshold", "Cutoff threshold (p)", "number", 5e-8,
+               minimum=0.0, maximum=1.0, step=1e-8, decimals=9),
+        Option("cutoff_line_color", "Cutoff line color", "choice", "#C0392B",
+               ["#C0392B", "#333333", "black", "#2166AC", "#1B7837"]),
+        Option("cutoff_line_style", "Cutoff line style", "choice", "--", ["--", "-", ":", "-."]),
+        Option("cutoff_line_width", "Cutoff line width", "number", 1.5, minimum=0.4, maximum=6.0, step=0.2, decimals=1),
+        Option("show_suggestive_line", "Suggestive line", "bool", True),
+    ],
+    "paired_slopegraph": [
+        Option("point_color", "Point color", "choice", "(group)",
+               ["(group)", "#2166AC", "#B2182B", "#1B7837", "#333333", "black"]),
+        Option("line_color", "Line color", "choice", "(group)",
+               ["(group)", "#BBBBBB", "#888888", "#2166AC", "#B2182B", "black"]),
+        Option("point_size", "Point size", "number", 6.0, minimum=2.0, maximum=20.0, step=1.0, decimals=1),
+        Option("line_width", "Line width", "number", 1.5, minimum=0.4, maximum=6.0, step=0.2, decimals=1),
+        Option("line_alpha", "Line alpha", "number", 0.7, minimum=0.1, maximum=1.0, step=0.1, decimals=1),
+    ],
+    "swimmer_plot": [
+        Option("right_pad_frac", "Right-side headroom", "number", 0.06, minimum=0.0, maximum=0.4, step=0.02, decimals=2),
+    ],
 }
 
 

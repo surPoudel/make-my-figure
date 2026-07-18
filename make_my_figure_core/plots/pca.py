@@ -111,12 +111,15 @@ def render(spec: Dict[str, Any], df, style: StyleProfile,
     color_map = {lvl: style.color_for(i) for i, lvl in enumerate(color_levels)}
     shape_map = {lvl: _MARKERS[i % len(_MARKERS)] for i, lvl in enumerate(shape_levels)}
 
+    # Marker size follows the Publication style control (was hard-coded, so the
+    # control did nothing); an explicit mapping['marker_size'] overrides it.
+    marker_size = float(get_mapping(spec, "marker_size", None) or style.marker_size)
     with style.apply():
         fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.85))
         for i, s in enumerate(sample_cols):
             col = color_map.get(color_vals[i], style.color_for(0))
             mk = shape_map.get(shape_vals[i], "o")
-            ax.scatter(pc1[i], pc2[i], color=col, marker=mk, s=30,
+            ax.scatter(pc1[i], pc2[i], color=col, marker=mk, s=marker_size,
                        edgecolors="black", linewidths=style.spine_width_pt, zorder=3)
 
         ax.set_xlabel(spec.get("layout", {}).get("x_label", f"PC1 ({explained[0]*100:.1f}%)"))
