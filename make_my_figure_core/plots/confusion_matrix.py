@@ -120,7 +120,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             ax.set_title(title)
         for spine in ax.spines.values():
             spine.set_visible(False)
-        cbar = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.03)
+        _cb_loc = str(get_mapping(spec, "colorbar_location", "right")).lower()
+        if _cb_loc not in ("right", "left", "top", "bottom"):
+            _cb_loc = "right"
+        cbar = fig.colorbar(im, ax=ax, location=_cb_loc,
+                            fraction=float(get_mapping(spec, "colorbar_fraction", 0.046) or 0.046),
+                            pad=float(get_mapping(spec, "colorbar_pad", 0.03) or 0.03),
+                            shrink=float(get_mapping(spec, "colorbar_shrink", 1.0) or 1.0))
         cbar.ax.tick_params(labelsize=style.tick_label_pt, width=style.tick_width,
                             length=style.tick_length)
         cbar.set_label("count" if normalize == "none" else "fraction",

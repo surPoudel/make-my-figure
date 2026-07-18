@@ -82,7 +82,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if title:
             ax.set_title(title)
         ax.grid(axis="x", linestyle=":", linewidth=style.spine_width_pt, alpha=0.5)
-        cbar = fig.colorbar(sc, ax=ax, fraction=0.046, pad=0.04)
+        _cb_loc = str(get_mapping(spec, "colorbar_location", "right")).lower()
+        if _cb_loc not in ("right", "left", "top", "bottom"):
+            _cb_loc = "right"
+        cbar = fig.colorbar(sc, ax=ax, location=_cb_loc,
+                            fraction=float(get_mapping(spec, "colorbar_fraction", 0.046) or 0.046),
+                            pad=float(get_mapping(spec, "colorbar_pad", 0.04) or 0.04),
+                            shrink=float(get_mapping(spec, "colorbar_shrink", 1.0) or 1.0))
         cbar.set_label("-log10(FDR)", fontsize=style.axis_font_pt)
         cbar.ax.tick_params(labelsize=style.axis_font_pt)
 

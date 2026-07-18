@@ -96,6 +96,10 @@ _CAPS: Dict[str, PlotStyleCapabilities] = {
     "confusion_matrix": PlotStyleCapabilities(
         plot_type="confusion_matrix", supports_continuous_colormap=True,
         supports_colorbar=True, supports_marker_size=False, supports_group_colors=False),
+    # enrichment dot plot: dots colored by a continuous value -> has a colorbar.
+    "enrichment_dotplot": PlotStyleCapabilities(
+        plot_type="enrichment_dotplot", supports_continuous_colormap=True,
+        supports_colorbar=True),
     # line-family plots: line width matters, markers optional
     "kaplan_meier_survival_curve": PlotStyleCapabilities(
         plot_type="kaplan_meier_survival_curve", supports_marker_size=False),

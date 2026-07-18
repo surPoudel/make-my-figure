@@ -319,6 +319,49 @@ def render(
     for _w in _cap_warnings:
         if _w not in result.warnings:
             result.warnings.append(_w)
+
+    # Uniform PublicationLayoutSpec application (spec['layout']): tick rotation/pad,
+    # axis-label pad, title pad, and explicit margins apply to the primary axes of
+    # EVERY plot type, so these controls behave consistently across all renderers
+    # without per-renderer wiring. Only keys the user actually set take effect
+    # (empty layout => no-op), so default output is unchanged. Guarded — never breaks
+    # a render.
+    try:
+        from make_my_figure_core.plots.base import apply_publication_layout
+
+        if (spec.get("layout") and getattr(result, "figure", None) is not None
+                and result.figure.axes):
+            apply_publication_layout(result.figure, result.figure.axes[0], spec, style)
+    except Exception as _exc:  # noqa: BLE001
+        result.warnings.append(f"Layout adjustment skipped: {_exc}")
+
+    # Uniform legend placement: when the user sets layout['legend_location'], re-place
+    # the primary axes' legend at that location (any of the inside/outside positions),
+    # reserving figure margin for outside legends. Works for every plot that draws a
+    # legend on its main axes, without editing each renderer. Guarded.
+    try:
+        _layout = spec.get("layout") or {}
+        if _layout.get("legend_location") and getattr(result, "figure", None) is not None \
+                and result.figure.axes:
+            from make_my_figure_core.plots.base import place_legend, resolve_legend_location
+
+            _ax = result.figure.axes[0]
+            _existing = _ax.get_legend()
+            if _existing is not None:
+                _title = _existing.get_title().get_text() or None
+                _h, _l = _ax.get_legend_handles_labels()
+                if not _h:
+                    # Legends built from manual handle lists (e.g. PCA) aren't returned
+                    # by get_legend_handles_labels(); read them off the existing legend.
+                    _h = list(getattr(_existing, "legend_handles",
+                                      getattr(_existing, "legendHandles", [])))
+                    _l = [t.get_text() for t in _existing.get_texts()]
+                if _h:
+                    place_legend(_ax, style, title=_title, handles=_h, labels=_l,
+                                 location=resolve_legend_location(spec, style))
+    except Exception as _exc:  # noqa: BLE001
+        result.warnings.append(f"Legend placement skipped: {_exc}")
+
     # Stamp the spec into metadata for a reproducibility sidecar.
     result.metadata.setdefault("spec", spec)
     if _style_notice:

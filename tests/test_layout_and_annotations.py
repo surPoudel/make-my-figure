@@ -304,6 +304,62 @@ def test_manhattan_exports_non_empty(fmt):
     assert len(figure_to_bytes(r.figure, fmt, dpi=300)) > 500
 
 
+def test_all_axis_plots_honor_x_tick_rotation():
+    # Every registered plot that renders x tick labels must respond to the shared
+    # layout x_tick_rotation control (applied centrally in registry.render).
+    import matplotlib.pyplot as plt
+    from make_my_figure_core import examples as ex
+    from make_my_figure_core.plots.registry import available_plot_types, default_mapping
+
+    def _spec(pt, layout):
+        info, aux, ps = ex.load_example(pt)
+        sp = dict(ps) if ps else make_spec(pt, "a", "publication", mapping=default_mapping(pt))
+        sp.setdefault("plot_type", pt)
+        sp["journal_style"] = "publication"
+        sp["layout"] = {**sp.get("layout", {}), **layout}
+        return sp, info.dataframe, {k: v.dataframe for k, v in (aux or {}).items()} or None
+
+    checked = failed = 0
+    for pt in available_plot_types():
+        try:
+            sp, df, aux = _spec(pt, {"x_tick_rotation": 90})
+            r = render(sp, df, aux=aux)
+            ax = r.figure.axes[0]
+            labels = [t for t in ax.get_xticklabels() if t.get_text()]
+            plt.close(r.figure)
+            if not labels:
+                continue
+            checked += 1
+            if 90 not in {round(t.get_rotation()) for t in labels}:
+                failed += 1
+        except Exception:  # example/render issues are covered by other tests
+            continue
+    assert checked >= 25, f"expected many axis plots, only checked {checked}"
+    assert failed == 0, f"{failed}/{checked} axis plots ignored x_tick_rotation"
+
+
+@pytest.mark.parametrize("pt", ["grouped_barplot_with_error_bar", "volcano_plot",
+                                "scatterplot_with_regression", "roc_curve",
+                                "pca_scatter_from_matrix", "manhattan_plot"])
+def test_legend_location_moves_legend_outside(pt):
+    import matplotlib.pyplot as plt
+    from make_my_figure_core import examples as ex
+    info, aux, ps = ex.load_example(pt)
+    sp = dict(ps)
+    sp.setdefault("plot_type", pt)
+    sp["journal_style"] = "publication"
+    sp["layout"] = {**sp.get("layout", {}), "legend_location": "outside right"}
+    auxd = {k: v.dataframe for k, v in (aux or {}).items()} or None
+    r = render(sp, info.dataframe, aux=auxd)
+    ax = r.figure.axes[0]
+    r.figure.canvas.draw()
+    leg = ax.get_legend()
+    assert leg is not None, f"{pt} example draws no legend"
+    x1 = ax.transAxes.inverted().transform((leg.get_window_extent().x1, 0))[0]
+    plt.close(r.figure)
+    assert x1 > 1.0, f"{pt} legend not moved outside (x1={x1:.2f})"
+
+
 def test_ui_hints_expose_new_controls():
     from make_my_figure_core import ui_hints as u
     man = {o.key for o in u.options("manhattan_plot")}
