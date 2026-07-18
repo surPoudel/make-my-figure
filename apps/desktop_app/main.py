@@ -96,6 +96,7 @@ from PySide6.QtWidgets import (
     QSplitter,
     QStackedWidget,
     QTabWidget,
+    QHeaderView,
     QTableWidget,
     QTableWidgetItem,
     QTextBrowser,
@@ -396,7 +397,9 @@ class MainWindow(QMainWindow):
 
         # App-level navigation: return to the upload/welcome page without quitting.
         # (Distinct from the Matplotlib toolbar 'home', which only resets zoom/pan.)
-        nav_row = QHBoxLayout()
+        # Stacked (not a fixed-width row): full labels stay visible at any pane width,
+        # DPI, or OS font metric — a horizontal row clipped "Matrix workflow…" on macOS.
+        nav_row = QVBoxLayout()
         self.home_btn = QPushButton("\U0001F3E0  Home / Upload New Data")
         self.home_btn.setToolTip("Return to the upload page to load a different dataset "
                                  "(clears the current data, plot, and statistics).")
@@ -418,7 +421,9 @@ class MainWindow(QMainWindow):
         self.plot_combo = QComboBox()
         # A no-plot placeholder so uploading data does not immediately draw a chart;
         # the user picks a plot type when ready (data=None means "nothing selected").
-        self.plot_combo.addItem("— Choose a plot type… —", None)
+        # Shared with the Streamlit app via ui_strings for cross-frontend consistency.
+        from make_my_figure_core.ui_strings import PLOT_TYPE_PLACEHOLDER
+        self.plot_combo.addItem(PLOT_TYPE_PLACEHOLDER, None)
         for pt, label in self.controller.plot_types():
             self.plot_combo.addItem(label, pt)
         self.plot_combo.currentIndexChanged.connect(self._on_plot_type_changed)
@@ -536,10 +541,12 @@ class MainWindow(QMainWindow):
         scroll = QScrollArea()
         scroll.setWidgetResizable(True)
         scroll.setWidget(controls)
-        scroll.setMinimumWidth(320)
-        scroll.setMaximumWidth(480)
+        # Minimum from content; no hard max cap (the splitter controls width). A fixed
+        # 480px cap previously clipped wide controls/labels regardless of window size.
+        scroll.setMinimumWidth(340)
         self._controls_scroll = scroll          # referenced by the pop-out manager
         splitter.addWidget(scroll)
+        scroll.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
 
         # Right: RStudio-like vertical splitter.
         #   top    = data / messages tabs
@@ -1543,6 +1550,19 @@ class MainWindow(QMainWindow):
                     self.table_widget.setItem(r, c, QTableWidgetItem(str(head.iat[r, c])))
         finally:
             self.table_widget.blockSignals(False)
+        # Readable, resizable headers: full name in a tooltip (never altered), columns
+        # user-resizable, and a per-column width cap so many sample columns don't each
+        # become extremely wide. First columns (feature id / annotation) get more room.
+        hdr = self.table_widget.horizontalHeader()
+        hdr.setSectionResizeMode(QHeaderView.Interactive)
+        self.table_widget.resizeColumnsToContents()
+        for c, colname in enumerate(head.columns):
+            it = self.table_widget.horizontalHeaderItem(c)
+            if it is not None:
+                it.setToolTip(str(colname))
+            cap = 260 if c < 2 else 140
+            if self.table_widget.columnWidth(c) > cap:
+                self.table_widget.setColumnWidth(c, cap)
         # Connect once; edits are live.
         if not getattr(self, "_table_edit_connected", False):
             self.table_widget.itemChanged.connect(self._on_table_cell_edited)
@@ -2247,12 +2267,29 @@ class MainWindow(QMainWindow):
             pass  # never let layout persistence break the app
 
     def _restore_splitter_state(self):
+        ms = getattr(self, "main_splitter", None)
         main_state = self.settings.value("main_splitter_state")
-        if main_state is not None and getattr(self, "main_splitter", None) is not None:
-            self.main_splitter.restoreState(main_state)
+        ok = False
+        if main_state is not None and ms is not None:
+            try:
+                ok = bool(ms.restoreState(main_state))
+            except Exception:  # noqa: BLE001
+                ok = False
+        # Validate against a degenerate/stale persisted layout (collapsed control pane
+        # or a left pane hogging the window); fall back to a proportional default.
+        if ms is not None:
+            sizes = ms.sizes()
+            left = sizes[0] if sizes else 0
+            total = sum(sizes)
+            if (not ok) or left < 300 or (total > 0 and left > 0.6 * total):
+                ms.setSizes([400, 820])
         right_state = self.settings.value("right_splitter_state")
-        if right_state is not None and getattr(self, "right_splitter", None) is not None:
-            self.right_splitter.restoreState(right_state)
+        rs = getattr(self, "right_splitter", None)
+        if right_state is not None and rs is not None:
+            try:
+                rs.restoreState(right_state)
+            except Exception:  # noqa: BLE001
+                pass
 
     def closeEvent(self, event):
         self._save_splitter_state()

@@ -198,7 +198,9 @@ if source_mode == "Bundled sample":
     default_plot_type = plot_for_sample
 else:
     uploaded = st.sidebar.file_uploader("Upload CSV / TSV / XLSX", type=["csv", "tsv", "txt", "xlsx", "xls"])
-    default_plot_type = available_plot_types()[0]
+    # No auto-selected plot on upload — start on the placeholder (parity with desktop;
+    # do not silently default to the first/bar plot).
+    default_plot_type = None
     if uploaded is not None:
         try:
             data = uploaded.getvalue()
@@ -382,12 +384,15 @@ with st.expander("🔮 Recommended figures", expanded=False):
 default_plot_type = st.session_state.pop("rec_plot_type", default_plot_type)
 
 # --- 2. Plot type + 3. style ------------------------------------------------
+from make_my_figure_core.ui_strings import PLOT_TYPE_PLACEHOLDER  # noqa: E402
+
 st.sidebar.header("2. Plot type")
+_plot_options = [PLOT_TYPE_PLACEHOLDER] + list(available_plot_types())
+_default_idx = (_plot_options.index(default_plot_type)
+                if default_plot_type in _plot_options else 0)   # 0 = placeholder
 plot_type = st.sidebar.selectbox(
-    "Plot type",
-    options=available_plot_types(),
-    index=available_plot_types().index(default_plot_type) if default_plot_type in available_plot_types() else 0,
-    format_func=display_name,
+    "Plot type", options=_plot_options, index=_default_idx,
+    format_func=lambda p: p if p == PLOT_TYPE_PLACEHOLDER else display_name(p),
 )
 
 st.sidebar.header("3. Style")
@@ -722,6 +727,14 @@ with st.sidebar.expander("Statistical tests & annotations", expanded=False):
             "annotate": True,
             "annotation": {"mode": ann_mode, "show_effect": show_effect},
         }
+
+# No plot chosen yet: show the empty-state and stop before building a spec (parity
+# with the desktop placeholder — nothing is rendered until a real plot is picked).
+if plot_type == PLOT_TYPE_PLACEHOLDER:
+    from make_my_figure_core.ui_strings import EMPTY_STATE_MESSAGE  # noqa: E402
+    st.subheader("Figure preview")
+    st.info(EMPTY_STATE_MESSAGE)
+    st.stop()
 
 layout = dict(_layout_controls)   # shared tick/legend/margin controls
 if title:

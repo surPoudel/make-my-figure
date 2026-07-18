@@ -40,6 +40,9 @@ class RecommendationsPanel(QGroupBox):
 
         self._scroll = QScrollArea()
         self._scroll.setWidgetResizable(True)
+        # A minimum height so at least a full card is readable; without it the nested
+        # scroll collapsed to a sliver and cards were truncated mid-sentence.
+        self._scroll.setMinimumHeight(240)
         self._host = QWidget()
         self._vbox = QVBoxLayout(self._host)
         self._vbox.setAlignment(Qt.AlignTop)
