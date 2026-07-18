@@ -4,6 +4,38 @@ All notable changes to Make My Figure are recorded here. This project uses a
 single, evolving `Publication` style — it does not target or claim compliance
 with any journal.
 
+## [1.0.0-rc1] — Responsive cross-platform UI and deterministic defaults
+
+### Fixed
+- **Clipped desktop controls (macOS/Windows).** The top-nav buttons were laid out
+  in a fixed-width horizontal row inside a control pane hard-capped at 480px, which
+  clipped the **"Matrix workflow…"** button. Buttons are now stacked vertically and
+  the pane's max-width cap is removed, so full labels stay visible at any pane
+  width, DPI, or OS font metric.
+- **Truncated recommendation cards.** The nested scroll area in the Recommended
+  Figures panel could collapse to a sliver and cut cards mid-sentence; it now has a
+  minimum height so at least a full card is readable.
+- **Over-wide / truncated data-preview columns.** Preview columns are now
+  user-resizable, width-capped, and carry header tooltips showing the full column
+  name.
+- **Stale persisted splitter sizes.** Degenerate/outdated saved splitter geometry is
+  validated on restore and falls back to a proportional default instead of leaving
+  the control pane unusably narrow.
+- **Streamlit silently defaulted to a bar plot.** On upload the app auto-selected
+  the first plot type and rendered it; it now shows a **"— Choose a plot type… —"**
+  placeholder and renders nothing until a real plot is chosen — matching the desktop
+  app's existing behavior.
+
+### Changed
+- Placeholder text, the visible style name, and top-level workflow action labels now
+  live in a shared `make_my_figure_core/ui_strings.py` so the Streamlit and desktop
+  frontends stay in lockstep.
+
+### Notes
+- Cross-platform UI QC runbook added (`docs/CROSS_PLATFORM_UI_QC.md`). The visual
+  fixes are covered by source-level guardrail tests; on-device verification on macOS
+  (Retina) and Windows (125/150/200% scaling) is still recommended before release.
+
 ## [0.6.1] — Open PlotSpec, transform-aware recommendations, in-app differential screen
 
 ### Added
