@@ -338,6 +338,41 @@ def test_all_axis_plots_honor_x_tick_rotation():
     assert failed == 0, f"{failed}/{checked} axis plots ignored x_tick_rotation"
 
 
+def test_all_plots_honor_y_tick_rotation():
+    # y_tick_rotation must apply wherever a plot draws y tick labels (central layout).
+    import matplotlib.pyplot as plt
+    from make_my_figure_core import examples as ex
+    from make_my_figure_core.plots.registry import available_plot_types, default_mapping
+
+    def _spec(pt, layout):
+        info, aux, ps = ex.load_example(pt)
+        sp = dict(ps) if ps else make_spec(pt, "a", "publication", mapping=default_mapping(pt))
+        sp.setdefault("plot_type", pt)
+        sp["journal_style"] = "publication"
+        sp["layout"] = {**sp.get("layout", {}), **layout}
+        return sp, info.dataframe, {k: v.dataframe for k, v in (aux or {}).items()} or None
+
+    checked = failed = 0
+    for pt in available_plot_types():
+        try:
+            sp, df, aux = _spec(pt, {"y_tick_rotation": 45})
+            r = render(sp, df, aux=aux)
+            ax = r.figure.axes[0]
+            lim = sorted(ax.get_ylim())
+            vis = [lb for tk, lb in zip(ax.get_yticks(), ax.get_yticklabels())
+                   if lb.get_text() and lim[0] - 1e-6 <= tk <= lim[1] + 1e-6]
+            plt.close(r.figure)
+            if not vis:
+                continue
+            checked += 1
+            if 45 not in {round(t.get_rotation()) for t in vis}:
+                failed += 1
+        except Exception:
+            continue
+    assert checked >= 25, f"only checked {checked} plots with y labels"
+    assert failed == 0, f"{failed}/{checked} plots ignored y_tick_rotation"
+
+
 @pytest.mark.parametrize("pt", ["grouped_barplot_with_error_bar", "volcano_plot",
                                 "scatterplot_with_regression", "roc_curve",
                                 "pca_scatter_from_matrix", "manhattan_plot"])

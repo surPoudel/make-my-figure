@@ -589,6 +589,36 @@ x_label = st.sidebar.text_input("X label (blank = auto)", value="")
 y_label = st.sidebar.text_input("Y label (blank = auto)", value="")
 column_width = st.sidebar.selectbox("Figure width", ["default", "single", "onehalf", "double"], index=0)
 dpi = st.sidebar.slider("Raster DPI (PNG/TIFF)", 150, 600, 300, step=50)
+# Shared layout controls (apply to every plot via the publication layout engine).
+with st.sidebar.expander("Axes & layout", expanded=False):
+    _xr = st.selectbox("X tick angle", ["auto", "0", "45", "90"], index=0)
+    _yr = st.selectbox("Y tick angle", ["auto", "0", "45", "90"], index=0)
+    _legloc = st.selectbox("Legend location",
+                           ["auto", "inside upper right", "inside upper left",
+                            "inside lower right", "inside lower left", "outside right",
+                            "outside left", "outside top", "outside bottom"], index=0)
+    _ml = st.slider("Left margin (0 = auto)", 0.0, 0.5, 0.0, step=0.02)
+    _mb = st.slider("Bottom margin (0 = auto)", 0.0, 0.5, 0.0, step=0.02)
+    _xpad = st.slider("X label padding", 0.0, 30.0, 0.0, step=1.0)
+    _ypad = st.slider("Y label padding", 0.0, 30.0, 0.0, step=1.0)
+    _autofix = st.checkbox("Auto-fix layout (prevent clipping)", value=False)
+_layout_controls = {}
+if _xr != "auto":
+    _layout_controls["x_tick_rotation"] = int(_xr)
+if _yr != "auto":
+    _layout_controls["y_tick_rotation"] = int(_yr)
+if _legloc != "auto":
+    _layout_controls["legend_location"] = _legloc
+if _ml > 0:
+    _layout_controls["margin_left"] = _ml
+if _mb > 0:
+    _layout_controls["margin_bottom"] = _mb
+if _xpad > 0:
+    _layout_controls["x_label_pad"] = _xpad
+if _ypad > 0:
+    _layout_controls["y_label_pad"] = _ypad
+if _autofix:
+    _layout_controls["auto_fix_layout"] = True
 
 # --- 6. Formatting (shares the core style engine with the desktop app) -------
 from make_my_figure_core.styles.engine import USER_PALETTES  # noqa: E402
@@ -664,7 +694,7 @@ with st.sidebar.expander("Statistical tests & annotations", expanded=False):
             "annotation": {"mode": ann_mode, "show_effect": show_effect},
         }
 
-layout = {}
+layout = dict(_layout_controls)   # shared tick/legend/margin controls
 if title:
     layout["title"] = title
 if x_label:

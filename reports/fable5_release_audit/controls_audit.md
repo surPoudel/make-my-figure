@@ -37,3 +37,13 @@ shared controls take effect, and cross-check the capability registry. Data:
 ## Remaining (not in this audit's scope)
 Interactive click-drag annotation UI; a dedicated clipping/overlap QC engine; the
 Publication-tab reorganization in the GUIs; per-plot y-tick-rotation where meaningful.
+
+## Y tick rotation (layout.y_tick_rotation) — follow-up audit
+- 37 plot types; 36 render y tick labels.
+- **36/36 honor y_tick_rotation** (0 failures) via the same central
+  `apply_publication_layout`. Data: `y_tick_rotation_audit.csv`.
+- Reachability: the shared layout controls (x/y tick rotation, legend location,
+  margins, label padding, auto-fix) are now surfaced in the **Streamlit** sidebar
+  "Axes & layout" expander. Surfacing the same set in the **desktop** style panel is a
+  parallel Qt task (not done in this session — engine support already exists, so a
+  PlotSpec with these keys works in the desktop app today).
