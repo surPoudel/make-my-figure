@@ -29,10 +29,14 @@ python -m apps.desktop_app.main
 Then in the browser:
 
 1. Pick a **bundled sample** or **upload** a CSV / TSV / XLSX.
-2. Review the table preview and any validation warnings.
-3. Choose a **plot type**, **style profile**, and **column mapping**.
-4. Preview the figure.
-5. Download **SVG / PNG / PDF** and the reproducible **PlotSpec JSON**.
+2. For a **multi-sheet Excel workbook**, pick a worksheet from the **Worksheet**
+   dropdown — every sheet is selectable, including notes/empty sheets. Switch sheets
+   any time without re-uploading. See [MULTI_SHEET_EXCEL.md](MULTI_SHEET_EXCEL.md).
+3. Review the table preview and any validation warnings.
+4. Choose a **plot type**, **style profile**, and **column mapping**.
+5. Preview the figure.
+6. Download **SVG / PNG / PDF** and the reproducible **PlotSpec JSON** (filenames
+   include the worksheet name).
 
 ## 3. Use the library from Python
 

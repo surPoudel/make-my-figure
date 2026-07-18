@@ -183,11 +183,15 @@ class MatrixWizardDialog(QDialog):
             return
         annotation = [c for c in self.data.info.columns
                       if c not in (feature_id, display) and c not in value_cols]
+        _prov = self.data.info.provenance() if getattr(self.data, "info", None) else {}
         self.matrix_spec = mw.MatrixSpec(
             source_file=self.data.table_name, feature_id_column=feature_id,
             feature_display_column=display, annotation_columns=annotation,
             value_columns=value_cols, value_type=self.vtype_combo.currentText(),
-            confirmed_by_user=True)
+            confirmed_by_user=True,
+            source_workbook=_prov.get("source_workbook_name"),
+            source_sheet=_prov.get("source_sheet_name"),
+            source_sheet_index=_prov.get("source_sheet_index"))
         self.diff_table = None
         self.map_note.setText(f"Confirmed: {len(value_cols)} value columns; "
                               f"{len(annotation)} annotation column(s).")

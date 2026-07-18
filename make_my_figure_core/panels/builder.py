@@ -257,6 +257,7 @@ def panel_from_dict(d: Dict[str, Any], assets_dir: Optional[str] = None) -> Pane
         label=d.get("label", ""), title=d.get("title", ""), caption=d.get("caption", ""),
         plot_spec=d.get("plot_spec"), stats_spec=d.get("stats_spec"),
         source_name=d.get("source_name", ""),
+        source_workbook=d.get("source_workbook", ""), source_sheet=d.get("source_sheet", ""),
         width_in=d.get("width_in"), height_in=d.get("height_in"),
         image_path=image_path, image_meta=d.get("image_meta", {}) or {},
         fit_mode=d.get("fit_mode", "contain"), preserve_aspect=d.get("preserve_aspect", True),

@@ -238,8 +238,14 @@ def make_spec(
     layout: Optional[Dict[str, Any]] = None,
     statistics: Optional[Dict[str, Any]] = None,
     output: Optional[Dict[str, Any]] = None,
+    source: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
-    """Build a PlotSpec dict with sensible defaults filled in."""
+    """Build a PlotSpec dict with sensible defaults filled in.
+
+    ``source`` is an optional worksheet-provenance block (see
+    ``TableInfo.provenance``); it is recorded on the spec and mirrored into the
+    statistics block so every sidecar stays worksheet-aware.
+    """
     spec: Dict[str, Any] = {
         "plot_type": plot_type,
         "input_table": input_table,
@@ -251,6 +257,10 @@ def make_spec(
         spec["layout"] = layout
     if statistics:
         spec["statistics"] = statistics
+    if source:
+        spec["source"] = dict(source)
+        if isinstance(spec.get("statistics"), dict):
+            spec["statistics"].setdefault("source", dict(source))
     return spec
 
 

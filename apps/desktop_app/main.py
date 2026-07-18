@@ -116,6 +116,7 @@ _MATRIX_PLOT_TYPES = {
     "hierarchical_dendrogram",
 }
 from make_my_figure_core.io.loaders import LoaderError
+from make_my_figure_core.io import workbook as workbook_io
 from make_my_figure_core.plots.base import RenderError
 from make_my_figure_core.plots.registry import display_name
 from make_my_figure_core.spec.validate import SpecValidationError
@@ -417,6 +418,24 @@ class MainWindow(QMainWindow):
         self.matrix_btn.clicked.connect(self.action_matrix_wizard)
         nav_row.addWidget(self.matrix_btn)
         cv.addLayout(nav_row)
+
+        # Worksheet selector — shown only for multi-sheet Excel workbooks. Every
+        # worksheet is listed (notes/empty/hidden included); classification is
+        # advisory. Switching sheets reloads that sheet and clears stale state.
+        self.sheet_box = QGroupBox("\U0001F4D1  Worksheet")
+        _sbl = QVBoxLayout(self.sheet_box)
+        self.sheet_combo = QComboBox()
+        self.sheet_combo.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        self.sheet_combo.setToolTip("Choose any worksheet in the uploaded workbook.")
+        self.sheet_combo.currentIndexChanged.connect(self._on_sheet_changed)
+        _sbl.addWidget(self.sheet_combo)
+        self.sheet_info_label = QLabel("")
+        self.sheet_info_label.setWordWrap(True)
+        self.sheet_info_label.setStyleSheet("color:#345; font-size:11px;")
+        _sbl.addWidget(self.sheet_info_label)
+        self.sheet_box.setVisible(False)
+        self._current_workbook_id = None
+        cv.addWidget(self.sheet_box)
 
         self.plot_combo = QComboBox()
         # A no-plot placeholder so uploading data does not immediately draw a chart;
@@ -1119,9 +1138,10 @@ class MainWindow(QMainWindow):
         self._drag_label = None
         self._pending_column_annotations = None
         self.stack.setCurrentIndex(1)
+        self._populate_sheet_selector(data)
         self._populate_table()
         self._rebuild_mapping_and_options()
-        self.statusBar().showMessage(f"Loaded {data.table_name} — runs locally.")
+        self.statusBar().showMessage(self._source_status(data))
         self.render_preview()
         if getattr(self, "_auto_recommend", True):
             self._refresh_recommendations()
@@ -1130,6 +1150,74 @@ class MainWindow(QMainWindow):
         self._data_before_transform = None
         if hasattr(self, "revert_btn"):
             self.revert_btn.setVisible(False)
+
+    def _source_status(self, data: LoadedData) -> str:
+        """Status-bar text showing workbook + worksheet when applicable."""
+        if data and data.is_workbook and data.sheet_name:
+            wb = data.workbook.source_filename
+            return (f"Workbook: {wb}  ·  Worksheet: {data.sheet_name} — runs locally.")
+        return f"Loaded {data.table_name} — runs locally."
+
+    def _populate_sheet_selector(self, data: LoadedData) -> None:
+        """Show/refresh the worksheet dropdown for a multi-sheet Excel workbook."""
+        if not (data and data.is_workbook):
+            self.sheet_box.setVisible(False)
+            self._current_workbook_id = None
+            return
+        wbk = data.workbook
+        prev = self._suppress_change
+        self._suppress_change = True
+        try:
+            if self._current_workbook_id != wbk.file_hash:
+                # New workbook: rebuild the dropdown (all sheets, workbook order).
+                self.sheet_combo.clear()
+                for name in wbk.sheet_names:
+                    label = f"{name}  (hidden)" if wbk.is_hidden(name) else name
+                    self.sheet_combo.addItem(label, name)
+                    i = self.sheet_combo.count() - 1
+                    self.sheet_combo.setItemData(i, name, Qt.ToolTipRole)  # full name
+                self._current_workbook_id = wbk.file_hash
+            idx = self.sheet_combo.findData(data.sheet_name)
+            if idx >= 0:
+                self.sheet_combo.setCurrentIndex(idx)
+        finally:
+            self._suppress_change = prev
+        stype = data.info.source_sheet_type or "unknown"
+        self.sheet_info_label.setText(
+            f"{wbk.n_sheets} worksheet(s). Detected type: {stype}. "
+            f"{data.info.n_rows} rows × {len(data.info.columns)} cols. "
+            "Every sheet is selectable; classification is advisory.")
+        self.sheet_box.setVisible(True)
+
+    def _on_sheet_changed(self, _idx: int) -> None:
+        """Load a newly selected worksheet, clearing stale mapping/plot/stats."""
+        if self._suppress_change or not (self.data and self.data.is_workbook):
+            return
+        sheet = self.sheet_combo.currentData()
+        if not sheet or sheet == self.data.sheet_name:
+            return
+        try:
+            new_data = self.controller.load_workbook_sheet(
+                self.data.workbook, sheet, source=self.data.source_path)
+        except LoaderError as exc:
+            # Empty/malformed sheet stays selectable but cannot be plotted.
+            self.sheet_info_label.setText(
+                f"Worksheet '{sheet}': {exc}\nPlotting disabled — pick another worksheet.")
+            self.statusBar().showMessage(f"{sheet}: cannot plot this worksheet.")
+            return
+        # Reset the plot type to the placeholder so a stale plot/mapping is cleared.
+        prev = self._suppress_change
+        self._suppress_change = True
+        try:
+            self.plot_combo.setCurrentIndex(0)
+        finally:
+            self._suppress_change = prev
+        if hasattr(self, "stats_panel") and hasattr(self.stats_panel, "reset"):
+            try:
+                self.stats_panel.reset()
+            except Exception:
+                pass
+        self._set_data(new_data)
 
     def _mark_reshaped(self, original: "LoadedData | None") -> None:
         """Remember the pre-reshape data and show the Revert button."""
@@ -1481,6 +1569,10 @@ class MainWindow(QMainWindow):
         self.data = None
         self._current_spec = None
         self._current_result = None
+        # Drop multi-sheet workbook context so a new upload starts clean.
+        self._current_workbook_id = None
+        if hasattr(self, "sheet_box"):
+            self.sheet_box.setVisible(False)
         self._clear_figure(show_placeholder=True)
         if hasattr(self, "stats_panel"):
             self.stats_panel.show_report(None)
@@ -1901,7 +1993,7 @@ class MainWindow(QMainWindow):
         spec = self.controller.build_spec(
             pt, style, self.data.table_name, mapping,
             layout=layout, width=self.width_combo.currentText(), dpi=self.dpi_spin.value(),
-            statistics=stats_spec)
+            statistics=stats_spec, source=self.data.source_provenance() or None)
         overrides = self._collect_style_overrides()
         if overrides:
             spec["style"] = overrides
@@ -2310,13 +2402,21 @@ class MainWindow(QMainWindow):
             return False
         return True
 
+    def _export_basename(self, pt: str) -> str:
+        """Default export stem — sheet-aware so per-worksheet exports never collide."""
+        prov = self.data.info.provenance() if (self.data and self.data.info) else {}
+        wb_name = prov.get("source_workbook_name") or (
+            self.data.table_name if self.data else "figure")
+        return workbook_io.output_basename(wb_name, prov.get("source_sheet_name"), pt)
+
     def export_single(self, fmt: str):
         if not self._ensure_rendered():
             return
         pt = self.plot_combo.currentData()
+        stem = self._export_basename(pt)
         if fmt == "json":
             dest, _ = QFileDialog.getSaveFileName(self, "Export PlotSpec JSON",
-                                                  f"{pt}.plot_spec.json", "JSON (*.json)")
+                                                  f"{stem}.plot_spec.json", "JSON (*.json)")
             if not dest:
                 return
             import json
@@ -2329,7 +2429,7 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage(f"Saved {dest}")
             return
         dest, _ = QFileDialog.getSaveFileName(self, f"Export {fmt.upper()}",
-                                              f"{pt}.{fmt}", f"{fmt.upper()} (*.{fmt})")
+                                              f"{stem}.{fmt}", f"{fmt.upper()} (*.{fmt})")
         if not dest:
             return
         base = os.path.splitext(dest)[0]
@@ -2345,14 +2445,15 @@ class MainWindow(QMainWindow):
         if not self._ensure_rendered():
             return
         pt = self.plot_combo.currentData()
+        stem = self._export_basename(pt)
         dest, _ = QFileDialog.getSaveFileName(self, "Export all as ZIP",
-                                              f"{pt}_figure_bundle.zip", "ZIP (*.zip)")
+                                              f"{stem}_bundle.zip", "ZIP (*.zip)")
         if not dest:
             return
         try:
             data = self.controller.export_bundle(
                 self._current_spec, self._current_result,
-                ["svg", "png", "pdf"], dpi=self.dpi_spin.value(), basename=pt)
+                ["svg", "png", "pdf"], dpi=self.dpi_spin.value(), basename=stem)
             with open(dest, "wb") as fh:
                 fh.write(data)
             self.statusBar().showMessage(f"Saved bundle {dest}")

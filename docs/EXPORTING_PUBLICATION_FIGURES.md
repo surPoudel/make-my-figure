@@ -4,6 +4,12 @@ Make My Figure exports **SVG, PDF, PNG, and a PlotSpec JSON** sidecar. Every plo
 is publication-styled by default (readable fonts, strong contrast, clean axes,
 non-overlapping legends).
 
+> **Worksheet-aware names:** when the data comes from a multi-sheet Excel workbook,
+> export filenames include the worksheet name (e.g. `Sol_24M_vs_6M_volcano.svg`) so
+> outputs from different sheets never overwrite each other, and the PlotSpec/StatsSpec
+> sidecars record the workbook + worksheet provenance. See
+> [MULTI_SHEET_EXCEL.md](MULTI_SHEET_EXCEL.md).
+
 ## Which format to use
 
 | Format | Use for | Notes |

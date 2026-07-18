@@ -32,6 +32,7 @@ if _REPO_ROOT not in sys.path:
 import streamlit as st
 
 from make_my_figure_core.io.loaders import LoaderError, load_table
+from make_my_figure_core.io import workbook as workbook_io
 from make_my_figure_core.plots.base import RenderError
 from make_my_figure_core.plots.registry import (
     available_plot_types,
@@ -113,6 +114,24 @@ if st.sidebar.button("🏠 Reset / Upload new data", use_container_width=True,
     for _k in list(st.session_state.keys()):
         del st.session_state[_k]
     st.rerun()
+
+def _clear_sheet_dependent_state():
+    """Drop state tied to a previously selected worksheet/workbook.
+
+    Switching worksheets (or uploading a different workbook) must not silently
+    reuse another sheet's column mappings, value-column picks, annotation offsets,
+    matrix-workflow state, grouped/derived tables, or a stale plot-type choice.
+    The Streamlit plot is recomputed every rerun, so clearing this state is what
+    makes the switch clean.
+    """
+    prefixes = ("map_", "valcols_", "annot_", "mw_", "grp_")
+    drop = [k for k in st.session_state if str(k).startswith(prefixes)]
+    for k in ("_grouped_df", "_grouped_name", "rec_plot_type", "data_editor"):
+        if k in st.session_state:
+            drop.append(k)
+    for k in drop:
+        st.session_state.pop(k, None)
+
 
 st.sidebar.divider()
 # Build/version indicator: lets a user confirm they run the freshly-pulled code
@@ -201,17 +220,85 @@ else:
     # No auto-selected plot on upload — start on the placeholder (parity with desktop;
     # do not silently default to the first/bar plot).
     default_plot_type = None
+    _empty_sheet_selected = False
     if uploaded is not None:
-        try:
-            data = uploaded.getvalue()
-            table_info = load_table(data, source_name=uploaded.name)
-            table_name = uploaded.name
-        except LoaderError as exc:
-            st.sidebar.error(f"Could not load file: {exc}")
+        raw = uploaded.getvalue()
+        if workbook_io.is_excel_source(uploaded.name):
+            # --- Multi-sheet workbook browser -------------------------------
+            try:
+                wbk = workbook_io.inspect_excel_workbook(raw, source_name=uploaded.name)
+            except LoaderError as exc:
+                st.sidebar.error(f"Could not open workbook: {exc}")
+                st.stop()
+            # A different workbook clears everything sheet-dependent.
+            if st.session_state.get("_wb_hash") != wbk.file_hash:
+                _clear_sheet_dependent_state()
+                st.session_state["_wb_hash"] = wbk.file_hash
+                st.session_state.pop("_wb_sheet", None)
+                st.session_state.pop("_wb_active_sheet", None)
+            for _w in wbk.warnings:
+                st.sidebar.caption("⚠ " + _w)
+            st.sidebar.subheader("📑 Worksheet")
+            st.sidebar.caption(f"{wbk.n_sheets} worksheet(s) — every sheet is "
+                               "selectable, including notes/empty sheets.")
+
+            def _sheet_label(name):
+                return f"{name} (hidden)" if wbk.is_hidden(name) else name
+
+            # Dropdown keeps workbook order, full names, Unicode; persists in session.
+            sheet = st.sidebar.selectbox(
+                "Worksheet", options=wbk.sheet_names, key="_wb_sheet",
+                format_func=_sheet_label,
+                help="Choose any worksheet. Documentation/empty sheets stay "
+                     "selectable; classification is advisory only.")
+            # Switching worksheets clears stale mappings/stats/derived tables.
+            if st.session_state.get("_wb_active_sheet") != sheet:
+                _clear_sheet_dependent_state()
+                st.session_state["_wb_active_sheet"] = sheet
+            prev = workbook_io.preview_excel_sheet(wbk, sheet, source=raw)
+            st.sidebar.caption(prev.type_message)
+            for _w in prev.warnings:
+                st.sidebar.caption("• " + _w)
+            if prev.is_empty:
+                # Empty sheet: selectable + previewable, but plotting disabled.
+                _empty_sheet_selected = True
+                st.subheader("Workbook browser")
+                st.info(f"**Workbook:** {uploaded.name}  \n**Worksheet:** {sheet}")
+                st.warning("This worksheet is empty. Plotting is disabled — pick "
+                           "another worksheet from the dropdown.")
+                st.stop()
+            try:
+                table_info = workbook_io.load_excel_sheet(wbk, sheet, source=raw)
+                table_name = f"{uploaded.name} [{sheet}]"
+            except LoaderError as exc:
+                st.sidebar.error(f"Could not load worksheet '{sheet}': {exc}")
+                st.stop()
+        else:
+            # Delimited text: clear stale workbook state if the file changed.
+            _h = workbook_io.compute_file_hash(raw)
+            if st.session_state.get("_wb_hash") != _h:
+                _clear_sheet_dependent_state()
+                st.session_state["_wb_hash"] = _h
+                st.session_state.pop("_wb_active_sheet", None)
+            try:
+                table_info = load_table(raw, source_name=uploaded.name)
+                table_name = uploaded.name
+            except LoaderError as exc:
+                st.sidebar.error(f"Could not load file: {exc}")
 
 if table_info is None:
     st.info("Choose a bundled sample or upload a data file to begin.")
     st.stop()
+
+# --- Active-source summary (worksheet-aware) --------------------------------
+_prov = table_info.provenance() if table_info is not None else {}
+if _prov.get("source_sheet_name"):
+    _stype = _prov.get("source_sheet_type", "unknown")
+    st.caption(
+        f"**Workbook:** {_prov.get('source_workbook_name')}  ·  "
+        f"**Worksheet:** {_prov.get('source_sheet_name')}  ·  "
+        f"**Detected type:** {_stype}  ·  "
+        f"**Rows × columns:** {table_info.n_rows} × {len(table_info.columns)}")
 
 # --- Workflow mode ----------------------------------------------------------
 # "Quick plot" is the classic single-plot flow below. "Matrix workflow (guided)"
@@ -224,6 +311,8 @@ workflow_mode = st.sidebar.radio(
          "recommendations, and generate publication plots.")
 if workflow_mode.startswith("Matrix"):
     from apps.streamlit_app.matrix_wizard import render_matrix_wizard
+    # Stash worksheet provenance so matrix-workflow exports stay sheet-aware.
+    st.session_state["_mw_source_prov"] = _prov or None
     render_matrix_wizard(table_info.dataframe, table_name)
     st.stop()
 
@@ -747,6 +836,7 @@ if y_label:
 style = load_profile(journal_style)
 w_mm = style.figure_size_inches(column_width)[0] * 25.4
 
+_source_prov = table_info.provenance() or None   # worksheet provenance (Excel)
 spec = make_spec(
     plot_type,
     table_name,
@@ -754,11 +844,14 @@ spec = make_spec(
     mapping=mapping,
     layout=layout or None,
     output=default_output_block(["svg", "png", "pdf"], width_mm=w_mm, dpi=dpi),
+    source=_source_prov,
 )
 spec["layout"] = {**spec.get("layout", {}), "column_width": column_width}
 spec["style"] = style_overrides
 if stats_spec.get("enabled"):
     spec["statistics"] = stats_spec
+    if _source_prov:
+        spec["statistics"].setdefault("source", dict(_source_prov))
 
 
 # --- Render + preview -------------------------------------------------------
@@ -817,7 +910,7 @@ try:
         st.download_button(
             "StatsSpec JSON",
             json.dumps(_ssp(spec.get("statistics", {}), stats_report), indent=2).encode("utf-8"),
-            file_name=f"{os.path.splitext(table_name)[0]}_{plot_type}.stats_spec.json",
+            file_name=f"{workbook_io.output_basename(_prov.get('source_workbook_name') or table_name, _prov.get('source_sheet_name'), plot_type)}.stats_spec.json",
             mime="application/json",
         )
     elif stats_spec.get("enabled"):
@@ -838,7 +931,11 @@ try:
         fig.savefig(buf, **save_kwargs)
         return buf.getvalue()
 
-    base = os.path.splitext(table_name)[0] + f"_{plot_type}"
+    # Sheet-aware base name so exports from different worksheets never collide
+    # (e.g. Sol_24M_vs_6M_volcano vs Gas_24M_vs_6M_volcano).
+    base = workbook_io.output_basename(
+        _prov.get("source_workbook_name") or table_name,
+        _prov.get("source_sheet_name"), plot_type)
     c1, c2, c3, c4 = st.columns(4)
     c1.download_button("SVG", _fig_bytes("svg"), file_name=f"{base}.svg", mime="image/svg+xml")
     c2.download_button("PNG", _fig_bytes("png"), file_name=f"{base}.png", mime="image/png")

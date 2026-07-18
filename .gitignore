@@ -61,3 +61,9 @@ figure_library/**/figures/*.png
 figure_library/**/figures/*.gif
 figure_library/**/supplementary/*
 figure_library/**/full_text/*
+
+# Private user workbooks / uploads dropped at the repo root (never commit real data).
+# Synthetic test fixtures live under examples/ and are committed explicitly.
+/*.xlsx
+/*.xls
+/*.xlsm

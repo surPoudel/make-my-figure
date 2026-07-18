@@ -26,7 +26,13 @@ class LoaderError(Exception):
 
 @dataclass
 class TableInfo:
-    """A loaded table plus the metadata the app needs to validate mappings."""
+    """A loaded table plus the metadata the app needs to validate mappings.
+
+    For a table read from a specific worksheet of a multi-sheet Excel workbook the
+    ``source_*`` provenance fields record where the data came from so that specs,
+    exports, and output filenames can stay worksheet-aware. They are ``None`` for
+    CSV/TSV/single-table sources (backward compatible).
+    """
 
     dataframe: pd.DataFrame
     source_name: str
@@ -35,6 +41,13 @@ class TableInfo:
     categorical_columns: List[str] = field(default_factory=list)
     missing_value_counts: Dict[str, int] = field(default_factory=dict)
     warnings: List[str] = field(default_factory=list)
+    # Worksheet provenance (populated by the workbook loader; None otherwise).
+    source_workbook_name: Optional[str] = None
+    source_workbook_hash: Optional[str] = None
+    source_sheet_name: Optional[str] = None
+    source_sheet_index: Optional[int] = None
+    source_sheet_type: Optional[str] = None
+    source_header_row: Optional[int] = None
 
     @property
     def columns(self) -> List[str]:
@@ -44,8 +57,23 @@ class TableInfo:
     def n_rows(self) -> int:
         return int(len(self.dataframe))
 
+    def provenance(self) -> Dict[str, Any]:
+        """Worksheet-source provenance for embedding in specs/sidecars.
+
+        Only non-null fields are included so CSV/single-table sources add nothing.
+        """
+        prov = {
+            "source_workbook_name": self.source_workbook_name,
+            "source_workbook_hash": self.source_workbook_hash,
+            "source_sheet_name": self.source_sheet_name,
+            "source_sheet_index": self.source_sheet_index,
+            "source_sheet_type": self.source_sheet_type,
+            "source_header_row": self.source_header_row,
+        }
+        return {k: v for k, v in prov.items() if v is not None}
+
     def summary(self) -> Dict[str, Any]:
-        return {
+        out = {
             "source_name": self.source_name,
             "delimiter": self.delimiter,
             "n_rows": self.n_rows,
@@ -56,6 +84,10 @@ class TableInfo:
             "missing_value_counts": self.missing_value_counts,
             "warnings": self.warnings,
         }
+        prov = self.provenance()
+        if prov:
+            out["provenance"] = prov
+        return out
 
 
 # Column names that look like identifiers should stay textual even when their
@@ -186,18 +218,23 @@ def _read_delimited(buffer: Union[str, bytes], source_name: str, ext: str) -> Ta
     return _post_process(df, source_name, delimiter)
 
 
-def _read_excel(source: Union[str, BinaryIO], source_name: str, sheet_name: Optional[Union[str, int]]) -> TableInfo:
+def _read_excel(
+    source: Union[str, BinaryIO],
+    source_name: str,
+    sheet_name: Optional[Union[str, int]],
+    header: Union[int, None] = 0,
+) -> TableInfo:
+    sel = sheet_name if sheet_name is not None else 0
     try:
         # Read once to discover columns, then re-read forcing ID columns to str.
-        probe = pd.read_excel(source, sheet_name=sheet_name if sheet_name is not None else 0, nrows=0)
-        if hasattr(source, "seek"):
-            source.seek(0)
-        dtype = _id_dtype_overrides(list(probe.columns))
-        df = pd.read_excel(
-            source,
-            sheet_name=sheet_name if sheet_name is not None else 0,
-            dtype=dtype,
-        )
+        if header is None:
+            df = pd.read_excel(source, sheet_name=sel, header=None)
+        else:
+            probe = pd.read_excel(source, sheet_name=sel, header=header, nrows=0)
+            if hasattr(source, "seek"):
+                source.seek(0)
+            dtype = _id_dtype_overrides(list(probe.columns))
+            df = pd.read_excel(source, sheet_name=sel, header=header, dtype=dtype)
     except Exception as exc:
         raise LoaderError(f"Failed to read Excel file '{source_name}': {exc}") from exc
 
@@ -205,6 +242,9 @@ def _read_excel(source: Union[str, BinaryIO], source_name: str, sheet_name: Opti
         raise LoaderError(
             f"'{source_name}' returned multiple sheets; pass sheet_name to choose one of {list(df.keys())}."
         )
+    if header is None:
+        # No-header read: give columns stable positional names so mapping works.
+        df.columns = [f"column_{i + 1}" for i in range(df.shape[1])]
     return _post_process(df, source_name, delimiter=None)
 
 
@@ -214,6 +254,7 @@ def load_table(
     source_name: Optional[str] = None,
     file_type: Optional[str] = None,
     sheet_name: Optional[Union[str, int]] = None,
+    header: Union[int, None] = 0,
 ) -> TableInfo:
     """Load a CSV/TSV/XLSX table into a :class:`TableInfo`.
 

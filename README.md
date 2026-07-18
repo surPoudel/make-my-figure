@@ -59,6 +59,9 @@ quickly and reproducibly**, with sensible defaults and full control when they ne
 
 **A. Table → plot.** Upload data → choose a plot → map columns (suggested, you confirm)
 → preview → adjust Publication settings → export PNG/SVG/PDF plus a PlotSpec JSON.
+Multi-sheet Excel workbooks show a **Worksheet** dropdown (every sheet selectable —
+notes/empty included); the selected sheet drives everything and exports are named per
+worksheet. See [docs/MULTI_SHEET_EXCEL.md](docs/MULTI_SHEET_EXCEL.md).
 
 **B. Matrix workflow.** Upload a feature-by-sample matrix → explicitly map feature /
 annotation / sample-value columns → upload or build sample metadata → validate groups →
@@ -236,6 +239,7 @@ platforms — see [docs/CROSS_PLATFORM_QC.md](docs/CROSS_PLATFORM_QC.md). (If th
 ## 14. Documentation
 
 - [Quickstart](docs/QUICKSTART.md)
+- [Multi-sheet Excel workbooks](docs/MULTI_SHEET_EXCEL.md)
 - [Matrix workflow](docs/MATRIX_WORKFLOW.md)
 - [Raw-like QC & preprocessing](docs/PREPROCESSING_QC.md) ·
   [Normalization methods](docs/NORMALIZATION_METHODS.md) ·

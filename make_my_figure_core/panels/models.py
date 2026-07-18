@@ -40,6 +40,8 @@ class Panel:
     aux: Dict[str, Any] = field(default_factory=dict)
     stats_spec: Optional[Dict[str, Any]] = None
     source_name: str = ""                    # provenance label (file / example name)
+    source_workbook: str = ""                # workbook filename (multi-sheet Excel)
+    source_sheet: str = ""                   # worksheet name (multi-sheet Excel)
     # Approximate rendered size in inches (width x height). ``None`` means
     # "auto": the width falls back to an even share of the figure width and the
     # height follows the panel's own aspect ratio. The panel is always drawn
@@ -85,6 +87,8 @@ class Panel:
             "plot_spec": self.plot_spec,
             "stats_spec": self.stats_spec or (self.plot_spec or {}).get("statistics"),
             "source_name": self.source_name,
+            "source_workbook": self.source_workbook or (self.plot_spec or {}).get("source", {}).get("source_workbook_name", ""),
+            "source_sheet": self.source_sheet or (self.plot_spec or {}).get("source", {}).get("source_sheet_name", ""),
             "width_in": self.width_in,
             "height_in": self.height_in,
             "has_prerendered_figure": self.figure is not None,

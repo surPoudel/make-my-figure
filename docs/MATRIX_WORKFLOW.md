@@ -5,6 +5,11 @@ numeric feature matrix) into publication-ready figures — with **no silent
 guessing**. You confirm every column role and every group before anything is
 plotted or analysed.
 
+> **Multi-sheet Excel:** if your matrix lives in one worksheet of a workbook, select
+> that sheet first (see [MULTI_SHEET_EXCEL.md](MULTI_SHEET_EXCEL.md)). The selected
+> worksheet drives the wizard, its provenance is stored on the MatrixSpec, and you may
+> supply sample metadata from another worksheet or an external file.
+
 > **Optional preprocessing/QC step (raw-like matrices).** Between "define groups"
 > and "recommend plots", both apps offer an optional preprocessing step
 > (Streamlit **🧪 Preprocess (raw-like)**; desktop **③ Preprocess (raw-like)** tab):

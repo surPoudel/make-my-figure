@@ -276,7 +276,8 @@ def _render_qc_plot(kind: str, df: pd.DataFrame, spec: mw.MatrixSpec, meta) -> N
     try:
         pi = mw.qc_plot_inputs(kind, df, spec, metadata=meta)
         ps = make_spec(pi.plot_type, spec.source_file or "matrix", "publication",
-                       mapping=pi.mapping)
+                       mapping=pi.mapping,
+                       source=st.session_state.get("_mw_source_prov"))
         for k, v in (pi.spec_extra or {}).items():
             ps[k] = v
         result = render(ps, pi.dataframe, aux=pi.aux or None)
@@ -419,7 +420,8 @@ def _generate_section(df: pd.DataFrame, spec: mw.MatrixSpec, meta, rec) -> None:
         return
     for w in pi.warnings:
         st.caption(f"• {w}")
-    ps = make_spec(pi.plot_type, spec.source_file or "matrix", "publication", mapping=pi.mapping)
+    ps = make_spec(pi.plot_type, spec.source_file or "matrix", "publication", mapping=pi.mapping,
+                   source=st.session_state.get("_mw_source_prov"))
     for _k, _v in (pi.spec_extra or {}).items():   # e.g. column_annotations (group strip)
         ps[_k] = _v
     ps["style"] = _style_controls()   # Publication style controls (colors/fonts/sizes)

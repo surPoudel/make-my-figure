@@ -21,6 +21,7 @@ from make_my_figure_core.io.loaders import (
     load_table,
     table_info_from_dataframe,
 )
+from make_my_figure_core.io import workbook as workbook_io
 from make_my_figure_core.plots.base import RenderError
 from make_my_figure_core.plots.registry import (
     available_plot_types,
@@ -54,6 +55,17 @@ class LoadedData:
     aux: Dict[str, TableInfo] = field(default_factory=dict)
     source_path: Optional[str] = None
     is_example: bool = False   # True for bundled examples, False for user uploads
+    # Multi-sheet Excel context (None for CSV/TSV/single-table/example sources).
+    workbook: Optional["workbook_io.WorkbookInfo"] = None
+    sheet_name: Optional[str] = None
+
+    @property
+    def is_workbook(self) -> bool:
+        return self.workbook is not None and self.workbook.n_sheets > 0
+
+    def source_provenance(self) -> Dict[str, Any]:
+        """Worksheet provenance dict for embedding in specs (empty if none)."""
+        return self.info.provenance() if self.info is not None else {}
 
 
 class DesktopController:
@@ -84,10 +96,49 @@ class DesktopController:
         return list(ui_hints.PCA_METADATA_FIELDS)
 
     # --- data loading ----------------------------------------------------
-    def load_file(self, path: str) -> LoadedData:
-        """Load a user file with friendly errors raised as ``LoaderError``."""
+    @staticmethod
+    def is_excel_path(path: str) -> bool:
+        return workbook_io.is_excel_source(path)
+
+    def load_file(self, path: str, *, sheet_name: Optional[str] = None) -> LoadedData:
+        """Load a user file with friendly errors raised as ``LoaderError``.
+
+        For a multi-sheet Excel workbook this loads the requested sheet (or the
+        first worksheet for preview when ``sheet_name`` is None) and attaches the
+        :class:`WorkbookInfo` so the GUI can offer a worksheet dropdown. The
+        selected worksheet's provenance is recorded on ``info``.
+        """
+        if self.is_excel_path(path):
+            wbk = workbook_io.inspect_excel_workbook(path)
+            chosen = sheet_name or wbk.active_sheet or wbk.sheet_names[0]
+            data = self._load_sheet(wbk, chosen, source=path)
+            data.source_path = path
+            return data
         info = load_table(path)
         return LoadedData(info=info, table_name=os.path.basename(path), source_path=path)
+
+    # --- multi-sheet Excel workbook -------------------------------------
+    def inspect_workbook(self, source, source_name: Optional[str] = None):
+        """List every worksheet (in order) without fully loading the data."""
+        return workbook_io.inspect_excel_workbook(source, source_name=source_name)
+
+    def preview_sheet(self, workbook, sheet_name: str, *, source=None, header=0):
+        """Cheap preview + advisory classification for one worksheet."""
+        return workbook_io.preview_excel_sheet(
+            workbook, sheet_name, source=source, header=header)
+
+    def load_workbook_sheet(self, workbook, sheet_name: str, *, source=None,
+                            header=0) -> LoadedData:
+        """Fully load a selected worksheet into a :class:`LoadedData` with provenance."""
+        return self._load_sheet(workbook, sheet_name, source=source, header=header)
+
+    def _load_sheet(self, workbook, sheet_name: str, *, source=None,
+                    header=0) -> LoadedData:
+        info = workbook_io.load_excel_sheet(
+            workbook, sheet_name, source=source, header=header)
+        table_name = f"{workbook.source_filename} [{sheet_name}]"
+        return LoadedData(info=info, table_name=table_name,
+                          workbook=workbook, sheet_name=sheet_name)
 
     def load_example(self, plot_type: str) -> LoadedData:
         """Load the bundled example for ``plot_type``.
@@ -256,6 +307,7 @@ class DesktopController:
         dpi: int = 300,
         formats: Optional[List[str]] = None,
         statistics: Optional[Dict[str, Any]] = None,
+        source: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         style = load_profile(style_name)
         w_mm = style.double_column_width_mm if width == "double" else style.single_column_width_mm
@@ -273,6 +325,11 @@ class DesktopController:
             from make_my_figure_core.statistics import normalize_stats_spec
 
             spec["statistics"] = normalize_stats_spec(statistics)
+        # Worksheet provenance (Excel workbook + sheet); None for CSV/single-table.
+        if source:
+            spec["source"] = dict(source)
+            if isinstance(spec.get("statistics"), dict):
+                spec["statistics"].setdefault("source", dict(source))
         return spec
 
     # --- statistics ------------------------------------------------------
@@ -511,7 +568,8 @@ class DesktopController:
                                   differential_table=differential_table,
                                   selected_features=selected_features, params=params)
         spec = make_spec(pi.plot_type, matrix_spec.source_file or data.table_name,
-                         "publication", mapping=pi.mapping)
+                         "publication", mapping=pi.mapping,
+                         source=data.source_provenance() or None)
         for k, v in (pi.spec_extra or {}).items():   # e.g. column_annotations (group strip)
             spec[k] = v
         if style_overrides:
@@ -521,16 +579,30 @@ class DesktopController:
         return spec, result, pi
 
     # --- raw-like matrix preprocessing / QC (GUI-free; the wizard is a thin layer) ---
-    def matrix_metadata_suggest_from_file(self, path: str, value_columns):
+    def metadata_file_sheets(self, path: str) -> List[str]:
+        """Worksheet names for an Excel metadata file (empty list for CSV/TSV)."""
+        if self.is_excel_path(path):
+            return workbook_io.list_excel_sheets(path)
+        return []
+
+    def matrix_metadata_suggest_from_file(self, path: str, value_columns, *,
+                                          sheet_name: Optional[str] = None):
         """Read a metadata table (CSV/TSV/XLSX) and suggest an (unconfirmed)
         sample->group mapping matched to the matrix value columns.
 
-        Returns ``(SampleMetadataSpec, info)`` where ``info`` summarizes the match
+        For an Excel metadata file, ``sheet_name`` selects the worksheet (a
+        metadata sheet from the same or another workbook). Returns
+        ``(SampleMetadataSpec, info)`` where ``info`` summarizes the match
         (columns used, matched / missing / extra samples) for the UI to display. The
         user confirms in the groups table — nothing is applied silently."""
         import make_my_figure_core.matrix_workflow as mw
 
-        info = load_table(path)                       # friendly LoaderError on failure
+        if self.is_excel_path(path):
+            wbk = workbook_io.inspect_excel_workbook(path)
+            chosen = sheet_name or wbk.active_sheet or wbk.sheet_names[0]
+            info = workbook_io.load_excel_sheet(wbk, chosen, source=path)
+        else:
+            info = load_table(path)                   # friendly LoaderError on failure
         meta_df = info.dataframe
         vcols = [str(c) for c in value_columns]
         spec = mw.suggest_metadata_from_table(meta_df, vcols)

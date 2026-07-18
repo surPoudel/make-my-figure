@@ -38,6 +38,18 @@
     "statistics": {
       "type": "object"
     },
+    "source": {
+      "type": "object",
+      "description": "Optional worksheet provenance when the data came from a multi-sheet Excel workbook (workbook name/hash, sheet name/index/type, header row). Absent for CSV/TSV/single-table sources.",
+      "properties": {
+        "source_workbook_name": {"type": "string"},
+        "source_workbook_hash": {"type": "string"},
+        "source_sheet_name": {"type": "string"},
+        "source_sheet_index": {"type": "integer"},
+        "source_sheet_type": {"type": "string"},
+        "source_header_row": {"type": ["integer", "null"]}
+      }
+    },
     "journal_style": {
       "type": "string"
     },

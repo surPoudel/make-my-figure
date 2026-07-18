@@ -4,6 +4,10 @@
 **generic per-feature comparison** between user-defined groups on a *normalized*
 feature matrix.
 
+> **Multi-sheet Excel:** statistics run only on the selected worksheet, and the
+> resulting StatsSpec records the worksheet provenance (workbook + sheet). Switching
+> worksheets clears stale statistics. See [MULTI_SHEET_EXCEL.md](MULTI_SHEET_EXCEL.md).
+
 > **Preprocessing provenance.** When the input is a **derived** (preprocessed)
 > matrix, pass `preprocessing_note` (the `PreprocessingSpec.method_sentence()`),
 > `source_matrix_id`, and `preprocessing_spec_id`. Both apps do this automatically

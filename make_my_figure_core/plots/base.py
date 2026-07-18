@@ -430,7 +430,7 @@ def base_metadata(spec: Dict[str, Any], style: StyleProfile, df: pd.DataFrame,
                   *, used_columns: List[str]) -> Dict[str, Any]:
     """Construct the common metadata block recorded for every figure."""
     output = spec.get("output", {}) or {}
-    return {
+    meta = {
         "plot_type": spec.get("plot_type"),
         "style_profile": style.name,
         "data_columns_used": [c for c in used_columns if c],
@@ -447,3 +447,8 @@ def base_metadata(spec: Dict[str, Any], style: StyleProfile, df: pd.DataFrame,
             "verify against your target journal's author guidelines."
         ),
     }
+    # Echo worksheet provenance when the spec carries it (multi-sheet Excel).
+    src = spec.get("source")
+    if isinstance(src, dict) and src:
+        meta["source"] = dict(src)
+    return meta

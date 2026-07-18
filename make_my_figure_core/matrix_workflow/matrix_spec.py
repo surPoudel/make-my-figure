@@ -32,6 +32,10 @@ class MatrixSpec:
     """A user-confirmed role mapping over the columns of a feature matrix."""
 
     source_file: Optional[str] = None
+    # Worksheet provenance when the matrix comes from a multi-sheet Excel workbook.
+    source_workbook: Optional[str] = None
+    source_sheet: Optional[str] = None
+    source_sheet_index: Optional[int] = None
     feature_id_column: Optional[str] = None
     feature_display_column: Optional[str] = None
     annotation_columns: List[str] = field(default_factory=list)
