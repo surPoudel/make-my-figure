@@ -297,6 +297,8 @@ class MainWindow(QMainWindow):
         self._identify_mode = False       # click-to-identify/label on the canvas
         self._picked_labels = {}          # plot_type -> [labels] chosen by clicking
         self._pick_cols = {}              # plot_type -> label column to annotate by
+        self._label_offsets = {}          # plot_type -> {label: [dx, dy]} manual moves
+        self._drag_label = None           # (plot_type, label) currently being dragged
         self._pending_column_annotations = None   # group color strip from "Define groups"
         self._toolbar = None
         self._suppress_change = False   # re-entrancy guard for plot-type changes
@@ -1005,6 +1007,8 @@ class MainWindow(QMainWindow):
         self.data = data
         self._picked_labels = {}          # clear click-to-label picks for new data
         self._pick_cols = {}
+        self._label_offsets = {}
+        self._drag_label = None
         self._pending_column_annotations = None
         self.stack.setCurrentIndex(1)
         self._populate_table()
@@ -1783,6 +1787,12 @@ class MainWindow(QMainWindow):
             col = self._pick_cols.get(pt)
             if col:
                 spec["mapping"]["label"] = col
+        # Per-label manual offsets (from click-drag / move) persist in the PlotSpec.
+        offsets = {k: v for k, v in (self._label_offsets.get(pt) or {}).items()
+                   if not picks or k in picks}
+        if offsets:
+            import json as _json
+            spec.setdefault("mapping", {})["label_offsets"] = _json.dumps(offsets)
         # Group color strip from "Define groups" (wide/heatmap mode).
         if pt == "heatmap_clustered_matrix" and self._pending_column_annotations:
             spec["column_annotations"] = self._pending_column_annotations

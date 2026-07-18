@@ -74,3 +74,19 @@ Picks are kept per plot type and reset when you load new data.
 SVG/PDF/PNG is static — only the labels you added persist). It currently covers
 volcano and scatter; other plot types label **by name** (e.g. heatmap "highlight
 gene list"). Drag-to-reposition a label/arrow is not implemented.
+
+## Interactive labelling (shared model)
+
+Volcano, MA, scatter and lollipop share one annotation model
+(`make_my_figure_core/plots/annotation_state.py`): add / toggle (click again to
+unlabel) / select / move / reset / delete. It serializes to the PlotSpec mapping the
+renderers already consume — `selected_labels` (labelled points) and `label_offsets`
+(JSON `{label: [dx, dy]}` in points, **only for manually moved labels**, so unmoved
+labels keep auto-placement with leader lines). Moving one label never disturbs the
+others, and offsets round-trip through the spec so manual placement persists on export.
+
+- **Desktop:** click a point to label it, click again to unlabel; per-label offsets
+  persist in the PlotSpec.
+- **Streamlit** (static canvas): the sidebar "Label points (annotate)" expander is the
+  click-to-label fallback — choose points, then move a selected label with x/y offset
+  controls (Reset restores auto-placement).

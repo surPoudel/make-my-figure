@@ -449,6 +449,48 @@ if plot_type == "heatmap_clustered_matrix":
 if plot_type == "volcano_plot":
     mapping["lfc_cutoff"] = st.sidebar.number_input("log2FC cutoff", value=1.0, step=0.5)
     mapping["p_cutoff"] = st.sidebar.number_input("p-value cutoff", value=0.05, step=0.01, format="%.3f")
+
+# Interactive labelling (volcano / MA) — Streamlit's canvas is static, so this is the
+# click-to-label FALLBACK: choose points to label, then move a selected label with
+# offset controls. Backed by the shared AnnotationState so it round-trips into the
+# PlotSpec exactly like the desktop click-to-label path.
+if plot_type in ("volcano_plot", "ma_plot"):
+    from make_my_figure_core.plots.annotation_state import AnnotationState  # noqa: E402
+    _lab_col = mapping.get("label")
+    if _lab_col and _lab_col in table_info.dataframe.columns:
+        with st.sidebar.expander("Label points (annotate)", expanded=False):
+            _choices = [str(v) for v in table_info.dataframe[_lab_col].dropna().unique()][:2000]
+            _key = f"annot_{plot_type}"
+            _state = AnnotationState.from_mapping(st.session_state.get(_key, {}))
+            _picked = st.multiselect("Points to label", _choices,
+                                     default=[l for l in _state.labels() if l in _choices],
+                                     key=f"{_key}_pick")
+            # rebuild state: keep offsets for still-picked labels
+            _new = AnnotationState.from_mapping({"selected_labels": _picked,
+                                                 "label_offsets": {
+                                                     k: v for k, v in
+                                                     ({a.label_text: [a.offset_x_points, a.offset_y_points]
+                                                       for a in _state.annotations.values() if a.moved}).items()
+                                                     if k in _picked}})
+            if _picked:
+                _sel = st.selectbox("Move which label", _picked, key=f"{_key}_sel")
+                _dx = st.number_input("x offset (pt)", value=float(
+                    (_new.annotations.get(_sel).offset()[0]) if _new.annotations.get(_sel) else 8.0),
+                    step=4.0, key=f"{_key}_dx")
+                _dy = st.number_input("y offset (pt)", value=float(
+                    (_new.annotations.get(_sel).offset()[1]) if _new.annotations.get(_sel) else 8.0),
+                    step=4.0, key=f"{_key}_dy")
+                if st.button("Reset this label position", key=f"{_key}_reset"):
+                    _new.reset(_sel)
+                else:
+                    _new.set_offset(_sel, _dx, _dy)
+            st.session_state[_key] = _new.to_mapping()
+            mapping.update(_new.to_mapping())
+            mapping.setdefault("annotate", True)
+            if _picked:
+                mapping["label_mode"] = "pasted"
+                mapping["label_list"] = _picked
+
 if plot_type == "scatterplot_with_regression":
     mapping["fit_line"] = st.sidebar.checkbox("Fit regression line", value=True)
 if plot_type == "boxplot_or_violin_with_points":
