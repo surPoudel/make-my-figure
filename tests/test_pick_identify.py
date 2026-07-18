@@ -58,7 +58,10 @@ def test_pick_helpers_handle_float_and_nan_columns():
 def test_build_pickable_points_skips_nonfinite():
     pts = build_pickable_points([1.0, float("nan"), 3.0], [0.0, 1.0, 2.0], ["a", "b", "c"])
     assert [p["label"] for p in pts] == ["a", "c"]
-    assert pts[0] == {"x": 1.0, "y": 0.0, "label": "a", "index": 0}
+    assert pts[0] == {"x": 1.0, "y": 0.0, "label": "a", "index": 0, "point_id": "row_0"}
+    # explicit point ids are threaded through when supplied
+    pts2 = build_pickable_points([1.0, 3.0], [0.0, 2.0], ["a", "c"], point_ids=["pep_1", "pep_2"])
+    assert [p["point_id"] for p in pts2] == ["pep_1", "pep_2"]
 
 
 def test_nearest_pickable_finds_closest():
@@ -69,17 +72,19 @@ def test_nearest_pickable_finds_closest():
     assert nearest_pickable([], 0, 0, 1, 1) == (None, float("inf"))
 
 
-@pytest.mark.parametrize("pt,expect_col", [
-    ("volcano_plot", "gene"),
-    ("scatterplot_with_regression", "sample_id"),
+@pytest.mark.parametrize("pt,expect_col,expect_key", [
+    # Volcano labels by point identity (duplicate-safe); scatter still by name.
+    ("volcano_plot", "gene", "selected_points"),
+    ("scatterplot_with_regression", "sample_id", "selected_labels"),
 ])
-def test_renderers_emit_pickable_points(pt, expect_col):
+def test_renderers_emit_pickable_points(pt, expect_col, expect_key):
     info, _a, _s = examples.load_example(pt)
     r = render(make_spec(pt, "data.csv", "publication"), info.dataframe)
     pts = r.metadata["pickable_points"]
     assert len(pts) == info.n_rows
     assert r.metadata["pick_label_column"] == expect_col
-    assert r.metadata["pick_label_key"] == "selected_labels"
+    assert r.metadata["pick_label_key"] == expect_key
+    assert all("point_id" in p for p in pts)   # stable identity per point
     # labels are meaningful, not "nan"
     assert all(p["label"] and p["label"].lower() != "nan" for p in pts)
 

@@ -553,8 +553,30 @@ if plot_type in ("volcano_plot", "ma_plot"):
     _lab_col = mapping.get("label")
     if _lab_col and _lab_col in table_info.dataframe.columns:
         with st.sidebar.expander("Label points (annotate)", expanded=False):
-            _choices = [str(v) for v in table_info.dataframe[_lab_col].dropna().unique()][:2000]
+            from make_my_figure_core.plots import label_policy as _lp  # noqa: E402
             _key = f"annot_{plot_type}"
+            # Duplicate-label handling: several rows/peptides may share a gene symbol.
+            st.caption("Multiple rows may share the same gene symbol. Choose whether "
+                       "to label every plotted row or only one representative point "
+                       "per gene.")
+            _pol = st.selectbox(
+                "Duplicate label handling", list(_lp.DUPLICATE_POLICIES),
+                format_func=lambda p: _lp.POLICY_LABELS[p], key=f"{_key}_pol",
+                help="'Label every selected point' keeps every peptide row (default).")
+            mapping["duplicate_label_policy"] = _pol
+            if _pol in ("unique", "count"):
+                _rep_cols = {"pvalue": mapping.get("p"),
+                             "padj": mapping.get("adj_p") or mapping.get("padj"),
+                             "effect": mapping.get("x") or mapping.get("y"),
+                             "statistic": mapping.get("statistic")}
+                _avail = _lp.available_rules(_rep_cols, table_info.dataframe.columns)
+                _rule = st.selectbox(
+                    "Representative point", _avail,
+                    format_func=lambda r: _lp.RULE_LABELS[r], key=f"{_key}_rule",
+                    help="Which row represents each gene when collapsing duplicates.")
+                mapping["duplicate_label_representative_rule"] = _rule
+                mapping["duplicate_label_show_count"] = (_pol == "count")
+            _choices = [str(v) for v in table_info.dataframe[_lab_col].dropna().unique()][:2000]
             _state = AnnotationState.from_mapping(st.session_state.get(_key, {}))
             _picked = st.multiselect("Points to label", _choices,
                                      default=[l for l in _state.labels() if l in _choices],

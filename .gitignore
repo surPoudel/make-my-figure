@@ -67,3 +67,7 @@ figure_library/**/full_text/*
 /*.xlsx
 /*.xls
 /*.xlsm
+
+# Private user outputs / screenshots dropped at the repo root (never commit).
+/*.png
+/Screenshot*.png

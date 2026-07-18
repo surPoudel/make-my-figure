@@ -19,7 +19,39 @@ identically.
 | `pasted` | Label the genes in `label_list` (paste a gene list) |
 | `significant_all` | Label all significant genes **only if** the count ≤ `max_labels_warn`; otherwise warn and fall back to top-N |
 
-Explicitly `selected_labels` are always labeled regardless of mode.
+Explicitly selected points are always labeled regardless of mode.
+
+## Duplicate feature labels (Volcano **and** MA)
+
+A DE table often maps several rows — peptides, transcripts, probes, isoforms — to
+the **same** gene symbol. Make My Figure never silently collapses them. Volcano and
+MA share one engine (`make_my_figure_core/plots/label_policy.py`), so both behave
+identically.
+
+`duplicate_label_policy`:
+| Policy | Behavior |
+|---|---|
+| `all` (default) | Label **every** selected plotted row. Three `Mbp` peptides all show "Mbp". Nothing is discarded. |
+| `unique` | One representative point per unique label value. |
+| `count` | One representative per label, suffixed with the number of plotted rows sharing it, e.g. `Mbp (n=3)`. |
+
+`duplicate_label_representative_rule` (used by `unique`/`count`) picks the
+representative deterministically: `pvalue` (smallest p), `padj` (smallest FDR),
+`effect` (largest |log2FC|), `statistic` (largest |statistic|), `first` (first row in
+source order). A rule whose column is absent falls back to `first` (the UI disables
+it). `duplicate_label_show_count` (`true`/`false`) adds the `(n=k)` suffix under
+`unique` too.
+
+**Top-N with a policy.** `top_n` counts *visible labels*. Under `all`, N is a number
+of rows; under `unique`/`count`, rows are ranked first, then the best representative
+per label is chosen until N unique labels are reached.
+
+**Point identity.** Every plotted row keeps a stable `point_id` (feature/id column
+when present, else `row_<index>`), so two rows sharing a gene symbol are independent
+annotations — separately clickable, labelable, movable, and unlabelable. Clicks store
+`selected_points` (point ids) and per-point manual offsets store `point_offsets`
+(JSON `{point_id: [dx, dy]}`). Legacy `selected_labels` / `label_offsets` (keyed by
+text) still load.
 
 ## Which name & how many
 - `label_by`: `symbol` (default), `id`, or `both` (uses `id_col` for the ID).
@@ -61,10 +93,12 @@ On the desktop app's live figure, tick **"Click a point to identify / label it"*
 - **Click near a point** → its name (gene symbol for volcano, sample id/label for
   scatter) and coordinates appear in the status bar — so you can see *which* point
   that blue dot at, say, `log2FC ≈ −4, −log10p ≈ 2` actually is.
-- The click also **toggles a label** on that point. Labels you add are stored in
-  the PlotSpec (`mapping.selected_labels`), so they **persist on export/reload**
-  and are drawn on top of whatever label mode is active. Click the point again to
-  remove its label.
+- The click also **toggles a label** on that point. On volcano/MA the click is
+  stored by **point identity** (`mapping.selected_points`), so clicking one `Mbp`
+  peptide labels *that* peptide only; another `Mbp` point stays independent and
+  clicking the same point again removes only its label. Labels persist on
+  export/reload and are drawn on top of whatever label mode is active. (Other plot
+  types still toggle by name via `selected_labels`.)
 
 How it works: each render emits a `pickable_points` table (data coords + name per
 point) and a `pick_label_column`; the app maps your click to the nearest point.

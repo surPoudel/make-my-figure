@@ -386,13 +386,16 @@ def resolve_point_labels(df: pd.DataFrame, column: Optional[str]) -> List[str]:
     return out
 
 
-def build_pickable_points(xs, ys, labels) -> List[Dict[str, Any]]:
+def build_pickable_points(xs, ys, labels, point_ids=None) -> List[Dict[str, Any]]:
     """Return a click-identify table: one record per plotted point.
 
-    Each record is ``{"x", "y", "label", "index"}`` in the axes' data coordinates,
-    so a GUI can map a click on the live canvas back to the underlying feature
-    (e.g. a gene) without the renderer knowing anything about the GUI. Non-finite
-    points are skipped. Used by the desktop "identify / label points" mode.
+    Each record is ``{"x", "y", "label", "index", "point_id"}`` in the axes' data
+    coordinates, so a GUI can map a click on the live canvas back to the underlying
+    feature (e.g. a specific peptide) without the renderer knowing anything about the
+    GUI. ``point_id`` is a **stable per-point identity** (so two rows sharing a gene
+    symbol stay distinct); when ``point_ids`` is not supplied it defaults to
+    ``row_<positional index>``. Non-finite points are skipped. Used by the desktop
+    "identify / label points" mode.
     """
     xs = np.asarray(xs, dtype=float)
     ys = np.asarray(ys, dtype=float)
@@ -402,7 +405,10 @@ def build_pickable_points(xs, ys, labels) -> List[Dict[str, Any]]:
         if not (np.isfinite(xv) and np.isfinite(yv)):
             continue
         lab = str(labels[i]) if labels is not None and i < len(labels) else str(i)
-        out.append({"x": float(xv), "y": float(yv), "label": lab, "index": int(i)})
+        pid = (str(point_ids[i]) if point_ids is not None and i < len(point_ids)
+               else f"row_{i}")
+        out.append({"x": float(xv), "y": float(yv), "label": lab, "index": int(i),
+                    "point_id": pid})
     return out
 
 

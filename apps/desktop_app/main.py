@@ -297,9 +297,11 @@ class MainWindow(QMainWindow):
         self._canvas = None
         self._fig_view = None             # aspect-preserving holder for the canvas
         self._identify_mode = False       # click-to-identify/label on the canvas
-        self._picked_labels = {}          # plot_type -> [labels] chosen by clicking
+        self._picked_labels = {}          # plot_type -> [labels] chosen by clicking (legacy)
+        self._picked_points = {}          # plot_type -> [point_id] chosen by clicking (identity)
         self._pick_cols = {}              # plot_type -> label column to annotate by
-        self._label_offsets = {}          # plot_type -> {label: [dx, dy]} manual moves
+        self._label_offsets = {}          # plot_type -> {label: [dx, dy]} manual moves (legacy)
+        self._point_offsets = {}          # plot_type -> {point_id: [dx, dy]} manual moves
         self._drag_label = None           # (plot_type, label) currently being dragged
         self._pending_column_annotations = None   # group color strip from "Define groups"
         self._toolbar = None
@@ -1133,8 +1135,10 @@ class MainWindow(QMainWindow):
     def _set_data(self, data: LoadedData):
         self.data = data
         self._picked_labels = {}          # clear click-to-label picks for new data
+        self._picked_points = {}
         self._pick_cols = {}
         self._label_offsets = {}
+        self._point_offsets = {}
         self._drag_label = None
         self._pending_column_annotations = None
         self.stack.setCurrentIndex(1)
@@ -1999,6 +2003,18 @@ class MainWindow(QMainWindow):
             spec["style"] = overrides
         # Inject click-to-label picks for this plot type (stored in the PlotSpec
         # so they persist through export/reload).
+        import json as _json
+        point_picks = self._picked_points.get(pt)
+        if point_picks:
+            # Point-identity selection (volcano/MA duplicate-safe).
+            spec.setdefault("mapping", {})["selected_points"] = list(point_picks)
+            col = self._pick_cols.get(pt)
+            if col:
+                spec["mapping"]["label"] = col
+            poffsets = {k: v for k, v in (self._point_offsets.get(pt) or {}).items()
+                        if k in point_picks}
+            if poffsets:
+                spec["mapping"]["point_offsets"] = _json.dumps(poffsets)
         picks = self._picked_labels.get(pt)
         if picks:
             spec.setdefault("mapping", {})["selected_labels"] = list(picks)
@@ -2009,7 +2025,6 @@ class MainWindow(QMainWindow):
         offsets = {k: v for k, v in (self._label_offsets.get(pt) or {}).items()
                    if not picks or k in picks}
         if offsets:
-            import json as _json
             spec.setdefault("mapping", {})["label_offsets"] = _json.dumps(offsets)
         # Group color strip from "Define groups" (wide/heatmap mode).
         if pt == "heatmap_clustered_matrix" and self._pending_column_annotations:
@@ -2195,13 +2210,26 @@ class MainWindow(QMainWindow):
         # _build_spec, which stores them in the PlotSpec => persists on export.
         plot_type = self._current_spec.get("plot_type")
         col = meta.get("pick_label_column")
-        picks = self._picked_labels.setdefault(plot_type, [])
-        if name in picks:
-            picks.remove(name)                # click again to remove
-            action = "removed label"
+        # Renderers that support duplicate features (volcano/MA) toggle by POINT
+        # identity so two rows sharing a gene symbol stay independent; older
+        # renderers still toggle by label text.
+        if meta.get("pick_label_key") == "selected_points":
+            pid = best.get("point_id") or f"row_{best.get('index', 0)}"
+            picks = self._picked_points.setdefault(plot_type, [])
+            if pid in picks:
+                picks.remove(pid)             # click the same point again to remove
+                action = "removed label"
+            else:
+                picks.append(pid)
+                action = "labeled"
         else:
-            picks.append(name)
-            action = "labeled"
+            picks = self._picked_labels.setdefault(plot_type, [])
+            if name in picks:
+                picks.remove(name)            # click again to remove
+                action = "removed label"
+            else:
+                picks.append(name)
+                action = "labeled"
         if col:
             self._pick_cols[plot_type] = col
         self.statusBar().showMessage(f"{action}: {name}", 6000)

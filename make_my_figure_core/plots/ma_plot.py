@@ -43,8 +43,18 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     y = get_mapping(spec, "y", None) or pick_column(df, _Y_ALIASES)
     p = get_mapping(spec, "p", None) or pick_column(df, _P_ALIASES)
     label_col = get_mapping(spec, "label", None) or pick_column(df, _LABEL_ALIASES)
+    id_col = get_mapping(spec, "id_col", None) or pick_column(df, ["feature_id", "peptide_id", "transcript_id", "probe_id"])
     p_cutoff = float(get_mapping(spec, "p_cutoff", 0.05))
     label_top_n = int(get_mapping(spec, "label_top_n", 8))
+
+    # Duplicate-label handling (shared with the volcano plot).
+    from make_my_figure_core.plots import label_policy as lp
+    dup_policy = lp.normalize_policy(get_mapping(spec, "duplicate_label_policy", "all"))
+    dup_rule = lp.normalize_rule(get_mapping(spec, "duplicate_label_representative_rule", "pvalue"))
+    dup_show_count = bool(get_mapping(spec, "duplicate_label_show_count", False))
+    selected_points = [str(s) for s in (get_mapping(spec, "selected_points", None) or [])]
+    adj_col = get_mapping(spec, "adj_p", None) or get_mapping(spec, "padj", None)
+    stat_col = get_mapping(spec, "statistic", None) or get_mapping(spec, "stat", None)
 
     if not x or not y:
         raise RenderError(
@@ -83,45 +93,75 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if down.any():
             ax.scatter(xs[down], ys[down], color=style.color_for(0), label="Down", zorder=3, **mk)
 
-        # Labels: click-selected points (selected_labels) when provided, otherwise the
-        # strongest significant hits by |logFC|. Per-label manual offsets (points) are
-        # honored — same interaction model as the volcano plot.
-        selected_labels = [str(s).strip().lower() for s in
-                           (get_mapping(spec, "selected_labels", None) or [])]
-        label_offsets = get_mapping(spec, "label_offsets", None) or {}
-        if isinstance(label_offsets, str):
-            import json
-            try:
-                label_offsets = json.loads(label_offsets)
-            except Exception:  # noqa: BLE001
-                label_offsets = {}
+        # Labels: explicit click-selected points, then legacy text selections, then the
+        # strongest significant hits by |logFC| — all routed through the shared
+        # duplicate-label policy so rows sharing a gene symbol stay independent.
+        selected_set = {str(s).strip().lower() for s in
+                        (get_mapping(spec, "selected_labels", None) or [])}
+        n_labeled = 0
         if label_col and label_col in work.columns and sig.any():
-            from make_my_figure_core.plots.base import dedupe_labels_by_distance
+            import pandas as pd
 
-            xr = float(np.nanmax(xs) - np.nanmin(xs)) or 1.0
-            yr = float(np.nanmax(ys) - np.nanmin(ys)) or 1.0
-            candidates = []
-            if selected_labels:
-                for i in range(len(work)):
-                    txt = str(work[label_col].iloc[i]).strip()
-                    if txt.lower() in selected_labels:
-                        candidates.append((float(xs[i]), float(ys[i]), txt))
-            elif label_top_n > 0:
-                sig_idx = np.where(sig)[0]
-                order = sig_idx[np.argsort(-np.abs(ys[sig_idx]))][:label_top_n]
-                for i in order:
-                    txt = str(work[label_col].iloc[i]).strip()
-                    if txt and txt.lower() != "nan":
-                        candidates.append((float(xs[i]), float(ys[i]), txt))
-                candidates = dedupe_labels_by_distance(
-                    candidates, min_dx=0.05 * xr, min_dy=0.07 * yr)
-            for x_i, y_i, txt in candidates:
-                off = label_offsets.get(txt) or label_offsets.get(txt.lower()) or (4, 4)
+            sig_series = pd.Series(sig, index=work.index)
+            label_series = work[label_col].astype(str).str.strip()
+            has_text = (label_series.ne("") & label_series.str.lower().ne("nan")
+                        & work[label_col].notna())
+
+            def _text_fn(i):
+                return str(work.at[i, label_col]).strip()
+
+            rep_columns = {"pvalue": p, "padj": adj_col, "effect": y, "statistic": stat_col}
+            total_counts = lp.total_label_counts(work.loc[has_text, label_col])
+
+            def _pts(ranked, *, policy, limit=None):
+                return lp.build_label_points(
+                    work, ranked, label_series=label_series, text_fn=_text_fn,
+                    x_col=x, y_col=y, id_col=id_col, policy=policy,
+                    representative_rule=dup_rule, show_count=dup_show_count,
+                    rep_columns=rep_columns, limit=limit, total_counts=total_counts)
+
+            explicit_pts: List = []
+            if selected_points:
+                want = set(selected_points)
+                sel_idx = [work.index[k] for k in range(len(work))
+                           if lp.point_id_for(work, work.index[k], id_col) in want]
+                explicit_pts = _pts(sel_idx, policy="all")
+
+            text_pts: List = []
+            if selected_set:
+                sel = work[label_series.str.lower().isin(selected_set) & has_text]
+                ranked = list(sel.reindex(sel[y].abs().sort_values(ascending=False).index).index)
+                text_pts = _pts(ranked, policy=dup_policy)
+
+            mode_pts: List = []
+            if not selected_set and not selected_points and label_top_n > 0:
+                sig_frame = work[sig_series & has_text]
+                ranked = list(sig_frame.reindex(
+                    sig_frame[y].abs().sort_values(ascending=False).index).index)
+                mode_pts = _pts(ranked, policy=dup_policy, limit=label_top_n)
+
+            label_points: List = []
+            seen_pid: set = set()
+            for pt in (explicit_pts + text_pts + mode_pts):
+                if pt.point_id in seen_pid:
+                    continue
+                seen_pid.add(pt.point_id)
+                label_points.append(pt)
+
+            point_offsets = lp.parse_offsets(get_mapping(spec, "point_offsets", None))
+            legacy_offsets = lp.parse_offsets(get_mapping(spec, "label_offsets", None))
+            for pt in label_points:
+                off = point_offsets.get(pt.point_id)
+                if off is None:
+                    off = (legacy_offsets.get(pt.label_text)
+                           or legacy_offsets.get(str(pt.label_text).lower()) or (4, 4))
                 dx, dy = float(off[0]), float(off[1])
-                ax.annotate(txt, (x_i, y_i), fontsize=style.annotation_pt,
+                ax.annotate(pt.label_text, (pt.anchor_x, pt.anchor_y),
+                            fontsize=style.annotation_pt,
                             xytext=(dx, dy), textcoords="offset points",
                             arrowprops=dict(arrowstyle="-", color="0.6", lw=0.5)
                             if (abs(dx) > 12 or abs(dy) > 12) else None)
+            n_labeled = len(label_points)
 
         ax.set_xlabel(spec.get("layout", {}).get("x_label", "Average expression"))
         ax.set_ylabel(spec.get("layout", {}).get("y_label", "log2 fold change"))
@@ -141,15 +181,21 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     meta["n_down"] = int(down.sum())
     meta["n_ns"] = int(ns.sum())
     meta["p_cutoff"] = p_cutoff
+    meta["n_labeled"] = n_labeled
+    meta["duplicate_label_policy"] = dup_policy
+    meta["duplicate_label_representative_rule"] = dup_rule
+    meta["duplicate_label_show_count"] = dup_show_count
     # Click-identify support (parity with volcano): map a canvas click back to a point.
     try:
         from make_my_figure_core.plots.base import (
             build_pickable_points, choose_label_column, resolve_point_labels)
 
-        pick_col = choose_label_column(work, [label_col, "gene", "gene_symbol", "symbol"])
+        pick_col = choose_label_column(work, [label_col, "gene", "gene_symbol", "symbol", id_col])
+        point_ids = [lp.point_id_for(work, idx, id_col) for idx in work.index]
         meta["pickable_points"] = build_pickable_points(
-            xs, ys, resolve_point_labels(work, pick_col))
-        meta["pick_label_key"] = "selected_labels"
+            xs, ys, resolve_point_labels(work, pick_col), point_ids=point_ids)
+        meta["pick_label_key"] = "selected_points"
+        meta["pick_offset_key"] = "point_offsets"
         meta["pick_label_column"] = pick_col
     except Exception as exc:  # noqa: BLE001
         meta["pickable_points"] = []

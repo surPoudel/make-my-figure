@@ -33,7 +33,7 @@ COLUMN_FIELDS: Dict[str, List[str]] = {
     "paired_slopegraph": ["subject", "condition", "value", "color"],
     "raincloud_plot": ["x", "y"],
     "hierarchical_dendrogram": ["row_id"],
-    "ma_plot": ["x", "y", "p", "label"],
+    "ma_plot": ["x", "y", "p", "label", "id_col"],
     "manhattan_plot": ["chrom", "pos", "p", "snp"],
     "qq_plot": ["p"],
     "bland_altman_plot": ["method_a", "method_b", "label"],
@@ -147,6 +147,12 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("label_by", "Label by", "choice", "symbol", ["symbol", "id", "both"]),
         Option("show_arrows", "Arrows to points", "bool", True),
         Option("label_box", "Label background box", "bool", False),
+        # Duplicate-label handling (several rows/features may share a gene symbol).
+        Option("duplicate_label_policy", "Duplicate labels", "choice", "all",
+               ["all", "unique", "count"]),
+        Option("duplicate_label_representative_rule", "Representative point", "choice",
+               "pvalue", ["pvalue", "padj", "effect", "statistic", "first"]),
+        Option("duplicate_label_show_count", "Append (n=…) count", "bool", False),
     ],
     "scatterplot_with_regression": [
         Option("fit_line", "Fit regression line", "bool", True),
@@ -211,6 +217,12 @@ OPTIONS: Dict[str, List[Option]] = {
     "ma_plot": [
         Option("p_cutoff", "Significance cutoff", "number", 0.05, minimum=0.0, maximum=1.0, step=0.01, decimals=4),
         Option("label_top_n", "Label top N hits", "number", 8, minimum=0, maximum=40, step=1, decimals=0),
+        # Duplicate-label handling (shared with the volcano plot).
+        Option("duplicate_label_policy", "Duplicate labels", "choice", "all",
+               ["all", "unique", "count"]),
+        Option("duplicate_label_representative_rule", "Representative point", "choice",
+               "pvalue", ["pvalue", "padj", "effect", "statistic", "first"]),
+        Option("duplicate_label_show_count", "Append (n=…) count", "bool", False),
     ],
     "manhattan_plot": [],
     "qq_plot": [Option("mode", "Mode", "choice", "pvalue", ["pvalue", "quantile"])],

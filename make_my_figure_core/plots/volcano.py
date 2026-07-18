@@ -134,6 +134,16 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     max_labels_warn = int(get_mapping(spec, "max_labels_warn", 40))
     auto_subtitle = bool(get_mapping(spec, "auto_subtitle", True))
 
+    # Duplicate-label handling (rows/features sharing a gene symbol).
+    from make_my_figure_core.plots import label_policy as lp
+    dup_policy = lp.normalize_policy(get_mapping(spec, "duplicate_label_policy", "all"))
+    dup_rule = lp.normalize_rule(get_mapping(spec, "duplicate_label_representative_rule", "pvalue"))
+    dup_show_count = bool(get_mapping(spec, "duplicate_label_show_count", False))
+    # Point-identity selection/offsets (new); legacy text keys still honored below.
+    selected_points = [str(s) for s in (get_mapping(spec, "selected_points", None) or [])]
+    adj_col = get_mapping(spec, "adj_p", None) or get_mapping(spec, "padj", None)
+    stat_col = get_mapping(spec, "statistic", None) or get_mapping(spec, "stat", None)
+
     require_columns(df, [x, p_col], context=PLOT_TYPE)
     work = df.copy()
     work[x] = coerce_numeric(work, x, context=PLOT_TYPE)
@@ -180,87 +190,126 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
         ymax = float(work["_neglog10p"].max()) if len(work) else 1.0
 
-        # --- Label selection ---------------------------------------------
+        # --- Label selection (point-identity aware) ----------------------
         n_labeled = 0
         if annotate and label_col and label_col in work.columns:
-            xr = (work[x].max() - work[x].min()) or 1.0
             sig_mask = (up | down)
-            has_text = work[label_col].astype(str).str.strip().ne("") & work[label_col].notna()
+            label_series = work[label_col].astype(str).str.strip()
+            has_text = (label_series.ne("") & label_series.str.lower().ne("nan")
+                        & work[label_col].notna())
 
-            def _rows_to_pts(frame):
-                return [(float(r[x]), float(r["_neglog10p"]), _label_text(r, label_col, id_col, label_by))
-                        for _, r in frame.iterrows()]
+            def _text_fn(i):
+                return _label_text(work.loc[i], label_col, id_col, label_by)
 
-            # Explicit selections are always labeled, regardless of mode.
-            pts: List = []
+            rep_columns = {"pvalue": p_col, "padj": adj_col, "effect": x, "statistic": stat_col}
+            total_counts = lp.total_label_counts(work.loc[has_text, label_col])
+
+            def _pts(ranked, *, policy, limit=None):
+                return lp.build_label_points(
+                    work, ranked, label_series=label_series, text_fn=_text_fn,
+                    x_col=x, y_col="_neglog10p", id_col=id_col, policy=policy,
+                    representative_rule=dup_rule, show_count=dup_show_count,
+                    rep_columns=rep_columns, limit=limit, total_counts=total_counts)
+
+            # 1) Explicit point selections (clicks) — always individual points.
+            explicit_pts: List = []
+            if selected_points:
+                sel_idx = [work.index[k] for k in range(len(work))
+                           if lp.point_id_for(work, work.index[k], id_col) in set(selected_points)]
+                explicit_pts = _pts(sel_idx, policy="all")
+
+            # 2) Legacy text selections (older specs / clicked-by-name) — under policy.
+            text_pts: List = []
             if selected_set:
-                sel = work[work[label_col].astype(str).str.strip().str.lower().isin(selected_set)]
-                pts += _rows_to_pts(sel)
+                sel = work[label_series.str.lower().isin(selected_set) & has_text]
+                ranked = list(sel.sort_values("_neglog10p", ascending=False).index)
+                text_pts = _pts(ranked, policy=dup_policy)
 
+            # 3) Mode-driven candidates — ranked, then policy applied.
             pool = work[sig_mask & has_text] if label_sig_only else work[has_text]
             mode_pts: List = []
             if label_mode == "pasted":
-                m = work[work[label_col].astype(str).str.strip().str.lower().isin(pasted_set) & has_text]
-                mode_pts = _rows_to_pts(m)
+                m = work[label_series.str.lower().isin(pasted_set) & has_text]
+                ranked = list(m.sort_values("_neglog10p", ascending=False).index)
+                mode_pts = _pts(ranked, policy=dup_policy)
             elif label_mode == "selected":
-                mode_pts = []  # only the explicit selections above
+                mode_pts = []  # only explicit / text selections above
             elif label_mode == "top_lfc":
-                mode_pts = _rows_to_pts(pool.reindex(pool[x].abs().sort_values(ascending=False).index).head(top_n))
+                ranked = list(pool.reindex(pool[x].abs().sort_values(ascending=False).index).index)
+                mode_pts = _pts(ranked, policy=dup_policy, limit=top_n)
             elif label_mode == "top_up_down":
-                up_pool = work[up & has_text].sort_values("_neglog10p", ascending=False).head(top_n_up)
-                dn_pool = work[down & has_text].sort_values("_neglog10p", ascending=False).head(top_n_down)
-                mode_pts = _rows_to_pts(up_pool) + _rows_to_pts(dn_pool)
+                up_ranked = list(work[up & has_text].sort_values("_neglog10p", ascending=False).index)
+                dn_ranked = list(work[down & has_text].sort_values("_neglog10p", ascending=False).index)
+                mode_pts = _pts(up_ranked, policy=dup_policy, limit=top_n_up) + \
+                    _pts(dn_ranked, policy=dup_policy, limit=top_n_down)
             elif label_mode == "significant_all":
-                sig_frame = work[sig_mask & has_text]
-                if len(sig_frame) <= max_labels_warn:
-                    mode_pts = _rows_to_pts(sig_frame)
-                else:
+                sig_frame = work[sig_mask & has_text].sort_values("_neglog10p", ascending=False)
+                ranked = list(sig_frame.index)
+                mode_pts = _pts(ranked, policy=dup_policy)
+                if len(mode_pts) > max_labels_warn:
                     warnings.append(
-                        f"{len(sig_frame)} significant features exceed the {max_labels_warn}-label cap; "
-                        f"labeled the top {top_n} by significance instead. Reduce the count or enlarge the figure.")
-                    mode_pts = _rows_to_pts(sig_frame.sort_values("_neglog10p", ascending=False).head(top_n))
+                        f"{len(mode_pts)} significant labels exceed the {max_labels_warn}-label cap; "
+                        f"labeled the top {top_n}. Reduce the count or enlarge the figure.")
+                    mode_pts = _pts(ranked, policy=dup_policy, limit=top_n)
             else:  # top_fdr (default)
-                mode_pts = _rows_to_pts(pool.sort_values("_neglog10p", ascending=False).head(top_n))
+                ranked = list(pool.sort_values("_neglog10p", ascending=False).index)
+                mode_pts = _pts(ranked, policy=dup_policy, limit=top_n)
 
-            seen = {t for _, _, t in pts}
-            for p in mode_pts:
-                if p[2] and p[2] not in seen:
-                    seen.add(p[2])
-                    pts.append(p)
+            # Merge, keeping point identity (never collapse duplicates by text).
+            label_points: List = []
+            seen_pid: set = set()
+            for pt in (explicit_pts + text_pts + mode_pts):
+                if pt.point_id in seen_pid:
+                    continue
+                seen_pid.add(pt.point_id)
+                label_points.append(pt)
 
-            if len(pts) > max_labels_warn:
+            if len(label_points) > max_labels_warn:
                 warnings.append(
-                    f"{len(pts)} labels requested exceed the {max_labels_warn}-label cap; "
+                    f"{len(label_points)} labels requested exceed the {max_labels_warn}-label cap; "
                     f"showing the first {max_labels_warn}. Reduce top N or enlarge the figure.")
-                pts = pts[:max_labels_warn]
+                label_points = label_points[:max_labels_warn]
 
-            kept = dedupe_labels_by_distance(pts, min_dx=xr * 0.045, min_dy=ymax * 0.035)
             # Extra top headroom so repelled labels are not clipped.
-            ax.set_ylim(0, ymax * (1.30 if kept else 1.18))
-            # Per-label manual offsets (points): a label listed in label_offsets is
-            # drawn at its user-set offset with a leader line and excluded from the
-            # auto-repel, so moving one label never disturbs the others.
-            label_offsets = get_mapping(spec, "label_offsets", None) or {}
-            if isinstance(label_offsets, str):
-                import json
-                try:
-                    label_offsets = json.loads(label_offsets)
-                except Exception:  # noqa: BLE001
-                    label_offsets = {}
-            manual = [(lx, ly, txt) for (lx, ly, txt) in kept
-                      if txt in label_offsets or str(txt).lower() in label_offsets]
-            auto = [p for p in kept if p not in manual]
+            ax.set_ylim(0, ymax * (1.30 if label_points else 1.18))
+
+            # Manual offsets keyed by POINT identity (new) with a text-key fallback
+            # for legacy specs. Moving one duplicate never disturbs the others; each
+            # moved label keeps a leader line to its own point.
+            point_offsets = lp.parse_offsets(get_mapping(spec, "point_offsets", None))
+            legacy_offsets = lp.parse_offsets(get_mapping(spec, "label_offsets", None))
             fs_lab = label_font_size or style.annotation_pt
-            for lx, ly, txt in manual:
-                off = label_offsets.get(txt) or label_offsets.get(str(txt).lower())
+            manual: List = []
+            auto: List = []
+            for pt in label_points:
+                off = point_offsets.get(pt.point_id)
+                if off is None:
+                    off = (legacy_offsets.get(pt.label_text)
+                           or legacy_offsets.get(str(pt.label_text).lower()))
+                if off is not None:
+                    manual.append((pt, off))
+                else:
+                    auto.append(pt)
+            for pt, off in manual:
                 dx, dy = float(off[0]), float(off[1])
-                ax.annotate(txt, (lx, ly), fontsize=fs_lab, color=label_color or style.text_color,
+                ax.annotate(pt.label_text, (pt.anchor_x, pt.anchor_y), fontsize=fs_lab,
+                            color=label_color or style.text_color,
                             xytext=(dx, dy), textcoords="offset points", zorder=6,
-                            arrowprops=dict(arrowstyle="-", color="0.5", lw=0.5)
-                            if (abs(dx) > 10 or abs(dy) > 10) else None)
+                            arrowprops=dict(arrowstyle="-", color="0.5", lw=0.5))
+            auto_tuples = [(pt.anchor_x, pt.anchor_y, pt.label_text) for pt in auto]
             n_labeled = len(manual) + _repel_labels(
-                ax, auto, style, show_arrows=show_arrows, box=label_box,
+                ax, auto_tuples, style, show_arrows=show_arrows, box=label_box,
                 color=label_color, font_size=label_font_size, repel=repel_strength)
+
+            # Warn if identical labels land on the same anchor (stacked, unresolved).
+            _anchors: Dict[Any, int] = {}
+            for pt in label_points:
+                key = (round(pt.anchor_x, 6), round(pt.anchor_y, 6), pt.label_text)
+                _anchors[key] = _anchors.get(key, 0) + 1
+            if any(c > 1 for c in _anchors.values()):
+                warnings.append(
+                    "Some duplicate labels share the same position; move them "
+                    "individually or use a unique-label policy.")
         else:
             ax.set_ylim(0, ymax * 1.18)
 
@@ -307,10 +356,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
         pick_col = choose_label_column(
             work, [label_col, "gene", "gene_symbol", "symbol", id_col, "gene_id"])
+        point_ids = [lp.point_id_for(work, idx, id_col) for idx in work.index]
         meta["pickable_points"] = build_pickable_points(
             work[x].to_numpy(float), work["_neglog10p"].to_numpy(float),
-            resolve_point_labels(work, pick_col))
-        meta["pick_label_key"] = "selected_labels"   # GUI appends clicked genes here
+            resolve_point_labels(work, pick_col), point_ids=point_ids)
+        # Clicks store POINT identity (so duplicate-symbol points stay independent).
+        meta["pick_label_key"] = "selected_points"
+        meta["pick_offset_key"] = "point_offsets"
         meta["pick_label_column"] = pick_col         # mapping['label'] set to this when labeling
     except Exception as exc:  # noqa: BLE001
         meta["pickable_points"] = []
@@ -322,6 +374,9 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     meta["n_ns"] = n_ns
     meta["n_labeled"] = n_labeled
     meta["annotate"] = annotate
+    meta["duplicate_label_policy"] = dup_policy
+    meta["duplicate_label_representative_rule"] = dup_rule
+    meta["duplicate_label_show_count"] = dup_show_count
     meta["label_mode"] = label_mode
     meta["show_arrows"] = show_arrows
     meta["classified_from"] = "class_col" if (class_col and class_col in work.columns) else "cutoffs"

@@ -218,7 +218,9 @@ def test_ma_has_click_identify_points():
                               "p": "adjusted_p_value", "label": "feature_label"})
     r = render(spec, tbl)
     assert len(r.metadata.get("pickable_points", [])) == len(tbl)
-    assert r.metadata.get("pick_label_key") == "selected_labels"
+    # MA now stores clicks by point identity (duplicate-safe), like volcano.
+    assert r.metadata.get("pick_label_key") == "selected_points"
+    assert all("point_id" in p for p in r.metadata["pickable_points"])
 
 
 def test_ma_selected_labels_and_offsets_render():
