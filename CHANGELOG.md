@@ -4,6 +4,30 @@ All notable changes to Make My Figure are recorded here. This project uses a
 single, evolving `Publication` style — it does not target or claim compliance
 with any journal.
 
+## [1.0.0] — First stable release
+
+Supersedes `1.0.0-rc1`, adding the release-candidate fixes plus first-class
+multi-sheet Excel support, duplicate feature-label handling, and a unified Matrix
+Workflow. One user-facing **Publication** style; reproducible PlotSpec/StatsSpec
+sidecars; no R dependency and no fabricated statistics.
+
+### Added
+- **Multi-sheet Excel workbook browser** (Desktop + Streamlit): every worksheet is
+  selectable (documentation/empty/hidden included), advisory sheet classification,
+  worksheet-aware output names, and workbook/sheet provenance on the PlotSpec. See
+  [docs/MULTI_SHEET_EXCEL.md](docs/MULTI_SHEET_EXCEL.md).
+- **Duplicate feature labels for Volcano & MA**: per-point identity with all /
+  unique / count label policies and deterministic representative selection, so rows
+  sharing a gene symbol stay independently labelable. See
+  [docs/VOLCANO_ANNOTATIONS.md](docs/VOLCANO_ANNOTATIONS.md).
+
+### Changed
+- **Unified Matrix Workflow.** The Matrix Workflow now prepares data + recommendations
+  and hands off to the *same* full plot editor as the normal workflow (one canonical
+  PlotSpec, full controls, annotations, export, and Figure Builder) — no second reduced
+  plot UI. Matrix/metadata/preprocessing/statistics/workbook provenance travels into
+  the exported PlotSpec. See [docs/MATRIX_WORKFLOW.md](docs/MATRIX_WORKFLOW.md).
+
 ## [1.0.0-rc1] — Responsive cross-platform UI and deterministic defaults
 
 ### Fixed
