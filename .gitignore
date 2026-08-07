@@ -71,3 +71,10 @@ figure_library/**/full_text/*
 # Private user outputs / screenshots dropped at the repo root (never commit).
 /*.png
 /Screenshot*.png
+
+# Manuscript work stays LOCAL — never commit it to the software repository.
+manuscript/
+prompts/
+REFERENCE_AND_OUTLINE_AUDIT.md
+scripts/*_manuscript*.py
+scripts/*manuscript*.py
