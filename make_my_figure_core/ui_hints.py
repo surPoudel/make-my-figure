@@ -19,7 +19,9 @@ COLUMN_FIELDS: Dict[str, List[str]] = {
     "lineplot_timecourse_with_error_band": ["x", "y", "color"],
     "ridge_or_density_plot": ["x", "group"],
     "enrichment_dotplot": ["y", "x", "size", "color"],
-    "kaplan_meier_survival_curve": ["time", "event", "group"],
+    # "event"/"group" drive the subject-level form; "survival_columns" is the
+    # precomputed-curve form (one column of S(t) per group).
+    "kaplan_meier_survival_curve": ["time", "event", "group", "survival_columns"],
     "stacked_bar_composition": ["x", "stack", "y", "facet_or_sort_by"],
     "waterfall_plot": ["x", "y", "color"],
     "pca_scatter_from_matrix": ["matrix_row_id"],   # color/shape come from metadata
@@ -174,12 +176,21 @@ OPTIONS: Dict[str, List[Option]] = {
     ],
     "lineplot_timecourse_with_error_band": [Option("error", "Error band", "choice", "sem", _ERROR_CHOICES)],
     "ridge_or_density_plot": [
+        Option("density_mode", "Density mode", "choice", "ridge", ["ridge", "overlay"]),
         Option("overlap", "Ridge overlap", "number", 0.7, minimum=0.0, maximum=0.95, step=0.05, decimals=2),
     ],
     "enrichment_dotplot": [
         Option("top_n", "Top N terms", "number", 20, minimum=5, maximum=40, step=1, decimals=0),
     ],
-    "kaplan_meier_survival_curve": [],
+    "kaplan_meier_survival_curve": [
+        Option("input_form", "Input form", "choice", "subject_level",
+               ["subject_level", "precomputed"]),
+        Option("y_scale", "Y-axis scale", "choice", "fraction", ["fraction", "percent"]),
+        Option("reference_line", "Reference line (y-axis units, blank for none)", "number",
+               None, minimum=0.0, maximum=100.0, step=0.5, decimals=2),
+        Option("curve_style", "Curve style (line: precomputed curves only)", "choice", "step",
+               ["step", "line"]),
+    ],
     "stacked_bar_composition": [_X_TICK_ROTATION],
     "waterfall_plot": [Option("sort", "Sort", "choice", "ascending", ["ascending", "descending"])],
     "pca_scatter_from_matrix": [],

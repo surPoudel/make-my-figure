@@ -21,6 +21,7 @@ from make_my_figure_core.statistics.annotations import (
     build_pairwise_annotations,
     stat_text_panel,
 )
+from make_my_figure_core.statistics.models import StatsError
 from make_my_figure_core.statistics.runner import run_statistics
 from make_my_figure_core.statistics.schemas import normalize_stats_spec
 
@@ -79,8 +80,30 @@ def run_and_annotate(
             vals = [tops[k] for k in (ka, kb) if k in tops]
             return max(vals) if vals else None
 
-        info = stats_overlay.annotate_pairwise(
-            ax, items, pos_lookup, style=style, cfg=ann_cfg, top_lookup=top_lookup)
+        placement = str(ann_cfg.get("placement", "bracket") or "bracket").lower()
+        if placement not in ("bracket", "above_bar"):
+            raise StatsError(
+                f"annotation placement must be 'bracket' or 'above_bar', got {placement!r}."
+            )
+
+        info: Dict[str, Any]
+        if placement == "above_bar":
+            # One label per compared bar, for comparisons that all share a reference group.
+            flat_tops = {k: v for k, v in (tops or {}).items() if not isinstance(k, tuple)}
+            info = stats_overlay.annotate_above(
+                ax, items, {k: v for k, v in positions.items() if not isinstance(k, tuple)},
+                flat_tops, style=style, cfg=ann_cfg,
+                reference=stats_spec.get("reference_group"))
+            leftover = info.get("unplaced") or []
+            if leftover:
+                # A label above one bar cannot describe a comparison between two non-reference
+                # groups, so those fall back to brackets rather than being dropped silently.
+                info["bracket_fallback"] = stats_overlay.annotate_pairwise(
+                    ax, leftover, pos_lookup, style=style, cfg=ann_cfg,
+                    top_lookup=top_lookup)
+        else:
+            info = stats_overlay.annotate_pairwise(
+                ax, items, pos_lookup, style=style, cfg=ann_cfg, top_lookup=top_lookup)
         report.config = dict(report.config or {})
         report.config["_annotation_info"] = info
         # Omnibus (ANOVA / Kruskal) and other non-pairwise results have no bracket

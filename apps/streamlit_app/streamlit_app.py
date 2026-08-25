@@ -267,8 +267,50 @@ else:
                 st.warning("This worksheet is empty. Plotting is disabled — pick "
                            "another worksheet from the dropdown.")
                 st.stop()
+            # Header row. A sheet written for people often carries a title row above the real
+            # header, or a group label on one row and the sub-label on the next. Without this
+            # control the loader's own "confirm the header row" advice cannot be acted on.
+            _hdr_choice = st.sidebar.selectbox(
+                "Header row", options=["First row", "Choose row…", "Two rows (stacked)",
+                                       "No header"],
+                key="_wb_header_mode",
+                help="Where the column names are. Use 'Two rows' when a group label sits above "
+                     "a sub-label, and 'No header' when the sheet starts straight into data.")
+            if _hdr_choice == "First row":
+                _header: object = 0
+            elif _hdr_choice == "No header":
+                _header = None
+            elif _hdr_choice == "Choose row…":
+                _header = int(st.sidebar.number_input(
+                    "Header is spreadsheet row", min_value=1,
+                    max_value=max(1, int(prev.row_count) + 1), value=1, step=1,
+                    key="_wb_header_row",
+                    help="Counting the way the spreadsheet does, so row 1 is the top row.")) - 1
+            else:
+                _top = int(st.sidebar.number_input(
+                    "Outer label on spreadsheet row", min_value=1,
+                    max_value=max(1, int(prev.row_count) + 1), value=1, step=1,
+                    key="_wb_header_top")) - 1
+                _sub = int(st.sidebar.number_input(
+                    "Sub-label on spreadsheet row", min_value=1,
+                    max_value=max(1, int(prev.row_count) + 1), value=2, step=1,
+                    key="_wb_header_sub")) - 1
+                _header = sorted({_top, _sub})
+            _fill = "merged"
+            if _hdr_choice == "Two rows (stacked)":
+                _fill = "forward" if st.sidebar.checkbox(
+                    "Carry a group label across blank cells", value=False,
+                    key="_wb_header_fill",
+                    help="On by default only when the label was written once without merging the "
+                         "cells. Off means a blank header cell stays unnamed, which is what the "
+                         "file actually records.") else "merged"
+            # Changing how the header is read changes every column name, so drop stale mappings.
+            if st.session_state.get("_wb_header_applied") != (sheet, str(_header), _fill):
+                _clear_sheet_dependent_state()
+                st.session_state["_wb_header_applied"] = (sheet, str(_header), _fill)
             try:
-                table_info = workbook_io.load_excel_sheet(wbk, sheet, source=raw)
+                table_info = workbook_io.load_excel_sheet(
+                    wbk, sheet, source=raw, header=_header, header_fill=_fill)
                 table_name = f"{uploaded.name} [{sheet}]"
             except LoaderError as exc:
                 st.sidebar.error(f"Could not load worksheet '{sheet}': {exc}")

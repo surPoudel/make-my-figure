@@ -33,7 +33,7 @@ import os
 import re
 import unicodedata
 from dataclasses import dataclass, field
-from typing import Any, BinaryIO, Dict, List, Optional, Union
+from typing import Any, BinaryIO, Dict, List, Optional, Sequence, Union
 
 import pandas as pd
 
@@ -412,7 +412,7 @@ def preview_excel_sheet(
     sheet_name: str,
     *,
     source: Optional[ExcelSource] = None,
-    header: Union[int, None] = 0,
+    header: Union[int, Sequence[int], None] = 0,
     nrows: int = 50,
 ) -> WorksheetInfo:
     """Cheap preview (first ``nrows`` rows) + advisory classification of a sheet.
@@ -529,7 +529,8 @@ def load_excel_sheet(
     sheet_name: str,
     *,
     source: Optional[ExcelSource] = None,
-    header: Union[int, None] = 0,
+    header: Union[int, Sequence[int], None] = 0,
+    header_fill: str = "merged",
     sheet_type: Optional[str] = None,
 ) -> TableInfo:
     """Fully load one worksheet into a :class:`TableInfo` with worksheet provenance.
@@ -550,6 +551,7 @@ def load_excel_sheet(
         file_type=workbook.workbook_format,
         sheet_name=sheet_name,
         header=header,
+        header_fill=header_fill,
     )
     # Attach provenance for specs/exports/filenames.
     info.source_workbook_name = workbook.source_filename

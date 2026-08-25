@@ -65,6 +65,12 @@ def default_annotation() -> Dict[str, Any]:
         "show_n": False,
         "hide_nonsignificant": False,  # drop the whole annotation when not significant
         "show_nonsignificant": True,   # draw a bracket even when ns (legacy alias)
+        # --- placement ---
+        # "bracket" draws a bracket spanning the two compared categories. "above_bar" puts the
+        # label directly over the bar it refers to, which is the convention when every condition is
+        # compared against one control: N-1 stacked brackets would take most of the panel height.
+        "placement": "bracket",
+        "above_bar_pad_frac": 0.02,   # gap between a bar top and its label, fraction of y-range
         # --- geometry (bracket engine) ---
         "font_size": None,            # None -> style.annotation_pt
         "line_width": None,           # None -> style-derived

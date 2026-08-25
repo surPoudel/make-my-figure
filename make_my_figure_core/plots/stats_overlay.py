@@ -199,6 +199,92 @@ def annotate_pairwise(
     return {"n_brackets": len(specs), "levels": n_levels, "top": new_top}
 
 
+def infer_reference_group(items) -> Optional[str]:
+    """The group every comparison shares, when there is exactly one.
+
+    A set of comparisons produced against a single control all name that control, so it can be
+    recovered from the items themselves without the caller restating it. Returns ``None`` when the
+    comparisons do not share exactly one common group - all-pairs comparisons, for instance - so the
+    caller can fall back to brackets rather than guessing which bar a label belongs to.
+    """
+    if len(items) < 2:
+        return None
+    common = None
+    for item in items:
+        pair = {str(item.group_a), str(item.group_b)}
+        common = pair if common is None else (common & pair)
+        if not common:
+            return None
+    return next(iter(common)) if len(common) == 1 else None
+
+
+def annotate_above(
+    ax,
+    items,
+    positions: Dict[Any, float],
+    tops: Dict[Any, float],
+    *,
+    style,
+    cfg: Dict[str, Any],
+    reference: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Draw each comparison's label directly above the bar it refers to.
+
+    This is the convention used when every condition in a screen is tested against one control: the
+    marker sits on the bar whose comparison it describes, and the control bar carries none. Drawing
+    the same comparisons as brackets stacks one bracket per condition, so with eight groups the
+    brackets take two thirds of the panel height and compress the bars into the remainder.
+
+    Only comparisons that involve ``reference`` are placed; anything else is left for the caller,
+    since a label above a single bar cannot say which of two non-reference groups it compared.
+    Returns a summary including the items that could not be placed.
+    """
+    if not items or not positions:
+        return {"n_labels": 0, "unplaced": list(items), "top": ax.get_ylim()[1]}
+
+    ref = reference if reference is not None else infer_reference_group(items)
+    if ref is None:
+        return {"n_labels": 0, "unplaced": list(items), "top": ax.get_ylim()[1]}
+    ref = str(ref)
+
+    fs = cfg.get("font_size") or getattr(style, "annotation_pt", 9.5)
+    text_color = getattr(style, "text_color", "#1a1a1a")
+    y0, y1 = ax.get_ylim()
+    yr = (y1 - y0) or 1.0
+    pad = float(cfg.get("above_bar_pad_frac", 0.02)) * yr
+
+    placed, unplaced, highest = [], [], y0
+    for item in items:
+        a, b = str(item.group_a), str(item.group_b)
+        if a == ref:
+            target = b
+        elif b == ref:
+            target = a
+        else:
+            unplaced.append(item)
+            continue
+        if target not in positions:
+            unplaced.append(item)
+            continue
+        x = positions[target]
+        base = tops.get(target)
+        if base is None:
+            base = _data_top(ax)
+        y = base + pad
+        ax.text(x, y, item.text, ha="center", va="bottom", fontsize=fs,
+                color=text_color, zorder=8, clip_on=False)
+        placed.append(target)
+        highest = max(highest, y)
+
+    if placed:
+        # one text line of headroom above the tallest label, so nothing is clipped
+        needed = highest + (float(cfg.get("top_margin_frac", 0.10)) * yr)
+        if needed > y1:
+            ax.set_ylim(y0, needed)
+
+    return {"n_labels": len(placed), "placed": placed, "unplaced": unplaced,
+            "reference": ref, "top": ax.get_ylim()[1]}
+
 def annotate_corner(ax, lines: List[str], *, style, loc: str = "upper left",
                     fontsize: Optional[float] = None) -> None:
     """Place a small multi-line stats panel in a plot corner without overlap."""

@@ -128,14 +128,21 @@ class DesktopController:
             workbook, sheet_name, source=source, header=header)
 
     def load_workbook_sheet(self, workbook, sheet_name: str, *, source=None,
-                            header=0) -> LoadedData:
-        """Fully load a selected worksheet into a :class:`LoadedData` with provenance."""
-        return self._load_sheet(workbook, sheet_name, source=source, header=header)
+                            header=0, header_fill: str = "merged") -> LoadedData:
+        """Fully load a selected worksheet into a :class:`LoadedData` with provenance.
+
+        ``header`` selects the header row (or rows, for a stacked header); ``header_fill`` chooses
+        whether a blank header cell outside a merged range inherits the label to its left. Both are
+        passed straight through to the loader so the desktop and browser frontends read a workbook
+        the same way.
+        """
+        return self._load_sheet(workbook, sheet_name, source=source, header=header,
+                                header_fill=header_fill)
 
     def _load_sheet(self, workbook, sheet_name: str, *, source=None,
-                    header=0) -> LoadedData:
+                    header=0, header_fill: str = "merged") -> LoadedData:
         info = workbook_io.load_excel_sheet(
-            workbook, sheet_name, source=source, header=header)
+            workbook, sheet_name, source=source, header=header, header_fill=header_fill)
         table_name = f"{workbook.source_filename} [{sheet_name}]"
         return LoadedData(info=info, table_name=table_name,
                           workbook=workbook, sheet_name=sheet_name)
