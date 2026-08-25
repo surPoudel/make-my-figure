@@ -44,5 +44,13 @@ version = { attr = "make_my_figure_core.version.__version__" }
 [tool.setuptools.packages.find]
 include = ["make_my_figure_core*"]
 
+# Resource folders are staged into make_my_figure_core/_bundled/ by setup.py at build time
+# (they live at the project root in a checkout). Declaring them here keeps them in the wheel.
+[tool.setuptools.package-data]
+make_my_figure_core = ["_bundled/**/*"]
+
+[tool.setuptools]
+include-package-data = true
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -1,0 +1,15 @@
+# Resource folders read at runtime via make_my_figure_core.resources.resource_path.
+# They live at the project root in a checkout; setup.py stages them into the package at
+# build time so an installed wheel can find them. Listing them here puts them in the sdist,
+# so a build from the sdist can stage them too.
+graft schemas
+graft style_profiles
+graft mock_data
+graft examples
+
+include LICENSE
+include README.md
+include pyproject.toml
+
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
