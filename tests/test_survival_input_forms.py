@@ -336,3 +336,31 @@ def test_precomputed_spec_round_trips_through_the_sidecar(tmp_path):
         assert norm(figure_to_bytes(again.figure, "svg")) == norm(reference)
     finally:
         plt.close(again.figure)
+
+
+def test_survival_columns_is_declared_a_multi_column_role():
+    """A single-value picker would quietly plot one curve out of several.
+
+    `survival_columns` takes one column per group. If a frontend renders it as a single-value
+    selector the figure still draws - with one curve - and looks finished, which is the failure mode
+    this whole concern was about.
+    """
+    from make_my_figure_core import ui_hints
+
+    assert ui_hints.is_multi_column("survival_columns")
+    assert "survival_columns" in ui_hints.MULTI_COLUMN_FIELDS
+    assert not ui_hints.is_multi_column("time")
+    assert not ui_hints.is_multi_column("event")
+
+
+def test_streamlit_offers_a_multiselect_for_multi_column_roles():
+    """Static check: the browser app must not render a list-valued role as a single picker."""
+    import ast
+    import pathlib
+
+    source = pathlib.Path("apps/streamlit_app/streamlit_app.py").read_text(encoding="utf-8")
+    assert "is_multi_column" in source, (
+        "the column-mapping loop must consult ui_hints.is_multi_column")
+    tree = ast.parse(source)
+    assert any(isinstance(n, ast.Attribute) and n.attr == "multiselect"
+               for n in ast.walk(tree)), "no multiselect widget in the app"

@@ -334,6 +334,20 @@ OPTIONS: Dict[str, List[Option]] = {
 }
 
 
+# Roles that take SEVERAL columns rather than one. A frontend must offer a multi-select for these;
+# rendering them as a single-value picker silently limits the figure - a survival plot given one
+# column of a three-group curve set draws one curve and looks finished.
+MULTI_COLUMN_FIELDS = frozenset({
+    "value_columns",      # matrix plots: the measurement columns
+    "survival_columns",   # precomputed survival curves: one column of S(t) per group
+})
+
+
+def is_multi_column(field: str) -> bool:
+    """True when a column role expects a list of columns."""
+    return field in MULTI_COLUMN_FIELDS
+
+
 def column_fields(plot_type: str) -> List[str]:
     return list(COLUMN_FIELDS.get(plot_type, []))
 

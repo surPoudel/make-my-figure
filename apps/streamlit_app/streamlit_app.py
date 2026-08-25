@@ -575,7 +575,20 @@ def _column_select(label: str, key: str, default):
 _handoff_mappings = st.session_state.get("_handoff_mappings") or {}
 for field in column_fields_for(plot_type):
     _default = _handoff_mappings.get(field, mapping.get(field))
-    mapping[field] = _column_select(field, field, _default)
+    if ui_hints.is_multi_column(field) and field != "value_columns":
+        # Several columns, one per series. A single-value picker here would quietly plot only the
+        # first of them. "value_columns" keeps its own richer widget further down.
+        _opts = [c for c in table_info.columns]
+        _pre = [c for c in (_default or []) if c in _opts] if isinstance(_default, (list, tuple)) \
+            else ([_default] if _default in _opts else [])
+        _picked = st.sidebar.multiselect(
+            field, _opts, default=_pre, key=f"map_{field}",
+            help="Pick one column per series. Repeated spreadsheet headers arrive "
+                 "disambiguated (e.g. event, event.1, event.2) — select them all.")
+        if _picked:
+            mapping[field] = list(_picked)
+    else:
+        mapping[field] = _column_select(field, field, _default)
 
 # Matrix plots: let the user pick the VALUE (measurement) columns explicitly.
 # Populate every non-id column and default the selection to the auto-detected
