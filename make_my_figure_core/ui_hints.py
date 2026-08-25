@@ -186,8 +186,11 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("input_form", "Input form", "choice", "subject_level",
                ["subject_level", "precomputed"]),
         Option("y_scale", "Y-axis scale", "choice", "fraction", ["fraction", "percent"]),
+        # minimum is below the axis range on purpose: a frontend that cannot show an empty
+        # numeric field uses the minimum as its "(auto)" sentinel, so keeping it outside 0-100
+        # leaves every real value - including 0 - expressible.
         Option("reference_line", "Reference line (y-axis units, blank for none)", "number",
-               None, minimum=0.0, maximum=100.0, step=0.5, decimals=2),
+               None, minimum=-1.0, maximum=100.0, step=0.5, decimals=2),
         Option("curve_style", "Curve style (line: precomputed curves only)", "choice", "step",
                ["step", "line"]),
         Option("y_ticks", "Y ticks", "choice", "auto", ["auto", "ends_and_midpoint"]),

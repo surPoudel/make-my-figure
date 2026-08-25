@@ -2027,6 +2027,17 @@ class MainWindow(QMainWindow):
             w.setSingleStep(opt.step)
         if opt.default is not None:
             w.setValue(opt.default)
+        else:
+            # An option with no default is optional: leaving it alone must mean "auto", not
+            # "send the minimum". A spin box cannot be empty, so Qt's special-value text is used -
+            # at the minimum it displays "(auto)" and _collect_mapping omits the key entirely.
+            # Without this, x_min/x_max would both arrive as their minimum and an axis-range
+            # option meant to be blank would silently constrain the figure.
+            w.setSpecialValueText("(auto)")
+            w.setValue(w.minimum())
+            w.setProperty("mmf_optional", True)
+            hint = "Leave at \u201c(auto)\u201d to let the figure choose."
+            w.setToolTip(f"{w.toolTip()}\n{hint}" if w.toolTip() else hint)
         w.valueChanged.connect(self._schedule_render)   # debounced (continuous control)
         return w
 
@@ -2056,6 +2067,10 @@ class MainWindow(QMainWindow):
             elif isinstance(w, QComboBox):
                 mapping[key] = w.currentText()
             elif isinstance(w, (QSpinBox, QDoubleSpinBox)):
+                # An optional numeric sitting at its minimum reads as "(auto)": omit it so the
+                # renderer applies its own default instead of being handed a sentinel.
+                if w.property("mmf_optional") and w.value() == w.minimum():
+                    continue
                 mapping[key] = w.value()
         return mapping
 

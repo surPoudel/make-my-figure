@@ -458,3 +458,33 @@ def test_axis_options_are_exposed_to_the_frontends():
 
     keys = {o.key for o in options(PLOT)}
     assert {"y_ticks", "x_min", "x_max"} <= keys
+
+
+def test_optional_numeric_options_declare_no_default():
+    """A frontend must be able to tell "leave this alone" from "send the minimum".
+
+    The convention across both frontends is that a number option with ``default is None`` is
+    optional: Streamlit renders a text box that may be empty, and the desktop uses the spin box's
+    special-value text. If a default were added here, the desktop would silently start sending a
+    value for an axis range the user never set.
+    """
+    from make_my_figure_core.ui_hints import options
+
+    by_key = {o.key: o for o in options(PLOT)}
+    for key in ("reference_line", "x_min", "x_max"):
+        assert by_key[key].default is None, f"{key} must stay optional"
+        assert by_key[key].minimum is not None, f"{key} needs a minimum to act as the sentinel"
+    # the sentinel must sit outside the usable range, so every real value stays expressible
+    assert by_key["reference_line"].minimum < 0.0
+
+
+def test_desktop_treats_an_optional_numeric_at_its_minimum_as_unset():
+    """Static check: Qt cannot run here, so the two code paths are asserted from source."""
+    import pathlib
+
+    source = pathlib.Path("apps/desktop_app/main.py").read_text(encoding="utf-8")
+    assert 'setSpecialValueText("(auto)")' in source, (
+        "an optional numeric must display (auto) at its minimum")
+    assert 'setProperty("mmf_optional", True)' in source
+    assert 'w.property("mmf_optional") and w.value() == w.minimum()' in source, (
+        "the collector must omit an optional numeric left at (auto)")
