@@ -28,6 +28,7 @@ import pandas as pd
 
 from make_my_figure_core.plots.base import (
     RenderError,
+    apply_axis_overrides,
     RenderResult,
     base_metadata,
     coerce_numeric,
@@ -337,6 +338,11 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             legend_title = str(group_col) if group_col is not None else None
             ax.legend(title=legend_title, frameon=False, loc="best")
         style_axes(ax, style)
+        # Axis frame overrides, applied after the cosmetics so they are not overwritten.
+        # "ends_and_midpoint" means 0/50/100 on a percent axis and 0/0.5/1 on a fraction one,
+        # which is how survival curves are usually labelled.
+        axis_applied = apply_axis_overrides(
+            ax, spec, tick_values=[0.0, top / 2.0, top])
 
         from make_my_figure_core.plots.stats_integration import run_and_annotate
 
@@ -358,6 +364,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     meta["survival_input_form"] = input_form
     meta["y_scale"] = scale
     meta["n_curves"] = len(curves)
+    if axis_applied:
+        meta["axis_overrides"] = axis_applied
     if stats_report is not None:
         meta["statistics_report"] = stats_report.to_dict()
     return RenderResult(figure=fig, metadata=meta, warnings=warnings,

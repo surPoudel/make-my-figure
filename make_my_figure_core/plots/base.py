@@ -114,6 +114,80 @@ def figure_size(spec: Dict[str, Any], style: StyleProfile, *, aspect: float) -> 
     return style.figure_size_inches(width, aspect=aspect)
 
 
+def apply_axis_overrides(ax, spec: Dict[str, Any], *, axis_min: float = None,
+                         axis_max: float = None, tick_values=None) -> Dict[str, Any]:
+    """Apply optional axis-range and tick overrides from the spec.
+
+    Journals often want a survival or dose axis drawn to a round limit with only the meaningful
+    ticks labelled - 0, 50 and 100 on a percent axis - rather than whatever the data happened to
+    span and whatever matplotlib chose. Nothing here changes the data: it changes the frame drawn
+    around it, and a range that would hide drawn values is refused rather than silently clipping.
+
+    Reads ``mapping['x_min' | 'x_max' | 'y_ticks']`` (the option widgets write into ``mapping``),
+    falling back to the same keys in ``layout``. Call this *after* ``style_axes`` so the cosmetics
+    do not overwrite it. Returns what was applied, for the metadata record.
+    """
+    mapping = spec.get("mapping", {}) or {}
+    layout = spec.get("layout", {}) or {}
+
+    def _opt(key):
+        value = mapping.get(key, layout.get(key))
+        return None if value in (None, "", "auto") else value
+
+    applied: Dict[str, Any] = {}
+
+    x_min, x_max = _opt("x_min"), _opt("x_max")
+    if x_min is not None or x_max is not None:
+        lo, hi = ax.get_xlim()
+        try:
+            new_lo = float(x_min) if x_min is not None else lo
+            new_hi = float(x_max) if x_max is not None else hi
+        except (TypeError, ValueError):
+            raise RenderError(
+                f"x_min/x_max must be numbers, got {x_min!r} and {x_max!r}."
+            )
+        if new_hi <= new_lo:
+            raise RenderError(
+                f"x_max ({new_hi:g}) must be greater than x_min ({new_lo:g})."
+            )
+        # Refuse a window that would hide plotted points; clipping data silently is the
+        # failure this codebase is trying not to repeat.
+        drawn = [np.asarray(line.get_xdata(), dtype=float) for line in ax.lines
+                 if len(line.get_xdata())]
+        if drawn:
+            finite = np.concatenate([d[np.isfinite(d)] for d in drawn if d.size])
+            if finite.size and (finite.min() < new_lo - 1e-9 or finite.max() > new_hi + 1e-9):
+                raise RenderError(
+                    f"the requested x range [{new_lo:g}, {new_hi:g}] would hide data spanning "
+                    f"[{finite.min():g}, {finite.max():g}]. Widen the range, or leave it on auto."
+                )
+        ax.set_xlim(new_lo, new_hi)
+        applied["x_limits"] = [new_lo, new_hi]
+
+    ticks = _opt("y_ticks")
+    if ticks is not None:
+        if str(ticks) == "ends_and_midpoint":
+            if tick_values is None:
+                lo, hi = ax.get_ylim()
+                tick_values = [lo, (lo + hi) / 2.0, hi]
+            ax.set_yticks(list(tick_values))
+            applied["y_ticks"] = list(tick_values)
+        else:
+            try:
+                values = [float(v) for v in str(ticks).replace(";", ",").split(",")
+                          if str(v).strip()]
+            except ValueError:
+                raise RenderError(
+                    f"y_ticks must be 'auto', 'ends_and_midpoint', or a comma-separated list of "
+                    f"numbers, got {ticks!r}."
+                )
+            if not values:
+                raise RenderError("y_ticks was given no usable numbers.")
+            ax.set_yticks(values)
+            applied["y_ticks"] = values
+    return applied
+
+
 def style_axes(ax, style: "StyleProfile | None" = None) -> None:
     """Apply common publication axis cosmetics driven by style tokens."""
     if style is not None:

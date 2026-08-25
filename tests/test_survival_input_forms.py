@@ -378,3 +378,83 @@ def test_desktop_gives_multi_column_roles_a_list_widget():
         "the column-role loop must give multi-column roles a multi-select widget")
     assert "_multi_col_widgets" in source, "collected values must reach the mapping"
     ast.parse(source)   # the module must at least be syntactically valid
+
+
+# --------------------------------------------------------------------------------------
+# Axis range and tick overrides
+# --------------------------------------------------------------------------------------
+
+@pytest.mark.parametrize("scale,expected", [
+    ("percent", [0.0, 50.0, 100.0]),
+    ("fraction", [0.0, 0.5, 1.0]),
+])
+def test_ends_and_midpoint_ticks_follow_the_scale(scale, expected):
+    """A survival axis is normally labelled only at 0, half and full."""
+    df = _precomputed_curves()
+    res = _render({"input_form": "precomputed", "time": "time_months", "survival": "event",
+                   "y_scale": scale, "y_ticks": "ends_and_midpoint"}, df)
+    try:
+        ticks = [round(float(t), 6) for t in res.figure.axes[0].get_yticks()]
+        assert ticks == expected
+        assert res.metadata["axis_overrides"]["y_ticks"] == expected
+    finally:
+        plt.close(res.figure)
+
+
+def test_explicit_tick_list_is_accepted():
+    df = _precomputed_curves()
+    res = _render({"input_form": "precomputed", "time": "time_months", "survival": "event",
+                   "y_scale": "percent", "y_ticks": "0, 25, 75, 100"}, df)
+    try:
+        assert [round(float(t)) for t in res.figure.axes[0].get_yticks()] == [0, 25, 75, 100]
+    finally:
+        plt.close(res.figure)
+
+
+def test_x_range_can_be_set_to_a_round_limit():
+    df = _precomputed_curves()          # data spans 0..40
+    res = _render({"input_form": "precomputed", "time": "time_months", "survival": "event",
+                   "y_scale": "percent", "x_min": 0, "x_max": 50}, df)
+    try:
+        assert tuple(round(float(v)) for v in res.figure.axes[0].get_xlim()) == (0, 50)
+        assert res.metadata["axis_overrides"]["x_limits"] == [0.0, 50.0]
+    finally:
+        plt.close(res.figure)
+
+
+def test_an_x_range_that_would_hide_data_is_refused():
+    """Silently clipping plotted points is the failure this whole concern was about."""
+    df = _precomputed_curves()          # spans 0..40
+    with pytest.raises(RenderError, match="would hide data"):
+        _render({"input_form": "precomputed", "time": "time_months", "survival": "event",
+                 "x_max": 20}, df)
+
+
+def test_inverted_x_range_is_refused():
+    df = _precomputed_curves()
+    with pytest.raises(RenderError, match="greater than"):
+        _render({"input_form": "precomputed", "time": "time_months", "survival": "event",
+                 "x_min": 40, "x_max": 10}, df)
+
+
+def test_nonsense_tick_spec_is_refused():
+    df = _precomputed_curves()
+    with pytest.raises(RenderError, match="y_ticks"):
+        _render({"input_form": "precomputed", "time": "time_months", "survival": "event",
+                 "y_ticks": "sideways"}, df)
+
+
+def test_axis_overrides_default_to_auto_and_record_nothing():
+    df = _precomputed_curves()
+    res = _render({"input_form": "precomputed", "time": "time_months", "survival": "event"}, df)
+    try:
+        assert "axis_overrides" not in res.metadata
+    finally:
+        plt.close(res.figure)
+
+
+def test_axis_options_are_exposed_to_the_frontends():
+    from make_my_figure_core.ui_hints import options
+
+    keys = {o.key for o in options(PLOT)}
+    assert {"y_ticks", "x_min", "x_max"} <= keys
