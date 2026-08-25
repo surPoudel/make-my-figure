@@ -165,9 +165,10 @@ the exported sidecar like any other setting. No frontend-specific code was touch
 - **Dunnett's test is not implemented**, so the paper's exact procedure cannot be reproduced. Adding
   it would be the right way to serve this figure type properly, and is recorded as a follow-up rather
   than approximated.
-- **`placement` is not yet a GUI control.** It is available in the StatsSpec and therefore in the
-  PlotSpec and its sidecar; adding the checkbox to both frontends' statistics panels is a small
-  follow-up.
+- ~~`placement` is not yet a GUI control.~~ **Now added to both frontends'** statistics panels: an
+  "Annotation placement" selector in the Streamlit statistics section and in the desktop
+  `StatisticsPanel`, the latter also restoring the value when a saved spec is loaded so it
+  round-trips.
 - **`above_bar` needs a reference group.** With all-pairs comparisons it places nothing and the
   bracket engine takes over — deliberate, since the label would otherwise be ambiguous.
 - **Labels are not de-collided horizontally.** The overlap test passes at eight groups because each

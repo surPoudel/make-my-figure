@@ -87,7 +87,17 @@ control for scale, label or anything else, so the plot felt hard-wired.
 `make_my_figure_core/ui_hints.py`
 
 - `column_fields` gains `survival_columns`; `options` gains `input_form`, `y_scale`,
-  `reference_line`, `curve_style` — so both frontends now render controls for them.
+  `reference_line`, `curve_style`.
+
+`apps/streamlit_app/streamlit_app.py`
+
+- **Correction to an earlier claim in this report.** Adding the options to `ui_hints` surfaced them
+  in the desktop app, which reads that registry, but *not* in the browser app, which kept its own
+  hardcoded copy of the role table. That copy had drifted to 18 of the 37 plot types, leaving 19 with
+  no column-mapping controls at all. The app now calls `ui_hints.column_fields()` (with a documented
+  additive override for the PCA colour/shape roles it offers on top) and renders any registered
+  option that no other section already owns. All four survival options and the `survival_columns`
+  role are now reachable in the browser, verified with Streamlit's own `AppTest` harness.
 
 The renderer still copies before modifying, so the caller's DataFrame is untouched (asserted).
 
@@ -149,8 +159,9 @@ Those PNGs derive from collaborator data and were written to a temporary locatio
 
 ## Cross-frontend
 
-The fix is entirely in the shared core plus the shared `ui_hints`, so both frontends inherit it. This
-was verified rather than assumed: for the same mapping, `DesktopController.build_spec` +
+The renderer fix is in the shared core, so both frontends inherit it. Reaching the *options* needed a
+second change: the desktop reads `ui_hints` and picked them up, the browser app did not until its
+duplicate role table was replaced (above). Both were then verified rather than assumed: for the same mapping, `DesktopController.build_spec` +
 `.render` and the direct `registry.render` path produced identical y-limits, y-label, x-label, curve
 count, `y_scale`, input form, **and identical curve coordinates**. Both frontends build their control
 panels from `ui_hints`, which now reports 4 options and 4 column roles for this plot type.

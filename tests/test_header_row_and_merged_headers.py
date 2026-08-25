@@ -381,3 +381,77 @@ def test_streamlit_app_passes_the_header_choice_to_the_loader():
         keywords = {kw.arg for kw in call.keywords}
         assert "header" in keywords, "worksheet loaded without forwarding the header choice"
         assert "header_fill" in keywords, "worksheet loaded without forwarding header_fill"
+
+
+def test_streamlit_column_roles_come_from_ui_hints():
+    """One source of truth for column roles across the two frontends.
+
+    The Streamlit app used to keep its own copy of the role table. It had drifted to 18 of the 37
+    plot types - leaving 19 with no column-mapping controls - and lacked roles added elsewhere,
+    including the `survival_columns` role this work introduced. Any extra roles the app offers must
+    be additive, so switching to the shared registry cannot remove a control.
+    """
+    import ast
+    import pathlib
+
+    from make_my_figure_core import ui_hints
+    from make_my_figure_core.plots.registry import _RENDERERS
+
+    source = pathlib.Path("apps/streamlit_app/streamlit_app.py").read_text(encoding="utf-8")
+    tree = ast.parse(source)
+
+    # the app must not carry a second full role table
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Dict):
+            name = node.targets[0].id if isinstance(node.targets[0], ast.Name) else ""
+            if name == "COLUMN_FIELDS":
+                raise AssertionError(
+                    "the Streamlit app has its own COLUMN_FIELDS again; roles must come from "
+                    "ui_hints so both frontends stay in step")
+
+    # The module runs Streamlit at import time, so the helper's behaviour is re-created here from
+    # its own source rather than imported. That keeps this test working whether or not Streamlit
+    # is installed, which matters because it is an optional extra.
+    extras = {}
+    helper = None
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and getattr(node.targets[0], "id", "") == "EXTRA_COLUMN_FIELDS":
+            extras = ast.literal_eval(node.value)
+        if isinstance(node, ast.FunctionDef) and node.name == "column_fields_for":
+            helper = node
+    assert helper is not None, "column_fields_for() is missing from the Streamlit app"
+
+    def column_fields_for(plot_type):
+        fields = list(ui_hints.column_fields(plot_type))
+        for extra in extras.get(plot_type, []):
+            if extra not in fields:
+                fields.append(extra)
+        return fields
+
+    # every registered plot type now gets its roles, and nothing is lost
+    for plot_type in _RENDERERS:
+        roles = column_fields_for(plot_type)
+        assert set(ui_hints.column_fields(plot_type)) <= set(roles), plot_type
+
+    # the survival role this work added is reachable in the browser app
+    assert "survival_columns" in column_fields_for("kaplan_meier_survival_curve")
+    # and the app's own PCA extras survive
+    assert {"color", "shape"} <= set(column_fields_for("pca_scatter_from_matrix"))
+
+
+def test_streamlit_renders_registered_options_without_duplicating_owned_ones():
+    """The generic option pass must not offer a second widget for a key another section owns."""
+    import ast
+    import pathlib
+
+    source = pathlib.Path("apps/streamlit_app/streamlit_app.py").read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    owned = None
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign) and getattr(node.targets[0], "id", "") == "_OPTIONS_OWNED_ELSEWHERE":
+            owned = ast.literal_eval(node.value)
+    assert owned, "_OPTIONS_OWNED_ELSEWHERE is missing"
+    # the keys that have a dedicated widget in the publication-style section
+    assert {"x_tick_rotation", "y_tick_rotation", "legend_location",
+            "colorbar_location", "colorbar_pad", "colorbar_shrink"} <= set(owned)
+    assert "ui_hints.options(plot_type)" in source, "options are no longer read from the registry"

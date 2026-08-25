@@ -61,6 +61,15 @@ CORRECTION_CHOICES = [
 ANNOTATION_MODES = [("stars", "Stars (*, **)"), ("p", "Exact p-values"), ("both", "Stars + p")]
 
 # Rich annotation content selector (Part 2).
+# Where the annotation sits. "bracket" spans the two compared categories; "above_bar" puts one
+# label over each compared bar and leaves the reference bar unmarked, which is the convention when
+# every condition is tested against a single control - brackets would stack one per comparison and
+# take most of the panel height.
+ANNOTATION_PLACEMENT_CHOICES = [
+    ("bracket", "Bracket between the compared bars"),
+    ("above_bar", "Above each bar (needs a control group)"),
+]
+
 ANNOTATION_CONTENT_CHOICES = [
     ("stars", "Stars only"),
     ("p", "P-value only"),
@@ -116,6 +125,11 @@ class StatisticsPanel(QGroupBox):
 
         self.annotation_combo = self._combo(ANNOTATION_CONTENT_CHOICES)
         form.addRow("Annotation shows", self.annotation_combo)
+        self.placement_combo = self._combo(ANNOTATION_PLACEMENT_CHOICES)
+        self.placement_combo.setToolTip(
+            "Above-bar placement compares every condition to the control group and puts one label "
+            "over each bar. Comparisons it cannot attribute to a single bar fall back to brackets.")
+        form.addRow("Annotation placement", self.placement_combo)
         self.template_edit = QLineEdit()
         self.template_edit.setPlaceholderText("{effect_symbol} = {effect}, p = {p}")
         self.template_edit.setToolTip("Tokens: {p} {p_adj} {stars} {stat_symbol} {stat} "
@@ -248,6 +262,7 @@ class StatisticsPanel(QGroupBox):
             "show_effect": self.show_effect_cb.isChecked(),
             "hide_nonsignificant": self.hide_ns_cb.isChecked(),
             "font_size": self.fontsize_spin.value(),
+            "placement": self.placement_combo.currentData(),
         })
 
         def _val(combo):
@@ -310,6 +325,7 @@ class StatisticsPanel(QGroupBox):
                 self.fontsize_spin.setValue(float(ann["font_size"]))
             except (TypeError, ValueError):
                 pass
+        _set(self.placement_combo, ann.get("placement") or "bracket")
         self.show_effect_cb.setChecked(bool(ann.get("show_effect", False)))
         self.hide_ns_cb.setChecked(bool(ann.get("hide_nonsignificant", False)))
         self._on_content_changed()

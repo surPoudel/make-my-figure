@@ -31,6 +31,7 @@ if _REPO_ROOT not in sys.path:
 
 import streamlit as st
 
+from make_my_figure_core import ui_hints
 from make_my_figure_core.io.loaders import LoaderError, load_table
 from make_my_figure_core.io import workbook as workbook_io
 from make_my_figure_core.plots.base import RenderError
@@ -72,26 +73,27 @@ SAMPLE_FILES = {
 PCA_METADATA_SAMPLE = "pca_sample_metadata.csv"
 
 # Which mapping keys are exposed as column selectors per plot type.
-COLUMN_FIELDS = {
-    "barplot_with_error_bar": ["x", "y", "color"],
-    "grouped_barplot_with_error_bar": ["x", "group", "y"],
-    "heatmap_clustered_matrix": ["row_id"],
-    "volcano_plot": ["x", "p", "label"],
-    "scatterplot_with_regression": ["x", "y", "color", "label"],
-    "boxplot_or_violin_with_points": ["x", "y"],
-    "lineplot_timecourse_with_error_band": ["x", "y", "color"],
-    "ridge_or_density_plot": ["x", "group"],
-    "enrichment_dotplot": ["y", "x", "size", "color"],
-    "kaplan_meier_survival_curve": ["time", "event", "group"],
-    "stacked_bar_composition": ["x", "stack", "y", "facet_or_sort_by"],
-    "waterfall_plot": ["x", "y", "color"],
-    "pca_scatter_from_matrix": ["matrix_row_id", "color", "shape"],
-    "oncoprint_mutation_heatmap": ["sample", "row", "fill"],
-    "lollipop_mutation_plot": ["x", "y", "color", "label"],
-    "roc_curve": ["label", "score", "score2"],
-    "forest_plot": ["label", "estimate", "lower", "upper"],
-    "network_graph": ["source", "target", "weight", "interaction_type"],
+# Column roles come from the shared ui_hints registry, which is also what the desktop app reads,
+# so a role added for a plot type appears in both frontends instead of only one. This module used to
+# keep its own copy of the table; it had drifted to 18 of the 37 plot types, which left the other 19
+# with no column-mapping controls at all, and it lacked roles that had since been added elsewhere.
+#
+# EXTRA_COLUMN_FIELDS holds the few roles this app offers that ui_hints deliberately does not.
+# PCA colour/shape are read from the separate sample-metadata table, so ui_hints exposes them via
+# PCA_METADATA_FIELDS rather than as columns of the matrix; this app asks for them here instead.
+# Entries are appended, never substituted, so switching to ui_hints cannot remove a control.
+EXTRA_COLUMN_FIELDS = {
+    "pca_scatter_from_matrix": ["color", "shape"],
 }
+
+
+def column_fields_for(plot_type: str) -> list:
+    fields = list(ui_hints.column_fields(plot_type))
+    for extra in EXTRA_COLUMN_FIELDS.get(plot_type, []):
+        if extra not in fields:
+            fields.append(extra)
+    return fields
+
 
 
 st.set_page_config(page_title="Make My Figure", layout="wide")
@@ -571,7 +573,7 @@ def _column_select(label: str, key: str, default):
 # A Matrix-Workflow handoff supplies suggested mappings for the recommended plot;
 # they seed the selectbox defaults once (the map_* keys were cleared on handoff).
 _handoff_mappings = st.session_state.get("_handoff_mappings") or {}
-for field in COLUMN_FIELDS.get(plot_type, []):
+for field in column_fields_for(plot_type):
     _default = _handoff_mappings.get(field, mapping.get(field))
     mapping[field] = _column_select(field, field, _default)
 
@@ -861,6 +863,62 @@ if _cbpad > 0:
 if _cbshrink < 1.0:
     mapping["colorbar_shrink"] = _cbshrink
 
+# Any remaining registered option for this plot type, rendered from ui_hints.
+#
+# The hand-written widgets elsewhere cover the options this app has always offered. This fills in
+# the rest, so an option added to the shared registry reaches the browser app as well as the
+# desktop one instead of being reachable only by hand-editing a PlotSpec.
+#
+# It deliberately runs after EVERY other section that writes into `mapping` - the per-plot
+# options, the publication-style controls and the colorbar controls all do - and skips any key
+# already set. Placing it earlier rendered a second widget for keys a later section then
+# overwrote, and an exclusion list would drift out of date, which is the duplication this change
+# is removing in the first place.
+# Keys that already have a dedicated widget in another section. Most per-plot options are
+# detected by simply being present in `mapping`, but these are set into `_layout_controls`
+# instead, or written only when moved off their default, so they would otherwise be offered a
+# second time under the registry's own label - "X-axis label angle" beside the existing
+# "X tick angle", or "Colorbar location" beside the ⑤ Colorbar expander's "Location".
+_OPTIONS_OWNED_ELSEWHERE = {
+    "x_tick_rotation", "y_tick_rotation", "y_label_rotation",   # ⑤ Axis labels
+    "legend_location",                                          # ⑤ Legend
+    "colorbar_location", "colorbar_pad", "colorbar_shrink",      # ⑤ Colorbar
+}
+_generic_opts = [o for o in ui_hints.options(plot_type)
+                 if o.key not in mapping and o.key not in _OPTIONS_OWNED_ELSEWHERE]
+if _generic_opts:
+    for _o in _generic_opts:
+        _label = _o.label or _o.key
+        if _o.kind == "choice" and _o.choices:
+            _default = _o.default if _o.default in _o.choices else _o.choices[0]
+            mapping[_o.key] = st.sidebar.selectbox(
+                _label, list(_o.choices), index=list(_o.choices).index(_default),
+                key=f"opt_{plot_type}_{_o.key}")
+        elif _o.kind == "bool":
+            mapping[_o.key] = st.sidebar.checkbox(
+                _label, value=bool(_o.default), key=f"opt_{plot_type}_{_o.key}")
+        elif _o.kind == "number":
+            # A number option with no default is optional: an empty box must stay unset rather
+            # than silently becoming a value the user never chose.
+            if _o.default is None:
+                _raw = st.sidebar.text_input(_label, value="",
+                                             key=f"opt_{plot_type}_{_o.key}")
+                if str(_raw).strip():
+                    try:
+                        mapping[_o.key] = float(_raw)
+                    except ValueError:
+                        st.sidebar.warning(f"{_label}: '{_raw}' is not a number — ignored.")
+            else:
+                _kw = {}
+                if _o.minimum is not None:
+                    _kw["min_value"] = float(_o.minimum)
+                if _o.maximum is not None:
+                    _kw["max_value"] = float(_o.maximum)
+                if _o.step is not None:
+                    _kw["step"] = float(_o.step)
+                mapping[_o.key] = st.sidebar.number_input(
+                    _label, value=float(_o.default), key=f"opt_{plot_type}_{_o.key}", **_kw)
+
 # Honest, plot-aware note: flag controls that don't apply to the active plot instead
 # of silently ignoring them (plot-specific colors live in the per-plot options above).
 from make_my_figure_core.styles.capabilities import (  # noqa: E402
@@ -893,6 +951,12 @@ with st.sidebar.expander("Statistical tests & annotations", expanded=False):
     correction = st.selectbox(
         "Correction", ["benjamini_hochberg", "bonferroni", "holm", "none"])
     ann_mode = st.selectbox("Annotation", ["stars", "p", "both"])
+    ann_placement = st.selectbox(
+        "Annotation placement", ["bracket", "above_bar"],
+        help="'bracket' spans the two compared categories. 'above_bar' puts one label over each "
+             "compared bar and leaves the control bar unmarked — the usual convention when every "
+             "condition is tested against one control, where brackets would stack up and squeeze "
+             "the bars. Needs a control group; anything it cannot place falls back to a bracket.")
     show_effect = st.checkbox("Show effect size on figure", value=False)
     posthoc = st.checkbox("Post-hoc pairwise after omnibus", value=False)
     _none = "(none)"
@@ -909,7 +973,8 @@ with st.sidebar.expander("Statistical tests & annotations", expanded=False):
             "subject_column": None if subject_column == _none else subject_column,
             "reference_group": reference_group or None,
             "annotate": True,
-            "annotation": {"mode": ann_mode, "show_effect": show_effect},
+            "annotation": {"mode": ann_mode, "show_effect": show_effect,
+                           "placement": ann_placement},
         }
 
 # No plot chosen yet: show the empty-state and stop before building a spec (parity

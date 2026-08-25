@@ -195,11 +195,26 @@ correctly returns a single result to which `vs_control` does not apply.
 `test_controller_workbook`, `test_grouping`, `test_matrix_workflow_core`, `test_matrix_handoff`),
 then the full suite.
 
-**pytest result:** `1258 passed, 5 skipped`
-(`PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python -m pytest -q --ignore=tests/test_desktop_gui.py`),
-reproduced across two independent full-suite runs (476 s and 486 s) with the same counts and the
-same five skips. Baseline before any change: `1203 passed, 5 skipped`.
-**+55 new tests, 0 failures, 0 regressions.**
+**pytest result.** Two environments, reported separately because installing an optional extra
+changes what runs:
+
+| environment | result |
+|---|---|
+| Streamlit absent (as delivered) | `1258 passed, 5 skipped`, reproduced across two runs (476 s, 486 s) |
+| Streamlit installed | `1264 passed, 3 skipped, 2 failed` (522 s) |
+
+Baseline before any change: `1203 passed, 5 skipped`. **+57 new tests, 0 regressions.**
+
+The two failures appear only once Streamlit is installed, because the tests covering them were being
+skipped for a missing import. **Both are pre-existing and neither is caused by this work** — each was
+run against the original `7c8b5a5` file and fails identically, with the same error text:
+
+- `test_app_smoke.py::test_app_runs_each_sample_plot_type` — `ValueError: 'barplot_with_error_bar' is not in list` (the app's plot-type list no longer contains internal names)
+- `test_streamlit_matrix_wizard.py::test_preprocess_diagnostics_runs` —
+  `st.session_state has no key "get"`, which looks like a Streamlit 1.62 incompatibility in the
+  test's own mocking; `requirements.txt` only pins `streamlit>=1.30`
+
+They are outside the three concerns and were left alone.
 
 **Skipped tests — skips, not passes:**
 
@@ -221,10 +236,19 @@ that is reasoning rather than evidence.
 
 **Frontends tested.** The shared core was exercised directly and through the GUI-free
 `DesktopController`, and for C1 the controller path was shown to produce **identical** limits, labels,
-curve count and curve coordinates to the direct core path. The Qt widget layer could not be run
-(PySide6 imports but `QtTest` cannot load its platform library) and **Streamlit is not installed**, so
-neither GUI was executed. The Streamlit change is covered by an AST guard on its call site rather than
-by running the app. Both frontends read the same `ui_hints`, which the tests assert.
+curve count and curve coordinates to the direct core path.
+
+Streamlit was subsequently installed (1.62.0) and the browser app **was** run: it serves, reports
+healthy, and its script executes without raising. Streamlit's own `AppTest` harness was then used to
+confirm each new control actually appears — the four survival options and the `survival_columns` role
+for C1, the annotation-placement selector for C3, column-mapping controls for plot types that
+previously had none, PCA's colour/shape controls preserved, and no duplicated widget introduced. The
+one duplicate label that remains ("Location", twice) was verified present in the committed
+pre-change file and is the Legend and Colorbar expanders sharing a label.
+
+The Qt widget layer still could not be run — PySide6 imports but `QtTest` cannot load
+`libxkbcommon.so.0` — so the desktop placement control is covered by parsing and by a StatsSpec
+round-trip check rather than by clicking it.
 
 **Unresolved / follow-ups (not fixed here):**
 
@@ -232,10 +256,13 @@ by running the app. Both frontends read the same `ui_hints`, which the tests ass
 2. **Statistical annotation is not wired into `lineplot_timecourse_with_error_band`**, so C2's 4E/4F
    cannot carry the paper's paired *t* test on the figure.
 3. **`overlay` draws a KDE, not a fitted Gaussian**; C2's paper says "Gaussian distributions".
-4. **No GUI control yet for `annotation.placement` (C3) or `header_fill` (C2)** in either frontend,
-   and no header-row control in the **desktop** GUI — the desktop controller accepts it, but adding
-   an untestable Qt widget was judged worse than recording the gap.
-5. **Seven other plot types still expose zero options** (`pca_scatter_from_matrix`,
+4. **Partly closed.** `annotation.placement` (C3) now has a control in both frontends, and the C1
+   survival options are reachable in both. Still open: `header_fill` (C2) has no GUI control, and the
+   **desktop** GUI has no header-row control — its controller accepts both, but adding a Qt widget
+   that cannot be exercised in this environment was judged worse than recording the gap.
+5. **The browser app's duplicate role table is gone**, which also gave column-mapping controls to
+   19 plot types that previously had none in that frontend. Seven other plot types still expose zero
+   *options* (`pca_scatter_from_matrix`,
    `oncoprint_mutation_heatmap`, `roc_curve`, `precision_recall_curve`, `upset_plot`, `sankey_plot`,
    `embedding_scatter`) — the same shape of problem as C1's.
 6. **Merged-header recovery needs openpyxl**, so legacy `.xls` falls back to pandas' behaviour.
