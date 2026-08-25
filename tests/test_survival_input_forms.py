@@ -364,3 +364,17 @@ def test_streamlit_offers_a_multiselect_for_multi_column_roles():
     tree = ast.parse(source)
     assert any(isinstance(n, ast.Attribute) and n.attr == "multiselect"
                for n in ast.walk(tree)), "no multiselect widget in the app"
+
+
+def test_desktop_gives_multi_column_roles_a_list_widget():
+    """Static check: the desktop cannot be exercised here (Qt has no display), so the
+    widget-selection logic is asserted from source instead of by clicking it."""
+    import ast
+    import pathlib
+
+    source = pathlib.Path("apps/desktop_app/main.py").read_text(encoding="utf-8")
+    assert "from make_my_figure_core import ui_hints" in source
+    assert "ui_hints.is_multi_column(field)" in source, (
+        "the column-role loop must give multi-column roles a multi-select widget")
+    assert "_multi_col_widgets" in source, "collected values must reach the mapping"
+    ast.parse(source)   # the module must at least be syntactically valid

@@ -115,6 +115,7 @@ _MATRIX_PLOT_TYPES = {
     "hierarchical_clustering",
     "hierarchical_dendrogram",
 }
+from make_my_figure_core import ui_hints
 from make_my_figure_core.io.loaders import LoaderError
 from make_my_figure_core.io import workbook as workbook_io
 from make_my_figure_core.plots.base import RenderError
@@ -1860,6 +1861,7 @@ class MainWindow(QMainWindow):
             # No plot type selected — clear the option controls too and stop.
             self._clear_form(self.options_form)
             self._option_widgets = {}
+            self._multi_col_widgets = {}
             return
         defaults = self.controller.default_mapping(pt)
         col_opts = self._column_options()
@@ -1872,7 +1874,29 @@ class MainWindow(QMainWindow):
         else:
             prefill = self._group_value_prefill(pt, col_opts)
         handoff_map = self._handoff_mapping or {}
+        self._multi_col_widgets = {}
         for field in self.controller.column_fields(pt):
+            if ui_hints.is_multi_column(field) and field != "value_columns":
+                # Several columns, one per series. A single combo here would quietly plot only
+                # the first of them - a three-group survival curve would come out as one curve
+                # and look finished. "value_columns" keeps its own richer widget below.
+                lw = QListWidget()
+                lw.setSelectionMode(QListWidget.ExtendedSelection)
+                lw.setMaximumHeight(120)
+                lw.setToolTip("Pick one column per series. Repeated spreadsheet headers arrive "
+                              "disambiguated (e.g. event, event.1, event.2) — select them all.")
+                pre = handoff_map.get(field) or defaults.get(field) or []
+                if isinstance(pre, str):
+                    pre = [pre]
+                pre_set = {str(x) for x in pre}
+                for c in self.data.info.columns if self.data is not None else []:
+                    it = QListWidgetItem(str(c))
+                    lw.addItem(it)
+                    it.setSelected(str(c) in pre_set)
+                lw.itemSelectionChanged.connect(self.render_preview)
+                self.mapping_form.addRow(field, lw)
+                self._multi_col_widgets[field] = lw
+                continue
             combo = QComboBox()
             combo.addItems(col_opts)
             # Prefer the curated default when that column actually exists in the
@@ -2021,6 +2045,11 @@ class MainWindow(QMainWindow):
             chosen = [i.text() for i in lw.selectedItems()]
             if chosen:
                 mapping["value_columns"] = chosen
+        # Other multi-column roles (e.g. survival_columns) collected the same way.
+        for field, widget in (getattr(self, "_multi_col_widgets", None) or {}).items():
+            picked = [i.text() for i in widget.selectedItems()]
+            if picked:
+                mapping[field] = picked
         for key, w in self._option_widgets.items():
             if isinstance(w, QCheckBox):
                 mapping[key] = w.isChecked()
