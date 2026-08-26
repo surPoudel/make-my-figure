@@ -79,3 +79,50 @@ bundled examples. `7/7`.
 - **Neither GUI was clicked.** PySide6 cannot load `libxkbcommon.so.0` here, and the browser app was
   driven through Streamlit's `AppTest` harness and its own code paths rather than a real browser.
 - **Linux only.** macOS and native Windows were not tested.
+
+## Loop D — the branch's final suite, and three stale tests it exposed
+
+Full suite at `335ceee`: **1286 passed, 5 skipped, 2 failed**. The two failures were the pair noted
+in Loop C. Confirming they are not mine, both were re-run in a detached worktree at `7c8b5a5`, the
+commit this work branched from, and produced byte-identical messages:
+
+    AttributeError: get not found in session_state.
+    KeyError: 'st.session_state has no key "get"...'
+    ValueError: 'barplot_with_error_bar' is not in list
+
+Diagnosed rather than left alone, because both are stale *tests*, not application defects, and one
+of them was hiding real coverage:
+
+- `test_app_smoke.py::test_app_runs_each_sample_plot_type` drives the sample picker as
+  `at.selectbox[0]`. The matrix wizard has since added selectboxes ahead of it, so index 0 is now
+  "Feature id column"; the picker is index 2. It also selected plot-type keys
+  (`barplot_with_error_bar`) while the widget offers display names (`Bar plot with error bars`), so
+  the selection could never match. The test is now found by label and selects through
+  `display_name`. This matters beyond a green tick: it is the only check that runs all 37 bundled
+  samples through the browser app, it had been dead, and it is the natural place for a new option
+  widget to break. It passes, so none of the options added for C1/C3 raise for any plot type.
+- `test_streamlit_matrix_wizard.py` called `.get()` on `at.session_state`. AppTest exposes a
+  `SafeSessionState` proxy with no `.get`; the app's own `st.session_state.get(...)` calls are
+  fine, so this was test-only. Rewritten as membership plus indexing.
+- `test_desktop_gui.py` guarded itself with `pytest.importorskip("PySide6")`, but the top-level
+  package imports cleanly here while `PySide6.QtGui` fails to load `libxkbcommon.so.0`. pytest 9
+  skips only on `ModuleNotFoundError`, so the loader's plain `ImportError` aborted collection and
+  took the whole run with it - and `-k "not gui"` could not help, because `-k` filters after
+  collection. Replaced with an explicit try/except plus `pytest.skip(allow_module_level=True)`, so
+  the file's documented "skipped automatically if PySide6 is unavailable" is now true.
+
+A bare `pytest`, nothing excluded: **1288 passed, 6 skipped, 0 failed**. Every skip states a
+reason - Qt unavailable (2), the optional pydeseq2 extra, the two opt-in packaging builds, and one
+cache-dependent offline path.
+
+The two opt-in packaging tests stay skipped by default, so their substance was run by hand against
+the artifact that was pushed: the wheel was installed into a clean virtual environment and checked
+there, 14/14 - all six survival options exposed, `survival_columns` multi-column, the three
+optional numerics defaulting to unset, y ticks resolving to 0/50/100 and the x range to 0-50,
+omitted axis options meaning auto, all three guards firing, C2's stacked header composing, C3
+placing seven above-bar labels, and all 37 plot types rendering from the wheel's own bundled
+examples.
+
+Still not verified by me, and unchanged by this loop: no Qt widget has been rendered on any
+machine, so the desktop multi-select and the `(auto)` spin boxes are reasoned about, not seen; and
+nothing here was run on macOS.

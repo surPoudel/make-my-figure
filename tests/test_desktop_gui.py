@@ -14,7 +14,15 @@ import pytest
 matplotlib.use("Agg")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-pytest.importorskip("PySide6")
+# Importing the top-level package is not enough: PySide6 installs cleanly while its Qt
+# libraries stay unloadable (no libxkbcommon on a bare WSL/container image). That surfaces as
+# a plain ImportError from the dynamic loader, which importorskip does not treat as "missing"
+# - it only skips ModuleNotFoundError - so collection aborted the entire run and the
+# documented "-k not gui" escape could not help, because -k filters after collection.
+try:
+    import PySide6.QtWidgets  # noqa: F401
+except ImportError as exc:  # pragma: no cover - environment-dependent
+    pytest.skip(f"PySide6/Qt unavailable: {exc}", allow_module_level=True)
 
 _REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if _REPO_ROOT not in sys.path:

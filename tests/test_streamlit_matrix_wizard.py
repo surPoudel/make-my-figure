@@ -65,7 +65,9 @@ def test_preprocess_diagnostics_runs():
     at.run(timeout=30)
     assert not at.exception
     # diagnostics populated the QC summary object used to drive recommendations
-    assert at.session_state.get("mw_qc") is not None
+    # AppTest exposes a SafeSessionState proxy, which has no .get(); index it instead.
+    assert "mw_qc" in at.session_state
+    assert at.session_state["mw_qc"] is not None
 
 
 def test_processed_matrix_flows_downstream():
