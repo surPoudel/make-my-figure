@@ -9,6 +9,8 @@ renderer mutates input data silently").
 
 from __future__ import annotations
 
+import math
+
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
@@ -115,7 +117,8 @@ def figure_size(spec: Dict[str, Any], style: StyleProfile, *, aspect: float) -> 
 
 
 def apply_axis_overrides(ax, spec: Dict[str, Any], *, axis_min: float = None,
-                         axis_max: float = None, tick_values=None) -> Dict[str, Any]:
+                         axis_max: float = None, tick_values=None,
+                         x_extent=None, y_extent=None) -> Dict[str, Any]:
     """Apply optional axis-range and tick overrides from the spec.
 
     Journals often want a survival or dose axis drawn to a round limit with only the meaningful
@@ -126,7 +129,31 @@ def apply_axis_overrides(ax, spec: Dict[str, Any], *, axis_min: float = None,
     Reads ``mapping['x_min' | 'x_max' | 'y_ticks']`` (the option widgets write into ``mapping``),
     falling back to the same keys in ``layout``. Call this *after* ``style_axes`` so the cosmetics
     do not overwrite it. Returns what was applied, for the metadata record.
+
+    ``x_extent`` / ``y_extent`` are explicit ``(min, max)`` spans of the drawn data. Pass them when
+    the renderer knows the span, which is always: the fallback has to infer it from the axes, and an
+    artist it does not recognise reads as "no data" - which would turn the refusal below into a
+    silent clip.
     """
+
+    def _span(explicit, axis: str):
+        """Best available (min, max) of the drawn data on one axis."""
+        if explicit is not None:
+            lo, hi = (float(v) for v in explicit)
+            if math.isfinite(lo) and math.isfinite(hi):
+                return lo, hi
+        # ``ax.dataLim`` is matplotlib's own union over every artist, so it covers bars and step
+        # patches as well as lines. Reading ``ax.lines`` alone missed both.
+        interval = ax.dataLim.intervalx if axis == "x" else ax.dataLim.intervaly
+        if np.all(np.isfinite(interval)) and interval[1] > interval[0]:
+            return float(interval[0]), float(interval[1])
+        getter = (lambda ln: ln.get_xdata()) if axis == "x" else (lambda ln: ln.get_ydata())
+        drawn = [np.asarray(getter(line), dtype=float) for line in ax.lines if len(getter(line))]
+        if drawn:
+            finite = np.concatenate([d[np.isfinite(d)] for d in drawn if d.size])
+            if finite.size:
+                return float(finite.min()), float(finite.max())
+        return None
     mapping = spec.get("mapping", {}) or {}
     layout = spec.get("layout", {}) or {}
 
@@ -152,17 +179,34 @@ def apply_axis_overrides(ax, spec: Dict[str, Any], *, axis_min: float = None,
             )
         # Refuse a window that would hide plotted points; clipping data silently is the
         # failure this codebase is trying not to repeat.
-        drawn = [np.asarray(line.get_xdata(), dtype=float) for line in ax.lines
-                 if len(line.get_xdata())]
-        if drawn:
-            finite = np.concatenate([d[np.isfinite(d)] for d in drawn if d.size])
-            if finite.size and (finite.min() < new_lo - 1e-9 or finite.max() > new_hi + 1e-9):
-                raise RenderError(
-                    f"the requested x range [{new_lo:g}, {new_hi:g}] would hide data spanning "
-                    f"[{finite.min():g}, {finite.max():g}]. Widen the range, or leave it on auto."
-                )
+        span = _span(x_extent, "x")
+        if span is not None and (span[0] < new_lo - 1e-9 or span[1] > new_hi + 1e-9):
+            raise RenderError(
+                f"the requested x range [{new_lo:g}, {new_hi:g}] would hide data spanning "
+                f"[{span[0]:g}, {span[1]:g}]. Widen the range, or leave it on auto."
+            )
         ax.set_xlim(new_lo, new_hi)
         applied["x_limits"] = [new_lo, new_hi]
+
+    y_min, y_max = _opt("y_min"), _opt("y_max")
+    if y_min is not None or y_max is not None:
+        lo, hi = ax.get_ylim()
+        try:
+            new_lo = float(y_min) if y_min is not None else lo
+            new_hi = float(y_max) if y_max is not None else hi
+        except (TypeError, ValueError):
+            raise RenderError(f"y_min/y_max must be numbers, got {y_min!r} and {y_max!r}.")
+        if new_hi <= new_lo:
+            raise RenderError(f"y_max ({new_hi:g}) must be greater than y_min ({new_lo:g}).")
+        span = _span(y_extent, "y")
+        if span is not None and (span[0] < new_lo - 1e-9 or span[1] > new_hi + 1e-9):
+            raise RenderError(
+                f"the requested y range [{new_lo:g}, {new_hi:g}] would hide data spanning "
+                f"[{span[0]:g}, {span[1]:g}]. A truncated value axis overstates differences; "
+                "widen the range, or leave it on auto."
+            )
+        ax.set_ylim(new_lo, new_hi)
+        applied["y_limits"] = [new_lo, new_hi]
 
     ticks = _opt("y_ticks")
     if ticks is not None:

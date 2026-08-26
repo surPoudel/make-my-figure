@@ -663,6 +663,21 @@ class Example:
     aux_name: Optional[str] = None    # e.g. "metadata" for PCA
 
 
+def b_histogram(rng):
+    # Bimodal measurement with two unequal-sized groups: the two things a histogram has to get
+    # right are shared bins across groups and honest handling of different n.
+    rows = []
+    for group, n, w_small, mu1, mu2 in [("Wildtype", 620, 0.35, 14.0, 31.0),
+                                        ("Mutant", 480, 0.42, 13.0, 29.0)]:
+        small = rng.normal(mu1, 3.0, int(n * w_small))
+        large = rng.normal(mu2, 6.0, n - int(n * w_small))
+        for i, v in enumerate(np.concatenate([small, large]), start=1):
+            rows.append({"cell_id": f"{group[:3].upper()}{i:04d}", "group": group,
+                         "replicate": f"R{(i % 3) + 1}",
+                         "measurement": round(float(max(v, 5.0)), 4)})
+    return pd.DataFrame(rows), None
+
+
 EXAMPLES: List[Example] = [
     Example("barplot_with_error_bar", "bar_error", "Bar_error",
             "Compare a mean readout across experimental conditions with replicate error bars.",
@@ -905,6 +920,17 @@ EXAMPLES: List[Example] = [
             ["Keep the first column as labels; every other column must be numeric.",
              "Ward linkage requires the euclidean metric.",
              "k must be between 2 and the number of clustered objects."]),
+    # Appended last on purpose: each example is seeded from SEED + its index in this list, so
+    # inserting one in the middle would reseed - and silently rewrite - every example after it.
+    Example("histogram_distribution", "histogram", "Histogram",
+            "Binned counts of one measurement, as separate panels per group or overlaid - shows "
+            "the distribution's actual shape (modes, gaps, tails) rather than a smoothed curve.",
+            b_histogram, ["group", "measurement"], ["cell_id", "replicate"],
+            "One row per observation. 'measurement' is the numeric value being binned; 'group' is "
+            "optional and splits it. Bins are always shared across groups so the panels compare.",
+            ["Do not pre-bin the data - supply the raw values and let the plot count them.",
+             "With unequal group sizes, overlaid raw counts favour the larger group: set the Y "
+             "axis to 'percent', or keep separate panels."]),
 ]
 
 

@@ -24,7 +24,9 @@ def controller():
 
 
 def test_catalog(controller):
-    assert len(controller.plot_types()) == 37
+    # A deliberate tripwire: bump it when a plot type is added, so the desktop
+    # catalogue and the registry cannot silently drift apart.
+    assert len(controller.plot_types()) == 38
     styles = dict(controller.styles())
     # v0.6: a single Publication style identity (no journal-named profiles).
     assert set(styles) == {"publication"}

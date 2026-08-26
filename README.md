@@ -38,9 +38,12 @@ quickly and reproducibly**, with sensible defaults and full control when they ne
 
 ## 3. What you can make
 
-37 plot types, grouped by what you're trying to show:
+38 plot types, grouped by what you're trying to show:
 
 - **Basic comparisons** — bar, grouped bar, box, violin, dot/strip, beeswarm, raincloud.
+- **Distributions** — histogram (binned counts, as panels per group or overlaid, with a
+  frequency-polygon option) and ridge/density (smoothed). Reach for the histogram when
+  the shape matters: a density estimate can render two modes as one shoulder.
 - **Relationships** — scatter, scatter with regression readout, correlation heatmap,
   Bland–Altman.
 - **Time / trajectory** — line & time-course (with error band), paired slopegraph,

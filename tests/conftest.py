@@ -23,6 +23,7 @@ PLOT_SAMPLES = {
     "boxplot_or_violin_with_points": "box_violin_points.csv",
     "lineplot_timecourse_with_error_band": "line_timecourse.tsv",
     "ridge_or_density_plot": "ridge_density.csv",
+    "histogram_distribution": "histogram_distribution.csv",
     "enrichment_dotplot": "enrichment_dotplot.csv",
     "kaplan_meier_survival_curve": "survival_km.csv",
     "stacked_bar_composition": "stacked_composition.csv",

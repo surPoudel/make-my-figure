@@ -18,8 +18,9 @@ def _load(name):
 
 
 def test_all_plot_types_registered():
-    # 17 original + 18 v0.4 + 2 v0.5 (network graph, hierarchical clustering).
-    assert len(available_plot_types()) == 37
+    # 17 original + 18 v0.4 + 2 v0.5 (network graph, hierarchical clustering)
+    # + 1 histogram (binned distribution).
+    assert len(available_plot_types()) == 38
 
 
 def test_box_and_violin_kinds(mock_dir):

@@ -18,6 +18,8 @@ COLUMN_FIELDS: Dict[str, List[str]] = {
     "boxplot_or_violin_with_points": ["x", "y"],
     "lineplot_timecourse_with_error_band": ["x", "y", "color"],
     "ridge_or_density_plot": ["x", "group"],
+    # "x"/"group" is the long form; "value_columns" is the wide form (one column per group).
+    "histogram_distribution": ["x", "group", "value_columns"],
     "enrichment_dotplot": ["y", "x", "size", "color"],
     # "event"/"group" drive the subject-level form; "survival_columns" is the
     # precomputed-curve form (one column of S(t) per group).
@@ -178,6 +180,43 @@ OPTIONS: Dict[str, List[Option]] = {
     "ridge_or_density_plot": [
         Option("density_mode", "Density mode", "choice", "ridge", ["ridge", "overlay"]),
         Option("overlap", "Ridge overlap", "number", 0.7, minimum=0.0, maximum=0.95, step=0.05, decimals=2),
+    ],
+    # A histogram counts; the ridge/density plot above smooths. Both are offered because a kernel
+    # density estimate can render two modes as one shoulder, and for a distribution that is not
+    # unimodal that is a difference in the result, not the styling.
+    "histogram_distribution": [
+        # Which shape the table is in - declared rather than guessed, as for the survival curve.
+        # "long" is one numeric column plus an optional group column; "wide" is one column per
+        # group, which is what a spreadsheet of one column per condition already looks like.
+        Option("input_form", "Input form", "choice", "long", ["long", "wide"]),
+        Option("panel_mode", "Arrangement", "choice", "panels", ["panels", "overlay"]),
+        Option("draw_style", "Draw as", "choice", "bars", ["bars", "line", "both"]),
+        Option("normalize", "Y axis shows", "choice", "count",
+               ["count", "frequency", "percent", "density"]),
+        Option("cumulative", "Cumulative", "bool", False),
+        # 'bins' and 'bin_width' are two ways to say the same thing, so both default to unset and
+        # the renderer refuses to resolve a conflict rather than picking a silent winner. The
+        # minimums sit below any real value so a frontend that cannot show an empty numeric field
+        # can use the minimum as its "(auto)" sentinel.
+        Option("bins", "Number of bins", "number", None,
+               minimum=-1.0, maximum=200.0, step=1, decimals=0),
+        Option("bin_width", "Bin width", "number", None,
+               minimum=-1.0, maximum=1e6, step=0.5, decimals=4),
+        Option("show_mean", "Mark the mean", "bool", False),
+        Option("show_median", "Mark the median", "bool", False),
+        Option("bar_alpha", "Fill opacity", "number", None,
+               minimum=-1.0, maximum=1.0, step=0.05, decimals=2),
+        Option("log_y", "Logarithmic Y axis", "bool", False),
+        Option("share_axes", "Panels share both axes", "bool", True),
+        Option("x_min", "X-axis minimum", "number", None,
+               minimum=-1e9, maximum=1e9, step=1.0, decimals=4),
+        Option("x_max", "X-axis maximum", "number", None,
+               minimum=-1e9, maximum=1e9, step=1.0, decimals=4),
+        Option("y_min", "Y-axis minimum", "number", None,
+               minimum=-1e9, maximum=1e9, step=1.0, decimals=4),
+        Option("y_max", "Y-axis maximum", "number", None,
+               minimum=-1e9, maximum=1e9, step=1.0, decimals=4),
+        _X_TICK_ROTATION,
     ],
     "enrichment_dotplot": [
         Option("top_n", "Top N terms", "number", 20, minimum=5, maximum=40, step=1, decimals=0),

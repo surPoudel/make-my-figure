@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Make My Figure turns tabular data (CSV/TSV/XLSX) into publication-style scientific
 figures. The reusable engine lives in `make_my_figure_core/` and is frontend-agnostic;
-two GUIs (`apps/streamlit_app/`, `apps/desktop_app/`) consume it. There are 37 plot
+two GUIs (`apps/streamlit_app/`, `apps/desktop_app/`) consume it. There are 38 plot
 types, a single **Publication** style, and a reproducibility sidecar (PlotSpec JSON).
 
 > v0.6: one user-facing style identity — **Publication** (a general manuscript-ready
