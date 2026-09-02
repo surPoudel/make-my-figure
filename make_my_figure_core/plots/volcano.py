@@ -38,6 +38,9 @@ from make_my_figure_core.styles.engine import StyleProfile
 PLOT_TYPE = "volcano_plot"
 
 # Strong, colorblind-aware volcano colors (down=blue, up=red, n.s.=grey).
+# Significance colours. The palette does not drive a volcano - points are coloured by class, not by
+# group - so these are exposed as plot options (see ui_hints) with the classic blue/grey/red as the
+# defaults, and the palette control is declared inapplicable in styles/capabilities.py.
 _NS_COLOR = "#BBBBBB"
 _DOWN_COLOR = "#2166AC"
 _UP_COLOR = "#B2182B"
@@ -174,12 +177,15 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.85))
         sig_size = max(22.0, style.marker_size * 0.6)
         ns_size = max(12.0, style.marker_size * 0.32)
-        ax.scatter(work.loc[ns, x], work.loc[ns, "_neglog10p"], color=_NS_COLOR,
+        ns_color = str(get_mapping(spec, "color_ns", _NS_COLOR) or _NS_COLOR)
+        down_color = str(get_mapping(spec, "color_down", _DOWN_COLOR) or _DOWN_COLOR)
+        up_color = str(get_mapping(spec, "color_up", _UP_COLOR) or _UP_COLOR)
+        ax.scatter(work.loc[ns, x], work.loc[ns, "_neglog10p"], color=ns_color,
                    label="n.s.", s=ns_size, edgecolors="none", alpha=0.55, zorder=1)
-        ax.scatter(work.loc[down, x], work.loc[down, "_neglog10p"], color=_DOWN_COLOR,
+        ax.scatter(work.loc[down, x], work.loc[down, "_neglog10p"], color=down_color,
                    label=f"Down (n={n_down})", s=sig_size, edgecolors="white",
                    linewidths=0.4, alpha=0.95, zorder=3)
-        ax.scatter(work.loc[up, x], work.loc[up, "_neglog10p"], color=_UP_COLOR,
+        ax.scatter(work.loc[up, x], work.loc[up, "_neglog10p"], color=up_color,
                    label=f"Up (n={n_up})", s=sig_size, edgecolors="white",
                    linewidths=0.4, alpha=0.95, zorder=3)
 

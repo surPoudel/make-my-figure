@@ -43,6 +43,10 @@ python scripts/harvest_library.py --papers 10   # CC-BY-only figure harvest (net
 
 # Desktop installers
 python scripts/build_desktop.py           # or scripts/build_{windows.ps1,macos.sh,linux.sh}
+
+# Figure-preset QC across the whole registry, and the style-control honesty audit
+python scripts/build_figure_preset_qc.py         # reports/figure_preset_qc/all_plot_preset_matrix.csv
+python scripts/audit_style_capabilities.py --write   # regenerates _CAPS in styles/capabilities.py
 ```
 
 The version is defined once in `make_my_figure_core/version.py`; `pyproject.toml` reads it
@@ -161,6 +165,35 @@ Data flows: **loader → PlotSpec (validated) → renderer → RenderResult → 
   an **editable preview table** (edits write back to the DataFrame and re-render live) and
   **user-confirmable column mapping** (volcano DE columns auto-detected via
   `de_detect.detect_de_columns`, then confirmed/overridden in "Map columns").
+
+- **Figure presets** (`presets.py`): a figure's *configuration* separated from its *data*, for
+  every registered plot type. A PlotSpec mixes the two (`mapping` holds column roles and options;
+  `layout` holds axis-label text and geometry; `statistics` holds the test and its display), so
+  the module classifies every key by scope using the registry: column roles come from
+  `ui_hints.column_fields`, each option's scope from `ui_hints.Option.scope` (`"style"` = visual,
+  `"config"` = analytical/data-dependent; the default is `"config"`, so a new threshold cannot leak
+  into a lab style by omission), and the shared blocks split on fixed key sets. Two modes:
+  **style** (typography, palette, geometry, legend/colorbar placement, export defaults, visual
+  options - no table name, columns, thresholds, labels or data) and **full** (adds roles,
+  analytical options, labels, the statistics test, manual annotations). `apply_preset` applies onto
+  a spec that already names the *new* table; roles the new table lacks come back in
+  `unresolved_roles` for the frontend to ask about - nothing is ever substituted. A full preset
+  refuses a different plot type; a style preset applies its universal parts and lists what it
+  dropped. `load_preset` also accepts a raw PlotSpec or an exported sidecar (backward compatible).
+  `PresetStore` is the per-user library (`MAKE_MY_FIGURE_PRESETS` overrides the folder), shared
+  by both GUIs; the desktop panel/menu and the Streamlit expander are thin layers over it. Figure
+  Builder layout presets (`extract_layout_preset` / `apply_layout_preset`, `.mmflayout.json`) carry
+  grid, panel sizes, gutters, label style and fonts - never panel content (that is the FigureSpec).
+  `scripts/build_figure_preset_qc.py` runs save→new-data→apply→verify→export→round-trip for every
+  renderer and writes `reports/figure_preset_qc/all_plot_preset_matrix.csv`;
+  `tests/test_figure_preset_qc.py` pins it.
+
+- **Style capabilities are generated from source** (`styles/capabilities.py`):
+  `scripts/audit_style_capabilities.py` scans what each renderer reads (`color_for`, cmaps,
+  `marker_size`, `line_width_pt`, legends, colorbars) and regenerates `_CAPS`; a test asserts zero
+  drift. A control that is shown but changes nothing is a bug - fix the renderer or the
+  declaration, never the test. Volcano/MA colour points by significance class, so those colours are
+  plot options (`color_up`/`color_down`/`color_ns`) and the palette is declared inapplicable.
 
 - **Harvest** (`harvest/`): a license-gated, HTTPS-only pipeline that downloads figures/data
   **only** from CC BY/CC BY-SA/CC0 open-access papers into `figure_library/` (git-ignored).

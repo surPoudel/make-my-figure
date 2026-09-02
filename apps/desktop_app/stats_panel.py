@@ -460,14 +460,60 @@ class FigureBuilderDialog(QDialog):
         self.name_combo.currentTextChanged.connect(self._schedule_preview)
         form.addRow("Figure name", self.name_combo)
         self.cols_combo = QComboBox()
-        self.cols_combo.addItems(["Auto", "1", "2", "3", "4"])
+        self.cols_combo.addItems(["Auto", "1", "2", "3", "4", "5", "6"])
         self.cols_combo.currentTextChanged.connect(self._schedule_preview)
         form.addRow("Columns", self.cols_combo)
+        self.rows_combo = QComboBox()
+        self.rows_combo.addItems(["Auto", "1", "2", "3", "4", "5", "6"])
+        self.rows_combo.setToolTip("Rows of the panel grid. Auto derives it from the panel count "
+                                   "and the column count.")
+        self.rows_combo.currentTextChanged.connect(self._schedule_preview)
+        form.addRow("Rows", self.rows_combo)
+        self.width_mm_spin = QDoubleSpinBox()
+        self.width_mm_spin.setRange(40.0, 400.0); self.width_mm_spin.setSingleStep(5.0)
+        self.width_mm_spin.setValue(180.0); self.width_mm_spin.setSuffix(" mm")
+        self.width_mm_spin.setToolTip("Overall figure width. 89 mm is a typical single column, "
+                                      "180 mm a double column.")
+        self.width_mm_spin.valueChanged.connect(self._schedule_preview)
+        form.addRow("Figure width", self.width_mm_spin)
+        self.wspace_spin = QDoubleSpinBox()
+        self.wspace_spin.setRange(0.0, 1.0); self.wspace_spin.setSingleStep(0.02)
+        self.wspace_spin.setValue(0.18); self.wspace_spin.setDecimals(2)
+        self.wspace_spin.valueChanged.connect(self._schedule_preview)
+        form.addRow("Horizontal gutter", self.wspace_spin)
+        self.hspace_spin = QDoubleSpinBox()
+        self.hspace_spin.setRange(0.0, 1.0); self.hspace_spin.setSingleStep(0.02)
+        self.hspace_spin.setValue(0.22); self.hspace_spin.setDecimals(2)
+        self.hspace_spin.valueChanged.connect(self._schedule_preview)
+        form.addRow("Vertical gutter", self.hspace_spin)
+        self.label_style_combo = QComboBox()
+        self.label_style_combo.addItems(["A", "a", "1"])
+        self.label_style_combo.setToolTip("Panel letter style: A B C, a b c, or 1 2 3.")
+        self.label_style_combo.currentTextChanged.connect(self._schedule_preview)
+        form.addRow("Panel labels", self.label_style_combo)
         self.dpi_spin = QSpinBox()
         self.dpi_spin.setRange(72, 600)
         self.dpi_spin.setValue(300)
         form.addRow("Export DPI", self.dpi_spin)
         v.addLayout(form)
+
+        # --- layout presets: reuse a grid / sizes / spacing / label style without the content ---
+        lp_group = QGroupBox("Layout preset")
+        lp_group.setToolTip("A reusable multi-panel layout: grid, panel sizes, gutters, label style "
+                            "and fonts. It never contains the panels themselves - that is what "
+                            "saving the figure (FigureSpec) is for.")
+        lpv = QVBoxLayout(lp_group)
+        self.layout_preset_combo = QComboBox()
+        lpv.addWidget(self.layout_preset_combo)
+        lp_row = QHBoxLayout()
+        for label, slot in (("Apply", self._apply_layout_preset), ("Save…", self._save_layout_preset),
+                            ("Import…", self._import_layout_preset),
+                            ("Export…", self._export_layout_preset),
+                            ("Delete", self._delete_layout_preset)):
+            b = QPushButton(label); b.clicked.connect(slot); lp_row.addWidget(b)
+        lpv.addLayout(lp_row)
+        v.addWidget(lp_group)
+        self._refresh_layout_presets()
 
         v.addWidget(QLabel("Panels (order = A, B, C ...):"))
         imp_row = QHBoxLayout()
@@ -627,8 +673,15 @@ class FigureBuilderDialog(QDialog):
 
         ncols_txt = self.cols_combo.currentText()
         ncols = None if ncols_txt == "Auto" else int(ncols_txt)
+        nrows_txt = self.rows_combo.currentText()
+        nrows = None if nrows_txt == "Auto" else int(nrows_txt)
         return FigureLayout(
             ncols=ncols,
+            nrows=nrows,
+            fig_width_mm=float(self.width_mm_spin.value()),
+            wspace=float(self.wspace_spin.value()),
+            hspace=float(self.hspace_spin.value()),
+            label_style=self.label_style_combo.currentText(),
             panel_dpi=self.dpi_spin.value(),
             label_size=float(self.label_spin.value()),
             base_font_pt=float(self.text_spin.value()),
@@ -636,6 +689,142 @@ class FigureBuilderDialog(QDialog):
             tick_label_pt=float(self.tick_spin.value()),
             legend_pt=float(self.legend_spin.value()),
         )
+
+    # --- layout presets --------------------------------------------------------------------
+    def _layout_store(self):
+        from make_my_figure_core.presets import LayoutPresetStore
+        return LayoutPresetStore()
+
+    def _refresh_layout_presets(self) -> None:
+        combo = self.layout_preset_combo
+        current = combo.currentData()
+        combo.blockSignals(True)
+        combo.clear()
+        combo.addItem("(choose a layout preset)", None)
+        try:
+            for e in self._layout_store().list():
+                combo.addItem(f"{e.name}", e.path)
+        except Exception:  # noqa: BLE001 - an unreadable library must not break the dialog
+            pass
+        idx = combo.findData(current)
+        combo.setCurrentIndex(idx if idx >= 0 else 0)
+        combo.blockSignals(False)
+
+    def _apply_layout_to_controls(self, layout) -> None:
+        """Push a FigureLayout into the dialog's controls (no preview until done)."""
+        self._syncing = True
+        try:
+            self.cols_combo.setCurrentText(str(layout.ncols) if layout.ncols else "Auto")
+            self.rows_combo.setCurrentText(str(layout.nrows) if layout.nrows else "Auto")
+            self.width_mm_spin.setValue(float(layout.fig_width_mm))
+            self.wspace_spin.setValue(float(layout.wspace))
+            self.hspace_spin.setValue(float(layout.hspace))
+            if layout.label_style in ("A", "a", "1"):
+                self.label_style_combo.setCurrentText(layout.label_style)
+            self.dpi_spin.setValue(int(layout.panel_dpi))
+            self.label_spin.setValue(float(layout.label_size))
+            for spin, val in ((self.text_spin, layout.base_font_pt), (self.axis_spin, layout.axis_font_pt),
+                              (self.tick_spin, layout.tick_label_pt), (self.legend_spin, layout.legend_pt)):
+                if val is not None:
+                    spin.setValue(float(val))
+        finally:
+            self._syncing = False
+
+    def _apply_layout_preset(self) -> None:
+        from make_my_figure_core.presets import PresetError, apply_layout_preset, load_layout_preset
+
+        path = self.layout_preset_combo.currentData()
+        if not path:
+            QMessageBox.information(self, "Layout preset", "Choose a layout preset to apply first.")
+            return
+        try:
+            preset = load_layout_preset(path)
+            mpf = self._build_mpf()
+            res = apply_layout_preset(preset, mpf)
+        except PresetError as exc:
+            QMessageBox.warning(self, "Cannot apply layout preset", str(exc))
+            return
+        self._apply_layout_to_controls(mpf.layout)
+        # per-panel sizes come back through the saved_panels records the dialog edits
+        for p, panel in zip(self.saved_panels, mpf.panels):
+            p["width_in"] = panel.width_in
+            p["height_in"] = panel.height_in
+        self._refresh_list()
+        if self.list.currentRow() >= 0:
+            self._on_panel_selected(self.list.currentRow())
+        for w in res.warnings:
+            QMessageBox.information(self, "Layout preset applied", w)
+        self._schedule_preview()
+
+    def _save_layout_preset(self) -> None:
+        from PySide6.QtWidgets import QInputDialog
+
+        from make_my_figure_core.presets import PresetError, extract_layout_preset
+
+        name, ok = QInputDialog.getText(self, "Save layout preset", "Layout preset name:",
+                                        text=f"{len(self.saved_panels)}-panel layout")
+        if not ok or not name.strip():
+            return
+        try:
+            preset = extract_layout_preset(self._build_mpf(), name=name.strip())
+            path = self._layout_store().save(preset)
+        except PresetError as exc:
+            QMessageBox.warning(self, "Cannot save layout preset", str(exc))
+            return
+        self._refresh_layout_presets()
+        idx = self.layout_preset_combo.findData(path)
+        if idx >= 0:
+            self.layout_preset_combo.setCurrentIndex(idx)
+
+    def _import_layout_preset(self) -> None:
+        from make_my_figure_core.presets import PresetError, load_layout_preset
+
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Import layout preset", "",
+            "Layout preset (*.mmflayout.json);;FigureSpec (*.figure_spec.json);;All files (*)")
+        if not path:
+            return
+        try:
+            preset = load_layout_preset(path)
+            dest = self._layout_store().save(preset)
+        except (PresetError, OSError, ValueError) as exc:
+            QMessageBox.warning(self, "Cannot import layout preset", str(exc))
+            return
+        self._refresh_layout_presets()
+        idx = self.layout_preset_combo.findData(dest)
+        if idx >= 0:
+            self.layout_preset_combo.setCurrentIndex(idx)
+
+    def _export_layout_preset(self) -> None:
+        from make_my_figure_core.presets import (LAYOUT_PRESET_EXTENSION, PresetError,
+                                                 load_layout_preset, safe_filename,
+                                                 save_layout_preset)
+
+        path = self.layout_preset_combo.currentData()
+        if not path:
+            QMessageBox.information(self, "Export layout preset", "Choose a layout preset first.")
+            return
+        try:
+            preset = load_layout_preset(path)
+        except PresetError as exc:
+            QMessageBox.warning(self, "Cannot export layout preset", str(exc))
+            return
+        dest, _ = QFileDialog.getSaveFileName(
+            self, "Export layout preset",
+            safe_filename(preset.get("name", "layout")) + LAYOUT_PRESET_EXTENSION,
+            "Layout preset (*.mmflayout.json)")
+        if dest:
+            save_layout_preset(preset, dest)
+
+    def _delete_layout_preset(self) -> None:
+        path = self.layout_preset_combo.currentData()
+        if not path:
+            return
+        if QMessageBox.question(self, "Delete layout preset",
+                                f"Delete {self.layout_preset_combo.currentText()}?") != QMessageBox.Yes:
+            return
+        self._layout_store().delete(path)
+        self._refresh_layout_presets()
 
     def _build_mpf(self):
         from make_my_figure_core.panels import MultiPanelFigure, Panel

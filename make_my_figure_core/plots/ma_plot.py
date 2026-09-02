@@ -87,7 +87,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.72))
         ax.axhline(0.0, color=style.text_color, lw=style.spine_width_pt, zorder=1)
         if ns.any():
-            ax.scatter(xs[ns], ys[ns], color="#B8B8B8", label="Not sig.", zorder=2, **mk)
+            ns_color = str(get_mapping(spec, "color_ns", "#B8B8B8") or "#B8B8B8")
+            ax.scatter(xs[ns], ys[ns], color=ns_color, label="Not sig.", zorder=2, **mk)
         if up.any():
             ax.scatter(xs[up], ys[up], color=style.color_for(1), label="Up", zorder=3, **mk)
         if down.any():

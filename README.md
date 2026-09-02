@@ -36,6 +36,23 @@ quickly and reproducibly**, with sensible defaults and full control when they ne
 - **No silent preprocessing** — you confirm every transform; the original data are kept.
 - **No AI/API required** and **no R required** for the core workflow.
 
+## Figure presets — configure once, reuse on new data
+
+Any figure's configuration can be saved as a **Figure preset** and applied later to a different
+dataset of the same plot type, in both the desktop and browser apps (*Figure preset* panel /
+sidebar expander: Apply, Save preset…, Import, Export, Delete, Reset to Publication defaults).
+
+- **Figure style only** — fonts, palette, line and marker sizes, tick angles, margins, legend and
+  colorbar placement, export size/DPI, and the visual plot options (violin vs box, histogram bars vs
+  polygon, heatmap colormap, node colours…). Portable: this is `Lab_Default_Heatmap.mmfpreset.json`.
+- **Full figure configuration** — everything above plus column roles, thresholds, axis labels and
+  the statistics test. On new data it applies what fits and asks you to choose a column for any
+  role the new table lacks; it never guesses.
+
+Presets never contain your data, the table's name, or worksheet provenance. Existing
+`*.plot_spec.json` files load as full presets. The Figure Builder has its own **Layout preset**
+(grid, panel sizes, gutters, panel-letter style, fonts — no panel content).
+
 ## 3. What you can make
 
 38 plot types, grouped by what you're trying to show:

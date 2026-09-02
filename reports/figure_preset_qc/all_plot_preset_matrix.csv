@@ -1,0 +1,39 @@
+plot_type,preset_save,preset_load,style_roundtrip,full_config_roundtrip,color_roundtrip,typography_roundtrip,layout_roundtrip,legend_roundtrip,annotation_roundtrip,plot_specific_roundtrip,new_data_safe,png_export,pdf_export,svg_export,status,notes
+barplot_with_error_bar,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample | legend_roundtrip: N/A - this plot type draws no legend
+grouped_barplot_with_error_bar,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
+heatmap_clustered_matrix,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
+volcano_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample | palette control declared inapplicable: a volcano colours points by significance class (up / down / not significant) - set those three colours in the plot options; the palette does not apply
+scatterplot_with_regression,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
+boxplot_or_violin_with_points,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample | legend_roundtrip: N/A - this plot type draws no legend
+lineplot_timecourse_with_error_band,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
+ridge_or_density_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
+histogram_distribution,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed
+enrichment_dotplot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,new data: mock sample | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset
+kaplan_meier_survival_curve,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
+stacked_bar_composition,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
+waterfall_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
+pca_scatter_from_matrix,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,new data: mock sample | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset
+oncoprint_mutation_heatmap,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,new data: mock sample | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset
+lollipop_mutation_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
+roc_curve,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,new data: mock sample | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset
+forest_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample | legend_roundtrip: N/A - this plot type draws no legend
+dot_strip_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed
+beeswarm_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed
+paired_slopegraph,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed
+raincloud_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed | legend_roundtrip: N/A - this plot type draws no legend
+hierarchical_dendrogram,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed | legend_roundtrip: N/A - this plot type draws no legend
+ma_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed
+manhattan_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed
+qq_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,N/A,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed | legend_roundtrip: N/A - this plot type draws no legend | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset
+bland_altman_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed | legend_roundtrip: N/A - this plot type draws no legend
+precision_recall_curve,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset
+confusion_matrix,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed | legend_roundtrip: N/A - this plot type draws no legend
+calibration_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset
+dose_response_curve,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset
+upset_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,N/A,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed | legend_roundtrip: N/A - this plot type draws no legend | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset
+swimmer_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed
+spider_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed
+sankey_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,N/A,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed | legend_roundtrip: N/A - this plot type draws no legend | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset
+embedding_scatter,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset
+hierarchical_clustering,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed
+network_graph,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed

@@ -144,6 +144,14 @@ class FigureLayout:
         keys = ("base_font_pt", "axis_font_pt", "tick_label_pt", "legend_pt")
         return {k: getattr(self, k) for k in keys if getattr(self, k) is not None}
 
+    @classmethod
+    def from_dict(cls, d: Optional[Dict[str, Any]]) -> "FigureLayout":
+        """Rebuild a layout from ``to_dict`` output; unknown keys are ignored, missing keep defaults."""
+        import dataclasses
+
+        known = {f.name for f in dataclasses.fields(cls)}
+        return cls(**{k: v for k, v in (d or {}).items() if k in known})
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "ncols": self.ncols, "nrows": self.nrows,
@@ -152,6 +160,7 @@ class FigureLayout:
             "wspace": self.wspace, "hspace": self.hspace,
             "label_style": self.label_style, "label_prefix": self.label_prefix,
             "label_size": self.label_size, "label_weight": self.label_weight,
+            "label_dx": self.label_dx, "label_dy": self.label_dy,
             "panel_dpi": self.panel_dpi, "background": self.background,
             "show_titles": self.show_titles,
             "base_font_pt": self.base_font_pt, "axis_font_pt": self.axis_font_pt,

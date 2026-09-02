@@ -516,6 +516,7 @@ class MainWindow(QMainWindow):
         lb.addRow("Point picking", self.chk_click_label)
         cv.addWidget(labels_box)
 
+        cv.addWidget(self._build_preset_panel())
         cv.addWidget(self._build_style_panel())
 
         # Statistics panel (statistical tests, annotations, method reporting).
@@ -648,6 +649,357 @@ class MainWindow(QMainWindow):
         return splitter
 
     # --- advanced style panel -------------------------------------------
+    # --- Figure presets -------------------------------------------------------------------
+    # Save a figure's configuration once and apply it to new data later. Everything here is a thin
+    # layer over make_my_figure_core.presets, which both frontends share; the desktop app only
+    # moves values between the preset and its widgets.
+
+    def _preset_store(self):
+        from make_my_figure_core.presets import PresetStore
+        return PresetStore()
+
+    def _build_preset_panel(self) -> QWidget:
+        box = QGroupBox("Figure preset")
+        box.setToolTip("A reusable configuration for this plot type: fonts, colours, layout, "
+                       "legend and export settings (a style preset), or the whole configuration "
+                       "including column roles and thresholds (a full preset). Presets never "
+                       "contain your data.")
+        outer = QVBoxLayout(box)
+        self.preset_combo = QComboBox()
+        self.preset_combo.setToolTip("Presets saved for this plot type, plus universal ones.")
+        outer.addWidget(self.preset_combo)
+        row1 = QHBoxLayout()
+        for label, slot, tip in (
+                ("Apply", self.action_apply_preset,
+                 "Apply the selected preset to the current figure."),
+                ("Save preset…", self.action_save_preset,
+                 "Save the current configuration as a preset."),
+                ("Delete", self.action_delete_preset, "Delete the selected preset.")):
+            b = QPushButton(label); b.setToolTip(tip); b.clicked.connect(slot); row1.addWidget(b)
+        outer.addLayout(row1)
+        row2 = QHBoxLayout()
+        for label, slot, tip in (
+                ("Import…", self.action_import_preset,
+                 "Add a preset file (.mmfpreset.json) to your library."),
+                ("Export…", self.action_export_preset,
+                 "Write the selected preset to a file to share it."),
+                ("Reset to Publication defaults", self.action_reset_style,
+                 "Return every style control to the Publication defaults.")):
+            b = QPushButton(label); b.setToolTip(tip); b.clicked.connect(slot); row2.addWidget(b)
+        outer.addLayout(row2)
+        self.preset_status = QLabel("")
+        self.preset_status.setWordWrap(True)
+        self.preset_status.setStyleSheet("color: #666;")
+        outer.addWidget(self.preset_status)
+        self._refresh_preset_list()
+        return box
+
+    def _refresh_preset_list(self) -> None:
+        combo = getattr(self, "preset_combo", None)
+        if combo is None:
+            return
+        pt = self.plot_combo.currentData() if hasattr(self, "plot_combo") else None
+        current = combo.currentData()
+        combo.blockSignals(True)
+        combo.clear()
+        combo.addItem("(choose a preset)", None)
+        try:
+            entries = self._preset_store().list(pt) if pt else self._preset_store().list()
+        except Exception as exc:  # noqa: BLE001 - an unreadable library must not break the UI
+            entries = []
+            self.preset_status.setText(f"Preset library unavailable: {exc}")
+        for e in entries:
+            combo.addItem(e.label, e.path)
+        idx = combo.findData(current)
+        combo.setCurrentIndex(idx if idx >= 0 else 0)
+        combo.blockSignals(False)
+        if hasattr(self, "preset_status") and entries is not None:
+            n = len(entries)
+            self.preset_status.setText(
+                f"{n} preset{'s' if n != 1 else ''} for this plot type." if pt else "")
+
+    def _selected_preset_path(self):
+        combo = getattr(self, "preset_combo", None)
+        return combo.currentData() if combo is not None else None
+
+    def action_apply_preset(self):
+        from make_my_figure_core.presets import PresetError, apply_preset, load_preset
+
+        path = self._selected_preset_path()
+        if not path:
+            QMessageBox.information(self, "Figure preset", "Choose a preset to apply first.")
+            return
+        if self.data is None or self.plot_combo.currentData() is None:
+            QMessageBox.information(self, "Figure preset",
+                                    "Load data and choose a plot type, then apply the preset.")
+            return
+        try:
+            preset = load_preset(path)
+            base = self._build_spec()
+            result = apply_preset(preset, base, columns=list(self.data.info.columns))
+        except PresetError as exc:
+            QMessageBox.warning(self, "Cannot apply preset", str(exc))
+            return
+        self._apply_spec_to_controls(result.spec, keep_plot_type=True)
+        msg = [f"Applied preset “{preset.get('name', '')}”: {len(result.applied)} setting(s)."]
+        if result.skipped:
+            msg.append(f"{len(result.skipped)} setting(s) do not apply to this plot type.")
+        self.preset_status.setText(" ".join(msg))
+        if result.unresolved_roles:
+            lines = [f"• {role}: wanted {wanted!r}" for role, wanted in result.unresolved_roles.items()]
+            QMessageBox.information(
+                self, "Choose columns for this data",
+                "The preset named columns this table does not have. Nothing was substituted - "
+                "pick a column for each of these in “Map columns”:\n\n" + "\n".join(lines))
+        for w in result.warnings:
+            if "universal settings" in w:
+                self.preset_status.setText(self.preset_status.text() + " " + w)
+        self.render_preview()
+
+    def action_save_preset(self):
+        from PySide6.QtWidgets import QDialogButtonBox, QRadioButton
+
+        from make_my_figure_core.presets import PresetError, extract_preset
+
+        if self.data is None or self.plot_combo.currentData() is None:
+            QMessageBox.information(self, "Save preset",
+                                    "Render a figure first, then save its configuration.")
+            return
+        pt = self.plot_combo.currentData()
+        dlg = QDialog(self)
+        dlg.setWindowTitle("Save Figure Preset")
+        form = QVBoxLayout(dlg)
+        name_row = QFormLayout()
+        name_edit = QLineEdit(f"{display_name(pt)} preset")
+        name_row.addRow("Preset name", name_edit)
+        form.addLayout(name_row)
+        style_rb = QRadioButton("Figure style only  -  fonts, colours, layout, legend, export. "
+                                "Portable: apply to any data of this plot type.")
+        full_rb = QRadioButton("Full figure configuration  -  also column roles, thresholds, "
+                               "axis labels and statistics. Asks for remapping on new data.")
+        style_rb.setChecked(True)
+        form.addWidget(style_rb); form.addWidget(full_rb)
+        note = QLabel("Neither kind contains your data or the table's name.")
+        note.setStyleSheet("color: #666;")
+        form.addWidget(note)
+        buttons = QDialogButtonBox(QDialogButtonBox.Save | QDialogButtonBox.Cancel)
+        buttons.accepted.connect(dlg.accept); buttons.rejected.connect(dlg.reject)
+        form.addWidget(buttons)
+        if dlg.exec() != QDialog.Accepted:
+            return
+        name = name_edit.text().strip() or f"{display_name(pt)} preset"
+        try:
+            spec = self._current_spec or self._build_spec()
+            preset = extract_preset(spec, mode="style" if style_rb.isChecked() else "full",
+                                    name=name)
+            path = self._preset_store().save(preset)
+        except PresetError as exc:
+            QMessageBox.warning(self, "Cannot save preset", str(exc))
+            return
+        self._refresh_preset_list()
+        idx = self.preset_combo.findData(path)
+        if idx >= 0:
+            self.preset_combo.setCurrentIndex(idx)
+        self.statusBar().showMessage(f"Saved preset “{name}”.", 5000)
+
+    def action_import_preset(self):
+        from make_my_figure_core.presets import PresetError
+
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Import Figure preset", "",
+            "Figure preset (*.mmfpreset.json);;PlotSpec JSON (*.plot_spec.json *.json);;All files (*)")
+        if not path:
+            return
+        try:
+            dest = self._preset_store().import_file(path)
+        except (PresetError, OSError, ValueError) as exc:
+            QMessageBox.warning(self, "Cannot import preset", str(exc))
+            return
+        self._refresh_preset_list()
+        idx = self.preset_combo.findData(dest)
+        if idx >= 0:
+            self.preset_combo.setCurrentIndex(idx)
+        self.statusBar().showMessage("Preset imported.", 4000)
+
+    def action_export_preset(self):
+        from make_my_figure_core.presets import PRESET_EXTENSION, PresetError, load_preset
+
+        path = self._selected_preset_path()
+        if not path:
+            QMessageBox.information(self, "Export preset", "Choose a preset to export first.")
+            return
+        try:
+            preset = load_preset(path)
+        except PresetError as exc:
+            QMessageBox.warning(self, "Cannot export preset", str(exc))
+            return
+        from make_my_figure_core.presets import safe_filename
+        dest, _ = QFileDialog.getSaveFileName(
+            self, "Export Figure preset", safe_filename(preset.get("name", "preset")) + PRESET_EXTENSION,
+            "Figure preset (*.mmfpreset.json)")
+        if not dest:
+            return
+        try:
+            self._preset_store().export_file(path, dest)
+        except (PresetError, OSError) as exc:
+            QMessageBox.warning(self, "Cannot export preset", str(exc))
+            return
+        self.statusBar().showMessage(f"Exported preset to {dest}", 5000)
+
+    def action_delete_preset(self):
+        path = self._selected_preset_path()
+        if not path:
+            QMessageBox.information(self, "Delete preset", "Choose a preset to delete first.")
+            return
+        name = self.preset_combo.currentText()
+        if QMessageBox.question(self, "Delete preset", f"Delete {name}? This cannot be undone.") \
+                != QMessageBox.Yes:
+            return
+        self._preset_store().delete(path)
+        self._refresh_preset_list()
+        self.statusBar().showMessage("Preset deleted.", 4000)
+
+    def _apply_spec_to_controls(self, spec: dict, *, keep_plot_type: bool = False) -> None:
+        """Push every value in ``spec`` into the matching control - mapping, options, labels,
+        size, style tokens, layout geometry, colorbar and statistics.
+
+        This is the one place a spec becomes widget state, used by both “Open PlotSpec” and
+        “Apply preset”. A value with no widget is left in the spec's hands; a widget with no
+        value keeps what it had.
+        """
+        self._loading_spec = True
+        prev = self._suppress_change
+        self._suppress_change = True
+        try:
+            pt = spec.get("plot_type")
+            if not keep_plot_type:
+                idx = self.plot_combo.findData(pt)
+                if idx >= 0:
+                    self.plot_combo.setCurrentIndex(idx)
+                self._rebuild_mapping_and_options()
+            mapping = spec.get("mapping") or {}
+            for key, val in mapping.items():
+                if val is None:
+                    continue
+                w = self._mapping_widgets.get(key)
+                if w is not None:
+                    i = w.findText(str(val))
+                    if i >= 0:
+                        w.setCurrentIndex(i)
+                    continue
+                lw = (getattr(self, "_multi_col_widgets", None) or {}).get(key)
+                if lw is None and key == "value_columns":
+                    lw = getattr(self, "_value_cols_widget", None)
+                if lw is not None and isinstance(val, (list, tuple)):
+                    wanted = {str(v) for v in val}
+                    for j in range(lw.count()):
+                        item = lw.item(j)
+                        item.setSelected(item.text() in wanted)
+                    continue
+                ow = self._option_widgets.get(key)
+                if ow is None:
+                    continue
+                try:
+                    if isinstance(ow, QCheckBox):
+                        ow.setChecked(bool(val))
+                    elif isinstance(ow, QComboBox):
+                        j = ow.findText(str(val))
+                        if j >= 0:
+                            ow.setCurrentIndex(j)
+                    elif isinstance(ow, (QSpinBox, QDoubleSpinBox)):
+                        ow.setValue(type(ow.value())(val))
+                except Exception:  # noqa: BLE001 - one bad value must not abort the restore
+                    pass
+            # optional numerics the spec does not mention go back to "(auto)"
+            for key, ow in self._option_widgets.items():
+                if isinstance(ow, (QSpinBox, QDoubleSpinBox)) and ow.property("mmf_optional") \
+                        and key not in mapping:
+                    ow.setValue(ow.minimum())
+            layout = spec.get("layout") or {}
+            self.title_edit.setText(str(layout.get("title", "") or ""))
+            self.xlabel_edit.setText(str(layout.get("x_label", "") or ""))
+            self.ylabel_edit.setText(str(layout.get("y_label", "") or ""))
+            cw = layout.get("column_width")
+            if cw:
+                k = self.width_combo.findText(str(cw))
+                if k >= 0:
+                    self.width_combo.setCurrentIndex(k)
+            dpi = (spec.get("output") or {}).get("dpi")
+            if dpi:
+                try:
+                    self.dpi_spin.setValue(int(dpi))
+                except Exception:  # noqa: BLE001
+                    pass
+            style = spec.get("style") or {}
+            has_layout_geometry = any(k in layout for k in (
+                "x_tick_rotation", "y_tick_rotation", "legend_location", "x_label_pad",
+                "y_label_pad", "title_pad", "margin_left", "margin_right", "margin_top",
+                "margin_bottom", "auto_fix_layout"))
+            has_colorbar = any(k in mapping for k in ("colorbar_location", "colorbar_pad",
+                                                      "colorbar_shrink"))
+            if (style or has_layout_geometry or has_colorbar) and getattr(self, "_style_box", None):
+                self._style_box.setChecked(True)
+                pal = style.get("palette_name")
+                if pal:
+                    kp = self.palette_combo.findData(pal)
+                    if kp >= 0:
+                        self.palette_combo.setCurrentIndex(kp)
+                fam = style.get("font_family")
+                fam = fam[0] if isinstance(fam, (list, tuple)) and fam else fam
+                if fam:
+                    kf = self.font_combo.findData(fam)
+                    if kf >= 0:
+                        self.font_combo.setCurrentIndex(kf)
+                for widget, skey in [(self.sp_title, "title_font_pt"), (self.sp_axis, "axis_font_pt"),
+                                     (self.sp_tick, "tick_label_pt"), (self.sp_legend, "legend_pt"),
+                                     (self.sp_annot, "annotation_pt"), (self.sp_marker, "marker_size"),
+                                     (self.sp_linew, "line_width_pt"), (self.sp_spine, "spine_width_pt")]:
+                    if skey in style:
+                        try:
+                            widget.setValue(type(widget.value())(style[skey]))
+                        except Exception:  # noqa: BLE001
+                            pass
+                if "legend_outside" in style:
+                    self.chk_legend_outside.setChecked(bool(style["legend_outside"]))
+                if "grid" in style:
+                    self.chk_grid.setChecked(bool(style["grid"]))
+                # layout geometry
+                for combo, key in ((self.cmb_xrot, "x_tick_rotation"), (self.cmb_yrot, "y_tick_rotation")):
+                    if key in layout:
+                        j = combo.findText(str(int(layout[key])) if str(layout[key]).lstrip("-").isdigit()
+                                           else str(layout[key]))
+                        combo.setCurrentIndex(j if j >= 0 else 0)
+                if "legend_location" in layout:
+                    j = self.cmb_legloc.findText(str(layout["legend_location"]))
+                    self.cmb_legloc.setCurrentIndex(j if j >= 0 else 0)
+                for key, w in (("x_label_pad", self.sp_xpad), ("y_label_pad", self.sp_ypad),
+                               ("title_pad", self.sp_titlepad), ("margin_left", self.sp_ml),
+                               ("margin_right", self.sp_mr), ("margin_top", self.sp_mt),
+                               ("margin_bottom", self.sp_mb)):
+                    if key in layout:
+                        try:
+                            w.setValue(float(layout[key]))
+                        except (TypeError, ValueError):
+                            pass
+                self.chk_autofix.setChecked(bool(layout.get("auto_fix_layout", False)))
+                # colorbar geometry rides in the mapping
+                if "colorbar_location" in mapping:
+                    j = self.cmb_cbloc.findText(str(mapping["colorbar_location"]))
+                    self.cmb_cbloc.setCurrentIndex(j if j >= 0 else 0)
+                if "colorbar_pad" in mapping:
+                    self.sp_cbpad.setValue(float(mapping["colorbar_pad"]))
+                if "colorbar_shrink" in mapping:
+                    self.sp_cbshrink.setValue(float(mapping["colorbar_shrink"]))
+            stats = spec.get("statistics")
+            if stats and hasattr(self, "stats_panel"):
+                try:
+                    self.stats_panel.load_spec(stats)
+                except Exception:  # noqa: BLE001
+                    pass
+        finally:
+            self._suppress_change = prev
+            self._loading_spec = False
+
     def _build_style_panel(self) -> QWidget:
         # Grouped Publication controls: Typography / Axes & labels / Legend / Colorbar
         # / Figure margins — mirroring the Streamlit sidebar sections. Every control
@@ -872,6 +1224,17 @@ class MainWindow(QMainWindow):
         a_tmpl = QAction("Save template…", self)
         a_tmpl.triggered.connect(self.action_save_template)
         filem.addAction(a_tmpl)
+
+        preset_menu = filem.addMenu("Figure preset")
+        for label, slot in (("Apply selected preset", self.action_apply_preset),
+                            ("Save preset…", self.action_save_preset),
+                            ("Import preset…", self.action_import_preset),
+                            ("Export selected preset…", self.action_export_preset),
+                            ("Delete selected preset", self.action_delete_preset),
+                            ("Reset to Publication defaults", self.action_reset_style)):
+            act = QAction(label, self)
+            act.triggered.connect(slot)
+            preset_menu.addAction(act)
         filem.addSeparator()
         a_quit = QAction("Quit", self)
         a_quit.triggered.connect(self.close)
@@ -1386,88 +1749,7 @@ class MainWindow(QMainWindow):
 
     def _apply_plotspec_to_ui(self, spec: dict):
         """Populate the controls from a loaded PlotSpec (no intermediate renders)."""
-        self._loading_spec = True
-        prev = self._suppress_change
-        self._suppress_change = True
-        try:
-            pt = spec.get("plot_type")
-            idx = self.plot_combo.findData(pt)
-            if idx >= 0:
-                self.plot_combo.setCurrentIndex(idx)
-            self._rebuild_mapping_and_options()
-            for key, val in (spec.get("mapping") or {}).items():
-                w = self._mapping_widgets.get(key)
-                if w is not None and val is not None:
-                    i = w.findText(str(val))
-                    if i >= 0:
-                        w.setCurrentIndex(i)
-                    continue
-                ow = self._option_widgets.get(key)
-                if ow is None:
-                    continue
-                try:
-                    if isinstance(ow, QCheckBox):
-                        ow.setChecked(bool(val))
-                    elif isinstance(ow, QComboBox):
-                        j = ow.findText(str(val))
-                        if j >= 0:
-                            ow.setCurrentIndex(j)
-                    elif isinstance(ow, (QSpinBox, QDoubleSpinBox)) and val is not None:
-                        ow.setValue(val)
-                except Exception:
-                    pass
-            layout = spec.get("layout") or {}
-            self.title_edit.setText(str(layout.get("title", "") or ""))
-            self.xlabel_edit.setText(str(layout.get("x_label", "") or ""))
-            self.ylabel_edit.setText(str(layout.get("y_label", "") or ""))
-            cw = layout.get("column_width")
-            if cw:
-                k = self.width_combo.findText(str(cw))
-                if k >= 0:
-                    self.width_combo.setCurrentIndex(k)
-            dpi = (spec.get("output") or {}).get("dpi")
-            if dpi:
-                try:
-                    self.dpi_spin.setValue(int(dpi))
-                except Exception:
-                    pass
-            style = spec.get("style") or {}
-            if style and getattr(self, "_style_box", None):
-                self._style_box.setChecked(True)
-                pal = style.get("palette_name")
-                if pal:
-                    kp = self.palette_combo.findData(pal)
-                    if kp >= 0:
-                        self.palette_combo.setCurrentIndex(kp)
-                fam = style.get("font_family")
-                fam = fam[0] if isinstance(fam, (list, tuple)) and fam else fam
-                if fam:
-                    kf = self.font_combo.findData(fam)
-                    if kf >= 0:
-                        self.font_combo.setCurrentIndex(kf)
-                for widget, skey in [(self.sp_axis, "axis_font_pt"), (self.sp_tick, "tick_label_pt"),
-                                     (self.sp_legend, "legend_pt"), (self.sp_annot, "annotation_pt"),
-                                     (self.sp_marker, "marker_size"), (self.sp_linew, "line_width_pt"),
-                                     (self.sp_spine, "spine_width_pt")]:
-                    if skey in style:
-                        try:
-                            widget.setValue(type(widget.value())(style[skey]))
-                        except Exception:
-                            pass
-                if "legend_outside" in style:
-                    self.chk_legend_outside.setChecked(bool(style["legend_outside"]))
-                if "grid" in style:
-                    self.chk_grid.setChecked(bool(style["grid"]))
-            # Statistics: populate the panel so annotations survive later edits.
-            stats = spec.get("statistics")
-            if stats and hasattr(self, "stats_panel"):
-                try:
-                    self.stats_panel.load_spec(stats)
-                except Exception:
-                    pass
-        finally:
-            self._suppress_change = prev
-            self._loading_spec = False
+        self._apply_spec_to_controls(spec)
 
     def _on_generate_recommendation(self, rec):
         if self._apply_recommendation(rec):
@@ -1876,10 +2158,13 @@ class MainWindow(QMainWindow):
         handoff_map = self._handoff_mapping or {}
         self._multi_col_widgets = {}
         for field in self.controller.column_fields(pt):
-            if ui_hints.is_multi_column(field) and field != "value_columns":
+            if ui_hints.is_multi_column(field) and not (field == "value_columns"
+                                                          and pt in _MATRIX_PLOT_TYPES):
                 # Several columns, one per series. A single combo here would quietly plot only
                 # the first of them - a three-group survival curve would come out as one curve
-                # and look finished. "value_columns" keeps its own richer widget below.
+                # and look finished. For matrix plots "value_columns" keeps its own richer widget
+                # below; for anything else (a wide-form histogram) it is an ordinary multi-select,
+                # otherwise the role would have no control at all.
                 lw = QListWidget()
                 lw.setSelectionMode(QListWidget.ExtendedSelection)
                 lw.setMaximumHeight(120)
@@ -1965,6 +2250,7 @@ class MainWindow(QMainWindow):
             w = self._make_option_widget(opt)
             self.options_form.addRow(opt.label, w)
             self._option_widgets[opt.key] = w
+        self._refresh_preset_list()
 
         # Apply a Matrix-Workflow handoff's suggested option defaults (e.g. volcano
         # use_fdr / heatmap scale) once, then clear so later manual edits stick.

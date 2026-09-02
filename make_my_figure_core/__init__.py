@@ -21,6 +21,7 @@ from make_my_figure_core.plots.registry import (
     RenderResult,
 )
 from make_my_figure_core import data as mock_data
+from make_my_figure_core import presets
 from make_my_figure_core.resources import resource_path
 
 __all__ = [
@@ -42,5 +43,6 @@ __all__ = [
     "figure_to_bytes",
     "RenderResult",
     "mock_data",
+    "presets",
     "resource_path",
 ]

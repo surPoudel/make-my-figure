@@ -401,11 +401,28 @@ def apply_publication_layout(fig, ax, spec: Dict[str, Any],
         except (TypeError, ValueError):
             return None
 
+    def _angle(value):
+        """0 / 45 / 90 from a number or the words horizontal / vertical; None if unreadable.
+
+        Written as a lookup *then* a conversion: ``d.get(key, int(value))`` evaluates ``int(value)``
+        before the lookup, so the words raised ValueError and were silently skipped.
+        """
+        named = {"horizontal": 0, "vertical": 90}
+        key = str(value).strip().lower()
+        if key in named:
+            return named[key]
+        try:
+            return int(float(value))
+        except (TypeError, ValueError):
+            return None
+
     # Tick rotation + alignment.
     xr = layout.get("x_tick_rotation")
     if xr is not None and xr != "auto":
         try:
-            ang = {"horizontal": 0, "vertical": 90}.get(str(xr).lower(), int(xr))
+            ang = _angle(xr)
+            if ang is None:
+                raise ValueError(xr)
             ha = "right" if 0 < ang < 90 else "center"
             for t in ax.get_xticklabels():
                 t.set_rotation(ang)
@@ -419,7 +436,9 @@ def apply_publication_layout(fig, ax, spec: Dict[str, Any],
     yr = layout.get("y_tick_rotation")
     if yr is not None and yr != "auto":
         try:
-            ang = {"horizontal": 0, "vertical": 90}.get(str(yr).lower(), int(yr))
+            ang = _angle(yr)
+            if ang is None:
+                raise ValueError(yr)
             for t in ax.get_yticklabels():
                 t.set_rotation(ang)
         except (TypeError, ValueError):

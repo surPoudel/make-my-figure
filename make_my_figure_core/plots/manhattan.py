@@ -124,7 +124,10 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if _xr is None or str(_xr) == "auto":
             rot = 90 if len(tick_lab) > 12 else 0
         else:
-            rot = {"horizontal": 0, "vertical": 90}.get(str(_xr).lower(), int(_xr))
+            # lookup first, convert second: a dict default is evaluated eagerly, so the words
+            # used to raise ValueError before the lookup could match them
+            _named = {"horizontal": 0, "vertical": 90}
+            rot = _named[str(_xr).lower()] if str(_xr).lower() in _named else int(float(_xr))
         ax.set_xticks(tick_pos)
         ax.set_xticklabels(tick_lab, fontsize=max(style.tick_label_pt - 1, 9.0),
                            rotation=rot, ha=("right" if 0 < rot < 90 else "center"))

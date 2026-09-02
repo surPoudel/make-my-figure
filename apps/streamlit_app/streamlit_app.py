@@ -153,6 +153,15 @@ try:
                    "package is shadowing the repo — run `python -m pip install -e .`.")
 except Exception:  # noqa: BLE001
     pass
+# Figure-preset values staged by the previous run are written into widget state here, before any
+# widget exists. Streamlit refuses to change a widget's key once that widget has been created in the
+# current run, and the column/option widgets are created long before the preset controls - so a
+# preset is applied by staging its values and rerunning, never by writing into live widgets.
+_pending = st.session_state.pop("_preset_pending", None)
+if _pending:
+    for _k, _v in _pending.items():
+        st.session_state[_k] = _v
+
 st.sidebar.header("1. Data")
 source_mode = st.sidebar.radio("Data source",
                                ["Bundled sample", "Upload file", "Open PlotSpec"])
@@ -572,12 +581,16 @@ def _column_select(label: str, key: str, default):
 
 # A Matrix-Workflow handoff supplies suggested mappings for the recommended plot;
 # they seed the selectbox defaults once (the map_* keys were cleared on handoff).
+_MATRIX_PLOT_TYPES_EARLY = {"heatmap_clustered_matrix", "pca_scatter_from_matrix",
+                            "hierarchical_clustering", "hierarchical_dendrogram"}
 _handoff_mappings = st.session_state.get("_handoff_mappings") or {}
 for field in column_fields_for(plot_type):
     _default = _handoff_mappings.get(field, mapping.get(field))
-    if ui_hints.is_multi_column(field) and field != "value_columns":
+    if ui_hints.is_multi_column(field) and not (field == "value_columns"
+                                                  and plot_type in _MATRIX_PLOT_TYPES_EARLY):
         # Several columns, one per series. A single-value picker here would quietly plot only the
-        # first of them. "value_columns" keeps its own richer widget further down.
+        # first of them. For matrix plots "value_columns" keeps its own richer widget further
+        # down; for anything else (a wide-form histogram) it is an ordinary multi-select.
         _opts = [c for c in table_info.columns]
         _pre = [c for c in (_default or []) if c in _opts] if isinstance(_default, (list, tuple)) \
             else ([_default] if _default in _opts else [])
@@ -623,15 +636,14 @@ st.session_state.pop("_handoff_mappings", None)
 
 # Plot-type-specific options.
 if plot_type in ("barplot_with_error_bar", "grouped_barplot_with_error_bar"):
-    mapping["error"] = st.sidebar.selectbox("Error bar", ["sem", "sd", "ci95", "none"], index=0)
+    mapping["error"] = st.sidebar.selectbox("Error bar", ["sem", "sd", "ci95", "none"], index=0, key=f"opt_{plot_type}_error")
 if plot_type == "heatmap_clustered_matrix":
-    mapping["cluster_rows"] = st.sidebar.checkbox("Cluster rows", value=True)
-    mapping["cluster_columns"] = st.sidebar.checkbox("Cluster columns", value=True)
-    mapping["color_scale"] = st.sidebar.selectbox("Color scale", ["diverging", "sequential"], index=0)
+    mapping["cluster_rows"] = st.sidebar.checkbox("Cluster rows", value=True, key=f"opt_{plot_type}_cluster_rows")
+    mapping["cluster_columns"] = st.sidebar.checkbox("Cluster columns", value=True, key=f"opt_{plot_type}_cluster_columns")
+    mapping["color_scale"] = st.sidebar.selectbox("Color scale", ["diverging", "sequential"], index=0, key=f"opt_{plot_type}_color_scale")
 if plot_type == "volcano_plot":
-    mapping["lfc_cutoff"] = st.sidebar.number_input("log2FC cutoff", value=1.0, step=0.5)
-    mapping["p_cutoff"] = st.sidebar.number_input("p-value cutoff", value=0.05, step=0.01, format="%.3f")
-
+    mapping["lfc_cutoff"] = st.sidebar.number_input("log2FC cutoff", value=1.0, step=0.5, key=f"opt_{plot_type}_lfc_cutoff")
+    mapping["p_cutoff"] = st.sidebar.number_input("p-value cutoff", value=0.05, step=0.01, format="%.3f", key=f"opt_{plot_type}_p_cutoff")
 # Interactive labelling (volcano / MA) — Streamlit's canvas is static, so this is the
 # click-to-label FALLBACK: choose points to label, then move a selected label with
 # offset controls. Backed by the shared AnnotationState so it round-trips into the
@@ -696,23 +708,23 @@ if plot_type in ("volcano_plot", "ma_plot"):
                 mapping["label_list"] = _picked
 
 if plot_type == "scatterplot_with_regression":
-    mapping["fit_line"] = st.sidebar.checkbox("Fit regression line", value=True)
+    mapping["fit_line"] = st.sidebar.checkbox("Fit regression line", value=True, key=f"opt_{plot_type}_fit_line")
 if plot_type == "boxplot_or_violin_with_points":
-    mapping["kind"] = st.sidebar.selectbox("Kind", ["box", "violin"], index=0)
-    mapping["points"] = st.sidebar.checkbox("Overlay points", value=True)
+    mapping["kind"] = st.sidebar.selectbox("Kind", ["box", "violin"], index=0, key=f"opt_{plot_type}_kind")
+    mapping["points"] = st.sidebar.checkbox("Overlay points", value=True, key=f"opt_{plot_type}_points")
 if plot_type == "lineplot_timecourse_with_error_band":
-    mapping["error"] = st.sidebar.selectbox("Error band", ["sem", "sd", "ci95", "none"], index=0)
+    mapping["error"] = st.sidebar.selectbox("Error band", ["sem", "sd", "ci95", "none"], index=0, key=f"opt_{plot_type}_error")
 if plot_type == "ridge_or_density_plot":
-    mapping["overlap"] = st.sidebar.slider("Ridge overlap", 0.0, 0.95, 0.7, step=0.05)
+    mapping["overlap"] = st.sidebar.slider("Ridge overlap", 0.0, 0.95, 0.7, step=0.05, key=f"opt_{plot_type}_overlap")
 if plot_type == "enrichment_dotplot":
-    mapping["top_n"] = st.sidebar.slider("Top N terms", 5, 40, 20, step=1)
+    mapping["top_n"] = st.sidebar.slider("Top N terms", 5, 40, 20, step=1, key=f"opt_{plot_type}_top_n")
 if plot_type == "stacked_bar_composition":
     mapping["facet_or_sort_by"] = _column_select("sort by", "sortby", mapping.get("facet_or_sort_by"))
 if plot_type == "waterfall_plot":
-    mapping["sort"] = st.sidebar.selectbox("Sort", ["ascending", "descending"], index=0)
+    mapping["sort"] = st.sidebar.selectbox("Sort", ["ascending", "descending"], index=0, key=f"opt_{plot_type}_sort")
 if plot_type == "forest_plot":
-    mapping["reference"] = st.sidebar.number_input("Reference line", value=1.0, step=0.5)
-    mapping["log_scale"] = st.sidebar.checkbox("Log x-axis", value=True)
+    mapping["reference"] = st.sidebar.number_input("Reference line", value=1.0, step=0.5, key=f"opt_{plot_type}_reference")
+    mapping["log_scale"] = st.sidebar.checkbox("Log x-axis", value=True, key=f"opt_{plot_type}_log_scale")
 if plot_type == "network_graph":
     # --- Edge color: by a categorical edge column (e.g. interaction_type),
     # single fixed color, or by sign (correlation). We auto-detect a categorical
@@ -756,9 +768,8 @@ if plot_type == "network_graph":
     _ncm = st.sidebar.text_input('Custom node colors (JSON, e.g. {"g1":"#B2182B"})', value="")
     if _ncm.strip():
         mapping["node_color_map"] = _ncm.strip()
-    mapping["node_labels"] = st.sidebar.checkbox("Show node labels", value=True)
-    mapping["show_legend"] = st.sidebar.checkbox("Show legend", value=True)
-
+    mapping["node_labels"] = st.sidebar.checkbox("Show node labels", value=True, key=f"opt_{plot_type}_node_labels")
+    mapping["show_legend"] = st.sidebar.checkbox("Show legend", value=True, key=f"opt_{plot_type}_show_legend")
 # PCA needs a second metadata table mapping sample columns to attributes.
 pca_aux = None
 if plot_type == "pca_scatter_from_matrix":
@@ -790,6 +801,158 @@ if plot_type == "pca_scatter_from_matrix":
 # --- 5. Publication style (grouped; shares the core engine with the desktop app) ---
 from make_my_figure_core.styles.engine import USER_PALETTES  # noqa: E402
 
+_STYLE_DEFAULTS = {
+    "lay_width": "default", "lay_dpi": 300, "lay_ml": 0.0, "lay_mr": 0.0, "lay_mt": 0.0,
+    "lay_mb": 0.0, "lay_autofix": False,
+    "sty_palette": "(profile default)", "sty_title_pt": 14, "sty_axis_pt": 12, "sty_tick_pt": 10,
+    "sty_annot_pt": 10, "sty_marker": 45, "sty_linew": 1.8, "sty_spine": 1.1, "sty_grid": False,
+    "lab_title": "", "lab_x": "", "lab_y": "", "lay_xrot": "auto", "lay_yrot": "auto",
+    "lay_xpad": 0.0, "lay_ypad": 0.0, "lay_tpad": 0.0,
+    "lay_legloc": "auto", "sty_legend_pt": 10, "sty_legend_out": False,
+    "lay_cbloc": "default", "lay_cbpad": 0.0, "lay_cbshrink": 1.0,
+}
+for _k, _v in _STYLE_DEFAULTS.items():
+    st.session_state.setdefault(_k, _v)
+
+# --- Figure preset: save this figure's configuration, apply it to new data later --------------
+# A thin layer over make_my_figure_core.presets (shared with the desktop app). Applying a preset
+# writes its values into the session-state keys of the controls below and reruns, so the widgets
+# show what is in effect and the user can keep editing from there.
+from make_my_figure_core import presets as _presets  # noqa: E402
+
+
+def _preset_to_session(preset: dict, columns) -> "_presets.PresetApplyResult":
+    """Stage a preset's values for the widget state keys (applied on the next run); returns the
+    apply report. Values are staged rather than written because most target widgets already exist
+    in this run - see the ``_preset_pending`` block at the top of the script."""
+    skeleton = make_spec(plot_type, table_name, journal_style, mapping=dict(mapping))
+    res = _presets.apply_preset(preset, skeleton, columns=list(columns))
+    spec_ = res.spec
+    staged: dict = {}
+    sty = spec_.get("style") or {}
+    _sty_keys = {"title_font_pt": "sty_title_pt", "axis_font_pt": "sty_axis_pt",
+                 "tick_label_pt": "sty_tick_pt", "annotation_pt": "sty_annot_pt",
+                 "marker_size": "sty_marker", "line_width_pt": "sty_linew",
+                 "spine_width_pt": "sty_spine", "grid": "sty_grid", "legend_pt": "sty_legend_pt",
+                 "legend_outside": "sty_legend_out"}
+    for tok, key in _sty_keys.items():
+        if tok in sty:
+            staged[key] = sty[tok]
+    if sty.get("palette_name"):
+        staged["sty_palette"] = sty["palette_name"]
+    lay = spec_.get("layout") or {}
+    if lay.get("column_width"):
+        staged["lay_width"] = lay["column_width"]
+    for lk, key in (("x_tick_rotation", "lay_xrot"), ("y_tick_rotation", "lay_yrot")):
+        if lk in lay:
+            staged[key] = str(lay[lk])
+    if "legend_location" in lay:
+        staged["lay_legloc"] = lay["legend_location"]
+    for lk, key in (("x_label_pad", "lay_xpad"), ("y_label_pad", "lay_ypad"),
+                    ("title_pad", "lay_tpad"), ("margin_left", "lay_ml"),
+                    ("margin_right", "lay_mr"), ("margin_top", "lay_mt"),
+                    ("margin_bottom", "lay_mb")):
+        if lk in lay:
+            staged[key] = float(lay[lk])
+    staged["lay_autofix"] = bool(lay.get("auto_fix_layout", False))
+    for lk, key in (("title", "lab_title"), ("x_label", "lab_x"), ("y_label", "lab_y")):
+        if lk in lay:
+            staged[key] = str(lay[lk])
+    out = spec_.get("output") or {}
+    if out.get("dpi"):
+        staged["lay_dpi"] = int(out["dpi"])
+    mp = spec_.get("mapping") or {}
+    for mk, key in (("colorbar_location", "lay_cbloc"), ("colorbar_pad", "lay_cbpad"),
+                    ("colorbar_shrink", "lay_cbshrink")):
+        if mk in mp:
+            staged[key] = mp[mk]
+    roles = set(_presets.role_keys(plot_type))
+    for k, v in mp.items():
+        if k in roles:
+            if v is not None:
+                staged[f"map_{k}"] = list(v) if isinstance(v, (list, tuple)) else v
+        elif k in ("colorbar_location", "colorbar_pad", "colorbar_shrink"):
+            continue
+        else:
+            staged[f"opt_{plot_type}_{k}"] = v
+    st.session_state["_preset_pending"] = staged
+    st.session_state["_preset_report"] = {
+        "name": preset.get("name", ""), "applied": len(res.applied), "skipped": res.skipped,
+        "unresolved": res.unresolved_roles, "warnings": res.warnings}
+    return res
+
+
+with st.sidebar.expander("Figure preset", expanded=False):
+    st.caption("Save this figure's configuration and apply it to new data later. "
+               "Presets never contain your data.")
+    _store = _presets.PresetStore()
+    try:
+        _entries = _store.list(plot_type)
+    except Exception as _exc:  # noqa: BLE001
+        _entries, _store_err = [], str(_exc)
+    else:
+        _store_err = ""
+    if _store_err:
+        st.warning(f"Preset library unavailable: {_store_err}")
+    _labels = ["(choose a preset)"] + [e.label for e in _entries]
+    _chosen = st.selectbox("Figure preset", _labels, key=f"preset_pick_{plot_type}")
+    _entry = next((e for e in _entries if e.label == _chosen), None)
+    _c1, _c2, _c3 = st.columns(3)
+    if _c1.button("Apply", key="preset_apply", disabled=_entry is None):
+        try:
+            _preset_to_session(_presets.load_preset(_entry.path), table_info.columns)
+            st.rerun()
+        except _presets.PresetError as _exc:
+            st.error(str(_exc))
+    if _c2.button("Delete", key="preset_delete", disabled=_entry is None):
+        _store.delete(_entry.path)
+        st.rerun()
+    if _entry is not None:
+        try:
+            _c3.download_button("Export", _presets.preset_to_json(_presets.load_preset(_entry.path)),
+                                file_name=_presets.safe_filename(_entry.name) + _presets.PRESET_EXTENSION,
+                                mime="application/json", key="preset_export")
+        except _presets.PresetError as _exc:
+            st.error(str(_exc))
+    _rep = st.session_state.pop("_preset_report", None)
+    if _rep:
+        st.success(f"Applied “{_rep['name']}”: {_rep['applied']} setting(s).")
+        if _rep["unresolved"]:
+            st.warning("The preset named columns this table does not have - nothing was "
+                       "substituted. Choose a column for: "
+                       + ", ".join(f"{r} (wanted {w!r})" for r, w in _rep["unresolved"].items()))
+        for _w in _rep["warnings"]:
+            if "universal settings" in _w:
+                st.info(_w)
+        if _rep["skipped"]:
+            st.caption(f"{len(_rep['skipped'])} setting(s) do not apply to this plot type.")
+    with st.form("preset_save_form", clear_on_submit=False):
+        st.markdown("**Save preset**")
+        _pname = st.text_input("Preset name", value=f"{display_name(plot_type)} preset")
+        _pmode = st.radio("Save", ["Figure style only", "Full figure configuration"],
+                          help="Style: fonts, colours, layout, legend, export - portable to any data "
+                               "of this plot type. Full: also column roles, thresholds, labels and "
+                               "statistics; asks for remapping on new data.")
+        if st.form_submit_button("Save"):
+            st.session_state["_preset_save_request"] = {
+                "name": _pname.strip() or f"{display_name(plot_type)} preset",
+                "mode": "style" if _pmode.startswith("Figure style") else "full"}
+    _imp = st.file_uploader("Import preset", type=["json"], key="preset_import")
+    if _imp is not None and st.session_state.get("_preset_imported") != _imp.name:
+        try:
+            _store.save(_presets.load_preset_bytes(_imp.getvalue(), name=_imp.name.split(".")[0]))
+            st.session_state["_preset_imported"] = _imp.name
+            st.rerun()
+        except _presets.PresetError as _exc:
+            st.error(str(_exc))
+    if st.button("Reset to Publication defaults", key="preset_reset"):
+        st.session_state["_preset_pending"] = dict(_STYLE_DEFAULTS)
+        st.rerun()
+
+# Every control below carries a session-state key so a Figure preset can set it (see the
+# "Figure preset" expander above). Defaults are seeded once, and the widgets are created without
+# an explicit value, which is the pattern Streamlit expects when state is written programmatically.
+
 st.sidebar.header("5. Publication style")
 style_overrides = {}
 _layout_controls = {}
@@ -797,56 +960,57 @@ _layout_controls = {}
 # ① Figure — dimensions, DPI, margins, auto layout.
 with st.sidebar.expander("① Figure", expanded=False):
     column_width = st.selectbox("Figure width preset",
-                                ["default", "single", "onehalf", "double"], index=0)
-    dpi = st.slider("Raster DPI (PNG/TIFF)", 150, 600, 300, step=50)
-    _ml = st.slider("Left margin (0 = auto)", 0.0, 0.5, 0.0, step=0.02)
-    _mr = st.slider("Right margin (0 = auto)", 0.0, 0.5, 0.0, step=0.02)
-    _mt = st.slider("Top margin (0 = auto)", 0.0, 0.5, 0.0, step=0.02)
-    _mb = st.slider("Bottom margin (0 = auto)", 0.0, 0.5, 0.0, step=0.02)
-    _autofix = st.checkbox("Auto-fix layout (prevent clipping)", value=False)
+                                ["default", "single", "onehalf", "double"], key="lay_width")
+    dpi = st.slider("Raster DPI (PNG/TIFF)", 150, 600, step=50, key="lay_dpi")
+    _ml = st.slider("Left margin (0 = auto)", 0.0, 0.5, step=0.02, key="lay_ml")
+    _mr = st.slider("Right margin (0 = auto)", 0.0, 0.5, step=0.02, key="lay_mr")
+    _mt = st.slider("Top margin (0 = auto)", 0.0, 0.5, step=0.02, key="lay_mt")
+    _mb = st.slider("Bottom margin (0 = auto)", 0.0, 0.5, step=0.02, key="lay_mb")
+    _autofix = st.checkbox("Auto-fix layout (prevent clipping)", key="lay_autofix")
 
 # ② Typography — palette, fonts/sizes, marks.
 with st.sidebar.expander("② Typography", expanded=False):
     # Only the curated, user-facing palettes — never the internal journal-named
     # entries kept in NAMED_PALETTES for backward compatibility.
-    pal = st.selectbox("Palette", ["(profile default)"] + list(USER_PALETTES))
+    pal = st.selectbox("Palette", ["(profile default)"] + list(USER_PALETTES), key="sty_palette")
     if pal != "(profile default)":
         style_overrides["palette_name"] = pal
-    style_overrides["title_font_pt"] = st.slider("Title pt", 8, 28, 14)
-    style_overrides["axis_font_pt"] = st.slider("Axis label pt", 8, 24, 12)
-    style_overrides["tick_label_pt"] = st.slider("Tick label pt", 6, 20, 10)
-    style_overrides["annotation_pt"] = st.slider("Annotation pt", 6, 20, 10)
-    style_overrides["marker_size"] = st.slider("Marker size", 6, 200, 45)
-    style_overrides["line_width_pt"] = st.slider("Line width", 0.5, 6.0, 1.8, 0.1)
+    style_overrides["title_font_pt"] = st.slider("Title pt", 8, 28, key="sty_title_pt")
+    style_overrides["axis_font_pt"] = st.slider("Axis label pt", 8, 24, key="sty_axis_pt")
+    style_overrides["tick_label_pt"] = st.slider("Tick label pt", 6, 20, key="sty_tick_pt")
+    style_overrides["annotation_pt"] = st.slider("Annotation pt", 6, 20, key="sty_annot_pt")
+    style_overrides["marker_size"] = st.slider("Marker size", 6, 200, key="sty_marker")
+    style_overrides["line_width_pt"] = st.slider("Line width", 0.5, 6.0, step=0.1, key="sty_linew")
     style_overrides["regression_line_width"] = style_overrides["line_width_pt"]
-    style_overrides["spine_width_pt"] = st.slider("Axis/spine width", 0.4, 4.0, 1.1, 0.1)
-    style_overrides["grid"] = st.checkbox("Grid", value=False)
+    style_overrides["spine_width_pt"] = st.slider("Axis/spine width", 0.4, 4.0, step=0.1,
+                                                  key="sty_spine")
+    style_overrides["grid"] = st.checkbox("Grid", key="sty_grid")
 
 # ③ Axes & labels — titles, tick rotation, padding.
 with st.sidebar.expander("③ Axes & labels", expanded=False):
-    title = st.text_input("Title", value="")
-    x_label = st.text_input("X label (blank = auto)", value="")
-    y_label = st.text_input("Y label (blank = auto)", value="")
-    _xr = st.selectbox("X tick angle", ["auto", "0", "45", "90"], index=0)
-    _yr = st.selectbox("Y tick angle", ["auto", "0", "45", "90"], index=0)
-    _xpad = st.slider("X label padding", 0.0, 30.0, 0.0, step=1.0)
-    _ypad = st.slider("Y label padding", 0.0, 30.0, 0.0, step=1.0)
-    _tpad = st.slider("Title padding", 0.0, 30.0, 0.0, step=1.0)
+    title = st.text_input("Title", key="lab_title")
+    x_label = st.text_input("X label (blank = auto)", key="lab_x")
+    y_label = st.text_input("Y label (blank = auto)", key="lab_y")
+    _xr = st.selectbox("X tick angle", ["auto", "0", "45", "90"], key="lay_xrot")
+    _yr = st.selectbox("Y tick angle", ["auto", "0", "45", "90"], key="lay_yrot")
+    _xpad = st.slider("X label padding", 0.0, 30.0, step=1.0, key="lay_xpad")
+    _ypad = st.slider("Y label padding", 0.0, 30.0, step=1.0, key="lay_ypad")
+    _tpad = st.slider("Title padding", 0.0, 30.0, step=1.0, key="lay_tpad")
 
 # ④ Legend — location, size, inside/outside.
 with st.sidebar.expander("④ Legend", expanded=False):
     _legloc = st.selectbox("Location",
                            ["auto", "inside upper right", "inside upper left",
                             "inside lower right", "inside lower left", "outside right",
-                            "outside left", "outside top", "outside bottom"], index=0)
-    style_overrides["legend_pt"] = st.slider("Legend pt", 6, 20, 10)
-    style_overrides["legend_outside"] = st.checkbox("Legend outside plot", value=False)
+                            "outside left", "outside top", "outside bottom"], key="lay_legloc")
+    style_overrides["legend_pt"] = st.slider("Legend pt", 6, 20, key="sty_legend_pt")
+    style_overrides["legend_outside"] = st.checkbox("Legend outside plot", key="sty_legend_out")
 
 # ⑤ Colorbar — heatmap / clustering / confusion / enrichment only.
 with st.sidebar.expander("⑤ Colorbar", expanded=False):
-    _cbloc = st.selectbox("Location", ["default", "right", "left", "top", "bottom"], index=0)
-    _cbpad = st.slider("Padding (0 = default)", 0.0, 0.4, 0.0, step=0.02)
-    _cbshrink = st.slider("Size", 0.3, 1.0, 1.0, step=0.1)
+    _cbloc = st.selectbox("Location", ["default", "right", "left", "top", "bottom"], key="lay_cbloc")
+    _cbpad = st.slider("Padding (0 = default)", 0.0, 0.4, step=0.02, key="lay_cbpad")
+    _cbshrink = st.slider("Size", 0.3, 1.0, step=0.1, key="lay_cbshrink")
     st.caption("Applies to heatmap, clustered heatmap, confusion matrix, enrichment dot.")
 
 # Assemble the shared layout controls (applied to every plot by the layout engine).
@@ -1034,6 +1198,20 @@ if stats_spec.get("enabled"):
     spec["statistics"] = stats_spec
     if _source_prov:
         spec["statistics"].setdefault("source", dict(_source_prov))
+
+# A "Save preset" submitted in the sidebar is fulfilled here, from the fully assembled spec.
+_save_req = st.session_state.pop("_preset_save_request", None)
+if _save_req:
+    try:
+        _saved = _presets.extract_preset(spec, mode=_save_req["mode"], name=_save_req["name"])
+        _presets.PresetStore().save(_saved)
+        st.sidebar.success(f"Saved preset “{_save_req['name']}”.")
+        st.sidebar.download_button(
+            "Download the saved preset", _presets.preset_to_json(_saved),
+            file_name=_presets.safe_filename(_save_req["name"]) + _presets.PRESET_EXTENSION,
+            mime="application/json", key="preset_download_saved")
+    except _presets.PresetError as _exc:
+        st.sidebar.error(f"Could not save preset: {_exc}")
 
 
 # --- Render + preview -------------------------------------------------------
