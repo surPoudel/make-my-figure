@@ -24,6 +24,21 @@ def test_font_stack_is_kept_outside_the_style_context():
     assert ax.get_xticklabels()[0].get_fontname() == "DejaVu Serif"
 
 
+def test_legend_and_manual_annotation_take_the_style_font():
+    """The registry re-places legends and applies manual annotations after the renderer returns; both
+    were drawn outside the style's rc_context and fell back to the default family."""
+    style = load_profile("publication").with_overrides({"font_family": "DejaVu Serif"})
+    df = pd.DataFrame({"x": [1.0, 2.0, 3.0, 4.0, 5.0, 6.0], "y": [1.0, 2.5, 2.0, 4.0, 3.5, 5.0], "g": list("aaabbb")})
+    spec = make_spec("scatterplot_with_regression", "t.csv", "publication", mapping={"x": "x", "y": "y", "color": "g"},
+                     layout={"title": "t"})
+    spec["annotations"] = [{"kind": "text", "text": "note", "xy": [0.1, 0.9], "coords": "axes"}]
+    res = render(spec, df, style=style)
+    ax = res.figure.axes[0]; res.figure.canvas.draw()
+    leg = ax.get_legend()
+    assert leg is not None and all(t.get_fontname() == "DejaVu Serif" for t in leg.get_texts())
+    assert [t for t in ax.texts if t.get_text() == "note"][0].get_fontname() == "DejaVu Serif"
+
+
 def test_composite_letters_use_the_publication_font_stack():
     """Figure Builder letters/titles are drawn on the composite figure and used matplotlib's default
     family (DejaVu Sans) instead of the Publication stack."""

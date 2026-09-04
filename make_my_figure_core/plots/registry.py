@@ -372,8 +372,9 @@ def render(
                                       getattr(_existing, "legendHandles", [])))
                     _l = [t.get_text() for t in _existing.get_texts()]
                 if _h:
-                    place_legend(_ax, style, title=_title, handles=_h, labels=_l,
-                                 location=resolve_legend_location(spec, style))
+                    with style.apply():   # legend text must take the profile's font stack
+                        place_legend(_ax, style, title=_title, handles=_h, labels=_l,
+                                     location=resolve_legend_location(spec, style))
     except Exception as _exc:  # noqa: BLE001
         result.warnings.append(f"Legend placement skipped: {_exc}")
 
@@ -391,8 +392,9 @@ def render(
 
         anns = parse_annotations(spec.get("annotations"))
         if anns and result.figure.axes:
-            result.metadata["n_manual_annotations"] = apply_annotations(
-                result.figure, result.figure.axes[0], anns, style)
+            with style.apply():   # annotation text must take the profile's font stack
+                result.metadata["n_manual_annotations"] = apply_annotations(
+                    result.figure, result.figure.axes[0], anns, style)
     except Exception as exc:  # annotations must never break the render
         result.warnings.append(f"Manual annotations skipped: {exc}")
 
