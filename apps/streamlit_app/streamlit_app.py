@@ -1287,12 +1287,11 @@ try:
     st.subheader("Export")
 
     def _fig_bytes(fmt: str) -> bytes:
-        buf = io.BytesIO()
-        save_kwargs = {"format": fmt, "bbox_inches": "tight"}
-        if fmt in ("png", "tiff"):
-            save_kwargs["dpi"] = dpi
-        fig.savefig(buf, **save_kwargs)
-        return buf.getvalue()
+        # Route through the registry so vector exports keep text as editable text
+        # (svg.fonttype none / Type 42 fonts), exactly like the desktop export path.
+        from make_my_figure_core.plots.registry import figure_to_bytes as _to_bytes
+
+        return _to_bytes(fig, fmt, dpi=dpi)
 
     # Sheet-aware base name so exports from different worksheets never collide
     # (e.g. Sol_24M_vs_6M_volcano vs Gas_24M_vs_6M_volcano).

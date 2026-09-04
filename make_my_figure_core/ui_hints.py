@@ -89,6 +89,8 @@ class Option:
 
 
 _ERROR_CHOICES = ["sem", "sd", "ci95", "none"]
+# Line/time-course bands: the error choices plus distribution bands (median with IQR or range).
+_BAND_CHOICES = _ERROR_CHOICES + ["iqr", "range"]
 # Common publication-safe colors for network node/edge controls ("(palette)" =
 # use the active Publication palette rather than a fixed color).
 _NET_NODE_COLORS = ["(palette)", "#2166AC", "#B2182B", "#1B7837", "#762A83",
@@ -199,7 +201,7 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("points", "Overlay points", "bool", True, scope="style"),
         _X_TICK_ROTATION,
     ],
-    "lineplot_timecourse_with_error_band": [Option("error", "Error band", "choice", "sem", _ERROR_CHOICES, scope="style")],
+    "lineplot_timecourse_with_error_band": [Option("error", "Error band", "choice", "sem", _BAND_CHOICES, scope="style")],
     "ridge_or_density_plot": [
         Option("density_mode", "Density mode", "choice", "ridge", ["ridge", "overlay"], scope="style"),
         Option("overlap", "Ridge overlap", "number", 0.7, minimum=0.0, maximum=0.95, step=0.05, decimals=2, scope="style"),

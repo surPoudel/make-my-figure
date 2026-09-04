@@ -1,4 +1,8 @@
-"""Line / time-course plot with mean line and SEM/SD/CI error band."""
+"""Line / time-course plot with a centre line and an error band.
+
+Band methods: ``sem``/``sd``/``ci95`` (mean-centred, symmetric), ``iqr`` and ``range``
+(median-centred order statistics, for replicate measurements), or ``none``.
+"""
 
 from __future__ import annotations
 
@@ -9,13 +13,14 @@ import numpy as np
 
 from make_my_figure_core.plots.base import (
     RenderResult,
+    apply_publication_layout,
     base_metadata,
     coerce_numeric,
     figure_size,
     get_mapping,
     require_columns,
     style_axes,
-    summarize_error,
+    summarize_band,
 )
 from make_my_figure_core.styles.engine import StyleProfile
 
@@ -44,22 +49,23 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         for si, s in enumerate(series):
             sub = work if s is None else work[work[color_by] == s]
             xs = sorted(sub[x].dropna().unique())
-            means, errs = [], []
+            means, lows, highs = [], [], []
             for xv in xs:
                 vals = sub.loc[sub[x] == xv, y].to_numpy()
-                c, e = summarize_error(vals, error_method)
+                c, lo, hi = summarize_band(vals, error_method)
                 means.append(c)
-                errs.append(e)
+                lows.append(lo)
+                highs.append(hi)
             xs = np.asarray(xs, dtype=float)
             means = np.asarray(means, dtype=float)
-            errs = np.asarray(errs, dtype=float)
+            lows = np.asarray(lows, dtype=float)
+            highs = np.asarray(highs, dtype=float)
             col = style.color_for(si)
             label = None if s is None else str(s)
             ax.plot(xs, means, color=col, lw=style.line_width_pt, label=label, marker="o",
                     markersize=3)
             if error_method.lower() != "none":
-                ax.fill_between(xs, means - errs, means + errs, color=col, alpha=0.2,
-                                linewidth=0)
+                ax.fill_between(xs, lows, highs, color=col, alpha=0.2, linewidth=0)
 
         ax.set_xlabel(spec.get("layout", {}).get("x_label", x))
         ax.set_ylabel(spec.get("layout", {}).get("y_label", y))
@@ -70,6 +76,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             ax.legend(title=str(color_by), frameon=False, loc="best")
         style_axes(ax, style)
         fig.tight_layout()
+        apply_publication_layout(fig, ax, spec, style)
 
     meta = base_metadata(spec, style, work, used_columns=[x, y, color_by])
     meta["error_method"] = error_method

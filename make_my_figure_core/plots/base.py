@@ -95,6 +95,32 @@ def summarize_error(values: np.ndarray, method: str) -> tuple[float, float]:
     return (mean, sem)
 
 
+def summarize_band(values: np.ndarray, method: str) -> tuple[float, float, float]:
+    """Return ``(center, low, high)`` for an array given a band method.
+
+    Symmetric methods (``sem``, ``sd``, ``ci95``, ``none``) delegate to
+    :func:`summarize_error` and centre on the mean. Two order-statistic methods
+    are added for replicate measurements such as benchmark timings: ``iqr``
+    (median with the 25th-75th percentile band) and ``range`` (median with the
+    min-max band). NaNs are dropped.
+    """
+    arr = np.asarray(values, dtype=float)
+    arr = arr[~np.isnan(arr)]
+    m = (method or "sem").lower()
+    if m in ("iqr", "range"):
+        if arr.size == 0:
+            return (np.nan, np.nan, np.nan)
+        med = float(np.median(arr))
+        if arr.size < 2:
+            return (med, med, med)
+        if m == "iqr":
+            lo, hi = np.percentile(arr, [25, 75])
+            return (med, float(lo), float(hi))
+        return (med, float(np.min(arr)), float(np.max(arr)))
+    c, e = summarize_error(arr, m)
+    return (c, c - e, c + e)
+
+
 _WIDTH_ALIASES = {"single", "onehalf", "double", "default"}
 
 
@@ -431,6 +457,32 @@ def apply_publication_layout(fig, ax, spec: Dict[str, Any],
             return int(float(value))
         except (TypeError, ValueError):
             return None
+
+    # Axis scales (``linear`` | ``log`` | ``symlog``). Applied before tick handling
+    # so rotated/padded ticks are computed for the final scale. A log axis is
+    # skipped when the data include non-positive values (matplotlib would drop them).
+    for axis_name, key in (("x", "x_scale"), ("y", "y_scale")):
+        scale = layout.get(key)
+        if scale is None or str(scale).lower() in ("", "linear", "auto"):
+            continue
+        scale = str(scale).lower()
+        if scale not in ("log", "symlog"):
+            continue
+        try:
+            if scale == "log":
+                lo = (ax.get_xlim() if axis_name == "x" else ax.get_ylim())[0]
+                data_min = None
+                for line in ax.get_lines():
+                    d = line.get_xdata() if axis_name == "x" else line.get_ydata()
+                    d = np.asarray(d, dtype=float)
+                    d = d[np.isfinite(d)]
+                    if d.size:
+                        data_min = d.min() if data_min is None else min(data_min, d.min())
+                if data_min is not None and data_min <= 0:
+                    continue
+            (ax.set_xscale if axis_name == "x" else ax.set_yscale)(scale)
+        except (TypeError, ValueError):
+            pass
 
     # Tick rotation + alignment.
     xr = layout.get("x_tick_rotation")
