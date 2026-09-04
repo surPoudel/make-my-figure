@@ -308,8 +308,18 @@ def _read_delimited(
         header_df = pd.read_csv(io.StringIO(text), sep=delimiter, nrows=0,
                                 header=read_header, engine="python")
         dtype = _id_dtype_overrides([str(c) for c in header_df.columns])
-        df = pd.read_csv(io.StringIO(text), sep=delimiter, dtype=dtype,
-                         header=read_header, engine="python")
+        # Correctly rounded float parsing. pandas' default converter ("high") can be off by
+        # one unit in the last place for some decimal strings (e.g. 1.93094534810896e-14), so
+        # the same table would then load to different doubles from a CSV and from an Excel
+        # workbook, whose cells are parsed by Python's float(). ``round_trip`` uses the same
+        # correctly rounded conversion as float(); it is only available on the C engine, so
+        # fall back to the python engine when the C tokenizer rejects a file.
+        try:
+            df = pd.read_csv(io.StringIO(text), sep=delimiter, dtype=dtype, header=read_header,
+                             engine="c", float_precision="round_trip")
+        except (pd.errors.ParserError, ValueError):
+            df = pd.read_csv(io.StringIO(text), sep=delimiter, dtype=dtype,
+                             header=read_header, engine="python")
     except Exception as exc:  # pragma: no cover - defensive
         raise LoaderError(f"Failed to parse '{source_name}' with delimiter {delimiter!r}: {exc}") from exc
 

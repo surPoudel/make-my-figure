@@ -89,8 +89,8 @@ class Option:
 
 
 _ERROR_CHOICES = ["sem", "sd", "ci95", "none"]
-# Line/time-course bands: the error choices plus distribution bands (median with IQR or range).
-_BAND_CHOICES = _ERROR_CHOICES + ["iqr", "range"]
+# Line plot bands add median-centred order statistics for replicate measurements.
+_BAND_CHOICES = ["sem", "sd", "ci95", "iqr", "range", "none"]
 # Common publication-safe colors for network node/edge controls ("(palette)" =
 # use the active Publication palette rather than a fixed color).
 _NET_NODE_COLORS = ["(palette)", "#2166AC", "#B2182B", "#1B7837", "#762A83",
