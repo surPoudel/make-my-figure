@@ -187,8 +187,12 @@ class StyleProfile:
 
     def rc_params(self) -> Dict[str, Any]:
         """Matplotlib rcParams encoding this profile's tokens."""
+        # The family list is written explicitly rather than as the generic "sans-serif":
+        # text artists keep the family they were created with, and a generic family is
+        # resolved through the *global* rcParams at save time (outside this profile's
+        # rc_context), which silently replaced Arial with DejaVu Sans in every export.
         return {
-            "font.family": "sans-serif",
+            "font.family": list(self.font_family),
             "font.sans-serif": self.font_family,
             "font.size": self.base_font_pt,
             "font.weight": self.font_weight,
