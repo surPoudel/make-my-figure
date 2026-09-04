@@ -152,7 +152,10 @@ def build_figure(mpf: MultiPanelFigure) -> Figure:
     else:
         fig_h_in = max(sum(row_h) * (1.0 + layout.hspace), 1.5)
 
-    with plt.rc_context(_VECTOR_TEXT_RC):
+    # Panel letters and titles are drawn on the composite itself, so they take the Publication
+    # style's font stack rather than matplotlib's default (which would mix DejaVu Sans letters
+    # with Arial panel text on systems that have Arial).
+    with plt.rc_context({**_VECTOR_TEXT_RC, "font.family": list(_ann_style.font_family)}):
         comp = plt.figure(figsize=(fig_w_in, fig_h_in), facecolor=layout.background)
         gs = comp.add_gridspec(
             nrows, ncols, wspace=layout.wspace, hspace=layout.hspace,
