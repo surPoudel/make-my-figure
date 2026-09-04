@@ -18,6 +18,8 @@ from make_my_figure_core.plots.base import (
     coerce_numeric,
     figure_size,
     get_mapping,
+    place_legend,
+    resolve_legend_location,
     require_columns,
     style_axes,
     summarize_band,
@@ -73,7 +75,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if title:
             ax.set_title(title)
         if series != [None]:
-            ax.legend(title=str(color_by), frameon=False, loc="best")
+            place_legend(ax, style, title=(str(color_by) or None) if str(color_by).strip() else None,
+                         location=resolve_legend_location(spec, style))
         style_axes(ax, style)
         fig.tight_layout()
         apply_publication_layout(fig, ax, spec, style)
