@@ -21,6 +21,7 @@ from make_my_figure_core.plots.base import (
     coerce_numeric,
     figure_size,
     get_mapping,
+    apply_publication_layout,
     place_legend,
     require_columns,
     style_axes,
@@ -99,6 +100,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             place_legend(ax, style, title=str(color_by), force_outside=True)
         else:
             fig.tight_layout()
+        apply_publication_layout(fig, ax, spec, style)
 
     meta = base_metadata(spec, style, work, used_columns=[x, y, color_by])
     meta["n_groups"] = len(groups)

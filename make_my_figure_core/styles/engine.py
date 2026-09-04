@@ -113,6 +113,23 @@ _DIVERGING_CMAP = {
 _FONT_STACK = ["Arial", "Helvetica", "DejaVu Sans", "sans-serif"]
 
 
+def _installed_families(stack) -> List[str]:
+    """Keep the families of ``stack`` that are installed (matplotlib warns for every missing
+    family in a concrete list); always end with DejaVu Sans, which ships with matplotlib."""
+    from matplotlib import font_manager as _fm
+
+    if isinstance(stack, str):
+        stack = [stack]
+    available = {f.name for f in _fm.fontManager.ttflist}
+    out: List[str] = []
+    for fam in stack:
+        if fam in available and fam not in out:
+            out.append(fam)
+    if "DejaVu Sans" not in out:
+        out.append("DejaVu Sans")
+    return out
+
+
 @dataclass
 class StyleProfile:
     """Resolved publication-style tokens for one profile.
@@ -131,6 +148,7 @@ class StyleProfile:
     legend_pt: float = 10.0
     legend_title_pt: float = 11.0
     title_font_pt: float = 13.0
+    title_font_weight: str = "bold"      # axes title weight ("normal" for manuscript typography)
     annotation_pt: float = 9.5          # gene/mutation/point labels
     panel_label_pt: float = 13.0
     font_weight: str = "normal"
@@ -192,13 +210,18 @@ class StyleProfile:
         # resolved through the *global* rcParams at save time (outside this profile's
         # rc_context), which silently replaced Arial with DejaVu Sans in every export.
         return {
-            "font.family": list(self.font_family),
-            "font.sans-serif": self.font_family,
+            # A concrete family list (not the generic "sans-serif") so every Text object
+            # records the profile's stack and resolves the same font at draw time, even
+            # when the figure is saved outside this rc context (export_figure /
+            # figure_to_bytes). With the generic name, exports fell back to matplotlib's
+            # default DejaVu Sans on every platform regardless of the profile.
+            "font.family": _installed_families(self.font_family),
+            "font.sans-serif": _installed_families(self.font_family),
             "font.size": self.base_font_pt,
             "font.weight": self.font_weight,
             "text.color": self.text_color,
             "axes.titlesize": self.title_font_pt,
-            "axes.titleweight": "bold",
+            "axes.titleweight": self.title_font_weight,
             "axes.labelsize": self.axis_font_pt,
             "axes.labelcolor": self.text_color,
             "axes.labelweight": self.font_weight,
