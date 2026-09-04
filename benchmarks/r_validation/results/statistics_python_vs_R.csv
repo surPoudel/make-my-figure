@@ -1,0 +1,1040 @@
+component,dataset_id,test_id,comparison,quantity,python_value,R_value,abs_diff,rel_diff,class,cause,statistic_name,effect_size_name,correction_method
+statistics,A_two_group_normal,mann_whitney,ctrl|treat,effect_size,-0.611111111111111,-0.611111111111111,0,0,EXACT,,U,rank-biserial,none
+statistics,A_two_group_normal,mann_whitney,ctrl|treat,n_total,27,27,0,0,EXACT,,U,rank-biserial,none
+statistics,A_two_group_normal,mann_whitney,ctrl|treat,p_value,0.007829676673447,0.007829676673447,0,0,EXACT,,U,rank-biserial,none
+statistics,A_two_group_normal,mann_whitney,ctrl|treat,statistic,35,35,0,0,EXACT,,U,rank-biserial,none
+statistics,A_two_group_normal,students_t,ctrl|treat,ci_high,-0.765452607886717,-0.765452607886715,1.99840144432528e-15,2.61074483741394e-15,EXACT,,t,Cohen's d,none
+statistics,A_two_group_normal,students_t,ctrl|treat,ci_low,-4.58947243701329,-4.58947243701328,1.06581410364015e-14,2.32230200369992e-15,EXACT,,t,Cohen's d,none
+statistics,A_two_group_normal,students_t,ctrl|treat,df,25,25,0,0,EXACT,,t,Cohen's d,none
+statistics,A_two_group_normal,students_t,ctrl|treat,effect_size,-1.11698879389733,-1.11698879389733,0,0,EXACT,,t,Cohen's d,none
+statistics,A_two_group_normal,students_t,ctrl|treat,estimate,-2.67746252245,-2.67746252245,0,0,EXACT,,t,Cohen's d,none
+statistics,A_two_group_normal,students_t,ctrl|treat,n_total,27,27,0,0,EXACT,,t,Cohen's d,none
+statistics,A_two_group_normal,students_t,ctrl|treat,p_value,0.0079635386598938,0.0079635386598938,0,0,EXACT,,t,Cohen's d,none
+statistics,A_two_group_normal,students_t,ctrl|treat,statistic,-2.8840526644431,-2.8840526644431,0,0,EXACT,,t,Cohen's d,none
+statistics,A_two_group_normal,welch_t,ctrl|treat,ci_high,-0.739558723056101,-0.7395587230561,9.99200722162641e-16,1.35107692061776e-15,EXACT,,t,Hedges' g,none
+statistics,A_two_group_normal,welch_t,ctrl|treat,ci_low,-4.6153663218439,-4.6153663218439,0,0,EXACT,,t,Hedges' g,none
+statistics,A_two_group_normal,welch_t,ctrl|treat,df,22.849462067574,22.849462067574,0,0,EXACT,,t,Hedges' g,none
+statistics,A_two_group_normal,welch_t,ctrl|treat,effect_size,-1.08314064862771,-1.08314064862771,0,0,EXACT,,t,Hedges' g,none
+statistics,A_two_group_normal,welch_t,ctrl|treat,estimate,-2.67746252245,-2.67746252245,0,0,EXACT,,t,Hedges' g,none
+statistics,A_two_group_normal,welch_t,ctrl|treat,n_total,27,27,0,0,EXACT,,t,Hedges' g,none
+statistics,A_two_group_normal,welch_t,ctrl|treat,p_value,0.0089089512347076,0.0089089512347077,9.8879238130678e-17,1.10988639993293e-14,EXACT,,t,Hedges' g,none
+statistics,A_two_group_normal,welch_t,ctrl|treat,statistic,-2.85915796916306,-2.85915796916306,0,0,EXACT,,t,Hedges' g,none
+statistics,B_two_group_unequal_var,mann_whitney,ctrl|treat,effect_size,-0.29,-0.29,0,0,EXACT,,U,rank-biserial,none
+statistics,B_two_group_unequal_var,mann_whitney,ctrl|treat,n_total,30,30,0,0,EXACT,,U,rank-biserial,none
+statistics,B_two_group_unequal_var,mann_whitney,ctrl|treat,p_value,0.20990277239127,0.20990277239127,0,0,EXACT,,U,rank-biserial,none
+statistics,B_two_group_unequal_var,mann_whitney,ctrl|treat,statistic,71,71,0,0,EXACT,,U,rank-biserial,none
+statistics,B_two_group_unequal_var,students_t,ctrl|treat,ci_high,1.29890450072382,1.29890450072381,9.99200722162641e-15,7.69264192714578e-15,EXACT,,t,Cohen's d,none
+statistics,B_two_group_unequal_var,students_t,ctrl|treat,ci_low,-4.13441083612381,-4.13441083612381,0,0,EXACT,,t,Cohen's d,none
+statistics,B_two_group_unequal_var,students_t,ctrl|treat,df,28,28,0,0,EXACT,,t,Cohen's d,none
+statistics,B_two_group_unequal_var,students_t,ctrl|treat,effect_size,-0.414026006524759,-0.41402600652476,9.99200722162641e-16,2.41337671164598e-15,EXACT,,t,Cohen's d,none
+statistics,B_two_group_unequal_var,students_t,ctrl|treat,estimate,-1.4177531677,-1.4177531677,0,0,EXACT,,t,Cohen's d,none
+statistics,B_two_group_unequal_var,students_t,ctrl|treat,n_total,30,30,0,0,EXACT,,t,Cohen's d,none
+statistics,B_two_group_unequal_var,students_t,ctrl|treat,p_value,0.294194661005588,0.294194661005587,9.99200722162641e-16,3.39639311858097e-15,EXACT,,t,Cohen's d,none
+statistics,B_two_group_unequal_var,students_t,ctrl|treat,statistic,-1.06901055211144,-1.06901055211144,0,0,EXACT,,t,Cohen's d,none
+statistics,B_two_group_unequal_var,welch_t,ctrl|treat,ci_high,0.568130168759532,0.56813016875953,1.99840144432528e-15,3.51750629382811e-15,EXACT,,t,Hedges' g,none
+statistics,B_two_group_unequal_var,welch_t,ctrl|treat,ci_low,-3.40363650415953,-3.40363650415953,0,0,EXACT,,t,Hedges' g,none
+statistics,B_two_group_unequal_var,welch_t,ctrl|treat,df,21.9020108918573,21.9020108918573,0,0,EXACT,,t,Hedges' g,none
+statistics,B_two_group_unequal_var,welch_t,ctrl|treat,effect_size,-0.402836114456522,-0.402836114456523,9.99200722162641e-16,2.48041495363614e-15,EXACT,,t,Hedges' g,none
+statistics,B_two_group_unequal_var,welch_t,ctrl|treat,estimate,-1.4177531677,-1.4177531677,0,0,EXACT,,t,Hedges' g,none
+statistics,B_two_group_unequal_var,welch_t,ctrl|treat,n_total,30,30,0,0,EXACT,,t,Hedges' g,none
+statistics,B_two_group_unequal_var,welch_t,ctrl|treat,p_value,0.152862349761767,0.152862349761767,0,0,EXACT,,t,Hedges' g,none
+statistics,B_two_group_unequal_var,welch_t,ctrl|treat,statistic,-1.4809545642812,-1.4809545642812,0,0,EXACT,,t,Hedges' g,none
+statistics,C_two_group_ties,mann_whitney,ctrl|treat,effect_size,-0.63265306122449,-0.63265306122449,0,0,EXACT,,U,rank-biserial,none
+statistics,C_two_group_ties,mann_whitney,ctrl|treat,n_total,28,28,0,0,EXACT,,U,rank-biserial,none
+statistics,C_two_group_ties,mann_whitney,ctrl|treat,p_value,0.0042842882841506,0.0042842882841506,0,0,EXACT,,U,rank-biserial,none
+statistics,C_two_group_ties,mann_whitney,ctrl|treat,statistic,36,36,0,0,EXACT,,U,rank-biserial,none
+statistics,C_two_group_ties,students_t,ctrl|treat,ci_high,-0.892986689544356,-0.892986689544357,9.99200722162641e-16,1.11894245889878e-15,EXACT,,t,Cohen's d,none
+statistics,C_two_group_ties,students_t,ctrl|treat,ci_low,-3.9641561675985,-3.9641561675985,0,0,EXACT,,t,Cohen's d,none
+statistics,C_two_group_ties,students_t,ctrl|treat,df,26,26,0,0,EXACT,,t,Cohen's d,none
+statistics,C_two_group_ties,students_t,ctrl|treat,effect_size,-1.2287167396111,-1.2287167396111,0,0,EXACT,,t,Cohen's d,none
+statistics,C_two_group_ties,students_t,ctrl|treat,estimate,-2.42857142857143,-2.42857142857143,0,0,EXACT,,t,Cohen's d,none
+statistics,C_two_group_ties,students_t,ctrl|treat,n_total,28,28,0,0,EXACT,,t,Cohen's d,none
+statistics,C_two_group_ties,students_t,ctrl|treat,p_value,0.0031749183833635,0.0031749183833635,0,0,EXACT,,t,Cohen's d,none
+statistics,C_two_group_ties,students_t,ctrl|treat,statistic,-3.25087892475307,-3.25087892475307,0,0,EXACT,,t,Cohen's d,none
+statistics,C_two_group_ties,welch_t,ctrl|treat,ci_high,-0.892915131401941,-0.892915131401941,0,0,EXACT,,t,Hedges' g,none
+statistics,C_two_group_ties,welch_t,ctrl|treat,ci_low,-3.96422772574092,-3.96422772574092,0,0,EXACT,,t,Hedges' g,none
+statistics,C_two_group_ties,welch_t,ctrl|treat,df,25.9751306805269,25.9751306805269,0,0,EXACT,,t,Hedges' g,none
+statistics,C_two_group_ties,welch_t,ctrl|treat,effect_size,-1.19292887340883,-1.19292887340883,0,0,EXACT,,t,Hedges' g,none
+statistics,C_two_group_ties,welch_t,ctrl|treat,estimate,-2.42857142857143,-2.42857142857143,0,0,EXACT,,t,Hedges' g,none
+statistics,C_two_group_ties,welch_t,ctrl|treat,n_total,28,28,0,0,EXACT,,t,Hedges' g,none
+statistics,C_two_group_ties,welch_t,ctrl|treat,p_value,0.0031773991534555,0.0031773991534554,1.00180280737661e-16,3.15290197735189e-14,EXACT,,t,Hedges' g,none
+statistics,C_two_group_ties,welch_t,ctrl|treat,statistic,-3.25087892475307,-3.25087892475307,0,0,EXACT,,t,Hedges' g,none
+statistics,D_two_group_small_n,mann_whitney,ctrl|treat,effect_size,-0.8,-0.8,0,0,EXACT,,U,rank-biserial,none
+statistics,D_two_group_small_n,mann_whitney,ctrl|treat,n_total,11,11,0,0,EXACT,,U,rank-biserial,none
+statistics,D_two_group_small_n,mann_whitney,ctrl|treat,p_value,0.0303030303030303,0.0303030303030303,0,0,EXACT,,U,rank-biserial,none
+statistics,D_two_group_small_n,mann_whitney,ctrl|treat,statistic,3,3,0,0,EXACT,,U,rank-biserial,none
+statistics,D_two_group_small_n,students_t,ctrl|treat,ci_high,-0.45735138777832,-0.457351387778319,9.99200722162641e-16,2.1847549802275e-15,EXACT,,t,Cohen's d,none
+statistics,D_two_group_small_n,students_t,ctrl|treat,ci_low,-3.23667070788835,-3.23667070788835,0,0,EXACT,,t,Cohen's d,none
+statistics,D_two_group_small_n,students_t,ctrl|treat,df,9,9,0,0,EXACT,,t,Cohen's d,none
+statistics,D_two_group_small_n,students_t,ctrl|treat,effect_size,-1.82062093293129,-1.82062093293129,0,0,EXACT,,t,Cohen's d,none
+statistics,D_two_group_small_n,students_t,ctrl|treat,estimate,-1.84701104783333,-1.84701104783333,0,0,EXACT,,t,Cohen's d,none
+statistics,D_two_group_small_n,students_t,ctrl|treat,n_total,11,11,0,0,EXACT,,t,Cohen's d,none
+statistics,D_two_group_small_n,students_t,ctrl|treat,p_value,0.0147958210723813,0.0147958210723813,0,0,EXACT,,t,Cohen's d,none
+statistics,D_two_group_small_n,students_t,ctrl|treat,statistic,-3.00665651578185,-3.00665651578185,0,0,EXACT,,t,Cohen's d,none
+statistics,D_two_group_small_n,welch_t,ctrl|treat,ci_high,-0.337368528210501,-0.337368528210501,0,0,EXACT,,t,Hedges' g,none
+statistics,D_two_group_small_n,welch_t,ctrl|treat,ci_low,-3.35665356745617,-3.35665356745617,0,0,EXACT,,t,Hedges' g,none
+statistics,D_two_group_small_n,welch_t,ctrl|treat,df,6.92060911584495,6.92060911584495,0,0,EXACT,,t,Hedges' g,none
+statistics,D_two_group_small_n,welch_t,ctrl|treat,effect_size,-1.66456771010861,-1.66456771010861,0,0,EXACT,,t,Hedges' g,none
+statistics,D_two_group_small_n,welch_t,ctrl|treat,estimate,-1.84701104783333,-1.84701104783333,0,0,EXACT,,t,Hedges' g,none
+statistics,D_two_group_small_n,welch_t,ctrl|treat,n_total,11,11,0,0,EXACT,,t,Hedges' g,none
+statistics,D_two_group_small_n,welch_t,ctrl|treat,p_value,0.0232839246111131,0.0232839246111131,0,0,EXACT,,t,Hedges' g,none
+statistics,D_two_group_small_n,welch_t,ctrl|treat,statistic,-2.89980194560211,-2.89980194560211,0,0,EXACT,,t,Hedges' g,none
+statistics,E_two_group_one_constant,mann_whitney,ctrl|treat,effect_size,-0.25,-0.25,0,0,EXACT,,U,rank-biserial,none
+statistics,E_two_group_one_constant,mann_whitney,ctrl|treat,n_total,16,16,0,0,EXACT,,U,rank-biserial,none
+statistics,E_two_group_one_constant,mann_whitney,ctrl|treat,p_value,0.400160495495669,0.400160495495669,0,0,EXACT,,U,rank-biserial,none
+statistics,E_two_group_one_constant,mann_whitney,ctrl|treat,statistic,24,24,0,0,EXACT,,U,rank-biserial,none
+statistics,E_two_group_one_constant,students_t,ctrl|treat,ci_high,0.0317467841686495,0.0317467841686496,1.04083408558608e-16,3.27854966366616e-15,EXACT,,t,Cohen's d,none
+statistics,E_two_group_one_constant,students_t,ctrl|treat,ci_low,-1.43671604416865,-1.43671604416865,0,0,EXACT,,t,Cohen's d,none
+statistics,E_two_group_one_constant,students_t,ctrl|treat,df,14,14,0,0,EXACT,,t,Cohen's d,none
+statistics,E_two_group_one_constant,students_t,ctrl|treat,effect_size,-1.02602507453106,-1.02602507453106,0,0,EXACT,,t,Cohen's d,none
+statistics,E_two_group_one_constant,students_t,ctrl|treat,estimate,-0.70248463,-0.70248463,0,0,EXACT,,t,Cohen's d,none
+statistics,E_two_group_one_constant,students_t,ctrl|treat,n_total,16,16,0,0,EXACT,,t,Cohen's d,none
+statistics,E_two_group_one_constant,students_t,ctrl|treat,p_value,0.0593554144379476,0.0593554144379477,1.04083408558608e-16,1.75356215678388e-15,EXACT,,t,Cohen's d,none
+statistics,E_two_group_one_constant,students_t,ctrl|treat,statistic,-2.05205014906211,-2.05205014906211,0,0,EXACT,,t,Cohen's d,none
+statistics,E_two_group_one_constant,welch_t,ctrl|treat,ci_high,0.10700445252968,0.10700445252968,0,0,EXACT,,t,Hedges' g,none
+statistics,E_two_group_one_constant,welch_t,ctrl|treat,ci_low,-1.51197371252968,-1.51197371252968,0,0,EXACT,,t,Hedges' g,none
+statistics,E_two_group_one_constant,welch_t,ctrl|treat,df,7,7,0,0,EXACT,,t,Hedges' g,none
+statistics,E_two_group_one_constant,welch_t,ctrl|treat,effect_size,-0.970060070465727,-0.970060070465727,0,0,EXACT,,t,Hedges' g,none
+statistics,E_two_group_one_constant,welch_t,ctrl|treat,estimate,-0.70248463,-0.70248463,0,0,EXACT,,t,Hedges' g,none
+statistics,E_two_group_one_constant,welch_t,ctrl|treat,n_total,16,16,0,0,EXACT,,t,Hedges' g,none
+statistics,E_two_group_one_constant,welch_t,ctrl|treat,p_value,0.0792900970960331,0.0792900970960331,0,0,EXACT,,t,Hedges' g,none
+statistics,E_two_group_one_constant,welch_t,ctrl|treat,statistic,-2.05205014906211,-2.05205014906211,0,0,EXACT,,t,Hedges' g,none
+statistics,F_paired_normal,paired_t,pre|post,ci_high,-2.0215757789506,-2.0215757789506,0,0,EXACT,,t,Cohen's dz,none
+statistics,F_paired_normal,paired_t,pre|post,ci_low,-5.6486429810494,-5.6486429810494,0,0,EXACT,,t,Cohen's dz,none
+statistics,F_paired_normal,paired_t,pre|post,df,13,13,0,0,EXACT,,t,Cohen's dz,none
+statistics,F_paired_normal,paired_t,pre|post,effect_size,-1.22100093962481,-1.22100093962481,0,0,EXACT,,t,Cohen's dz,none
+statistics,F_paired_normal,paired_t,pre|post,estimate,-3.83510938,-3.83510938,0,0,EXACT,,t,Cohen's dz,none
+statistics,F_paired_normal,paired_t,pre|post,n_total,14,14,0,0,EXACT,,t,Cohen's dz,none
+statistics,F_paired_normal,paired_t,pre|post,p_value,0.0005269994629266,0.0005269994629266,0,0,EXACT,,t,Cohen's dz,none
+statistics,F_paired_normal,paired_t,pre|post,statistic,-4.56856718500511,-4.56856718500511,0,0,EXACT,,t,Cohen's dz,none
+statistics,F_paired_normal,wilcoxon,pre|post,effect_size,-0.923809523809524,-0.923809523809524,0,0,EXACT,,W,rank-biserial,none
+statistics,F_paired_normal,wilcoxon,pre|post,n_total,14,14,0,0,EXACT,,W,rank-biserial,none
+statistics,F_paired_normal,wilcoxon,pre|post,p_value,0.0008544921875,0.0008544921875,0,0,EXACT,,W,rank-biserial,none
+statistics,F_paired_normal,wilcoxon,pre|post,statistic,4,4,0,0,EXACT,,W,rank-biserial,none
+statistics,G_paired_zeros_ties,paired_t,pre|post,ci_high,0.171208094697616,0.171208094697615,9.99200722162641e-16,5.83617686960075e-15,EXACT,,t,Cohen's dz,none
+statistics,G_paired_zeros_ties,paired_t,pre|post,ci_low,-2.04620809469762,-2.04620809469762,0,0,EXACT,,t,Cohen's dz,none
+statistics,G_paired_zeros_ties,paired_t,pre|post,df,15,15,0,0,EXACT,,t,Cohen's dz,none
+statistics,G_paired_zeros_ties,paired_t,pre|post,effect_size,-0.450577108284593,-0.450577108284593,0,0,EXACT,,t,Cohen's dz,none
+statistics,G_paired_zeros_ties,paired_t,pre|post,estimate,-0.9375,-0.9375,0,0,EXACT,,t,Cohen's dz,none
+statistics,G_paired_zeros_ties,paired_t,pre|post,n_total,16,16,0,0,EXACT,,t,Cohen's dz,none
+statistics,G_paired_zeros_ties,paired_t,pre|post,p_value,0.0916238808676074,0.0916238808676073,9.71445146547012e-17,1.06025321930066e-15,EXACT,,t,Cohen's dz,none
+statistics,G_paired_zeros_ties,paired_t,pre|post,statistic,-1.80230843313837,-1.80230843313837,0,0,EXACT,,t,Cohen's dz,none
+statistics,G_paired_zeros_ties,wilcoxon,pre|post,effect_size,-0.525641025641026,-0.525641025641026,0,0,EXACT,,W,rank-biserial,none
+statistics,G_paired_zeros_ties,wilcoxon,pre|post,n_total,16,16,0,0,EXACT,,W,rank-biserial,none
+statistics,G_paired_zeros_ties,wilcoxon,pre|post,p_value,0.104953155304266,0.104953155304266,0,0,EXACT,,W,rank-biserial,none
+statistics,G_paired_zeros_ties,wilcoxon,pre|post,statistic,18.5,18.5,0,0,EXACT,,W,rank-biserial,none
+statistics,H_three_groups_balanced,dunn,low|high,effect_size,-0.68,-0.68,0,0,EXACT,,z,rank-biserial,none
+statistics,H_three_groups_balanced,dunn,low|high,n_total,20,20,0,0,EXACT,,z,rank-biserial,none
+statistics,H_three_groups_balanced,dunn,low|high,p_value,0.0103056160791427,0.0103056160791427,0,0,EXACT,,z,rank-biserial,none
+statistics,H_three_groups_balanced,dunn,low|high,statistic,-2.56540256540385,-2.56540256540385,0,0,EXACT,,z,rank-biserial,none
+statistics,H_three_groups_balanced,dunn,low|mid,effect_size,-0.04,-0.04,0,0,EXACT,,z,rank-biserial,none
+statistics,H_three_groups_balanced,dunn,low|mid,n_total,20,20,0,0,EXACT,,z,rank-biserial,none
+statistics,H_three_groups_balanced,dunn,low|mid,p_value,0.858879907709513,0.858879907709513,0,0,EXACT,,z,rank-biserial,none
+statistics,H_three_groups_balanced,dunn,low|mid,statistic,-0.177800177800267,-0.177800177800267,0,0,EXACT,,z,rank-biserial,none
+statistics,H_three_groups_balanced,dunn,mid|high,effect_size,-0.62,-0.62,0,0,EXACT,,z,rank-biserial,none
+statistics,H_three_groups_balanced,dunn,mid|high,n_total,20,20,0,0,EXACT,,z,rank-biserial,none
+statistics,H_three_groups_balanced,dunn,mid|high,p_value,0.0169586781994378,0.0169586781994378,0,0,EXACT,,z,rank-biserial,none
+statistics,H_three_groups_balanced,dunn,mid|high,statistic,-2.38760238760358,-2.38760238760358,0,0,EXACT,,z,rank-biserial,none
+statistics,H_three_groups_balanced,dunn_bh,low|high,adjusted_p_value,0.0254380172991567,0.0254380172991567,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,H_three_groups_balanced,dunn_bh,low|high,effect_size,-0.68,-0.68,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,H_three_groups_balanced,dunn_bh,low|high,n_total,20,20,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,H_three_groups_balanced,dunn_bh,low|high,p_value,0.0103056160791427,0.0103056160791427,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,H_three_groups_balanced,dunn_bh,low|high,statistic,-2.56540256540385,-2.56540256540385,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,H_three_groups_balanced,dunn_bh,low|mid,adjusted_p_value,0.858879907709513,0.858879907709513,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,H_three_groups_balanced,dunn_bh,low|mid,effect_size,-0.04,-0.04,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,H_three_groups_balanced,dunn_bh,low|mid,n_total,20,20,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,H_three_groups_balanced,dunn_bh,low|mid,p_value,0.858879907709513,0.858879907709513,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,H_three_groups_balanced,dunn_bh,low|mid,statistic,-0.177800177800267,-0.177800177800267,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,H_three_groups_balanced,dunn_bh,mid|high,adjusted_p_value,0.0254380172991567,0.0254380172991567,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,H_three_groups_balanced,dunn_bh,mid|high,effect_size,-0.62,-0.62,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,H_three_groups_balanced,dunn_bh,mid|high,n_total,20,20,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,H_three_groups_balanced,dunn_bh,mid|high,p_value,0.0169586781994378,0.0169586781994378,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,H_three_groups_balanced,dunn_bh,mid|high,statistic,-2.38760238760358,-2.38760238760358,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,H_three_groups_balanced,kruskal_wallis,all,df,2,2,0,0,EXACT,,H,epsilon-squared,none
+statistics,H_three_groups_balanced,kruskal_wallis,all,df,2,2,0,0,EXACT,,H,epsilon-squared,none
+statistics,H_three_groups_balanced,kruskal_wallis,all,effect_size,0.229964157706093,0.229964157706093,0,0,EXACT,,H,epsilon-squared,none
+statistics,H_three_groups_balanced,kruskal_wallis,all,effect_size,0.229964157706093,0.229964157706093,0,0,EXACT,,H,epsilon-squared,none
+statistics,H_three_groups_balanced,kruskal_wallis,all,n_total,30,30,0,0,EXACT,,H,epsilon-squared,none
+statistics,H_three_groups_balanced,kruskal_wallis,all,n_total,30,30,0,0,EXACT,,H,epsilon-squared,none
+statistics,H_three_groups_balanced,kruskal_wallis,all,p_value,0.0164979998104601,0.0164979998104601,0,0,EXACT,,H,epsilon-squared,none
+statistics,H_three_groups_balanced,kruskal_wallis,all,p_value,0.0164979998104601,0.0164979998104601,0,0,EXACT,,H,epsilon-squared,none
+statistics,H_three_groups_balanced,kruskal_wallis,all,statistic,8.20903225806451,8.20903225806451,0,0,EXACT,,H,epsilon-squared,none
+statistics,H_three_groups_balanced,kruskal_wallis,all,statistic,8.20903225806451,8.20903225806451,0,0,EXACT,,H,epsilon-squared,none
+statistics,H_three_groups_balanced,one_way_anova,all,df,2,2,0,0,EXACT,,F,eta-squared,none
+statistics,H_three_groups_balanced,one_way_anova,all,df2,27,27,0,0,EXACT,,F,eta-squared,none
+statistics,H_three_groups_balanced,one_way_anova,all,effect_size,0.330739597522691,0.330739597522692,9.99200722162641e-16,3.02111005046526e-15,EXACT,,F,eta-squared,none
+statistics,H_three_groups_balanced,one_way_anova,all,extra.omega_squared,0.274363977125979,0.27436397712598,9.99200722162641e-16,3.64188014997259e-15,EXACT,,F,eta-squared,none
+statistics,H_three_groups_balanced,one_way_anova,all,n_total,30,30,0,0,EXACT,,F,eta-squared,none
+statistics,H_three_groups_balanced,one_way_anova,all,p_value,0.0044211399078603,0.0044211399078603,0,0,EXACT,,F,eta-squared,none
+statistics,H_three_groups_balanced,one_way_anova,all,statistic,6.67152060696991,6.67152060696991,0,0,EXACT,,F,eta-squared,none
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|high,adjusted_p_value,0.0176574402230242,0.0176574402230241,1.00613961606655e-16,5.69810574669031e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|high,ci_high,-0.815996973754942,-0.815996973754943,9.99200722162641e-16,1.22451523020319e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|high,ci_low,-4.38048063304506,-4.38048063304506,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|high,df,17.1950947600738,17.1950947600738,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|high,effect_size,-1.31627693840087,-1.31627693840087,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|high,estimate,-2.5982388034,-2.5982388034,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|high,n_total,20,20,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|high,p_value,0.006820305115675,0.006820305115675,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|high,statistic,-3.07313550757434,-3.07313550757434,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|mid,adjusted_p_value,0.59556589559324,0.59556589559324,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|mid,ci_high,1.05776016859258,1.05776016859258,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|mid,ci_low,-1.78746974599258,-1.78746974599258,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|mid,df,17.0875083898419,17.0875083898419,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|mid,effect_size,-0.231671889890329,-0.231671889890329,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|mid,estimate,-0.364854788700001,-0.364854788700001,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|mid,n_total,20,20,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|mid,p_value,0.59556589559324,0.59556589559324,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,low|mid,statistic,-0.540888539606091,-0.540888539606091,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,mid|high,adjusted_p_value,0.0176574402230242,0.0176574402230241,1.00613961606655e-16,5.69810574669031e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,mid|high,ci_high,-0.571340981250253,-0.571340981250255,1.99840144432528e-15,3.49773867078853e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,mid|high,ci_low,-3.89542704814974,-3.89542704814975,1.02140518265514e-14,2.62206215141493e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,mid|high,df,15.233667785604,15.233667785604,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,mid|high,effect_size,-1.22512918055357,-1.22512918055358,9.99200722162641e-15,8.15588052282901e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,mid|high,estimate,-2.2333840147,-2.2333840147,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,mid|high,n_total,20,20,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,mid|high,p_value,0.0117716268153495,0.0117716268153494,1.00613961606655e-16,8.54715862003544e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_benjamini_hochberg,mid|high,statistic,-2.86033119344831,-2.86033119344831,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|high,adjusted_p_value,0.0204609153470252,0.020460915347025,2.0122792321331e-16,9.83474687228819e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|high,ci_high,-0.815996973754942,-0.815996973754943,9.99200722162641e-16,1.22451523020319e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|high,ci_low,-4.38048063304506,-4.38048063304506,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|high,df,17.1950947600738,17.1950947600738,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|high,effect_size,-1.31627693840087,-1.31627693840087,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|high,estimate,-2.5982388034,-2.5982388034,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|high,n_total,20,20,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|high,p_value,0.006820305115675,0.006820305115675,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|high,statistic,-3.07313550757434,-3.07313550757434,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|mid,adjusted_p_value,1,1,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|mid,ci_high,1.05776016859258,1.05776016859258,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|mid,ci_low,-1.78746974599258,-1.78746974599258,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|mid,df,17.0875083898419,17.0875083898419,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|mid,effect_size,-0.231671889890329,-0.231671889890329,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|mid,estimate,-0.364854788700001,-0.364854788700001,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|mid,n_total,20,20,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|mid,p_value,0.59556589559324,0.59556589559324,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,low|mid,statistic,-0.540888539606091,-0.540888539606091,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,mid|high,adjusted_p_value,0.0353148804460484,0.0353148804460482,2.0122792321331e-16,5.69810574669031e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,mid|high,ci_high,-0.571340981250253,-0.571340981250255,1.99840144432528e-15,3.49773867078853e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,mid|high,ci_low,-3.89542704814974,-3.89542704814975,1.02140518265514e-14,2.62206215141493e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,mid|high,df,15.233667785604,15.233667785604,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,mid|high,effect_size,-1.22512918055357,-1.22512918055358,9.99200722162641e-15,8.15588052282901e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,mid|high,estimate,-2.2333840147,-2.2333840147,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,mid|high,n_total,20,20,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,mid|high,p_value,0.0117716268153495,0.0117716268153494,1.00613961606655e-16,8.54715862003544e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_bonferroni,mid|high,statistic,-2.86033119344831,-2.86033119344831,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,H_three_groups_balanced,welch_t_holm,low|high,adjusted_p_value,0.0204609153470252,0.020460915347025,2.0122792321331e-16,9.83474687228819e-15,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,low|high,ci_high,-0.815996973754942,-0.815996973754943,9.99200722162641e-16,1.22451523020319e-15,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,low|high,ci_low,-4.38048063304506,-4.38048063304506,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,low|high,df,17.1950947600738,17.1950947600738,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,low|high,effect_size,-1.31627693840087,-1.31627693840087,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,low|high,estimate,-2.5982388034,-2.5982388034,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,low|high,n_total,20,20,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,low|high,p_value,0.006820305115675,0.006820305115675,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,low|high,statistic,-3.07313550757434,-3.07313550757434,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,low|mid,adjusted_p_value,0.59556589559324,0.59556589559324,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,low|mid,ci_high,1.05776016859258,1.05776016859258,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,low|mid,ci_low,-1.78746974599258,-1.78746974599258,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,low|mid,df,17.0875083898419,17.0875083898419,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,low|mid,effect_size,-0.231671889890329,-0.231671889890329,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,low|mid,estimate,-0.364854788700001,-0.364854788700001,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,low|mid,n_total,20,20,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,low|mid,p_value,0.59556589559324,0.59556589559324,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,low|mid,statistic,-0.540888539606091,-0.540888539606091,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,mid|high,adjusted_p_value,0.0235432536306989,0.0235432536306988,1.00613961606655e-16,4.27357931001774e-15,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,mid|high,ci_high,-0.571340981250253,-0.571340981250255,1.99840144432528e-15,3.49773867078853e-15,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,mid|high,ci_low,-3.89542704814974,-3.89542704814975,1.02140518265514e-14,2.62206215141493e-15,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,mid|high,df,15.233667785604,15.233667785604,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,mid|high,effect_size,-1.22512918055357,-1.22512918055358,9.99200722162641e-15,8.15588052282901e-15,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,mid|high,estimate,-2.2333840147,-2.2333840147,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,mid|high,n_total,20,20,0,0,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,mid|high,p_value,0.0117716268153495,0.0117716268153494,1.00613961606655e-16,8.54715862003544e-15,EXACT,,t,Hedges' g,holm
+statistics,H_three_groups_balanced,welch_t_holm,mid|high,statistic,-2.86033119344831,-2.86033119344831,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,dunn,g1|g2,effect_size,-0.296296296296296,-0.296296296296296,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g1|g2,n_total,15,15,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g1|g2,p_value,0.595219530403287,0.595219530403287,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g1|g2,statistic,-0.531287551595986,-0.531287551595986,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g1|g3,effect_size,-0.875,-0.875,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g1|g3,n_total,18,18,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g1|g3,p_value,0.0023256989947306,0.0023256989947306,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g1|g3,statistic,-3.04514274441179,-3.04514274441179,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g1|g4,effect_size,-0.666666666666667,-0.666666666666667,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g1|g4,n_total,13,13,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g1|g4,p_value,0.155596187613508,0.155596187613508,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g1|g4,statistic,-1.42003948006201,-1.42003948006201,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g1|g5,effect_size,-0.877777777777778,-0.877777777777778,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g1|g5,n_total,21,21,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g1|g5,p_value,0.000211277615022,0.000211277615022,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g1|g5,statistic,-3.70513567041443,-3.70513567041443,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g2|g3,effect_size,-0.768518518518518,-0.768518518518518,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g2|g3,n_total,21,21,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g2|g3,p_value,0.0048345300594524,0.0048345300594524,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g2|g3,statistic,-2.81785723643768,-2.81785723643768,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g2|g4,effect_size,-0.46031746031746,-0.46031746031746,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g2|g4,n_total,16,16,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g2|g4,p_value,0.311515429930189,0.311515429930189,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g2|g4,statistic,-1.01204731731213,-1.01204731731213,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g2|g5,effect_size,-0.822222222222222,-0.822222222222222,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g2|g5,n_total,24,24,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g2|g5,p_value,0.0003427316874497,0.0003427316874497,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g2|g5,statistic,-3.58065672794378,-3.58065672794378,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g3|g4,effect_size,0.55952380952381,0.55952380952381,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g3|g4,n_total,19,19,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g3|g4,p_value,0.123499761139909,0.123499761139909,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g3|g4,statistic,1.54024862614749,1.54024862614749,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g3|g5,effect_size,-0.238888888888889,-0.238888888888889,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g3|g5,n_total,27,27,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g3|g5,p_value,0.490286191702448,0.490286191702448,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g3|g5,statistic,-0.689853704758175,-0.689853704758175,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g4|g5,effect_size,-0.657142857142857,-0.657142857142857,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g4|g5,n_total,22,22,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g4|g5,p_value,0.0289599405541072,0.0289599405541072,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn,g4|g5,statistic,-2.18403140355361,-2.18403140355361,0,0,EXACT,,z,rank-biserial,none
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g2,adjusted_p_value,0.595219530403287,0.595219530403287,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g2,effect_size,-0.296296296296296,-0.296296296296296,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g2,n_total,15,15,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g2,p_value,0.595219530403287,0.595219530403287,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g2,statistic,-0.531287551595986,-0.531287551595986,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g3,adjusted_p_value,0.0077523299824354,0.0077523299824354,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g3,effect_size,-0.875,-0.875,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g3,n_total,18,18,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g3,p_value,0.0023256989947306,0.0023256989947306,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g3,statistic,-3.04514274441179,-3.04514274441179,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g4,adjusted_p_value,0.222280268019298,0.222280268019298,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g4,effect_size,-0.666666666666667,-0.666666666666667,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g4,n_total,13,13,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g4,p_value,0.155596187613508,0.155596187613508,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g4,statistic,-1.42003948006201,-1.42003948006201,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g5,adjusted_p_value,0.0017136584372485,0.0017136584372485,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g5,effect_size,-0.877777777777778,-0.877777777777778,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g5,n_total,21,21,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g5,p_value,0.000211277615022,0.000211277615022,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g1|g5,statistic,-3.70513567041443,-3.70513567041443,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g2|g3,adjusted_p_value,0.0120863251486311,0.0120863251486311,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g2|g3,effect_size,-0.768518518518518,-0.768518518518518,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g2|g3,n_total,21,21,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g2|g3,p_value,0.0048345300594524,0.0048345300594524,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g2|g3,statistic,-2.81785723643768,-2.81785723643768,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g2|g4,adjusted_p_value,0.389394287412737,0.389394287412737,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g2|g4,effect_size,-0.46031746031746,-0.46031746031746,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g2|g4,n_total,16,16,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g2|g4,p_value,0.311515429930189,0.311515429930189,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g2|g4,statistic,-1.01204731731213,-1.01204731731213,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g2|g5,adjusted_p_value,0.0017136584372485,0.0017136584372485,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g2|g5,effect_size,-0.822222222222222,-0.822222222222222,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g2|g5,n_total,24,24,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g2|g5,p_value,0.0003427316874497,0.0003427316874497,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g2|g5,statistic,-3.58065672794378,-3.58065672794378,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g3|g4,adjusted_p_value,0.205832935233181,0.205832935233181,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g3|g4,effect_size,0.55952380952381,0.55952380952381,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g3|g4,n_total,19,19,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g3|g4,p_value,0.123499761139909,0.123499761139909,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g3|g4,statistic,1.54024862614749,1.54024862614749,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g3|g5,adjusted_p_value,0.544762435224942,0.544762435224942,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g3|g5,effect_size,-0.238888888888889,-0.238888888888889,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g3|g5,n_total,27,27,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g3|g5,p_value,0.490286191702448,0.490286191702448,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g3|g5,statistic,-0.689853704758175,-0.689853704758175,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g4|g5,adjusted_p_value,0.0579198811082145,0.0579198811082145,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g4|g5,effect_size,-0.657142857142857,-0.657142857142857,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g4|g5,n_total,22,22,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g4|g5,p_value,0.0289599405541072,0.0289599405541072,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,dunn_bh,g4|g5,statistic,-2.18403140355361,-2.18403140355361,0,0,EXACT,,z,rank-biserial,benjamini_hochberg
+statistics,I_five_groups_unbalanced,kruskal_wallis,all,df,4,4,0,0,EXACT,,H,epsilon-squared,none
+statistics,I_five_groups_unbalanced,kruskal_wallis,all,df,4,4,0,0,EXACT,,H,epsilon-squared,none
+statistics,I_five_groups_unbalanced,kruskal_wallis,all,effect_size,0.437548444409087,0.437548444409087,0,0,EXACT,,H,epsilon-squared,none
+statistics,I_five_groups_unbalanced,kruskal_wallis,all,effect_size,0.437548444409087,0.437548444409087,0,0,EXACT,,H,epsilon-squared,none
+statistics,I_five_groups_unbalanced,kruskal_wallis,all,n_total,49,49,0,0,EXACT,,H,epsilon-squared,none
+statistics,I_five_groups_unbalanced,kruskal_wallis,all,n_total,49,49,0,0,EXACT,,H,epsilon-squared,none
+statistics,I_five_groups_unbalanced,kruskal_wallis,all,p_value,0.0001127539679858,0.0001127539679858,0,0,EXACT,,H,epsilon-squared,none
+statistics,I_five_groups_unbalanced,kruskal_wallis,all,p_value,0.0001127539679858,0.0001127539679858,0,0,EXACT,,H,epsilon-squared,none
+statistics,I_five_groups_unbalanced,kruskal_wallis,all,statistic,23.2521315539998,23.2521315539998,0,0,EXACT,,H,epsilon-squared,none
+statistics,I_five_groups_unbalanced,kruskal_wallis,all,statistic,23.2521315539998,23.2521315539998,0,0,EXACT,,H,epsilon-squared,none
+statistics,I_five_groups_unbalanced,one_way_anova,all,df,4,4,0,0,EXACT,,F,eta-squared,none
+statistics,I_five_groups_unbalanced,one_way_anova,all,df2,44,44,0,0,EXACT,,F,eta-squared,none
+statistics,I_five_groups_unbalanced,one_way_anova,all,effect_size,0.460055914953882,0.460055914953882,0,0,EXACT,,F,eta-squared,none
+statistics,I_five_groups_unbalanced,one_way_anova,all,extra.omega_squared,0.4059880246652,0.4059880246652,0,0,EXACT,,F,eta-squared,none
+statistics,I_five_groups_unbalanced,one_way_anova,all,n_total,49,49,0,0,EXACT,,F,eta-squared,none
+statistics,I_five_groups_unbalanced,one_way_anova,all,p_value,1.43822277722208e-05,1.43822277722208e-05,0,0,EXACT,,F,eta-squared,none
+statistics,I_five_groups_unbalanced,one_way_anova,all,statistic,9.37247986346673,9.37247986346673,0,0,EXACT,,F,eta-squared,none
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g2,adjusted_p_value,0.281649960517346,0.281649960517345,9.99200722162641e-16,3.54766860370677e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g2,ci_high,0.844487191947296,0.844487191947294,1.99840144432528e-15,2.36640823375566e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g2,ci_low,-2.52226496972507,-2.52226496972507,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g2,df,7.65987870174438,7.65987870174439,9.76996261670138e-15,1.27547223619565e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g2,effect_size,-0.631043132537875,-0.631043132537876,9.99200722162641e-16,1.58341113410765e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g2,estimate,-0.838888888888889,-0.838888888888889,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g2,n_total,15,15,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g2,p_value,0.281649960517346,0.281649960517345,9.99200722162641e-16,3.54766860370677e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g2,statistic,-1.15811032076591,-1.15811032076592,9.99200722162641e-15,8.6278543956142e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g3,adjusted_p_value,0.0023206165144194,0.0023206165144194,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g3,ci_high,-1.75021926847443,-1.75021926847443,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g3,ci_low,-5.59978073152557,-5.59978073152557,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g3,df,13.3256087144544,13.3256087144544,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g3,effect_size,-1.76414926216276,-1.76414926216276,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g3,estimate,-3.675,-3.675,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g3,n_total,18,18,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g3,p_value,0.0011603082572097,0.0011603082572097,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g3,statistic,-4.11458788301182,-4.11458788301182,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g4,adjusted_p_value,0.0806338274843599,0.0806338274843599,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g4,ci_high,0.0574688209108087,0.0574688209108088,9.71445146547012e-17,1.69038642371781e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g4,ci_low,-3.33842120186319,-3.33842120186319,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g4,df,7.83565304436514,7.83565304436514,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g4,effect_size,-1.20555597604038,-1.20555597604038,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g4,estimate,-1.64047619047619,-1.64047619047619,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g4,n_total,13,13,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g4,p_value,0.0564436792390519,0.0564436792390519,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g4,statistic,-2.23611508177018,-2.23611508177018,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g5,adjusted_p_value,0.0006592685842472,0.0006592685842472,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g5,ci_high,-2.78244352431893,-2.78244352431892,9.76996261670138e-15,3.51128874002674e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g5,ci_low,-6.94422314234774,-6.94422314234774,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g5,df,16.6682542299512,16.6682542299512,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g5,effect_size,-1.79198261560402,-1.79198261560402,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g5,estimate,-4.86333333333333,-4.86333333333333,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g5,n_total,21,21,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g5,p_value,0.0001318537168494,0.0001318537168494,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g1|g5,statistic,-4.93842345887341,-4.93842345887341,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g3,adjusted_p_value,0.0023206165144194,0.0023206165144194,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g3,ci_high,-1.35099563527785,-1.35099563527785,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g3,ci_low,-4.32122658694437,-4.32122658694437,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g3,df,16.3624786223561,16.3624786223561,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g3,effect_size,-1.55255920376546,-1.55255920376546,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g3,estimate,-2.83611111111111,-2.83611111111111,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g3,n_total,21,21,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g3,p_value,0.0009088071502127,0.0009088071502127,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g3,statistic,-4.04108668174439,-4.04108668174439,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g4,adjusted_p_value,0.14991151827144,0.14991151827144,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g4,ci_high,0.237757762564127,0.237757762564128,9.99200722162641e-16,4.20259978638189e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g4,ci_low,-1.84093236573873,-1.84093236573873,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g4,df,13.4462940746331,13.4462940746331,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g4,effect_size,-0.784083237714981,-0.78408323771498,9.99200722162641e-16,1.27435541802241e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g4,estimate,-0.801587301587302,-0.801587301587301,9.99200722162641e-16,1.24652763358904e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g4,n_total,16,16,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g4,p_value,0.119929214617152,0.119929214617152,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g4,statistic,-1.66056441760113,-1.66056441760113,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g5,adjusted_p_value,0.0006592685842472,0.0006592685842472,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g5,ci_high,-2.31687488740276,-2.31687488740276,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g5,ci_low,-5.73201400148613,-5.73201400148613,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g5,df,18.7989591181552,18.7989591181552,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g5,effect_size,-1.63388449943154,-1.63388449943154,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g5,estimate,-4.02444444444445,-4.02444444444444,9.76996261670138e-15,2.42765498482364e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g5,n_total,24,24,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g5,p_value,9.43798156932397e-05,9.43798156932399e-05,1.89735380184963e-19,2.01033853256988e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g2|g5,statistic,-4.93646659537644,-4.93646659537644,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g4,adjusted_p_value,0.018771133548359,0.018771133548359,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g4,ci_high,3.54141536522668,3.54141536522668,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g4,ci_low,0.527632253820941,0.527632253820941,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g4,df,16.1539813369616,16.1539813369616,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g4,effect_size,1.07359434356705,1.07359434356705,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g4,estimate,2.03452380952381,2.03452380952381,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g4,n_total,19,19,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g4,p_value,0.0112626801290154,0.0112626801290154,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g4,statistic,2.85996621561904,2.85996621561904,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g5,adjusted_p_value,0.256919978676481,0.256919978676481,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g5,ci_high,0.806404204965476,0.806404204965477,9.99200722162641e-16,1.23908173594583e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g5,ci_low,-3.18307087163214,-3.18307087163215,9.76996261670138e-15,3.06935126822726e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g5,df,24.898081452041,24.898081452041,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g5,effect_size,-0.445776290527553,-0.445776290527553,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g5,estimate,-1.18833333333333,-1.18833333333333,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g5,n_total,27,27,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g5,p_value,0.231227980808833,0.231227980808833,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g3|g5,statistic,-1.22719222599104,-1.22719222599104,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g4|g5,adjusted_p_value,0.0023206165144194,0.0023206165144194,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g4|g5,ci_high,-1.49772011251535,-1.49772011251535,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g4|g5,ci_low,-4.94799417319894,-4.94799417319894,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g4|g5,df,18.7517999987503,18.7517999987503,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g4|g5,effect_size,-1.25688408128724,-1.25688408128724,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g4|g5,estimate,-3.22285714285714,-3.22285714285714,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g4|g5,n_total,22,22,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g4|g5,p_value,0.0009530486704118,0.0009530486704118,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_benjamini_hochberg,g4|g5,statistic,-3.91364018876018,-3.91364018876018,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g2,adjusted_p_value,1,1,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g2,ci_high,0.844487191947296,0.844487191947294,1.99840144432528e-15,2.36640823375566e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g2,ci_low,-2.52226496972507,-2.52226496972507,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g2,df,7.65987870174438,7.65987870174439,9.76996261670138e-15,1.27547223619565e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g2,effect_size,-0.631043132537875,-0.631043132537876,9.99200722162641e-16,1.58341113410765e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g2,estimate,-0.838888888888889,-0.838888888888889,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g2,n_total,15,15,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g2,p_value,0.281649960517346,0.281649960517345,9.99200722162641e-16,3.54766860370677e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g2,statistic,-1.15811032076591,-1.15811032076592,9.99200722162641e-15,8.6278543956142e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g3,adjusted_p_value,0.0116030825720973,0.0116030825720973,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g3,ci_high,-1.75021926847443,-1.75021926847443,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g3,ci_low,-5.59978073152557,-5.59978073152557,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g3,df,13.3256087144544,13.3256087144544,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g3,effect_size,-1.76414926216276,-1.76414926216276,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g3,estimate,-3.675,-3.675,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g3,n_total,18,18,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g3,p_value,0.0011603082572097,0.0011603082572097,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g3,statistic,-4.11458788301182,-4.11458788301182,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g4,adjusted_p_value,0.564436792390519,0.564436792390519,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g4,ci_high,0.0574688209108087,0.0574688209108088,9.71445146547012e-17,1.69038642371781e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g4,ci_low,-3.33842120186319,-3.33842120186319,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g4,df,7.83565304436514,7.83565304436514,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g4,effect_size,-1.20555597604038,-1.20555597604038,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g4,estimate,-1.64047619047619,-1.64047619047619,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g4,n_total,13,13,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g4,p_value,0.0564436792390519,0.0564436792390519,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g4,statistic,-2.23611508177018,-2.23611508177018,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g5,adjusted_p_value,0.0013185371684945,0.0013185371684945,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g5,ci_high,-2.78244352431893,-2.78244352431892,9.76996261670138e-15,3.51128874002674e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g5,ci_low,-6.94422314234774,-6.94422314234774,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g5,df,16.6682542299512,16.6682542299512,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g5,effect_size,-1.79198261560402,-1.79198261560402,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g5,estimate,-4.86333333333333,-4.86333333333333,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g5,n_total,21,21,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g5,p_value,0.0001318537168494,0.0001318537168494,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g1|g5,statistic,-4.93842345887341,-4.93842345887341,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g3,adjusted_p_value,0.0090880715021278,0.0090880715021278,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g3,ci_high,-1.35099563527785,-1.35099563527785,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g3,ci_low,-4.32122658694437,-4.32122658694437,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g3,df,16.3624786223561,16.3624786223561,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g3,effect_size,-1.55255920376546,-1.55255920376546,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g3,estimate,-2.83611111111111,-2.83611111111111,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g3,n_total,21,21,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g3,p_value,0.0009088071502127,0.0009088071502127,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g3,statistic,-4.04108668174439,-4.04108668174439,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g4,adjusted_p_value,1,1,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g4,ci_high,0.237757762564127,0.237757762564128,9.99200722162641e-16,4.20259978638189e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g4,ci_low,-1.84093236573873,-1.84093236573873,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g4,df,13.4462940746331,13.4462940746331,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g4,effect_size,-0.784083237714981,-0.78408323771498,9.99200722162641e-16,1.27435541802241e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g4,estimate,-0.801587301587302,-0.801587301587301,9.99200722162641e-16,1.24652763358904e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g4,n_total,16,16,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g4,p_value,0.119929214617152,0.119929214617152,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g4,statistic,-1.66056441760113,-1.66056441760113,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g5,adjusted_p_value,0.0009437981569323,0.0009437981569323,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g5,ci_high,-2.31687488740276,-2.31687488740276,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g5,ci_low,-5.73201400148613,-5.73201400148613,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g5,df,18.7989591181552,18.7989591181552,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g5,effect_size,-1.63388449943154,-1.63388449943154,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g5,estimate,-4.02444444444445,-4.02444444444444,9.76996261670138e-15,2.42765498482364e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g5,n_total,24,24,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g5,p_value,9.43798156932397e-05,9.43798156932399e-05,1.89735380184963e-19,2.01033853256988e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g2|g5,statistic,-4.93646659537644,-4.93646659537644,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g4,adjusted_p_value,0.112626801290154,0.112626801290154,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g4,ci_high,3.54141536522668,3.54141536522668,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g4,ci_low,0.527632253820941,0.527632253820941,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g4,df,16.1539813369616,16.1539813369616,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g4,effect_size,1.07359434356705,1.07359434356705,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g4,estimate,2.03452380952381,2.03452380952381,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g4,n_total,19,19,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g4,p_value,0.0112626801290154,0.0112626801290154,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g4,statistic,2.85996621561904,2.85996621561904,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g5,adjusted_p_value,1,1,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g5,ci_high,0.806404204965476,0.806404204965477,9.99200722162641e-16,1.23908173594583e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g5,ci_low,-3.18307087163214,-3.18307087163215,9.76996261670138e-15,3.06935126822726e-15,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g5,df,24.898081452041,24.898081452041,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g5,effect_size,-0.445776290527553,-0.445776290527553,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g5,estimate,-1.18833333333333,-1.18833333333333,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g5,n_total,27,27,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g5,p_value,0.231227980808833,0.231227980808833,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g3|g5,statistic,-1.22719222599104,-1.22719222599104,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g4|g5,adjusted_p_value,0.0095304867041183,0.0095304867041183,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g4|g5,ci_high,-1.49772011251535,-1.49772011251535,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g4|g5,ci_low,-4.94799417319894,-4.94799417319894,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g4|g5,df,18.7517999987503,18.7517999987503,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g4|g5,effect_size,-1.25688408128724,-1.25688408128724,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g4|g5,estimate,-3.22285714285714,-3.22285714285714,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g4|g5,n_total,22,22,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g4|g5,p_value,0.0009530486704118,0.0009530486704118,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_bonferroni,g4|g5,statistic,-3.91364018876018,-3.91364018876018,0,0,EXACT,,t,Hedges' g,bonferroni
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g2,adjusted_p_value,0.462455961617666,0.462455961617667,9.99200722162641e-16,2.16063972592643e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g2,ci_high,0.844487191947296,0.844487191947294,1.99840144432528e-15,2.36640823375566e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g2,ci_low,-2.52226496972507,-2.52226496972507,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g2,df,7.65987870174438,7.65987870174439,9.76996261670138e-15,1.27547223619565e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g2,effect_size,-0.631043132537875,-0.631043132537876,9.99200722162641e-16,1.58341113410765e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g2,estimate,-0.838888888888889,-0.838888888888889,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g2,n_total,15,15,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g2,p_value,0.281649960517346,0.281649960517345,9.99200722162641e-16,3.54766860370677e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g2,statistic,-1.15811032076591,-1.15811032076592,9.99200722162641e-15,8.6278543956142e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g3,adjusted_p_value,0.0072704572017022,0.0072704572017022,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g3,ci_high,-1.75021926847443,-1.75021926847443,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g3,ci_low,-5.59978073152557,-5.59978073152557,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g3,df,13.3256087144544,13.3256087144544,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g3,effect_size,-1.76414926216276,-1.76414926216276,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g3,estimate,-3.675,-3.675,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g3,n_total,18,18,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g3,p_value,0.0011603082572097,0.0011603082572097,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g3,statistic,-4.11458788301182,-4.11458788301182,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g4,adjusted_p_value,0.225774716956208,0.225774716956208,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g4,ci_high,0.0574688209108087,0.0574688209108088,9.71445146547012e-17,1.69038642371781e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g4,ci_low,-3.33842120186319,-3.33842120186319,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g4,df,7.83565304436514,7.83565304436514,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g4,effect_size,-1.20555597604038,-1.20555597604038,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g4,estimate,-1.64047619047619,-1.64047619047619,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g4,n_total,13,13,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g4,p_value,0.0564436792390519,0.0564436792390519,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g4,statistic,-2.23611508177018,-2.23611508177018,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g5,adjusted_p_value,0.001186683451645,0.001186683451645,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g5,ci_high,-2.78244352431893,-2.78244352431892,9.76996261670138e-15,3.51128874002674e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g5,ci_low,-6.94422314234774,-6.94422314234774,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g5,df,16.6682542299512,16.6682542299512,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g5,effect_size,-1.79198261560402,-1.79198261560402,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g5,estimate,-4.86333333333333,-4.86333333333333,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g5,n_total,21,21,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g5,p_value,0.0001318537168494,0.0001318537168494,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g1|g5,statistic,-4.93842345887341,-4.93842345887341,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g3,adjusted_p_value,0.0072704572017022,0.0072704572017022,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g3,ci_high,-1.35099563527785,-1.35099563527785,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g3,ci_low,-4.32122658694437,-4.32122658694437,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g3,df,16.3624786223561,16.3624786223561,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g3,effect_size,-1.55255920376546,-1.55255920376546,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g3,estimate,-2.83611111111111,-2.83611111111111,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g3,n_total,21,21,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g3,p_value,0.0009088071502127,0.0009088071502127,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g3,statistic,-4.04108668174439,-4.04108668174439,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g4,adjusted_p_value,0.359787643851455,0.359787643851457,1.99840144432528e-15,5.55439153755471e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g4,ci_high,0.237757762564127,0.237757762564128,9.99200722162641e-16,4.20259978638189e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g4,ci_low,-1.84093236573873,-1.84093236573873,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g4,df,13.4462940746331,13.4462940746331,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g4,effect_size,-0.784083237714981,-0.78408323771498,9.99200722162641e-16,1.27435541802241e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g4,estimate,-0.801587301587302,-0.801587301587301,9.99200722162641e-16,1.24652763358904e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g4,n_total,16,16,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g4,p_value,0.119929214617152,0.119929214617152,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g4,statistic,-1.66056441760113,-1.66056441760113,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g5,adjusted_p_value,0.0009437981569323,0.0009437981569323,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g5,ci_high,-2.31687488740276,-2.31687488740276,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g5,ci_low,-5.73201400148613,-5.73201400148613,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g5,df,18.7989591181552,18.7989591181552,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g5,effect_size,-1.63388449943154,-1.63388449943154,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g5,estimate,-4.02444444444445,-4.02444444444444,9.76996261670138e-15,2.42765498482364e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g5,n_total,24,24,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g5,p_value,9.43798156932397e-05,9.43798156932399e-05,1.89735380184963e-19,2.01033853256988e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g2|g5,statistic,-4.93646659537644,-4.93646659537644,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g4,adjusted_p_value,0.056313400645077,0.0563134006450771,1.04083408558608e-16,1.84828846005249e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g4,ci_high,3.54141536522668,3.54141536522668,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g4,ci_low,0.527632253820941,0.527632253820941,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g4,df,16.1539813369616,16.1539813369616,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g4,effect_size,1.07359434356705,1.07359434356705,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g4,estimate,2.03452380952381,2.03452380952381,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g4,n_total,19,19,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g4,p_value,0.0112626801290154,0.0112626801290154,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g4,statistic,2.85996621561904,2.85996621561904,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g5,adjusted_p_value,0.462455961617666,0.462455961617667,9.99200722162641e-16,2.16063972592643e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g5,ci_high,0.806404204965476,0.806404204965477,9.99200722162641e-16,1.23908173594583e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g5,ci_low,-3.18307087163214,-3.18307087163215,9.76996261670138e-15,3.06935126822726e-15,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g5,df,24.898081452041,24.898081452041,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g5,effect_size,-0.445776290527553,-0.445776290527553,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g5,estimate,-1.18833333333333,-1.18833333333333,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g5,n_total,27,27,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g5,p_value,0.231227980808833,0.231227980808833,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g3|g5,statistic,-1.22719222599104,-1.22719222599104,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g4|g5,adjusted_p_value,0.0072704572017022,0.0072704572017022,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g4|g5,ci_high,-1.49772011251535,-1.49772011251535,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g4|g5,ci_low,-4.94799417319894,-4.94799417319894,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g4|g5,df,18.7517999987503,18.7517999987503,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g4|g5,effect_size,-1.25688408128724,-1.25688408128724,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g4|g5,estimate,-3.22285714285714,-3.22285714285714,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g4|g5,n_total,22,22,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g4|g5,p_value,0.0009530486704118,0.0009530486704118,0,0,EXACT,,t,Hedges' g,holm
+statistics,I_five_groups_unbalanced,welch_t_holm,g4|g5,statistic,-3.91364018876018,-3.91364018876018,0,0,EXACT,,t,Hedges' g,holm
+statistics,J_two_way_balanced,two_way_anova,genotype,df,1,1,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,genotype,df2,28,28,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,genotype,effect_size,0.267501955032515,0.267501955032515,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,genotype,extra.sum_sq,77.3312286572978,77.3312286572979,9.9475983006414e-14,1.2863623756355e-15,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,genotype,n_total,32,32,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,genotype,p_value,2.58770250519625e-06,2.58770250519621e-06,3.98105485209521e-20,1.53845151987179e-14,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,genotype,statistic,34.4739991112546,34.4739991112547,9.9475983006414e-14,2.8855365078297e-15,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,genotype x treatment,df,1,1,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,genotype x treatment,df2,28,28,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,genotype x treatment,effect_size,0.0231885961588952,0.0231885961588954,1.97758476261356e-16,8.52826427724447e-15,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,genotype x treatment,extra.sum_sq,6.70351224755462,6.70351224755466,3.99680288865056e-14,5.9622519375698e-15,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,genotype x treatment,n_total,32,32,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,genotype x treatment,p_value,0.0948765328926082,0.0948765328926073,9.0205620750794e-16,9.50768519892044e-15,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,genotype x treatment,statistic,2.98840299419805,2.98840299419806,1.02140518265514e-14,3.41789639696583e-15,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,treatment,df,1,1,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,treatment,df2,28,28,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,treatment,effect_size,0.492042669960611,0.492042669960611,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,treatment,extra.sum_sq,142.242938804863,142.242938804864,9.9475983006414e-13,6.99338637420028e-15,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,treatment,n_total,32,32,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,treatment,p_value,1.13219051190463e-08,1.13219051190461e-08,2.00177708237833e-22,1.76805675487497e-14,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,two_way_anova,treatment,statistic,63.4114190487306,63.4114190487307,9.9475983006414e-14,1.5687392665029e-15,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,J_two_way_balanced,welch_t,KO:vehicle|drug,ci_high,-3.74715993628945,-3.74715993628945,0,0,EXACT,,t,Hedges' g,none
+statistics,J_two_way_balanced,welch_t,KO:vehicle|drug,ci_low,-6.51697483496055,-6.51697483496055,0,0,EXACT,,t,Hedges' g,none
+statistics,J_two_way_balanced,welch_t,KO:vehicle|drug,df,12.0033292167398,12.0033292167398,0,0,EXACT,,t,Hedges' g,none
+statistics,J_two_way_balanced,welch_t,KO:vehicle|drug,effect_size,-3.81670700352388,-3.81670700352388,0,0,EXACT,,t,Hedges' g,none
+statistics,J_two_way_balanced,welch_t,KO:vehicle|drug,estimate,-5.132067385625,-5.132067385625,0,0,EXACT,,t,Hedges' g,none
+statistics,J_two_way_balanced,welch_t,KO:vehicle|drug,n_total,16,16,0,0,EXACT,,t,Hedges' g,none
+statistics,J_two_way_balanced,welch_t,KO:vehicle|drug,p_value,3.41592386121537e-06,3.41592386121537e-06,0,0,EXACT,,t,Hedges' g,none
+statistics,J_two_way_balanced,welch_t,KO:vehicle|drug,statistic,-8.07380327668514,-8.07380327668514,0,0,EXACT,,t,Hedges' g,none
+statistics,J_two_way_balanced,welch_t,WT:vehicle|drug,ci_high,-1.41546699630592,-1.41546699630592,0,0,EXACT,,t,Hedges' g,none
+statistics,J_two_way_balanced,welch_t,WT:vehicle|drug,ci_low,-5.18710738419408,-5.18710738419408,0,0,EXACT,,t,Hedges' g,none
+statistics,J_two_way_balanced,welch_t,WT:vehicle|drug,df,10.0626241281726,10.0626241281726,0,0,EXACT,,t,Hedges' g,none
+statistics,J_two_way_balanced,welch_t,WT:vehicle|drug,effect_size,-1.84233964536147,-1.84233964536147,0,0,EXACT,,t,Hedges' g,none
+statistics,J_two_way_balanced,welch_t,WT:vehicle|drug,estimate,-3.30128719025,-3.30128719025,0,0,EXACT,,t,Hedges' g,none
+statistics,J_two_way_balanced,welch_t,WT:vehicle|drug,n_total,16,16,0,0,EXACT,,t,Hedges' g,none
+statistics,J_two_way_balanced,welch_t,WT:vehicle|drug,p_value,0.0029394174603335,0.0029394174603335,0,0,EXACT,,t,Hedges' g,none
+statistics,J_two_way_balanced,welch_t,WT:vehicle|drug,statistic,-3.8972569421108,-3.8972569421108,0,0,EXACT,,t,Hedges' g,none
+statistics,K_two_way_unbalanced,two_way_anova,genotype,df,1,1,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,genotype,df2,21,21,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,genotype,effect_size,0.111616383947595,0.111616383947591,3.99680288865056e-15,3.58083889416011e-14,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,genotype,extra.sum_sq,8.1983339160237,8.19833391602346,2.39808173319034e-13,2.92508423998597e-14,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,genotype,n_total,25,25,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,genotype,p_value,0.045939239985811,0.0459392399858138,2.79637424327461e-15,6.08711472836325e-14,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,genotype,statistic,4.50108439425316,4.50108439425302,1.4033219031262e-13,3.11774181554541e-14,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,genotype x treatment,df,1,1,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,genotype x treatment,df2,21,21,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,genotype x treatment,effect_size,0.0399319691186133,0.0399319691186128,4.9960036108132e-16,1.25112878755695e-14,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,genotype x treatment,extra.sum_sq,2.9330426697253,2.93304266972527,3.01980662698043e-14,1.02958155302366e-14,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,genotype x treatment,n_total,25,25,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,genotype x treatment,p_value,0.218333419003715,0.218333419003717,1.99840144432528e-15,9.15298012298914e-15,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,genotype x treatment,statistic,1.61031164668421,1.6103116466842,9.99200722162641e-15,6.20501456485205e-15,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,treatment,df,1,1,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,treatment,df2,21,21,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,treatment,effect_size,0.327700677258091,0.327700677258097,5.99520433297585e-15,1.82947572252163e-14,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,treatment,extra.sum_sq,24.0699392118843,24.0699392118848,5.00932628710871e-13,2.08115452349597e-14,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,treatment,n_total,25,25,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,treatment,p_value,0.0015487039174798,0.0015487039174797,9.99634403031635e-17,6.45465147823954e-14,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,two_way_anova,treatment,statistic,13.2149811006699,13.2149811006702,2.98427949019242e-13,2.25825483022528e-14,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,K_two_way_unbalanced,welch_t,KO:vehicle|drug,ci_high,1.84850548502355,1.84850548502355,0,0,EXACT,,t,Hedges' g,none
+statistics,K_two_way_unbalanced,welch_t,KO:vehicle|drug,ci_low,-4.33323543073784,-4.33323543073784,0,0,EXACT,,t,Hedges' g,none
+statistics,K_two_way_unbalanced,welch_t,KO:vehicle|drug,df,4.35806016481061,4.35806016481061,0,0,EXACT,,t,Hedges' g,none
+statistics,K_two_way_unbalanced,welch_t,KO:vehicle|drug,effect_size,-0.710545020757149,-0.710545020757149,0,0,EXACT,,t,Hedges' g,none
+statistics,K_two_way_unbalanced,welch_t,KO:vehicle|drug,estimate,-1.24236497285714,-1.24236497285714,0,0,EXACT,,t,Hedges' g,none
+statistics,K_two_way_unbalanced,welch_t,KO:vehicle|drug,n_total,11,11,0,0,EXACT,,t,Hedges' g,none
+statistics,K_two_way_unbalanced,welch_t,KO:vehicle|drug,p_value,0.335957173466886,0.335957173466886,0,0,EXACT,,t,Hedges' g,none
+statistics,K_two_way_unbalanced,welch_t,KO:vehicle|drug,statistic,-1.08073580051151,-1.08073580051151,0,0,EXACT,,t,Hedges' g,none
+statistics,K_two_way_unbalanced,welch_t,WT:vehicle|drug,ci_high,-1.43645344098968,-1.43645344098968,0,0,EXACT,,t,Hedges' g,none
+statistics,K_two_way_unbalanced,welch_t,WT:vehicle|drug,ci_low,-3.92213727172143,-3.92213727172143,0,0,EXACT,,t,Hedges' g,none
+statistics,K_two_way_unbalanced,welch_t,WT:vehicle|drug,df,11.1067427142414,11.1067427142415,9.9475983006414e-14,8.9563597146139e-15,EXACT,,t,Hedges' g,none
+statistics,K_two_way_unbalanced,welch_t,WT:vehicle|drug,effect_size,-2.22500517653487,-2.22500517653487,0,0,EXACT,,t,Hedges' g,none
+statistics,K_two_way_unbalanced,welch_t,WT:vehicle|drug,estimate,-2.67929535635555,-2.67929535635556,9.76996261670138e-15,3.64646719277367e-15,EXACT,,t,Hedges' g,none
+statistics,K_two_way_unbalanced,welch_t,WT:vehicle|drug,n_total,14,14,0,0,EXACT,,t,Hedges' g,none
+statistics,K_two_way_unbalanced,welch_t,WT:vehicle|drug,p_value,0.000594189804854,0.000594189804854,0,0,EXACT,,t,Hedges' g,none
+statistics,K_two_way_unbalanced,welch_t,WT:vehicle|drug,statistic,-4.73928497981952,-4.73928497981953,9.76996261670138e-15,2.06148451893125e-15,EXACT,,t,Hedges' g,none
+statistics,L_repeated_measures,rm_anova,all,df,3,3,0,0,EXACT,,F,,none
+statistics,L_repeated_measures,rm_anova,all,df2,27,27,0,0,EXACT,,F,,none
+statistics,L_repeated_measures,rm_anova,all,extra.n_levels,4,4,0,0,EXACT,,F,,none
+statistics,L_repeated_measures,rm_anova,all,extra.n_subjects,10,10,0,0,EXACT,,F,,none
+statistics,L_repeated_measures,rm_anova,all,n_total,40,40,0,0,EXACT,,F,,none
+statistics,L_repeated_measures,rm_anova,all,p_value,3.26098634375178e-08,3.26098634375178e-08,0,0,EXACT,,F,,none
+statistics,L_repeated_measures,rm_anova,all,statistic,26.572040890877,26.572040890877,0,0,EXACT,,F,,none
+statistics,M_linear_xy,linear_regression,all,ci_high,0.998085137296417,0.998085137296418,9.99200722162641e-16,1.00111772515644e-15,EXACT,,slope,R-squared,none
+statistics,M_linear_xy,linear_regression,all,ci_low,0.688898852446136,0.688898852446136,0,0,EXACT,,slope,R-squared,none
+statistics,M_linear_xy,linear_regression,all,df,38,38,0,0,EXACT,,slope,R-squared,none
+statistics,M_linear_xy,linear_regression,all,effect_size,0.762504921514024,0.762504921514024,0,0,EXACT,,slope,R-squared,none
+statistics,M_linear_xy,linear_regression,all,estimate,0.843491994871276,0.843491994871277,9.99200722162641e-16,1.18460012452771e-15,EXACT,,slope,R-squared,none
+statistics,M_linear_xy,linear_regression,all,extra.intercept,1.29501119537723,1.29501119537723,0,0,EXACT,,slope,R-squared,none
+statistics,M_linear_xy,linear_regression,all,extra.pearson_r,0.873215277874834,0.873215277874834,0,0,EXACT,,slope,R-squared,none
+statistics,M_linear_xy,linear_regression,all,extra.stderr,0.0763651393493462,0.0763651393493462,0,0,EXACT,,slope,R-squared,none
+statistics,M_linear_xy,linear_regression,all,n_total,40,40,0,0,EXACT,,slope,R-squared,none
+statistics,M_linear_xy,linear_regression,all,p_value,2.0053309220744e-13,2.00533092207434e-13,5.98272110519615e-27,2.98340839376644e-14,EXACT,,slope,R-squared,none
+statistics,M_linear_xy,linear_regression,all,statistic,0.843491994871276,0.843491994871277,9.99200722162641e-16,1.18460012452771e-15,EXACT,,slope,R-squared,none
+statistics,M_linear_xy,pearson,all,ci_high,0.931376505070156,0.931376505070156,0,0,EXACT,,r,R-squared,none
+statistics,M_linear_xy,pearson,all,ci_low,0.771589682421174,0.771589682421174,0,0,EXACT,,r,R-squared,none
+statistics,M_linear_xy,pearson,all,df,38,38,0,0,EXACT,,r,R-squared,none
+statistics,M_linear_xy,pearson,all,effect_size,0.762504921514024,0.762504921514024,0,0,EXACT,,r,R-squared,none
+statistics,M_linear_xy,pearson,all,estimate,0.873215277874834,0.873215277874834,0,0,EXACT,,r,R-squared,none
+statistics,M_linear_xy,pearson,all,n_total,40,40,0,0,EXACT,,r,R-squared,none
+statistics,M_linear_xy,pearson,all,p_value,2.0053309220743e-13,2.00533092207434e-13,4.01372428576451e-27,2.00152715024843e-14,EXACT,,r,R-squared,none
+statistics,M_linear_xy,pearson,all,statistic,0.873215277874834,0.873215277874834,0,0,EXACT,,r,R-squared,none
+statistics,M_linear_xy,spearman,all,effect_size,0.860037523452158,0.860037523452157,9.99200722162641e-16,1.16181061281127e-15,EXACT,,rho,Spearman rho,none
+statistics,M_linear_xy,spearman,all,estimate,0.860037523452158,0.860037523452157,9.99200722162641e-16,1.16181061281127e-15,EXACT,,rho,Spearman rho,none
+statistics,M_linear_xy,spearman,all,n_total,40,40,0,0,EXACT,,rho,Spearman rho,none
+statistics,M_linear_xy,spearman,all,p_value,1.16429240812806e-12,1.16429240812811e-12,5.00832011506716e-26,4.30159990746593e-14,EXACT,,rho,Spearman rho,none
+statistics,M_linear_xy,spearman,all,statistic,0.860037523452158,0.860037523452157,9.99200722162641e-16,1.16181061281127e-15,EXACT,,rho,Spearman rho,none
+statistics,N_monotone_nonlinear_ties,linear_regression,all,ci_high,3.39566072571225,3.39566072571225,0,0,EXACT,,slope,R-squared,none
+statistics,N_monotone_nonlinear_ties,linear_regression,all,ci_low,2.5518534241945,2.55185342419451,1.02140518265514e-14,4.00260129743757e-15,EXACT,,slope,R-squared,none
+statistics,N_monotone_nonlinear_ties,linear_regression,all,df,33,33,0,0,EXACT,,slope,R-squared,none
+statistics,N_monotone_nonlinear_ties,linear_regression,all,effect_size,0.861716045508586,0.861716045508586,0,0,EXACT,,slope,R-squared,none
+statistics,N_monotone_nonlinear_ties,linear_regression,all,estimate,2.97375707495338,2.97375707495338,0,0,EXACT,,slope,R-squared,none
+statistics,N_monotone_nonlinear_ties,linear_regression,all,extra.intercept,-1.54644315393477,-1.54644315393477,0,0,EXACT,,slope,R-squared,none
+statistics,N_monotone_nonlinear_ties,linear_regression,all,extra.pearson_r,0.928286618188901,0.928286618188901,0,0,EXACT,,slope,R-squared,none
+statistics,N_monotone_nonlinear_ties,linear_regression,all,extra.stderr,0.20737305405755,0.20737305405755,0,0,EXACT,,slope,R-squared,none
+statistics,N_monotone_nonlinear_ties,linear_regression,all,n_total,35,35,0,0,EXACT,,slope,R-squared,none
+statistics,N_monotone_nonlinear_ties,linear_regression,all,p_value,9.82823709233755e-16,9.82823709233724e-16,3.09627905299247e-29,3.15039108631846e-14,EXACT,,slope,R-squared,none
+statistics,N_monotone_nonlinear_ties,linear_regression,all,statistic,2.97375707495338,2.97375707495338,0,0,EXACT,,slope,R-squared,none
+statistics,N_monotone_nonlinear_ties,pearson,all,ci_high,0.963481722291675,0.963481722291675,0,0,EXACT,,r,R-squared,none
+statistics,N_monotone_nonlinear_ties,pearson,all,ci_low,0.861563187945143,0.861563187945142,9.99200722162641e-16,1.15975326725109e-15,EXACT,,r,R-squared,none
+statistics,N_monotone_nonlinear_ties,pearson,all,df,33,33,0,0,EXACT,,r,R-squared,none
+statistics,N_monotone_nonlinear_ties,pearson,all,effect_size,0.861716045508586,0.861716045508586,0,0,EXACT,,r,R-squared,none
+statistics,N_monotone_nonlinear_ties,pearson,all,estimate,0.928286618188901,0.928286618188901,0,0,EXACT,,r,R-squared,none
+statistics,N_monotone_nonlinear_ties,pearson,all,n_total,35,35,0,0,EXACT,,r,R-squared,none
+statistics,N_monotone_nonlinear_ties,pearson,all,p_value,9.8282370923371e-16,9.82823709233738e-16,2.78073469090407e-29,2.82933212210771e-14,EXACT,,r,R-squared,none
+statistics,N_monotone_nonlinear_ties,pearson,all,statistic,0.928286618188901,0.928286618188901,0,0,EXACT,,r,R-squared,none
+statistics,N_monotone_nonlinear_ties,spearman,all,effect_size,0.962631266390327,0.962631266390327,0,0,EXACT,,rho,Spearman rho,none
+statistics,N_monotone_nonlinear_ties,spearman,all,estimate,0.962631266390327,0.962631266390327,0,0,EXACT,,rho,Spearman rho,none
+statistics,N_monotone_nonlinear_ties,spearman,all,n_total,35,35,0,0,EXACT,,rho,Spearman rho,none
+statistics,N_monotone_nonlinear_ties,spearman,all,p_value,2.71133782813513e-20,2.71133782813509e-20,3.97223051029867e-34,1.46504447696611e-14,EXACT,,rho,Spearman rho,none
+statistics,N_monotone_nonlinear_ties,spearman,all,statistic,0.962631266390327,0.962631266390327,0,0,EXACT,,rho,Spearman rho,none
+statistics,O_contingency_2x2,chi_square,all,df,1,1,0,0,EXACT,,chi2,Cramer's V,none
+statistics,O_contingency_2x2,chi_square,all,effect_size,0.254811701558958,0.254811701558958,0,0,EXACT,,chi2,Cramer's V,none
+statistics,O_contingency_2x2,chi_square,all,extra.expected_min,17.2666666666667,17.2666666666667,0,0,EXACT,,chi2,Cramer's V,none
+statistics,O_contingency_2x2,chi_square,all,n_total,75,75,0,0,EXACT,,chi2,Cramer's V,none
+statistics,O_contingency_2x2,chi_square,all,p_value,0.027332643710597,0.0273326437105969,1.00613961606655e-16,3.68109146967171e-15,EXACT,,chi2,Cramer's V,none
+statistics,O_contingency_2x2,chi_square,all,statistic,4.86967524385287,4.86967524385287,0,0,EXACT,,chi2,Cramer's V,none
+statistics,O_contingency_2x2,fishers_exact,all,effect_size,0.31304347826087,0.31304347826087,0,0,EXACT,,odds ratio,odds ratio,none
+statistics,O_contingency_2x2,fishers_exact,all,estimate,0.31304347826087,0.31304347826087,0,0,EXACT,,odds ratio,odds ratio,none
+statistics,O_contingency_2x2,fishers_exact,all,n_total,75,75,0,0,EXACT,,odds ratio,odds ratio,none
+statistics,O_contingency_2x2,fishers_exact,all,p_value,0.0207494859368467,0.0207494859368467,0,0,EXACT,,odds ratio,odds ratio,none
+statistics,O_contingency_2x2,fishers_exact,all,statistic,0.31304347826087,0.31304347826087,0,0,EXACT,,odds ratio,odds ratio,none
+statistics,P_contingency_3x4,chi_square,all,df,6,6,0,0,EXACT,,chi2,Cramer's V,none
+statistics,P_contingency_3x4,chi_square,all,effect_size,0.182885861262271,0.182885861262271,0,0,EXACT,,chi2,Cramer's V,none
+statistics,P_contingency_3x4,chi_square,all,extra.expected_min,12.4666666666667,12.4666666666667,0,0,EXACT,,chi2,Cramer's V,none
+statistics,P_contingency_3x4,chi_square,all,n_total,180,180,0,0,EXACT,,chi2,Cramer's V,none
+statistics,P_contingency_3x4,chi_square,all,p_value,0.0610602432079764,0.0610602432079764,0,0,EXACT,,chi2,Cramer's V,none
+statistics,P_contingency_3x4,chi_square,all,statistic,12.0410057698714,12.0410057698714,0,0,EXACT,,chi2,Cramer's V,none
+statistics,P_contingency_3x4,fishers_exact,all,n_total,180,180,0,0,EXACT,,,,none
+statistics,P_contingency_3x4,fishers_exact,all,p_value,0.0460247698761506,0.0462146170861666,0.000189847210016005,0.00410794726832934,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"r x c table: before the fix scipy's default r x c Fisher p-value was an UNSEEDED Monte Carlo approximation (non-reproducible); after the fix it is a seeded Monte Carlo approximation with 200000 resamples, so it differs from R's exact network algorithm by Monte Carlo error (documented in the result warnings).",,,none
+statistics,Q_contingency_small_expected,chi_square,all,df,1,1,0,0,EXACT,,chi2,Cramer's V,none
+statistics,Q_contingency_small_expected,chi_square,all,effect_size,0.50395263067897,0.50395263067897,0,0,EXACT,,chi2,Cramer's V,none
+statistics,Q_contingency_small_expected,chi_square,all,extra.expected_min,3.5,3.5,0,0,EXACT,,chi2,Cramer's V,none
+statistics,Q_contingency_small_expected,chi_square,all,n_total,16,16,0,0,EXACT,,chi2,Cramer's V,none
+statistics,Q_contingency_small_expected,chi_square,all,p_value,0.0438197928026748,0.0438197928026748,0,0,EXACT,,chi2,Cramer's V,none
+statistics,Q_contingency_small_expected,chi_square,all,statistic,4.06349206349206,4.06349206349206,0,0,EXACT,,chi2,Cramer's V,none
+statistics,Q_contingency_small_expected,fishers_exact,all,effect_size,0.0476190476190476,0.0476190476190476,0,0,EXACT,,odds ratio,odds ratio,none
+statistics,Q_contingency_small_expected,fishers_exact,all,estimate,0.0476190476190476,0.0476190476190476,0,0,EXACT,,odds ratio,odds ratio,none
+statistics,Q_contingency_small_expected,fishers_exact,all,n_total,16,16,0,0,EXACT,,odds ratio,odds ratio,none
+statistics,Q_contingency_small_expected,fishers_exact,all,p_value,0.0405594405594406,0.0405594405594406,0,0,EXACT,,odds ratio,odds ratio,none
+statistics,Q_contingency_small_expected,fishers_exact,all,statistic,0.0476190476190476,0.0476190476190476,0,0,EXACT,,odds ratio,odds ratio,none
+statistics,R_survival_two_groups,cox_ph,B|A,ci_high,0.976253647891452,0.976253647891464,1.19904086659517e-14,1.22820628551287e-14,EXACT,,z,hazard ratio,none
+statistics,R_survival_two_groups,cox_ph,B|A,ci_low,0.276280546814,0.276280546814004,3.99680288865056e-15,1.44664651012917e-14,EXACT,,z,hazard ratio,none
+statistics,R_survival_two_groups,cox_ph,B|A,effect_size,0.519345637960513,0.51934563796052,6.99440505513849e-15,1.34677265849496e-14,EXACT,,z,hazard ratio,none
+statistics,R_survival_two_groups,cox_ph,B|A,estimate,0.519345637960513,0.51934563796052,6.99440505513849e-15,1.34677265849496e-14,EXACT,,z,hazard ratio,none
+statistics,R_survival_two_groups,cox_ph,B|A,n_total,60,60,0,0,EXACT,,z,hazard ratio,none
+statistics,R_survival_two_groups,cox_ph,B|A,p_value,0.0418916523348822,0.0418916523348862,3.99680288865056e-15,9.54080984130134e-14,EXACT,,z,hazard ratio,none
+statistics,R_survival_two_groups,cox_ph,B|A,statistic,-2.0345948863749,-2.03459488637486,3.99680288865056e-14,1.96442196695569e-14,EXACT,,z,hazard ratio,none
+statistics,R_survival_two_groups,logrank,all,df,1,1,0,0,EXACT,,chi2,,none
+statistics,R_survival_two_groups,logrank,all,extra.expected_events.A,18.4422333086967,18.4422333086967,0,0,EXACT,,chi2,,none
+statistics,R_survival_two_groups,logrank,all,extra.expected_events.B,22.5577666913033,22.5577666913033,0,0,EXACT,,chi2,,none
+statistics,R_survival_two_groups,logrank,all,extra.observed_events.A,25,25,0,0,EXACT,,chi2,,none
+statistics,R_survival_two_groups,logrank,all,extra.observed_events.B,16,16,0,0,EXACT,,chi2,,none
+statistics,R_survival_two_groups,logrank,all,n_total,60,60,0,0,EXACT,,chi2,,none
+statistics,R_survival_two_groups,logrank,all,p_value,0.0304335130398706,0.0304335130398705,9.71445146547012e-17,3.19202434919141e-15,EXACT,,chi2,,none
+statistics,R_survival_two_groups,logrank,all,statistic,4.68463587287206,4.68463587287206,0,0,EXACT,,chi2,,none
+statistics,S_survival_three_groups,cox_ph,arm2|arm1,ci_high,1.57814070848813,1.57814070848813,0,0,EXACT,,z,hazard ratio,none
+statistics,S_survival_three_groups,cox_ph,arm2|arm1,ci_low,0.362103110481204,0.362103110481204,0,0,EXACT,,z,hazard ratio,none
+statistics,S_survival_three_groups,cox_ph,arm2|arm1,effect_size,0.755942894219242,0.755942894219241,9.99200722162641e-16,1.32179392094775e-15,EXACT,,z,hazard ratio,none
+statistics,S_survival_three_groups,cox_ph,arm2|arm1,estimate,0.755942894219242,0.755942894219241,9.99200722162641e-16,1.32179392094775e-15,EXACT,,z,hazard ratio,none
+statistics,S_survival_three_groups,cox_ph,arm2|arm1,n_total,63,63,0,0,EXACT,,z,hazard ratio,none
+statistics,S_survival_three_groups,cox_ph,arm2|arm1,p_value,0.456247250973496,0.456247250973496,0,0,EXACT,,z,hazard ratio,none
+statistics,S_survival_three_groups,cox_ph,arm2|arm1,statistic,-0.745040476529283,-0.745040476529284,9.99200722162641e-16,1.34113615788681e-15,EXACT,,z,hazard ratio,none
+statistics,S_survival_three_groups,cox_ph,arm3|arm1,ci_high,0.628543934785101,0.628543934785101,0,0,EXACT,,z,hazard ratio,none
+statistics,S_survival_three_groups,cox_ph,arm3|arm1,ci_low,0.0774399563557871,0.077439956355787,9.71445146547012e-17,1.25444950160334e-15,EXACT,,z,hazard ratio,none
+statistics,S_survival_three_groups,cox_ph,arm3|arm1,effect_size,0.220622788663032,0.220622788663032,0,0,EXACT,,z,hazard ratio,none
+statistics,S_survival_three_groups,cox_ph,arm3|arm1,estimate,0.220622788663032,0.220622788663032,0,0,EXACT,,z,hazard ratio,none
+statistics,S_survival_three_groups,cox_ph,arm3|arm1,n_total,63,63,0,0,EXACT,,z,hazard ratio,none
+statistics,S_survival_three_groups,cox_ph,arm3|arm1,p_value,0.0046656166961569,0.0046656166961569,0,0,EXACT,,z,hazard ratio,none
+statistics,S_survival_three_groups,cox_ph,arm3|arm1,statistic,-2.82925733650086,-2.82925733650086,0,0,EXACT,,z,hazard ratio,none
+statistics,S_survival_three_groups,logrank,all,df,2,2,0,0,EXACT,,chi2,,none
+statistics,S_survival_three_groups,logrank,all,extra.expected_events.arm1,8.75744354417875,8.75744354417876,8.88178419700125e-15,1.01419828197524e-15,EXACT,,chi2,,none
+statistics,S_survival_three_groups,logrank,all,extra.expected_events.arm2,12.1031511693581,12.1031511693581,0,0,EXACT,,chi2,,none
+statistics,S_survival_three_groups,logrank,all,extra.expected_events.arm3,13.1394052864631,13.1394052864631,0,0,EXACT,,chi2,,none
+statistics,S_survival_three_groups,logrank,all,extra.observed_events.arm1,14,14,0,0,EXACT,,chi2,,none
+statistics,S_survival_three_groups,logrank,all,extra.observed_events.arm2,15,15,0,0,EXACT,,chi2,,none
+statistics,S_survival_three_groups,logrank,all,extra.observed_events.arm3,5,5,0,0,EXACT,,chi2,,none
+statistics,S_survival_three_groups,logrank,all,n_total,63,63,0,0,EXACT,,chi2,,none
+statistics,S_survival_three_groups,logrank,all,p_value,0.0075708992692522,0.0075708992692521,1.00613961606655e-16,1.32895654833607e-14,EXACT,,chi2,,none
+statistics,S_survival_three_groups,logrank,all,statistic,9.76688684952722,9.76688684952722,0,0,EXACT,,chi2,,none
+statistics,T_glm_predictors,glm_binomial,const,ci_high,0.232732979042879,0.232732979042879,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_binomial,const,ci_low,-0.823206101653689,-0.823206101653688,9.99200722162641e-16,1.21379168613474e-15,EXACT,,z,,
+statistics,T_glm_predictors,glm_binomial,const,estimate,-0.295236561305405,-0.295236561305405,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_binomial,const,n_total,120,120,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_binomial,const,p_value,0.273080091682078,0.273080091682078,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_binomial,const,statistic,-1.09599699008455,-1.09599699008455,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_binomial,x1,ci_high,1.26829056964213,1.26829056964213,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_binomial,x1,ci_low,0.39622251593044,0.396222515930441,9.99200722162641e-16,2.52181711535559e-15,EXACT,,z,,
+statistics,T_glm_predictors,glm_binomial,x1,estimate,0.832256542786284,0.832256542786285,9.99200722162641e-16,1.20059221020654e-15,EXACT,,z,,
+statistics,T_glm_predictors,glm_binomial,x1,n_total,120,120,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_binomial,x1,p_value,0.0001833069928504,0.0001833069928504,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_binomial,x1,statistic,3.74097604611536,3.74097604611537,1.02140518265514e-14,2.73031735585629e-15,EXACT,,z,,
+statistics,T_glm_predictors,glm_binomial,x2,ci_high,1.57247045412695,1.57247045412695,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_binomial,x2,ci_low,-0.005669169420638,-0.0056691694206376,3.99853761212654e-16,7.05312774314046e-14,EXACT,,z,,
+statistics,T_glm_predictors,glm_binomial,x2,estimate,0.783400642353156,0.783400642353156,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_binomial,x2,n_total,120,120,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_binomial,x2,p_value,0.0516688697743041,0.0516688697743041,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_binomial,x2,statistic,1.94588238146652,1.94588238146652,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gamma,const,ci_high,0.591908487571291,0.591908487341542,2.29748997604418e-10,3.88149523834537e-10,NUMERICALLY_EQUIVALENT,,z,,
+statistics,T_glm_predictors,glm_gamma,const,ci_low,0.293533975661824,0.293533975451726,2.10097994557401e-10,7.15753582132011e-10,NUMERICALLY_EQUIVALENT,,z,,
+statistics,T_glm_predictors,glm_gamma,const,estimate,0.442721231616558,0.442721231396634,2.19924023436846e-10,4.9675508588963e-10,NUMERICALLY_EQUIVALENT,,z,,
+statistics,T_glm_predictors,glm_gamma,const,n_total,120,120,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gamma,const,p_value,6.01648535353931e-09,6.01648544369941e-09,9.01601001745046e-17,1.49855095667059e-08,EXACT,,z,,
+statistics,T_glm_predictors,glm_gamma,const,statistic,5.81629887624552,5.81629887373929,2.5062298902867e-09,4.308977140983e-10,NUMERICALLY_EQUIVALENT,,z,,
+statistics,T_glm_predictors,glm_gamma,x1,ci_high,1.02376783998467,1.02376784114413,1.15946008349965e-09,1.13254200503493e-09,NUMERICALLY_EQUIVALENT,,z,,
+statistics,T_glm_predictors,glm_gamma,x1,ci_low,0.806195586424606,0.806195587598398,1.17379206354684e-09,1.45596438581795e-09,NUMERICALLY_EQUIVALENT,,z,,
+statistics,T_glm_predictors,glm_gamma,x1,estimate,0.914981713204638,0.914981714371266,1.16662801641354e-09,1.27502877717638e-09,NUMERICALLY_EQUIVALENT,,z,,
+statistics,T_glm_predictors,glm_gamma,x1,n_total,120,120,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gamma,x1,p_value,4.70874144575928e-61,4.70873972367666e-61,1.72208261992166e-67,3.6572036068631e-07,EXACT,,z,,
+statistics,T_glm_predictors,glm_gamma,x1,statistic,16.4849255826526,16.4849256047569,2.21042988357567e-08,1.34087950202082e-09,NUMERICALLY_EQUIVALENT,,z,,
+statistics,T_glm_predictors,glm_gamma,x2,ci_high,0.828451893820158,0.828451894503594,6.83435974480062e-10,8.24955533344003e-10,NUMERICALLY_EQUIVALENT,,z,,
+statistics,T_glm_predictors,glm_gamma,x2,ci_low,0.384352630147162,0.384352630859844,7.1268202450625e-10,1.85424000588182e-09,NUMERICALLY_EQUIVALENT,,z,,
+statistics,T_glm_predictors,glm_gamma,x2,estimate,0.60640226198366,0.606402262681719,6.98059055004308e-10,1.15114849987078e-09,NUMERICALLY_EQUIVALENT,,z,,
+statistics,T_glm_predictors,glm_gamma,x2,n_total,120,120,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gamma,x2,p_value,8.67344774753807e-08,8.67344743520212e-08,3.12335949380554e-15,3.60105875393335e-08,EXACT,,z,,
+statistics,T_glm_predictors,glm_gamma,x2,statistic,5.35252674729379,5.35252675380784,6.51405063223365e-09,1.2170047777154e-09,NUMERICALLY_EQUIVALENT,,z,,
+statistics,T_glm_predictors,glm_gaussian,const,ci_high,-0.304537646607363,-0.304537646607363,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gaussian,const,ci_low,-0.777598652387793,-0.777598652387793,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gaussian,const,estimate,-0.541068149497578,-0.541068149497578,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gaussian,const,n_total,120,120,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gaussian,const,p_value,7.34437754826231e-06,7.3443775482623e-06,1.01643953670516e-20,1.38396961488677e-15,EXACT,,z,,
+statistics,T_glm_predictors,glm_gaussian,const,statistic,-4.48345593164026,-4.48345593164026,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gaussian,x1,ci_high,0.915051270791994,0.915051270791994,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gaussian,x1,ci_low,0.570099054731833,0.570099054731833,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gaussian,x1,estimate,0.742575162761913,0.742575162761913,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gaussian,x1,n_total,120,120,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gaussian,x1,p_value,3.21739992259885e-17,3.21739992259887e-17,1.97215226305253e-31,6.12964602006801e-15,EXACT,,z,,
+statistics,T_glm_predictors,glm_gaussian,x1,statistic,8.4383894757962,8.4383894757962,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gaussian,x2,ci_high,0.910606390823743,0.910606390823743,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gaussian,x2,ci_low,0.206504545813466,0.206504545813467,9.99200722162641e-16,4.83863790129447e-15,EXACT,,z,,
+statistics,T_glm_predictors,glm_gaussian,x2,estimate,0.558555468318605,0.558555468318605,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gaussian,x2,n_total,120,120,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gaussian,x2,p_value,0.0018732094794768,0.0018732094794768,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_gaussian,x2,statistic,3.10963139503317,3.10963139503317,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_negativebinomial,const,ci_high,0.735047575350636,0.735047817455307,2.42104670977739e-07,3.29372681924138e-07,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"statsmodels' NegativeBinomial family fixes alpha = 1 (theta = 1) AND the GLM scale at 1; R's summary.glm additionally estimates a Pearson dispersion (0.83 here), inflating/deflating every SE by its square root. The like-for-like R reference uses negative.binomial(theta = 1) with dispersion = 1; R's default SEs and MASS::glm.nb (theta estimated) are reported as context.",z,,
+statistics,T_glm_predictors,glm_negativebinomial,const,ci_low,0.0818986111963685,0.0818990377406968,4.26544328302469e-07,5.20817264853545e-06,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"statsmodels' NegativeBinomial family fixes alpha = 1 (theta = 1) AND the GLM scale at 1; R's summary.glm additionally estimates a Pearson dispersion (0.83 here), inflating/deflating every SE by its square root. The like-for-like R reference uses negative.binomial(theta = 1) with dispersion = 1; R's default SEs and MASS::glm.nb (theta estimated) are reported as context.",z,,
+statistics,T_glm_predictors,glm_negativebinomial,const,estimate,0.408473093273502,0.408473427598002,3.34324499973171e-07,8.18473069200955e-07,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"statsmodels' NegativeBinomial family fixes alpha = 1 (theta = 1) AND the GLM scale at 1; R's summary.glm additionally estimates a Pearson dispersion (0.83 here), inflating/deflating every SE by its square root. The like-for-like R reference uses negative.binomial(theta = 1) with dispersion = 1; R's default SEs and MASS::glm.nb (theta estimated) are reported as context.",z,,
+statistics,T_glm_predictors,glm_negativebinomial,const,n_total,120,120,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_negativebinomial,const,p_value,0.0142267986118122,0.0142266919294709,1.06682341301234e-07,7.49868921407646e-06,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"statsmodels' NegativeBinomial family fixes alpha = 1 (theta = 1) AND the GLM scale at 1; R's summary.glm additionally estimates a Pearson dispersion (0.83 here), inflating/deflating every SE by its square root. The like-for-like R reference uses negative.binomial(theta = 1) with dispersion = 1; R's default SEs and MASS::glm.nb (theta estimated) are reported as context.",z,,
+statistics,T_glm_predictors,glm_negativebinomial,const,statistic,2.45148532848516,2.45148802722567,2.69874051017638e-06,1.10085812380268e-06,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"statsmodels' NegativeBinomial family fixes alpha = 1 (theta = 1) AND the GLM scale at 1; R's summary.glm additionally estimates a Pearson dispersion (0.83 here), inflating/deflating every SE by its square root. The like-for-like R reference uses negative.binomial(theta = 1) with dispersion = 1; R's default SEs and MASS::glm.nb (theta estimated) are reported as context.",z,,
+statistics,T_glm_predictors,glm_negativebinomial,x1,ci_high,1.12093919587211,1.1209399245683,7.28696190055445e-07,6.50076042510559e-07,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"statsmodels' NegativeBinomial family fixes alpha = 1 (theta = 1) AND the GLM scale at 1; R's summary.glm additionally estimates a Pearson dispersion (0.83 here), inflating/deflating every SE by its square root. The like-for-like R reference uses negative.binomial(theta = 1) with dispersion = 1; R's default SEs and MASS::glm.nb (theta estimated) are reported as context.",z,,
+statistics,T_glm_predictors,glm_negativebinomial,x1,ci_low,0.632771334571812,0.632772847884921,1.51331310904723e-06,2.39155822520762e-06,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"statsmodels' NegativeBinomial family fixes alpha = 1 (theta = 1) AND the GLM scale at 1; R's summary.glm additionally estimates a Pearson dispersion (0.83 here), inflating/deflating every SE by its square root. The like-for-like R reference uses negative.binomial(theta = 1) with dispersion = 1; R's default SEs and MASS::glm.nb (theta estimated) are reported as context.",z,,
+statistics,T_glm_predictors,glm_negativebinomial,x1,estimate,0.876855265221959,0.876856386226609,1.12100464999543e-06,1.27843586202236e-06,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"statsmodels' NegativeBinomial family fixes alpha = 1 (theta = 1) AND the GLM scale at 1; R's summary.glm additionally estimates a Pearson dispersion (0.83 here), inflating/deflating every SE by its square root. The like-for-like R reference uses negative.binomial(theta = 1) with dispersion = 1; R's default SEs and MASS::glm.nb (theta estimated) are reported as context.",z,,
+statistics,T_glm_predictors,glm_negativebinomial,x1,n_total,120,120,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_negativebinomial,x1,p_value,1.90810100561042e-12,1.90782274373875e-12,2.78261871670175e-16,0.000145831835344144,EXACT,,z,,
+statistics,T_glm_predictors,glm_negativebinomial,x1,statistic,7.04104008367797,7.04106040208351,2.03184055402872e-05,2.88570249081726e-06,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"statsmodels' NegativeBinomial family fixes alpha = 1 (theta = 1) AND the GLM scale at 1; R's summary.glm additionally estimates a Pearson dispersion (0.83 here), inflating/deflating every SE by its square root. The like-for-like R reference uses negative.binomial(theta = 1) with dispersion = 1; R's default SEs and MASS::glm.nb (theta estimated) are reported as context.",z,,
+statistics,T_glm_predictors,glm_negativebinomial,x2,ci_high,1.1270205171107,1.12701950891488,1.00819581994038e-06,8.94567405503013e-07,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"statsmodels' NegativeBinomial family fixes alpha = 1 (theta = 1) AND the GLM scale at 1; R's summary.glm additionally estimates a Pearson dispersion (0.83 here), inflating/deflating every SE by its square root. The like-for-like R reference uses negative.binomial(theta = 1) with dispersion = 1; R's default SEs and MASS::glm.nb (theta estimated) are reported as context.",z,,
+statistics,T_glm_predictors,glm_negativebinomial,x2,ci_low,0.224299486942252,0.224298783791591,7.03150661002239e-07,3.13487413898219e-06,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"statsmodels' NegativeBinomial family fixes alpha = 1 (theta = 1) AND the GLM scale at 1; R's summary.glm additionally estimates a Pearson dispersion (0.83 here), inflating/deflating every SE by its square root. The like-for-like R reference uses negative.binomial(theta = 1) with dispersion = 1; R's default SEs and MASS::glm.nb (theta estimated) are reported as context.",z,,
+statistics,T_glm_predictors,glm_negativebinomial,x2,estimate,0.675660002026478,0.675659146353233,8.55673245037103e-07,1.26642577993476e-06,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"statsmodels' NegativeBinomial family fixes alpha = 1 (theta = 1) AND the GLM scale at 1; R's summary.glm additionally estimates a Pearson dispersion (0.83 here), inflating/deflating every SE by its square root. The like-for-like R reference uses negative.binomial(theta = 1) with dispersion = 1; R's default SEs and MASS::glm.nb (theta estimated) are reported as context.",z,,
+statistics,T_glm_predictors,glm_negativebinomial,x2,n_total,120,120,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_negativebinomial,x2,p_value,0.0033467791066554,0.0033468084806633,2.93740079000855e-08,8.77672208308254e-06,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"statsmodels' NegativeBinomial family fixes alpha = 1 (theta = 1) AND the GLM scale at 1; R's summary.glm additionally estimates a Pearson dispersion (0.83 here), inflating/deflating every SE by its square root. The like-for-like R reference uses negative.binomial(theta = 1) with dispersion = 1; R's default SEs and MASS::glm.nb (theta estimated) are reported as context.",z,,
+statistics,T_glm_predictors,glm_negativebinomial,x2,statistic,2.9339501917199,2.93394746752172,2.72419817992642e-06,9.28508666443815e-07,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"statsmodels' NegativeBinomial family fixes alpha = 1 (theta = 1) AND the GLM scale at 1; R's summary.glm additionally estimates a Pearson dispersion (0.83 here), inflating/deflating every SE by its square root. The like-for-like R reference uses negative.binomial(theta = 1) with dispersion = 1; R's default SEs and MASS::glm.nb (theta estimated) are reported as context.",z,,
+statistics,T_glm_predictors,glm_poisson,const,ci_high,0.171619137793598,0.17161914313315,5.33955199499836e-09,3.11127995252586e-08,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,IRLS standard errors: R's summary.glm uses the working weights of the final iteration (evaluated at the previous iterate) whereas statsmodels evaluates the information at the converged coefficients; relative differences <= 1e-7 with glm.control(epsilon = 1e-14). Coefficients agree to <= 1e-10.,z,,
+statistics,T_glm_predictors,glm_poisson,const,ci_low,-0.333753285524671,-0.333753290864224,5.33955302195466e-09,1.59985029904226e-08,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,IRLS standard errors: R's summary.glm uses the working weights of the final iteration (evaluated at the previous iterate) whereas statsmodels evaluates the information at the converged coefficients; relative differences <= 1e-7 with glm.control(epsilon = 1e-14). Coefficients agree to <= 1e-10.,z,,
+statistics,T_glm_predictors,glm_poisson,const,estimate,-0.0810670738655363,-0.0810670738655368,4.9960036108132e-16,6.16280244566358e-15,EXACT,,z,,
+statistics,T_glm_predictors,glm_poisson,const,n_total,120,120,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_poisson,const,p_value,0.529481411679086,0.529481420379043,8.69995697705406e-09,1.64310901992103e-08,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,IRLS standard errors: R's summary.glm uses the working weights of the final iteration (evaluated at the previous iterate) whereas statsmodels evaluates the information at the converged coefficients; relative differences <= 1e-7 with glm.control(epsilon = 1e-14). Coefficients agree to <= 1e-10.,z,,
+statistics,T_glm_predictors,glm_poisson,const,statistic,-0.628797844034462,-0.628797830747239,1.3287222988545e-08,2.11311522687358e-08,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,IRLS standard errors: R's summary.glm uses the working weights of the final iteration (evaluated at the previous iterate) whereas statsmodels evaluates the information at the converged coefficients; relative differences <= 1e-7 with glm.control(epsilon = 1e-14). Coefficients agree to <= 1e-10.,z,,
+statistics,T_glm_predictors,glm_poisson,x1,ci_high,0.85803647571724,0.858036478249778,2.53253806814513e-09,2.95155058361971e-09,NUMERICALLY_EQUIVALENT,,z,,
+statistics,T_glm_predictors,glm_poisson,x1,ci_low,0.521427940693482,0.521427938160945,2.5325369579221e-09,4.85692606835359e-09,NUMERICALLY_EQUIVALENT,,z,,
+statistics,T_glm_predictors,glm_poisson,x1,estimate,0.689732208205361,0.689732208205362,9.99200722162641e-16,1.44867922691692e-15,EXACT,,z,,
+statistics,T_glm_predictors,glm_poisson,x1,n_total,120,120,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_poisson,x1,p_value,9.57552059318075e-16,9.57553002898539e-16,9.43580464155223e-22,9.85408077985218e-07,EXACT,,z,,
+statistics,T_glm_predictors,glm_poisson,x1,statistic,8.03218068706651,8.0321805662033,1.20863210995026e-07,1.50473720280771e-08,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,IRLS standard errors: R's summary.glm uses the working weights of the final iteration (evaluated at the previous iterate) whereas statsmodels evaluates the information at the converged coefficients; relative differences <= 1e-7 with glm.control(epsilon = 1e-14). Coefficients agree to <= 1e-10.,z,,
+statistics,T_glm_predictors,glm_poisson,x2,ci_high,0.705209127500159,0.705209130878181,3.37802208427718e-09,4.79009975391357e-09,NUMERICALLY_EQUIVALENT,,z,,
+statistics,T_glm_predictors,glm_poisson,x2,ci_low,0.0807745244591336,0.0807745210811123,3.37802130712106e-09,4.18203799990195e-08,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,IRLS standard errors: R's summary.glm uses the working weights of the final iteration (evaluated at the previous iterate) whereas statsmodels evaluates the information at the converged coefficients; relative differences <= 1e-7 with glm.control(epsilon = 1e-14). Coefficients agree to <= 1e-10.,z,,
+statistics,T_glm_predictors,glm_poisson,x2,estimate,0.392991825979646,0.392991825979647,9.99200722162641e-16,2.54254835879052e-15,EXACT,,z,,
+statistics,T_glm_predictors,glm_poisson,x2,n_total,120,120,0,0,EXACT,,z,,
+statistics,T_glm_predictors,glm_poisson,x2,p_value,0.0136238484870339,0.0136238495026026,1.01556870031605e-09,7.45434467785366e-08,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,IRLS standard errors: R's summary.glm uses the working weights of the final iteration (evaluated at the previous iterate) whereas statsmodels evaluates the information at the converged coefficients; relative differences <= 1e-7 with glm.control(epsilon = 1e-14). Coefficients agree to <= 1e-10.,z,,
+statistics,T_glm_predictors,glm_poisson,x2,statistic,2.46703120354826,2.46703117685632,2.66919402136523e-08,1.08194578873838e-08,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,IRLS standard errors: R's summary.glm uses the working weights of the final iteration (evaluated at the previous iterate) whereas statsmodels evaluates the information at the converged coefficients; relative differences <= 1e-7 with glm.control(epsilon = 1e-14). Coefficients agree to <= 1e-10.,z,,
+statistics,ex_categorical_2x2,fishers_exact,all,effect_size,0.242424242424242,0.242424242424242,0,0,EXACT,,odds ratio,odds ratio,none
+statistics,ex_categorical_2x2,fishers_exact,all,estimate,0.242424242424242,0.242424242424242,0,0,EXACT,,odds ratio,odds ratio,none
+statistics,ex_categorical_2x2,fishers_exact,all,n_total,60,60,0,0,EXACT,,odds ratio,odds ratio,none
+statistics,ex_categorical_2x2,fishers_exact,all,p_value,0.0182438502214706,0.0182438502214706,0,0,EXACT,,odds ratio,odds ratio,none
+statistics,ex_categorical_2x2,fishers_exact,all,statistic,0.242424242424242,0.242424242424242,0,0,EXACT,,odds ratio,odds ratio,none
+statistics,ex_contingency_large,chi_square,all,df,4,4,0,0,EXACT,,chi2,Cramer's V,none
+statistics,ex_contingency_large,chi_square,all,effect_size,0.33374538112335,0.33374538112335,0,0,EXACT,,chi2,Cramer's V,none
+statistics,ex_contingency_large,chi_square,all,n_total,101,101,0,0,EXACT,,chi2,Cramer's V,none
+statistics,ex_contingency_large,chi_square,all,p_value,0.0001593417490746,0.0001593417490746,0,0,EXACT,,chi2,Cramer's V,none
+statistics,ex_contingency_large,chi_square,all,statistic,22.4999678430763,22.4999678430763,0,0,EXACT,,chi2,Cramer's V,none
+statistics,ex_grouped_within_dose,welch_t,0.5:VC|OJ,adjusted_p_value,0.0085266265470335,0.0085266265470335,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_grouped_within_dose,welch_t,0.5:VC|OJ,ci_high,-1.16014211216371,-1.1601421121637,1.02140518265514e-14,8.80413849256953e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_grouped_within_dose,welch_t,0.5:VC|OJ,ci_low,-5.8278578878363,-5.8278578878363,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_grouped_within_dose,welch_t,0.5:VC|OJ,df,17.3557055256989,17.3557055256989,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_grouped_within_dose,welch_t,0.5:VC|OJ,effect_size,-1.35076865751551,-1.35076865751551,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_grouped_within_dose,welch_t,0.5:VC|OJ,estimate,-3.494,-3.494,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_grouped_within_dose,welch_t,0.5:VC|OJ,n_total,20,20,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_grouped_within_dose,welch_t,0.5:VC|OJ,p_value,0.0056844176980223,0.0056844176980223,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_grouped_within_dose,welch_t,0.5:VC|OJ,statistic,-3.15366394626085,-3.15366394626085,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_grouped_within_dose,welch_t,1:VC|OJ,adjusted_p_value,1.24715431429426e-06,1.24715431429426e-06,0,0,EXACT,,,,
+statistics,ex_grouped_within_dose,welch_t,1:VC|OJ,ci_high,-5.18522885656339,-5.18522885656338,1.06581410364015e-14,2.05548131649205e-15,EXACT,,,,
+statistics,ex_grouped_within_dose,welch_t,1:VC|OJ,ci_low,-8.77477114343662,-8.77477114343662,0,0,EXACT,,,,
+statistics,ex_grouped_within_dose,welch_t,1:VC|OJ,df,15.7282547284737,15.7282547284737,0,0,EXACT,,,,
+statistics,ex_grouped_within_dose,welch_t,1:VC|OJ,effect_size,-3.53621424230243,-3.53621424230243,0,0,EXACT,,,,
+statistics,ex_grouped_within_dose,welch_t,1:VC|OJ,estimate,-6.98,-6.98,0,0,EXACT,,,,
+statistics,ex_grouped_within_dose,welch_t,1:VC|OJ,n_total,20,20,0,0,EXACT,,,,
+statistics,ex_grouped_within_dose,welch_t,1:VC|OJ,p_value,4.15718104764754e-07,4.15718104764755e-07,1.00585162486448e-21,2.41955212759778e-15,EXACT,,,,
+statistics,ex_grouped_within_dose,welch_t,1:VC|OJ,statistic,-8.25606316829664,-8.25606316829664,0,0,EXACT,,,,
+statistics,ex_grouped_within_dose,welch_t,2:VC|OJ,adjusted_p_value,0.225794132466188,0.22579413246619,1.99840144432528e-15,8.85054639152113e-15,EXACT,,,,
+statistics,ex_grouped_within_dose,welch_t,2:VC|OJ,ci_high,0.856129164972638,0.856129164972645,6.99440505513849e-15,8.16980117172153e-15,EXACT,,,,
+statistics,ex_grouped_within_dose,welch_t,2:VC|OJ,ci_low,-3.31012916497265,-3.31012916497265,0,0,EXACT,,,,
+statistics,ex_grouped_within_dose,welch_t,2:VC|OJ,df,13.1787479152218,13.1787479152218,0,0,EXACT,,,,
+statistics,ex_grouped_within_dose,welch_t,2:VC|OJ,effect_size,-0.54428122577052,-0.544281225770517,2.99760216648792e-15,5.5074509730596e-15,EXACT,,,,
+statistics,ex_grouped_within_dose,welch_t,2:VC|OJ,estimate,-1.22700000000001,-1.227,9.99200722162641e-15,8.14344516839961e-15,EXACT,,,,
+statistics,ex_grouped_within_dose,welch_t,2:VC|OJ,n_total,20,20,0,0,EXACT,,,,
+statistics,ex_grouped_within_dose,welch_t,2:VC|OJ,p_value,0.225794132466188,0.22579413246619,1.99840144432528e-15,8.85054639152113e-15,EXACT,,,,
+statistics,ex_grouped_within_dose,welch_t,2:VC|OJ,statistic,-1.27074319409831,-1.27074319409831,0,0,EXACT,,,,
+statistics,ex_nonparametric,mann_whitney,A|B,effect_size,-0.375,-0.375,0,0,EXACT,,U,rank-biserial,none
+statistics,ex_nonparametric,mann_whitney,A|B,n_total,40,40,0,0,EXACT,,U,rank-biserial,none
+statistics,ex_nonparametric,mann_whitney,A|B,p_value,0.0438704853169907,0.0438704853169907,0,0,EXACT,,U,rank-biserial,none
+statistics,ex_nonparametric,mann_whitney,A|B,statistic,125,125,0,0,EXACT,,U,rank-biserial,none
+statistics,ex_one_way_anova,one_way_anova,all,df,2,2,0,0,EXACT,,F,eta-squared,none
+statistics,ex_one_way_anova,one_way_anova,all,df2,45,45,0,0,EXACT,,F,eta-squared,none
+statistics,ex_one_way_anova,one_way_anova,all,effect_size,0.6226242921047,0.622624292104699,9.99200722162641e-16,1.60482129405034e-15,EXACT,,F,eta-squared,none
+statistics,ex_one_way_anova,one_way_anova,all,n_total,48,48,0,0,EXACT,,F,eta-squared,none
+statistics,ex_one_way_anova,one_way_anova,all,p_value,3.00202058361333e-10,3.00202058361335e-10,2.016252743098e-24,6.7163188490572e-15,EXACT,,F,eta-squared,none
+statistics,ex_one_way_anova,one_way_anova,all,statistic,37.1222796784853,37.1222796784853,0,0,EXACT,,F,eta-squared,none
+statistics,ex_one_way_anova,welch_t,Low|High,adjusted_p_value,5.54356409578787e-09,5.54356409578794e-09,7.03103520670074e-23,1.26832396725475e-14,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Low|High,ci_high,-1.89581764951583,-1.89581764951583,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Low|High,ci_low,-3.09218235048417,-3.09218235048417,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Low|High,df,29.6092599230521,29.6092599230521,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Low|High,effect_size,-2.93618191203827,-2.93618191203827,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Low|High,estimate,-2.494,-2.494,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Low|High,n_total,32,32,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Low|High,p_value,1.84785469859596e-09,1.84785469859598e-09,1.98523347012727e-23,1.07434500755696e-14,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Low|High,statistic,-8.51955526741882,-8.51955526741881,1.06581410364015e-14,1.25102082231466e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Low|Medium,adjusted_p_value,0.0371406173918314,0.0371406173918316,2.0122792321331e-16,5.41800156659663e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Low|Medium,ci_high,-0.0431502460300285,-0.0431502460300276,8.95117313604032e-16,2.07441995343692e-14,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Low|Medium,ci_low,-1.31184975396997,-1.31184975396997,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Low|Medium,df,29.9971671767587,29.9971671767587,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Low|Medium,effect_size,-0.751730131052502,-0.751730131052501,9.99200722162641e-16,1.32920137279006e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Low|Medium,estimate,-0.6775,-0.677499999999999,9.99200722162641e-16,1.4748350142622e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Low|Medium,n_total,32,32,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Low|Medium,p_value,0.0371406173918314,0.0371406173918316,2.0122792321331e-16,5.41800156659663e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Low|Medium,statistic,-2.1812021834982,-2.18120218349819,1.02140518265514e-14,4.68276251684757e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Medium|High,adjusted_p_value,1.38215332324025e-06,1.38215332324025e-06,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Medium|High,ci_high,-1.21499648868991,-1.2149964886899,9.99200722162641e-15,8.22389802327779e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Medium|High,ci_low,-2.4180035113101,-2.4180035113101,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Medium|High,df,29.542415118866,29.5424151188661,9.9475983006414e-14,3.36722582111737e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Medium|High,effect_size,-2.12695897584545,-2.12695897584545,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Medium|High,estimate,-1.8165,-1.8165,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Medium|High,n_total,32,32,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Medium|High,p_value,9.21435548826833e-07,9.21435548826832e-07,9.52912065661088e-22,1.03416030223094e-15,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_one_way_anova,welch_t,Medium|High,statistic,-6.17153333448218,-6.17153333448218,0,0,EXACT,,t,Hedges' g,benjamini_hochberg
+statistics,ex_repeated_measures,rm_anova,all,df,2,2,0,0,EXACT,,F,,none
+statistics,ex_repeated_measures,rm_anova,all,df2,22,22,0,0,EXACT,,F,,none
+statistics,ex_repeated_measures,rm_anova,all,n_total,36,36,0,0,EXACT,,F,,none
+statistics,ex_repeated_measures,rm_anova,all,p_value,2.35822256789772e-10,2.35822256789765e-10,7.03103520670074e-24,2.98149771883859e-14,EXACT,,F,,none
+statistics,ex_repeated_measures,rm_anova,all,statistic,71.5300768653995,71.5300768653997,2.1316282072803e-13,2.98004461995959e-15,EXACT,,F,,none
+statistics,ex_scatter_correlation,pearson,all,ci_high,0.921197162184763,0.921197162184763,0,0,EXACT,,r,R-squared,none
+statistics,ex_scatter_correlation,pearson,all,ci_low,0.771934493053269,0.771934493053268,9.99200722162641e-16,1.29441128898186e-15,EXACT,,r,R-squared,none
+statistics,ex_scatter_correlation,pearson,all,df,48,48,0,0,EXACT,,r,R-squared,none
+statistics,ex_scatter_correlation,pearson,all,effect_size,0.747403483749762,0.747403483749761,9.99200722162641e-16,1.33689599244253e-15,EXACT,,r,R-squared,none
+statistics,ex_scatter_correlation,pearson,all,estimate,0.864525004698974,0.864525004698974,0,0,EXACT,,r,R-squared,none
+statistics,ex_scatter_correlation,pearson,all,n_total,50,50,0,0,EXACT,,r,R-squared,none
+statistics,ex_scatter_correlation,pearson,all,p_value,5.99303826558501e-16,5.99303826558538e-16,3.69778549322349e-29,6.17013496219068e-14,EXACT,,r,R-squared,none
+statistics,ex_scatter_correlation,pearson,all,statistic,0.864525004698974,0.864525004698974,0,0,EXACT,,r,R-squared,none
+statistics,ex_survival_km,logrank,all,df,1,1,0,0,EXACT,,chi2,,none
+statistics,ex_survival_km,logrank,all,n_total,80,80,0,0,EXACT,,chi2,,none
+statistics,ex_survival_km,logrank,all,p_value,0.0342120479224935,0.0342120479224936,9.71445146547012e-17,2.83948259615383e-15,EXACT,,chi2,,none
+statistics,ex_survival_km,logrank,all,statistic,4.48407538647675,4.48407538647675,0,0,EXACT,,chi2,,none
+statistics,ex_two_group_paired,paired_t,Pre|Post,ci_high,-0.667105673366528,-0.667105673366528,0,0,EXACT,,t,Cohen's dz,none
+statistics,ex_two_group_paired,paired_t,Pre|Post,ci_low,-1.18836099330014,-1.18836099330014,0,0,EXACT,,t,Cohen's dz,none
+statistics,ex_two_group_paired,paired_t,Pre|Post,df,14,14,0,0,EXACT,,t,Cohen's dz,none
+statistics,ex_two_group_paired,paired_t,Pre|Post,effect_size,-1.97124739392543,-1.97124739392543,0,0,EXACT,,t,Cohen's dz,none
+statistics,ex_two_group_paired,paired_t,Pre|Post,estimate,-0.927733333333333,-0.927733333333333,0,0,EXACT,,t,Cohen's dz,none
+statistics,ex_two_group_paired,paired_t,Pre|Post,n_total,15,15,0,0,EXACT,,t,Cohen's dz,none
+statistics,ex_two_group_paired,paired_t,Pre|Post,p_value,2.34972522589833e-06,2.34972522589833e-06,0,0,EXACT,,t,Cohen's dz,none
+statistics,ex_two_group_paired,paired_t,Pre|Post,statistic,-7.63460832792795,-7.63460832792795,0,0,EXACT,,t,Cohen's dz,none
+statistics,ex_two_group_unpaired,welch_t,Control|Treated,ci_high,-0.414579599742739,-0.41457959974274,9.99200722162641e-16,2.41015410015996e-15,EXACT,,t,Hedges' g,none
+statistics,ex_two_group_unpaired,welch_t,Control|Treated,ci_low,-1.76186484470171,-1.76186484470171,0,0,EXACT,,t,Hedges' g,none
+statistics,ex_two_group_unpaired,welch_t,Control|Treated,df,33.2018308443562,33.2018308443562,0,0,EXACT,,t,Hedges' g,none
+statistics,ex_two_group_unpaired,welch_t,Control|Treated,effect_size,-1.07094611058816,-1.07094611058816,0,0,EXACT,,t,Hedges' g,none
+statistics,ex_two_group_unpaired,welch_t,Control|Treated,estimate,-1.08822222222222,-1.08822222222222,0,0,EXACT,,t,Hedges' g,none
+statistics,ex_two_group_unpaired,welch_t,Control|Treated,n_total,36,36,0,0,EXACT,,t,Hedges' g,none
+statistics,ex_two_group_unpaired,welch_t,Control|Treated,p_value,0.0024046908290635,0.0024046908290634,9.97465998686664e-17,4.1480010096563e-14,EXACT,,t,Hedges' g,none
+statistics,ex_two_group_unpaired,welch_t,Control|Treated,statistic,-3.28585738475911,-3.28585738475912,1.02140518265514e-14,3.1084890883967e-15,EXACT,,t,Hedges' g,none
+statistics,ex_two_way_anova,two_way_anova,genotype,df,1,1,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,ex_two_way_anova,two_way_anova,genotype,df2,28,28,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,ex_two_way_anova,two_way_anova,genotype,effect_size,0.363427844240254,0.363427844240253,9.99200722162641e-16,2.74937855752762e-15,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,ex_two_way_anova,two_way_anova,genotype,n_total,32,32,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,ex_two_way_anova,two_way_anova,genotype,p_value,2.5579796976487e-10,2.55797969764868e-10,2.016252743098e-24,7.8822077632256e-15,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,ex_two_way_anova,two_way_anova,genotype,statistic,91.4473264730247,91.4473264730247,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,ex_two_way_anova,two_way_anova,genotype x treatment,df,1,1,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,ex_two_way_anova,two_way_anova,genotype x treatment,df2,28,28,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,ex_two_way_anova,two_way_anova,genotype x treatment,effect_size,0.111818833179634,0.111818833179634,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,ex_two_way_anova,two_way_anova,genotype x treatment,n_total,32,32,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,ex_two_way_anova,two_way_anova,genotype x treatment,p_value,1.20734878805826e-05,1.2073487880583e-05,4.01493616998538e-19,3.32541533125845e-14,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,ex_two_way_anova,two_way_anova,genotype x treatment,statistic,28.1363508758862,28.1363508758861,9.9475983006414e-14,3.53549696068328e-15,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,ex_two_way_anova,two_way_anova,treatment,df,1,1,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,ex_two_way_anova,two_way_anova,treatment,df2,28,28,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,ex_two_way_anova,two_way_anova,treatment,effect_size,0.4134763718895,0.413476371889501,9.99200722162641e-16,2.41658481619276e-15,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,ex_two_way_anova,two_way_anova,treatment,n_total,32,32,0,0,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,ex_two_way_anova,two_way_anova,treatment,p_value,6.20466923009807e-11,6.20466923009785e-11,2.19719850209398e-24,3.54120166702142e-14,EXACT,,F,"partial eta-squared (approx, eta-sq of total SS)",none
+statistics,ex_two_way_anova,two_way_anova,treatment,statistic,104.04075903459,104.040759034591,1.00897068477934e-12,9.69784048234293e-15,NUMERICALLY_EQUIVALENT,,F,"partial eta-squared (approx, eta-sq of total SS)",none

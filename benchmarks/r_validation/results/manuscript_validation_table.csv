@@ -1,0 +1,10 @@
+component,n_comparisons,EXACT,NUMERICALLY_EQUIVALENT,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,METHOD_MISMATCH,UPSTREAM_INPUT_DIFFERENCE,FAIL,NEEDS_REVIEW,NOT_COMPARED,max_abs_error_among_agreeing
+statistics,1039,1000,16,23,0,0,0,0,0,2.21e-08
+multiple_testing,1176,1176,0,0,0,0,0,0,0,9.99e-16
+transformations,88,77,4,7,0,0,0,0,0,1.02e-10
+qc_metrics,112,101,7,0,0,0,0,0,4,3.05e-05
+pca,15,10,0,0,0,5,0,0,0,3.02e-13
+clustering,31,24,0,0,0,7,0,0,0,1.07e-13
+differential_exact,100,47,6,16,0,31,0,0,0,7.98e-10
+plot_derived,35,27,1,7,0,0,0,0,0,2.82e-09
+rsem_characterisation,29,29,0,0,0,0,0,0,0,

@@ -1,0 +1,25 @@
+id,kind,implementation,formula,conventions_defaults,R_reference,validation_class,datasets
+total_sum,normalization,matrix_workflow/normalization.py::total_sum,x / colsum * scale_factor (nansum; zero totals -> NaN),scale_factor=1e6,"sweep(m,2,colSums,'/')*1e6",A,"W,X,Z,RSEM"
+median_scale,normalization,::median_scale,x / (colmedian / median(colmedians)); median 0 -> NaN,,manual,A,"W,X,Z,RSEM"
+upper_quartile,normalization,::upper_quartile,x / (colQ75 / median(colQ75)); numpy nanpercentile linear (= R type 7),,quantile(type=7),A,"W,X,Z,RSEM"
+quantile,normalization,::quantile_normalize,"sort columns, row means of sorted matrix, map back by ordinal rank (argsort of argsort)",ties broken by row order; NaN sorted last,limma::normalizeQuantiles (ties averaged) + base-R ordinal variant,A vs ordinal variant; convention difference vs canonical,"W,X,Y,Z"
+zscore/row_zscore/column_zscore/global_zscore,scaling,::zscore,(x-mean)/sd with ddof (default 0); sd 0 or non-finite -> 1,nan-aware,manual,A,"W,X,Y,Z"
+standard_scale,scaling,::standard_scale,"= zscore(axis=column, ddof=0)",,manual,A,"W,Y"
+robust_scale,scaling,::robust_scale,"(x-median)/IQR (Q3-Q1, type 7); IQR 0 -> 1; axis row/column/global",default axis column,manual,A,"W,X,Y,Z"
+center,centering,::center,subtract sample_median | feature_mean | feature_median | grand_median,,manual,A,"W,X,Y"
+internal_standard_features / control_features,normalization,::internal_standard_features,divide or subtract per-sample median/mean of selected feature rows,CV>0.5 warning,manual,A,W
+internal_standard_columns,normalization,::internal_standard_columns,divide or subtract per-feature median/mean across selected IS columns,,manual,A,W
+reference_sample,normalization,::reference_sample,divide or subtract a reference column (or group mean),zero ref -> NaN,manual,A,W
+cpm,normalization,::cpm,"x/lib*1e6; log: log2((x+ps)/(lib+2ps)*1e6), ps = prior*lib/mean(lib)",prior_count default 0.5 (edgeR default is 2),"edgeR::cpm(log=,prior.count=)",A,"W,RSEM"
+tmm_norm_factors / tmm,normalization,::tmm_norm_factors,Robinson-Oshlack TMM: ref = sample with Q75(CPM of positive values) closest to mean; M/A trims 0.3/0.05 with ordinal ranks; weights 1/asymptotic var; factors / geometric mean,"edgeR: Q75 over all genes (zeros included), average ranks, Acutoff, logR<1e-6 shortcut",edgeR::calcNormFactors(method='TMM'),A target; documented reference-choice difference,"W,RSEM"
+voom (matrix),normalization,::voom,"log2-CPM on TMM effective libraries, prior 0.5 (= limma voom E)",weights NOT applied to the matrix,limma::voom()$E,A (given equal TMM factors),"W,RSEM"
+voom_weights,weights,::voom_weights,"lowess(sqrt(sd_feature) vs mean_feature, frac 0.5); w = 1/trend^4 per feature","per-feature weights, no design, raw SD not residual SD",limma::voom()$weights (per observation from fitted values),B (METHOD_MISMATCH: approximation),W (not exported by app)
+log2 / ln / log10,transform,matrix_workflow/preprocessing.py::_log,log_b(x + pseudocount); non-finite -> NaN,pseudocount default 1.0; negative warning,log2(m+1),A,"W,X,Y,RSEM"
+arcsinh,transform,::arcsinh,asinh(x / cofactor),cofactor default 5,asinh(m/5),A,"W,X,Y"
+sqrt,transform,::sqrt,"sqrt(clip(x,0))",,"sqrt(pmax(m,0))",A,"W,X"
+winsorize,transform,::winsorize,"clip to global [P_lower, P_upper] (nanpercentile, type 7)",1st/99th default; GLOBAL not per-feature,quantile(type=7),A,"W,X"
+impute,impute,::impute,feature_median | sample_median | constant,,manual,A,X
+filter,filter,::filter_features,"max_missing_frac, max_zero_frac, drop_constant (nanstd>0), min_variance, min_total, top_variable_n",,manual,A,"W,X"
+heatmap scale_matrix,plot scaling,clustering.py::scale_matrix,"row/column z-score ddof 0 (sd 0 -> 1), center_rows, log=log1p(clip>=0), log_zscore",,manual,A,Y
+diagnose_matrix (QC),qc,matrix_workflow/qc_diagnostics.py::diagnose_matrix,"missing, zero/negative fractions, min/max/mean/median, integer_like, per-feature var (ddof 0), col sums/medians, skew (biased g1), MAD outliers (raw MAD, k=3.5)",,manual R,A,"W,X,Y,Z,RSEM"
+_suspect_type / _warnings,qc rules,qc_diagnostics.py,"rule thresholds: skew>1.5, max>=100 (count_like), max<40, negatives; totals ratio>3; zero_fraction>0.3",categorical rule,inputs compared; rule audited,audited,"W,X,Y,Z,RSEM"

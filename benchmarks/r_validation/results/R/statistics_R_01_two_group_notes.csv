@@ -1,0 +1,6 @@
+"dataset_id","test_id","comparison","note"
+"A_two_group_normal","mann_whitney","ctrl|treat","scipy-matched exact=FALSE (ties=FALSE); R default exact=TRUE"
+"B_two_group_unequal_var","mann_whitney","ctrl|treat","scipy-matched exact=FALSE (ties=FALSE); R default exact=TRUE"
+"C_two_group_ties","mann_whitney","ctrl|treat","scipy-matched exact=FALSE (ties=TRUE); R default exact=FALSE"
+"D_two_group_small_n","mann_whitney","ctrl|treat","scipy-matched exact=TRUE (ties=FALSE); R default exact=TRUE"
+"E_two_group_one_constant","mann_whitney","ctrl|treat","scipy-matched exact=FALSE (ties=TRUE); R default exact=FALSE"

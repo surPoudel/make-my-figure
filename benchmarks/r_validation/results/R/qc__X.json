@@ -1,0 +1,34 @@
+{
+  "n_features": 300,
+  "n_samples": 8,
+  "missing_values": 84,
+  "zero_fraction": 0,
+  "negative_value_fraction": 0,
+  "min": 49.57915322,
+  "max": 674536.966,
+  "mean": 6829.60627969074,
+  "median": 3210.5989365,
+  "integer_like": false,
+  "variance_summary": {
+    "min": 788090.235277709,
+    "median": 27013008.4376577,
+    "max": 49133588356.315
+  },
+  "sample_total_summary": {
+    "min": 1168046.30838964,
+    "median": 1868383.36074699,
+    "max": 3127480.80368863
+  },
+  "sample_median_summary": {
+    "min": 2001.043507,
+    "median": 3320.0763225,
+    "max": 4320.677328
+  },
+  "skewness_summary": {
+    "overall": 23.5448925747005,
+    "median_per_sample": 4.94103064219791
+  },
+  "outlier_samples": [],
+  "outlier_features": ["prot003", "prot005", "prot007", "prot008", "prot009", "prot018", "prot021", "prot022", "prot028", "prot044", "prot048", "prot061", "prot067", "prot068", "prot071", "prot075", "prot079", "prot082", "prot088", "prot093", "prot095", "prot101", "prot105", "prot111", "prot113", "prot114", "prot117", "prot119", "prot124", "prot125", "prot126", "prot133", "prot138", "prot146", "prot148", "prot150", "prot166", "prot167", "prot189", "prot193", "prot194", "prot197", "prot206", "prot212", "prot223", "prot229", "prot240", "prot245", "prot248", "prot252"],
+  "looks_log_scale": false
+}

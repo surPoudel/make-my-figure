@@ -1,0 +1,53 @@
+{
+ "n_features": 200,
+ "n_samples": 10,
+ "missing_values": 0,
+ "zero_fraction": 0.0,
+ "negative_value_fraction": 0.4905,
+ "integer_like": false,
+ "min": -5.045012768,
+ "max": 5.814235579,
+ "mean": 0.08786828083608271,
+ "median": 0.036325269945,
+ "variance_summary": {
+  "min": 0.23723618872317714,
+  "median": 1.8216074134685165,
+  "max": 5.446767005401385
+ },
+ "skewness_summary": {
+  "overall": 0.0828190298574894,
+  "median_per_sample": 0.11597025352089922
+ },
+ "library_size_or_column_sum_summary": {
+  "min": 0.9239470442724009,
+  "median": 16.562371214050494,
+  "max": 35.53806986771001
+ },
+ "sample_total_summary": {
+  "min": 0.9239470442724009,
+  "median": 16.562371214050494,
+  "max": 35.53806986771001
+ },
+ "sample_median_summary": {
+  "min": -0.089732853295,
+  "median": 0.026855421218,
+  "max": 0.1432036014
+ },
+ "outlier_samples": [],
+ "outlier_features": [
+  "f008",
+  "f018",
+  "f092",
+  "f115",
+  "f168",
+  "f184",
+  "f198"
+ ],
+ "suspected_data_type": "log_like_or_normalized",
+ "warnings": [
+  "Negative values present \u2014 log transforms and ratio fold-change are not valid without an explicit, justified offset.",
+  "Sample totals differ substantially \u2014 consider total-sum or median scaling before comparing samples.",
+  "Values may already be log-transformed/normalized \u2014 avoid re-logging; consider only centering/scaling."
+ ],
+ "_looks_log_scale": true
+}

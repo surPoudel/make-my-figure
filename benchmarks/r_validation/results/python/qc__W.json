@@ -1,0 +1,97 @@
+{
+ "n_features": 400,
+ "n_samples": 12,
+ "missing_values": 0,
+ "zero_fraction": 0.040625,
+ "negative_value_fraction": 0.0,
+ "integer_like": true,
+ "min": 0.0,
+ "max": 4377.0,
+ "mean": 80.14020833333333,
+ "median": 22.0,
+ "variance_summary": {
+  "min": 0.0,
+  "median": 192.67708333333331,
+  "max": 1567845.909722222
+ },
+ "skewness_summary": {
+  "overall": 8.566284970688384,
+  "median_per_sample": 6.507397462123565
+ },
+ "library_size_or_column_sum_summary": {
+  "min": 19774.0,
+  "median": 33452.5,
+  "max": 41565.0
+ },
+ "sample_total_summary": {
+  "min": 19774.0,
+  "median": 33452.5,
+  "max": 41565.0
+ },
+ "sample_median_summary": {
+  "min": 14.0,
+  "median": 23.5,
+  "max": 30.5
+ },
+ "outlier_samples": [
+  "B_11"
+ ],
+ "outlier_features": [
+  "gene0000",
+  "gene0001",
+  "gene0004",
+  "gene0005",
+  "gene0006",
+  "gene0007",
+  "gene0008",
+  "gene0013",
+  "gene0015",
+  "gene0016",
+  "gene0017",
+  "gene0019",
+  "gene0021",
+  "gene0022",
+  "gene0027",
+  "gene0028",
+  "gene0032",
+  "gene0033",
+  "gene0035",
+  "gene0039",
+  "gene0041",
+  "gene0043",
+  "gene0047",
+  "gene0049",
+  "gene0050",
+  "gene0051",
+  "gene0052",
+  "gene0055",
+  "gene0057",
+  "gene0059",
+  "gene0062",
+  "gene0066",
+  "gene0071",
+  "gene0072",
+  "gene0073",
+  "gene0079",
+  "gene0084",
+  "gene0086",
+  "gene0089",
+  "gene0092",
+  "gene0094",
+  "gene0099",
+  "gene0105",
+  "gene0111",
+  "gene0115",
+  "gene0116",
+  "gene0118",
+  "gene0119",
+  "gene0131",
+  "gene0140"
+ ],
+ "suspected_data_type": "count_like",
+ "warnings": [
+  "Strongly right-skewed values \u2014 consider a log/arcsinh transform (the choice depends on your data type).",
+  "Values look count-like (non-negative, integer, right-skewed)."
+ ],
+ "_looks_log_scale": false
+}

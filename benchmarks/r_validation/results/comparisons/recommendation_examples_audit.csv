@@ -1,0 +1,39 @@
+example,intended_plot_type,detected_schema,top1,top1_kind,intended_rank,n_recommendations,in_top3,notes
+bar_error,barplot_with_error_bar,generic_long,boxplot_or_violin_with_points,direct,3.0,5,True,
+beeswarm,beeswarm_plot,generic_long,boxplot_or_violin_with_points,direct,,5,False,
+bland_altman,bland_altman_plot,unknown,scatterplot_with_regression,direct,,1,False,Could not confidently detect a schema — pick a plot type manually or check column headers.
+box_violin,boxplot_or_violin_with_points,generic_long,boxplot_or_violin_with_points,direct,1.0,5,True,
+calibration,calibration_plot,classification,roc_curve,direct,3.0,4,True,
+confusion_matrix,confusion_matrix,unknown,barplot_with_error_bar,transform,,1,False,Could not confidently detect a schema — pick a plot type manually or check column headers.
+dendrogram,hierarchical_dendrogram,expression_like_matrix,heatmap_clustered_matrix,direct,,5,False,"For group comparison plots, use 'Define groups' to tag samples, then box/violin/bar plots become available.; Make My Figure does not run differential-expression"
+dose_response,dose_response_curve,dose_response,dose_response_curve,direct,1.0,2,True,
+dot_strip,dot_strip_plot,generic_long,boxplot_or_violin_with_points,direct,,5,False,
+embedding,embedding_scatter,expression_like_matrix,heatmap_clustered_matrix,direct,,6,False,"For group comparison plots, use 'Define groups' to tag samples, then box/violin/bar plots become available.; Make My Figure does not run differential-expression"
+enrichment,enrichment_dotplot,enrichment,enrichment_dotplot,direct,1.0,5,True,
+forest,forest_plot,expression_like_matrix,heatmap_clustered_matrix,direct,,6,False,"For group comparison plots, use 'Define groups' to tag samples, then box/violin/bar plots become available.; Make My Figure does not run differential-expression"
+grouped_bar,grouped_barplot_with_error_bar,paired,paired_slopegraph,direct,,3,False,
+heatmap,heatmap_clustered_matrix,expression_like_matrix,heatmap_clustered_matrix,direct,1.0,5,True,"For group comparison plots, use 'Define groups' to tag samples, then box/violin/bar plots become available.; Make My Figure does not run differential-expression"
+hier_clustering,hierarchical_clustering,expression_like_matrix,heatmap_clustered_matrix,direct,,5,False,"For group comparison plots, use 'Define groups' to tag samples, then box/violin/bar plots become available.; Make My Figure does not run differential-expression"
+histogram,histogram_distribution,paired,paired_slopegraph,direct,,3,False,
+kaplan_meier,kaplan_meier_survival_curve,survival,kaplan_meier_survival_curve,direct,1.0,2,True,
+line_timecourse,lineplot_timecourse_with_error_band,generic_long,boxplot_or_violin_with_points,direct,,6,False,
+lollipop,lollipop_mutation_plot,mutation_matrix,oncoprint_mutation_heatmap,direct,,2,False,
+ma_plot,ma_plot,precomputed_differential,volcano_plot,direct,2.0,5,True,
+manhattan,manhattan_plot,gwas,manhattan_plot,direct,1.0,3,True,
+network,network_graph,network_edge_list,network_graph,direct,1.0,2,True,
+oncoprint,oncoprint_mutation_heatmap,mutation_matrix,oncoprint_mutation_heatmap,direct,1.0,2,True,
+paired_slope,paired_slopegraph,paired,paired_slopegraph,direct,1.0,3,True,
+pca,pca_scatter_from_matrix,expression_like_matrix,heatmap_clustered_matrix,direct,2.0,5,True,"For group comparison plots, use 'Define groups' to tag samples, then box/violin/bar plots become available.; Make My Figure does not run differential-expression"
+precision_recall,precision_recall_curve,classification,roc_curve,direct,2.0,4,True,
+qq,qq_plot,unknown,,,,0,False,Could not confidently detect a schema — pick a plot type manually or check column headers.
+raincloud,raincloud_plot,generic_long,boxplot_or_violin_with_points,direct,,5,False,
+ridge,ridge_or_density_plot,generic_long,boxplot_or_violin_with_points,direct,2.0,5,True,
+roc,roc_curve,classification,roc_curve,direct,1.0,4,True,
+sankey,sankey_plot,generic_long,boxplot_or_violin_with_points,direct,,5,False,
+scatter,scatterplot_with_regression,generic_long,boxplot_or_violin_with_points,direct,5.0,6,False,
+spider,spider_plot,generic_long,boxplot_or_violin_with_points,direct,,6,False,
+stacked,stacked_bar_composition,generic_long,boxplot_or_violin_with_points,direct,,5,False,
+swimmer,swimmer_plot,survival,kaplan_meier_survival_curve,direct,,2,False,
+upset,upset_plot,unknown,barplot_with_error_bar,transform,,1,False,Could not confidently detect a schema — pick a plot type manually or check column headers.
+volcano,volcano_plot,precomputed_differential,volcano_plot,direct,1.0,5,True,
+waterfall,waterfall_plot,generic_long,boxplot_or_violin_with_points,direct,,6,False,

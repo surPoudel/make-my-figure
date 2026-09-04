@@ -1,0 +1,34 @@
+{
+ "dataset": "AA_roc_tied_scores.csv (200 rows, integer scores, 40% positives)",
+ "auc_by_row_order_5_shuffles": [
+  0.7337,
+  0.713,
+  0.7067,
+  0.7117,
+  0.7265
+ ],
+ "auc_mann_whitney_tie_corrected": 0.7254419918401507,
+ "ap_by_row_order_5_shuffles": [
+  0.6574,
+  0.6185,
+  0.6295,
+  0.6164,
+  0.6313
+ ],
+ "after_fix_auc_5_shuffles": [
+  0.7254,
+  0.7254,
+  0.7254,
+  0.7254,
+  0.7254
+ ],
+ "after_fix_ap_5_shuffles": [
+  0.5872,
+  0.5872,
+  0.5872,
+  0.5872,
+  0.5872
+ ],
+ "pROC_auc": 0.725442,
+ "fix": "plots/roc.py::_roc and plots/precision_recall.py::_pr_from_scores collapse tied scores to one operating point (stable sort); regression test tests/test_r_validation_regressions.py::test_roc_auc_and_ap_do_not_depend_on_row_order_with_tied_scores"
+}

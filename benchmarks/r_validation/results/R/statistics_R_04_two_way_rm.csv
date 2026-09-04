@@ -1,0 +1,88 @@
+"dataset_id","test_id","comparison","quantity","value"
+"J_two_way_balanced","two_way_anova","genotype","statistic",34.4739991112547
+"J_two_way_balanced","two_way_anova","genotype","df",1
+"J_two_way_balanced","two_way_anova","genotype","df2",28
+"J_two_way_balanced","two_way_anova","genotype","p_value",2.58770250519621e-06
+"J_two_way_balanced","two_way_anova","genotype","effect_size",0.267501955032515
+"J_two_way_balanced","two_way_anova","genotype","extra.sum_sq",77.3312286572979
+"J_two_way_balanced","two_way_anova","genotype","n_total",32
+"J_two_way_balanced","two_way_anova","treatment","statistic",63.4114190487307
+"J_two_way_balanced","two_way_anova","treatment","df",1
+"J_two_way_balanced","two_way_anova","treatment","df2",28
+"J_two_way_balanced","two_way_anova","treatment","p_value",1.13219051190461e-08
+"J_two_way_balanced","two_way_anova","treatment","effect_size",0.492042669960611
+"J_two_way_balanced","two_way_anova","treatment","extra.sum_sq",142.242938804864
+"J_two_way_balanced","two_way_anova","treatment","n_total",32
+"J_two_way_balanced","two_way_anova","genotype x treatment","statistic",2.98840299419806
+"J_two_way_balanced","two_way_anova","genotype x treatment","df",1
+"J_two_way_balanced","two_way_anova","genotype x treatment","df2",28
+"J_two_way_balanced","two_way_anova","genotype x treatment","p_value",0.0948765328926073
+"J_two_way_balanced","two_way_anova","genotype x treatment","effect_size",0.0231885961588954
+"J_two_way_balanced","two_way_anova","genotype x treatment","extra.sum_sq",6.70351224755466
+"J_two_way_balanced","two_way_anova","genotype x treatment","n_total",32
+"J_two_way_balanced","two_way_anova","genotype","typeI.p_value",2.58770250519621e-06
+"J_two_way_balanced","two_way_anova","treatment","typeI.p_value",1.13219051190461e-08
+"J_two_way_balanced","two_way_anova","genotype x treatment","typeI.p_value",0.0948765328926072
+"J_two_way_balanced","welch_t","WT:vehicle|drug","statistic",-3.8972569421108
+"J_two_way_balanced","welch_t","WT:vehicle|drug","df",10.0626241281726
+"J_two_way_balanced","welch_t","WT:vehicle|drug","p_value",0.00293941746033358
+"J_two_way_balanced","welch_t","WT:vehicle|drug","estimate",-3.30128719025
+"J_two_way_balanced","welch_t","WT:vehicle|drug","ci_low",-5.18710738419408
+"J_two_way_balanced","welch_t","WT:vehicle|drug","ci_high",-1.41546699630592
+"J_two_way_balanced","welch_t","WT:vehicle|drug","effect_size",-1.84233964536147
+"J_two_way_balanced","welch_t","WT:vehicle|drug","n_total",16
+"J_two_way_balanced","welch_t","KO:vehicle|drug","statistic",-8.07380327668514
+"J_two_way_balanced","welch_t","KO:vehicle|drug","df",12.0033292167398
+"J_two_way_balanced","welch_t","KO:vehicle|drug","p_value",3.41592386121537e-06
+"J_two_way_balanced","welch_t","KO:vehicle|drug","estimate",-5.132067385625
+"J_two_way_balanced","welch_t","KO:vehicle|drug","ci_low",-6.51697483496055
+"J_two_way_balanced","welch_t","KO:vehicle|drug","ci_high",-3.74715993628945
+"J_two_way_balanced","welch_t","KO:vehicle|drug","effect_size",-3.81670700352388
+"J_two_way_balanced","welch_t","KO:vehicle|drug","n_total",16
+"K_two_way_unbalanced","two_way_anova","genotype","statistic",4.50108439425302
+"K_two_way_unbalanced","two_way_anova","genotype","df",1
+"K_two_way_unbalanced","two_way_anova","genotype","df2",21
+"K_two_way_unbalanced","two_way_anova","genotype","p_value",0.0459392399858138
+"K_two_way_unbalanced","two_way_anova","genotype","effect_size",0.111616383947591
+"K_two_way_unbalanced","two_way_anova","genotype","extra.sum_sq",8.19833391602346
+"K_two_way_unbalanced","two_way_anova","genotype","n_total",25
+"K_two_way_unbalanced","two_way_anova","treatment","statistic",13.2149811006702
+"K_two_way_unbalanced","two_way_anova","treatment","df",1
+"K_two_way_unbalanced","two_way_anova","treatment","df2",21
+"K_two_way_unbalanced","two_way_anova","treatment","p_value",0.00154870391747971
+"K_two_way_unbalanced","two_way_anova","treatment","effect_size",0.327700677258097
+"K_two_way_unbalanced","two_way_anova","treatment","extra.sum_sq",24.0699392118848
+"K_two_way_unbalanced","two_way_anova","treatment","n_total",25
+"K_two_way_unbalanced","two_way_anova","genotype x treatment","statistic",1.6103116466842
+"K_two_way_unbalanced","two_way_anova","genotype x treatment","df",1
+"K_two_way_unbalanced","two_way_anova","genotype x treatment","df2",21
+"K_two_way_unbalanced","two_way_anova","genotype x treatment","p_value",0.218333419003717
+"K_two_way_unbalanced","two_way_anova","genotype x treatment","effect_size",0.0399319691186128
+"K_two_way_unbalanced","two_way_anova","genotype x treatment","extra.sum_sq",2.93304266972527
+"K_two_way_unbalanced","two_way_anova","genotype x treatment","n_total",25
+"K_two_way_unbalanced","two_way_anova","genotype","typeI.p_value",0.259647675036217
+"K_two_way_unbalanced","two_way_anova","treatment","typeI.p_value",0.00154870391747971
+"K_two_way_unbalanced","two_way_anova","genotype x treatment","typeI.p_value",0.218333419003717
+"K_two_way_unbalanced","welch_t","WT:vehicle|drug","statistic",-4.73928497981953
+"K_two_way_unbalanced","welch_t","WT:vehicle|drug","df",11.1067427142415
+"K_two_way_unbalanced","welch_t","WT:vehicle|drug","p_value",0.000594189804854003
+"K_two_way_unbalanced","welch_t","WT:vehicle|drug","estimate",-2.67929535635556
+"K_two_way_unbalanced","welch_t","WT:vehicle|drug","ci_low",-3.92213727172143
+"K_two_way_unbalanced","welch_t","WT:vehicle|drug","ci_high",-1.43645344098968
+"K_two_way_unbalanced","welch_t","WT:vehicle|drug","effect_size",-2.22500517653487
+"K_two_way_unbalanced","welch_t","WT:vehicle|drug","n_total",14
+"K_two_way_unbalanced","welch_t","KO:vehicle|drug","statistic",-1.08073580051151
+"K_two_way_unbalanced","welch_t","KO:vehicle|drug","df",4.35806016481061
+"K_two_way_unbalanced","welch_t","KO:vehicle|drug","p_value",0.335957173466886
+"K_two_way_unbalanced","welch_t","KO:vehicle|drug","estimate",-1.24236497285714
+"K_two_way_unbalanced","welch_t","KO:vehicle|drug","ci_low",-4.33323543073784
+"K_two_way_unbalanced","welch_t","KO:vehicle|drug","ci_high",1.84850548502355
+"K_two_way_unbalanced","welch_t","KO:vehicle|drug","effect_size",-0.710545020757149
+"K_two_way_unbalanced","welch_t","KO:vehicle|drug","n_total",11
+"L_repeated_measures","rm_anova","all","statistic",26.572040890877
+"L_repeated_measures","rm_anova","all","df",3
+"L_repeated_measures","rm_anova","all","df2",27
+"L_repeated_measures","rm_anova","all","p_value",3.26098634375178e-08
+"L_repeated_measures","rm_anova","all","extra.n_subjects",10
+"L_repeated_measures","rm_anova","all","extra.n_levels",4
+"L_repeated_measures","rm_anova","all","n_total",40

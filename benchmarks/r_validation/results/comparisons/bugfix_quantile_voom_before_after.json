@@ -1,0 +1,118 @@
+{
+ "W__quantile": {
+  "before_vs_R_canonical": {
+   "max_abs": 28.08333333333394,
+   "n_cells_beyond_1e-10": 3225,
+   "n_nan_one_side": 0
+  },
+  "after_vs_R_canonical": {
+   "max_abs": 0.0,
+   "n_cells_beyond_1e-10": 0,
+   "n_nan_one_side": 0
+  },
+  "before_vs_after": {
+   "max_abs": 28.08333333333394,
+   "n_cells_beyond_1e-10": 3225,
+   "n_nan_one_side": 0
+  },
+  "n_cells": 4800
+ },
+ "X__quantile": {
+  "before_vs_R_canonical": {
+   "max_abs": 161700.448899479,
+   "n_cells_beyond_1e-10": 2308,
+   "n_nan_one_side": 28
+  },
+  "after_vs_R_canonical": {
+   "max_abs": 1.000444171950221e-10,
+   "n_cells_beyond_1e-10": 1,
+   "n_nan_one_side": 0
+  },
+  "before_vs_after": {
+   "max_abs": 161700.448899479,
+   "n_cells_beyond_1e-10": 2308,
+   "n_nan_one_side": 28
+  },
+  "n_cells": 2400
+ },
+ "Y__quantile": {
+  "before_vs_R_canonical": {
+   "max_abs": 0.0,
+   "n_cells_beyond_1e-10": 0,
+   "n_nan_one_side": 0
+  },
+  "after_vs_R_canonical": {
+   "max_abs": 0.0,
+   "n_cells_beyond_1e-10": 0,
+   "n_nan_one_side": 0
+  },
+  "before_vs_after": {
+   "max_abs": 0.0,
+   "n_cells_beyond_1e-10": 0,
+   "n_nan_one_side": 0
+  },
+  "n_cells": 2000
+ },
+ "Z__quantile": {
+  "before_vs_R_canonical": {
+   "max_abs": 1.0,
+   "n_cells_beyond_1e-10": 90,
+   "n_nan_one_side": 0
+  },
+  "after_vs_R_canonical": {
+   "max_abs": 0.0,
+   "n_cells_beyond_1e-10": 0,
+   "n_nan_one_side": 0
+  },
+  "before_vs_after": {
+   "max_abs": 1.0,
+   "n_cells_beyond_1e-10": 90,
+   "n_nan_one_side": 0
+  },
+  "n_cells": 150
+ },
+ "W__voom_logcpm": {
+  "before_vs_R_canonical": {
+   "max_abs": 0.7456985395090205,
+   "n_cells_beyond_1e-10": 4800,
+   "n_nan_one_side": 0
+  },
+  "after_vs_R_canonical": {
+   "max_abs": 0.0009934046245003714,
+   "n_cells_beyond_1e-10": 4800,
+   "n_nan_one_side": 0
+  },
+  "before_vs_after": {
+   "max_abs": 0.7456339842448205,
+   "n_cells_beyond_1e-10": 4800,
+   "n_nan_one_side": 0
+  },
+  "n_cells": 4800
+ },
+ "RSEM__voom_logcpm": {
+  "before_vs_R_canonical": {
+   "max_abs": 0.6259892647601601,
+   "n_cells_beyond_1e-10": 186336,
+   "n_nan_one_side": 0
+  },
+  "after_vs_R_canonical": {
+   "max_abs": 3.421842009743159e-07,
+   "n_cells_beyond_1e-10": 186336,
+   "n_nan_one_side": 0
+  },
+  "before_vs_after": {
+   "max_abs": 0.6259892419478801,
+   "n_cells_beyond_1e-10": 186336,
+   "n_nan_one_side": 0
+  },
+  "n_cells": 186336
+ },
+ "_notes": {
+  "quantile": "R canonical = limma::normalizeQuantiles(ties=TRUE); fix = Bolstad/limma algorithm (average ranks, NA columns interpolated).",
+  "voom": "R canonical = limma::voom()$E (TMM from edgeR); residual after the fix = TMM factor tie-boundary difference (see DISCREPANCY_REPORT A1).",
+  "regression_tests": [
+   "test_quantile_normalization_ties_get_equal_values_and_match_bolstad",
+   "test_voom_matches_limma_definition"
+  ]
+ }
+}

@@ -1,0 +1,13 @@
+{
+ "x_label": "PC1 (36.5%)",
+ "y_label": "PC2 (31.9%)",
+ "n_samples": 16,
+ "n_features": 11646,
+ "explained_variance_ratio": [
+  0.3655,
+  0.3189,
+  0.0672,
+  0.0475,
+  0.0328
+ ]
+}

@@ -1,0 +1,34 @@
+{
+  "n_features": 200,
+  "n_samples": 10,
+  "missing_values": 0,
+  "zero_fraction": 0,
+  "negative_value_fraction": 0.4905,
+  "min": -5.045012768,
+  "max": 5.814235579,
+  "mean": 0.0878682808360827,
+  "median": 0.036325269945,
+  "integer_like": false,
+  "variance_summary": {
+    "min": 0.237236188723177,
+    "median": 1.82160741346852,
+    "max": 5.44676700540138
+  },
+  "sample_total_summary": {
+    "min": 0.923947044272402,
+    "median": 16.5623712140505,
+    "max": 35.53806986771
+  },
+  "sample_median_summary": {
+    "min": -0.089732853295,
+    "median": 0.026855421218,
+    "max": 0.1432036014
+  },
+  "skewness_summary": {
+    "overall": 0.0828190298574894,
+    "median_per_sample": 0.115970253520899
+  },
+  "outlier_samples": [],
+  "outlier_features": ["f008", "f018", "f092", "f115", "f168", "f184", "f198"],
+  "looks_log_scale": true
+}

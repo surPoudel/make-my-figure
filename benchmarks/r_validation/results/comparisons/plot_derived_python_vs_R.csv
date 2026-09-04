@@ -1,0 +1,36 @@
+component,plot,quantity,python_value,R_value,abs_diff,class,cause
+plot_derived,roc_curve,auc[score_model_a] (metadata rounded 4 dp),0.9667,0.9667,0,EXACT,
+plot_derived,roc_curve,auc[score_model_b] (metadata rounded 4 dp),0.7106,0.7106,0,EXACT,
+plot_derived,precision_recall_curve,average_precision[score_model_a] (4 dp),0.8133,0.8133,0,EXACT,
+plot_derived,precision_recall_curve,average_precision[score_model_b] (4 dp),0.5533,0.5533,0,EXACT,
+plot_derived,calibration_plot,brier (4 dp),0.1786,0.1786,0,EXACT,
+plot_derived,confusion_matrix,accuracy (4 dp),0.8167,0.8167,0,EXACT,
+plot_derived,bland_altman_plot,bias,1.68922222222222,1.68922222222222,2.22044604925031e-15,EXACT,
+plot_derived,bland_altman_plot,sd_diff,3.99734468826545,3.99734468826545,1.33226762955019e-15,EXACT,
+plot_derived,bland_altman_plot,loa_upper,9.5240178112225,9.5240178112225,1.77635683940025e-15,EXACT,
+plot_derived,bland_altman_plot,loa_lower,-6.14557336677806,-6.14557336677806,2.66453525910038e-15,EXACT,
+plot_derived,qq_plot,lambda_gc,1.04365788624935,1.04365788624935,2.44249065417534e-15,EXACT,
+plot_derived,scatterplot_with_regression,regression[Responder].slope,1.30226103794622,1.30226103794622,3.99680288865056e-15,EXACT,
+plot_derived,scatterplot_with_regression,regression[Responder].intercept,1.16441617813141,1.16441617813141,1.99840144432528e-15,EXACT,
+plot_derived,scatterplot_with_regression,regression[Responder].pearson_r,0.96141060298843,0.961410602988431,6.66133814775094e-16,EXACT,
+plot_derived,scatterplot_with_regression,regression[Responder].r_squared,0.924310347538577,0.924310347538578,8.88178419700125e-16,EXACT,
+plot_derived,scatterplot_with_regression,regression[Responder].p_value,4.56642591418255e-20,4.56642591418195e-20,5.97640135867664e-33,EXACT,
+plot_derived,scatterplot_with_regression,regression[Responder].slope_stderr,0.0648709749993831,0.0648709749993829,2.08166817117217e-16,EXACT,
+plot_derived,scatterplot_with_regression,regression[Responder].intercept_stderr,0.336193125220554,0.336193125220552,1.55431223447522e-15,EXACT,
+plot_derived,scatterplot_with_regression,regression[Non_responder].slope,0.661681877821666,0.661681877821666,4.44089209850063e-16,EXACT,
+plot_derived,scatterplot_with_regression,regression[Non_responder].intercept,2.2535039150827,2.2535039150827,4.88498130835069e-15,EXACT,
+plot_derived,scatterplot_with_regression,regression[Non_responder].pearson_r,0.797731027407697,0.797731027407697,1.11022302462516e-16,EXACT,
+plot_derived,scatterplot_with_regression,regression[Non_responder].r_squared,0.63637479208894,0.63637479208894,4.44089209850063e-16,EXACT,
+plot_derived,scatterplot_with_regression,regression[Non_responder].p_value,1.7888257012638e-06,1.78882570126381e-06,5.50571415715295e-21,EXACT,
+plot_derived,scatterplot_with_regression,regression[Non_responder].slope_stderr,0.104293160742103,0.104293160742103,3.60822483003176e-16,EXACT,
+plot_derived,scatterplot_with_regression,regression[Non_responder].intercept_stderr,0.590592026343992,0.590592026343992,3.33066907387547e-16,EXACT,
+plot_derived,kaplan_meier_survival_curve,S(t) along drawn curve [Low_risk] max|d| over 53 points,5.55111512312578e-16,0,5.55111512312578e-16,EXACT,
+plot_derived,kaplan_meier_survival_curve,S(t) along drawn curve [High_risk] max|d| over 60 points,6.66133814775094e-16,0,6.66133814775094e-16,EXACT,
+plot_derived,dose_response_curve,4PL[DrugA].bottom,0.0396432831026763,0.0396561315697963,1.2848467120033e-05,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"same 4PL model and bounds; scipy bounded TRF and R nls(port) stop at their own convergence tolerances (relative differences <= 3e-4 on the asymptotes, <= 1e-6 on EC50)"
+plot_derived,dose_response_curve,4PL[DrugA].top,100.057546266031,100.057535957454,1.03085766198774e-05,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"same 4PL model and bounds; scipy bounded TRF and R nls(port) stop at their own convergence tolerances (relative differences <= 3e-4 on the asymptotes, <= 1e-6 on EC50)"
+plot_derived,dose_response_curve,4PL[DrugA].ec50,0.397602783883345,0.397602821715646,3.78323010696846e-08,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"same 4PL model and bounds; scipy bounded TRF and R nls(port) stop at their own convergence tolerances (relative differences <= 3e-4 on the asymptotes, <= 1e-6 on EC50)"
+plot_derived,dose_response_curve,4PL[DrugA].hill,1.20933871127287,1.20933968270484,9.71431970420156e-07,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"same 4PL model and bounds; scipy bounded TRF and R nls(port) stop at their own convergence tolerances (relative differences <= 3e-4 on the asymptotes, <= 1e-6 on EC50)"
+plot_derived,dose_response_curve,4PL[DrugB].bottom,-1.40656544015519,-1.40657045145782,5.01130263419469e-06,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"same 4PL model and bounds; scipy bounded TRF and R nls(port) stop at their own convergence tolerances (relative differences <= 3e-4 on the asymptotes, <= 1e-6 on EC50)"
+plot_derived,dose_response_curve,4PL[DrugB].top,100.243697159782,100.243695177173,1.98260865147404e-06,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"same 4PL model and bounds; scipy bounded TRF and R nls(port) stop at their own convergence tolerances (relative differences <= 3e-4 on the asymptotes, <= 1e-6 on EC50)"
+plot_derived,dose_response_curve,4PL[DrugB].ec50,5.98108852865204,5.98109069874086,2.17008882241743e-06,ACCEPTABLE_IMPLEMENTATION_DIFFERENCE,"same 4PL model and bounds; scipy bounded TRF and R nls(port) stop at their own convergence tolerances (relative differences <= 3e-4 on the asymptotes, <= 1e-6 on EC50)"
+plot_derived,dose_response_curve,4PL[DrugB].hill,1.4032858674667,1.40328586464236,2.82434320375557e-09,NUMERICALLY_EQUIVALENT,

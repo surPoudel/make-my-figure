@@ -1,0 +1,81 @@
+{
+ "file": "GREEN-318289-STRANDED_RSEM_gene_count.2024-01-10_03-09-06.txt",
+ "sha256": "37922f561a8dddc41c583cce6eb7e8e356f71f32c462e802ceda496ee4aa1a92",
+ "bytes": 6565018,
+ "shape": [
+  55665,
+  20
+ ],
+ "annotation_columns": [
+  "geneID",
+  "geneSymbol",
+  "bioType",
+  "annotationLevel"
+ ],
+ "n_samples": 16,
+ "min": 0.0,
+ "max": 590723.85,
+ "n_cells": 890640,
+ "n_nonzero": 259076,
+ "fraction_zero": 0.7091125482798886,
+ "fraction_non_integer": 0.046336342405461244,
+ "n_non_integer_cells": 41269,
+ "fraction_rows_all_zero": 0.6133656696308273,
+ "library_sizes": {
+  "2686012_Ctrl_1": 32779753.160000004,
+  "2686013_Ctrl_2": 37353063.03,
+  "2686014_Ctrl_3": 27885957.94,
+  "2686015_Ctrl_4": 33225371.85,
+  "2686016_sh5-8_1": 36355337.1,
+  "2686017_sh5-8_2": 41543049.99999999,
+  "2686018_sh5-8_3": 39058962.91,
+  "2686019_sh5-8_4": 35478119.99,
+  "2686020_shA-C_1": 40927249.92000001,
+  "2686021_shA-C_2": 32538834.9,
+  "2686022_shA-C_3": 40754730.010000005,
+  "2686023_shA-C_4": 31771195.82,
+  "2686024_sh50A_1": 40668918.93999999,
+  "2686025_sh50A_2": 24020891.07,
+  "2686026_sh50A_3": 34430804.809999995,
+  "2686027_sh50A_4": 40445718.03
+ },
+ "duplicate_geneID": 0,
+ "duplicate_geneSymbol": 120,
+ "suggested_matrix_spec": {
+  "source_file": "GREEN-318289-STRANDED_RSEM_gene_count.2024-01-10_03-09-06.txt",
+  "source_workbook": null,
+  "source_sheet": null,
+  "source_sheet_index": null,
+  "feature_id_column": "geneID",
+  "feature_display_column": "geneSymbol",
+  "annotation_columns": [
+   "bioType",
+   "annotationLevel"
+  ],
+  "value_columns": [
+   "2686012_Ctrl_1",
+   "2686013_Ctrl_2",
+   "2686014_Ctrl_3",
+   "2686015_Ctrl_4",
+   "2686016_sh5-8_1",
+   "2686017_sh5-8_2",
+   "2686018_sh5-8_3",
+   "2686019_sh5-8_4",
+   "2686020_shA-C_1",
+   "2686021_shA-C_2",
+   "2686022_shA-C_3",
+   "2686023_shA-C_4",
+   "2686024_sh50A_1",
+   "2686025_sh50A_2",
+   "2686026_sh50A_3",
+   "2686027_sh50A_4"
+  ],
+  "excluded_columns": [],
+  "value_type": "unknown_user_confirmed",
+  "missing_value_policy": "keep",
+  "duplicate_feature_policy": "keep",
+  "confirmed_by_user": false,
+  "created_at": null,
+  "app_version": "1.0.0"
+ }
+}

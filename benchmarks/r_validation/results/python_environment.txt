@@ -1,0 +1,11 @@
+timestamp_utc: 2026-09-04T16:37:39.000794+00:00
+python: 3.11.8 | packaged by conda-forge | (main, Feb 16 2024, 20:53:32) [GCC 12.3.0]
+platform: Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35
+numpy: 2.1.2
+scipy: 1.17.1
+pandas: 2.2.3
+statsmodels: 0.14.6
+matplotlib: 3.10.8
+make_my_figure_core: 1.0.0
+git_commit: ac49ff8a01bd7fba715a52ec7b8a92354662e80b
+rsem_sha256: 37922f561a8dddc41c583cce6eb7e8e356f71f32c462e802ceda496ee4aa1a92

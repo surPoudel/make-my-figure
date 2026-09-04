@@ -1,0 +1,27 @@
+file,rows,cols,purpose,sha256
+A_two_group_normal.csv,27,2,"Two groups, equal variance, n=12/15 (Student/Welch/MWU asymptotic regime)",f2460fc9f663b9feb5b3b0142e783bc37f6f201e5b4fda7b9fe74a63369338fa
+B_two_group_unequal_var.csv,30,2,"Two groups, strongly unequal variance and n (Welch vs Student divergence)",38fd40584108e3ab5c1e8f1e8f7f636f4517d4b3c595dd2562cc63697881ba07
+C_two_group_ties.csv,28,2,Two groups of small integers -> many ties (rank-test tie corrections),74aac9f0be7a8d0d8d193ba3c4d50ad9a5ae6a25651b951e0c8beb75cfdafb1e
+D_two_group_small_n.csv,11,2,"Two tiny groups n=5/6, no ties (scipy exact MWU regime; R exact by default)",345f728d1731cf429f06839da498348f655d90a6f4f85182d138d46def1f792e
+E_two_group_one_constant.csv,16,2,One group constant (zero variance) -> degenerate t / rank tests,47a9a0e2f58e816da1fe2129f22c119a3ddae1e81cb0ba6f9e7b008b2a1f1354
+F_paired_normal.csv,28,3,"Paired design, n=14 subjects, continuous (paired t / Wilcoxon signed-rank)",65c5b0b83c801ca91a029942a2826eb04ab39bcf08b454336e8af553eaa321ec
+G_paired_zeros_ties.csv,32,3,Paired design with zero differences and tied |d| (Wilcoxon zero/tie handling),b8181d9a087afed6a0dbbbb576bcc487a784af06c8373a3afdd12311bcd688bf
+H_three_groups_balanced.csv,30,2,"Three balanced groups (one-way ANOVA, Kruskal-Wallis, Dunn, post-hoc family)",d2e94412fa6a2557fe6354b744fac2310a27061445a662c7d8ec41537bb981f4
+I_five_groups_unbalanced.csv,49,2,"Five unbalanced groups, heteroscedastic, rounded (ties) -> KW/Dunn tie correction",53a0b6daf09acacaaab10c7870bc993a163700ed3640449dcb103f176460fd30
+J_two_way_balanced.csv,32,3,2x2 balanced factorial with interaction (two-way ANOVA type II),1239c3a9fd1e206dae990566119552d9bc54f87a5ff9f6ac7d6733c0da45b6b8
+K_two_way_unbalanced.csv,25,3,2x2 unbalanced factorial (type II SS matters; car::Anova comparison),f25795fbdf42891a6e3cb98ddf7090bd58d99847443aecc64e755869f2f786a7
+L_repeated_measures.csv,40,3,"One within-subject factor (4 levels) x 10 subjects, complete (RM-ANOVA)",a6c0228c2d77223438c13648cb2535112713e32ea61bcf777256c1462a1b0e34
+M_linear_xy.csv,40,2,"Linear relation with noise (Pearson, Spearman, OLS slope/intercept/SE)",bc254ad8ece1fe9ede05463a398494eee3d747b546cc0399d4302f4de29b7686
+N_monotone_nonlinear_ties.csv,35,2,Monotone non-linear relation with tied x (Spearman tie handling vs Pearson),43353c608cf23491f0dbcca49b0e9b6cf55c4143c8eb710e89ef6841e132754a
+O_contingency_2x2.csv,75,2,"2x2 table (chi-square with Yates, Fisher exact, odds ratio conventions)",29f3d3831d2f0bb6738684d950c153a784e02c8eff062f1bc5591ba0370155fc
+P_contingency_3x4.csv,180,2,"3x4 table (chi-square without Yates, Cramer's V)",c7a3ab9b4200e9e3792f7a2ec4113443864cf44078c3e9a74c237e1cbc78cfbe
+Q_contingency_small_expected.csv,16,2,Small 2x2 with expected counts < 5 (Fisher exact regime; chi-square warning),79d2dd7fffda78b3b0701d24953d85e83cfb772947b7a514de62ed823ce69c01
+R_survival_two_groups.csv,60,3,"Two-arm survival with tied integer times and censoring (log-rank, Cox Breslow/Efron)",2cd86a921b46ebe35aa50518ae5b510af82a2813b442619dc24671a043953df4
+S_survival_three_groups.csv,63,3,"Three-arm survival, unbalanced (multi-group log-rank df=2; Cox with 2 dummies)",104c02f8bcf0379ba9e4d81020c600d926104a8cce1ceb419a5dab29d5fc7ef7
+T_glm_predictors.csv,120,7,Two predictors with Gaussian/binomial/Poisson/negative-binomial/gamma responses (GLM),9f133934d75d8b89d5ab6f25bffa3874c75bd175d7ecf9a6056deab8798b7fee
+U_pvalues.csv,196,1,"196 p-values incl. duplicates, exact 1.0 and 1e-12 (BH/Holm/Bonferroni vs p.adjust)",3ae489ebd549e0d024cd507080edde8963fe05dd4278314627f02cd5ace42b6f
+V_pvalues_with_na.csv,196,1,Same vector with 3 NA entries (m = number of non-missing p-values),d9ba71207ea8cfa3f3ed1a9cf6d36764e2529c0ed81bbc530ef19f8ad3a46272
+W_count_matrix.tsv,400,14,"400 x 12 NB count matrix with an annotation column, 80 true DE features, lib-size spread (CPM/TMM/voom/DE)",6d8ad7571518b9c142d1810dd596e01d5d3d431625095fbd14daa32cd12d82c1
+X_intensity_matrix_missing.tsv,300,9,300 x 8 right-skewed intensity matrix with 4% missing (log/arcsinh/median-scale/impute/robust),0748ff0488c7e9e90f4ba061fe258b1c80dc4a63c45da499c86eaa123402674f
+Y_log_matrix_negatives.tsv,200,11,200 x 10 centred log-like matrix with negatives (z-score / centering / PCA / clustering),d7a977aac5941301a42bbd393d55830fb5018771e0e0d006f1fb5e8615f5805e
+Z_small_integer_matrix_ties.tsv,30,6,"30 x 5 small-integer matrix with heavy ties and a constant row (quantile normalization tie rule, z-score sd=0)",1da3c07a3f25b1577c9110d4f8a14bdc075c22a70af5119410e55f67e6d92dda

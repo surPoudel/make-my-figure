@@ -1,0 +1,483 @@
+{
+ "table_name": "GREEN-318289-STRANDED_RSEM_gene_count.2024-01-10_03-09-06.txt",
+ "schema": "numeric_matrix",
+ "profile_summary": {
+  "table_name": "GREEN-318289-STRANDED_RSEM_gene_count.2024-01-10_03-09-06.txt",
+  "n_rows": 55665,
+  "n_cols": 20,
+  "column_kinds": {
+   "geneID": "id",
+   "geneSymbol": "categorical",
+   "bioType": "categorical",
+   "annotationLevel": "numeric",
+   "2686012_Ctrl_1": "numeric",
+   "2686013_Ctrl_2": "numeric",
+   "2686014_Ctrl_3": "numeric",
+   "2686015_Ctrl_4": "numeric",
+   "2686016_sh5-8_1": "numeric",
+   "2686017_sh5-8_2": "numeric",
+   "2686018_sh5-8_3": "numeric",
+   "2686019_sh5-8_4": "numeric",
+   "2686020_shA-C_1": "numeric",
+   "2686021_shA-C_2": "numeric",
+   "2686022_shA-C_3": "numeric",
+   "2686023_shA-C_4": "numeric",
+   "2686024_sh50A_1": "numeric",
+   "2686025_sh50A_2": "numeric",
+   "2686026_sh50A_3": "numeric",
+   "2686027_sh50A_4": "numeric"
+  },
+  "numeric_columns": [
+   "annotationLevel",
+   "2686012_Ctrl_1",
+   "2686013_Ctrl_2",
+   "2686014_Ctrl_3",
+   "2686015_Ctrl_4",
+   "2686016_sh5-8_1",
+   "2686017_sh5-8_2",
+   "2686018_sh5-8_3",
+   "2686019_sh5-8_4",
+   "2686020_shA-C_1",
+   "2686021_shA-C_2",
+   "2686022_shA-C_3",
+   "2686023_shA-C_4",
+   "2686024_sh50A_1",
+   "2686025_sh50A_2",
+   "2686026_sh50A_3",
+   "2686027_sh50A_4"
+  ],
+  "categorical_columns": [
+   "geneSymbol",
+   "bioType"
+  ],
+  "datetime_columns": [],
+  "id_columns": [
+   "geneID"
+  ],
+  "binary_columns": [],
+  "missingness": {},
+  "duplicate_id_columns": [
+   "geneSymbol"
+  ],
+  "roles": [
+   {
+    "role": "subject",
+    "column": "geneID",
+    "confidence": 0.55,
+    "reason": "subject/id-like header"
+   }
+  ],
+  "is_matrix": true,
+  "matrix_kind": "count_like",
+  "matrix_feature_col": "geneID",
+  "matrix_sample_columns": [
+   "annotationLevel",
+   "2686012_Ctrl_1",
+   "2686013_Ctrl_2",
+   "2686014_Ctrl_3",
+   "2686015_Ctrl_4",
+   "2686016_sh5-8_1",
+   "2686017_sh5-8_2",
+   "2686018_sh5-8_3",
+   "2686019_sh5-8_4",
+   "2686020_shA-C_1",
+   "2686021_shA-C_2",
+   "2686022_shA-C_3",
+   "2686023_shA-C_4",
+   "2686024_sh50A_1",
+   "2686025_sh50A_2",
+   "2686026_sh50A_3",
+   "2686027_sh50A_4"
+  ],
+  "is_correlation_matrix": false,
+  "is_adjacency_matrix": false,
+  "notes": []
+ },
+ "recommendations": [
+  {
+   "id": "heatmap_clustered_matrix_0",
+   "plot_type": "heatmap_clustered_matrix",
+   "display_name": "Clustered heatmap",
+   "confidence": 0.85,
+   "why": "A wide numeric matrix (features \u00d7 samples) \u2014 a clustered heatmap with row/column clustering shows structure. Use 'Define groups' to tag samples for group plots.",
+   "required_mappings": {
+    "row_id": "geneID",
+    "cluster_rows": true,
+    "cluster_columns": true,
+    "color_scale": "diverging"
+   },
+   "missing_mappings": [],
+   "suggested_statistics": null,
+   "suggested_style": "publication",
+   "suggested_thresholds": {},
+   "estimated_cost": "high",
+   "requires_confirmation": true,
+   "warnings": [],
+   "plot_spec_draft": {
+    "plot_type": "heatmap_clustered_matrix",
+    "input_table": "GREEN-318289-STRANDED_RSEM_gene_count.2024-01-10_03-09-06.txt",
+    "mapping": {
+     "row_id": "geneID",
+     "cluster_rows": true,
+     "cluster_columns": true,
+     "color_scale": "diverging"
+    },
+    "journal_style": "publication",
+    "output": {
+     "formats": [
+      "svg",
+      "png",
+      "pdf"
+     ],
+     "width_mm": 89.0,
+     "height_mm": 70.0,
+     "dpi": 300
+    }
+   },
+   "kind": "direct",
+   "transform": null,
+   "instructions": null
+  },
+  {
+   "id": "pca_scatter_from_matrix_1",
+   "plot_type": "pca_scatter_from_matrix",
+   "display_name": "PCA scatter (matrix + metadata)",
+   "confidence": 0.7,
+   "why": "A numeric matrix is ideal for PCA to summarise sample structure. Provide a sample metadata table to colour points by group.",
+   "required_mappings": {
+    "matrix_row_id": "geneID",
+    "metadata_key": "sample_id",
+    "color": "group",
+    "shape": "batch"
+   },
+   "missing_mappings": [
+    "color / shape (needs a sample metadata table)"
+   ],
+   "suggested_statistics": null,
+   "suggested_style": "publication",
+   "suggested_thresholds": {},
+   "estimated_cost": "high",
+   "requires_confirmation": true,
+   "warnings": [],
+   "plot_spec_draft": null,
+   "kind": "direct",
+   "transform": null,
+   "instructions": null
+  },
+  {
+   "id": "tf_ridge_columns",
+   "plot_type": "ridge_or_density_plot",
+   "display_name": "Ridge of per-column distributions (reshape \u2192 long)",
+   "confidence": 0.5,
+   "why": "Reshape the wide numeric columns to long form and compare each column's distribution as a ridge/density plot.",
+   "required_mappings": {},
+   "missing_mappings": [],
+   "suggested_statistics": null,
+   "suggested_style": "publication",
+   "suggested_thresholds": {},
+   "estimated_cost": "low",
+   "requires_confirmation": false,
+   "warnings": [
+    "Reshapes the data (wide \u2192 long) and saves GREEN-318289-STRANDED_RSEM_gene_count.2024-01-10_03-09-06__long.csv."
+   ],
+   "plot_spec_draft": {
+    "plot_type": "ridge_or_density_plot",
+    "input_table": "GREEN-318289-STRANDED_RSEM_gene_count.2024-01-10_03-09-06__long.csv",
+    "mapping": {
+     "x": "value",
+     "group": "column",
+     "overlap": 0.6
+    },
+    "journal_style": "publication",
+    "output": {
+     "formats": [
+      "svg",
+      "png",
+      "pdf"
+     ],
+     "width_mm": 89.0,
+     "height_mm": 70.0,
+     "dpi": 300
+    }
+   },
+   "kind": "transform",
+   "transform": {
+    "name": "wide_to_long",
+    "params": {
+     "value_cols": [
+      "annotationLevel",
+      "2686012_Ctrl_1",
+      "2686013_Ctrl_2",
+      "2686014_Ctrl_3",
+      "2686015_Ctrl_4",
+      "2686016_sh5-8_1",
+      "2686017_sh5-8_2",
+      "2686018_sh5-8_3",
+      "2686019_sh5-8_4",
+      "2686020_shA-C_1",
+      "2686021_shA-C_2",
+      "2686022_shA-C_3",
+      "2686023_shA-C_4",
+      "2686024_sh50A_1",
+      "2686025_sh50A_2",
+      "2686026_sh50A_3",
+      "2686027_sh50A_4"
+     ]
+    },
+    "result_columns": [
+     "column",
+     "value"
+    ],
+    "output_filename": "GREEN-318289-STRANDED_RSEM_gene_count.2024-01-10_03-09-06__long.csv"
+   },
+   "instructions": null
+  },
+  {
+   "id": "tf_box_columns",
+   "plot_type": "boxplot_or_violin_with_points",
+   "display_name": "Box/violin of per-column distributions (reshape \u2192 long)",
+   "confidence": 0.48,
+   "why": "Reshape wide \u2192 long and compare each column's distribution with box/violin.",
+   "required_mappings": {},
+   "missing_mappings": [],
+   "suggested_statistics": null,
+   "suggested_style": "publication",
+   "suggested_thresholds": {},
+   "estimated_cost": "low",
+   "requires_confirmation": false,
+   "warnings": [
+    "Reshapes the data (wide \u2192 long) and saves GREEN-318289-STRANDED_RSEM_gene_count.2024-01-10_03-09-06__long.csv."
+   ],
+   "plot_spec_draft": {
+    "plot_type": "boxplot_or_violin_with_points",
+    "input_table": "GREEN-318289-STRANDED_RSEM_gene_count.2024-01-10_03-09-06__long.csv",
+    "mapping": {
+     "x": "column",
+     "y": "value"
+    },
+    "journal_style": "publication",
+    "output": {
+     "formats": [
+      "svg",
+      "png",
+      "pdf"
+     ],
+     "width_mm": 89.0,
+     "height_mm": 70.0,
+     "dpi": 300
+    }
+   },
+   "kind": "transform",
+   "transform": {
+    "name": "wide_to_long",
+    "params": {
+     "value_cols": [
+      "annotationLevel",
+      "2686012_Ctrl_1",
+      "2686013_Ctrl_2",
+      "2686014_Ctrl_3",
+      "2686015_Ctrl_4",
+      "2686016_sh5-8_1",
+      "2686017_sh5-8_2",
+      "2686018_sh5-8_3",
+      "2686019_sh5-8_4",
+      "2686020_shA-C_1",
+      "2686021_shA-C_2",
+      "2686022_shA-C_3",
+      "2686023_shA-C_4",
+      "2686024_sh50A_1",
+      "2686025_sh50A_2",
+      "2686026_sh50A_3",
+      "2686027_sh50A_4"
+     ]
+    },
+    "result_columns": [
+     "column",
+     "value"
+    ],
+    "output_filename": "GREEN-318289-STRANDED_RSEM_gene_count.2024-01-10_03-09-06__long.csv"
+   },
+   "instructions": null
+  },
+  {
+   "id": "tf_corr_heatmap",
+   "plot_type": "heatmap_clustered_matrix",
+   "display_name": "Correlation heatmap (compute correlation matrix)",
+   "confidence": 0.55,
+   "why": "Compute the pairwise correlation of the numeric columns and show a clustered heatmap \u2014 reveals which columns/samples move together.",
+   "required_mappings": {},
+   "missing_mappings": [],
+   "suggested_statistics": null,
+   "suggested_style": "publication",
+   "suggested_thresholds": {},
+   "estimated_cost": "low",
+   "requires_confirmation": false,
+   "warnings": [
+    "Computes a correlation matrix and saves GREEN-318289-STRANDED_RSEM_gene_count.2024-01-10_03-09-06__corr.csv."
+   ],
+   "plot_spec_draft": {
+    "plot_type": "heatmap_clustered_matrix",
+    "input_table": "GREEN-318289-STRANDED_RSEM_gene_count.2024-01-10_03-09-06__corr.csv",
+    "mapping": {
+     "row_id": "feature",
+     "scale": "none",
+     "color_scale": "diverging"
+    },
+    "journal_style": "publication",
+    "output": {
+     "formats": [
+      "svg",
+      "png",
+      "pdf"
+     ],
+     "width_mm": 89.0,
+     "height_mm": 70.0,
+     "dpi": 300
+    }
+   },
+   "kind": "transform",
+   "transform": {
+    "name": "correlation_matrix",
+    "params": {
+     "columns": [
+      "annotationLevel",
+      "2686012_Ctrl_1",
+      "2686013_Ctrl_2",
+      "2686014_Ctrl_3",
+      "2686015_Ctrl_4",
+      "2686016_sh5-8_1",
+      "2686017_sh5-8_2",
+      "2686018_sh5-8_3",
+      "2686019_sh5-8_4",
+      "2686020_shA-C_1",
+      "2686021_shA-C_2",
+      "2686022_shA-C_3",
+      "2686023_shA-C_4",
+      "2686024_sh50A_1",
+      "2686025_sh50A_2",
+      "2686026_sh50A_3",
+      "2686027_sh50A_4"
+     ]
+    },
+    "result_columns": [
+     "feature",
+     "annotationLevel",
+     "2686012_Ctrl_1",
+     "2686013_Ctrl_2",
+     "2686014_Ctrl_3",
+     "2686015_Ctrl_4",
+     "2686016_sh5-8_1",
+     "2686017_sh5-8_2",
+     "2686018_sh5-8_3",
+     "2686019_sh5-8_4",
+     "2686020_shA-C_1",
+     "2686021_shA-C_2",
+     "2686022_shA-C_3",
+     "2686023_shA-C_4",
+     "2686024_sh50A_1",
+     "2686025_sh50A_2",
+     "2686026_sh50A_3",
+     "2686027_sh50A_4"
+    ],
+    "output_filename": "GREEN-318289-STRANDED_RSEM_gene_count.2024-01-10_03-09-06__corr.csv"
+   },
+   "instructions": null
+  },
+  {
+   "id": "tf_count_bar",
+   "plot_type": "barplot_with_error_bar",
+   "display_name": "Frequency bar of 'geneSymbol' (count categories)",
+   "confidence": 0.45,
+   "why": "Count how many rows fall in each 'geneSymbol' category and show a frequency bar.",
+   "required_mappings": {},
+   "missing_mappings": [],
+   "suggested_statistics": null,
+   "suggested_style": "publication",
+   "suggested_thresholds": {},
+   "estimated_cost": "low",
+   "requires_confirmation": false,
+   "warnings": [
+    "Aggregates counts per category and saves GREEN-318289-STRANDED_RSEM_gene_count.2024-01-10_03-09-06__counts.csv."
+   ],
+   "plot_spec_draft": {
+    "plot_type": "barplot_with_error_bar",
+    "input_table": "GREEN-318289-STRANDED_RSEM_gene_count.2024-01-10_03-09-06__counts.csv",
+    "mapping": {
+     "x": "geneSymbol",
+     "y": "count"
+    },
+    "journal_style": "publication",
+    "output": {
+     "formats": [
+      "svg",
+      "png",
+      "pdf"
+     ],
+     "width_mm": 89.0,
+     "height_mm": 70.0,
+     "dpi": 300
+    }
+   },
+   "kind": "transform",
+   "transform": {
+    "name": "value_counts",
+    "params": {
+     "column": "geneSymbol",
+     "category_name": "geneSymbol"
+    },
+    "result_columns": [
+     "geneSymbol",
+     "count"
+    ],
+    "output_filename": "GREEN-318289-STRANDED_RSEM_gene_count.2024-01-10_03-09-06__counts.csv"
+   },
+   "instructions": null
+  },
+  {
+   "id": "guide_volcano",
+   "plot_type": "volcano_plot",
+   "display_name": "Volcano plot \u2014 needs a differential results table",
+   "confidence": 0.4,
+   "why": "This is a matrix of measurements, not a differential results table; a volcano needs per-feature fold-change + p-value/FDR.",
+   "required_mappings": {},
+   "missing_mappings": [],
+   "suggested_statistics": null,
+   "suggested_style": "publication",
+   "suggested_thresholds": {},
+   "estimated_cost": "low",
+   "requires_confirmation": false,
+   "warnings": [
+    "Define groups and run stats to get logFC + p/FDR first."
+   ],
+   "plot_spec_draft": null,
+   "kind": "guidance",
+   "transform": null,
+   "instructions": "Volcano and MA plots need a PRECOMPUTED differential results table: one row per feature with a log2 fold-change column and a p-value/FDR column. Make My Figure does not compute differential expression or fabricate statistics. To get there: define your groups, run a differential/statistical analysis (in your analysis tool of choice) to produce per-feature log2FC + p-value/FDR (and an average-abundance / baseMean column for MA), then load that results table here \u2014 it will be recommended as a volcano (and MA)."
+  },
+  {
+   "id": "guide_ma",
+   "plot_type": "ma_plot",
+   "display_name": "MA plot \u2014 needs a differential results table",
+   "confidence": 0.38,
+   "why": "An MA plot needs per-feature average abundance + log fold-change from a differential analysis.",
+   "required_mappings": {},
+   "missing_mappings": [],
+   "suggested_statistics": null,
+   "suggested_style": "publication",
+   "suggested_thresholds": {},
+   "estimated_cost": "low",
+   "requires_confirmation": false,
+   "warnings": [
+    "Define groups and run stats to get logFC + mean abundance first."
+   ],
+   "plot_spec_draft": null,
+   "kind": "guidance",
+   "transform": null,
+   "instructions": "Volcano and MA plots need a PRECOMPUTED differential results table: one row per feature with a log2 fold-change column and a p-value/FDR column. Make My Figure does not compute differential expression or fabricate statistics. To get there: define your groups, run a differential/statistical analysis (in your analysis tool of choice) to produce per-feature log2FC + p-value/FDR (and an average-abundance / baseMean column for MA), then load that results table here \u2014 it will be recommended as a volcano (and MA)."
+  }
+ ],
+ "notes": [
+  "For group comparison plots, use 'Define groups' to tag samples, then box/violin/bar plots become available.",
+  "Make My Figure does not run differential-expression analysis. Upload a precomputed differential results table (fold-change + p-value/FDR) for volcano or MA-style plots."
+ ]
+}

@@ -1,0 +1,3 @@
+"dataset_id","test_id","comparison","note"
+"F_paired_normal","wilcoxon","pre|post","zeros dropped=0; ties in |d|=FALSE; scipy-matched exact=TRUE"
+"G_paired_zeros_ties","wilcoxon","pre|post","zeros dropped=4; ties in |d|=TRUE; scipy-matched exact=FALSE"

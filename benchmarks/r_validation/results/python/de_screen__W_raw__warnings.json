@@ -1,0 +1,3 @@
+[
+ "Values look like raw counts (large, non-negative, wide range). This screen expects a NORMALIZED matrix (e.g. voom / log2-CPM); normalize before running, or results/log2FC may be misleading."
+]

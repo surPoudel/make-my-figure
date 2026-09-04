@@ -1,0 +1,52 @@
+[
+ {
+  "name": "Center/scale only (looks already log/normalized)",
+  "steps": [
+   {
+    "method": "row_zscore",
+    "params": {}
+   }
+  ],
+  "reason": "Values look already log-transformed or normalized \u2014 do NOT log again.",
+  "assumptions": [
+   "Data are already on a comparable scale."
+  ],
+  "warnings": []
+ },
+ {
+  "name": "Internal-standard normalization (if you have IS features/columns)",
+  "steps": [
+   {
+    "method": "internal_standard_features",
+    "params": {
+     "feature_ids": [],
+     "how": "median",
+     "operation": "divide"
+    }
+   }
+  ],
+  "reason": "Normalize each sample to spiked internal-standard features (you select them).",
+  "assumptions": [
+   "Internal standards are stable across samples."
+  ],
+  "warnings": [
+   "Requires you to identify the internal-standard features/columns."
+  ]
+ },
+ {
+  "name": "Quantile normalization (forces identical distributions)",
+  "steps": [
+   {
+    "method": "quantile",
+    "params": {}
+   }
+  ],
+  "reason": "Aggressively removes distribution differences between samples.",
+  "assumptions": [
+   "Global distribution shifts are technical, not biological."
+  ],
+  "warnings": [
+   "Inappropriate when distribution shifts are biologically real."
+  ]
+ }
+]

@@ -1,0 +1,43 @@
+{
+ "n_features": 30,
+ "n_samples": 5,
+ "missing_values": 0,
+ "zero_fraction": 0.16666666666666666,
+ "negative_value_fraction": 0.0,
+ "integer_like": true,
+ "min": 0.0,
+ "max": 5.0,
+ "mean": 2.62,
+ "median": 3.0,
+ "variance_summary": {
+  "min": 0.0,
+  "median": 2.1999999999999993,
+  "max": 5.04
+ },
+ "skewness_summary": {
+  "overall": -0.18358940850521677,
+  "median_per_sample": -0.16824542564921607
+ },
+ "library_size_or_column_sum_summary": {
+  "min": 74.0,
+  "median": 79.0,
+  "max": 83.0
+ },
+ "sample_total_summary": {
+  "min": 74.0,
+  "median": 79.0,
+  "max": 83.0
+ },
+ "sample_median_summary": {
+  "min": 2.5,
+  "median": 3.0,
+  "max": 3.0
+ },
+ "outlier_samples": [],
+ "outlier_features": [],
+ "suspected_data_type": "possibly_log_or_normalized",
+ "warnings": [
+  "Values may already be log-transformed/normalized \u2014 avoid re-logging; consider only centering/scaling."
+ ],
+ "_looks_log_scale": true
+}

@@ -1,0 +1,103 @@
+[
+ {
+  "name": "log2(x + 1) -> z-score",
+  "steps": [
+   {
+    "method": "log2",
+    "params": {
+     "pseudocount": 1.0
+    }
+   },
+   {
+    "method": "row_zscore",
+    "params": {}
+   }
+  ],
+  "reason": "Strong right skew with non-negative values.",
+  "assumptions": [
+   "Non-negative values; a small pseudocount is acceptable."
+  ],
+  "warnings": [
+   "Many zeros \u2014 consider filtering sparse features first."
+  ]
+ },
+ {
+  "name": "arcsinh (intensity-like) -> z-score",
+  "steps": [
+   {
+    "method": "arcsinh",
+    "params": {
+     "cofactor": 5.0
+    }
+   },
+   {
+    "method": "row_zscore",
+    "params": {}
+   }
+  ],
+  "reason": "Intensity-like skewed data; arcsinh handles zeros without a pseudocount.",
+  "assumptions": [
+   "Cofactor chosen for your instrument/scale."
+  ],
+  "warnings": []
+ },
+ {
+  "name": "Filter sparse features -> log2",
+  "steps": [
+   {
+    "method": "filter",
+    "params": {
+     "max_zero_frac": 0.5,
+     "drop_constant": true
+    }
+   },
+   {
+    "method": "log2",
+    "params": {
+     "pseudocount": 1.0
+    }
+   }
+  ],
+  "reason": "High zero fraction \u2014 filter sparse/constant features before transforming.",
+  "assumptions": [
+   "Sparse features are not of primary interest."
+  ],
+  "warnings": []
+ },
+ {
+  "name": "Internal-standard normalization (if you have IS features/columns)",
+  "steps": [
+   {
+    "method": "internal_standard_features",
+    "params": {
+     "feature_ids": [],
+     "how": "median",
+     "operation": "divide"
+    }
+   }
+  ],
+  "reason": "Normalize each sample to spiked internal-standard features (you select them).",
+  "assumptions": [
+   "Internal standards are stable across samples."
+  ],
+  "warnings": [
+   "Requires you to identify the internal-standard features/columns."
+  ]
+ },
+ {
+  "name": "Quantile normalization (forces identical distributions)",
+  "steps": [
+   {
+    "method": "quantile",
+    "params": {}
+   }
+  ],
+  "reason": "Aggressively removes distribution differences between samples.",
+  "assumptions": [
+   "Global distribution shifts are technical, not biological."
+  ],
+  "warnings": [
+   "Inappropriate when distribution shifts are biologically real."
+  ]
+ }
+]

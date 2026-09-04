@@ -1,0 +1,29 @@
+{
+ "input": "data/synthetic/P_contingency_3x4.csv (3x4 crosstab)",
+ "before_fix_p_values_five_calls": [
+  0.0483,
+  0.0464,
+  0.0446,
+  0.0466,
+  0.0438
+ ],
+ "R_fisher_test_exact_p": 0.0462148,
+ "note": "before the fix each call returned a different p-value (unseeded Monte Carlo)",
+ "after_fix_p_values_three_calls": [
+  0.04602476987615062,
+  0.04602476987615062,
+  0.04602476987615062
+ ],
+ "after_fix_seconds_per_call": 0.288,
+ "after_fix_extra": {
+  "p_value_method": "monte_carlo",
+  "n_resamples": 200000,
+  "seed": 20240901
+ },
+ "after_fix_warnings": [
+  "Fisher's exact test on a 3x4 table: the p-value is a seeded Monte Carlo approximation (200000 resamples, seed 20240901), not the exact network algorithm; report it as approximate.",
+  "Odds ratio is only reported for 2x2 tables."
+ ],
+ "fix": "make_my_figure_core/statistics/categorical.py: r x c branch now passes scipy.stats.MonteCarloMethod(n_resamples=200000, rng=default_rng(20240901)) and records method/seed/n_resamples in extra + a warning",
+ "regression_test": "tests/test_r_validation_regressions.py::test_fisher_rxc_is_reproducible"
+}

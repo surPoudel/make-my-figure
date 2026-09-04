@@ -1,0 +1,16 @@
+component,dataset_id,quantity,sign_flip,max_abs_error,rmse,corr_abs,class,cause
+pca,W_logcpm,PC1_scores(sign-aligned),False,1.06581410364015e-14,6.20666637884563e-15,1,EXACT,
+pca,W_logcpm,PC2_scores(sign-aligned),False,1.01252339845814e-13,7.1183560903452e-14,1,EXACT,
+pca,W_logcpm,explained_variance_ratio[1:5] (MakeMyFigure metadata is rounded to 4 dp; R rounded likewise),,0,,,EXACT,
+pca,W_voom,PC1_scores(sign-aligned),False,0.00142866254563856,0.000647730192570307,0.999999997028739,UPSTREAM_INPUT_DIFFERENCE,"Input matrices differ upstream by the TMM tie-handling difference only (see tmm_factors; voom now uses limma's definition). The component itself is validated on the plain log2-CPM input (W_logcpm / RSEM_logcpm), which is cell-wise identical on both sides."
+pca,W_voom,PC2_scores(sign-aligned),False,0.00238543458345397,0.00128551750330184,0.999999971978129,UPSTREAM_INPUT_DIFFERENCE,"Input matrices differ upstream by the TMM tie-handling difference only (see tmm_factors; voom now uses limma's definition). The component itself is validated on the plain log2-CPM input (W_logcpm / RSEM_logcpm), which is cell-wise identical on both sides."
+pca,W_voom,explained_variance_ratio[1:5] (MakeMyFigure metadata is rounded to 4 dp; R rounded likewise),,0.000100000000000003,,,UPSTREAM_INPUT_DIFFERENCE,"Input matrices differ upstream by the TMM tie-handling difference only (see tmm_factors; voom now uses limma's definition). The component itself is validated on the plain log2-CPM input (W_logcpm / RSEM_logcpm), which is cell-wise identical on both sides."
+pca,Y,PC1_scores(sign-aligned),False,1.99840144432528e-14,8.83837944079743e-15,1,EXACT,
+pca,Y,PC2_scores(sign-aligned),False,4.9960036108132e-14,2.68232272291662e-14,1,EXACT,
+pca,Y,explained_variance_ratio[1:5] (MakeMyFigure metadata is rounded to 4 dp; R rounded likewise),,0,,,EXACT,
+pca,RSEM_logcpm,PC1_scores(sign-aligned),False,3.01980662698043e-13,1.43115800855734e-13,1,EXACT,
+pca,RSEM_logcpm,PC2_scores(sign-aligned),False,2.20268248085631e-13,1.25472541678464e-13,1,EXACT,
+pca,RSEM_logcpm,explained_variance_ratio[1:5] (MakeMyFigure metadata is rounded to 4 dp; R rounded likewise),,0,,,EXACT,
+pca,RSEM_voom,PC1_scores(sign-aligned),False,8.03126649984165e-06,4.78598501383028e-06,0.999999999999978,UPSTREAM_INPUT_DIFFERENCE,"Input matrices differ upstream by the TMM tie-handling difference only (see tmm_factors; voom now uses limma's definition). The component itself is validated on the plain log2-CPM input (W_logcpm / RSEM_logcpm), which is cell-wise identical on both sides."
+pca,RSEM_voom,PC2_scores(sign-aligned),False,9.27699282993188e-06,4.66462494477343e-06,0.999999999999976,UPSTREAM_INPUT_DIFFERENCE,"Input matrices differ upstream by the TMM tie-handling difference only (see tmm_factors; voom now uses limma's definition). The component itself is validated on the plain log2-CPM input (W_logcpm / RSEM_logcpm), which is cell-wise identical on both sides."
+pca,RSEM_voom,explained_variance_ratio[1:5] (MakeMyFigure metadata is rounded to 4 dp; R rounded likewise),,0,,,EXACT,
