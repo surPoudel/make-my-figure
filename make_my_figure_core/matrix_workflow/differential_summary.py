@@ -220,15 +220,20 @@ def _two_group_record(feat, a, b, test, value_type, pseudocount) -> Dict[str, An
                 stat, pval = stats.ttest_ind(a, b, equal_var=True)
                 eff, ci_lo, ci_hi = _cohen_d_ci(a, b)
             elif test == "mann_whitney":
-                stat, pval = stats.mannwhitneyu(a, b, alternative="two-sided")
-                eff = 1.0 - (2.0 * stat) / (na * nb) if na * nb else np.nan  # rank-biserial
+                # see differential.differential_screen: canonicalise last-bit near-ties
+                a12, b12 = np.round(a, 12), np.round(b, 12)
+                stat, pval = stats.mannwhitneyu(a12, b12, alternative="two-sided")
+                # rank-biserial r = 2U/(n_a n_b) - 1 with U for group A, i.e. positive when A > B —
+                # the same convention as statistics.effect_sizes.rank_biserial_from_u (the sign
+                # was inverted before the R validation caught it).
+                eff = (2.0 * stat) / (na * nb) - 1.0 if na * nb else np.nan
             elif test == "paired_t":
                 n = min(na, nb)
                 stat, pval = stats.ttest_rel(a[:n], b[:n])
                 eff, ci_lo, ci_hi = _cohen_d_ci(a[:n], b[:n])
             elif test == "wilcoxon":
                 n = min(na, nb)
-                stat, pval = stats.wilcoxon(a[:n], b[:n])
+                stat, pval = stats.wilcoxon(np.round(a[:n], 12), np.round(b[:n], 12))
             else:
                 raise ValueError(f"Unknown two-group test: {test}")
         except Exception:

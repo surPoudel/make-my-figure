@@ -17,6 +17,11 @@ from make_my_figure_core.statistics import effect_sizes as es
 from make_my_figure_core.statistics._versions import software_versions
 from make_my_figure_core.statistics.models import StatResult, StatsError
 
+# r x c Fisher tables: scipy computes the p-value by Monte Carlo resampling; these
+# settings make that value reproducible across runs and machines.
+_RXC_N_RESAMPLES = 200_000
+_RXC_SEED = 20240901
+
 
 def contingency_from_columns(df: pd.DataFrame, row_col: str, col_col: str) -> pd.DataFrame:
     """Build a contingency table (counts) from two categorical columns."""
@@ -78,10 +83,26 @@ def fishers_exact(table, *, row_col=None, col_col=None, alternative: str = "two-
         r.effect_size_name = "odds ratio"; r.effect_size = float(oddsratio)
         r.statistic_name = "odds ratio"; r.statistic = float(oddsratio)
     else:
-        # scipy >= 1.15 supports r x c Fisher's exact; older versions raise for
-        # non-2x2, in which case we fall back to a clear warning (no fake p).
+        # scipy >= 1.15 supports r x c tables, but its default is an UNSEEDED Monte
+        # Carlo approximation, so repeated calls returned different p-values. Pin the
+        # resampling to a fixed seed and a large resample count so the value is
+        # reproducible, and say so in the result (it is an approximation, not the
+        # exact network algorithm R's fisher.test uses).
         try:
-            res = stats.fisher_exact(arr)
+            mc = getattr(stats, "MonteCarloMethod", None)
+            if mc is not None:
+                method = mc(n_resamples=_RXC_N_RESAMPLES, rng=np.random.default_rng(_RXC_SEED))
+                res = stats.fisher_exact(arr, method=method)
+                r.extra["p_value_method"] = "monte_carlo"
+                r.extra["n_resamples"] = _RXC_N_RESAMPLES
+                r.extra["seed"] = _RXC_SEED
+                r.warnings.append(
+                    f"Fisher's exact test on a {arr.shape[0]}x{arr.shape[1]} table: the p-value is a "
+                    f"seeded Monte Carlo approximation ({_RXC_N_RESAMPLES} resamples, seed {_RXC_SEED}), "
+                    "not the exact network algorithm; report it as approximate."
+                )
+            else:  # pragma: no cover - scipy without resampling methods
+                res = stats.fisher_exact(arr)
             r.p_value = float(res.pvalue if hasattr(res, "pvalue") else res[1])
             r.warnings.append("Odds ratio is only reported for 2x2 tables.")
         except Exception:

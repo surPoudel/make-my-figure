@@ -28,16 +28,21 @@ PLOT_TYPE = "roc_curve"
 
 def _roc(labels: np.ndarray, scores: np.ndarray) -> Tuple[np.ndarray, np.ndarray, float]:
     """Return (fpr, tpr, auc). Labels are 0/1; scores are continuous."""
-    order = np.argsort(-scores)
+    order = np.argsort(-scores, kind="stable")
     labels = labels[order]
+    scores = scores[order]
     P = float(np.sum(labels == 1))
     N = float(np.sum(labels == 0))
     if P == 0 or N == 0:
         raise RenderError("ROC needs both positive and negative labels.")
     tps = np.cumsum(labels == 1)
     fps = np.cumsum(labels == 0)
-    tpr = np.concatenate([[0.0], tps / P])
-    fpr = np.concatenate([[0.0], fps / N])
+    # One operating point per distinct score: tied scores must move together, otherwise
+    # the curve (and the AUC) depends on the row order of the input table. With ties
+    # collapsed, the trapezoid AUC equals the tie-corrected Mann-Whitney AUC.
+    last = np.r_[np.where(np.diff(scores) != 0)[0], scores.size - 1]
+    tpr = np.concatenate([[0.0], tps[last] / P])
+    fpr = np.concatenate([[0.0], fps[last] / N])
     # np.trapz was renamed to np.trapezoid in NumPy 2.0.
     trapezoid = getattr(np, "trapezoid", None) or getattr(np, "trapz", None)
     auc = float(trapezoid(tpr, fpr))

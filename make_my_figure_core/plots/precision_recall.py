@@ -30,14 +30,18 @@ PLOT_TYPE = "precision_recall_curve"
 
 def _pr_from_scores(labels: np.ndarray, scores: np.ndarray) -> Tuple[np.ndarray, np.ndarray, float, float, float]:
     """Return (recall_plot, precision_plot, average_precision, n_pos, n_neg)."""
-    order = np.argsort(-scores)
+    order = np.argsort(-scores, kind="stable")
     labels = labels[order]
+    scores = scores[order]
     P = float(np.sum(labels == 1))
     N = float(np.sum(labels == 0))
     if P == 0 or N == 0:
         raise RenderError("Precision-recall needs both positive (label==1) and negative labels.")
-    tp = np.cumsum(labels == 1).astype(float)
-    fp = np.cumsum(labels == 0).astype(float)
+    # One operating point per distinct score (tied scores are one threshold), so the
+    # curve and the average precision do not depend on the input row order.
+    last = np.r_[np.where(np.diff(scores) != 0)[0], scores.size - 1]
+    tp = np.cumsum(labels == 1).astype(float)[last]
+    fp = np.cumsum(labels == 0).astype(float)[last]
     precision = tp / np.maximum(tp + fp, 1e-12)
     recall = tp / P
     # Average precision: sum (R_n - R_{n-1}) * P_n, with R_{-1} = 0 (the

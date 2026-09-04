@@ -135,8 +135,12 @@ def differential_screen(df: pd.DataFrame, *, feature_col: str,
             stat = np.full(len(features), np.nan)
             pvals = np.full(len(features), np.nan)
             for i in range(len(features)):
-                a = A[i][np.isfinite(A[i])]
-                b = B[i][np.isfinite(B[i])]
+                # Rank tests must see mathematically equal values as ties. Log-CPM of
+                # zero counts is identical across libraries in exact arithmetic but can
+                # differ in the last bit, which broke ties arbitrarily (an all-zero gene
+                # scored p = 0.28 instead of 1). Rounding to 12 decimals restores the ties.
+                a = np.round(A[i][np.isfinite(A[i])], 12)
+                b = np.round(B[i][np.isfinite(B[i])], 12)
                 if a.size >= 1 and b.size >= 1 and not (np.all(a == b[0]) and np.all(b == b[0])):
                     try:
                         u = stats.mannwhitneyu(b, a, alternative="two-sided")

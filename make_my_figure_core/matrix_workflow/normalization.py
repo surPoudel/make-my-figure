@@ -68,20 +68,45 @@ def upper_quartile(df: pd.DataFrame, spec: MatrixSpec) -> Result:
 
 
 def quantile_normalize(df: pd.DataFrame, spec: MatrixSpec) -> Result:
-    """Force every sample to share the same value distribution (rank-based)."""
+    """Force every sample to share the same value distribution (rank-based).
+
+    Follows the Bolstad et al. (2003) algorithm as implemented by the standard
+    Bioconductor routine (ties averaged): the reference distribution is the row mean of
+    the column-wise sorted values, and each value is mapped through the reference at
+    its *average* rank, so tied values (e.g. many zeros) receive the same normalized
+    value. Missing values stay missing; a column with missing entries is interpolated
+    onto the full quantile grid before averaging, as that routine does.
+    """
+    from scipy.stats import rankdata
+
     cols = _cols(df, spec)
     m = _block(df, cols)
-    # mean of sorted values across samples = the common reference distribution
-    order = np.argsort(m, axis=0)
-    ranks = np.argsort(order, axis=0)
-    sorted_vals = np.sort(m, axis=0)
-    ref = np.nanmean(sorted_vals, axis=1)
-    new = np.empty_like(m)
+    n = m.shape[0]
+    grid = np.arange(n) / max(n - 1, 1)
+    sorted_full = np.empty_like(m)
     for j in range(m.shape[1]):
-        new[:, j] = ref[ranks[:, j]]
+        col = m[:, j]
+        vals = np.sort(col[np.isfinite(col)])
+        k = vals.size
+        if k == 0:
+            sorted_full[:, j] = np.nan
+        elif k == n:
+            sorted_full[:, j] = vals
+        else:  # interpolate the observed quantiles onto the full grid (Bolstad)
+            sorted_full[:, j] = np.interp(grid, np.arange(k) / max(k - 1, 1), vals)
+    ref = np.nanmean(sorted_full, axis=1)
+    new = np.full_like(m, np.nan)
+    for j in range(m.shape[1]):
+        col = m[:, j]
+        ok = np.isfinite(col)
+        k = int(ok.sum())
+        if k == 0:
+            continue
+        r = rankdata(col[ok], method="average")           # ties -> average rank
+        new[ok, j] = np.interp((r - 1) / max(k - 1, 1), grid, ref)
     warns = ["Quantile normalization forces all samples to the same distribution — "
              "inappropriate when global distribution shifts are biologically real."]
-    return _apply(df, cols, new), {}, warns
+    return _apply(df, cols, new), {"ties": "average", "reference": "row mean of sorted columns"}, warns
 
 
 # --- z-score / standardization ----------------------------------------------
@@ -340,10 +365,17 @@ def voom(df: pd.DataFrame, spec: MatrixSpec, *, prior_count: float = 0.5,
         warns.append("Negative values present — voom assumes non-negative counts.")
     factors = tmm_norm_factors(m)
     eff_lib = np.nansum(np.where(np.isfinite(m), m, 0.0), axis=0) * factors
-    out_df, _p, w = cpm(df, spec, log=True, prior_count=prior_count, lib_sizes=eff_lib)
-    return out_df, {"method": "voom", "output_scale": "log2_cpm",
-                    "norm_factors": [float(x) for x in factors],
-                    "weights_available": True}, warns + w
+    # voom definition (Law et al. 2014): E = log2((count + prior) / (effective library
+    # size + 2*prior) * 1e6) with an UNSCALED prior (0.5 by default). The cpm(log=TRUE)
+    # convention scales the prior by library size instead; the two differ by up to
+    # log2(lib/mean(lib)) for low counts, so this step uses the voom definition it is named after.
+    lib = np.where(eff_lib > 0, eff_lib, np.nan)
+    p = float(prior_count)
+    new = np.log2((m + p) / (lib + 2.0 * p) * 1e6)
+    return _apply(df, cols, new), {"method": "voom", "output_scale": "log2_cpm",
+                                   "prior_count": p, "prior_scaling": "unscaled (voom definition, Law et al. 2014)",
+                                   "norm_factors": [float(x) for x in factors],
+                                   "weights_available": True}, warns
 
 
 def voom_weights(df: pd.DataFrame, spec: MatrixSpec, *, prior_count: float = 0.5) -> pd.DataFrame:
