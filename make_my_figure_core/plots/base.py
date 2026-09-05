@@ -235,8 +235,13 @@ def apply_axis_overrides(ax, spec: Dict[str, Any], *, axis_min: float = None,
 def style_axes(ax, style: "StyleProfile | None" = None) -> None:
     """Apply common publication axis cosmetics driven by style tokens."""
     if style is not None:
+        # ``labelsize`` is set on the Axis itself (not only through rcParams) because
+        # matplotlib's automatic tick density (``Axis.get_tick_space``) reads the tick
+        # label size at *draw* time. Figures drawn outside the style context -- e.g. the
+        # Figure Builder rasterising a panel -- would otherwise be laid out for the
+        # default 10 pt and pile large tick labels on top of each other.
         ax.tick_params(direction=style.tick_direction, length=style.tick_length,
-                       width=style.tick_width)
+                       width=style.tick_width, labelsize=style.tick_label_pt)
         for spine, show in (("top", style.show_top_spine), ("right", style.show_right_spine)):
             if spine in ax.spines:
                 ax.spines[spine].set_visible(show)
@@ -296,6 +301,17 @@ def autorotate_xticklabels(ax, style: "StyleProfile | None" = None, *,
         fs = max(_FLOOR, base_fs - 1)
     else:
         fs = base_fs
+
+    # A rotated multi-line label draws its lines as parallel slanted strips that run into
+    # the neighbouring labels; rotated labels are therefore always single-line. The text is
+    # set through the formatter (set_xticklabels) because tick Text objects are refreshed
+    # from the formatter at draw time.
+    if angle and any("\n" in t.get_text() for t in ticklabels):
+        joined = [" ".join(part.strip() for part in t.get_text().split("\n") if part.strip())
+                  for t in ticklabels]
+        ax.set_xticks(ax.get_xticks())
+        ax.set_xticklabels(joined)
+        ticklabels = ax.get_xticklabels()
 
     for t in ticklabels:
         t.set_rotation(angle)
