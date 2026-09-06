@@ -8935,6 +8935,7 @@
    "n_down": 35,
    "n_ns": 530,
    "p_cutoff": 0.05,
+   "lfc_cutoff": 0.0,
    "n_labeled": 8,
    "duplicate_label_policy": "all",
    "duplicate_label_representative_rule": "pvalue",

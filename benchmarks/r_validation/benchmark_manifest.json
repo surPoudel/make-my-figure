@@ -1,6 +1,6 @@
 {
- "generated_utc": "2026-09-04T16:45:27.139047+00:00",
- "repository_commit": "ac49ff8a01bd7fba715a52ec7b8a92354662e80b",
+ "generated_utc": "2026-09-06T15:39:29.821378+00:00",
+ "repository_commit": "92fd71ebef61833d90423074e11379be59dac80c",
  "make_my_figure_core_version": "1.0.0",
  "python": {
   "python": "3.11.8 | packaged by conda-forge | (main, Feb 16 2024, 20:53:32) [GCC 12.3.0]",
@@ -463,7 +463,7 @@
   "results/python/pca__W_voom.json": "e092c903ea70257a828ee6c1514e78e21a11b549554623b0a9a16ad92040efeb",
   "results/python/pca__Y.csv": "d5075d598c3ac0e8840629b8c99c72609ab5a201784f2103781a0d92037ea3b8",
   "results/python/pca__Y.json": "b729b91b6b3f080aa39a50955ef097092465d22d8e0905de0adb7934c1fab484",
-  "results/python/plot_derived_statistics.json": "a303bf01f090c3989679d88c6ad6964227892a6719fc0ba4fb72826c7dcc5f36",
+  "results/python/plot_derived_statistics.json": "27f0497da7f1effd578cc269ce74223712512a28ba49ee1c0efe40e90acfd70c",
   "results/python/preprocessing_recommendations__RSEM.json": "4a871d24450ef1ff36feb4d4ed2b11f64f4f3eae3cf8adfbdd458c9ebc250447",
   "results/python/preprocessing_recommendations__W.json": "9faa2a429f868cf8b542f9c3ba57d760fa24afbb996d74d02d0d31afe715d8cf",
   "results/python/preprocessing_recommendations__X.json": "9faa2a429f868cf8b542f9c3ba57d760fa24afbb996d74d02d0d31afe715d8cf",
