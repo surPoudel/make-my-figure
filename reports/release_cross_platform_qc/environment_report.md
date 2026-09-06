@@ -7,7 +7,7 @@
 
 - App version: `0.6.1`
 - Git commit: `4aaae44`
-- Module path (redacted): `/mnt/c/Users/<user>/OneDrive - St. Jude Children's Research Hospital/make_my_plot`
+- Module path: redacted (a cloud-synced folder under /mnt/c)
 - In /mnt/c: `True` · In OneDrive: `True`
 - Platform: `Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.35`
 - Python: `3.11.8`

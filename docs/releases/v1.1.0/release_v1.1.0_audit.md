@@ -152,7 +152,7 @@ d9ef415047b28ec6f57c042d24559776bd0cafec6dd5f1a7be8aa96a5b782a38  make_my_figure
 ## 8. Privacy and repository-content audit (integration branch)
 
 Commands: `git ls-files`, `git ls-files | grep -i -E "manuscript|JUMP|Concerns|PRIVATE_REFERENCE|EndNote|\.enl|claude|prompt|\.ttf|\.otf|publisher"`,
-`git grep -n -i -E "manuscriptv[0-9]|JUMPlib|JUMPptm|PRIVATE_REFERENCE_ONLY|spoudel1|OneDrive|/mnt/c/Users"`.
+`git grep -n -i -E "manuscriptv[0-9]|JUMPlib|JUMPptm|PRIVATE_REFERENCE_ONLY|<local-user>|OneDrive|/mnt/c/Users"`.
 
 Findings and actions:
 
