@@ -19,5 +19,5 @@ XV,Open PlotSpec… reproduces a saved figure and locates its data,desktop contr
 QS10 / XVI,"Add generated panels, import an external panel, resize, label, export composite + FigureSpec + layout preset",core panels + presets,PASS,3 panels (1 imported); 3 files; composite.figure_spec.json; layout preset saved
 XIII,Select points to label; duplicate-label policy 'unique' with representative rule,core render,PASS,labels drawn: 0/3
 X,Every registered plot type renders from its bundled example,core render,PASS,38/38 render
-III,"Desktop: load an example, then Home / Upload New Data clears the session",offscreen Qt MainWindow,PASS,loaded + reset OK; banner=Make My Figure v1.0.0 · ac49ff8 · Linux · Agg
+III,"Desktop: load an example, then Home / Upload New Data clears the session",offscreen Qt MainWindow,PASS,loaded + reset OK; banner=Make My Figure v1.1.0 · cea315c · Linux · Agg
 III / XIV,"Browser app: pick a bundled sample, change Title pt, save a Figure preset",Streamlit AppTest,PASS,rendered; preset saved from browser app: ['Browser bars']

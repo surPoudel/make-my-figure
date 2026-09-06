@@ -225,16 +225,20 @@ def render_story(html: str, title: str, subtitle: str, out_path: str) -> int:
 
     doc = fitz.open()
     tp = doc.new_page(width=page_rect.width, height=page_rect.height)
-    tp.insert_textbox(fitz.Rect(60, 200, page_rect.width - 60, 300), title, fontsize=30, fontname="helv",
+    # The built-in Helvetica has no em-dash glyph (it rendered as "?"); use a TrueType font with full Latin coverage
+    import matplotlib
+    _ttf = os.path.join(os.path.dirname(matplotlib.__file__), "mpl-data", "fonts", "ttf", "DejaVuSans.ttf")
+    _cover_font = {"fontname": "DejaVuSans", "fontfile": _ttf}
+    tp.insert_textbox(fitz.Rect(60, 200, page_rect.width - 60, 300), title, fontsize=30, **_cover_font,
                       color=(0.07, 0.13, 0.2))
-    tp.insert_textbox(fitz.Rect(60, 300, page_rect.width - 60, 340), subtitle, fontsize=15, fontname="helv",
+    tp.insert_textbox(fitz.Rect(60, 300, page_rect.width - 60, 340), subtitle, fontsize=15, **_cover_font,
                       color=(0.2, 0.27, 0.33))
     tp.insert_textbox(fitz.Rect(60, 420, page_rect.width - 60, 560),
                       f"MakeMyFigure version {__version__}\nDocumentation generated from commit {COMMIT}\n"
                       f"Date {DATE}\n\nBuilt from the current code and the running application. "
                       f"Screenshots and example figures use bundled synthetic data only.\n\n"
                       f"Page references in the Contents count from the first body page.",
-                      fontsize=11, fontname="helv")
+                      fontsize=11, **_cover_font)
     doc.insert_pdf(toc)
     doc.insert_pdf(body)
     # page numbers on body pages (numbered from 1 at the first body page)
@@ -242,9 +246,9 @@ def render_story(html: str, title: str, subtitle: str, out_path: str) -> int:
         page = doc[i]
         num = i - n_toc
         page.insert_text(fitz.Point(page_rect.width / 2 - 8, page_rect.height - 28), str(num),
-                         fontsize=9, fontname="helv", color=(0.35, 0.35, 0.35))
+                         fontsize=9, **_cover_font, color=(0.35, 0.35, 0.35))
         page.insert_text(fitz.Point(48, page_rect.height - 28), f"{title} · v{__version__} · {COMMIT}",
-                         fontsize=7.5, fontname="helv", color=(0.5, 0.5, 0.5))
+                         fontsize=7.5, **_cover_font, color=(0.5, 0.5, 0.5))
     outline = [[lvl, txt, pg + n_toc + 1] for lvl, txt, pg in headings if txt]
     try:
         doc.set_toc(outline)

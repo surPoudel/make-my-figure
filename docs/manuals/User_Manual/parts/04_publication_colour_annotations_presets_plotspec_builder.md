@@ -146,6 +146,18 @@ The environment variable `MAKE_MY_FIGURE_PRESETS` overrides the folder (portable
 4. Adjust only what is data-specific: feature/value columns, clustering method, title.
 5. Export; the PlotSpec of the new figure records everything, including that the preset's values are in effect.
 
+**Worked example with bundled data (dataset A → preset → dataset B).** You can repeat this with the two apps' bundled examples; it is also executed by the release validation script (`scripts/validate_documented_workflows.py`, results in `docs/manuals/audit/v1.1.0_documentation_validation.csv`).
+
+1. *Dataset A:* **File → Open example → Box / violin with points** (desktop) or *Bundled sample → Box / violin with points* (browser). Set **Palette** to *colorblind_safe*, **Marker size** to 30 and, in *3. Options*, **Point size** to 20.
+2. **Save preset…** → *Lab box style* → *Figure style only*. The file `Lab_box_style.mmfpreset.json` appears in the preset library (Section 59); it contains the palette, the marker size and the point size but no column names and no data rows.
+3. *Dataset B:* open your own CSV with a different group column and value column (any two-column long table), choose *Box / violin with points*, map `x` and `y` yourself.
+4. **Apply** *Lab box style*. The palette, marker size and point size move to the saved values; your `x`/`y` mapping is untouched because a style preset never carries roles. The status line reports how many settings applied.
+5. Export. The new PlotSpec records the applied values, so the figure is reproducible without the preset file.
+
+If you had saved a **full** configuration in step 2 instead, step 4 would also try to restore the roles `x = group` and `y = value`; when dataset B has no columns with those names the status line lists each unresolved role ("wanted 'x' … nothing was substituted") and you map them in *Map columns*.
+
+**Categorical colours after applying a preset.** A preset stores the *palette*, not a table of category → colour pairs. Categories of dataset B receive the palette colours in the order in which they appear in dataset B (Section 47), so the first category in B gets the first palette colour even if a category of the same name was second in A. To pin a category to a colour, order the categories in the table (or in the grouping step) identically in both datasets. The exceptions are plots whose colours are options rather than palette entries — volcano and MA class colours (`color_up`, `color_down`, `color_ns`), Manhattan threshold-line colour, network node/edge colours, paired-slopegraph point/line colours: these are style options and are carried by the preset exactly.
+
 ## Part XV — PlotSpec and reproducibility
 
 ### 61. What a PlotSpec records

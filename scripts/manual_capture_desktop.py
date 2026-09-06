@@ -253,8 +253,7 @@ _pending_dialog_name["name"] = "desktop_18_help.png"
 win.action_help()
 _pending_dialog_name["name"] = None
 win.action_about()
-with open(os.path.join(OUT, "desktop_about_text.json"), "w", encoding="utf-8") as fh:
-    json.dump(_about_text, fh, indent=2)
+# The About text is only echoed (it contains the local commit lookup); nothing is written to the repo.
 print("about:", _about_text.get("text", "")[:160].replace("\n", " "))
 
 with open(os.path.join(OUT, "desktop_capture_log.json"), "w", encoding="utf-8") as fh:

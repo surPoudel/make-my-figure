@@ -1,8 +1,8 @@
 # Make My Figure — User Manual
 
-**MakeMyFigure version:** 1.0.0  
-**Documentation generated from commit:** `ac49ff8`  
-**Date:** 2026-09-03
+**MakeMyFigure version:** 1.1.0  
+**Documentation generated from commit:** `cea315c`  
+**Date:** 2026-09-06
 
 This manual describes the application exactly as built at the commit above. Where the packaged installers of an earlier release differ, the text says so.
 
@@ -10,7 +10,7 @@ This manual describes the application exactly as built at the commit above. Wher
 
 ### 1. About Make My Figure
 
-Make My Figure (package `make_my_figure_core`, version 1.0.0) turns tabular scientific data — CSV/TSV/TXT files and Excel workbooks — into manuscript-style figures, and records how each figure was made. One engine serves two interfaces: a **desktop application** built with Qt (PySide6) and a **browser application** built with Streamlit. Both run entirely on your own computer.
+Make My Figure (package `make_my_figure_core`, version 1.1.0) turns tabular scientific data — CSV/TSV/TXT files and Excel workbooks — into manuscript-style figures, and records how each figure was made. One engine serves two interfaces: a **desktop application** built with Qt (PySide6) and a **browser application** built with Streamlit. Both run entirely on your own computer.
 
 ### 2. Intended users
 
@@ -66,11 +66,11 @@ Python, pandas, NumPy, SciPy, statsmodels, Matplotlib, openpyxl, networkx. The d
 | Run the newest code, the browser app, or develop | **Source install** with Python 3.10–3.12 |
 | Use Make My Figure from your own scripts | `pip install` the core wheel (`make_my_figure_core-*.whl`) — no GUI included |
 
-**Warning:** the installers attached to release **v1.0.0** were built in July 2026 from the `main` branch of that time. They do not include the features and fixes added afterwards on the development branch this manual documents (Figure presets, the histogram plot, survival-curve and merged-header fixes, the capability audit). Until a newer installer is published, those features are available only from a source install.
+The installers attached to release **v1.1.0** (`MakeMyFigure-1.1.0.dmg`, `MakeMyFigure-1.1.0-Setup.exe` / `MakeMyFigure-1.1.0-windows.zip`, `MakeMyFigure-1.1.0.AppImage` / `MakeMyFigure-1.1.0-linux.tar.gz`) are built from the tagged v1.1.0 source on native macOS, Windows and Linux runners and contain everything this manual documents (Figure presets, the histogram plot, survival-curve and merged-header fixes, the R-validated statistical corrections). Download them from the project's GitHub *Releases* page and check the file's SHA-256 against `SHA256SUMS.txt` if you want to verify the download.
 
 ### 9. macOS
 
-**Packaged:** open `MakeMyFigure.dmg`, drag *Make My Figure* to *Applications*. The bundle is not notarised: on first launch right-click → **Open**, or allow it in *System Settings → Privacy & Security*.
+**Packaged:** open `MakeMyFigure-1.1.0.dmg`, drag *Make My Figure* to *Applications*. The bundle is not notarised: on first launch right-click → **Open**, or allow it in *System Settings → Privacy & Security*.
 
 **Source:**
 
@@ -97,7 +97,7 @@ Common macOS startup errors:
 
 ### 10. Windows
 
-**Packaged:** run `MakeMyFigure-Setup.exe` (Inno Setup installer) or unzip `MakeMyFigure-windows.zip` and start `MakeMyFigure\MakeMyFigure.exe`. Windows Defender may show a SmartScreen prompt for an unsigned binary; choose *More info → Run anyway* if you trust the source.
+**Packaged:** run `MakeMyFigure-1.1.0-Setup.exe` (Inno Setup installer) or unzip `MakeMyFigure-1.1.0-windows.zip` and start `MakeMyFigure\MakeMyFigure.exe`. Windows Defender may show a SmartScreen prompt for an unsigned binary; choose *More info → Run anyway* if you trust the source.
 
 **Source (PowerShell):**
 
@@ -116,7 +116,7 @@ First launch of the packaged app can take 10–20 s while Windows unpacks and sc
 
 ### 11. Linux
 
-**Packaged:** `chmod +x MakeMyFigure.AppImage && ./MakeMyFigure.AppImage`, or unpack `MakeMyFigure-linux.tar.gz` and run `MakeMyFigure/MakeMyFigure`.
+**Packaged:** `chmod +x MakeMyFigure-1.1.0.AppImage && ./MakeMyFigure-1.1.0.AppImage`, or unpack `MakeMyFigure-1.1.0-linux.tar.gz` and run `MakeMyFigure/MakeMyFigure`.
 
 **Source:** as for macOS, using the distribution's `python3` (3.10+). The Qt binding needs system libraries that server and container images usually lack:
 
@@ -128,13 +128,13 @@ sudo apt install -y libxkbcommon0 libxkbcommon-x11-0 libgl1 libegl1 libxcb-curso
 
 If PySide6 cannot load, the desktop app prints this exact list and exits cleanly; the browser app is unaffected.
 
-### 12. WSL (Windows Subsystem for Linux)
+### 12. WSL2 (Linux running under Windows)
 
-The source install works in WSL 2. The desktop app needs a display: WSLg (Windows 11) provides one automatically; otherwise use the browser app, which needs no display — `streamlit run apps/streamlit_app/streamlit_app.py --server.headless true` and open the printed URL in a Windows browser. Install the Linux Qt libraries above if you want the desktop app.
+WSL2 is Linux running inside Windows; it is not native Windows and the Windows installer does not apply to it. The source install works in WSL 2. The desktop app needs a display: WSLg (Windows 11) provides one automatically; otherwise use the browser app, which needs no display — `streamlit run apps/streamlit_app/streamlit_app.py --server.headless true` and open the printed URL in a Windows browser. Install the Linux Qt libraries above if you want the desktop app.
 
 ### 13. Launching, verifying the version, updating, uninstalling
 
-- **Desktop:** `python -m apps.desktop_app.main` (source) or the installed application. The status bar shows the build banner on launch (`Make My Figure v1.0.0 · <commit> · <platform> · <backend>`); **Help → About** shows the version.
+- **Desktop:** `python -m apps.desktop_app.main` (source) or the installed application. The status bar shows the build banner on launch (`Make My Figure v1.1.0 · <commit> · <platform> · <backend>`); **Help → About** shows the version.
 - **Browser:** `streamlit run apps/streamlit_app/streamlit_app.py`; the banner is in the sidebar, with a **🔧 Diagnostics** expander listing the module path and backend. If the commit there does not match your pulled HEAD, an older installed package is shadowing the checkout — run `python -m pip install -e .`.
 - **Update a source install:** `git pull`, then re-run the two `pip install` lines.
 - **Uninstall:** delete the project folder and the venv; packaged apps uninstall like any application. User presets live in a separate folder (Part XIV) and are not removed with the app.
@@ -591,7 +591,7 @@ The 38 plot types below are the complete registry on this commit, enumerated fro
 
 **Legend / colorbar controls:** legend location (inside/outside), legend size.
 
-**Plot-specific controls (visual, carried in a style preset):** `color_up` — Up-regulated colour, `color_down` — Down-regulated colour, `color_ns` — Not-significant colour, `annotate` — Show labels, `show_arrows` — Arrows to points, `label_box` — Label background box, `duplicate_label_policy` — Duplicate labels, `duplicate_label_representative_rule` — Representative point, `duplicate_label_show_count` — Append (n=…) count.  
+**Plot-specific controls (visual, carried in a style preset):** `show_legend` — Show Up / Down / n.s. legend, `color_up` — Up-regulated colour, `color_down` — Down-regulated colour, `color_ns` — Not-significant colour, `annotate` — Show labels, `show_arrows` — Arrows to points, `label_box` — Label background box, `duplicate_label_policy` — Duplicate labels, `duplicate_label_representative_rule` — Representative point, `duplicate_label_show_count` — Append (n=…) count.  
 **Analytical / data-dependent options (full preset only):** `lfc_cutoff` — log2FC cutoff, `p_cutoff` — p-value / FDR cutoff, `use_fdr` — P column is FDR/adjusted (y-axis = −log10 FDR), `label_mode` — Label mode, `top_n` — Top N labels, `top_n_up` — Top N up, `top_n_down` — Top N down, `label_by` — Label by.
 
 **Recommended export:** SVG or PDF for vector; PNG/TIFF at 300–600 dpi for raster.
@@ -659,7 +659,7 @@ The 38 plot types below are the complete registry on this commit, enumerated fro
 
 **Legend / colorbar controls:** no legend drawn.
 
-**Plot-specific controls (visual, carried in a style preset):** `kind` — Kind, `points` — Overlay points, `x_tick_rotation` — X-axis label angle.  
+**Plot-specific controls (visual, carried in a style preset):** `point_size` — Point size (pt²), `kind` — Kind, `points` — Overlay points, `x_tick_rotation` — X-axis label angle.  
 **Analytical / data-dependent options (full preset only):** none.
 
 **Recommended export:** SVG or PDF for vector; PNG/TIFF at 300–600 dpi for raster.
@@ -681,7 +681,7 @@ The 38 plot types below are the complete registry on this commit, enumerated fro
 
 **Required / optional input:** one table with the roles below; the bundled example has columns `time_hours`, `treatment`, `replicate`, `signal`, `unit`.
 
-**Column mapping:** `x`, `y`, `color`; example mapping `{"x": "time_hours", "y": "signal", "color": "treatment"}`.
+**Column mapping:** `x`, `y`, `color`, `style_by`; example mapping `{"x": "time_hours", "y": "signal", "color": "treatment"}`.
 
 **Statistics supported:** no on-figure statistical annotation (the Statistics panel still runs for the mapped columns where a test applies).
 
@@ -965,8 +965,8 @@ The 38 plot types below are the complete registry on this commit, enumerated fro
 
 **Legend / colorbar controls:** legend location (inside/outside), legend size.
 
-**Plot-specific controls (visual, carried in a style preset):** none.  
-**Analytical / data-dependent options (full preset only):** none.
+**Plot-specific controls (visual, carried in a style preset):** `show_sample_labels` — Show sample labels (auto: <= 12 samples).  
+**Analytical / data-dependent options (full preset only):** `order` — Row / column order.
 
 **Recommended export:** SVG or PDF for vector; PNG/TIFF at 300–600 dpi for raster.
 
@@ -1272,7 +1272,7 @@ The 38 plot types below are the complete registry on this commit, enumerated fro
 **Legend / colorbar controls:** legend location (inside/outside), legend size.
 
 **Plot-specific controls (visual, carried in a style preset):** `color_ns` — Not-significant colour, `duplicate_label_policy` — Duplicate labels, `duplicate_label_representative_rule` — Representative point, `duplicate_label_show_count` — Append (n=…) count.  
-**Analytical / data-dependent options (full preset only):** `p_cutoff` — Significance cutoff, `label_top_n` — Label top N hits.
+**Analytical / data-dependent options (full preset only):** `p_cutoff` — Significance cutoff, `lfc_cutoff` — |log2FC| cutoff (0 = none), `label_top_n` — Label top N hits.
 
 **Recommended export:** SVG or PDF for vector; PNG/TIFF at 300–600 dpi for raster.
 
@@ -1790,7 +1790,7 @@ Not every control applies to every plot: bars have no markers, a heatmap has no 
 
 ### 44. Axis ranges and ticks
 
-Some plot types expose **x_min / x_max / y_min / y_max** and **y ticks** options (histogram, Kaplan-Meier). A range that would hide plotted data is **refused** with a message, never silently clipped — a truncated axis overstates differences. Leave the field on *(auto)* to let the figure choose.
+Some plot types expose **x_min / x_max / y_min / y_max** and **y ticks** options (histogram, Kaplan-Meier, forest plot); line plots also take a layout **x/y axis scale** (linear, log, symlog — a log axis is skipped when the data include non-positive values). A range that would hide plotted data is **refused** with a message, never silently clipped — a truncated axis overstates differences. Leave the field on *(auto)* to let the figure choose.
 
 ## Part XII — Colour customisation
 
@@ -1908,6 +1908,18 @@ The environment variable `MAKE_MY_FIGURE_PRESETS` overrides the folder (portable
 4. Adjust only what is data-specific: feature/value columns, clustering method, title.
 5. Export; the PlotSpec of the new figure records everything, including that the preset's values are in effect.
 
+**Worked example with bundled data (dataset A → preset → dataset B).** You can repeat this with the two apps' bundled examples; it is also executed by the release validation script (`scripts/validate_documented_workflows.py`, results in `docs/manuals/audit/v1.1.0_documentation_validation.csv`).
+
+1. *Dataset A:* **File → Open example → Box / violin with points** (desktop) or *Bundled sample → Box / violin with points* (browser). Set **Palette** to *colorblind_safe*, **Marker size** to 30 and, in *3. Options*, **Point size** to 20.
+2. **Save preset…** → *Lab box style* → *Figure style only*. The file `Lab_box_style.mmfpreset.json` appears in the preset library (Section 59); it contains the palette, the marker size and the point size but no column names and no data rows.
+3. *Dataset B:* open your own CSV with a different group column and value column (any two-column long table), choose *Box / violin with points*, map `x` and `y` yourself.
+4. **Apply** *Lab box style*. The palette, marker size and point size move to the saved values; your `x`/`y` mapping is untouched because a style preset never carries roles. The status line reports how many settings applied.
+5. Export. The new PlotSpec records the applied values, so the figure is reproducible without the preset file.
+
+If you had saved a **full** configuration in step 2 instead, step 4 would also try to restore the roles `x = group` and `y = value`; when dataset B has no columns with those names the status line lists each unresolved role ("wanted 'x' … nothing was substituted") and you map them in *Map columns*.
+
+**Categorical colours after applying a preset.** A preset stores the *palette*, not a table of category → colour pairs. Categories of dataset B receive the palette colours in the order in which they appear in dataset B (Section 47), so the first category in B gets the first palette colour even if a category of the same name was second in A. To pin a category to a colour, order the categories in the table (or in the grouping step) identically in both datasets. The exceptions are plots whose colours are options rather than palette entries — volcano and MA class colours (`color_up`, `color_down`, `color_ns`), Manhattan threshold-line colour, network node/edge colours, paired-slopegraph point/line colours: these are style options and are carried by the preset exactly.
+
 ## Part XV — PlotSpec and reproducibility
 
 ### 61. What a PlotSpec records
@@ -1980,7 +1992,7 @@ Inside the guided Matrix workflow, step **⑤ Figure Builder** lists the panels 
 | **PNG** | raster | 150–600 (Raster DPI) | rasterised | white background | grows with DPI² | slides, quick sharing, journals requiring raster |
 | **TIFF** | raster, LZW-compressed | as PNG | rasterised | white | larger than PNG | journals requiring TIFF |
 
-All exports use `bbox_inches="tight"`. Desktop buttons: **Export SVG / PNG / PDF / PlotSpec JSON**, **Export all as ZIP** (every format incl. TIFF/EPS plus sidecars). Browser: **SVG / PNG / PDF / PlotSpec JSON** downloads. Every export writes `name.plot_spec.json`, and `name.stats_spec.json` when statistics ran. The Figure Builder exports PNG + SVG + PDF + `name.figure_spec.json` with panel content embedded as raster at the export DPI.
+All exports use a tight bounding box that also includes the axis labels and title, so a long axis label is never clipped. Desktop buttons: **Export SVG / PNG / PDF / PlotSpec JSON**, **Export all as ZIP** (every format incl. TIFF/EPS plus sidecars). Browser: **SVG / PNG / PDF / PlotSpec JSON** downloads. Every export writes `name.plot_spec.json`, and `name.stats_spec.json` when statistics ran. The Figure Builder exports PNG + SVG + PDF + `name.figure_spec.json` with panel content embedded as raster at the export DPI.
 
 ![Browser: figure preview with the Export downloads (SVG, PNG, PDF, PlotSpec JSON).](../assets/screenshots/streamlit_16_export.png)
 
@@ -2118,7 +2130,7 @@ figure_builder_assets/                                 copies of imported panel 
 - The recommendation engine is rule-based.
 - No transformation is ever applied silently; conversely nothing is auto-normalised for you.
 - Cross-platform font differences; no byte-identical guarantee.
-- Packaged v1.0.0 installers predate this branch; two cosmetic desktop defects exist on this commit (group titles containing "&" lose the ampersand to a Qt mnemonic; About shows `commit unknown` while the status bar shows the commit).
+- Packaged v1.1.0 installers are built from the same tagged source as this manual; the two cosmetic Qt defects below are present in them as well.
 - Statistics annotation is not available on the line/time-course plot.
 
 ## Part XXVI — Glossary

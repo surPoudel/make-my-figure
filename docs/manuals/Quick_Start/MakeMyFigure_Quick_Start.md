@@ -1,8 +1,8 @@
 # Make My Figure — Quick Start
 
-**MakeMyFigure version:** 1.0.0  
-**Documentation generated from commit:** `ac49ff8`  
-**Date:** 2026-09-03
+**MakeMyFigure version:** 1.1.0  
+**Documentation generated from commit:** `cea315c`  
+**Date:** 2026-09-06
 
 This manual describes the application exactly as built at the commit above. Where the packaged installers of an earlier release differ, the text says so.
 
@@ -30,13 +30,16 @@ Two interfaces share one engine: a **desktop app** (Qt) and a **browser app** (S
 
 ### A. Packaged application (no Python needed)
 
-Installers for **Windows** (`MakeMyFigure-Setup.exe`, or `MakeMyFigure-windows.zip`), **macOS** (`MakeMyFigure.dmg`) and **Linux** (`MakeMyFigure.AppImage`, or `MakeMyFigure-linux.tar.gz`) are attached to the GitHub release of version 1.0.0. They contain the desktop app and everything it needs.
+Download the installer for your system from the project's GitHub **Releases** page (release **v1.1.0**):
 
-**Warning:** at the time of writing the published installers were built from the v1.0.0 release (July 2026). They do **not** contain features added since — Figure presets, the histogram plot, the wide-form histogram picker, the collaborator fixes to survival curves and merged Excel headers. To use those today, install from source (B). A rebuilt installer will carry them once one is published.
+| System | File | Steps |
+|---|---|---|
+| **macOS** | `MakeMyFigure-1.1.0.dmg` | open the DMG, drag *Make My Figure* to *Applications*, launch it. The bundle is not notarised: on first launch right-click → **Open** (or allow it under *System Settings → Privacy & Security*). |
+| **Windows** | `MakeMyFigure-1.1.0-Setup.exe` (or `MakeMyFigure-1.1.0-windows.zip`) | run the installer (or unzip and start `MakeMyFigure\MakeMyFigure.exe`). SmartScreen may warn about an unsigned program; choose *More info → Run anyway* if you trust the source. |
+| **Linux** | `MakeMyFigure-1.1.0.AppImage` (or `MakeMyFigure-1.1.0-linux.tar.gz`) | `chmod +x MakeMyFigure-1.1.0.AppImage && ./MakeMyFigure-1.1.0.AppImage`, or unpack the tarball and run `MakeMyFigure/MakeMyFigure`. |
+| **WSL2** (Linux under Windows) | not a native package | use the source install below with WSLg (Windows 11) or run the browser app and open it in a Windows browser. |
 
-- *Windows:* run the Setup `.exe` and follow the prompts, or unzip `MakeMyFigure-windows.zip` and run `MakeMyFigure\MakeMyFigure.exe`.
-- *macOS:* open the `.dmg` and drag **Make My Figure** to Applications. The first launch may need right-click → **Open** because the bundle is not notarised.
-- *Linux:* `chmod +x MakeMyFigure.AppImage && ./MakeMyFigure.AppImage`, or unpack the tarball and run `MakeMyFigure/MakeMyFigure`.
+`SHA256SUMS.txt` on the release page lists the checksum of every file. The status bar (desktop) shows `Make My Figure v1.1.0 · <commit> · <platform> · <backend>` on launch, and **Help → About** shows the version.
 
 ### B. From source (desktop and browser apps)
 
