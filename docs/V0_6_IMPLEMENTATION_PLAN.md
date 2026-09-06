@@ -102,7 +102,7 @@ directly implied by the "precomputed results" / "matrix" scope).
 
 ## 4. Windows-specific performance risks
 
-- **OneDrive-synced repo path** (the working dir is under `OneDrive - St. Jude...`): file I/O and
+- **OneDrive-synced repo path** (a working directory inside a cloud-synced folder): file I/O and
   first-access reads can be slow / trigger cloud hydration. File dialogs and example loads pay this.
 - **PyInstaller one-folder first launch** on Windows: Defender/SmartScreen scan + cold DLL load
   (Qt plugins, scipy/statsmodels submodules bundled) → slow first start; document expected delay.

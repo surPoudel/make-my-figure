@@ -38,7 +38,7 @@ implementation (file::function), the exact scipy/statsmodels/numpy call or formu
 defaults, the R reference used, and the validation class. Every entry except `network_metrics` (no igraph
 in the R environment) was exercised.
 
-## 3. Final validation matrix (`FINAL_VALIDATION_MATRIX.csv`, `results/manuscript_validation_table.csv`)
+## 3. Final validation matrix (`FINAL_VALIDATION_MATRIX.csv`, `results/validation_summary_table.csv`)
 
 | Component | n | EXACT | NUM. EQUIV. | ACCEPTABLE | UPSTREAM | FAIL | NEEDS REVIEW | Verdict |
 |---|---|---|---|---|---|---|---|---|

@@ -567,7 +567,7 @@ def summarize(frames: dict) -> None:
         err = df["abs_diff"] if "abs_diff" in df.columns else df["max_abs_error"] if "max_abs_error" in df.columns else df.get("max_abs_error_cophenetic")
         rows.append({"component": comp, "n_comparisons": len(df), **{k: counts.get(k, 0) for k in ["EXACT", "NUMERICALLY_EQUIVALENT", "ACCEPTABLE_IMPLEMENTATION_DIFFERENCE", "METHOD_MISMATCH", "UPSTREAM_INPUT_DIFFERENCE", "FAIL", "NEEDS_REVIEW", "NOT_COMPARED"]},
                      "max_abs_error_among_agreeing": float(np.nanmax(pd.to_numeric(err[df["class"].isin(["EXACT", "NUMERICALLY_EQUIVALENT"])], errors="coerce"))) if err is not None and df["class"].isin(["EXACT", "NUMERICALLY_EQUIVALENT"]).any() else np.nan})
-    tab = pd.DataFrame(rows); tab.to_csv(ROOT / "results" / "manuscript_validation_table.csv", index=False, float_format="%.3g")
+    tab = pd.DataFrame(rows); tab.to_csv(ROOT / "results" / "validation_summary_table.csv", index=False, float_format="%.3g")
     final = tab.copy()
     def verdict(r):
         if r["FAIL"] > 0:

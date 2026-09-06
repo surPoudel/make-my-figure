@@ -357,7 +357,7 @@
   "results/comparisons/recommendation_examples_audit.csv": "b8b32b971f7f9f2dcf06895cc36a649577798142d9c0595593062bba739fff26",
   "results/comparisons/rsem_characterisation_python_vs_R.csv": "473c8bd4f3f5d13e1dce5711c6aafd88b7559c0025dd911dbfe7226dceb5dee5",
   "results/comparisons/statistics_R_convention_context.csv": "e990ebca7800d2a27f954dd00e1a8f9e77f664eb4b2394485571a34076adc25f",
-  "results/manuscript_validation_table.csv": "e8ae61388807a47fc67076344edcb46c0cd09bc3ac795f1b168024e5f97640e2",
+  "results/validation_summary_table.csv": "e8ae61388807a47fc67076344edcb46c0cd09bc3ac795f1b168024e5f97640e2",
   "results/python/cluster__RSEM_logcpm_samples__average_correlation.csv": "e15a6f6723d961a98b5a48c81693fa8ab35d203120778d1a0c131514a4f22f91",
   "results/python/cluster__RSEM_logcpm_samples__average_euclidean.csv": "96b9980719ba9a492f5ff12dc2da09d2554de797dfd142334315333d89d9f850",
   "results/python/cluster__RSEM_logcpm_samples__complete_euclidean.csv": "8dcfe5aced470d21c060de607befdaf68adf3de0e0c855b9b40bd5bcea9947d2",

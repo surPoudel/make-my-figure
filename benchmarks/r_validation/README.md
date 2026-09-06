@@ -37,9 +37,9 @@ benchmarks/r_validation/
 ├── results/R/                    R outputs with identical file names / column contracts
 ├── results/comparisons/          per-component comparison tables (+ bugfix before/after records)
 ├── results/statistics_python_vs_R.csv, transformation_python_vs_R.csv(+_summary), rnaseq_method_concordance.csv,
-│   manuscript_validation_table.csv, R_sessionInfo.txt, python_environment.txt
+│   validation_summary_table.csv, R_sessionInfo.txt, python_environment.txt
 ├── figures/                      exact_method_concordance, transformation_concordance, rnaseq_concordance, qc_concordance (pdf+png)
-└── reports/                      VALIDATION_REPORT.md, DISCREPANCY_REPORT.md, RECOMMENDATION_AUDIT.md, METHODS_FOR_MANUSCRIPT.md
+└── reports/                      VALIDATION_REPORT.md, DISCREPANCY_REPORT.md, RECOMMENDATION_AUDIT.md
 ```
 
 ## Independence safeguards

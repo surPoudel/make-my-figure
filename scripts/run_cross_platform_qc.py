@@ -125,7 +125,9 @@ def run(output_dir: str) -> dict:
             row["notes"] = traceback.format_exc().splitlines()[-1]
         rows.append(row)
 
-    manifest = {"build": build_info(), "packages": _package_versions(),
+    build = dict(build_info())
+    build["module_path"] = "<redacted>"  # never record a local user path in a committed report
+    manifest = {"build": build, "packages": _package_versions(),
                 "n_plot_types": len(plot_types),
                 "repo_in_mnt_c": _REPO.startswith("/mnt/"),
                 "repo_in_onedrive": "OneDrive" in _REPO}
