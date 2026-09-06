@@ -59,7 +59,7 @@ columns map, and export a clean figure plus a reproducible JSON record (PlotSpec
 
 | System | File |
 |---|---|
-| macOS | `MakeMyFigure-1.1.0.dmg` (also `MakeMyFigure-1.1.0-macos.zip`) |
+| macOS | `MakeMyFigure-1.1.0.dmg` |
 | Windows | `MakeMyFigure-1.1.0-Setup.exe` (also `MakeMyFigure-1.1.0-windows.zip`) |
 | Linux | `MakeMyFigure-1.1.0-linux-x86_64.tar.gz` or `MakeMyFigure-1.1.0.AppImage` |
 | Python | `make_my_figure_core-1.1.0-py3-none-any.whl`, `make_my_figure_core-1.1.0.tar.gz` |

@@ -130,7 +130,7 @@ application code changed for either. Final run of the whole module: **41 passed,
 | Artefact | How built | Evidence |
 |---|---|---|
 | `make_my_figure_core-1.1.0-py3-none-any.whl`, `make_my_figure_core-1.1.0.tar.gz` | `python -m build` from the integration branch | fresh venv install → version 1.1.0, 38 plot types, exports PNG/PDF/SVG/TIFF/EPS, resources resolved from site-packages |
-| `MakeMyFigure-1.1.0.dmg`, `-macos.zip` | GitHub Actions macOS runner | workflow_dispatch run 34043384212 — job success; `--selftest` "SELFTEST OK: 38 plot types rendered + exported; statistics OK" |
+| `MakeMyFigure-1.1.0.dmg` (the `-macos.zip` is only a fallback when hdiutil fails; not produced) | GitHub Actions macOS runner | workflow_dispatch run 34043384212 — job success; `--selftest` "SELFTEST OK: 38 plot types rendered + exported; statistics OK" |
 | `MakeMyFigure-1.1.0-Setup.exe`, `-windows.zip` | GitHub Actions Windows runner (Inno Setup) | same run — job success; `MakeMyFigure.exe --selftest` step exit 0 (the windowed executable prints no console output) |
 | `MakeMyFigure-1.1.0.AppImage`, `MakeMyFigure-1.1.0-linux-x86_64.tar.gz` | GitHub Actions Ubuntu runner | same run — job success; "SELFTEST OK" |
 
