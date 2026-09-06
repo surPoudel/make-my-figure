@@ -162,7 +162,8 @@ def debug_info() -> dict:
     return {
         "frontend": "desktop",
         "app_version": __version__,
-        "git_commit": _git_commit(),
+        "git_commit": (_git_commit() if _git_commit() != "unknown"
+                       else __import__("make_my_figure_core.version", fromlist=["build_info"]).build_info().get("commit", "unknown")),
         "desktop_app_file": os.path.abspath(__file__),
         "core_package_path": os.path.dirname(os.path.abspath(make_my_figure_core.__file__)),
         "repo_root": _REPO_ROOT,
@@ -1336,9 +1337,9 @@ class MainWindow(QMainWindow):
             self, f"About {APP_NAME}",
             f"<h3>{APP_NAME}</h3>"
             f"<p>Version {di['app_version']} (commit {di['git_commit']})</p>"
-            "<p>Author: Make My Figure contributors (placeholder)</p>"
-            "<p>License: MIT (placeholder)</p>"
-            "<p>Website: https://example.com/make-my-figure (placeholder)</p>"
+            "<p>Make My Figure contributors · MIT License</p>"
+            "<p>Source code, manuals and releases: "
+            "<a href='https://github.com/surPoudel/make-my-figure'>github.com/surPoudel/make-my-figure</a></p>"
             "<p>Create publication-style scientific figures from your data — "
             "entirely on your computer.</p>"
             f"{cloud}"

@@ -1,14 +1,14 @@
 ; Inno Setup script for Make My Figure (Windows installer).
 ; Build:  iscc /DMyAppVersion=0.1.0 packaging\windows_installer.iss
-; Produces dist\MakeMyFigure-Setup.exe
+; Produces dist\MakeMyFigure-<version>-Setup.exe
 ; Requires the PyInstaller output at dist\MakeMyFigure\ (run build_windows.ps1 first).
 
 #ifndef MyAppVersion
   #define MyAppVersion "0.1.0"
 #endif
 #define MyAppName "Make My Figure"
-#define MyAppPublisher "Make My Figure contributors"   ; placeholder
-#define MyAppURL "https://example.com/make-my-figure"   ; placeholder
+#define MyAppPublisher "Make My Figure contributors"
+#define MyAppURL "https://github.com/surPoudel/make-my-figure"
 #define MyAppExeName "MakeMyFigure.exe"
 
 [Setup]
@@ -21,7 +21,7 @@ DefaultDirName={autopf}\MakeMyFigure
 DefaultGroupName=Make My Figure
 DisableProgramGroupPage=yes
 OutputDir=..\dist
-OutputBaseFilename=MakeMyFigure-Setup
+OutputBaseFilename=MakeMyFigure-{#MyAppVersion}-Setup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern

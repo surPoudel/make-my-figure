@@ -78,3 +78,4 @@ prompts/
 REFERENCE_AND_OUTLINE_AUDIT.md
 scripts/*_manuscript*.py
 scripts/*manuscript*.py
+benchmarks/r_validation/results/R/*.rds

@@ -22,6 +22,7 @@ python3 "$ROOT/scripts/build_desktop.py" --clean
 
 APP="$ROOT/dist/MakeMyFigure.app"
 [ -d "$APP" ] || { echo "Build failed: $APP not found"; exit 1; }
+VER="$(python3 -c "import sys; sys.path.insert(0, '$ROOT'); from make_my_figure_core.version import __version__; print(__version__)")"
 
 # Optional codesign/notarization only if Apple secrets are present.
 if [ -n "${APPLE_DEVELOPER_ID:-}" ]; then
@@ -32,7 +33,7 @@ else
 fi
 
 # Produce a .dmg if create-dmg or hdiutil is available; else zip the .app.
-DMG="$ROOT/dist/MakeMyFigure.dmg"
+DMG="$ROOT/dist/MakeMyFigure-${VER}.dmg"
 if command -v hdiutil >/dev/null 2>&1; then
   echo "==> Creating $DMG"
   rm -f "$DMG"
@@ -41,6 +42,6 @@ if command -v hdiutil >/dev/null 2>&1; then
 fi
 if [ ! -f "$DMG" ]; then
   echo "==> Zipping .app as fallback"
-  (cd "$ROOT/dist" && zip -r -q "MakeMyFigure-macos.zip" "MakeMyFigure.app")
+  (cd "$ROOT/dist" && zip -r -q "MakeMyFigure-${VER}-macos.zip" "MakeMyFigure.app")
 fi
 echo "Done."

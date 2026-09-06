@@ -109,7 +109,7 @@ jobs:
         run: |
           set -euo pipefail
           shopt -s nullglob
-          files=(dist/*.dmg dist/*.AppImage dist/*.exe dist/*-windows.zip dist/*-macos.zip dist/*-linux.tar.gz)
+          files=(dist/*.dmg dist/*.AppImage dist/*.exe dist/*-windows.zip dist/*-macos.zip dist/*-linux-*.tar.gz)
           if [ ${#files[@]} -eq 0 ]; then
             echo "No installer files found in dist/ — nothing to publish."
             exit 0

@@ -4,6 +4,94 @@ All notable changes to Make My Figure are recorded here. This project uses a
 single, evolving `Publication` style — it does not target or claim compliance
 with any journal.
 
+## [1.1.0] — Figure presets, validated statistics, export and packaging fixes
+
+### Added
+- **Figure presets for every plot type** (`presets.py`; desktop *Figure preset* panel and
+  browser expander: Apply, Save preset…, Import, Export, Delete, Reset). A preset is the
+  reusable part of a PlotSpec — **style** mode (typography, palette, geometry, legend and
+  colorbar placement, export size, visual plot options) or **full** mode (adds column roles,
+  thresholds, labels, statistics test). It never contains the table, its name, values or
+  worksheet provenance; roles a new table cannot satisfy are reported, never substituted.
+  Every option now declares a scope (`Option.scope`), and a registry-wide QC matrix
+  (`reports/figure_preset_qc/`) pins save → apply → export → round-trip for all 38 types.
+  Figure Builder **Layout presets** (`.mmflayout.json`) carry grid, panel sizes, gutters and
+  label style without panel content.
+- **Histogram plot type** (`histogram_distribution`): long or wide input (declared, not
+  guessed), one panel per group or overlaid, bars and/or frequency polygon, counts /
+  frequency / percent / density, cumulative option, mean/median markers, axis-range and tick
+  controls. Complements the ridge/density plot, which smooths.
+- **Survival curves:** explicit `precomputed` input form for already-computed S(t) columns
+  (multi-column role), validated 0/1 event indicator with a two-level recoding message,
+  `y_scale` fraction/percent, reference line, group labels, curve style; a log-rank test is
+  refused on a precomputed curve with an explanation.
+- **Axis-range and tick overrides** (`x_min`, `x_max`, `y_ticks`, `ends_and_midpoint`) for
+  survival, histogram and forest plots. A range that would hide plotted data is refused
+  rather than clipped silently. Layout `x_scale` / `y_scale` (`linear` | `log` | `symlog`)
+  for line plots; a log axis is skipped for non-positive data.
+- **Line / time-course bands:** `iqr` and `range` (median-centred) in addition to SEM / SD /
+  CI95; `style_by` mapping varies line style and marker by a second category while colour
+  follows the first.
+- **Oncoprint:** `order` (frequency | input) and `show_sample_labels` options.
+- **Box/violin:** `point_size`; **volcano:** `show_legend`; **MA plot:** optional
+  `lfc_cutoff` so significance can follow a published definition; **heatmap:** an explicit
+  layout `aspect` overrides the row-count height heuristic; `title_font_weight` style token
+  honoured by every renderer that draws a title.
+- **Multi-column roles** (`value_columns`, `survival_columns`) render as multi-select lists in
+  both frontends; optional numeric options can be left blank ("(auto)") in the desktop app.
+- **Independent R validation benchmark** (`benchmarks/r_validation/`): every statistical test,
+  correction, normalisation/transform, QC metric, PCA, clustering and differential screen
+  compared with independent R implementations (base R, survival, car, rstatix, effectsize,
+  MASS, dunn.test, limma, edgeR, DESeq2) on 26 seeded synthetic datasets, the bundled examples
+  and a public RSEM count matrix; 2,625 comparisons, no failures; classes EXACT /
+  NUMERICALLY_EQUIVALENT / ACCEPTABLE_IMPLEMENTATION_DIFFERENCE / UPSTREAM_INPUT_DIFFERENCE /
+  METHOD_MISMATCH kept apart; the feature-level screen is compared with limma-voom, edgeR and
+  DESeq2 as concordance only. Regression tests in `tests/test_r_validation_regressions.py`.
+- **User Manual and Quick Start** (`docs/manuals/`, generated Markdown, DOCX and PDF with
+  screenshots from bundled example data) and a plot catalogue generated from the registry.
+
+### Changed
+- The browser app reads column roles and options from the shared `ui_hints` registry (its
+  own copy had drifted: 19 plot types had no mapping controls).
+- Tick density follows the style's tick font even when a figure is drawn outside the style
+  context (Figure Builder rasterisation); rotated multi-line category labels are joined on
+  one line.
+- Exports use a tight bounding box that includes axis labels and titles, so a long axis label
+  is no longer clipped.
+- Streamlit single-plot exports keep text as text (editable SVG/PDF).
+
+### Fixed
+- **Six numerical defects found by the R validation:** r × c Fisher's exact test used an
+  unseeded Monte Carlo p-value (now seeded, 200,000 resamples, method recorded); ROC AUC and
+  average precision depended on input row order for tied scores (ties collapsed to one
+  operating point); quantile normalisation broke ties by sort order (now Bolstad/limma
+  average-rank algorithm); `voom` used a library-size-scaled prior (now the voom definition);
+  the Mann–Whitney effect size in the feature-level summary had the wrong sign; last-bit
+  near-ties in rank tests are treated as ties.
+- Delimited-text floats are parsed correctly rounded (`float_precision="round_trip"`), so a
+  CSV and an XLSX of the same table load to the same doubles.
+- The Publication font stack (Arial → Helvetica → DejaVu Sans) is written as a concrete,
+  installed family list, so exports, Figure Builder letters/titles, re-placed legends and
+  manual annotations keep the profile font instead of falling back to DejaVu Sans.
+- Style presets transfer the palette in order to plots with new categories (regression test).
+- Installed wheels ship the bundled resources (schemas, style profiles, mock data, examples)
+  inside the package; `pip install` of a wheel could previously not render anything.
+- Three stale tests repaired (browser smoke test picker index; AppTest session-state proxy).
+- Desktop About dialog shows the real licence and repository instead of placeholders.
+
+### Validation
+- Full test suite on Linux (Qt offscreen where available); R benchmark re-run against the
+  release candidate (see `docs/releases/v1.1.0/release_v1.1.0_audit.md`).
+
+### Documentation
+- README rewritten for v1.1.0 (native installers first; plot and statistics counts from code).
+- `docs/manuals/`: Quick Start and User Manual regenerated for v1.1.0.
+
+### Packaging
+- `setup.py` + `MANIFEST.in` stage resources into the wheel; `pyproject.toml` build extra.
+- Native installers (macOS DMG, Windows Setup.exe, Linux AppImage/tar.gz) are built on the
+  GitHub Actions native runners when a version tag is pushed, with a `--selftest` smoke test.
+
 ## [1.0.0] — First stable release
 
 Supersedes `1.0.0-rc1`, adding the release-candidate fixes plus first-class

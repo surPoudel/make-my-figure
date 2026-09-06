@@ -11,10 +11,12 @@ python3 "$ROOT/scripts/build_desktop.py" --clean
 
 APPDIR_SRC="$ROOT/dist/MakeMyFigure"
 [ -d "$APPDIR_SRC" ] || { echo "Build failed: $APPDIR_SRC not found"; exit 1; }
+VER="$(python3 -c "import sys; sys.path.insert(0, '$ROOT'); from make_my_figure_core.version import __version__; print(__version__)")"
+ARCH_TAG="$(uname -m)"
 
 # Portable tar.gz fallback (always produced).
 echo "==> Creating portable tarball"
-(cd "$ROOT/dist" && tar czf MakeMyFigure-linux.tar.gz MakeMyFigure)
+(cd "$ROOT/dist" && tar czf "MakeMyFigure-${VER}-linux-${ARCH_TAG}.tar.gz" MakeMyFigure)
 
 # Assemble an AppDir for AppImage.
 APPDIR="$ROOT/dist/MakeMyFigure.AppDir"
@@ -40,8 +42,8 @@ chmod +x "$APPDIR/AppRun"
 
 if command -v appimagetool >/dev/null 2>&1; then
   echo "==> Building AppImage"
-  ( cd "$ROOT/dist" && ARCH="$(uname -m)" appimagetool "MakeMyFigure.AppDir" "MakeMyFigure.AppImage" ) \
-    && echo "  wrote dist/MakeMyFigure.AppImage" || echo "  appimagetool failed; tarball available"
+  ( cd "$ROOT/dist" && ARCH="$(uname -m)" appimagetool "MakeMyFigure.AppDir" "MakeMyFigure-${VER}.AppImage" ) \
+    && echo "  wrote dist/MakeMyFigure-${VER}.AppImage" || echo "  appimagetool failed; tarball available"
 else
   echo "==> appimagetool not found; skipping AppImage (tarball available)."
 fi
