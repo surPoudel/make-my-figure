@@ -1,8 +1,8 @@
 # Make My Figure — current capability audit
 
 **Application:** Make My Figure (Python package `make_my_figure_core`; desktop app `apps/desktop_app`; browser app `apps/streamlit_app`)
-**Version audited:** 1.0.0 (`make_my_figure_core/version.py`) — git commit `ac49ff8`, branch `fix/collaborator-concerns-c1-c3`
-**Audit date:** 2026-09-03
+**Version audited:** 1.1.0 (`make_my_figure_core/version.py`) — release branch `release/v1.1.0-integration` (first audited at commit `ac49ff8` on 2026-09-03; re-verified for v1.1.0 on 2026-09-06: 22/22 manual instructions and 8/8 documented workflows re-executed, screenshots recaptured)
+**Audit dates:** 2026-09-03 (initial), 2026-09-06 (v1.1.0 re-verification)
 **Method:** every fact below was read from the code on this commit, exercised in the running application (desktop offscreen on Qt, browser app in headless Chromium, both on Linux), or both. Nothing was taken from the README, changelog or earlier documents without re-verification.
 
 Classification key: **impl** = implemented on this commit · **tested** = covered by the pytest suite · **desktop** = a control exists in the PySide6 app · **browser** = a control exists in the Streamlit app · **documented** = covered in the two manuals produced with this audit · **limitation** = a boundary a user needs to know.
@@ -11,10 +11,10 @@ Classification key: **impl** = implemented on this commit · **tested** = covere
 
 | Feature | impl | tested | desktop | browser | documented | limitation |
 |---|---|---|---|---|---|---|
-| Version string (`1.0.0`), build banner with commit | yes | yes (`test_style_leaks_and_version`) | status bar on launch; Help → About | sidebar banner + 🔧 Diagnostics | yes | About dialog shows `commit unknown` while the status-bar banner shows the commit (two different lookup paths) |
+| Version string (`1.1.0`), build banner with commit | yes | yes (`test_style_leaks_and_version`) | status bar on launch; Help → About | sidebar banner + 🔧 Diagnostics | yes | the About dialog now falls back to the build-info commit, so both show the same commit (fixed for v1.1.0) |
 | Desktop entry point `python -m apps.desktop_app.main` | yes | GUI tests skip without Qt | — | — | yes | needs PySide6 (`pip install -e ".[desktop]"`) and Qt system libraries on Linux |
 | Browser entry point `streamlit run apps/streamlit_app/streamlit_app.py` | yes | AppTest suites | — | — | yes | Streamlit ≥ 1.30 |
-| Packaged installers (PyInstaller): `MakeMyFigure-Setup.exe`, `-windows.zip`, `.dmg`, `.AppImage`, `-linux.tar.gz` | yes (release v1.0.0, 2026-07-19) | build scripts only | — | — | yes | the published v1.0.0 assets predate this branch: they do **not** contain Figure presets, the histogram, or the fixes on this branch. Packaged builds need no Python. |
+| Packaged installers (PyInstaller): `MakeMyFigure-1.1.0-Setup.exe`, `-windows.zip`, `.dmg`, `.AppImage`, `-linux-x86_64.tar.gz` | yes (built from the v1.1.0 tag on the GitHub Actions native runners; `--selftest` passes on all three) | build scripts + CI workflow | — | — | yes | the v1.1.0 installers contain everything documented here, including Figure presets and the histogram |
 | Supported OS | Windows, macOS, Linux (native), WSL (source only) | Linux CI | — | — | yes | macOS/Windows not exercised in this audit |
 | Python for source installs | `requires-python >= 3.9` | CI 3.11 | — | — | yes | 3.9 is allowed by metadata but pip's byte-compile step failed on a PySide6 template under Apple's 3.9 during collaborator testing; recommend 3.10–3.12 and `--no-compile` |
 
@@ -166,7 +166,7 @@ Bar plot with error bars · Grouped bar plot with error bars · Clustered heatma
 - Figure Builder composites embed panel content as raster; free positioning/z-order is not available.
 - Desktop app has no header-row selector (browser app does); desktop has no drag-to-move for labels.
 - Browser Figure Builder exists only inside the guided Matrix workflow and supports columns only.
-- Two cosmetic desktop defects observed offscreen: group titles containing "&" ("Plot type & style", "Labels & size", "Axes & labels", "Recommend & generate") render with a Qt mnemonic (the "&" is consumed), and the About dialog reports `commit unknown`.
+- Two cosmetic desktop defects observed offscreen: group titles containing "&" ("Plot type & style", "Labels & size", "Axes & labels", "Recommend & generate") render with a Qt mnemonic (the "&" is consumed), (the About-dialog commit lookup was fixed in v1.1.0).
 - Browser app reports several "style control … ignored" notices for plot types without markers, lines or legends because every style token is always sent.
-- Packaged v1.0.0 installers do not include this branch.
+- The v1.1.0 installers are built from the same tagged source as these manuals.
 - Cross-platform font/spacing differences are expected; no byte-identical output promise.

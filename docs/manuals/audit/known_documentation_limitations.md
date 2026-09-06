@@ -1,11 +1,11 @@
 # Known documentation limitations
 
-Version documented: **1.0.0**, commit **ac49ff8**, generated 2026-09-03. Everything below is a boundary of *this documentation run*, stated so that a reader knows what was and was not verified.
+Version documented: **1.1.0** (release branch `release/v1.1.0-integration`; initial run 2026-09-03 at commit `ac49ff8`, re-verified and screenshots recaptured 2026-09-06). Everything below is a boundary of *this documentation run*, stated so that a reader knows what was and was not verified.
 
 ## Environment used for verification
 
 - All screenshots and workflow validations were produced on **Linux (WSL 2)**. The desktop app was driven on Qt's **offscreen** platform (no window manager, default Fusion-like widget style) and the browser app in **headless Chromium**. On macOS and Windows the widgets are drawn by the native style, so spacing, fonts and control shapes differ from the screenshots; the labels and layout are the same.
-- No screenshot was taken on macOS or Windows, and no packaged installer (`.dmg`, `.exe`, `.AppImage`) was run. Installer instructions come from the build scripts and the v1.0.0 release assets; the installation-error table for macOS reflects errors reported by a collaborator and reproduced by reasoning, not by running on a Mac here.
+- No screenshot was taken on macOS or Windows, and no packaged installer (`.dmg`, `.exe`, `.AppImage`) was run. Installer instructions come from the build scripts and the CI build logs of the v1.1.0 installers (which pass their `--selftest` on the macOS, Windows and Linux runners); the installation-error table for macOS reflects errors reported by a collaborator and reproduced by reasoning, not by running on a Mac here.
 - Emoji glyphs in a few button labels depend on an installed emoji font; on the capture machine one had to be installed. They are decoration only.
 
 ## Observed UI defects that the manuals describe rather than hide

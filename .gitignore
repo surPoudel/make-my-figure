@@ -87,3 +87,6 @@ docs/manuals/assets/_pdf_cache/
 claude_code/
 benchmarks/r_validation/reports/METHODS_FOR_MANUSCRIPT.md
 CLAUDE.md
+
+# Private diagnostic notes about a collaborator's workbooks stay local
+reports/collaborator_concerns/

@@ -76,7 +76,11 @@ with any journal.
 - Style presets transfer the palette in order to plots with new categories (regression test).
 - Installed wheels ship the bundled resources (schemas, style profiles, mock data, examples)
   inside the package; `pip install` of a wheel could previously not render anything.
-- Three stale tests repaired (browser smoke test picker index; AppTest session-state proxy).
+- Five stale tests repaired: browser smoke test picker index; AppTest session-state proxy; the
+  desktop grouping-dialog test used a 3-row toy matrix whose columns are (correctly) classified
+  as annotations and expected groups to be guessed without pressing *Guess groups*, so it
+  blocked on a modal warning offscreen; the PlotSpec round-trip test hard-coded a plot type
+  that the benchmark had since corrected.
 - Desktop About dialog shows the real licence and repository instead of placeholders.
 
 ### Validation
