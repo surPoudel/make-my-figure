@@ -16,7 +16,7 @@ COLUMN_FIELDS: Dict[str, List[str]] = {
     "volcano_plot": ["x", "p", "label", "id_col"],
     "scatterplot_with_regression": ["x", "y", "color", "label"],
     "boxplot_or_violin_with_points": ["x", "y"],
-    "lineplot_timecourse_with_error_band": ["x", "y", "color"],
+    "lineplot_timecourse_with_error_band": ["x", "y", "color", "style_by"],
     "ridge_or_density_plot": ["x", "group"],
     # "x"/"group" is the long form; "value_columns" is the wide form (one column per group).
     "histogram_distribution": ["x", "group", "value_columns"],
@@ -266,7 +266,10 @@ OPTIONS: Dict[str, List[Option]] = {
     "stacked_bar_composition": [_X_TICK_ROTATION],
     "waterfall_plot": [Option("sort", "Sort", "choice", "ascending", ["ascending", "descending"], scope="style")],
     "pca_scatter_from_matrix": [],
-    "oncoprint_mutation_heatmap": [],
+    "oncoprint_mutation_heatmap": [
+        Option("order", "Row / column order", "choice", "frequency", ["frequency", "input"]),
+        Option("show_sample_labels", "Show sample labels (auto: <= 12 samples)", "bool", None, scope="style"),
+    ],
     "lollipop_mutation_plot": [
         Option("show_labels", "Show mutation labels", "bool", True, scope="style"),
         Option("label_top_n", "Label top N mutations", "number", 6, minimum=0, maximum=40, step=1, decimals=0),

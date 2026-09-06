@@ -55,3 +55,27 @@ def test_log_scale_skipped_for_nonpositive_data():
     spec["layout"] = {"x_scale": "log"}
     res = render(spec, df)
     assert res.figure.axes[0].get_xscale() == "linear"
+
+
+def test_oncoprint_input_order_and_sample_labels():
+    rows = [{"s": s, "g": g, "f": "match"} for s in ("second", "first") for g in ("zeta", "alpha", "mid")]
+    df = pd.DataFrame(rows)
+    spec = make_spec("oncoprint_mutation_heatmap", "t.csv", "publication",
+                     mapping={"sample": "s", "row": "g", "fill": "f", "order": "input"})
+    ax = render(spec, df).figure.axes[0]
+    assert [t.get_text() for t in ax.get_xticklabels()] == ["second", "first"]
+    assert [t.get_text() for t in ax.get_yticklabels()][::-1][:3] == ["zeta", "alpha", "mid"] or \
+        [t.get_text() for t in ax.get_yticklabels()][:3] == ["zeta", "alpha", "mid"]
+
+
+def test_lineplot_style_by_varies_linestyle_and_marker():
+    df = _timing_frame()
+    df["platform"] = ["A", "B"] * (len(df) // 2)
+    spec = make_spec("lineplot_timecourse_with_error_band", "t.csv", "publication",
+                     mapping={"x": "rows", "y": "seconds", "color": "operation", "style_by": "platform", "error": "none"})
+    ax = render(spec, df).figure.axes[0]
+    lines = {l.get_label(): l for l in ax.get_lines() if not l.get_label().startswith("_")}
+    assert set(lines) == {"load, A", "load, B", "render, A", "render, B"}
+    assert lines["load, A"].get_color() == lines["load, B"].get_color()
+    assert lines["load, A"].get_linestyle() != lines["load, B"].get_linestyle()
+    assert lines["load, A"].get_marker() != lines["load, B"].get_marker()

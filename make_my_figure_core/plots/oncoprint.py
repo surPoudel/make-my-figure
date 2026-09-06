@@ -32,9 +32,15 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     work[sample_col] = work[sample_col].astype(str)
     work[gene_col] = work[gene_col].astype(str)
 
-    # Order genes by number of altered samples (descending).
+    # Order rows by number of altered samples (descending) - the oncoprint convention -
+    # or keep the input order (``order: "input"``), which suits categorical status
+    # matrices where the row/column order carries meaning.
+    order_mode = str(get_mapping(spec, "order", "frequency")).lower()
     gene_freq = work.groupby(gene_col)[sample_col].nunique().sort_values(ascending=False)
-    genes: List[str] = list(gene_freq.index)
+    if order_mode == "input":
+        genes: List[str] = list(dict.fromkeys(work[gene_col].tolist()))
+    else:
+        genes = list(gene_freq.index)
     samples: List[str] = list(dict.fromkeys(work[sample_col].tolist()))
 
     # Map (gene, sample) -> alteration type (last wins if multiple).
@@ -46,7 +52,11 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     def _sample_key(s: str):
         return tuple(1 if (g, s) in cell else 0 for g in genes)
 
-    samples = sorted(samples, key=_sample_key, reverse=True)
+    if order_mode != "input":
+        samples = sorted(samples, key=_sample_key, reverse=True)
+    show_sample_labels = get_mapping(spec, "show_sample_labels", None)
+    if show_sample_labels is None:
+        show_sample_labels = len(samples) <= 12
 
     alt_types = list(dict.fromkeys(work[fill_col].astype(str).tolist()))
     color_map = {a: style.color_for(i) for i, a in enumerate(alt_types)}
@@ -70,8 +80,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         ax.set_ylim(0, n_g)
         ax.set_yticks([n_g - 1 - i + 0.45 for i in range(n_g)])
         ax.set_yticklabels(genes)
-        ax.set_xticks([])
-        ax.set_xlabel(spec.get("layout", {}).get("x_label", f"Samples (n={n_s})"))
+        if show_sample_labels:
+            ax.set_xticks(range(n_s))
+            ax.set_xticklabels(samples)
+            ax.set_xlabel(spec.get("layout", {}).get("x_label", ""))
+        else:
+            ax.set_xticks([])
+            ax.set_xlabel(spec.get("layout", {}).get("x_label", f"Samples (n={n_s})"))
         title = spec.get("layout", {}).get("title")
         if title:
             ax.set_title(title)
