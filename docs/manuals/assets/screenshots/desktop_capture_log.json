@@ -1,0 +1,143 @@
+{
+  "captured": [
+    {
+      "screenshot": "desktop_01_home_upload.png",
+      "ok": true,
+      "size": "1680x1000",
+      "note": "welcome page before any data"
+    },
+    {
+      "screenshot": "desktop_02_data_loaded_workspace.png",
+      "ok": true,
+      "size": "1680x1000",
+      "note": "bar plot example rendered; data preview + controls"
+    },
+    {
+      "screenshot": "desktop_03_plot_selector_and_mapping.png",
+      "ok": true,
+      "size": "640x959",
+      "note": "controls column: plot type, recommendations, map columns, options"
+    },
+    {
+      "screenshot": "desktop_04_publication_controls.png",
+      "ok": true,
+      "size": "606x992",
+      "note": "5. Publication style group (typography, axes, legend, colorbar, margins)"
+    },
+    {
+      "screenshot": "desktop_05_statistics.png",
+      "ok": true,
+      "size": "606x847",
+      "note": "Statistics panel: test, comparison, correction, annotation, results table"
+    },
+    {
+      "screenshot": "desktop_05b_statistics_figure.png",
+      "ok": true,
+      "size": "1680x1000",
+      "note": "box/violin with brackets after Run statistics"
+    },
+    {
+      "screenshot": "desktop_06_matrix_workflow_mapping.png",
+      "ok": true,
+      "size": "1400x860",
+      "note": "Matrix workflow tab: \u2460 Map columns (before confirming)"
+    },
+    {
+      "screenshot": "desktop_07_matrix_workflow_groups.png",
+      "ok": true,
+      "size": "1400x860",
+      "note": "Matrix workflow tab: \u2461 Define groups (groups typed per sample column)"
+    },
+    {
+      "screenshot": "desktop_08_preprocessing_qc.png",
+      "ok": true,
+      "size": "1400x860",
+      "note": "Matrix workflow tab: \u2462 Preprocess (raw-like)"
+    },
+    {
+      "screenshot": "desktop_08b_matrix_validation.png",
+      "ok": true,
+      "size": "1400x860",
+      "note": "Matrix workflow tab: \u2463 Validation after Run diagnostics"
+    },
+    {
+      "screenshot": "desktop_08c_matrix_recommend_generate.png",
+      "ok": true,
+      "size": "1400x860",
+      "note": "Matrix workflow tab: \u2464 Recommend & generate"
+    },
+    {
+      "screenshot": "desktop_09_plot_recommendations.png",
+      "ok": true,
+      "size": "1354x157",
+      "note": "Recommended plots for a grouped-observation table"
+    },
+    {
+      "screenshot": "desktop_10_volcano_editor.png",
+      "ok": true,
+      "size": "1680x1000",
+      "note": "volcano example with options and labels"
+    },
+    {
+      "screenshot": "desktop_10b_volcano_options.png",
+      "ok": true,
+      "size": "606x481",
+      "note": "volcano options: class colours, cutoffs, labels, duplicate policy"
+    },
+    {
+      "screenshot": "desktop_11_figure_preset_save.png",
+      "ok": true,
+      "size": "744x142",
+      "note": "dialog: Save Figure Preset"
+    },
+    {
+      "screenshot": "desktop_12_figure_preset_load.png",
+      "ok": true,
+      "size": "606x139",
+      "note": "Figure preset group with saved presets listed"
+    },
+    {
+      "screenshot": "desktop_13_annotation_controls.png",
+      "ok": true,
+      "size": "606x201",
+      "note": "Labels & size group with Point picking enabled"
+    },
+    {
+      "screenshot": "desktop_14_figure_builder.png",
+      "ok": true,
+      "size": "1280x902",
+      "note": "Figure Builder with three generated panels"
+    },
+    {
+      "screenshot": "desktop_15_figure_builder_resize.png",
+      "ok": true,
+      "size": "1280x902",
+      "note": "first panel widened to 6 in; 2x2 grid"
+    },
+    {
+      "screenshot": "desktop_16_export_options.png",
+      "ok": true,
+      "size": "606x203",
+      "note": "Export group: SVG/PNG/PDF/PlotSpec JSON, ZIP, template, panels"
+    },
+    {
+      "screenshot": "desktop_17_multi_sheet_workbook.png",
+      "ok": true,
+      "size": "606x95",
+      "note": "Worksheet chooser for the bundled example workbook"
+    },
+    {
+      "screenshot": "desktop_17b_workbook_loaded.png",
+      "ok": true,
+      "size": "1680x1000",
+      "note": "workbook loaded: worksheet box, preview and figure"
+    },
+    {
+      "screenshot": "desktop_18_help.png",
+      "ok": true,
+      "size": "640x560",
+      "note": "dialog: Make My Figure \u2014 Help"
+    }
+  ],
+  "message_boxes": []
+}

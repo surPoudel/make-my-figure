@@ -1,0 +1,46 @@
+[
+  {
+    "screenshot": "streamlit_01_home.png",
+    "note": "landing state: data source, bundled sample"
+  },
+  {
+    "screenshot": "streamlit_02_data_loaded_bar.png",
+    "note": "bar plot example rendered with sidebar controls"
+  },
+  {
+    "screenshot": "streamlit_04_publication_controls.png",
+    "note": "Publication style expanders opened"
+  },
+  {
+    "screenshot": "streamlit_05_statistics.png",
+    "note": "Statistical tests & annotations expander"
+  },
+  {
+    "screenshot": "streamlit_11_figure_preset.png",
+    "note": "Figure preset expander: apply / save / import / export"
+  },
+  {
+    "screenshot": "streamlit_10_volcano_editor.png",
+    "note": "volcano example with the Label points expander"
+  },
+  {
+    "screenshot": "streamlit_09_recommended_figures.png",
+    "note": "Recommended figures expander for a matrix"
+  },
+  {
+    "screenshot": "streamlit_07_define_groups.png",
+    "note": "Define groups expander (wide matrix assignment)"
+  },
+  {
+    "screenshot": "streamlit_16_export.png",
+    "note": "scatter example; Export section with PNG/SVG/PDF downloads at the bottom"
+  },
+  {
+    "screenshot": "streamlit_17_multi_sheet_workbook.png",
+    "note": "workbook browser: worksheet chooser + classification"
+  },
+  {
+    "screenshot": "streamlit_06_matrix_workflow.png",
+    "note": "guided Matrix workflow with the heatmap example: step \u2460 mapping"
+  }
+]

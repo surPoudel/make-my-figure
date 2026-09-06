@@ -1,0 +1,23 @@
+manual_section,instruction,executed_via,status,evidence
+QS4 / IV,Load a CSV table,core load_table,PASS,"(24, 5) columns=['condition', 'replicate', 'measurement']"
+QS4 / IV,Load a TSV table,core load_table,PASS,"(60, 5)"
+QS4 / IV,Load an Excel worksheet (.xlsx),core load_table,PASS,"(500, 6)"
+QS4 / XVIII,Open a multi-sheet workbook and list every worksheet with its classification,controller inspect_workbook,PASS,"40 sheets; hidden=[]; first=['Bar_error', 'Grouped_bar', 'Box_violin']; types=['metadata', 'metadata', 'metadata']"
+QS4 / XVIII,Switch to another worksheet and use it as the data table,controller,PASS,"selected sheet 'Grouped_bar' -> (20, 6)"
+IV,Choose the header row / two stacked header rows (browser app),core load_table,PASS,"header=1 -> ['gene', 'value', 'note']; stacked -> ['grpA | r1', 'grpA | r2', 'grpB | r1', 'grpB | r2']"
+QS5 / XVII,"Map x/y/group, preview, adjust Publication controls, export PNG/PDF/SVG (+TIFF/EPS)",core render + export_figure,PASS,5 files + sidecar basic.plot_spec.json
+XVII,Exported SVG text stays editable,core export_figure,PASS,SVG keeps live <text> elements (editable)
+QS6 / VI,See recommended plots for a grouped-observation table,core recommend_for_table,PASS,"schema=generic_long; top=[('boxplot_or_violin_with_points', 0.72), ('ridge_or_density_plot', 0.62), ('barplot_with_error_bar', 0.6)]"
+QS7 / IX,"Two-group comparison: choose test, view p-value + effect size, annotate the figure",core render with statistics,PASS,Welch's t-test p=5.97e-12 effect Hedges' g=-2.67; stats sidecar stats.stats_spec.json
+IX,Statistics registry lists 18 methods,core statistics.TESTS,PASS,"18 methods: students_t, welch_t, mann_whitney, paired_t, wilcoxon, one_way_anova, two_way_anova, rm_anova, kruskal_wallis, dunn, chi_square, fishers_exact, logrank, cox_ph, pearson, spearman, linear_regression, glm"
+IX,Export stats table and method report; copy the method sentence,desktop controller,PASS,"stats_table.csv, method.md; sentence: Statistical analyses were performed with Python (scipy 1.17.1, statsmodels 0.14."
+QS8 / VII,"Matrix Workflow: map feature/value columns, define groups from names, run QC, list preprocessing methods",controller + matrix_workflow core,PASS,"value columns=12; groups=['Ctrl', 'DrugA', 'DrugB']; QC keys=['n_features', 'n_samples', 'missing_values', 'zero_fraction']; 27 preprocessing methods"
+VIII,Apply a preprocessing step (log2) and confirm the original matrix is preserved,matrix_workflow.apply_step,PASS,"log2 applied -> (30, 13); step log2 recorded; original matrix unchanged"
+QS9 / XIV,"Save a Figure preset, load new data, apply it, export/import/delete it",core presets + PresetStore,PASS,"saved Lab_Heatmap.mmfpreset.json; applied to (30, 13); library=['Lab Heatmap', 'Lab Heatmap (imported)']"
+XIV / XV,Load an existing PlotSpec JSON as a (full) preset,core load_preset,PASS,mode=full plot_type=forest_plot
+XV,Open PlotSpec… reproduces a saved figure and locates its data,desktop controller load_plotspec,PASS,plot_type=roc_curve; data resolved=True
+QS10 / XVI,"Add generated panels, import an external panel, resize, label, export composite + FigureSpec + layout preset",core panels + presets,PASS,3 panels (1 imported); 3 files; composite.figure_spec.json; layout preset saved
+XIII,Select points to label; duplicate-label policy 'unique' with representative rule,core render,PASS,labels drawn: 0/3
+X,Every registered plot type renders from its bundled example,core render,PASS,38/38 render
+III,"Desktop: load an example, then Home / Upload New Data clears the session",offscreen Qt MainWindow,PASS,loaded + reset OK; banner=Make My Figure v1.0.0 · ac49ff8 · Linux · Agg
+III / XIV,"Browser app: pick a bundled sample, change Title pt, save a Figure preset",Streamlit AppTest,PASS,rendered; preset saved from browser app: ['Browser bars']
