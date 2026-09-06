@@ -72,7 +72,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             for i, vals in enumerate(data):
                 jitter = rng.uniform(-0.12, 0.12, size=len(vals))
                 ax.scatter(np.full(len(vals), positions[i]) + jitter, vals,
-                           s=8, color=style.color_for(i), edgecolors="black",
+                           s=float(get_mapping(spec, "point_size", 8.0) or 8.0),
+                           color=style.color_for(i), edgecolors="black",
                            linewidths=0.2, alpha=0.8, zorder=3)
 
         ax.set_xticks(positions)

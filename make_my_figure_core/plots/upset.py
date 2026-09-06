@@ -156,7 +156,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
         title = layout.get("title")
         if title:
-            fig.suptitle(title, fontsize=style.title_font_pt, fontweight="bold")
+            fig.suptitle(title, fontsize=style.title_font_pt, fontweight=getattr(style, "title_font_weight", "bold"))
         apply_publication_layout(fig, ax_sets, spec, style)
 
     meta = base_metadata(spec, style, df, used_columns=set_names)

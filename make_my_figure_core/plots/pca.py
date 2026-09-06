@@ -15,6 +15,7 @@ import numpy as np
 import pandas as pd
 
 from make_my_figure_core.plots.base import (
+    place_legend,
     RenderError,
     RenderResult,
     base_metadata,
@@ -143,7 +144,9 @@ def render(spec: Dict[str, Any], df, style: StyleProfile,
                                           markerfacecolor="grey", markeredgecolor="black",
                                           label=str(lvl)))
         if handles:
-            ax.legend(handles=handles, frameon=False, loc="best", fontsize=style.axis_font_pt - 1)
+            # Honour the shared legend controls (legend_loc / legend_outside / legend_pt)
+            # instead of a hard-coded loc="best", which could sit on the point cloud.
+            place_legend(ax, style, handles=handles, labels=[h.get_label() for h in handles])
         style_axes(ax, style)
         fig.tight_layout()
 

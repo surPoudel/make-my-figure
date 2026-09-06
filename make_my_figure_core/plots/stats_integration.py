@@ -122,6 +122,8 @@ def run_and_annotate(
         stats_overlay.annotate_corner(ax, lines, style=style, loc=corner_loc)
     elif mode == "survival":
         lines = stat_text_panel(report.results, digits=int(ann_cfg.get("digits", 3)))
-        stats_overlay.annotate_corner(ax, lines, style=style, loc="lower left")
+        # Placement is user-configurable (annotation block 'location'); lower left by default.
+        stats_overlay.annotate_corner(ax, lines, style=style,
+                                      loc=str(ann_cfg.get("location", "lower left")).lower())
 
     return report

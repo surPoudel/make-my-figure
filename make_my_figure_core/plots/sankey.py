@@ -113,7 +113,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         ax.axis("off")
         ax._colorbar = True  # flow diagram: no meaningful x/y labels
         title = spec.get("layout", {}).get("title", f"{src} → {tgt}")
-        ax.set_title(title, fontsize=style.title_font_pt, fontweight="bold")
+        ax.set_title(title, fontsize=style.title_font_pt, fontweight=getattr(style, "title_font_weight", "bold"))
 
     meta = base_metadata(spec, style, work, used_columns=[src, tgt, val])
     meta.update({"n_sources": len(sources), "n_targets": len(targets), "total_flow": total})

@@ -221,7 +221,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         ax.yaxis.labelpad = float(get_mapping(spec, "y_label_pad", _lay.get("y_label_pad", 6.0)) or 6.0)
         title = _lay.get("title")
         if title:
-            fig.suptitle(title, fontsize=style.title_font_pt, fontweight="bold")
+            fig.suptitle(title, fontsize=style.title_font_pt, fontweight=getattr(style, "title_font_weight", "bold"))
         # Colorbar placement + size are configurable; default gap is larger when the
         # row labels sit on the right so the z-score bar clears them.
         _auto_pad = (0.16 if row_fs > 0 else 0.06) if labels_right else 0.03

@@ -335,7 +335,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                         f"({p_kind} < {p_cutoff:g}, |log$_2$FC| ≥ {lfc_cutoff:g})")
         # Bold title with a smaller, grey subtitle beneath it (EnhancedVolcano style).
         if title:
-            ax.set_title(str(title), fontsize=style.title_font_pt, fontweight="bold",
+            ax.set_title(str(title), fontsize=style.title_font_pt, fontweight=getattr(style, "title_font_weight", "bold"),
                          pad=(20 if subtitle else 8))
             if subtitle:
                 ax.text(0.5, 1.015, subtitle, transform=ax.transAxes, ha="center",
@@ -343,7 +343,10 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         elif subtitle:
             ax.set_title(subtitle, fontsize=max(9.0, style.annotation_pt), color="0.4")
         style_axes(ax, style)
-        place_legend(ax, style, force_outside=True)
+        # The Up / Down / n.s. legend can be switched off (e.g. when a figure legend
+        # explains the colours, as most published volcano plots do).
+        if bool(get_mapping(spec, "show_legend", True)):
+            place_legend(ax, style, force_outside=True)
         leg = ax.get_legend()
         if leg is not None:
             for h in leg.legend_handles:

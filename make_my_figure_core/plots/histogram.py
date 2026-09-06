@@ -404,7 +404,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             if title:
                 # The profile sets axes.titleweight to bold; a suptitle does not inherit that, so
                 # it is set here or the figure title would be lighter than its own panels.
-                fig.suptitle(title, fontsize=style.title_font_pt, fontweight="bold")
+                fig.suptitle(title, fontsize=style.title_font_pt, fontweight=getattr(style, "title_font_weight", "bold"))
 
         drawn_heights = np.concatenate(
             [_heights(v, edges, normalize, cumulative) for v in per_group.values()])

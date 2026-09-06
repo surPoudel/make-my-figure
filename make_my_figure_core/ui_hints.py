@@ -160,6 +160,7 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("y_label_pad", "Y-axis label padding", "number", 6.0, minimum=0.0, maximum=40.0, step=1.0, decimals=1, scope="style"),
     ],
     "volcano_plot": [
+        Option("show_legend", "Show Up / Down / n.s. legend", "bool", True, scope="style"),
         Option("color_up", "Up-regulated colour", "choice", "#B2182B", _SIG_COLORS, scope="style"),
         Option("color_down", "Down-regulated colour", "choice", "#2166AC", _SIG_COLORS, scope="style"),
         Option("color_ns", "Not-significant colour", "choice", "#BBBBBB", _SIG_COLORS, scope="style"),
@@ -197,6 +198,7 @@ OPTIONS: Dict[str, List[Option]] = {
                ["lower right", "lower left", "upper right", "upper left"], scope="style"),
     ],
     "boxplot_or_violin_with_points": [
+        Option("point_size", "Point size (pt²)", "number", 8.0, minimum=1.0, maximum=80.0, step=1.0, scope="style"),
         Option("kind", "Kind", "choice", "box", ["box", "violin"], scope="style"),
         Option("points", "Overlay points", "bool", True, scope="style"),
         _X_TICK_ROTATION,
@@ -303,6 +305,7 @@ OPTIONS: Dict[str, List[Option]] = {
     "ma_plot": [
         Option("color_ns", "Not-significant colour", "choice", "#B8B8B8", _SIG_COLORS, scope="style"),
         Option("p_cutoff", "Significance cutoff", "number", 0.05, minimum=0.0, maximum=1.0, step=0.01, decimals=4),
+        Option("lfc_cutoff", "|log2FC| cutoff (0 = none)", "number", 0.0, minimum=0.0, maximum=20.0, step=0.5, decimals=2),
         Option("label_top_n", "Label top N hits", "number", 8, minimum=0, maximum=40, step=1, decimals=0),
         # Duplicate-label handling (shared with the volcano plot).
         Option("duplicate_label_policy", "Duplicate labels", "choice", "all",

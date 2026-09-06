@@ -373,6 +373,15 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         target_h = w_in * (0.95 if n_c <= 14 else 1.15)
     target_h += 0.5 * len(col_annotations)
     target_h = max(target_h, w_in * 0.6)
+    # An explicit numeric layout['aspect'] is an instruction about the panel shape (for
+    # example to fit a multi-panel grid) and takes precedence over the row-count heuristic,
+    # exactly as figure_size() treats it for the other plot types.
+    try:
+        _explicit_aspect = float(layout.get("aspect"))
+    except (TypeError, ValueError):
+        _explicit_aspect = None
+    if _explicit_aspect and _explicit_aspect > 0:
+        target_h = w_in * _explicit_aspect
     figsize = (w_in, min(target_h, 22.0))
 
     with style.apply():
@@ -445,7 +454,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         title = spec.get("layout", {}).get("title")
         if title:
             if col_annotations or col_color_map is not None:
-                fig.suptitle(title, fontsize=style.title_font_pt, fontweight="bold")
+                fig.suptitle(title, fontsize=style.title_font_pt,
+                             fontweight=getattr(style, "title_font_weight", "bold"))
             else:
                 ax.set_title(title)
         # Colorbar position/size are user-configurable (location: right/left/top/bottom).

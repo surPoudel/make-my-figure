@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from make_my_figure_core.plots.base import (
+    apply_axis_overrides,
     RenderResult,
     base_metadata,
     coerce_numeric,
@@ -54,6 +55,17 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         ax.axvline(reference, ls="--", color="0.5", lw=style.spine_width_pt)
         if log_scale and np.all(est > 0) and np.all(lo > 0):
             ax.set_xscale("log")
+            # Ratio axes rarely span a decade: label the ticks as plain numbers
+            # (1, 1.5, 2, 3) rather than matplotlib's default "2 x 10^0" notation.
+            from matplotlib.ticker import FuncFormatter, NullFormatter
+            ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _p: f"{v:g}"))
+            ax.xaxis.set_minor_formatter(NullFormatter())
+            lo_all, hi_all = float(np.min(lo)), float(np.max(hi))
+            if hi_all / lo_all < 10:
+                cands = np.array([0.1, 0.2, 0.3, 0.5, 0.7, 1.0, 1.5, 2.0, 3.0, 5.0, 7.0, 10.0])
+                ticks = cands[(cands >= lo_all * 0.9) & (cands <= hi_all * 1.1)]
+                if len(ticks) >= 2:
+                    ax.set_xticks(ticks)
         ax.set_yticks(y_pos)
         ax.set_yticklabels(labels)
         ax.set_xlabel(spec.get("layout", {}).get("x_label", estimate_col))
@@ -61,9 +73,12 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if title:
             ax.set_title(title)
         style_axes(ax, style)
+        axis_overrides = apply_axis_overrides(ax, spec, x_extent=(float(np.min(lo)), float(np.max(hi))))
         fig.tight_layout()
 
     meta = base_metadata(spec, style, work, used_columns=[label_col, estimate_col, lower_col, upper_col])
+    if axis_overrides:
+        meta["axis_overrides"] = axis_overrides
     meta["n_rows"] = int(len(labels))
     meta["reference"] = reference
     return RenderResult(figure=fig, metadata=meta, warnings=warnings)

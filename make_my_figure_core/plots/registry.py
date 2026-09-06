@@ -426,6 +426,26 @@ def render(
     return result
 
 
+def _bbox_extra_artists(fig: Figure) -> List[Any]:
+    """Axis labels and titles to include in a tight bounding box.
+
+    ``bbox_inches="tight"`` measures each axis "for layout only", which ignores an axis
+    label's extent *along* its axis, so a long x-axis label wider than the axes is cut
+    off in the exported file. Listing the labels explicitly makes the tight box honour
+    their full extent.
+    """
+    # Passing ``bbox_extra_artists`` REPLACES matplotlib's default list (legends,
+    # colorbars, annotation boxes, ...) rather than adding to it, so the defaults are
+    # kept and only the axis labels/titles are appended.
+    extra: List[Any] = list(fig.get_default_bbox_extra_artists())
+    for ax in fig.axes:
+        extra.extend(ax.get_default_bbox_extra_artists())
+        for art in (ax.xaxis.label, ax.yaxis.label, ax.title):
+            if art is not None and art.get_visible() and art.get_text():
+                extra.append(art)
+    return extra
+
+
 def export_figure(fig: Figure, base_path: str, formats: List[str], dpi: int = 300) -> List[str]:
     """Save ``fig`` to ``base_path.<ext>`` for each requested format.
 
@@ -441,7 +461,8 @@ def export_figure(fig: Figure, base_path: str, formats: List[str], dpi: int = 30
             if fmt not in _EXPORT_FORMATS:
                 continue
             out = f"{base_path}.{fmt}"
-            save_kwargs: Dict[str, Any] = {"bbox_inches": "tight"}
+            save_kwargs: Dict[str, Any] = {"bbox_inches": "tight",
+                                           "bbox_extra_artists": _bbox_extra_artists(fig)}
             if fmt in ("png", "tiff"):
                 save_kwargs["dpi"] = dpi
             if fmt == "tiff":
@@ -484,7 +505,8 @@ def figure_to_bytes(fig: Figure, fmt: str, dpi: int = 300) -> bytes:
     import matplotlib as mpl
 
     buf = _io.BytesIO()
-    save_kwargs: Dict[str, Any] = {"format": fmt.lower(), "bbox_inches": "tight"}
+    save_kwargs: Dict[str, Any] = {"format": fmt.lower(), "bbox_inches": "tight",
+                                   "bbox_extra_artists": _bbox_extra_artists(fig)}
     if fmt.lower() in ("png", "tiff"):
         save_kwargs["dpi"] = dpi
     if fmt.lower() == "tiff":

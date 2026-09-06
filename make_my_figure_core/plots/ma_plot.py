@@ -45,6 +45,9 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     label_col = get_mapping(spec, "label", None) or pick_column(df, _LABEL_ALIASES)
     id_col = get_mapping(spec, "id_col", None) or pick_column(df, ["feature_id", "peptide_id", "transcript_id", "probe_id"])
     p_cutoff = float(get_mapping(spec, "p_cutoff", 0.05))
+    # Optional |log fold change| cutoff (0 = significance by p/FDR alone, the historical default).
+    # Lets an MA plot follow a published definition such as "padj < 0.05 and |FC| > 1.5".
+    lfc_cutoff = float(get_mapping(spec, "lfc_cutoff", 0.0) or 0.0)
     label_top_n = int(get_mapping(spec, "label_top_n", 8))
 
     # Duplicate-label handling (shared with the volcano plot).
@@ -77,6 +80,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         warnings.append("No p-value/FDR column found; all points shown as non-significant.")
 
     sig = np.isfinite(pv) & (pv <= p_cutoff)
+    if lfc_cutoff > 0:
+        sig = sig & (np.abs(ys) >= lfc_cutoff)
     up = sig & (ys > 0)
     down = sig & (ys < 0)
     ns = ~sig
@@ -182,6 +187,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     meta["n_down"] = int(down.sum())
     meta["n_ns"] = int(ns.sum())
     meta["p_cutoff"] = p_cutoff
+    meta["lfc_cutoff"] = lfc_cutoff
     meta["n_labeled"] = n_labeled
     meta["duplicate_label_policy"] = dup_policy
     meta["duplicate_label_representative_rule"] = dup_rule

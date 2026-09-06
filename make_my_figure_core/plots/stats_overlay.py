@@ -297,6 +297,8 @@ def annotate_corner(ax, lines: List[str], *, style, loc: str = "upper left",
         "upper right": (0.97, 0.97, "right", "top"),
         "lower left": (0.03, 0.03, "left", "bottom"),
         "lower right": (0.97, 0.03, "right", "bottom"),
+        "center right": (0.97, 0.50, "right", "center"),
+        "center left": (0.03, 0.50, "left", "center"),
     }
     x, y, ha, va = positions.get(loc, positions["upper left"])
     ax.text(x, y, "\n".join(lines), transform=ax.transAxes, ha=ha, va=va,
