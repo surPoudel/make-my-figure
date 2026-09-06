@@ -37,7 +37,7 @@ Download the installer for your system from the
 |---|---|---|
 | **macOS** | `MakeMyFigure-1.1.0.dmg` | Open the DMG, drag *Make My Figure* to *Applications*, launch. The bundle is not notarised: on first launch right-click → **Open**, or allow it under *System Settings → Privacy & Security*. |
 | **Windows** | `MakeMyFigure-1.1.0-Setup.exe` (or `MakeMyFigure-1.1.0-windows.zip`) | Run the installer (or unzip and start `MakeMyFigure\MakeMyFigure.exe`). SmartScreen may warn about an unsigned program; choose *More info → Run anyway* if you trust the source. |
-| **Linux** | `MakeMyFigure-1.1.0-linux-x86_64.tar.gz` (or `MakeMyFigure-1.1.0.AppImage`) | Unpack the tarball and run `MakeMyFigure/MakeMyFigure`, or `chmod +x` the AppImage and run it. The desktop app needs the usual Qt system libraries (`libxkbcommon0 libgl1 libegl1 libxcb-*`). |
+| **Linux** | `MakeMyFigure-1.1.0-linux-x86_64.tar.gz` (or `MakeMyFigure-1.1.0.AppImage`) | Unpack the tarball and run `MakeMyFigure/MakeMyFigure`, or `chmod +x` the AppImage and run it. The desktop app needs the usual Qt system libraries (`libxkbcommon0 libgl1 libegl1 libxcb-*`). Built on Ubuntu 24.04: needs glibc 2.38 or newer (Ubuntu 24.04+, Fedora 39+, Debian 13+); on older distributions use the wheel or the source install. |
 | **WSL2** (Linux running under Windows) | no native package | WSL2 is not native Windows: use the source install below with WSLg (Windows 11), or run the browser app inside WSL2 and open it in a Windows browser. |
 
 On launch the desktop status bar shows `Make My Figure v1.1.0 · <commit> · <platform> · <backend>`;

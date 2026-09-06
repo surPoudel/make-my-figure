@@ -65,6 +65,8 @@ columns map, and export a clean figure plus a reproducible JSON record (PlotSpec
 | Python | `make_my_figure_core-1.1.0-py3-none-any.whl`, `make_my_figure_core-1.1.0.tar.gz` |
 | Manuals | `MakeMyFigure_v1.1.0_Quick_Start.pdf`, `MakeMyFigure_v1.1.0_User_Manual.pdf` |
 
+**Linux binaries:** the tar.gz and AppImage are built on the Ubuntu 24.04 runner and need glibc 2.38 or newer (Ubuntu 24.04+, Fedora 39+, Debian 13+). On older distributions, including Ubuntu 22.04 and current WSL2 Ubuntu images, use the Python wheel or the source install instead.
+
 `SHA256SUMS.txt` on the release page lists the checksum of every asset. The status bar
 (desktop) and the banner (browser) show `Make My Figure v1.1.0 · <commit> · <platform> ·
 <backend>`; **Help → About** shows the version.
