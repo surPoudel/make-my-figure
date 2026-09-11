@@ -145,6 +145,8 @@ def test_built_wheel_contains_every_bundled_dir(tmp_path):
         assert any(n.startswith(prefix) for n in names), f"wheel is missing {name}/"
     assert "make_my_figure_core/_bundled/schemas/plot_spec.schema.json" in names, (
         "the plot-spec schema is what render() needs first; it must be in the wheel")
+    assert "make_my_figure_core/_bundled/schemas/figure_package_manifest.schema.json" in names, (
+        "opening a figure package validates its manifest against this schema; it must be in the wheel")
 
 
 @pytest.mark.skipif(not os.environ.get("RUN_PACKAGING_BUILD_TESTS"),
