@@ -224,6 +224,12 @@ def _step_preprocess(df: pd.DataFrame, spec: mw.MatrixSpec, meta) -> None:
                         _set("processed_spec", dspec.to_dict())
                         _set("processed_id", ps.output_matrix_id)
                         _set("prep_note", ps.method_sentence())
+                        # Full records for the reproducible figure package (raw matrix + specs).
+                        _set("prep_spec", ps.to_dict())
+                        _set("raw_matrix_df", df)
+                        _set("raw_matrix_spec", spec.to_dict())
+                        _set("raw_matrix_name", source_name)
+                        _set("meta_spec", meta.to_dict() if meta is not None else None)
                         # A derived matrix invalidates any differential summary on the raw one.
                         for k in ("diff", "diff_sentence"):
                             st.session_state.pop(f"mw_{k}", None)
