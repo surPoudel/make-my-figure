@@ -12,7 +12,7 @@ The path through the application is always the same:
 4. **Optionally run statistics** — you choose the method; results are stored and every p-value drawn on the figure comes from a stored result.
 5. **Style** the figure with the single **Publication** style (fonts, palette, layout, legend), add annotations.
 6. **Assemble** several plots into a multi-panel figure if you need one.
-7. **Export** SVG, PDF, PNG (and TIFF/EPS) together with a **PlotSpec** JSON that records the configuration.
+7. **Export** SVG, PDF, PNG (and TIFF/EPS) together with a **PlotSpec** JSON that records the configuration — or **Save Figure Package** to get one portable `.mmfpackage` that also freezes the data.
 
 Two interfaces share one engine: a **desktop app** (Qt) and a **browser app** (Streamlit). Both run entirely on your computer; nothing is uploaded anywhere.
 
@@ -123,7 +123,7 @@ Use the bundled example so the steps match the screenshots exactly: **File → O
 
 ![The Publication style group: ② Typography, ③ Axes and labels, ④ Legend, ⑤ Colorbar, ① Figure margins, and Reset to publication defaults.](../assets/screenshots/desktop_04_publication_controls.png)
 
-7. **Export:** desktop **5. Export → Export SVG / PNG / PDF / PlotSpec JSON** or **Export all as ZIP**; browser **Export → SVG / PNG / PDF / PlotSpec JSON** download buttons. A `.plot_spec.json` sidecar is written with every export so the figure can be reproduced.
+7. **Export:** desktop **5. Export → Export SVG / PNG / PDF / Export PlotSpec JSON (specification only)**, **Save Figure Package (.mmfpackage)** or **Export all as ZIP** (figures + specs + package); browser **Export → SVG / PNG / PDF / PlotSpec JSON / Figure Package** download buttons. The PlotSpec JSON records the configuration but *not* the data — it needs the source table to reopen. The **figure package** is the file to move or share: it holds the specification **and** a frozen copy of the data, and reopens anywhere with **Open Figure Package**.
 
 ![Desktop Export group: SVG, PNG, PDF, PlotSpec JSON, ZIP bundle, template table, and the multi-panel buttons.](../assets/screenshots/desktop_16_export_options.png)
 
@@ -179,7 +179,9 @@ A **Figure preset** is your configuration without your data. Configure a figure 
 
 ![The Figure preset group with saved presets listed for the current plot type.](../assets/screenshots/desktop_12_figure_preset_load.png)
 
-A **PlotSpec** is different: it is the exact record of *one* figure, including the table name and column names. Every export writes one. An existing PlotSpec can be loaded as a full preset.
+A **PlotSpec** is different: it is the exact record of *one* figure, including the table name and column names — but not the values; the source table is required to reopen it. An existing PlotSpec can be loaded as a full preset.
+
+A **Figure package** (`.mmfpackage`) is the third kind of file: the PlotSpec (or FigureSpec) *plus* a frozen copy of the exact data, the StatsSpec results, the Matrix Workflow records where they apply, imported images, previews and a checksum for every file. It is the one file to send to a collaborator; **Open Figure Package** reproduces the figure without the original data files. Because it contains data, share it only with people who may see those data.
 
 ![PlotSpec versus Figure preset: what each contains, and what never enters a preset.](../assets/diagrams/plotspec_vs_preset.png)
 
@@ -193,7 +195,7 @@ In the desktop app, click **Save current plot as panel** for each plot you want,
 - Set **Columns**, **Rows**, **Figure width** (mm), the two **gutters**, **Panel labels** (A / a / 1) and **Export DPI**.
 - Select a panel to set its **Width** and **Height** in inches (proportions are preserved, never stretched), reorder, duplicate or remove it.
 - **Fonts** apply to every panel. **Layout preset** saves the grid/sizes/fonts for reuse without any panel content.
-- **Save figure…** writes PNG/SVG/PDF plus a **FigureSpec** (`.figure_spec.json`).
+- **Save figure…** writes PNG/SVG/PDF plus a **FigureSpec** (`.figure_spec.json`; panel *identities*, not the data). **Save Figure Package…** writes one `.mmfpackage` with the FigureSpec, every panel's PlotSpec/StatsSpec, the exact tables and imported images; **Open Figure Package** rebuilds the composite here.
 
 **Note:** the composite embeds each panel's content as a raster image at the export DPI; panel letters and titles stay vector text. For a fully vector single panel, export that plot directly as SVG or PDF. The browser app has a simpler Figure Builder (columns only) inside the guided Matrix workflow.
 
@@ -207,7 +209,17 @@ In the desktop app, click **Save current plot as panel** for each plot you want,
 | PNG | raster | 150–600 (set in **Raster DPI**) | — | slides, previews, journals requiring raster |
 | TIFF | raster (LZW) | as PNG | — | journals requiring TIFF (core/ZIP export) |
 
-Every export also writes `name.plot_spec.json`; when statistics ran, `name.stats_spec.json` as well. The desktop **Export all as ZIP** bundles formats and sidecars.
+**Export PlotSpec JSON** writes `name.plot_spec.json` (specification only); **Export all as ZIP** bundles SVG/PNG/PDF, `name.plot_spec.json`, `name.stats_spec.json` when statistics ran, and `name.mmfpackage`. **Save Figure Package** writes the package alone.
+
+### Sharing a reproducible figure
+
+1. Finalise the plot. 2. **Save Figure Package**. 3. Send the one `.mmfpackage` file. 4. The collaborator opens Make My Figure. 5. **Open Figure Package** (landing page or File menu). 6. Integrity is verified (every SHA-256). 7. The figure opens with the frozen data and configuration. 8. Inspect, edit and export as usual.
+
+| | PlotSpec | Figure preset | Figure package |
+|---|---|---|---|
+| purpose | recipe for one plot | reusable configuration | portable reproducibility bundle |
+| contains data | no — source data required | no | yes — frozen copy + specifications |
+| file | `.plot_spec.json` | `.mmfpreset.json` | `.mmfpackage` |
 
 ## 12. Where to get help
 

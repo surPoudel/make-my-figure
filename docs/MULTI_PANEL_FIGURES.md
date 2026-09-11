@@ -47,6 +47,8 @@ correct, aligned composite without a fragile SVG-splicing step. Because each
 panel's PlotSpec is recorded in the sidecar, any individual panel can still be
 re-exported as fully vector SVG/PDF from its spec.
 
+The FigureSpec records table *identities*, not the values. To move a composite to another computer use **Save Figure Package…** in the Figure Builder: one `.mmfpackage` with the FigureSpec, every panel's PlotSpec/StatsSpec, the exact tables and imported images. **Open Figure Package** (landing page or File menu) rebuilds the composite in the Figure Builder with its layout (see `FIGURE_PACKAGES.md`).
+
 For fully-vector composites, export each panel as SVG/PDF individually and
 assemble them in Illustrator/Inkscape; use the Figure Builder for fast,
 reproducible, review-ready composites.

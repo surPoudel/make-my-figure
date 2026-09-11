@@ -740,3 +740,165 @@ def test_revert_restores_original_data_after_transform(app, tmp_path):
     assert win.revert_btn.isHidden()                 # button hidden again
     assert win._current_result is not None or win.data is not None
     win.close()
+
+
+# --- reproducible figure packages (v1.1.1) -----------------------------------------------
+
+def _stub_dialogs(monkeypatch, save_path=None, open_path=None):
+    from PySide6.QtWidgets import QFileDialog, QMessageBox
+
+    if save_path is not None:
+        monkeypatch.setattr(QFileDialog, "getSaveFileName",
+                            staticmethod(lambda *a, **k: (save_path, "Figure package (*.mmfpackage)")))
+    if open_path is not None:
+        monkeypatch.setattr(QFileDialog, "getOpenFileName",
+                            staticmethod(lambda *a, **k: (open_path, "Figure package (*.mmfpackage)")))
+    shown = []
+    monkeypatch.setattr(QMessageBox, "question",
+                        staticmethod(lambda *a, **k: QMessageBox.Save if len(a) > 3 and (a[3] & QMessageBox.Save) else QMessageBox.Yes))
+    monkeypatch.setattr(QMessageBox, "information", staticmethod(lambda *a, **k: shown.append(("info", a[1], a[2]))))
+    monkeypatch.setattr(QMessageBox, "warning", staticmethod(lambda *a, **k: shown.append(("warning", a[1], a[2]))))
+    monkeypatch.setattr(QMessageBox, "critical", staticmethod(lambda *a, **k: shown.append(("critical", a[1], a[2]))))
+    return shown
+
+
+def test_landing_page_has_open_figure_package_button(app):
+    from PySide6.QtWidgets import QPushButton
+
+    win = MainWindow()
+    labels = [b.text() for b in win.findChildren(QPushButton)]
+    assert "Open Figure Package" in labels
+    assert "Open data file" in labels and "Use example data" in labels and "Recent files" in labels and "Help" in labels
+    assert "Save Figure Package (.mmfpackage)" in labels
+    win.close()
+
+
+def test_save_and_reopen_figure_package_with_statistics(app, tmp_path, monkeypatch):
+    """Save package → close → new window → Open Figure Package → identical spec + stats."""
+    import shutil
+
+    win = MainWindow()
+    win.load_example("boxplot_or_violin_with_points")
+    win.stats_panel.setChecked(True)
+    win.stats_panel.enable_cb.setChecked(True)
+    i = win.stats_panel.test_combo.findData("welch_t")
+    if i >= 0:
+        win.stats_panel.test_combo.setCurrentIndex(i)
+    win.render_preview()
+    assert win._current_result is not None and win._current_result.stats_report is not None
+    spec_a = win._build_spec()
+    stats_a = [r.to_dict() for r in win._current_result.stats_report.results]
+    dest = str(tmp_path / "boxes.mmfpackage")
+    shown = _stub_dialogs(monkeypatch, save_path=dest)
+    win.action_save_package()
+    assert os.path.exists(dest) and os.path.getsize(dest) > 1000
+    assert any(kind == "info" and "Figure package saved" in title for kind, title, _ in shown)
+    assert dest in win._recent_files()
+    win.close()
+    # move it, open in a fresh window
+    moved = tmp_path / "elsewhere" / "received.mmfpackage"
+    moved.parent.mkdir()
+    shutil.move(dest, moved)
+    win2 = MainWindow()
+    shown2 = _stub_dialogs(monkeypatch, open_path=str(moved))
+    win2.action_open_package()
+    assert win2.stack.currentIndex() == 1 and win2._current_result is not None
+    assert win2._package_context is not None and win2._package_context.integrity == "verified"
+    assert win2.plot_combo.currentData() == spec_a["plot_type"]
+    spec_b = win2._current_spec
+    for k in ("plot_type", "mapping", "layout", "statistics"):
+        assert {kk: v for kk, v in spec_b.get(k, {}).items() if kk != "source"} == \
+               {kk: v for kk, v in spec_a.get(k, {}).items() if kk != "source"} if isinstance(spec_a.get(k), dict) else spec_b.get(k) == spec_a.get(k)
+    stats_b = [r.to_dict() for r in win2._current_result.stats_report.results]
+    assert [(r["test_id"], r["p_value"], r["adjusted_p_value"], r["effect_size"]) for r in stats_a] == \
+           [(r["test_id"], r["p_value"], r["adjusted_p_value"], r["effect_size"]) for r in stats_b]
+    assert not any(kind in ("warning", "critical") for kind, _, _ in shown2), shown2
+    assert "integrity verified" in win2.statusBar().currentMessage()
+    # normal editing + re-export still work
+    win2.title_edit.setText("edited after reopening")
+    win2.render_preview()
+    assert win2._current_spec["layout"]["title"] == "edited after reopening"
+    blob_dest = str(tmp_path / "again.zip")
+    monkeypatch.setattr(__import__("PySide6.QtWidgets", fromlist=["QFileDialog"]).QFileDialog, "getSaveFileName",
+                        staticmethod(lambda *a, **k: (blob_dest, "ZIP (*.zip)")))
+    win2.export_zip()
+    import zipfile
+
+    assert any(n.endswith(".mmfpackage") for n in zipfile.ZipFile(blob_dest).namelist())
+    win2.close()
+
+
+def test_open_invalid_and_tampered_package_shows_error_no_traceback(app, tmp_path, monkeypatch):
+    import json
+    import zipfile
+
+    win = MainWindow()
+    bad = tmp_path / "bad.mmfpackage"
+    bad.write_bytes(b"this is not a zip")
+    shown = _stub_dialogs(monkeypatch, open_path=str(bad))
+    win.action_open_package()
+    assert shown and shown[-1][0] == "critical" and "not a valid ZIP" in shown[-1][2]
+    assert win.stack.currentIndex() == 0            # still on the landing page
+    # tampered: build a good package, edit one value, repack
+    win.load_example("scatterplot_with_regression")
+    good = str(tmp_path / "good.mmfpackage")
+    shown = _stub_dialogs(monkeypatch, save_path=good)
+    win.action_save_package()
+    zin = zipfile.ZipFile(good)
+    tampered = str(tmp_path / "tampered.mmfpackage")
+    with zipfile.ZipFile(tampered, "w") as zout:
+        for zi in zin.infolist():
+            data = zin.read(zi.filename)
+            if zi.filename.startswith("data/") and zi.filename.endswith(".mmftable.json"):
+                doc = json.loads(data)
+                doc["columns"][1]["values"][0] = 424242.0
+                data = json.dumps(doc, sort_keys=True, separators=(",", ":")).encode()
+            zout.writestr(zi.filename, data)
+    shown = _stub_dialogs(monkeypatch, open_path=tampered)
+    win.action_open_package()
+    assert shown[-1][0] == "critical" and "integrity check failed" in shown[-1][2]
+    win.close()
+
+
+def test_package_path_routes_through_load_path_and_recent(app, tmp_path, monkeypatch):
+    win = MainWindow()
+    win.load_example("forest_plot")
+    dest = str(tmp_path / "forest.mmfpackage")
+    _stub_dialogs(monkeypatch, save_path=dest)
+    win.action_save_package()
+    win2 = MainWindow()
+    _stub_dialogs(monkeypatch)
+    win2.load_path(dest)                                   # drag-drop / recent files use this
+    assert win2._package_context is not None and win2.plot_combo.currentData() == "forest_plot"
+    labels = [a.text() for a in win2.recent_menu.actions()]
+    assert any(l.startswith("📦 ") and l.endswith("forest.mmfpackage") for l in labels)
+    win.close()
+    win2.close()
+
+
+def test_composite_package_reopens_in_figure_builder(app, tmp_path, monkeypatch):
+    from apps.desktop_app.stats_panel import FigureBuilderDialog
+
+    win = MainWindow()
+    win.load_example("scatterplot_with_regression")
+    win.action_save_panel()
+    win.load_example("barplot_with_error_bar")
+    win.action_save_panel()
+    assert len(win._saved_panels) == 2
+    dlg = FigureBuilderDialog(win.controller, win._saved_panels, win)
+    dest = str(tmp_path / "Figure_1.mmfpackage")
+    _stub_dialogs(monkeypatch, save_path=dest)
+    dlg._save_package()
+    assert os.path.exists(dest)
+    dlg.close()
+    win.close()
+    # fresh window, no panels: open the composite package (the builder dialog is stubbed to not block)
+    win2 = MainWindow()
+    monkeypatch.setattr(FigureBuilderDialog, "exec", lambda self: 0)
+    shown = _stub_dialogs(monkeypatch, open_path=dest)
+    win2.action_open_package()
+    assert len(win2._saved_panels) == 2
+    assert win2._saved_panels[0]["plot_spec"]["plot_type"] == "scatterplot_with_regression"
+    assert win2._saved_panels[0]["table"] is not None and len(win2._saved_panels[0]["table"]) > 0
+    assert not any(kind == "critical" for kind, _, _ in shown), shown
+    win2.close()

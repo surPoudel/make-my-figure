@@ -38,6 +38,8 @@ Then in the browser:
 6. Download **SVG / PNG / PDF** and the reproducible **PlotSpec JSON** (filenames
    include the worksheet name).
 
+   The **PlotSpec JSON** is the specification only — the source table is required to reopen it. To move or share a figure, download the **Figure Package** (`.mmfpackage`): specification + frozen data + statistics/preprocessing records, verified by checksum and reopened anywhere with **Open Figure Package** (see `FIGURE_PACKAGES.md`).
+
 ## 3. Use the library from Python
 
 ```python

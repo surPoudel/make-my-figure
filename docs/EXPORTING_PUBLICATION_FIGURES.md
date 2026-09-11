@@ -4,6 +4,8 @@ Make My Figure exports **SVG, PDF, PNG, and a PlotSpec JSON** sidecar. Every plo
 is publication-styled by default (readable fonts, strong contrast, clean axes,
 non-overlapping legends).
 
+For reproducibility across folders, computers and laboratories use a **figure package** (`.mmfpackage`, see `FIGURE_PACKAGES.md`): it carries the PlotSpec (or FigureSpec) together with a frozen, lossless copy of the exact data, the StatsSpec results, the Matrix Workflow records, imported images and previews, with a SHA-256 for every file. A PlotSpec JSON alone is the recipe and needs the source data to reopen.
+
 > **One export path.** Figures generated from the Matrix Workflow export through the
 > exact same canonical PlotSpec + renderer as the normal workflow (the Matrix Workflow
 > hands off to the full plot editor). Matrix/preprocessing/statistics/workbook
@@ -23,7 +25,8 @@ non-overlapping legends).
 | **SVG** | Final manuscript editing | Vector; **text stays editable** (`svg.fonttype=none`) so you can adjust labels in Illustrator/Inkscape. |
 | **PDF** | Vector submission / print | Vector; fonts embedded as editable text (`pdf.fonttype=42`). |
 | **PNG** | Slides, previews, quick sharing | Raster; default **300 DPI**, selectable up to 600 DPI. |
-| **PlotSpec JSON** | Reproducibility | Records plot type, column mapping, style, and output settings. |
+| **PlotSpec JSON** | Specification | Records plot type, column mapping, style, statistics configuration and output settings; the source data are required to reopen it. |
+| **Figure package** (`.mmfpackage`) | Reproducibility | PlotSpec/FigureSpec + frozen data + StatsSpec/Matrix/Preprocessing records + assets + previews + checksums; reopens without the original files. |
 
 **Prefer SVG or PDF for final figures** — they scale losslessly and keep text as
 real, editable characters, so a journal (or you) can restyle text without
