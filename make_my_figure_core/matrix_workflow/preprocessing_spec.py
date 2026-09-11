@@ -22,6 +22,9 @@ class PreprocessingStep:
     step_type: str                      # "transform" | "normalization" | "filter" | "impute"
     method_name: str                    # e.g. "log2", "total_sum", "internal_standard_features"
     parameters: Dict[str, Any] = field(default_factory=dict)
+    # The parameters exactly as requested by the user/recommendation (``parameters`` merges
+    # them with the values the method reported back). Replaying a chain uses these.
+    user_parameters: Dict[str, Any] = field(default_factory=dict)
     input_matrix_id: Optional[str] = None
     output_matrix_id: Optional[str] = None
     warnings: List[str] = field(default_factory=list)

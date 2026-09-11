@@ -8,6 +8,7 @@ internals directly.
 
 from __future__ import annotations
 
+import json
 import os
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
@@ -174,7 +175,13 @@ class DesktopController:
 
         with open(path, "r", encoding="utf-8") as fh:
             spec = json.load(fh)
+        # Accept both shapes the app writes: the bare spec ("Save PlotSpec") and the
+        # export sidecar {"plot_spec": ..., "render_metadata": ...} ("Export PlotSpec JSON").
+        if isinstance(spec, dict) and "plot_type" not in spec and isinstance(spec.get("plot_spec"), dict):
+            spec = spec["plot_spec"]
         if not isinstance(spec, dict) or "plot_type" not in spec:
+            if isinstance(spec, dict) and spec.get("package_format"):
+                raise ValueError("This is a figure-package manifest, not a PlotSpec. Use Open Figure Package.")
             raise ValueError("This file is not a PlotSpec (no 'plot_type').")
         from make_my_figure_core.styles.engine import normalize_style_name
         if spec.get("journal_style"):
@@ -478,8 +485,110 @@ class DesktopController:
             sidecar = write_sidecar(spec, result.metadata, base_path)
         return {"files": files, "sidecar": sidecar}
 
-    def export_bundle(self, spec, result, formats: List[str], dpi: int = 300, basename: str = "figure") -> bytes:
-        return export_bundle_bytes(spec, result, formats=formats, dpi=dpi, basename=basename)
+    def export_bundle(self, spec, result, formats: List[str], dpi: int = 300, basename: str = "figure",
+                      extra_files: Optional[Dict[str, bytes]] = None) -> bytes:
+        return export_bundle_bytes(spec, result, formats=formats, dpi=dpi, basename=basename,
+                                   extra_files=extra_files)
+
+    # --- reproducible figure packages (.mmfpackage) -----------------------
+    # Three artifacts, kept distinct: a PlotSpec is the recipe (needs the data), a Figure
+    # preset is appearance only, a figure package is recipe + frozen data + records.
+    def stamp_source_digest(self, spec: Dict[str, Any], data: LoadedData) -> Dict[str, Any]:
+        """Record a content digest of the table the plot was drawn from in ``spec['source']``.
+
+        Called on export paths only (hashing a large table on every preview would be
+        wasteful). Lets "Open PlotSpec" detect that the external data changed.
+        """
+        from make_my_figure_core.package import table_digest
+
+        df = data.info.dataframe
+        src = dict(spec.get("source") or {})
+        src["source_table_sha256"] = table_digest(df)
+        src["source_table_shape"] = [int(df.shape[0]), int(df.shape[1])]
+        spec["source"] = src
+        return spec
+
+    def check_source_digest(self, spec: Dict[str, Any], data: LoadedData) -> Optional[str]:
+        """Return a warning when the loaded table differs from the digest in the spec."""
+        from make_my_figure_core.package import table_digest
+
+        src = spec.get("source") or {}
+        want = src.get("source_table_sha256")
+        if not want:
+            return None
+        have = table_digest(data.info.dataframe)
+        if have == want:
+            return None
+        shape = src.get("source_table_shape")
+        return ("The data file differs from the table recorded when this PlotSpec was saved "
+                f"(recorded shape {shape}, loaded shape {list(data.info.dataframe.shape)}). "
+                "The figure drawn now may not match the original. A figure package (.mmfpackage) "
+                "carries a frozen copy of the data and avoids this.")
+
+    def package_content(self, data: LoadedData, spec: Dict[str, Any], result, *, matrix=None,
+                        name: Optional[str] = None, dpi: int = 300):
+        """Everything needed to reproduce the current plot (for :func:`write_figure_package`).
+
+        ``matrix`` is an optional :class:`~make_my_figure_core.package.MatrixContext` when
+        the plotted table came from the Matrix Workflow (original matrix + specs).
+        """
+        from make_my_figure_core.package import content_for_single_plot
+
+        aux = {k: v.dataframe for k, v in data.aux.items()} if data.aux else None
+        spec = json.loads(json.dumps(spec, default=str)) if not isinstance(spec, dict) else dict(spec)
+        self.stamp_source_digest(spec, data)
+        return content_for_single_plot(
+            spec, data.info.dataframe, result, table_name=data.table_name, aux=aux,
+            source_path=None if data.is_example else data.source_path, sheet_name=data.sheet_name,
+            provenance=data.source_provenance(), matrix=matrix, name=name, preview_dpi=dpi)
+
+    def write_package(self, content, dest_path: str):
+        from make_my_figure_core.package import write_figure_package
+
+        return write_figure_package(content, dest_path)
+
+    def package_bytes(self, content) -> bytes:
+        from make_my_figure_core.package import build_package_bytes
+
+        data, _manifest, _warnings = build_package_bytes(content)
+        return data
+
+    def open_package(self, path_or_bytes):
+        """Validate + verify + load a figure package. Raises ``PackageError`` subclasses."""
+        from make_my_figure_core.package import open_figure_package
+
+        return open_figure_package(path_or_bytes)
+
+    def loaded_from_package(self, pkg) -> Tuple[LoadedData, Dict[str, Any]]:
+        """``(LoadedData, plot_spec)`` for a single-plot package (frozen table, no file path)."""
+        from make_my_figure_core.package import single_plot_inputs
+
+        spec, df, aux = single_plot_inputs(pkg)
+        aux_info = {k: table_info_from_dataframe(v, k) for k, v in (aux or {}).items()}
+        loaded = self.loaded_from_dataframe(df, spec.get("input_table") or pkg.name, aux=aux_info)
+        # keep worksheet provenance recorded in the spec (the table itself is frozen)
+        return loaded, spec
+
+    def export_all_bundle(self, data: LoadedData, spec: Dict[str, Any], result, *, formats: List[str],
+                          dpi: int = 300, basename: str = "figure", matrix=None) -> bytes:
+        """The desktop "Export all": publication files + PlotSpec/StatsSpec + the figure package."""
+        from make_my_figure_core.package import PACKAGE_EXTENSION
+
+        content = self.package_content(data, spec, result, matrix=matrix, name=basename, dpi=dpi)
+        pkg_bytes = self.package_bytes(content)
+        readme = (
+            f"Make My Figure export bundle for {basename}\n\n"
+            f"{basename}.svg/.png/.pdf    publication figure files\n"
+            f"{basename}.plot_spec.json  plot specification (recipe only; needs the source data)\n"
+            f"{basename}.stats_spec.json statistics configuration + results (when statistics ran)\n"
+            f"{basename}{PACKAGE_EXTENSION}  reproducible figure package: specification + frozen data + "
+            "records + previews. Open it in Make My Figure with 'Open Figure Package' to reproduce the "
+            "figure on any computer without the original files.\n\n"
+            "The figure package contains the data used for the figure; share it only with people who may see these data.\n"
+        )
+        extra = {f"{basename}{PACKAGE_EXTENSION}": pkg_bytes, "README.txt": readme.encode("utf-8")}
+        return self.export_bundle(content.components[0].plot_spec, result, formats, dpi=dpi, basename=basename,
+                                  extra_files=extra)
 
     def save_template(self, plot_type: str, dest_path: str) -> str:
         """Copy the bundled example table for ``plot_type`` to ``dest_path``.

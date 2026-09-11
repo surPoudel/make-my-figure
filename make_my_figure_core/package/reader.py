@@ -423,7 +423,7 @@ def verify_preprocessing(pkg: FigurePackage, *, max_cells: int = 5_000_000) -> D
                                             "value_columns": ps.get("value_columns") or mspec.value_columns,
                                             "feature_id_column": ps.get("feature_id_column") or mspec.feature_id_column})
         meta = mw.SampleMetadataSpec.from_dict(pkg.sample_metadata_spec) if pkg.sample_metadata_spec else None
-        steps = [{"method": s.get("method_name"), "params": s.get("parameters") or {}} for s in ps.get("preprocessing_steps", [])]
+        steps = [{"method": s.get("method_name"), "params": _replay_params(s)} for s in ps.get("preprocessing_steps", [])]
         final_df, _dspec, _ps = mw.run_preprocessing(src.dataframe, src_spec, steps, metadata=meta,
                                                      output_matrix_id=ps.get("output_matrix_id") or "processed")
         a, b = final_df, der.dataframe
@@ -442,3 +442,30 @@ def verify_preprocessing(pkg: FigurePackage, *, max_cells: int = 5_000_000) -> D
         return {"status": "identical", "detail": "re-running the recorded preprocessing reproduces the frozen derived matrix"}
     except Exception as exc:  # noqa: BLE001
         return {"status": "error", "detail": f"could not re-run the preprocessing record: {exc}"}
+
+
+def _replay_params(step: Dict[str, Any]) -> Dict[str, Any]:
+    """Parameters to pass when replaying a recorded step.
+
+    Records written by v1.1.1+ carry ``user_parameters`` (exactly what was requested).
+    Older records only have ``parameters`` (requested values merged with what the method
+    reported back), so keep only the keys the method's signature accepts.
+    """
+    if "user_parameters" in step and isinstance(step["user_parameters"], dict):
+        return dict(step["user_parameters"])
+    params = dict(step.get("parameters") or {})
+    method = step.get("method_name")
+    try:
+        import inspect
+
+        from make_my_figure_core.matrix_workflow import preprocessing as _pp
+
+        if method == "zscore" or method in _pp._ZSCORE:
+            return {k: v for k, v in params.items() if k in ("axis", "ddof")}
+        fn = _pp._REGISTRY[method][0]
+        sig = inspect.signature(fn)
+        if any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values()):
+            return params
+        return {k: v for k, v in params.items() if k in sig.parameters and k not in ("df", "matrix_spec")}
+    except Exception:  # noqa: BLE001
+        return params

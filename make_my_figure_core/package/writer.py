@@ -48,6 +48,9 @@ class TableSource:
     provenance: Dict[str, Any] = field(default_factory=dict)
     derived_from: Optional[str] = None         # table_id of the table this one was computed from
     include_original_file: bool = True
+    # In-memory original (browser uploads have no path): included as the original source file.
+    original_bytes: Optional[bytes] = None
+    original_filename: Optional[str] = None
 
 
 @dataclass
@@ -224,7 +227,16 @@ def build_package_bytes(content: PackageContent) -> Tuple[bytes, Dict[str, Any],
             entry["csv_copy"] = None
         # original source file for provenance
         orig: Optional[Dict[str, Any]] = None
-        if t.original_path:
+        if t.original_bytes is not None and not t.original_path:
+            fname = t.original_filename or f"{tid}_original"
+            orig = {"filename": fname, "sheet_name": t.sheet_name, "header_row": t.header_row, "path": None,
+                    "sha256": M.sha256_bytes(t.original_bytes), "bytes": len(t.original_bytes), "included": False, "note": None}
+            if t.include_original_file and len(t.original_bytes) <= MAX_ORIGINAL_COPY_BYTES:
+                rec2 = z.add(f"data/original/{tid}/{M.safe_basename_for_zip(fname)}", t.original_bytes, "original_source_file")
+                orig["path"] = rec2["path"]
+                orig["included"] = True
+                features.add("original_source_file")
+        elif t.original_path:
             fname = os.path.basename(t.original_path)
             orig = {"filename": fname, "sheet_name": t.sheet_name, "header_row": t.header_row,
                     "path": None, "sha256": None, "bytes": None, "included": False, "note": None}

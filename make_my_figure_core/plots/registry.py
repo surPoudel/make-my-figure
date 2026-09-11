@@ -523,14 +523,22 @@ def export_bundle_bytes(
     formats: Optional[List[str]] = None,
     dpi: int = 300,
     basename: str = "figure",
+    extra_files: Optional[Dict[str, bytes]] = None,
 ) -> bytes:
-    """Build a ZIP (in memory) containing the figure in each format + sidecar JSON."""
+    """Build a ZIP (in memory) containing the figure in each format + sidecar JSON.
+
+    ``extra_files`` (name -> bytes) are added verbatim; the desktop "Export all" uses
+    this to include the reproducible figure package (``*.mmfpackage``) and a README so
+    the ZIP is a complete publication + reproducibility bundle.
+    """
     import io as _io
     import zipfile as _zip
 
     fmts = formats or ["svg", "png", "pdf"]
     buf = _io.BytesIO()
     with _zip.ZipFile(buf, "w", _zip.ZIP_DEFLATED) as zf:
+        for name, data in (extra_files or {}).items():
+            zf.writestr(name, data)
         for fmt in fmts:
             if fmt.lower() in _EXPORT_FORMATS:
                 zf.writestr(f"{basename}.{fmt.lower()}",

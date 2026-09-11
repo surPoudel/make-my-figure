@@ -205,7 +205,8 @@ def apply_step(df: pd.DataFrame, matrix_spec: MatrixSpec, method: str, *,
         derived.value_type = "log_normalized"
     step = PreprocessingStep(
         step_id=f"{method}", step_type=step_type, method_name=method,
-        parameters={**params, **(p or {})}, input_matrix_id=matrix_spec.source_file,
+        parameters={**params, **(p or {})}, user_parameters=dict(params),
+        input_matrix_id=matrix_spec.source_file,
         output_matrix_id=None, warnings=list(warns), qc_before=qc_before,
         qc_after=(diagnose_matrix(new_df, derived).to_dict() if with_qc else None),
         user_confirmed=True)
