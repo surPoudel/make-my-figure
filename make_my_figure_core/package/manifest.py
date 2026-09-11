@@ -60,9 +60,11 @@ def environment_record() -> Dict[str, Any]:
     """Software/library versions in effect when the package was written."""
     info = build_info()
     libs: Dict[str, str] = {}
+    from importlib import metadata as _md
+
     for mod in ("numpy", "pandas", "matplotlib", "scipy", "statsmodels", "openpyxl", "jsonschema"):
         try:
-            libs[mod] = __import__(mod).__version__
+            libs[mod] = _md.version(mod)
         except Exception:  # noqa: BLE001
             libs[mod] = "not installed"
     return {
