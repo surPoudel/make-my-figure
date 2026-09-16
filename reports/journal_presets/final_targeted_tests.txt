@@ -1,0 +1,17 @@
+........................................................................ [ 10%]
+........................................................................ [ 20%]
+........................................................................ [ 30%]
+........................................................................ [ 40%]
+........................................................................ [ 50%]
+........................................................................ [ 61%]
+........................................................................ [ 71%]
+........................................................................ [ 81%]
+........................................................................ [ 91%]
+............................................................             [100%]
+=============================== warnings summary ===============================
+tests/test_box_violin_publication_options.py::test_every_declared_option_is_read_by_the_renderer
+  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/make_my_figure_core/plots/box_violin.py:332: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.8))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+708 passed, 1 warning in 376.04s (0:06:16)

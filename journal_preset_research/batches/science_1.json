@@ -1,0 +1,952 @@
+[
+ {
+  "paper_id": "PMC12490786",
+  "journal": "Science Translational Medicine",
+  "year": "2025",
+  "doi": "10.1126/scitranslmed.adn2601",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12490786/figures/Fig1.jpg",
+    "caption": "Purification of NHP CD34 + CD90 + HSCs for ex vivo base editing. ( A ) Comparison of the protospacer design for patients with SCD and NHPs. On- and off-target adenines are color coded. ( B ) Experimental outline of autologous ex vivo HSC base editing in the NHP. Briefly, NHPs were pre-treated with G-CSF/SCF for 5 days, BM harvested, CD34 + cells enriched via MACS, and CD90 +/\u2212 FACS purified (Day \u2212"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12490786/figures/Fig2.jpg",
+    "caption": "Base editing of the HBB gene in NHP HSCs. ( A ) Allelic base editing efficiency in CD34 + CD90 + HSCs, CD34 + CD90 \u2212 progenitors, and the combined infusion product determined by EditR analysis of Sanger sequencing at position A9. ( B ) Assessment of mono- and biallelic editing on single colonies from Fig. 1D by Sanger sequencing (EditR) at position A9. ( C ) Comparison of the frequency of allelic "
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12490786/figures/Fig3.jpg",
+    "caption": "Recovery of the peripheral blood and bone marrow compartments after transplantation of base-edited HSCs. ( A ) Neutrophil and lymphocyte values (top row) as well as red blood cell and platelet values (bottom row) for the NHPs from day 0 to 40 and day 50 to 250 post-transplant. The gray shaded area on each graph indicates the range of normal values in na\u00efve control animals. ( B ) Composition of PB "
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12490786/figures/Fig4.jpg",
+    "caption": "Longitudinal tracking of on-target and bystander editing in the peripheral blood. ( A ) Longitudinal tracking of the base editing frequency at adenines A9 (left) and A12 (right) in PB WBCs of each animal using Sanger sequencing (EditR, blue) and NGS (red). ( B ) Combination of editing events in PB WBCs over time using NGS. ( C ) Frequency of base editing in FACS-purified PB lineages 6 months post-"
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12490786/figures/Fig5.jpg",
+    "caption": "Editing in bone marrow lineages. ( A ) Frequency of base editing in FACS-purified BM lineages 3- and 6-months post-transplant were determined at all four adenines in the protospacer using NGS. Abbreviations: Gran = Granulocytes; Mono = Monocytes; NK = NK cells; B = B cells; T = T cells; Ery = CD71 + cells. ( B ) Combinations of editing events in FACS-purified BM lineages 3- and 6-months post-trans"
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12490786/figures/Fig6.jpg",
+    "caption": "Engraftment and persistence of base-edited HSPCs in the bone marrow. ( A ) Frequency of base editing in FACS-purified BM HSPC subsets at all four adenines in the protospacer in samples collected at 3 months (left) and six months (right) post-transplant, determined by NGS. ( B ) Combinations of editing events in FACS-purified BM HSPC subsets 3- and 6-months post-transplant, as determined by NGS. ( "
+   },
+   {
+    "figure_number": 7,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12490786/figures/Fig7.jpg",
+    "caption": "Analysis of rare base editing events and off-target editing. ( A ) Cumulative frequency of indels detected in the protospacer region by NGS in PB WBC samples taken before editing (controls) and after transplant in the three animals (left). Localization of indels quantified in the first graph relative to the protospacer (grey vertical bar). Middle graph shows indels detected in samples taken before"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC12716425",
+  "journal": "Science advances",
+  "year": 2025,
+  "doi": "10.1126/sciadv.aeb1017",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/science/2025_Yudin_mechanism_of_cotranslational_modificatio/figures/fig01_F1.jpg",
+    "caption": "(A) Schematic depicting cotranslational processing of H2A and H4 by MetAP and NatD. Red asterisk marks the reaction step at which we attempted to arrest the complex in the cryo-EM experiment. (B) Design of the nascent chain for the RNC used in the cryo-EM experiment. (C) Cryo-EM map of the RNCH4-60aa-NAC-MetAP1-NatD complex filtered to estimated local resolution, with rRNA in light gray, small sub"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/science/2025_Yudin_mechanism_of_cotranslational_modificatio/figures/fig02_F2.jpg",
+    "caption": "(A) Cartoon of NAC, MetAP1, and NatD bound at the ribosomal tunnel exit. Dotted boxes refer to structure details shown in (B) to (E). (B) The substrate-binding cavity of NatD accommodates the N-terminal SGRG motif of the nascent polypeptide and CoA. The CoA moiety beyond the phosphate adenosine diphosphate is not resolved in our map and is modeled as in PDB 4U9W. (C) The N-terminal basic helix of "
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/science/2025_Yudin_mechanism_of_cotranslational_modificatio/figures/fig03_F3.jpg",
+    "caption": "(A to E) Summaries of the binding affinities (Kd or Ki values) of NatD for NAC-bound RNC with the indicated mutations in the NatD basic patch (A), the NAC\u03b1 UBA domain (B), and the NatD interaction interface with NAC UBA (C), and with changes in the N-terminal sequence (D) or length (E) of the H4 nascent chain. Values are obtained from the data in fig. S5 and are shown as means\u00a0\u00b1\u00a0SEM, with the dots"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/science/2025_Yudin_mechanism_of_cotranslational_modificatio/figures/fig04_F4.jpg",
+    "caption": "(A) The N domain of MetAP1 closes over the CoA-binding cavity of NatD. (B) N-terminal processing defects of H4 and 1433G after knockdown of METAP1 and METAP2 in human HEK293T cells. N-acetyl-antagonistic H4 phosphorylation mark at serine 1 (S1P, top panel) and 1433G still containing the initiator methionine (iMet, middle panel) were detected by immunoblotting using epitope-specific antibodies. Kno"
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/science/2025_Yudin_mechanism_of_cotranslational_modificatio/figures/fig05_F5.jpg",
+    "caption": ""
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC12716426",
+  "journal": "Science advances",
+  "year": 2025,
+  "doi": "10.1126/sciadv.aea6007",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/science/2025_Li_advances_in_machine_learning_enhanced_mi/figures/fig01_F1.jpg",
+    "caption": ""
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/science/2025_Li_advances_in_machine_learning_enhanced_mi/figures/fig02_F2.jpg",
+    "caption": "(A) A capillary-based microfluidic chip integrates immunomagnetic beads, with structural designs optimized for bead preparation and target cell capture. Image credits: Reprinted from, with the permission of AIP Publishing. (B) For cells with overlapping dimensions, a DEP-inertial microfluidic device achieves size-based separation through combined DEP and inertial focusing mechanisms. Image credits"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/science/2025_Li_advances_in_machine_learning_enhanced_mi/figures/fig03_F3.jpg",
+    "caption": "(A) Variations in pillar configurations within DLD devices. Image credits: Reprinted from, with the permission of AIP Publishing. (B) Schematic of the DLD principle, featuring a periodic array of micrometer-sized pillars. Image credits: Reproduced/modified from. (C) Structure of a parallel inverted L-shaped DLD chip for nucleated cell sorting from whole blood, with performance characterization: Nu"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/science/2025_Li_advances_in_machine_learning_enhanced_mi/figures/fig04_F4.jpg",
+    "caption": "(A) Fundamental principles of inertial microfluidics, highlighting particle focusing and size-dependent migration. Image credits: Reused with permission from. Used with permission of Royal Society of Chemistry from; permission conveyed through Copyright Clearance Center Inc. (B) Inertial microfluidic separation of cancer cells from blood under low shear stress. Image credits: Reprinted in part wit"
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/science/2025_Li_advances_in_machine_learning_enhanced_mi/figures/fig05_F5.jpg",
+    "caption": "(A) Reynolds number\u2013dependent focusing behavior of microspheres in inertial microfluidics. Image credits: Reused with permission from (CC BY 4.0; https://creativecommons.org/licenses/by/4.0/deed.en). (B) Hydrodynamic forces on microspheres in viscoelastic microfluidic flows. Image credits: Reused with permission from. Used with permission of Royal Society of Chemistry from; permission conveyed thr"
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/science/2025_Li_advances_in_machine_learning_enhanced_mi/figures/fig06_F6.jpg",
+    "caption": "(A) LDA combined with microfluidic technology achieves high-specificity exosome profiling for pancreatic cancer diagnosis. Image credits: Reprinted in part with permission from. Copyright 2017 American Chemical Society. (B) The KNN algorithm is used for real-time pattern recognition in microfluidic imaging data, optimizing cell sorting accuracy. Image credits: Reprinted in part with permission fro"
+   },
+   {
+    "figure_number": 7,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/science/2025_Li_advances_in_machine_learning_enhanced_mi/figures/fig07_F7.jpg",
+    "caption": "(A) MLP. Image credits: Reused with permission from (CC BY-NC 4.0; https://creativecommons.org/licenses/by-nc/4.0/). (B) Using a 1D feature vector of normalized scattering intensities from three distinct wavelengths, coupled with a CNN, enables the distinction of CTCC peaks from non-CTCC peaks. Image credits: Reused with permission from (CC BY-NC 3.0; https://creativecommons.org/licenses/by-nc/3.0"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC12870020",
+  "journal": "Science Translational Medicine",
+  "year": "2026",
+  "doi": "10.1126/scitranslmed.ado9383",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12870020/figures/Fig1.jpg",
+    "caption": "Characteristics of each lung lesion cluster and cluster distribution across all lesions. (A) Heatmap of hierarchical clustering of median feature values across the clusters from Leiden community detection. Three groups (1, 2, 3) of similar clusters are labeled from the hierarchical clustering, and clusters are labeled (a, b, c) within each group. Feature values were scaled for visualization. The s"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12870020/figures/Fig2.jpg",
+    "caption": "Distribution of complete treatment clusters across lung lesions. Inner pie charts represent the analysis of the distribution of clusters from the complete treatment (two months) across individual drug treatments. Cluster groups are indicated in the outer pie charts: (1) Low bacterial burden and low/improved PET/CT pathology; (2) low or varied bacterial burden and moderate/improved PET/CT pathology"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12870020/figures/Fig3.jpg",
+    "caption": "Characteristics of each lesion cluster from subsequent treatment phase analysis and cluster distribution across all lesions. (A) Heatmap of hierarchical clustering of median feature values across the clusters from Leiden community detection. Clusters are split into two large branches: changed and stagnated. Four groups (1, 2, 3, 4) of similar clusters are labeled from the hierarchical clustering, "
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12870020/figures/Fig4.jpg",
+    "caption": "Distribution of subsequent treatment phase clusters across lesions from individual treatment arms. Inner pie charts represent the analysis of distribution of the clusters from the subsequent treatment phase (second half of treatment). Cluster groups are indicated in the outer pie charts: (1) low bacterial burden and low PET/CT pathology with minimal improvement during subsequent treatment; (2) var"
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12870020/figures/Fig5.jpg",
+    "caption": "Distribution of lung granuloma types across the subsequent treatment phase clusters. Each stacked bar represents the percentages of each of the granuloma types present in each cluster from the subsequent treatment phase analysis. Cluster colors correspond to those defined in Figure 3 . The number above each bar is the total number of lesions in that cluster."
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13004167",
+  "journal": "Science",
+  "year": "2026",
+  "doi": "10.1126/science.adx3162",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13004167/figures/Fig1.jpg",
+    "caption": "TCR catch bond engineering improves the sensitivity of the PAP 22 /HLA-A2 specific TCR156. ( A ) Schematic illustration of the strategy for PAP TCR engineering. Three major steps were designed, each intended to further augment the TCR156 potency. ( B-D ) Position scanning of TCR156\u03b1. ( B ) Example FACs plot of CD69 expression of SKW-3 cells expressing TCR156 bearing mutations at position 30 and 32"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13004167/figures/Fig2.jpg",
+    "caption": "Catch bond engineered TCRs exhibit prolonged bond lifetimes that correlate with enhanced functionality. ( A ) Illustration of the BFP experiment setup. ( B ) Selected TCR variants were subjected to BFP measurement. The bond lifetime between the TCR and PAP/HLA-A*02:01 were measured under zero to 45 pN of force. ( C ) Comparisons of peak bond lifetime of the TCR variants measured in BFP. Data indic"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13004167/figures/Fig3.jpg",
+    "caption": "T cell profiling of the TCR156 variants. ( A ) Membrane expression of CD107a, the cytotoxic degranulation marker, on primary human T cells after the T cells were cultured with PC3-PAP-A2 for 4 hours at an E:T ratio of 4:1. The experiments were performed in duplicates and repeated at least once with human PBMCs from 3 donors. Data indicate mean \u00b1 SEM. ( B-D ) Primary human T cells expressing TCR156"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13004167/figures/Fig4.jpg",
+    "caption": "Anti-tumor potencies of the TCR156 variants. ( A-D ) In vitro killing of the TCR156 variants expressing human PBMCs measured in Incucyte assay under different conditions. ( A ) E:T ratio of 1:1; ( B ) Different E:T ratios as indicated were tested for TCR156 variants S32M\u03b1 and S30E32Q\u03b1; ( C ) TCR156 variants S32M\u03b1 and S30E32Q\u03b1 were stimulated by PC3-PAP-A2 repetitively every 2 days. (D) Transduced "
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13004167/figures/Fig5.jpg",
+    "caption": "Single-cell RNA-sequencing analysis of the TILs from the PC3-PAP-A2 xenograft in NSG mice. ( A ) Experimental setup for isolation of TILs from different groups of T cells transduced with non-engineered (i.e., wild-type; TCR156) or three variants of catch bond engineered TCRs. An irrelevant TCR (F5) was also used as a negative control. For each experimental group, TILs collected from three individu"
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13004167/figures/Fig6.jpg",
+    "caption": "Structural environment of a catch bond hotspot at the TCR-pMHC interface. ( A ) Crystal structures of wild-type TCR156 and mutants superimposed on HLA-A2 ( B ) CDR footprint of TCR156 variants aligned on PAP-A2. Wild-type (sky blue), S32H\u03b1 (red), S32M\u03b1 (magenta), S32Q\u03b1 (blue), S30E32Q\u03b1 (pink) The C\u03b1 r.m.s.d. for the TCRs range between 0.298 \u2013 0.369 \u00c5 ( C-F ) (top) Details of boxed region in A show"
+   },
+   {
+    "figure_number": 7,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13004167/figures/Fig7.jpg",
+    "caption": "The catch bond hotspot mutation primes the TCR for peptide interaction. ( A-E ) TCR\u2013peptide interface dynamics in MD simulation. ( A ) Inset showing the V\u03b1 hotspot region of interest with the TCR\u03b2 subunit hidden. ( B ) Representative simulation snapshots show water-mediated hydrogen-bonding networks that form in WT simulations and a network of protein\u2013peptide hydrogen bonds that form in S32M simul"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13035345",
+  "journal": "Science Translational Medicine",
+  "year": "2025",
+  "doi": "10.1126/scitranslmed.adu2085",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13035345/figures/Fig1.jpg",
+    "caption": "Design and characterization of a secretable SARS-CoV-2 RBD nanoparticle. (A) Schematic of the biogenesis of secreted RBD nanoparticles using mRNA-LNP as an example for method of delivery. The secretory pathway has been omitted for simplicity. UTR, untranslated region; SP, signal peptide; 16 GS, 16-residue glycine/serine linker. The protein models and schematic were rendered using ChimeraX ( 82 ) a"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13035345/figures/Fig2.jpg",
+    "caption": "mRNA-launched RBD nanoparticles elicit binding and neutralizing antibody titers in BALB/c mice. (A) Study design and groups; n=10 mice/group (except for Empty LNP, where n=5) received either AddaVax-adjuvanted protein (equimolar amounts of RBD: 0.9 \u03bcg of RBD per dose for Rpk9-based constructs, 5 \u03bcg of spike protein per dose for S-2P-foldon) or nucleoside-modified, LNP-encapsulated mRNA (0.2, 1, or"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13035345/figures/Fig3.jpg",
+    "caption": "Membrane-anchored S-2P, Rpk9-I53\u201350A, and Rpk9-I3\u201301NS mRNA vaccines induce antigen-specific CD8 T cell responses in C57BL/6 mice. (A) Study design and groups (ICS, intracellular cytokine staining); n=5 mice/group received either AddaVax-adjuvanted protein (equimolar amounts of RBD: 0.9 \u03bcg of RBD per dose for Rpk9-based constructs, 5 \u03bcg of spike protein per dose for S-2P-foldon) or nucleoside-modi"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13035345/figures/Fig4.jpg",
+    "caption": "mRNA-launched Rpk9-I3\u201301NS elicits neutralizing activity and confers protective immunity against mouse-adapted Wuhan-Hu-1 SARS-CoV-2. (A) Study design and groups; n=4\u20136 mice/group/time point (2 and 4 days post infection (dpi)) received either nucleoside-modified, LNP-encapsulated mRNA (1 \u03bcg dose) or an equivalent volume of PBS. (B) Serum neutralizing antibody titers against D614G Wuhan-Hu-1 SARS-C"
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13035345/figures/Fig5.jpg",
+    "caption": "mRNA-launched Rpk9-I3\u201301NS elicits neutralizing activity and confers protective immunity against mouse-adapted Omicron BA.5 SARS-CoV-2. (A) Study design and groups; n=4\u20135 mice/group/time point (2 and 4 days post infection (dpi)) received either nucleoside-modified, LNP-encapsulated mRNA (1 or 5 \u03bcg dose) or an equivalent volume of PBS. (B) Serum neutralizing antibody titers against Omicron BA.5 SAR"
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13035345/figures/Fig6.jpg",
+    "caption": "Characterization of secretable sarbecovirus RBD nanoparticles. (A) Size exclusion chromatogram of SARS-CoV-1-Rpk9-I3\u201301NS (orange), BtKY72-Rpk9-I3\u201301NS (pink), and RmYN02-Rpk9-I3\u201301NS (blue) purification. (B) DLS of SEC-purified SARS-CoV-1-Rpk9-I3\u201301NS, BtKY72-Rpk9-I3\u201301NS, and RmYN02-Rpk9-I3\u201301NS. D h , hydrodynamic diameter; PDI, polydispersity index. (C) Representative electron micrograph (scal"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13041778",
+  "journal": "Science",
+  "year": "2026",
+  "doi": "10.1126/science.adw4937",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13041778/figures/Fig1.jpg",
+    "caption": "MYXV M3.1 induces NF-\u03baB signaling in human monocytes. ( A ) Schematic of the arrayed virulence factor screening approach. Created with BioRender.com . ( B ) For each viral ORF, DESeq2 was used to identify differentially expressed host genes compared to the mCherry control. The empirical cumulative distribution function (ECDF) of the absolute fold change was plotted for the top 100 genes with the l"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13041778/figures/Fig2.jpg",
+    "caption": "M3.1 interacts with host antiviral factors and NF-\u03baB inhibitors. ( A ) Hypothesized mechanism in which M3.1 inhibits an antiviral host factor that also functions as a negative regulator of NF-\u03baB. ( B ) A luciferase reporter was used to measure NF-\u03baB responses in HEK293T cells transfected with M3.1-FLAG and/or stimulated with TNF\u03b1 (1 ng/ml). Fold change is relative to unstimulated cells transfected"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13041778/figures/Fig3.jpg",
+    "caption": "M3.1 blocks ZAP complex antiviral activity and inhibits TBK1-mediated type I IFN induction. ( A ) HEK293T cells nucleofected with Cas9 and two guides targeting the indicated gene or a non-targeting control (NTC) were infected with GFP-expressing MYXV (MOI = 1) for 24 hours. Images were taken using an inverted microscope at 4x magnification and are representative of three independent experiments. S"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13041778/figures/Fig4.jpg",
+    "caption": "M3.1 unleashes NF-\u03baB signaling by blocking N4BP1, ZC3H12A, and TBK1. ( A, D ) BLaER1 cells expressing doxycycline-inducible M3.1 were nucleofected with Cas9 and two gRNAs targeting the indicated gene or a non-targeting control (NTC). IL-6 secreted by BLaER1 monocytes was measured by ELISA after 24 hours of doxycycline treatment. Each data point represents an independent experiment; bars indicate m"
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13041778/figures/Fig5.jpg",
+    "caption": "M3.1 promotes degradation of N4BP1. ( A ) BLaER1 monocytes expressing doxycycline-inducible mCherry or M3.1 were treated with doxycycline and MG132 (5 \u03bcM) and/or bafilomycin A (125 \u03bcM) for 16 hours. Lysates were incubated with or without the deubiquitinase USP2 for 45 minutes at 37\u00b0C and immunoblotted as indicated. Images are representative of three independent experiments. ( B ) BLaER1 monocytes "
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13041778/figures/Fig6.jpg",
+    "caption": "Poxvirus virulence factors modulate NF-\u03baB signaling. ( A ) A phylogeny was built using homologous M3.1 protein sequences from poxviruses. NF-\u03baB induction in HEK293T cells was measured for each homolog (50 ng) using a luciferase reporter. Fold change is relative to mCherry-expressing control cells. Each data point represents an independent experiment; bars indicate mean \u00b1 SEM of three independent e"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13061089",
+  "journal": "Science Translational Medicine",
+  "year": "2026",
+  "doi": "10.1126/scitranslmed.adq4529",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13061089/figures/Fig1.jpg",
+    "caption": "MECP2-e1 and e2 are alternatively spliced and differ in translational efficiency. (A) Schematic of MECP2 exons alternatively spliced into e1 and e2 at pre-mRNA level. Purple denotes e1 and orange denotes e2 . Translational start sites of e1 and e2 are indicated by a black arrow on mature mRNA. E1 and E2 proteins have distinct N-termini but identical functional domains. (B) e1 and e2 absolute mRNA "
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13061089/figures/Fig2.gif",
+    "caption": "Isoform switching moderately upregulates MeCP2 protein leading to mild MeCP2-overexpression-like phenotypes in male mice. (A) e1 and e2 absolute mRNA concentrations (left), Western blot showing MeCP2 protein bands (center) and quantification (right) in cortices of wild-type\u2013black (n=4) and E2KO\u2013green (n=6) mice (B) Elevated plus maze (EPM) analysis: time in closed arms (left) and number of entries"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13061089/figures/Fig3.jpg",
+    "caption": "Isoform switching in G118E NGN2-iNeurons upregulates MeCP2 protein to control range. (A) Schematic of G118E, control and G118E-E2KO NGN2-iNeurons derivation from G118E patient fibroblasts. G118E fibroblasts were reprogrammed into G118E iPSCs (in red), which were then edited by CRISPR/Cas9 editing to correct the G118E mutation to WT to generate isogenic control iPSCs (in grey). Exon 2 was deleted b"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13061089/figures/Fig4.gif",
+    "caption": "Isoform switching corrects transcriptomic dysregulation in 8-week-old G118E NGN2-iNeurons. (A-C) Volcano plots of DEGs between G118E and control (A) , G118E and G118E-E2KO (B) G118E-E2KO and control (C) NGN2-iNs with mean expression on X-axis and Log 2 Fold change on Y-axis, (D-E) Dot plots of G118E disease gene expression (3,424 genes) with Log 10 Normalized average expression on Y-axis and indiv"
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13061089/figures/Fig5.jpg",
+    "caption": "Isoform switching corrects electrophysiological and morphological deficits in G118E NGN2-iNeurons. (A) Box plots showing spontaneous synaptic charge transfer (charge, a measure of spontaneous synaptic current) of control, G118E and G118E-E2KO NGN2-iNeurons recorded under a voltage clamp. Dots show individual neurons (B) Representative traces of current injection-dependent firing (C) Firing in resp"
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13061089/figures/Fig6.gif",
+    "caption": "An exon 2-skipping morpholino upregulates MeCP2 protein. (A) Schematic of Morpholino treatment paradigm in HEK293T cells (created with Biorender.com ) (B) Left - Western blot showing bands for MeCP2 and GAPDH (internal control) in HEK293T cells treated with Control or E2Skip Morpholino (N=3 each), right - quantification of MeCP2 normalized to GAPDH in these cells (C) Schematic of Morpholino treatm"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13092281",
+  "journal": "Science",
+  "year": "2026",
+  "doi": "10.1126/science.adv7924",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13092281/figures/Fig1.jpg",
+    "caption": "DefensePredictor shows strong performance on held-out folds. ( A ) Pipeline for building DefensePredictor. Train, validation, and test sizes are shown for fold four, which has the median number of defense genes across five folds. Dark blue elements represent control genes, pink elements represent known defense genes. Light blue elements represent center genes, grey elements represent neighboring g"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13092281/figures/Fig2.jpg",
+    "caption": "DefensePredictor identifies hundreds of predicted defense genes in 69 diverse E. coli strains. ( A ) Histogram of log-odds for 321,347 genes from 69 strains. Vertical line at a log-odds of 4 indicates a strict threshold for predicting a gene as defensive. ( B ) Left: number of protein clusters belonging to one of four categories of predicted defense genes. Right: examples of the types of predicted"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13092281/figures/Fig3.jpg",
+    "caption": "Predicted defense systems validate experimentally at a high rate. ( A ) Pipeline for validating predicted defense systems. The yellow gene represents an uncharacterized, predicted defense gene. The boxed genes represent a putative transcriptional unit. An example plaquing assay is shown, with phage plaques forming on a lawn of E. coli , at decreasing concentrations of phage. ( B ) Bottom: each poi"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13092281/figures/Fig4.jpg",
+    "caption": "Validated systems contain diverse domains in diverse contexts. ( A ) Defense heatmap (as in Fig. 3C ) for validated systems with known defense domains or domains without a known function. Proteins are outlined using the same color scheme as Fig. 2C , where only the proteins that are most distant from known defense proteins are colored. MTase, methyltransferase; HTH, helix-turn-helix; HeH, helix-ex"
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13092281/figures/Fig5.jpg",
+    "caption": "Newly validated defense domains are essential for protection. ( A, C, D, F, H-J ) For the systems DS-8 ( A ), DS-9 ( B ), DS-11 ( D ), DS-6 ( F ), DS-2 ( H ), DS-3 ( I ), DS-5 ( J ), the domain architecture is shown at the top along with the location of catalytic mutants tested. Bar graphs show \u2212log(EOP) versus the phage indicated for the wild-type system and variants harboring the mutations indic"
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13092281/figures/Fig6.jpg",
+    "caption": "Thousands of predicted defense proteins remain to be validated. ( A ) Histogram of the number of genomes each protein cluster is encoded by in a set of 3,000 E. coli strains. ( B ) Scatterplot showing the percent of genes per genome dedicated to defense as defined by DefenseFinder or DefensePredictor for 3,000 E. coli strains. The dashed line represents the function y = x . Pearson correlation is "
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13107528",
+  "journal": "Science",
+  "year": "2026",
+  "doi": "10.1126/science.adv2600",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13107528/figures/Fig1.jpg",
+    "caption": "CUG initiation enables production of DPRs in all three frames from the C9ORF72 repeat in (G 4 C 2 ) 66 mice. ( A ) FISH with probe targeting G 4 C 2 repeats in the cortices of 10-month-old AAV-injected mice. The percentage of cells with foci was quantified. N = 3 mice per genotype; each open dot represents data from a field of view (FOV), and each solid dot represents the average value for each mo"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13107528/figures/Fig2.jpg",
+    "caption": "Reducing DPR amounts by mutating the CUG upstream of the repeat rescues behavior deficits in (G 4 C 2 ) 66 mice. ( A ) Inverted grid test performed in 9-month-old mice expressing (G 4 C 2 ) 66 with either a CUG or mutated CCG codon upstream of the repeat. Holding impulse = body weight (g) \u00d7 0.00980665 (N/g) \u00d7 hanging time (s). N = 18 to 23 mice per genotype, both males and females. ( B ) Hanging w"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13107528/figures/Fig3.jpg",
+    "caption": "Reducing DPR amounts by mutating the CUG upstream of the repeat rescues pathological abnormalities in (G 4 C 2 ) 66 mice. ( A and B ) Immunohistochemistry staining with phosphorylated TDP-43 (p-TDP-43) antibody in the cortex of 15-month-old mice. The arrowheads in the insert point to p-TDP-43 aggregates. The number of inclusions per square millimeter was quantified in the whole cortex. N = 8 mice "
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13107528/figures/Fig4.jpg",
+    "caption": "Rescue of pathological and behavioral changes in (G 4 C 2 ) 149 mice with CUG\u2192CCG mutation. ( A ) FISH with probe targeting G 4 C 2 repeats in the cortex of 18-month-old AAV-injected mice. The percentage of cells with foci was quantified. N = 3 to 4 mice per genotype; each open dot represents data from an FOV, and each solid dot represents the average value for each mouse. All FOVs were taken from"
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13107528/figures/Fig5.jpg",
+    "caption": "CUG\u2192CCG base editing lowered DPR amounts and partially rescued gene expression in C9ORF72 iPSC-derived motor neurons. ( A ) Schematic of the genome editing strategy using adenine base editor to mutate the CUG codon into CCG in C9ORF72 iPSC lines. The A\u2192G mutation (magenta) is at position 12 of the optimal protospacer. The base editing window of adenine base editor (ABE 6.3) is from position 12 to "
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13107528/figures/Fig6.jpg",
+    "caption": "CUG\u2192CCG editing in the C9ORF72 neurons ameliorates disease-related phenotypes. ( A ) Longitudinal live-cell imaging to determine the number of alive motor neurons on day 4, day 7, and day 11 after induction of hNIL. N > 24 wells per genotype from three (day 7) to four (day 11) independent differentiations; the number of alive cells per well on days 7 and 11 were normalized to the alive cells in th"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13124201",
+  "journal": "Science",
+  "year": "2026",
+  "doi": "10.1126/science.adu9394",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13124201/figures/Fig1.jpg",
+    "caption": "Cardioprotective factor pro-ANP expression was insufficient in adult hearts after MI. ( A ) Schematic showing that intramuscularly injected saNppa-LNPs promote heart repair after MI. saRNA encoding the Nppa gene were packaged into LNPs and then injected into muscle tissue, where the Nppa mRNA was amplified and translated to produce pro-ANP. Pro-ANP was released into the circulation and subsequentl"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13124201/figures/Fig2.jpg",
+    "caption": "Fabrication and characterization of an intramuscularly injectable saNppa-LNP. ( A ) Schematic illustrating the structure of saNppa RNA. ( B ) Bioluminescence radiances of mice receiving a single IM, SC, or IV injection of 5 \u03bcg saFluc-LNPs, measured on day 1, 2, and 3 after injection. Radiance of the Fluc signal is expressed as photons/s. Data are presented as mean \u00b1 SD. n = 5. Significance was det"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13124201/figures/Fig3.gif",
+    "caption": "Cardioprotection by a single IM injection of saNppa-LNP. ( A ) Schematic showing animal study design. ( B ) Body weight changes of female mice after MI and treatment. Data are presented as mean \u00b1 SD. n = 3. ( C ) Longitudinal analysis of pro-ANP levels in mouse serum after injection of 0.25 mg/kg saNppa-LNPs. Data are presented as mean \u00b1 SD. n = 3. Statistical analysis was performed using two-way "
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13124201/figures/Fig4.gif",
+    "caption": "snRNA-seq uncovered mechanism of saNppa therapy. ( A ) Diagram shows the process of sample collection and snRNA-seq using the 10x Genomics platform. [Figure created with BioRender.com ] ( B ) Log-normalized Nppa expression projected onto t-SNE plots. The color gradient ranges from purple (high expression) to gray (no expression). ( C ) UMAP representation of nine clusters from all three groups. Cl"
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13124201/figures/Fig5.jpg",
+    "caption": "Cardiac protection of saNppa-LNPs in a swine ischemia/reperfusion model. ( A ) Schematic representation of the experimental timeline. A swine I/R model was induced in Yorkshire pigs by 90-min balloon occlusion intervention followed by reperfusion. During recovery, 20 \u03bcg/kg of saNppa-LNPs were intramuscularly injected. Cardiac function was evaluated by echocardiogram preoperation and on days 2 and "
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13246279",
+  "journal": "Science Translational Medicine",
+  "year": "2026",
+  "doi": "10.1126/scitranslmed.adv4942",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13246279/figures/Fig1.jpg",
+    "caption": "Conceptual framework for metabolic health index\u2013based risk stratification using NBS metabolites. ( A ) Metabolite values obtained from newborn screen results in California were merged with clinical records sourced from HCAI and CPQCC, representing a selection of preterm singleton live births with a gestational age range of 22 to 29 weeks. NBS metabolites, clinical demographics, and newborn outcome"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13246279/figures/Fig2.gif",
+    "caption": "A unifying metabolic health index. ( A ) A bottleneck layer was used to develop a metabolic health index that compresses NBS metabolite profiles into a single risk score that encompasses risk for BPD, IVH, NEC, and ROP. ( B ) Bottleneck output from a model with a single bottleneck unit was evaluated as a single metabolic health index to calculate AUPRC on the K -fold CV test set and the holdout va"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13246279/figures/Fig3.jpg",
+    "caption": "Multicohort generalizability of the metabolic health index model and approach. ( A ) Metabolic health model previously trained using the California cohort was validated on the NSO cohort of 3299 individuals. The resultant health index scores were paired with the subgroup discovery procedure to identify subgroups in the Ontario cohort using metabolite quantiles to define individuals with the strong"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13246279/figures/Fig4.gif",
+    "caption": "Cohort-specific variability in the relationship between metabolites and metabolic health index subgroups. ( A ) Scoring method for determining univariate metabolite generalizability to compare metabolites across cohorts. Individuals were divided into one of three quantiles for each metabolite value. Individuals in each quantile were scored for model AUROC, and subgroups were quantified with summar"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13286266",
+  "journal": "Science",
+  "year": "2026",
+  "doi": "10.1126/science.aea1272",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13286266/figures/Fig1.jpg",
+    "caption": "Genetic screens identify ILF3 as a mediator of transcriptional adaptation. ( A ) Schematic showing the Flow-FISH-based genome-wide CRISPR-Cas9 screens used in Actg1 -NSD and WT cells. ( B ) Gene-level enrichment of the average scores of the sgRNAs in the bottom 30% of Actg2 / Rpl13a expressing cells relative to the top 30% of expressing cells, plotted against MAGeCK-calculated P -values obtained f"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13286266/figures/Fig2.jpg",
+    "caption": "ILF3 is enriched at adapting genes\u2019 RNAs from adapting genes\u2019 loci, and its artificial recruitment is sufficient to promote gene expression. ( A ) IGV ( 141 ) tracks of the Actg2 locus showing PRO-seq signals in WT cells from the positive and negative strands. A.S.: antisense. ( B ) log 2 (fold-change) of RNA IP/input signal in ILF3 nuclear RIP-seq experiments in Actg1 -NSD cells relative to that "
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13286266/figures/Fig3.jpg",
+    "caption": "Tiling trigger screen identifies regions of mRNA sufficient for TA-mediated paralogous gene upregulation. ( A ) qPCR analysis of Actg2 and the endogenous Actg1 mRNA expression levels in WT (white bars) or Ilf3 knockdown (kd) (grey bars) MEFs expressing Actg1 coding sequence, or a control (GFP-2A-RFP) message from the NMD vector. When the stable Actg1 NMD cells were maintained in culture for severa"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13286266/figures/Fig4.jpg",
+    "caption": "Trigger screens identify regions of mRNA sufficient for self-TA. ( A ) Enrichment of triggers in the top 10% of Actg1 (as inferred by NeonGreen (NG) signal) expressing cells, normalized to forward scatter (FSC), relative to the bottom 10% of expressing cells, plotted against one-sided MAGeCK-calculated P values obtained from two independent replicates of the trigger screen. Red dots represent trig"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13308464",
+  "journal": "Science",
+  "year": "2026",
+  "doi": "10.1126/science.aec6396",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13308464/figures/Fig1.gif",
+    "caption": "SHIV.5MUT rapidly and consistently induces V3-glycan bNAbs. (A) Study design. Macaques were immunized with protein nanoparticles adjuvanted with SMNP or mRNA-LNPs at eight-week intervals. All vaccinated as well as unvaccinated control animals were then infected with SHIV.5MUT or SHIV.BG505.N332. (B) Amino acid alignment of BG505.N332 and 5MUT Envs in the V1 region. Differences at positions 134, 13"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13308464/figures/Fig2.gif",
+    "caption": "SHIV.5MUT-induced V3-glycan bNAbs are structurally diverse and resemble human bNAbs. (A) Cryo-EM maps of SHIV.5MUT-induced V3-glycan bNAbs in complex with 5MUT-3fill. The heavy chain of each bNAb is shown in a darker shade while the light chain is shown in a lighter shade. The N332 gp120 glycan is modeled as cyan spheres and the 324 GDIR 327 peptide motif is red. (B) Top, surface representations o"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13308464/figures/Fig3.gif",
+    "caption": "Characterization of inferred V3-glycan bNAb UCAs suggests similar antibodies may be elicitable in humans. (A) Alignments of heavy chain (HC) and light chain (LC) amino acid sequences of seven inferred UCAs, the corresponding mature bNAbs, and closest human V H /V K alleles are shown. Analysis of the five remaining UCAs is shown in fig. S10 . Somatically mutated residues in the mature bNAb sequence"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13308464/figures/Fig4.gif",
+    "caption": "Selection in the V1 region precedes selection in the V3 region in SHIV.5MUT-infected macaques. (A, D) Left: Fraction of amino acid variants in the V1 (A) or V3 (D) regions of Env plotted over time for SHIV.5MUT-infected macaques that did (red) versus did not (black) develop bNAbs, as well as for SHIV.BG505.N332-infected macaques (grey). Thin lines indicate data from individual animals, and thick l"
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13308464/figures/Fig5.jpg",
+    "caption": "SHIV.5MUT elicits V3-glycan bNAbs via a two-step process. (A) Schematic model of SHIV.5MUT-mediated V3-glycan bNAb elicitation. (B) Top, neutralization of the indicated V1 variants by plasma from all 24 SHIV.5MUT-infected macaques at week 12 post-infection, with titers represented as log(1/ID 50 ). Each point represents a single macaque with lines connecting paired samples. Wilcoxon matched-pairs "
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13308464/figures/Fig6.gif",
+    "caption": "Env-antibody coevolution analysis reveals key Env mutations enriched in SHIV.5MUT macaques that develop bNAbs. (A) LASSIE-selected sites that are enriched macaques that developed bNAbs. Numbers indicate peak percentage of transmitted founder (TF) loss. Maximum increase in average number of V1h glycans and V1h length is also shown. (B) Selected sites enriched in macaques that developed bNAbs were s"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13372101",
+  "journal": "Science",
+  "year": "2026",
+  "doi": "10.1126/science.aea2100",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13372101/figures/Fig1.jpg",
+    "caption": "In vivo biotinylation of vasculature luminal surface proteins. ( A ) Illustration of blood vessels in various organs: brain, kidney, and intestine. ( B ) Schematic of the method. Wheat germ agglutinin (WGA) anchors the horseradish peroxidase (HRP) to the vasculature luminal surface. HRP converts biotin-xx-phenol (chemical structure in green) to phenoxyl radicals ( 13 ), which covalently biotinylat"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13372101/figures/Fig2.gif",
+    "caption": "Luminal surface proteome of mouse brain vasculature across the lifespan. ( A ) Design and TMT tag usage of the 18-plex quantitative proteomic experiment. Each age comprises three biotinylated replicates (colored TMT tags: green, development; blue, adult; red, aged) and three non-biotinylated controls (gray TMT tags). ( B ) Principal component analysis of the proteome. Solid dots, +WGA, biotinylate"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13372101/figures/Fig3.gif",
+    "caption": "Proteomic dynamics from development through adulthood to aging. ( A to I ) Various dynamic patterns, such as static (A), unidirectionally rising (E), and unidirectionally reducing (I), and their example proteins. Y axis, log 2 (+WGA/\u2013WGA fold change). +WGA, WGA-HRP perfused. \u2212WGA, WGA-HRP omitted. FC, fold change. 14d, 14-day-old. 12w, 12-week-old. 80w, 80-week-old. Error bar, standard deviation. "
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13372101/figures/Fig4.jpg",
+    "caption": "Neonatal but not adult blood-brain barrier requires SLC7A1. ( A ) Schematic of the viral-genetic strategy for knocking out genes in brain endothelial cells in neonatal mice. Adeno-associated virus (AAV) with the X1.1 capsid ( 55 ), which encodes one or two guide RNAs (gRNAs), is injected intravenously (IV) into postnatal day 0 (P0) mice that express body-wide Cas9 (CAG-Cas9) ( 56 ) or endothelial "
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13372101/figures/Fig5.gif",
+    "caption": "Nitric oxide synthase NOS3 is required at the neonatal blood\u2013brain barrier but not in adults. ( A ) Diagram of the nitric oxide synthesis pathway. Solute carrier transporters SLC7A1\u2013SLC7A4 mediate the intracellular uptake of the cationic amino acid arginine, which is subsequently converted into nitric oxide by nitric oxide synthases (NOS1\u2013NOS3). ( B and C ) mRNA expression of Slc7a1 \u2013 Slc7a4 (B) a"
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13372101/figures/Fig6.jpg",
+    "caption": "HYAL2 secures blood-brain barrier integrity throughout the lifespan. ( A ) Enrichment of HYAL2 in the proteome across ages. +WGA, WGA-HRP perfused. \u2212WGA, WGA-HRP omitted. FC, fold change. ( B ) Expression dynamics of HYAL2. Y axis, log 2 (+WGA/\u2013WGA fold change). +WGA, WGA-HRP perfused. \u2212WGA, WGA-HRP omitted. FC, fold change. 14d, 14-day-old. 12w, 12-week-old. 80w, 80-week-old. Error bar, standard "
+   },
+   {
+    "figure_number": 7,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13372101/figures/Fig7.gif",
+    "caption": "In vivo structure-function interrogation of human and mouse HYAL2. ( A ) Amino acid alignment of human and mouse HYAL2 proteins, using the Lesk color scheme. ( B ) Structure alignment of human and mouse HYAL2 proteins, based on AlphaFold ( 63 , 64 ) predictions. ( C ) Schematic of the viral-genetic strategy for in vivo functional tests of mouse and human HYAL2, as well as their variants, in a resc"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13403147",
+  "journal": "Science",
+  "year": "2026",
+  "doi": "10.1126/science.adx1893",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13403147/figures/Fig1.jpg",
+    "caption": "Self-assembled CRYSTAL induces systemic STING activation in mice. ( A ) Schematic comparison of three categories of STING agonists currently under clinical or preclinical development, including free drugs, lipid nanoparticles, or particles with structurally ordered nanoassemblies. ( B ) STEM-EDX analysis of CDA/Mn/His11 nanoassemblies. N (yellow), P (orange), O (cyan), and Mn (green) are represent"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13403147/figures/Fig2.jpg",
+    "caption": "CRYSTAL regresses large tumors in mice and rabbits through targeted STING activation. ( A ) Antitumor efficacy of uCMP and CRYSTAL in late-stage B16F10 tumor\u2013bearing C57BL/6 mice. Left to right: treatment regimen, representative tumor images before (D0) and after treatment (Tx) (D3), and tumor growth curve. ( B ) Antitumor efficacy of uCMP and CRYSTAL in late-stage spontaneous MMTV-PyMT breast can"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13403147/figures/Fig3.jpg",
+    "caption": "Host and tumor factors critical for CRYSTAL therapy. ( A ) Schematic shows host and tumor factors orchestrate both innate and adaptive immune responses. ( B ) MMTV-PyMT mice (D80 after birth) received intravenous injections of 10 \u03bcg CDA or CRYSTAL on D0, D5, and D10. Tumors were collected for immune profiling on D3 and D15. Changes in myeloid cells (CD11b + CD3 \u2212 CD49b \u2212 F4/80 \u2212 ), monocytes (CD11"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13403147/figures/Fig4.jpg",
+    "caption": "CRYSTAL remodels the tumor and spleen microenvironment. MMTV-PyMT mice (D80 after birth) were enrolled and received intravenous injections of 10 \u03bcg CDA or CRYSTAL on D0, D5, and D10. Tumors and spleens were collected for immune profiling on D15 via flow cytometry (see figs. S22 , S24 , and S25 for the gating strategy). ( A to C ) Frequency of major immune cell types among CD45 + live cells in the "
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13403147/figures/Fig5.jpg",
+    "caption": "CRYSTAL safely elicits STING activation in healthy dogs and nonhuman primates. ( A to D ) Dose escalation trial of systemic CRYSTAL treatment in two female (F1, F2) and two male (M1, M2) na\u00efve beagles. Dosing regimen is shown in (A). The dynamic changes of WBC, NEU, and lymphocyte (LYM) counts were measured before and after each dose (the dashed horizontal lines indicate normal ranges, dotted vert"
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13403147/figures/Fig6.jpg",
+    "caption": "CRYSTAL induces potent STING activation in human samples. ( A and B ) Cellular uptake and STING activation efficiency of CRYSTAL among human PBMCs. Human PBMCs were seeded and rested overnight before treatment. PBMCs were incubated with CRYSTAL-Cy7 at 2.5 or 5 \u03bcM for 1 hour and then analyzed with flow cytometry for the frequency of CRYSTAL-Cy7 + cells among each cell type (A). mDCs, myeloid dendri"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13491402",
+  "journal": "Science",
+  "year": "2026",
+  "doi": "10.1126/science.adv7378",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13491402/figures/Fig1.webp",
+    "caption": "CD70-CAR T cells fail to eradicate CD70-heterogeneous kidney tumors. ( A ) CD70 immunohistochemistry of CD70-heterogeneous K5 and K7 PDX ccRCC tumors at the kidney site. Scale bar, 200 \u03bcM. ( B ) Representative flow cytometric analysis of CD70 expression on K5 and K7 tumors at kidney site 15 days after tumor implantation. ( C ) Diagram depicting in vivo CAR T treatment of ccRCC kidney model. K5 or "
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13491402/figures/Fig2.gif",
+    "caption": "Sensitive HLA-independent T cell receptors detect low-level CD70 expressed on apparent CD70-negative tumor cells. ( A ) Diagram depicting a CD70-HIT receptor. The same variable heavy (VH) and variable light (VL) domains of the CD70\u20131XX CAR replace the variable \u03b1 (V\u03b1) and variable \u03b2 (V\u03b2) of a TCR to form the HIT heterodimer. HIT T cells are engineered by disrupting TCR\u03b1 expression, and integrating "
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13491402/figures/Fig3.gif",
+    "caption": "CD70 is epigenetically silenced by EZH2-mediated H3K27me3 to low levels. ( A ) CD70 LO and CD70 HI tumor cells from mice bearing K5 PDX tumor at both kidney and lung sites were isolated by fluorescence-activated cell sorting 15 days after tumor administration. Representative gating strategy to sort CD70 LO and CD70 HI tumor cells from kidney site, denoted as day 0 of isolation, \u201cd0 ex-vivo.\u201d Isola"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13491402/figures/Fig4.gif",
+    "caption": "Epigenetic signature of CD70 to predict low-level expression in ccRCC patient tumors and normal tissues. ( A ) Uniform manifold approximation and projection (UMAP) of single cells from K5 and K7 kidney tumor showing heterogeneous CD70 transcriptional and cell surface protein expression as detected by cellular indexing of transcriptomes and epitopes (CITE) sequencing. ( B to D ) ccRCC patient kidne"
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13491402/figures/Fig5.gif",
+    "caption": "CD70-HIT T cells eliminate CD70-heterogeneous ovarian and pancreatic tumors. ( A ) Representative flow cytometric analysis of CD70 expression on OV4 high-grade serous ovarian carcinoma (HGSOC) PDX tumor at ovarian site. ( B ) Diagram depicting in vivo CAR T treatment of HGSOC ovarian model. OV4 ovarian PDX tumor is administered orthotopically (5 \u00d7 10 5 cells per mouse) into the ovary of NSG mice w"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13564803",
+  "journal": "Science Advances",
+  "year": "2026",
+  "doi": "10.1126/sciadv.aef4204",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564803/figures/Fig1.webp",
+    "caption": "Comparison of various pDCPD deconstruction methods. ( A ) Prior deconstruction strategies involving the use of (i) comonomers or (ii) chain transfer agents (CTAs). h, hours. ( B ) Present metathesis deconstruction strategy using commercial reagents and materials."
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564803/figures/Fig2.webp",
+    "caption": "Metathesis deconstruction process optimization. ( A ) Solvent and catalyst screening. (i) Solvent screening with environmental impact scores (#) from Henderson and co-workers ( 56 ), whereby a higher value is \u201cgreener\u201d; (ii) catalyst screening using CPME under an inert, nitrogen atmosphere; and (iii) catalyst screening using CPME under an ambient atmosphere. ( B ) Kinetics of pDCPD deconstruction "
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564803/figures/Fig3.webp",
+    "caption": "Mechanistic investigation of the metathesis deconstruction of pDCPD. ( A ) Hypothesized reaction pathways for metathesis deconstruction of pDCPD; chain transfer at C\u2550C double bonds in the cross-links and main chains (pathway 1) and RCM of cyclopentene (pathway 2). NB, norbornene; CP, cyclopentene. ( B ) Metathesis deconstruction 19 F NMR spectra and corresponding proposed reaction of a fluorine-la"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564803/figures/Fig4.webp",
+    "caption": "Metathetic deconstruction of lab-scale composites, encapsulated electronic, commercial pDCPD-based materials and glass fiber composites, and regeneration of recovered oligomers. ( A ) Comparison of Young\u2019s modulus and ultimate tensile strength (UTS) from tensile testing dogbones (ASTM D638 Type V) of virgin pDCPD and pDCPD containing 20 wt % fragments recovered from metathesis deconstruction. ( B "
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564803/figures/Fig5.webp",
+    "caption": "Proposed recycling process, LCA, and TEA. ( A ) Simplified process flow diagram within the system boundary. ( B ) Estimates of GHG emissions and ( C ) variable operational cost per kilogram of recycled material for various energy or mass inputs into the system using 99% recovery of ruthenium and scenarios MD1 and MD2 for catalyst cost. ( D ) Comparison of GHG emissions and variable operational cos"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13564807",
+  "journal": "Science Advances",
+  "year": "2026",
+  "doi": "10.1126/sciadv.adz3976",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564807/figures/Fig1.gif",
+    "caption": "BM-on-a-chip recapitulates the human BM microenvironment. ( A ) The spatial architecture of human BM features CD90 + mesenchymal stem cells (MSCs), VECAD + sinusoids, and CXCL12 + stroma. DAPI, 4\u2032,6-diamidino-2-phenylindole. ( B ) An illustrative representation of the human BM-on-a-chip (hBMOC) platform is shown. The schematic depicts a unit from a 4 \u00d7 2 grid of five-channel devices placed on a bo"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564807/figures/Fig2.gif",
+    "caption": "Loaded ASCs localize in the perivascular space of the BMOC. B cell subpopulations in human donor tissue are shown as percentages ( A ) and counts per 100,000 cells ( B ). ( C ) A schematic of lymphoid organoids displays the coculture of tonsil cells with CD40L and stromal cells in a PEG-4MAL synthetic hydrogel (top). Created in BioRender. L.K. (2024); https://BioRender.com/q40wo2f . Bottom: Repres"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564807/figures/Fig3.gif",
+    "caption": "ASC survival in the hBMOC promoted by BAFF and IL-21. ( A ) Representative gating of ASCs from tonsil organoids (left) and after these cells were cultured in the hBMOC for 4 days (right). ( B ) Quantification of ASC counts in (A). ( C ) Representative gating of CD138 + ASCs from tonsil organoids (left) and after these cells were cultured in the hBMOC for 4 days (right). ( D ) Quantification of CD1"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564807/figures/Fig4.gif",
+    "caption": "Comparison of sorted organoid subpopulations in the hBMOC. ( A ) Strategy for sorting tonsil organoid cells via FACS into ASC and non-ASC subpopulations. ( B ) Representative gating of ASCs post 4 days in the BMOC for either ASCs or non-ASCs. ( C ) Quantification of ASC counts from (B). ( D ) Representative gating of CD138 + ASCs following 4 days of culture in the BMOC. ( E ) Quantification of CD1"
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564807/figures/Fig5.webp",
+    "caption": "BM niche modulates motility of ASCs. ( A ) Plotted 2D tracks of ASCs with the same origin (left) and motility metrics of the cell tracks divided into categories based on track displacement (right). ( B ) Examples of ASC tracks exhibiting periods of both high and low displacement periods. Scale bar, 50 \u03bcm. ( C ) Comparison of the total time each cell spent in high versus low displacement periods. ("
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564807/figures/Fig6.webp",
+    "caption": "CXCL12-CXCR4 signaling controls ASC motility. ( A ) Pooled measurement of ASC motility with or without AMD3100 treatment. ( B ) Clustering analysis of ASCs within hBMOC with or without AMD3100 treatment. ( C ) Pooled measurement of ASC motility with or without \u03b1-CXCL12 treatment. ( D ) Epifluorescence images displaying a 10-kDa fluorescent dextran gradient in the hBMOC (left) and quantifying the f"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13564810",
+  "journal": "Science Advances",
+  "year": "2026",
+  "doi": "10.1126/sciadv.aef1694",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564810/figures/Fig1.webp",
+    "caption": "LOXL4 knockout reduces ECM stiffness and CD8 + T cell exhaustion, effects reproduced by Piezo1 deletion in CD8 + T cells. WT or Loxl4 ko mouse 3LL lung cancer cells were implanted into C57 mice subcutaneously to generate syngeneic tumors. ( A ) Average tissue stiffness in 3LL-formed tumors evaluated by elastic modulus measurement. ( B ) Schematic diagram of the in vitro culture model: mLX4 was the"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564810/figures/Fig2.webp",
+    "caption": "LOXL4 regulates ECM stiffness to promote CD8 + T cell exhaustion through Piezo1-mediated FAK1-YAP1 axis. ( A ) Schematic diagram of the intratumoral injection of TRULI (LATS1/2 inhibitor) into 3LL-tumors in Piezo1 dko or Piezo1 fl/fl mice on day 7. Created in BioRender. Gu, X. (2026) https://BioRender.com/xdbdblf . ( B ) Weekly volume change in subcutaneous tumors in mice receiving TRULI administr"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564810/figures/Fig3.webp",
+    "caption": "YBX1 is activated by YAP1 and participates in mechanical force\u2013responsive CD8 + T cell exhaustion. ( A ) MA plots of DEGs from RNA-seq of CD8 + T cells seeded on soft versus stiff ECM. ( B and C ) qPCR and flow cytometry analysis of YBX1 expression in CD8 + T cells cultured in soft, moderate, or stiff gels (0, 2.5, or 5.0 \u03bcg/ml mLX4). ( D ) Nuclear translocation of YBX1 in CD8 + T cells cultured i"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564810/figures/Fig4.webp",
+    "caption": "YBX1 deficiency enhances antitumor immunity of CD8 + T cells. ( A ) CD8 + T cells were extracted from Ybx1 fl/fl or Ybx1 dko mice, activated with \u03b1CD3/\u03b1CD28 antibodies, and cultured in soft, moderate, or stiff gels (0, 2.5, or 5.0 \u03bcg/ml mLX4). Created in BioRender. Gu, X. (2026) https://BioRender.com/rd5ihlz . ( B ) Quantification of average Ca 2+ transient amplitude (\u0394 F / F 0 ) in Ybx1 fl/fl or "
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564810/figures/Fig5.webp",
+    "caption": "YBX1 suppresses cytotoxicity program of CD8 + T cells by recruiting ACLY and KAT2A. ( A to D ) CUT&Tag with anti-H3K27ac and anti-H3K4me3 in CD8 + T cells seeded on soft or stiff gels (0 or 5 \u03bcg/mL mLX4) to analyze genomic binding. ( E ) MA plots of DEGs from RNA-seq in Piezo1 dko CD8 + T cells overexpressing YBX1 or not. ( F and G ) Immunoprecipitation and mass spectrometry of YBX1-associated pro"
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564810/figures/Fig6.webp",
+    "caption": "ACLY or KAT2A deficiency enhances antitumor immunity of CD8 + T cells. ( A ) Acly fl/fl or Kat2a fl/fl mice were crossed with Cd8a -Cre mice to generate Acly dko or Kat2a dko strains, followed by implantation of 3LL cells into these strains subcutaneously. Created in BioRender. Gu, X. (2026) https://BioRender.com/6ccnkis . ( B ) Weekly volume change in subcutaneous tumors in mice. ( C ) Representa"
+   },
+   {
+    "figure_number": 7,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564810/figures/Fig7.webp",
+    "caption": "Acetyldigoxin targets LOXL4 and suppresses lung tumorigenesis in mice. ( A ) C57 mice receiving subcutaneous injection of 3LL cells were further treated with acetyldigoxin (0, 2.5, or 5 mg/kg). Created in BioRender. Gu, X. (2026) https://BioRender.com/4tfgf9i . ( B ) Weekly volume change in subcutaneous tumors formed by 3LL cells in mice. ( C ) Representative images and weight of subcutaneous tumo"
+   },
+   {
+    "figure_number": 8,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564810/figures/Fig8.webp",
+    "caption": "Graphical abstract. This study uncovers a previously unknown mechanotransduction-to-epigenetic pathway by which LOXL4-driven matrix stiffening induces CD8 + T cell exhaustion. Repurposing of the cardiac glycoside derivative acetyldigoxin as a LOXL4-targeted therapy offers a clinically translatable strategy to overcome ECM-mediated immunotherapy resistance in lung cancer. Created in BioRender. Gu, "
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13564813",
+  "journal": "Science Advances",
+  "year": "2026",
+  "doi": "10.1126/sciadv.aed9568",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564813/figures/Fig1.webp",
+    "caption": "Schematic illustration of TAM-targeted resiquimod mRNA-CXCL9 LNPs for cancer immunotherapy. (1) TREM2 Ab-LNPs target surface markers of TAMs to improve uptake efficacy and restrict their interaction with tumor cells in the TME. (2) Intracellular delivery of TLR7/8 agonists binds endosomal TLR receptors and reprograms immunosuppressive TAMs to proinflammatory macrophages. The codelivery LNP system "
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564813/figures/Fig2.webp",
+    "caption": "Optimized coating of TREM2 antibody on LNPs facilitates mRNA delivery to immunosuppressive macrophages with improved specificity in vitro. ( A ) Design of mRNA and resiquimod codelivered LNPs, TREM2 Ab-LNPs, and benchmarking mannose-modified LNPs. Lipids in ethanol are mixed with mRNA and resiquimod in 50 mM citrate buffer (pH 3.0), followed by dialysis in phosphate-buffered saline (PBS) for 24 ho"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564813/figures/Fig3.webp",
+    "caption": "TREM2 Ab-LNPs enable specific uptake by TAMs in 4T1 solid tumors. ( A ) Bioluminescence images of 4T1 tumor-bearing mice, excised tumors and organs at 12 hours after injection of PBS, DiD-labeled mRNA-FLuc LNPs, TREM2 antibody\u2013coated DiD-labeled mRNA-FLuc LNPs (T-mRNA LNPs), and mannose DiD-labeled mRNA-FLuc LNPs (M-mRNA LNPs; n = 3 per group). Each mouse received PBS or mRNA-FLuc LNP treatment vi"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564813/figures/Fig4.webp",
+    "caption": "Codelivery of resiquimod and mRNA-CXCL9 reprogram macrophages and stimulate their CXCL9 secretion efficiently in vitro. ( A and B ) Evaluation of cell uptake, lysosomal entrapment, and mRNA translation of mRNA-eGFP (mRNA) LNPs, resiquimod mRNA-eGFP\u2013coloaded (RmRNA) LNPs, and separate treatment of mRNA LNPs and resiquimod at incubation times of 4 and 24 hours using confocal laser scanning microscop"
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564813/figures/Fig5.webp",
+    "caption": "TREM2 antibody\u2013coated, resiquimod, and mRNA-CXCL9\u2013coloaded LNPs suppress 4T1 tumor growth in vivo by reducing immunosuppressive TAMs, boosting tumor infiltration and activity of CTLs. ( A ) Treatment schedule of mRNA-CXCL9 LNPs, RmRNA LNPs, and T-RmRNA LNPs. One million 4T1 tumor cells were inoculated subcutaneously into the fourth mammary fat pad of a BALB/c mouse on day 0. The mRNA LNPs were inj"
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564813/figures/Fig6.webp",
+    "caption": "Combination with immune checkpoint inhibitors anti\u2013PD-L1 and anti\u2013CTLA-4 facilitates a favorable immune environment for CTLs in tumors. ( A ) Treatment schedule of vehicle LNPs and T-RmRNA LNPs in combination with anti\u2013PD-L1 and anti\u2013CTLA-4 or their isotype control antibodies. The LNPs carrying 4 \u03bcg of mRNA were injected intravenously to mouse tail vein on days 4, 6, and 8 after 4T1 tumor inoculat"
+   },
+   {
+    "figure_number": 7,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564813/figures/Fig7.webp",
+    "caption": "Central memory immunity of CTLs was up-regulated after combinational treatment of T-RmRNA LNPs and immune checkpoint inhibitors. ( A ) Concatenated dot plots of CD62L and CD44 expression in CTLs (i.e., CD8 + T cells) of TdLNs with treatment of LNPs and anti\u2013PD-L1 and anti\u2013CTLA-4 or their isotype control antibodies. Gating was based on CD44 and CD62L expression of na\u00efve cells in the spleen of a hea"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13564824",
+  "journal": "Science Advances",
+  "year": "2026",
+  "doi": "10.1126/sciadv.aef3957",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564824/figures/Fig1.webp",
+    "caption": "Brain state\u2013dependent microglial Ca 2+ activity. ( A ) Experimental setup: mTPM and EEG/EMG recordings in freely behaving mice with tamoxifen-induced expression of GCaMP6s in microglia. A representative mTPM image of microglia in a Cx3cr1 CreERT ::RCL-GCaMP6s mouse. Scale bar, 30 \u03bcm. ( B ) Representative long-term microglial Ca 2+ activity during sleep-wake cycles in freely behaving mice, showing "
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564824/figures/Fig2.webp",
+    "caption": "eADO oscillations during natural sleep-wake cycles. ( A ) Schematic diagram depicting mTPM images of eADO reported by the GRAB ADO1.0 sensor expressed in neurons. Freely behaving mice were head mounted with an mTPM and EEG/EMG electrodes. ( B ) Representative simultaneous recordings from somatosensory cortex during the sleep-wake cycles in freely behaving mice, showing EEG (0- to 30-Hz spectrogram"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564824/figures/Fig3.webp",
+    "caption": "Microglial Ca 2+ activity is modulated by eADO and A 3 R. ( A ) Schematic diagram depicting mTPM images of microglial Ca 2+ activity in freely behaving mice. A drug infusion catheter was implanted in the subarachnoid space adjacent to the cranial window. Microglia were imaged following local application of ADO or A 3 R ant/agonists for 30 min. ( B and C ) The number of Ca 2+ events within the FOV "
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564824/figures/Fig4.webp",
+    "caption": "Sleep fragmentation in microglial A 3 R cKO mice. ( A ) A hypnogram measured from microglial A 3 R cKO and sibling control mice at the light phase (ZT3 to ZT9) and dark phase (ZT15 to ZT21). Cx3cr1 CreERT ::Adora3 fl/fl mice, microglial A 3 R cKO mice; Cx3cr1 WT ::Adora3 fl/fl mice, littermate controls. ( B ) Total duration of wakefulness, NREM sleep, and REM sleep at the light phase (ZT3 to ZT9) "
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564824/figures/Fig5.gif",
+    "caption": "A 3 R regulates state-dependent microglial Ca 2+ activity. ( A ) Mean Ca 2+ activity of microglia during different brain states in littermate control and A 3 R cKO mice. Control mice, Cx3cr1 CreERT ::RCL-GCaMP6s mice; A 3 R cKO mice, Cx3cr1 CreERT ::Adora3 fl/fl ::RCL-GCaMP6s mice. Experimental setup: In vivo imaging was performed 1 month after tamoxifen induction. Mann-Whitney test was used. n = "
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564824/figures/Fig6.gif",
+    "caption": "A 3 R alters state-dependent morphological dynamics in microglia. ( A ) Representative microglial morphological changes during the sleep-wake cycle in microglial A 3 R cKO mice ( Cx3cr1 CreERT ::Adora3 fl/fl ::Cx3cr1 GFP/\u2212 mice). Data collection was performed as follows: Baseline data were acquired at 4 weeks postsurgery, tamoxifen was induced at 5 weeks, and A 3 R cKO data were collected at 9 wee"
+   },
+   {
+    "figure_number": 7,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564824/figures/Fig7.webp",
+    "caption": "Microglia as stabilizers of sleep homeostasis. Regulation of A 3 R-mediated microglial Ca 2+ activity and morphology dynamics by eADO oscillations underlies the stabilization of wake-sleep states in mice. Microglia serve as a stabilizer for sleep homeostasis through the eADO-A 3 R signaling pathway."
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13564827",
+  "journal": "Science Advances",
+  "year": "2026",
+  "doi": "10.1126/sciadv.aed4474",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564827/figures/Fig1.webp",
+    "caption": "Schematics illustrating spatial-variable multifunctional stretchable electronics via microstructure heterogenization. ( A ) Comparison of stretchable electronic systems with spatial-variant electrical properties based on material, geometry, and microstructure heterogenization. ( B ) Schematic showing spatial-variant electrical and electromechanical properties of LM-based stretchable electronics en"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564827/figures/Fig2.webp",
+    "caption": "Spatial-variant LM-based stretchable electronics fabricated via judiciously engineered transfer printing. ( A ) Schematics illustrating the partial and complete transfer printing of LMPs via judicious selection of the LMP size and interfacial adhesion to control electrical and electromechanical properties. ( B ) SEM images (top) and size distributions (bottom) of LMPs prepared by different tip-son"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564827/figures/Fig3.webp",
+    "caption": "Electrical, electromechanical, and dielectric properties of partially or completely transferred LM patterns. ( A ) Sheet resistance of partially transferred LMPs (i.e., pLMP) with different widths as a function of average LMP diameter. ( B ) Electromechanical response of pLMP fabricated from different-sized LMPs. ( C ) Schematics showing the flexibility of air spraying, including subsequent sprayi"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564827/figures/Fig4.webp",
+    "caption": "Seamless integration of electrical, electromechanical, or dielectric-variant LM patterns via single-step transfer printing. ( A ) Resistance-variant all-LM electronics with seamless integration of low-resistive and high-resistive regions. (a) Schematics illustrating the fabrication of resistance-variant electronics via selective air spraying of different-sized LMPs and transfer printing. (b) Optic"
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564827/figures/Fig5.webp",
+    "caption": "Multifunctional LM-based electronics fabricated via engineered transfer printing. ( A ) Individually addressable LED display array (4\u00d74) based on stretchable LM interconnects: The LED elements in the (a) first row and (b) second column are turned on. All LED elements are turned on (c) before and (d) after stretching. ( B ) LM-based stretchable NFC coil before (top) and after (bottom) wireless powe"
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564827/figures/Fig6.webp",
+    "caption": "Continuous physiological (ECG, GSR, and respiration) and motion monitoring via LM-based multimodal sensing electronics. ( A ) Schematics showing the LM-based multimodal sensing electronics consisting of a clothes-based wireless charging hub and multiple on-skin sensors to detect (a) deformation (based on an integrated strain sensor), (b) ECG, and (c) GSR. The integrated strain sensor combines spat"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13564832",
+  "journal": "Science Advances",
+  "year": "2026",
+  "doi": "10.1126/sciadv.aec0989",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564832/figures/Fig1.gif",
+    "caption": "Architecture of the proposed GraphED framework for the discovery of constitutive laws. ( A ) Graph-based representation of equations, where nodes correspond to operators and variables, and edges represent their connections. Edge features encode parametric information, including constants or undetermined material-specific coefficients. ( B ) Diagram of the graph template, which imposes structural c"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564832/figures/Fig2.gif",
+    "caption": "Data-driven discovery of DIF constitutive model. ( A ) Distribution of the strain rate in the training datasets collected from the literature. ( B ) Optimization trajectory and the top five discovered equations with their corresponding loss values. The darker gray color indicates larger optimization epochs. ( C ) Comparison of MSEs on the test dataset between the discovered constitutive model and "
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564832/figures/Fig3.webp",
+    "caption": "Data-driven discovery of strain hardening constitutive model. ( A ) Distribution of true plastic strain in the training dataset. ( B ) Optimization trajectory and the top five discovered equations with their corresponding loss values. The darker gray color indicates larger optimization epochs. ( C ) Comparison of RMSEs on the test dataset between the discovered constitutive model, six conventional"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564832/figures/Fig4.webp",
+    "caption": "Performance of the constructed integrated constitutive model. ( A ) Observation (triangle scatter) and prediction (dotted line) of plastic strain-stress curves by the constructed integrated constitutive model. ( B ) Comparison of the relative error under different strain rates among the empirical model, the model constructed from the discovered equations, and the improved model. ( C ) Comparison o"
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564832/figures/Fig5.gif",
+    "caption": "Performance of the discovered rate-dependent constitutive model for lithium. ( A and B ) Observation (triangle scatter) and prediction (line) of plastic flow curves under different temperatures by the (A) empirical model and (B) discovered model. ( C ) Generalization of the discovered model to broader temperature regions. ( D and E ) Observation and prediction of plastic flow curves under differen"
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564832/figures/Fig6.webp",
+    "caption": "Results of GraphED for finding the hyperelastic constitutive model for filled rubbers. ( A ) Training and test dataset for equation discovery and the discovered constitutive model by GraphED. Here, \u03bb is the stretch ratio, and f is the nominal stress. ( B ) Change of loss values during optimization. ( C ) Comparison with representative empirical models and models found by existing symbolic regressi"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13564844",
+  "journal": "Science Advances",
+  "year": "2026",
+  "doi": "10.1126/sciadv.aee0891",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564844/figures/Fig1.webp",
+    "caption": "Accumulation of LOH in ME and GR samples. ( A ) Heterozygosity over generations in both hydrated and desiccated ME samples. Desiccated samples at endpoint have a significantly lower average than at midpoint [Mann-Whitney U (MWU) rank test; P = 0.0346; rank biserial r = \u22120.61]. ( B ) LOH rate over generations in these ME samples. LOH rate at endpoint is significantly higher in desiccated samples th"
+   },
+   {
+    "figure_number": 2,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564844/figures/Fig2.webp",
+    "caption": "Examples of HR-induced LOH tracts observed in the genome of A. vaga after multiple generations in the ME experiment. ( A ) LOH score and \u0394 coverage along chromosome 6 of ME sample D5C3 at midpoint (green line) and endpoint (orange line). Examples of LOH tracts resulting from one CO in (1) or two COs in (2). The ME sample H3C4 is a negative control (blue line) without LOH on chromosome 6. ( B ) LOH"
+   },
+   {
+    "figure_number": 3,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564844/figures/Fig3.webp",
+    "caption": "Large deletions and duplications in the genome of A. vaga after multiple generations in the ME experiment. ( A to D ) AF, LOH score, coverage, and \u0394 coverage across nonoverlapping windows at chromosome ends. Retention of sequence coverage confirmed hemizygous deletions, while homozygous deletions were characterized by complete loss of coverage. (A) Homozygous deletion on chromosome 1 in sample H4C"
+   },
+   {
+    "figure_number": 4,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564844/figures/Fig4.webp",
+    "caption": "Summary of the positions of large (>100 kb) events observed in the genome of A. vaga in ME and GR samples. Events are shown per sample and chromosome (based on figs. S6 and S14). GR samples from the following treatments are not shown, as they do not display large events (>100 kb): 30 days hydrated (30H), 30 days desiccated (30D), 0 Gy IR (P0), and 100 Gy IR (P100)."
+   },
+   {
+    "figure_number": 5,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564844/figures/Fig5.webp",
+    "caption": "Progressive DNA repair of fragmented chromosomes in the GR sample P500 C18 E3. ( A ) AF and coverage across a deleted region of chromosome 1. ( B ) Coverage ( y axis) by deletion size (log-scaled x axis) for ancestor (blue), P500 C18 E3 t 0 after 1 month (Illumina, orange), and t 1 after 6 months of culture (Nanopore, red). ( C ) Expected AF and coverage patterns under three scenarios: repair only"
+   },
+   {
+    "figure_number": 6,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564844/figures/Fig6.webp",
+    "caption": "Increased chromosome fragment number in descendants of the A. vaga GR 500-Gy IR sample P500 C18 E3. ( A ) 3D z-stack microscopy of one-celled eggs with different DAPI thresholds (blue: stringent and gray: less stringent). Left: nonirradiated controls; karyotypes correspond to control images 2 and 7 in (B). Right: P500 C18 E3 (500-Gy IR); karyotypes correspond to images 10 and 12 in (B). ( B ) Inde"
+   },
+   {
+    "figure_number": 7,
+    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13564844/figures/Fig7.webp",
+    "caption": "Integrated models for HR and DSB repair in A. vaga germ line. The figure illustrates DSB repair during meiosis I in the ancestor (mF 0 ) and in offspring after X or X + Y generations (mF X , mF X + Y ). The broken chromosome is shown in blue and the homologous template in red; expected LOH score (orange) and \u0394 coverage (blue) profiles are shown below each scenario. ( A ) HR repair of Spo11-mediate"
+   }
+  ]
+ }
+]

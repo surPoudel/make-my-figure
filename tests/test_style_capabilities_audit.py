@@ -97,10 +97,16 @@ def test_embedding_scatter_declares_its_colorbar():
     assert caps.supports_continuous_colormap and caps.supports_colorbar
 
 
-@pytest.mark.parametrize("pt", ["barplot_with_error_bar", "boxplot_or_violin_with_points",
-                                "kaplan_meier_survival_curve", "forest_plot"])
+@pytest.mark.parametrize("pt", ["stacked_bar_composition", "kaplan_meier_survival_curve", "forest_plot"])
 def test_plots_without_markers_say_so(pt):
     assert get_style_capabilities(pt).supports_marker_size is False
+
+
+def test_box_violin_marker_size_seeds_the_observation_markers():
+    """The box/violin plot draws its observations through the shared helper, which scales the
+    adaptive marker from ``style.marker_size`` - so the control applies and is declared to."""
+    assert get_style_capabilities("boxplot_or_violin_with_points").supports_marker_size is True
+    assert get_style_capabilities("boxplot_or_violin_with_points").supports_legend is True
 
 
 def test_audit_csv_is_written(tmp_path, monkeypatch):

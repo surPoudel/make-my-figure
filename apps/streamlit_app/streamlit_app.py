@@ -708,9 +708,9 @@ if plot_type in _MATRIX_PLOT_TYPES:
 # The handoff mappings are one-shot — consumed now that the mapping widgets exist.
 st.session_state.pop("_handoff_mappings", None)
 
-# Plot-type-specific options.
-if plot_type in ("barplot_with_error_bar", "grouped_barplot_with_error_bar"):
-    mapping["error"] = st.sidebar.selectbox("Error bar", ["sem", "sd", "ci95", "none"], index=0, key=f"opt_{plot_type}_error")
+# Plot-type-specific options. (Bar plots: ``summary`` / ``error`` and the observation, fill,
+# n-label and orientation controls all come from the registry via the generic block below, under
+# the same ``opt_{plot_type}_{key}`` session keys.)
 if plot_type == "heatmap_clustered_matrix":
     mapping["cluster_rows"] = st.sidebar.checkbox("Cluster rows", value=True, key=f"opt_{plot_type}_cluster_rows")
     mapping["cluster_columns"] = st.sidebar.checkbox("Cluster columns", value=True, key=f"opt_{plot_type}_cluster_columns")
@@ -968,13 +968,32 @@ with st.sidebar.expander("Figure preset", expanded=False):
         _store_err = ""
     if _store_err:
         st.warning(f"Preset library unavailable: {_store_err}")
-    _labels = ["(choose a preset)"] + [e.label for e in _entries]
+    from make_my_figure_core import experimental_presets as _xp  # noqa: E402
+    from make_my_figure_core import preset_preview as _pv  # noqa: E402
+    _show_exp = st.checkbox(
+        "Show experimental presets", value=False, key="preset_show_experimental",
+        help="Evidence-derived style presets bundled with the app (read-only). They describe visual "
+             "conventions measured in published open-access figures and publishers' stated artwork "
+             "requirements. Not journal templates, no endorsement; they never change data, statistics "
+             "or thresholds, and always open the preview first.")
+    _exp_entries = _xp.list_experimental_presets(plot_type=plot_type) if _show_exp else []
+    _labels = ["(choose a preset)"] + [e.label for e in _entries] + [e.label for e in _exp_entries]
     _chosen = st.selectbox("Figure preset", _labels, key=f"preset_pick_{plot_type}")
     _entry = next((e for e in _entries if e.label == _chosen), None)
-    _c1, _c2, _c3 = st.columns(3)
-    if _c1.button("Apply", key="preset_apply", disabled=_entry is None):
+    _exp_entry = next((e for e in _exp_entries if e.label == _chosen), None)
+    _any = _entry or _exp_entry
+    _c0, _c1, _c2, _c3 = st.columns(4)
+    if _c0.button("Preview", key="preset_preview", disabled=_any is None,
+                  help="Before/after on synthetic example data and the list of changes; nothing is applied."):
+        st.session_state["_preset_preview_path"] = _any.path
+    if _c1.button("Apply", key="preset_apply", disabled=_entry is None,
+                  help="Applies a preset from your library immediately. Experimental presets are applied "
+                       "from the preview."):
         try:
-            _preset_to_session(_presets.load_preset(_entry.path), table_info.columns)
+            _p = _presets.load_preset(_entry.path)
+            _pv.apply_with_guard(_p, make_spec(plot_type, table_name, journal_style, mapping=dict(mapping)),
+                                 columns=list(table_info.columns))
+            _preset_to_session(_p, table_info.columns)
             st.rerun()
         except _presets.PresetError as _exc:
             st.error(str(_exc))
@@ -988,6 +1007,65 @@ with st.sidebar.expander("Figure preset", expanded=False):
                                 mime="application/json", key="preset_export")
         except _presets.PresetError as _exc:
             st.error(str(_exc))
+    _pp = st.session_state.get("_preset_preview_path")
+    if _pp:
+        try:
+            _pre = _presets.load_preset(_pp)
+            _base = make_spec(plot_type, table_name, journal_style, mapping=dict(mapping))
+            _prev = None
+            try:
+                # the user's own data (their groups and replicate counts), in memory only
+                _prev = _pv.preview_pair(_pre, plot_type, base_spec=_base,
+                                         data=(table_info.dataframe, None))
+            except Exception:  # noqa: BLE001 - unmapped or aux-dependent figure: fall back
+                _prev = None
+            if _prev is None:
+                _prev = _pv.preview_pair(_pre, plot_type, base_spec={"style": _base.get("style"),
+                                                                     "layout": _base.get("layout"),
+                                                                     "output": _base.get("output")})
+        except (_presets.PresetError, KeyError, ValueError) as _exc:
+            st.error(f"Cannot preview: {_exc}")
+            _prev = None
+        if _prev is not None:
+            st.markdown(f"**Preview: {_pre.get('name', '')}**")
+            _pc1, _pc2 = st.columns(2)
+            _pc1.image(_prev.before_png, caption="Current settings", use_container_width=True)
+            _pc2.image(_prev.after_png, caption="With this preset", use_container_width=True)
+            st.caption(_prev.synthetic_data_notice)
+            if _prev.changes:
+                st.table([{"setting": c.label, "now": repr(c.old), "preset": repr(c.new)} for c in _prev.changes])
+            else:
+                st.caption("No setting would change.")
+            if _prev.apply_result.skipped:
+                st.caption(f"{len(_prev.apply_result.skipped)} setting(s) do not apply to this plot type.")
+            if _xp.is_experimental(_pre):
+                st.info(_xp.provenance_text(_pre))
+            if _prev.safe_to_apply:
+                st.success("Checked: no data, column role, statistical test, threshold or transformation changes.")
+            else:
+                st.error("Refused: this preset would change analytical settings ("
+                         + ", ".join(_prev.protected_violations) + "). It cannot be applied.")
+            _a1, _a2 = st.columns(2)
+            if _a1.button("Apply this preset", key="preset_preview_apply", disabled=not _prev.safe_to_apply):
+                try:
+                    _pv.apply_with_guard(_pre, _base, columns=list(table_info.columns))
+                    _preset_to_session(_pre, table_info.columns)
+                    st.session_state.pop("_preset_preview_path", None)
+                    st.rerun()
+                except _presets.PresetError as _exc:
+                    st.error(str(_exc))
+            if _a2.button("Cancel", key="preset_preview_cancel"):
+                st.session_state.pop("_preset_preview_path", None)
+                st.rerun()
+            if _xp.is_experimental(_pre):
+                _lab_name = st.text_input("Save as my preset (name)", value=f"{_pre.get('name', 'preset')} (lab copy)",
+                                          key="preset_lab_copy_name")
+                if st.button("Save as my preset", key="preset_lab_copy_save"):
+                    try:
+                        _store.save(_xp.clone_for_lab(_pre, name=_lab_name))
+                        st.success(f"Saved “{_lab_name}” to your preset library.")
+                    except _presets.PresetError as _exc:
+                        st.error(str(_exc))
     _rep = st.session_state.pop("_preset_report", None)
     if _rep:
         st.success(f"Applied “{_rep['name']}”: {_rep['applied']} setting(s).")

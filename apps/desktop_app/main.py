@@ -76,6 +76,7 @@ from PySide6.QtGui import QAction, QIcon
 from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
+    QInputDialog,
     QComboBox,
     QDialog,
     QDoubleSpinBox,
@@ -707,13 +708,26 @@ class MainWindow(QMainWindow):
         outer.addWidget(self.preset_combo)
         row1 = QHBoxLayout()
         for label, slot, tip in (
+                ("Preview & apply…", self.action_preview_preset,
+                 "Show the current look and the preset side by side on synthetic example data, "
+                 "list every setting that would change, then apply or cancel."),
                 ("Apply", self.action_apply_preset,
-                 "Apply the selected preset to the current figure."),
+                 "Apply the selected preset to the current figure (experimental presets always "
+                 "open the preview first)."),
                 ("Save preset…", self.action_save_preset,
                  "Save the current configuration as a preset."),
                 ("Delete", self.action_delete_preset, "Delete the selected preset.")):
             b = QPushButton(label); b.setToolTip(tip); b.clicked.connect(slot); row1.addWidget(b)
         outer.addLayout(row1)
+        self.chk_experimental_presets = QCheckBox("Show experimental presets")
+        self.chk_experimental_presets.setToolTip(
+            "Evidence-derived style presets bundled with the app (read-only). They describe visual "
+            "conventions measured in published open-access figures and publishers' stated artwork "
+            "requirements. They are not journal templates and carry no endorsement; they never "
+            "change data, statistics or thresholds, and always open the preview first.")
+        self.chk_experimental_presets.setChecked(False)
+        self.chk_experimental_presets.toggled.connect(lambda _c: self._refresh_preset_list())
+        outer.addWidget(self.chk_experimental_presets)
         row2 = QHBoxLayout()
         for label, slot, tip in (
                 ("Import…", self.action_import_preset,
@@ -747,13 +761,26 @@ class MainWindow(QMainWindow):
             self.preset_status.setText(f"Preset library unavailable: {exc}")
         for e in entries:
             combo.addItem(e.label, e.path)
+        n_exp = 0
+        chk = getattr(self, "chk_experimental_presets", None)
+        if chk is not None and chk.isChecked():
+            from make_my_figure_core.experimental_presets import list_experimental_presets
+            try:
+                exp_entries = list_experimental_presets(plot_type=pt) if pt else list_experimental_presets()
+            except Exception:  # noqa: BLE001
+                exp_entries = []
+            for e in exp_entries:
+                combo.addItem(e.label, e.path)
+            n_exp = len(exp_entries)
         idx = combo.findData(current)
         combo.setCurrentIndex(idx if idx >= 0 else 0)
         combo.blockSignals(False)
         if hasattr(self, "preset_status") and entries is not None:
             n = len(entries)
-            self.preset_status.setText(
-                f"{n} preset{'s' if n != 1 else ''} for this plot type." if pt else "")
+            msg = f"{n} preset{'s' if n != 1 else ''} for this plot type." if pt else ""
+            if n_exp:
+                msg += f" {n_exp} experimental preset{'s' if n_exp != 1 else ''} (preview required)."
+            self.preset_status.setText(msg)
 
     def _selected_preset_path(self):
         combo = getattr(self, "preset_combo", None)
@@ -772,8 +799,18 @@ class MainWindow(QMainWindow):
             return
         try:
             preset = load_preset(path)
+        except PresetError as exc:
+            QMessageBox.warning(self, "Cannot apply preset", str(exc))
+            return
+        from make_my_figure_core.experimental_presets import is_experimental
+        if is_experimental(preset):
+            # bundled evidence-derived presets are never applied blind
+            self.action_preview_preset()
+            return
+        try:
+            from make_my_figure_core.preset_preview import apply_with_guard
             base = self._build_spec()
-            result = apply_preset(preset, base, columns=list(self.data.info.columns))
+            result = apply_with_guard(preset, base, columns=list(self.data.info.columns))
         except PresetError as exc:
             QMessageBox.warning(self, "Cannot apply preset", str(exc))
             return
@@ -791,6 +828,125 @@ class MainWindow(QMainWindow):
         for w in result.warnings:
             if "universal settings" in w:
                 self.preset_status.setText(self.preset_status.text() + " " + w)
+        self.render_preview()
+
+    def action_preview_preset(self):
+        """Before/after on synthetic data, the list of changes, then Apply or Cancel."""
+        from PySide6.QtGui import QPixmap
+        from PySide6.QtWidgets import QDialogButtonBox, QPlainTextEdit
+
+        from make_my_figure_core.experimental_presets import (NOTICE, is_experimental,
+                                                               provenance_text)
+        from make_my_figure_core.preset_preview import apply_with_guard, preview_pair
+        from make_my_figure_core.presets import PresetError, load_preset
+
+        path = self._selected_preset_path()
+        if not path:
+            QMessageBox.information(self, "Figure preset", "Choose a preset to preview first.")
+            return
+        pt = self.plot_combo.currentData()
+        if pt is None:
+            QMessageBox.information(self, "Figure preset", "Choose a plot type first.")
+            return
+        try:
+            preset = load_preset(path)
+            base = self._build_spec() if self.data is not None else None
+            prev = None
+            if self.data is not None and base is not None:
+                # the user's own groups, replicate counts and statistics, in memory only
+                aux = {k: v.dataframe for k, v in (self.data.aux or {}).items()} or None
+                try:
+                    prev = preview_pair(preset, pt, base_spec=base,
+                                        data=(self.data.info.dataframe, aux))
+                except Exception:  # noqa: BLE001 - an unmapped figure falls back to the example
+                    prev = None
+            if prev is None:
+                prev = preview_pair(preset, pt, base_spec=base)
+        except (PresetError, KeyError, ValueError) as exc:
+            QMessageBox.warning(self, "Cannot preview preset", str(exc))
+            return
+
+        dlg = QDialog(self)
+        dlg.setWindowTitle(f"Preview preset: {preset.get('name', '')}")
+        lay = QVBoxLayout(dlg)
+        imgs = QHBoxLayout()
+        for title, png in (("Current settings", prev.before_png), ("With this preset", prev.after_png)):
+            col = QVBoxLayout()
+            cap = QLabel(f"<b>{title}</b>")
+            col.addWidget(cap)
+            pic = QLabel()
+            pm = QPixmap()
+            pm.loadFromData(png, "PNG")
+            pic.setPixmap(pm.scaledToWidth(min(440, pm.width()), Qt.SmoothTransformation))
+            col.addWidget(pic)
+            imgs.addLayout(col)
+        lay.addLayout(imgs)
+        note = QLabel(prev.synthetic_data_notice)
+        note.setWordWrap(True); note.setStyleSheet("color: #666;")
+        lay.addWidget(note)
+        changes = QPlainTextEdit()
+        changes.setReadOnly(True)
+        lines = [c.as_text() for c in prev.changes] or ["No setting would change."]
+        if prev.apply_result.skipped:
+            lines.append("")
+            lines.append(f"{len(prev.apply_result.skipped)} setting(s) do not apply to this plot type.")
+        if is_experimental(preset):
+            lines += ["", provenance_text(preset)]
+        else:
+            lines += ["", NOTICE if is_experimental(preset) else
+                      "Style presets change how the figure is drawn, never your data, statistics or thresholds."]
+        changes.setPlainText("\n".join(lines))
+        changes.setMinimumHeight(160)
+        lay.addWidget(changes)
+        safety = QLabel()
+        safety.setWordWrap(True)
+        if prev.safe_to_apply:
+            safety.setText("Checked: no data, column role, statistical test, threshold or transformation changes.")
+            safety.setStyleSheet("color: #2e7d32;")
+        else:
+            safety.setText("Refused: this preset would change analytical settings (" +
+                           ", ".join(prev.protected_violations) + "). It cannot be applied.")
+            safety.setStyleSheet("color: #b71c1c;")
+        lay.addWidget(safety)
+        buttons = QDialogButtonBox(QDialogButtonBox.Apply | QDialogButtonBox.Cancel)
+        if is_experimental(preset):
+            from make_my_figure_core.experimental_presets import clone_for_lab
+            lab_btn = buttons.addButton("Save as my preset…", QDialogButtonBox.ActionRole)
+            lab_btn.setToolTip("Copy this experimental preset into your own library so you can edit "
+                               "and share it. The copy keeps a provenance note.")
+
+            def _save_lab_copy():
+                name, ok = QInputDialog.getText(dlg, "Save as my preset", "Name for your copy:",
+                                                text=f"{preset.get('name', 'preset')} (lab copy)")
+                if not ok:
+                    return
+                try:
+                    self._preset_store().save(clone_for_lab(preset, name=name))
+                except PresetError as exc:
+                    QMessageBox.warning(dlg, "Cannot save copy", str(exc))
+                    return
+                self._refresh_preset_list()
+                self.statusBar().showMessage(f"Saved “{name}” to your preset library.", 5000)
+
+            lab_btn.clicked.connect(_save_lab_copy)
+        apply_btn = buttons.button(QDialogButtonBox.Apply)
+        apply_btn.setEnabled(prev.safe_to_apply and self.data is not None)
+        if self.data is None:
+            apply_btn.setToolTip("Load data to apply the preset.")
+        apply_btn.clicked.connect(dlg.accept)
+        buttons.rejected.connect(dlg.reject)
+        lay.addWidget(buttons)
+        if dlg.exec() != QDialog.Accepted:
+            self.preset_status.setText("Preview closed; nothing applied.")
+            return
+        try:
+            result = apply_with_guard(preset, self._build_spec(), columns=list(self.data.info.columns))
+        except PresetError as exc:
+            QMessageBox.warning(self, "Cannot apply preset", str(exc))
+            return
+        self._apply_spec_to_controls(result.spec, keep_plot_type=True)
+        self.preset_status.setText(
+            f"Applied preset “{preset.get('name', '')}” after preview: {len(result.applied)} setting(s).")
         self.render_preview()
 
     def action_save_preset(self):
@@ -1274,7 +1430,8 @@ class MainWindow(QMainWindow):
         filem.addAction(a_tmpl)
 
         preset_menu = filem.addMenu("Figure preset")
-        for label, slot in (("Apply selected preset", self.action_apply_preset),
+        for label, slot in (("Preview & apply selected preset…", self.action_preview_preset),
+                            ("Apply selected preset", self.action_apply_preset),
                             ("Save preset…", self.action_save_preset),
                             ("Import preset…", self.action_import_preset),
                             ("Export selected preset…", self.action_export_preset),

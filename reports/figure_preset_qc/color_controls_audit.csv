@@ -1,10 +1,10 @@
 plot_type,color_model,categorical_palette,continuous_colormap,palette_control_has_effect,declared_palette,colorbar,legend,marker_size,declared_marker_size,line_width,declared_line_width,mapping_color_keys,color_options_exposed,literal_colors,style_tokens_read
-barplot_with_error_bar,categorical palette,True,False,True,True,False,False,False,False,False,False,color,,#222222,bar_edge_width;errorbar_capsize;errorbar_line_width
-grouped_barplot_with_error_bar,categorical palette,True,False,True,True,False,True,False,False,False,False,,,#222222,bar_edge_width;errorbar_capsize;errorbar_line_width
+barplot_with_error_bar,categorical palette,True,False,True,True,False,True,True,True,False,False,color,,,marker_size
+grouped_barplot_with_error_bar,categorical palette,True,False,True,True,False,True,True,True,False,False,,,,marker_size
 heatmap_clustered_matrix,continuous colormap,False,True,True,True,True,True,False,False,False,False,cell_border_color;color_scale;colorbar_fraction;colorbar_location;colorbar_pad;colorbar_shrink;colormap;group_separator_color,cell_border_color;color_scale;colorbar_location;colorbar_pad;colorbar_shrink;colormap;group_separator_color,#000000;#0072B2;#009E73;#222222;#56B4E9;#999999;#B2182B;#CC79A7;#D55E00;#E69F00;#EEEEEE;#F0E442,axis_font_pt;diverging_cmap;legend_pt;sequential_cmap;spine_width_pt;tick_label_pt;tick_length;tick_width;title_font_pt
 volcano_plot,significance classes + annotation colour,False,False,False,False,False,True,True,True,False,False,color_down;color_ns;color_up;label_color,color_down;color_ns;color_up,#2166AC;#B2182B;#BBBBBB;0.4;0.5,annotation_pt;marker_size;spine_width_pt;text_color;title_font_pt
 scatterplot_with_regression,categorical palette,True,False,True,True,False,True,True,True,True,True,color,,,annotation_pt;line_width_pt;marker_alpha;marker_edge_width;marker_size;text_color
-boxplot_or_violin_with_points,categorical palette,True,False,True,True,False,False,False,False,True,True,,,,line_width_pt;spine_width_pt
+boxplot_or_violin_with_points,categorical palette,True,False,True,True,False,True,True,True,True,True,,,black;white,annotation_pt;line_width_pt;marker_size;spine_width_pt
 lineplot_timecourse_with_error_band,categorical palette,True,False,True,True,False,True,False,False,True,True,color,,,line_width_pt
 ridge_or_density_plot,categorical palette,True,False,True,True,False,True,False,False,True,True,,,black,line_width_pt;spine_width_pt
 histogram_distribution,categorical palette,True,False,True,True,False,True,True,True,True,True,,,white,axis_font_pt;line_width_pt;marker_size;spine_width_pt;text_color;title_font_pt
@@ -12,7 +12,7 @@ enrichment_dotplot,continuous colormap,False,True,True,True,True,True,False,Fals
 kaplan_meier_survival_curve,categorical palette,True,False,True,True,False,True,False,False,True,True,,,#555555,line_width_pt
 stacked_bar_composition,categorical palette,True,False,True,True,False,True,False,False,False,False,,,white,axis_font_pt
 waterfall_plot,categorical palette,True,False,True,True,False,True,False,False,False,False,color,,0.6;black,legend_pt;legend_title_pt;spine_width_pt
-pca_scatter_from_matrix,categorical palette,True,False,True,True,False,True,True,True,False,False,color,,0.8,axis_font_pt;marker_size;spine_width_pt
+pca_scatter_from_matrix,categorical palette,True,False,True,True,False,True,True,True,False,False,color,,0.8,marker_size;spine_width_pt
 oncoprint_mutation_heatmap,categorical palette,True,False,True,True,False,True,False,False,False,False,,,#ECECEC;white,
 lollipop_mutation_plot,categorical palette,True,False,True,True,False,True,False,False,True,True,color,,0.65;black,axis_font_pt;line_width_pt;spine_width_pt
 roc_curve,categorical palette,True,False,True,True,False,True,False,False,True,True,,,0.6,line_width_pt;spine_width_pt

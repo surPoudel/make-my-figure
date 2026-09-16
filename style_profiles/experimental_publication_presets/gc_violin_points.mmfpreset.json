@@ -1,0 +1,129 @@
+{
+  "format": "make_my_figure.figure_preset",
+  "format_version": 1,
+  "name": "Violin + observations",
+  "description": "Violin body with the observations on top; used for larger groups where the distribution shape matters.",
+  "mode": "style",
+  "plot_type": "boxplot_or_violin_with_points",
+  "journal_style": "publication",
+  "created": "2026-09-16T16:58:27+00:00",
+  "app_version": "1.1.0",
+  "style": {
+    "marker_alpha": 0.9
+  },
+  "layout": {},
+  "options": {
+    "points": true,
+    "point_arrangement": "jitter",
+    "point_fill": "filled",
+    "point_edge": "dark",
+    "point_edge_width": 0.4,
+    "point_size": 0.0,
+    "point_alpha": 0.0,
+    "kind": "violin",
+    "show_outliers": false
+  },
+  "output": {},
+  "universal": false,
+  "experimental": {
+    "preset_id": "gc_violin_points",
+    "status": "experimental",
+    "evidence_family": "group-comparison corpus (all three families)",
+    "evidence_summary": "biological_group_comparison_corpus.csv: bar/box/violin/dot panels coded for representation, markers, error bars, statistics and colour",
+    "derived_from": {
+      "papers": 164,
+      "figures": "see biological_group_comparison_corpus.csv",
+      "panels": "see biological_group_comparison_corpus.csv",
+      "official_sources": "none (representation choices are observed practice)"
+    },
+    "not_official": true,
+    "target_width_mm": null,
+    "width_class": "any",
+    "value_evidence": {
+      "points": "OBSERVED:individual observations visible in 78% of group-comparison panels",
+      "point_arrangement": "OBSERVED:jitter 56%, centred 20%, beeswarm 3%",
+      "point_fill": "OBSERVED:filled 53% vs open 19%",
+      "point_edge": "OBSERVED:dark edge 31%, none 37%, same colour 12%",
+      "point_edge_width": "ESTIMATED:0.4 pt light edge",
+      "point_size": "SHARED:0 = adaptive - the renderer scales markers by the number of observations within fixed bounds (never hides points)",
+      "point_alpha": "SHARED:0 = adaptive opacity by group size",
+      "kind": "OBSERVED:violin+points 3% of panels (most common at large n)",
+      "show_outliers": "SHARED:not applicable to violins",
+      "marker_alpha": "ESTIMATED:0.9"
+    },
+    "notes": [],
+    "recommended_for": [
+      "boxplot_or_violin_with_points"
+    ],
+    "qc": {
+      "date": "2026-09-16",
+      "cells": 38,
+      "pass": 26,
+      "warn": 2,
+      "fail": 10,
+      "not_pass": [
+        {
+          "plot_type": "bland_altman_plot",
+          "status": "FAIL",
+          "issues": "3 overlapping text pair(s)"
+        },
+        {
+          "plot_type": "dose_response_curve",
+          "status": "FAIL",
+          "issues": "1 overlapping text pair(s)"
+        },
+        {
+          "plot_type": "lollipop_mutation_plot",
+          "status": "FAIL",
+          "issues": "1 overlapping text pair(s)"
+        },
+        {
+          "plot_type": "ma_plot",
+          "status": "FAIL",
+          "issues": "6 overlapping text pair(s); 2 clipped annotation(s)"
+        },
+        {
+          "plot_type": "network_graph",
+          "status": "FAIL",
+          "issues": "1 overlapping text pair(s)"
+        },
+        {
+          "plot_type": "pca_scatter_from_matrix",
+          "status": "FAIL",
+          "issues": "1 overlapping text pair(s)"
+        },
+        {
+          "plot_type": "scatterplot_with_regression",
+          "status": "FAIL",
+          "issues": "1 overlapping text pair(s)"
+        },
+        {
+          "plot_type": "spider_plot",
+          "status": "FAIL",
+          "issues": "1 overlapping text pair(s)"
+        },
+        {
+          "plot_type": "stacked_bar_composition",
+          "status": "FAIL",
+          "issues": "29 overlapping text pair(s)"
+        },
+        {
+          "plot_type": "volcano_plot",
+          "status": "FAIL",
+          "issues": "3 overlapping text pair(s)"
+        },
+        {
+          "plot_type": "lineplot_timecourse_with_error_band",
+          "status": "WARN",
+          "issues": "legend covers data (21% of legend box)"
+        },
+        {
+          "plot_type": "manhattan_plot",
+          "status": "WARN",
+          "issues": "legend covers data (21% of legend box)"
+        }
+      ],
+      "rule": "PASS = no overlapping text, no clipped annotation, smallest text >= 5 pt at the target width; WARN = legend over data or width off target by > 15 %; FAIL cells are reported, never fixed by shrinking text"
+    }
+  }
+}

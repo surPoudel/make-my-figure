@@ -4,6 +4,15 @@ For before/after designs, matched samples, paired treatments, or repeated
 measures: one line per subject connects that subject's value across the
 conditions/timepoints, so within-subject change is visible directly. An
 optional group column colors the lines.
+
+Statistics: when ``spec["statistics"]["enabled"]`` is true the paired tests in
+the engine (paired t-test, Wilcoxon signed-rank; repeated-measures ANOVA as the
+omnibus) run with the ``subject`` column as the pair ID and the ``condition``
+column as the grouping factor, and the results are drawn as brackets between
+the conditions by the shared bracket engine. The points here are the line
+markers of each subject's path, so the shared observation engine (jitter /
+beeswarm arrangements) is deliberately not used: moving a marker would detach
+it from its line.
 """
 
 from __future__ import annotations
@@ -24,9 +33,26 @@ from make_my_figure_core.plots.base import (
     require_columns,
     style_axes,
 )
+from make_my_figure_core.plots.stats_integration import run_and_annotate
 from make_my_figure_core.styles.engine import StyleProfile
 
 PLOT_TYPE = "paired_slopegraph"
+
+
+def _stats_view(spec: Dict[str, Any], *, subject: str, condition: str, value: str) -> Dict[str, Any]:
+    """The spec as the statistics engine expects it: ``x``/``y`` aliases for condition/value and
+    the subject column as the pair ID unless the StatsSpec names its own columns."""
+    mapping = dict(spec.get("mapping", {}) or {})
+    mapping.setdefault("x", condition)
+    mapping.setdefault("y", value)
+    stats = dict(spec.get("statistics", {}) or {})
+    if not stats.get("subject_column") and not stats.get("paired_id_column"):
+        stats["subject_column"] = subject
+    if not stats.get("group_column"):
+        stats["group_column"] = condition
+    if not stats.get("value_column"):
+        stats["value_column"] = value
+    return {**spec, "mapping": mapping, "statistics": stats}
 
 
 def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
@@ -45,6 +71,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     has_color = bool(color_by and color_by in work.columns)
     color_levels = ordered_unique(work[color_by].tolist()) if has_color else []
     warnings: List[str] = []
+    # Highest drawn value per condition (what a bracket must clear), keyed by str(condition).
+    tops: Dict[str, float] = {}
 
     with style.apply():
         fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.85))
@@ -58,7 +86,10 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                 vals = cell.to_numpy(float)
                 vals = vals[np.isfinite(vals)]
                 if vals.size:
-                    pts.append((cond_x[c], float(vals.mean())))
+                    drawn = float(vals.mean())
+                    pts.append((cond_x[c], drawn))
+                    key = str(c)
+                    tops[key] = max(tops.get(key, -np.inf), drawn)
             if len(pts) < 1:
                 continue
             xs = [p[0] for p in pts]
@@ -102,7 +133,16 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         else:
             fig.tight_layout()
 
+        # Statistics: disabled unless spec["statistics"]["enabled"]. Paired tests use the subject
+        # column as the pair ID; brackets sit between the compared conditions.
+        positions_map = {str(c): float(i) for c, i in cond_x.items()}
+        stats_report = run_and_annotate(
+            _stats_view(spec, subject=subject, condition=condition, value=value), work, style,
+            PLOT_TYPE, ax=ax, positions=positions_map, tops=tops, mode="bracket")
+
     meta = base_metadata(spec, style, work, used_columns=[subject, condition, value, color_by])
     meta["n_subjects"] = len(subjects)
     meta["conditions"] = [str(c) for c in conditions]
-    return RenderResult(figure=fig, metadata=meta, warnings=warnings)
+    if stats_report is not None:
+        meta["statistics_report"] = stats_report.to_dict()
+    return RenderResult(figure=fig, metadata=meta, warnings=warnings, stats_report=stats_report)
