@@ -103,7 +103,7 @@ recorded here as a collision between concurrent runs, not a defect. The final su
 one at a time. Running the suite also rewrites the byte counts in
 `benchmarks/publication_recreation/recreated_panels/karate_network/qc/visual_qc.md`; that file was
 restored and is not part of this change.
-Full non-GUI suite on the newest environment after the fixes: **2299 passed, 13 skipped, 0 failed** (`matplotlib_compat_full_suite_newest.txt`). The development-stack (3.10.8) full suite rerun is recorded in `matplotlib_compat_full_suite_mpl310.txt` when it completes.
+Full non-GUI suite on the newest environment after the fixes: **2299 passed, 13 skipped, 0 failed** (`matplotlib_compat_full_suite_newest.txt`). Development stack (3.10.8) full suite after the fixes: **2306 passed, 5 skipped, 0 failed** (`matplotlib_compat_full_suite_mpl310.txt`).
 
 ## Test suites on matplotlib 3.8.4
 
