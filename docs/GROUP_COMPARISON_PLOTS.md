@@ -75,3 +75,9 @@ through the preset dialog; `preset_preview.preview_gallery` renders several on t
 `scripts/group_comparison_visual_acceptance.py` renders every gc preset x dataset x width with
 statistics on and reports overlap/clipping/legibility (`reports/journal_presets/group_comparison_acceptance/`).
 `tests/test_preset_scientific_identity.py` proves the numbers do not change under a preset.
+
+## Requirements
+
+The box/violin renderer works on every matplotlib release the package supports (`>= 3.6`): it passes
+`orientation=` to matplotlib 3.10+ and `vert=` to older releases, drawing identical geometry either way
+(`reports/journal_presets/matplotlib_compat_check.md`).

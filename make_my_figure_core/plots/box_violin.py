@@ -27,6 +27,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 from typing import Any, Dict, List, Optional, Sequence
 
+import inspect
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Patch
@@ -131,6 +132,22 @@ def _face_alpha(box_fill: str) -> float:
     return 0.5 if box_fill == "light" else 1.0
 
 
+def _orientation_kwargs(method, orientation: str) -> dict:
+    """Return the keyword that selects the orientation for ``ax.boxplot`` / ``ax.violinplot``.
+
+    matplotlib 3.10 introduced ``orientation=`` and deprecated the boolean ``vert=``; older
+    releases (the ``>=3.6`` lower bound of this package) only know ``vert=``. The signature is
+    inspected once per call so the renderer works on both without emitting deprecation warnings.
+    """
+    try:
+        params = inspect.signature(method).parameters
+    except (TypeError, ValueError):  # pragma: no cover - C-implemented or wrapped callables
+        params = {}
+    if "orientation" in params:
+        return {"orientation": orientation}
+    return {"vert": orientation != "horizontal"}
+
+
 def _draw_boxes(ax, elements: List[_Element], *, orientation: str, box_fill: str, box_lw: float,
                 median_lw: float, cap_frac: float, show_outliers: bool, inner: bool) -> None:
     if not elements:
@@ -138,8 +155,8 @@ def _draw_boxes(ax, elements: List[_Element], *, orientation: str, box_fill: str
     widths = [e.width * (_INNER_BOX_FRACTION if inner else 1.0) for e in elements]
     bp = ax.boxplot([e.values for e in elements], positions=[e.position for e in elements],
                     widths=widths, capwidths=[w * cap_frac for w in widths], patch_artist=True,
-                    showfliers=bool(show_outliers and not inner), orientation=orientation,
-                    manage_ticks=False,
+                    showfliers=bool(show_outliers and not inner), manage_ticks=False,
+                    **_orientation_kwargs(ax.boxplot, orientation),
                     medianprops={"color": "black", "linewidth": median_lw},
                     whiskerprops={"linewidth": box_lw}, capprops={"linewidth": box_lw},
                     flierprops={"marker": "o", "markersize": 3.5, "markerfacecolor": "none",
@@ -172,7 +189,8 @@ def _draw_violins(ax, elements: List[_Element], *, orientation: str, alpha: floa
                             "only the observations are drawn for this group.")
             continue
         parts = ax.violinplot([e.values], positions=[e.position], widths=[e.width], showmeans=False,
-                              showmedians=show_medians, showextrema=False, orientation=orientation)
+                              showmedians=show_medians, showextrema=False,
+                              **_orientation_kwargs(ax.violinplot, orientation))
         for body in parts["bodies"]:
             body.set_facecolor(e.color)
             body.set_alpha(alpha)

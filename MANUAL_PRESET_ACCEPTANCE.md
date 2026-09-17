@@ -57,6 +57,7 @@ result in the table at the end. A step that cannot be completed is a blocker for
 
 | Step | Result (pass / fail / n.a.) | Notes | Tester | Date |
 |---|---|---|---|---|
+| D1 (macOS, matplotlib < 3.10) | fail -> fixed | `boxplot() got an unexpected keyword argument 'orientation'`; fixed in `plots/box_violin.py`, see `reports/journal_presets/matplotlib_compat_check.md`; re-test required | author | 2026-09-17 |
 | D1-D14 | | | | |
 | S1-S7 | | | | |
 | W1-W3 | | | | |

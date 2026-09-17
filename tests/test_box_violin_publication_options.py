@@ -467,3 +467,77 @@ def test_style_preset_round_trips_the_new_style_options_and_not_the_config_ones(
     assert applied_full.spec["mapping"]["category_order"] == "median_ascending"
     assert applied_full.spec["mapping"]["hue"] == "subgroup"
     assert not applied_full.unresolved_roles
+
+
+# --- matplotlib version compatibility -----------------------------------------------------------
+# ``Axes.boxplot``/``Axes.violinplot`` accept ``orientation=`` only from matplotlib 3.10; the package
+# declares ``matplotlib>=3.6`` and the macOS acceptance test (2026-09-17) ran on an older release and
+# failed with "boxplot() got an unexpected keyword argument 'orientation'". The renderer must pick
+# the keyword the installed matplotlib understands and draw the same geometry either way.
+
+def _geometry(fig):
+    ax = fig.axes[0]
+    return {
+        "xlim": tuple(np.round(ax.get_xlim(), 6)), "ylim": tuple(np.round(ax.get_ylim(), 6)),
+        "patches": [np.round(p.get_path().vertices, 6).tolist() for p in ax.patches],
+        "lines": [np.round(np.c_[l.get_xdata(), l.get_ydata()], 6).tolist() for l in ax.lines],
+        "points": [np.round(c.get_offsets(), 6).tolist() for c in _point_collections(ax)],
+        "collections": [np.round(np.concatenate([p.vertices for p in c.get_paths()]), 6).tolist()
+                        for c in ax.collections if not isinstance(c, PathCollection) and c.get_paths()],
+    }
+
+
+class _LegacyAxesMethods:
+    """Simulate matplotlib < 3.10: ``boxplot``/``violinplot`` know ``vert`` but not ``orientation``."""
+
+    def __init__(self, monkeypatch):
+        import inspect
+        from matplotlib.axes import Axes
+        real_box, real_violin = Axes.boxplot, Axes.violinplot
+        if "orientation" not in inspect.signature(real_box).parameters:
+            return  # the installed matplotlib already is the legacy API; nothing to simulate
+
+        def boxplot(self, x, *args, vert=True, **kw):
+            if "orientation" in kw:
+                raise TypeError("boxplot() got an unexpected keyword argument 'orientation'")
+            return real_box(self, x, *args, orientation="vertical" if vert else "horizontal", **kw)
+
+        def violinplot(self, dataset, *args, vert=True, **kw):
+            if "orientation" in kw:
+                raise TypeError("violinplot() got an unexpected keyword argument 'orientation'")
+            return real_violin(self, dataset, *args, orientation="vertical" if vert else "horizontal", **kw)
+
+        monkeypatch.setattr(Axes, "boxplot", boxplot)
+        monkeypatch.setattr(Axes, "violinplot", violinplot)
+
+
+def test_orientation_kwargs_follow_the_installed_signature():
+    from make_my_figure_core.plots.box_violin import _orientation_kwargs
+
+    def modern(x, orientation="vertical"):
+        pass
+
+    def legacy(x, vert=True):
+        pass
+
+    assert _orientation_kwargs(modern, "vertical") == {"orientation": "vertical"}
+    assert _orientation_kwargs(modern, "horizontal") == {"orientation": "horizontal"}
+    assert _orientation_kwargs(legacy, "vertical") == {"vert": True}
+    assert _orientation_kwargs(legacy, "horizontal") == {"vert": False}
+
+
+@pytest.mark.parametrize("kind", ["box", "violin", "box+violin", "summary"])
+@pytest.mark.parametrize("orientation", ["vertical", "horizontal"])
+@pytest.mark.parametrize("data", ["three_groups_unequal", "two_by_three"])
+def test_renders_identically_on_matplotlib_without_orientation_keyword(monkeypatch, kind, orientation, data):
+    mapping = {"kind": kind, "orientation": orientation, "points": True, "show_n": "below",
+               "seed": 7}
+    if data == "two_by_three":
+        mapping["hue"] = "subgroup"
+    stats = {"enabled": True} if orientation == "vertical" else None
+    modern = _geometry(_render(mapping, data, stats).figure)
+    plt.close("all")
+    _LegacyAxesMethods(monkeypatch)
+    legacy_result = _render(mapping, data, stats)
+    assert _geometry(legacy_result.figure) == modern
+    assert not any("orientation" in w for w in legacy_result.warnings)

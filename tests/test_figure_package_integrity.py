@@ -276,3 +276,26 @@ def test_table_object_column_types_preserved():
     back = table_from_json_bytes(table_to_json_bytes(df)[0])
     assert [type(x).__name__ for x in back["o"]] == [type(x).__name__ for x in df["o"]]
     assert back["o"].iloc[8] is pd.NA and back["o"].iloc[9] is pd.NaT
+
+
+def test_string_columns_round_trip_under_every_pandas_string_dtype():
+    """pandas >= 3 infers the NaN-backed ``str`` dtype for text; pandas 2 infers ``object`` and offers the
+    nullable ``string`` dtype. Each must round-trip with its dtype intact on the pandas that wrote it
+    (2026-09-17: text columns came back as ``object`` on pandas 3.0, failing the identity check)."""
+    from make_my_figure_core.package import tabledata as T
+
+    text = ["a", None, "NaN", "", "x,y", "ünïcödé 🧬"]
+    frames = {"inferred": pd.DataFrame({"s": text}), "string": pd.DataFrame({"s": pd.array(text, dtype="string")})}
+    if T._HAS_DEFAULT_STR_DTYPE:
+        frames["str"] = pd.DataFrame({"s": pd.Series(text, dtype="str")})
+    for label, df in frames.items():
+        blob, warnings = table_to_json_bytes(df)
+        back = table_from_json_bytes(blob)
+        pd.testing.assert_frame_equal(df, back, check_exact=True, check_dtype=True), label
+        assert warnings == [], label
+        assert table_to_json_bytes(back)[0] == blob, label
+    # a document written by pandas >= 3 (dtype "str") decodes on every pandas: text and missing values intact
+    doc = {"kind": "string", "dtype": "str", "values": ["a", None, "b"]}
+    s = T._decode_values(doc)
+    assert s.tolist()[0] == "a" and s.tolist()[2] == "b" and pd.isna(s.iloc[1])
+    assert str(s.dtype) == ("str" if T._HAS_DEFAULT_STR_DTYPE else "object")

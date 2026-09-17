@@ -128,6 +128,18 @@ def _dec_object_cell(v: Any) -> Any:
             return pd.NaT
     raise TableEncodingError(f"unexpected object cell {v!r}")
 
+_STRING_DTYPE_NAMES = ("string", "string[python]", "string[pyarrow]", "str")
+
+
+def _pandas_has_default_str_dtype() -> bool:
+    try:
+        return str(pd.Series(["a"], dtype="str").dtype) == "str"
+    except Exception:  # pragma: no cover - very old pandas
+        return False
+
+
+_HAS_DEFAULT_STR_DTYPE = _pandas_has_default_str_dtype()
+
 
 # ----------------------------------------------------------------------------
 # column encoding
@@ -171,7 +183,9 @@ def _encode_values(s: pd.Series, warnings: List[str], colname: Any) -> Dict[str,
         else:
             col.update(kind="float", nullable=False, values=[_enc_float(x) for x in s.to_numpy(dtype="float64")])
         return col
-    if pd.api.types.is_string_dtype(dt) and str(dt) in ("string", "string[python]", "string[pyarrow]"):
+    if pd.api.types.is_string_dtype(dt) and str(dt) in _STRING_DTYPE_NAMES:
+        # "string"/"string[...]" are the nullable extension dtype; "str" is the pandas >= 3 default
+        # string dtype (NaN-backed). Both round-trip as kind "string" with their dtype name recorded.
         col.update(kind="string", values=[None if pd.isna(x) else str(x) for x in s.to_numpy(dtype=object)])
         return col
     if dt == object:
@@ -217,7 +231,11 @@ def _decode_values(col: Dict[str, Any], n: Optional[int] = None) -> pd.Series:
         arr = np.asarray([_dec_float(v) for v in col["values"]], dtype="float64")
         return pd.Series(arr.astype(dtype) if dtype != "float64" else arr)
     if kind == "string":
-        return pd.Series([None if v is None else str(v) for v in col["values"]], dtype=dtype)
+        values = [None if v is None else str(v) for v in col["values"]]
+        if dtype == "str" and not _HAS_DEFAULT_STR_DTYPE:
+            # written by pandas >= 3; this pandas has no "str" dtype - object is what it would infer
+            return pd.Series(values, dtype=object)
+        return pd.Series(values, dtype=dtype)
     if kind == "object":
         return pd.Series([_dec_object_cell(v) for v in col["values"]], dtype=object)
     raise TableEncodingError(f"unknown column kind {kind!r}")
