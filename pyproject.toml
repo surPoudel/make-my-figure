@@ -6,26 +6,36 @@ build-backend = "setuptools.build_meta"
 name = "make_my_figure_core"
 description = "Reusable core engine for manuscript-style scientific figures (Make My Figure)."
 readme = "README.md"
+license = {file = "LICENSE"}
 requires-python = ">=3.9"
 dynamic = ["version"]
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Visualization",
+]
+# Lower bounds are what the code needs; upper bounds stop at the next major version so a
+# clean install a year from now resolves to something the test suite has actually seen.
+# Exact versions the release was tested with are in requirements-lock.txt.
 dependencies = [
-    "pandas>=1.5",
-    "numpy>=1.23",
-    "matplotlib>=3.6",
-    "scipy>=1.9",
-    "statsmodels>=0.14",
-    "openpyxl>=3.0",
-    "jsonschema>=4.0",
-    "networkx>=3.0",
-    "adjustText>=1.0",
-    "pillow>=9.0",
+    "pandas>=1.5,<3",
+    "numpy>=1.23,<3",
+    "matplotlib>=3.6,<4",
+    "scipy>=1.9,<2",
+    "statsmodels>=0.14,<0.16",
+    "openpyxl>=3.0,<4",
+    "jsonschema>=4.0,<5",
+    "networkx>=3.0,<4",
+    "adjustText>=1.0,<2",
+    "pillow>=9.0,<13",
 ]
 
 [project.optional-dependencies]
-app = ["streamlit>=1.30"]
-desktop = ["PySide6>=6.5"]
+app = ["streamlit>=1.30,<2"]
+desktop = ["PySide6>=6.5,<7"]
 build = ["pyinstaller>=6.0", "pillow>=9.0"]
-dev = ["pytest>=7.0", "pytest-qt>=4.2"]
+dev = ["pytest>=7.0,<10", "pytest-qt>=4.2,<5"]
 # Optional: import PDF/SVG figures as Figure Builder panels (raster formats work
 # without these). PyMuPDF handles PDF; cairosvg handles SVG.
 import-panels = ["pymupdf>=1.23", "cairosvg>=2.5"]

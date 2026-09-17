@@ -50,8 +50,10 @@ git clone https://github.com/surPoudel/make-my-figure.git
 cd make-my-figure
 python3 -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
 python -m pip install --upgrade pip
-python -m pip install -r requirements.txt               # core + browser app + pytest
+python -m pip install -r requirements.txt               # core + browser app + pytest (bounded ranges)
 python -m pip install -e ".[desktop]"                   # adds the PySide6 desktop app
+# reproducible environment with the exact versions the release was tested with:
+# python -m pip install -r requirements-lock.txt
 
 streamlit run apps/streamlit_app/streamlit_app.py       # browser app (no Qt required)
 python -m apps.desktop_app.main                         # desktop app
@@ -205,4 +207,5 @@ citation will be added when an archival record exists.
 
 ## 12. License
 
-Released under the [MIT License](LICENSE).
+Released under the [MIT License](LICENSE). The `LICENSE` file is at the repository root, in the
+source distribution, and (from the next build) inside every desktop bundle and installer.
