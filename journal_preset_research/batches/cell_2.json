@@ -7,32 +7,32 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11687419/figures/Fig1.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11687419/figures/Fig1.jpg",
     "caption": "Generation and validation of a system for rapid depletion of ZFP143 in mESCs (A) Schematic representation of the dTAG degron system. The endogenous Zfp143 locus is modified to create a fusion with the FKBP12 F36V -2xHA-P2A-eGFP cassette. (B) Western blot analysis of ZFP143 levels with an antibody against the endogenous ZFP143 at different time points after dTAG-V1 treatment. (C) Western blot analy"
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11687419/figures/Fig2.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11687419/figures/Fig2.gif",
     "caption": "ZFP143 depletion has no detectable effect on 3D genome structure and CTCF binding (A) Average Hi-C loops 52 in DMSO-treated and dTAG-V1-treated cells. Value in the upper-right corner indicates the interaction strength of the loop over the background. (B) Same as in (A), but for the average ZFP143-associated Hi-C loops. (C) 4C-seq data generated for the Cpox and Cldn1 (left) and Zfp111 and Zfp108 ("
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11687419/figures/Fig3.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11687419/figures/Fig3.jpg",
     "caption": "Re-analysis of publicly available ChIP-seq data reveals ZNF143 antibody cross-reactivity with CTCF (A) Overlap between ZNF143 peaks from re-analyzed publicly available data and CTCF peaks from CISTROME 56 for human (left) and mouse (right) datasets. Each dot represents the overlap between the indicated ZNF143 peak set with an individual CTCF peak set. Colors represent the antibody used for chromat"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11687419/figures/Fig4.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11687419/figures/Fig4.jpg",
     "caption": "ZFP143 depletion leads to downregulation of mitochondria-related genes at transcriptome and proteome levels (A) Sankey diagram showing the differentially expressed genes following ZFP143 depletion (upregulated genes in pink, downregulated genes in green). (B) Schematic of the genes and single-read mappability 59 (k = 36) for mitochondrial DNA (top) and fold changes of the mitochondrial-encoded gen"
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11687419/figures/Fig5.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11687419/figures/Fig5.jpg",
     "caption": "Prolonged loss of ZFP143 impairs cell proliferation and mitochondrial function (A) Bright-field microscopy images showing morphology of DMSO-treated (blue frame) and dTAG-V1-treated (orange frames) mESC colonies. Scale bar: 200 \u03bcm. (B) Growth curve showing the total cell number of DMSO-treated (blue line) and dTAG-V1-treated (orange line) cells at different time points. Dots indicate mean values. "
    },
    {
     "figure_number": 6,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11687419/figures/Fig6.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11687419/figures/Fig6.gif",
     "caption": "ZFP143-depleted cells fail to develop fully differentiated embryo models despite being able to exit the pluripotent state (A) Schematic of the in vitro gastruloids experiment (left). Bright-field microscopy images showing gastruloids treated with DMSO (blue) and dTAG-V1 (orange), imaged at 120 h of development (right). Scale bar: 300 \u03bcm. (B) Quantification of axis ratio (top) and roundness (bottom"
    }
   ]
@@ -45,12 +45,12 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11738662/figures/Fig1.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11738662/figures/Fig1.jpg",
     "caption": "Improved perturbation assignment to single nuclei with T7-assisted sgRNA library prep and an engineered CROP-seq vector (A) Schematic of Multiome Perturb-seq experimental design, library, and guide assignment strategy. sgRNA identity transcripts are biased toward nuclear retention by addition of dual SIRLOIN elements flanking the sgRNA cassette (purple), and a partial 10x TSO capture sequence (gre"
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11738662/figures/Fig2.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11738662/figures/Fig2.jpg",
     "caption": "Multiome Perturb-seq characterizes transcriptional and epigenetic state to elucidate regulatory relationships (A) Number of differentially expressed genes ( q < 0.1, Kolmogorov-Smirnov test on normalized expression, Benjamini-Hochberg false discovery rate [BH FDR] correction) vs. number of differentially accessible peaks ( q < 0.1, Mann-Whitney test on paired insertion counts within peaks, BH FDR "
    }
   ]
@@ -63,37 +63,37 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11913779/figures/Fig1.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11913779/figures/Fig1.jpg",
     "caption": "LUD2015-005 design and clinical outcomes (see also Figure S1 ) (A) LUD2015-005 timeline of treatment, sampling, and CT response-assessment events. On-treatment CT scans are named according to their timing relative to ICI+CTX (C1D8 = cycle 1, day 8). (B and C) Kaplan-Meier curves for (B) OS and (C) PFS for all LUD2015-005 inoperable patients. Risk table (below) shows number of patients with ongoing"
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11913779/figures/Fig2.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11913779/figures/Fig2.jpg",
     "caption": "Molecular features of response and resistance to ICI (see also Figures S2 and S3 ) (A) Top: Endoscopic sampling sites for biomarker analyses. Esophageal and gastric biopsies were taken \u22652cm away from tumor and gastro-esophageal junction. Bottom: Summary of bulk RNA-sequencing dataset. (B) Differential expression between PreTx and ICI-4W for patients with biopsies at both timepoints (n = 28), contr"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11913779/figures/Fig3.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11913779/figures/Fig3.jpg",
     "caption": "Myeloid phenotype in EAC predicts CB on ICI+CTX (see also Figures S4 and S5 ) (A) FGSEA results showing significantly enriched PreTx pathways in CB and NCB (FDR<0.1). Bar length represents NES; color reflects adjusted p value (labeled). Test statistic is DESeq2 moderated log fold changes (CB vs. NCB). (B) Heatmap of Z-score-normalized logTPM expression for markers of general immune infiltration ( "
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11913779/figures/Fig4.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11913779/figures/Fig4.jpg",
     "caption": "Increased TMC is an ICI+CTX-specific predictor of improved outcomes (see also Figures S7 and S8 ) (A) Deconvolution-assessed levels of phagocytic immune cell types in LUD2015-005 PreTx EAC biopsies were log10-transformed and scaled by column prior to hierarchical clustering (ward.D linkage). Results are shown as a clustered heatmap, with cells colored according to the scaled deconvolution estimate"
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11913779/figures/Fig5.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11913779/figures/Fig5.jpg",
     "caption": "Pre-treatment TMB and TMC are complementary predictive biomarkers for ICI+CTX (see also Figure S8 ) (A) OncoPrint showing genomic alterations of cancer driver genes in PreTx EAC biopsies. Top barplot indicates the fraction of mutations assigned to predefined single base substitution (SBS) mutational signatures. TMB (coding mutations/Mb) and total SNV and indel numbers are shown. Eight patients had"
    },
    {
     "figure_number": 6,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11913779/figures/Fig6.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11913779/figures/Fig6.jpg",
     "caption": "Exploring correlates and potential mechanisms of TMC (see also Table S5 ) (A) Comparison of INCITE upregulation during ICI-4W and PreTx TMC (log10-transformed). Pearson and Spearman correlation statistics are displayed. (B) Multiple linear regression between PreTx TMC (log10-transformed) and INCITE upregulation with tumor size changes during ICI-4W as dependent variable. Coefficients with p < 0.05"
    },
    {
     "figure_number": 7,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11913779/figures/Fig7.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11913779/figures/Fig7.gif",
     "caption": "scRNA-seq reveals EAC- and T cell-specific expression patterns predictive of ICI+CTX outcomes (A) Top: EAC-specific PreTx DEGs from pseudobulk differential expression (see STAR Methods ) with FDR < 0.1. Dot size represents percentage of cells with any expression; color represents average expression (scaled log-normalized counts). EAC-GDBD was excluded due to insufficient EAC cells. DEGs are sorted"
    }
   ]
@@ -106,27 +106,27 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11922821/figures/Fig1.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11922821/figures/Fig1.jpg",
     "caption": "Acute myocardial infarction results in cold fibrosis (A) Mathematical model of the myofibroblast-macrophage cell circuit predicts three possible outcomes: hot fibrosis, cold fibrosis, and healing based on the abundance of these two populations (axes). 19 The basin of attraction for the healing state is bounded by a separatrix. The scheme also denotes the growth factor signaling as either ON (black"
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11922821/figures/Fig2.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11922821/figures/Fig2.gif",
     "caption": "Chronic ventricular pressure overload results in hot fibrosis (A) Experimental scheme whereby MAMY mice (Postn MCM/+ Rosa26 TdTomto/+ Cx3cr1 GFP/+ ) underwent sham or transverse aortic constriction (TAC) to induce chronic pressure overload. To label myofibroblasts with tdTomato, mice were given 7 daily tamoxifen injections immediately following TAC, and on days 13\u201314 and 27\u201328 post-TAC (red line)."
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11922821/figures/Fig3.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11922821/figures/Fig3.jpg",
     "caption": "Cold fibrosis after MI is conserved in humans and in a clinically relevant porcine model (A and B) (A) Representative human left ventricle spatial transcriptomics slides (Visium) of patients following acute-myocardial infarction (MI) and non-transplanted donor hearts. Samples were divided based on time following MI as either: uninjured ( n = 10), early (days 0\u201315 post-MI; n = 6), and late (30 days"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11922821/figures/Fig4.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11922821/figures/Fig4.jpg",
     "caption": "In cold fibrosis, macrophages return to homeostatic functions whereas fibroblasts acquire a persistent fibrotic cell state (A) Pareto analysis was used to characterize the continuum of gene expression within each cell type as distributed between specialist and generalist cells. Pareto analysis was done using ParTI. 65 Fibroblasts (including myofibroblasts) from day 0 (black) and day 3 (green) foll"
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC11922821/figures/Fig5.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC11922821/figures/Fig5.gif",
     "caption": "Targeting the autocrine loop of myofibroblasts by inhibiting TIMP1 reduces fibrosis after acute MI in adult mice (A) Phase plot where the axes represent the number of cells. The separatrix (dashed lines) separates the basins of attraction of healing (gray area) and cold fibrosis (white). The separatrix is calculated with reference (WT) parameters (black), and with a 30% decrease in the production "
    }
   ]
@@ -139,32 +139,32 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12137002/figures/Fig1.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12137002/figures/Fig1.gif",
     "caption": "Direct recording of microsomal thermogenesis in adipose tissue (A) Schematic of organelle thermogenesis assays using ITC. Isolated mitochondria (20 \u03bcg) were subjected to ITC in the presence of glutamate, pyruvate, malate, and succinate (complexes I and II) or palmitoyl-carnitine and malate (\u03b2-oxidation). To detect microsomal thermogenesis, isolated microsomes (20 \u03bcg) were subjected to ITC in the p"
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12137002/figures/Fig2.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12137002/figures/Fig2.jpg",
     "caption": "C4orf3 promotes Ca 2+ cycling thermogenesis by reducing the energetic efficiency of SERCA2-dependent Ca 2+ transport (A) FPKM of indicated SERCA-binding peptides in isolated beige adipocytes of mice. n = 3. (B) Relative C4orf3/ALN protein expression levels in microsomes from IngWAT of UCP1 KO mice at the corresponding temperature. Calreticulin was used as a loading control. n = 3. Statistic: one-w"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12137002/figures/Fig3.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12137002/figures/Fig3.gif",
     "caption": "A structural mechanism by which C4ORF3 alters the Ca 2+ transport efficiency of SERCA2 (A) Side (left) and top (right) views of the SERCA2b-C4ORF3 complex structure predicted by AlphaFold3. The A-, N-, P-, and TM domains of Ca 2+ -unbound SERCA2b are shown in orange, pink, yellow, and green, respectively. C4ORF3/ALN is shown in blue. (B) Protein interaction interface of SERCA2b to C4orf3 as determ"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12137002/figures/Fig4.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12137002/figures/Fig4.gif",
     "caption": "C4orf3 is required for UCP1-independent thermogenesis in vivo (A) Cold tolerance test of male C4orf3 CRISPRi mice and littermate controls. Mice kept at room temperature were exposed to cold (6\u00b0C) for indicated time points. n = 11. Statistic: two-way ANOVA with \u0160\u00edd\u00e1k\u2019s multiple comparisons test. (B) OCR in iBAT and IngWAT of male C4orf3 CRISPRi mice and control male mice following cold exposure. A "
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12137002/figures/Fig5.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12137002/figures/Fig5.jpg",
     "caption": "Compensatory responses to C4orf3 and UCP1 loss (A) GO pathway enrichment analysis for 276 genes that were uniquely upregulated in IngWAT of DKO mice (UCP1 KO \u00d7 C4orf3 CRISPRi ) relative to other genotypes following cold exposure. n = 6 per group. (B) Relative mRNA levels of indicated genes in IngWAT of WT control, UCP1 KO, C4orf3 CRISPRi , and DKO mice (UCP1 KO \u00d7 C4orf3 CRISPRi ) following cold ex"
    },
    {
     "figure_number": 6,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12137002/figures/Fig6.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12137002/figures/Fig6.gif",
     "caption": "Loss of C4orf3 resulted in increased adiposity and systemic insulin resistance (A) Relative mRNA expression of indicated genes in the subcutaneous adipose tissue of people in Table 1 . Lean: n = 6 female, n = 3 males; overweight: n = 5 female, n = 4 males; obese classes 1 and 2: n = 6 female, n = 3 males; obese class 3: n = 9 female, n = 1 male; obese with T2D: n = 5 female, n = 4 males. Statistic"
    }
   ]
@@ -177,37 +177,37 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12332847/figures/Fig1.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12332847/figures/Fig1.jpg",
     "caption": "Aortic length scales with the vertebral column (A) Microcomputed tomography reconstructions of aorta (red) and vertebral column (white). Scale bar, 2 mm. (B) Anatomical landmarks of the descending aorta. (C) Length (mm) of descending aorta between 1st\u20138th intercostal vessels. Inset: rates of growth of aorta length from post-natal day 3\u20137 (P3\u2013P7) and from P7\u2013P14. Each dot represents a biological re"
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12332847/figures/Fig2.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12332847/figures/Fig2.jpg",
     "caption": "Dynamics of endothelial cell size and presence of two distinct proliferative waves during post-natal development (A) Images of en face aorta (red, ERG; white, PECAM) and machine learning segmentation of individual cells. A cell from each age is shown in the last row in black. (B) Average major axis (\u03bcm) of cells/aorta. Each dot represents a biological replicate, with mean and SD shown. N = 283\u201334,"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12332847/figures/Fig3.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12332847/figures/Fig3.jpg",
     "caption": "Proliferative endothelial population retains arterial fate (A) Schema of the approach and number of cells obtained. (B) Uniform manifold approximation and projection (UMAP) of libraries after quality control. (C) Cell identity markers for endothelial cells ( Cdh5 , PECAM , and Prox1 ), fibroblast ( Dcn ), vascular smooth muscle cells (SMC) ( Tgln ), and inflammatory cells ( Ptprc ). (D) UMAP ident"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12332847/figures/Fig4.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12332847/figures/Fig4.jpg",
     "caption": "Endothelial clonal dynamics are spatially uniform but temporally regulated across the two proliferative waves (A) The constitutive rainbow lineage tracing approach. Cre expression is driven by the constitutive Cdh5 promoter, leading to random recombination at Rainbow fl/+ as early as E7.5; recombined cells express mCerulean, mOrange, or mCherry. (B) Images showing descending aorta, infrarenal vena"
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12332847/figures/Fig5.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12332847/figures/Fig5.jpg",
     "caption": "Clonal outgrowth occurs through cell-autonomous mechanisms (A) Scenarios of clones that result in a high or low Gini coefficient. (B) Gini coefficient of each time window, color-coded by whether it is within the first wave, second wave, or both. N = 5\u20138 mice. (C) Gini coefficients of cluster sizes, calculated for different time windows, categorized based on their association with the first wave, s"
    },
    {
     "figure_number": 6,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12332847/figures/Fig6.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12332847/figures/Fig6.jpg",
     "caption": "Endothelial cell cycle in vivo is remarkably short (A) Workflow of image processing using machine learning segmentation to filter out SMC signals and identify endothelial EdU clones. Signal intensity of each EdU+ cell reconstructs lineage trees. (B) Largest clones and reconstructed lineage trees from 24 h EdU pulse-chase at P5 (first wave). Clones from N = 3 mice. (C) Largest clones and their corr"
    },
    {
     "figure_number": 7,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12332847/figures/Fig7.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12332847/figures/Fig7.jpg",
     "caption": "Cellular extrusion is a critical regulator of tissue scaling during endothelium expansion and growth (A) Key parameters in the mathematical model. There are two waves of cell division, and each consists of C k rounds of division. In each round, f k fraction of cells go through division. The duration of cell cycle, T k , is sampled from an exponential distribution. The effective rate of extrusion ("
    }
   ]
@@ -220,37 +220,37 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12416865/figures/Fig1.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12416865/figures/Fig1.jpg",
     "caption": "Metastasis immune pressure positively selects TIM3 + metastatic cells (A) Experimental design using immunocompetent (IC) Balb/c mice and immunodeficient (ID) NOD scid gamma (NSG) mice for the assessment of metastatic immune pressure. (B) Principal-component analysis (PCA) of the RNA-seq from EpRas cells isolated from three organ (lung, liver, and brain) metastatic samples in IC and ID hosts. (C) U"
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12416865/figures/Fig2.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12416865/figures/Fig2.gif",
     "caption": "TIM3 drives breast cancer metastasis (A) Kaplan-Meier survival plot after intracardiac injection of 4T07 control cells versus Tim3 -KD cells in ID (NSG) and IC (Balb/c) mice with the indicated conditions. Statistical analysis using Log rank (Mantel-Cox) test. (B) Relative photon flux BLI quantification of metastatic organs at day 16 after i.c. injection of 4T07 Ctrl and Tim3 -KD cells. Data repres"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12416865/figures/Fig3.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12416865/figures/Fig3.gif",
     "caption": "TIM3 + MICs display Stemness/EMT-like features and \u03b2-catenin activation (A) Unsupervised hierarchical clustering heatmap of the indicated conditions from 4T07 metastases RNA-seq analysis ( n = 2 independent biological replicates). (B) GSEA from (A) experiment comparing Ctrl and Tim3 -KD ( n = 2 independent biological replicates). (C) Gene ontology integration of the metastasis immunoediting RNA-se"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12416865/figures/Fig4.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12416865/figures/Fig4.gif",
     "caption": "TIM3 spatiotemporal dynamics in metastasis (A) Dual reporter system designed to track bulk tumor metastasis (Firefly luciferase [Fluc]-eGFP) and Tim3 promoter activity (mCherry-Nanoluciferase [Nluc]). (B) Representative BLI images of Fluc and Nluc signal in IC mice (Balb/c) upon i.c. injection of 4T07 cells experimental metastasis. BLI monitorization of metastatic growth: metastasis curve (blue li"
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12416865/figures/Fig5.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12416865/figures/Fig5.gif",
     "caption": "TIM3 + MICs induce an immunosuppressive environment during micrometastasis (A) Single cell RNA-seq uniform manifold approximation and projection (UMAP) of CD45 + immune cells isolated from liver metastasis after 4T07 Ctrl and Tim3 -KD i.c. injection. UMAP representation of: Ctrl (red) and Tim3 -KD (blue) in healthy liver adjacent tissue (AT), liver micrometastasis and liver macrometastasis. (B) sc"
    },
    {
     "figure_number": 6,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12416865/figures/Fig6.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12416865/figures/Fig6.gif",
     "caption": "Functional metastasis assessment of \u03b3\u03b4 T cells, CD8 T cells, and IL-1\u03b2 in TIM3-mediated immunosuppression (A) Blocking antibody scheme; intraperitoneal administration and doses indicated. Seven days before 4T07 tumor cell i.c. injection and, weekly reminder of 250 \u03bcg of antibody during the experiment. (B) Representative BLI images of 4T07 whole body metastasis for the indicated immune blocking con"
    },
    {
     "figure_number": 7,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12416865/figures/Fig7.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12416865/figures/Fig7.jpg",
     "caption": "Clinical and preclinical evaluation of TIM3 blockade for breast cancer metastasis (A) Disease free survival (DFS) and overall survival (OS) Kaplan-Meier curves of IHC epithelial-tumor TIM3 + and TIM3 - breast cancer primary tumor samples. Data obtained from Tissue microarrays (TMAs) with 257 breast cancer primary tumors from all subtypes. Statistical significance calculated by Log Rank (Mantel-Cox"
    }
   ]
@@ -263,37 +263,37 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12456964/figures/Fig1.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12456964/figures/Fig1.gif",
     "caption": "B2-SINEs are upregulated in DRG but not RGC neurons after nerve injury (A) Polyadenylated B2-SINE RNA expression determined by Quantseq REV, 75 bp single-end read RNA-seq from L4/L5 DRG neurons 24 and 72 h after sciatic nerve injury. Injury-dependent log 2 fold changes (log 2 FC) of uniquely mapped B2 elements. Boxplot midline shows medians, and whiskers indicate 10th and 90th percentiles. RE (non"
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12456964/figures/Fig2.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12456964/figures/Fig2.gif",
     "caption": "Exogenous B2-SINE expression promotes axonal growth (A) DRG neuron spot cultures transduced with B2-SINE AAV (AAV-B2) or control vector (AAV-control) underwent axotomy and axon growth was tracked by live imaging of AAV-expressed YFP (yellow fluorescent protein). Representative images of axon outgrowth at the site of axotomy at indicated time points following axotomy. Scale bar, 100 \u03bcm. (B) Process"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12456964/figures/Fig3.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12456964/figures/Fig3.jpg",
     "caption": "GI-SINES are a specifically regulated subset of B2 elements (A) Enrichment of B2-SINE subtypes in naive and injured DRG at 24 and 72 h after sciatic nerve crush. Paired-end, 150 bp reads total RNA-seq was carried out and B2-SINEs were mapped using RSEM (RNA-seq by Expectation Maximization) algorithm for injury/naive differential expression analysis. Boxplot whiskers show 10th and 90th percentiles."
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12456964/figures/Fig4.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12456964/figures/Fig4.gif",
     "caption": "B2-SINE RNA interacts with the protein translation machinery (A) Schematic of B2-SINE interactome analysis (consensus structure model based on Espinoza et al. 43 and Ponicsan et al. 45 ), blue and red dashed lines delineate the two biotin-conjugated constructs used for pull-downs. (B) Top 20 enriched proteins co-precipitated with B2-SINE baits. Nucleolin (Ncl) is highlighted in magenta and ribosom"
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12456964/figures/Fig5.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12456964/figures/Fig5.gif",
     "caption": "B2-SINE affects protein synthesis in DRG neurons Neurons were cultured from mouse L4/L5 DRG 2 weeks after intrathecal injection of either PHP.S-AAV-B2 or PHP.S-AAV-control vectors. (A) Representative images of YFP-positive (transduced) neurons from 48 h cultures, fixed and processed for proximity ligation assay (PLA) between nucleolin (Ncl) and RPL11, with indicated markers. Scale bar, 20 \u03bcm. (B) "
    },
    {
     "figure_number": 6,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12456964/figures/Fig6.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12456964/figures/Fig6.gif",
     "caption": "Disrupting GI-SINE inhibits nucleolin-ribosome complexes and axon growth (A) GI-SINE consensus sequence obtained by motif analysis. Colored highlights show motifs 1 and 2 by STREME motif search that have the highest GI-SINE specificity. Black boxed sites mark conserved box A and box B domains of the internal RNA Pol III promoter. Red dashed boxes and black dashed underline show GI-SINE ASO mix and"
    },
    {
     "figure_number": 7,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12456964/figures/Fig7.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12456964/figures/Fig7.gif",
     "caption": "GI-SINEs are intrinsic to a physiological neuronal growth circuit Upper: Axon-soma communication in neuronal growth is mediated by kinesin (K)-dependent anterograde transport of mRNAs on nucleolin (Nucl), including mTor and importin \u03b21 (\u03b2), and retrograde transport of their encoded proteins in a complex with dynein (D) and an importin \u03b1 (\u03b1) after local protein synthesis. The GI-SINEs are induced b"
    }
   ]
@@ -306,37 +306,37 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12488066/figures/Fig1.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12488066/figures/Fig1.jpg",
     "caption": "NGN2 and MyoD1 induces neurogenesis and myogenesis, respectively, when expressed in mESCs despite recognizing similar short DNA sequence motifs (A) Immunofluorescence images of mESCs prior and 2-days post-induction of NGN2 and MyoD1, resulting in distinct cell types. Nuclear marker Hoechst in magenta, neuronal marker TubIII, and myocyte marker \u03b1-actinin in green. Scale bar, 20 \u03bcm. The logos repres"
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12488066/figures/Fig2.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12488066/figures/Fig2.jpg",
     "caption": "DNA accessibility and cognate-motif occurrences are major factors underlying initial binding patterns (A) Density plot showing preexisting DNase-seq (DHS 0 h) and 6 h post-induction NGN2 ChIP-seq enrichments in all 1.3 million NGN2-motif-containing genomic regions (500 bp with minimum one non-overlapping cognate-motif, described in Figure S2 E). Percentage of total sites in each quarter indicates "
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12488066/figures/Fig3.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12488066/figures/Fig3.gif",
     "caption": "Identification of a chromatin-dependent motif syntax using a CNN (A) Scheme of the applied CNN for predicting the primary 6 h binding of NGN2 and MyoD1, using DNA sequence and continuous 0 h DHS (DNase I) signal as input. (B) Contrasting frequency-based motif representation (PFM), informing about the frequency of the DNA bases in the enriched motifs versus contribution weight matrices (CWM), ident"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12488066/figures/Fig4.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12488066/figures/Fig4.jpg",
     "caption": "Motif variant-specific chromatin and transcription responses (A) Uniform manifold approximation and projection (UMAP) of relevant genomic regions (represented as single points, positioned based on similarities in accessibility and TF binding) visualizing initial accessibility, TF ChIP-seq and fold-changes in ATAC-seq, H3K27ac, and RNA Pol II ChIP-seq, colored from blue to red. Bound regions with l"
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12488066/figures/Fig5.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12488066/figures/Fig5.jpg",
     "caption": "Homodimer and heterodimer formation with other bHLH proteins increase the regulatory repertoire of NGN2 and MyoD1 (A) Mass spectrometric detection of proteins interacting with NGN2 (enrichment relative to GFP > 5 with \u2212log10( p value) > 5). bHLH TFs are labeled in red, chromatin-associated proteins in blue ( Table S8 ). (B) Scheme of DAP-seq to probe genomic DNA-binding preferences in vitro , for "
    },
    {
     "figure_number": 6,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12488066/figures/Fig6.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12488066/figures/Fig6.jpg",
     "caption": "Reshaped accessibility landscape diverges NGN2 and MyoD1 genomic binding (A) UMAP of genomic regions (as in Figure 4 A) displaying initial accessibility, NGN2 and MyoD1 binding at 6 and 24 h. Dashed lines outline NGN2 and MyoD1-specific regions at 6 h and new regions at 24 h. The decrease in binding signal at the overlapping regions (high 0 h DHS) and gain in new regions (low 0 h DHS) illustrate d"
    },
    {
     "figure_number": 7,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12488066/figures/Fig7.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12488066/figures/Fig7.gif",
     "caption": "The models, trained in mESCs, predict TF binding and activity in other cellular contexts (A) Heatmaps of MyoD1 ChIP-seq in mESCs (6 h) and C2C12 cells (24 h) upon induction, together with their pre-induction accessibility in mESCs (DNase-seq 0 h) and in C2C12 cells (ATAC-seq 0 h), visualized on combined MyoD1-binding sites. (B) Enriched TF-MoDISco E-box seqlets in MyoD1 bound sites in mESCs and C2"
    }
   ]
@@ -349,7 +349,7 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/cell/2025_Maric_ufd1_npl4_recruit_cdc48_for_disassembly_/figures/fig01_dfig1.jpg",
+    "image": "../make_my_plot/figure_library/cell/2025_Maric_ufd1_npl4_recruit_cdc48_for_disassembly_/figures/fig01_dfig1.jpg",
     "caption": "Ufd1-Npl4 Are Required to Recruit Cdc48 to the CMG Helicase"
    }
   ]
@@ -362,32 +362,32 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/cell/2025_Giuntini_myc_inhibition_by_omomyc_causes_dna_dama/figures/fig01_fig1.jpg",
+    "image": "../make_my_plot/figure_library/cell/2025_Giuntini_myc_inhibition_by_omomyc_causes_dna_dama/figures/fig01_fig1.jpg",
     "caption": "Omomyc shuts down DDR pathways and induces DNA damage (A) Microarray analysis of a panel of DDR-related gene sets treated with Omomyc mini-protein for 72 h in MDA-MB-231 cells as compared to vehicle-treated cells. (B) Microarray analysis of specific genes related to DDR in MDA-MB-231 cells treated with Omomyc for 72 h as compared to vehicle. (C) Western blot analysis of RAD51 and PARP1 protein in "
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/cell/2025_Giuntini_myc_inhibition_by_omomyc_causes_dna_dama/figures/fig02_fig2.jpg",
+    "image": "../make_my_plot/figure_library/cell/2025_Giuntini_myc_inhibition_by_omomyc_causes_dna_dama/figures/fig02_fig2.jpg",
     "caption": "Omomyc synergizes with olaparib and enhances DNA damage in PARPi-resistant TNBC cells (A\u2013C) Synergy plots depicting Gaddum\u2019s non-interaction model (HSA) for MDA-MB-231 (A), MX-1 (B), and SUM149PT (C) cells treated with increasing concentrations of Omomyc and/or olaparib. (D\u2013F) Flow cytometry analysis of \u03b3H2AX (%, y axis) after treatment with selected concentrations of Omomyc, olaparib, or their co"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/cell/2025_Giuntini_myc_inhibition_by_omomyc_causes_dna_dama/figures/fig03_fig3.jpg",
+    "image": "../make_my_plot/figure_library/cell/2025_Giuntini_myc_inhibition_by_omomyc_causes_dna_dama/figures/fig03_fig3.jpg",
     "caption": "Combination of Omomyc and olaparib promotes apoptosis in PARPi-resistant TNBC cells (A) Bar charts representing total apoptosis (% of PI\u2212/Annexin+ cells and PI+/Annexin+ cells, y axis) in MDA-MB-231, MX-1, and SUM149PT cells at different time points (from left to right: 24, 72, and 120 h). Treatments are indicated on the x axis. Asterisks represent statistical significance using an ordinary one-wa"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/cell/2025_Giuntini_myc_inhibition_by_omomyc_causes_dna_dama/figures/fig04_fig4.jpg",
+    "image": "../make_my_plot/figure_library/cell/2025_Giuntini_myc_inhibition_by_omomyc_causes_dna_dama/figures/fig04_fig4.jpg",
     "caption": "Omomyc cooperates with olaparib to induce durable anti-tumor response and DNA damage (A) Waterfall plot representing change from baseline (%, y axis) for each mouse on treatment after 8 days in the MX-1 CDX model. Treatments and their corresponding disease control rate (DCR; sum of stable disease [SD], partial response [PR], and complete response [CR]) are listed in a color-coded table. (B) Waterf"
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/cell/2025_Giuntini_myc_inhibition_by_omomyc_causes_dna_dama/figures/fig05_fig5.jpg",
+    "image": "../make_my_plot/figure_library/cell/2025_Giuntini_myc_inhibition_by_omomyc_causes_dna_dama/figures/fig05_fig5.jpg",
     "caption": "Stronger MYC transcriptional signature correlates with resistance to olaparib, which is reverted by Omomyc treatment (A) GSEA for the Hallmark gene sets regulated in olaparib-resistant PDXs versus olaparib-sensitive PDXs after treatment. The normalized enrichment scores (NESs) for the significantly enriched gene sets (FDR < 0.05) are presented in the bar plot. Color intensity represents the FDR, a"
    },
    {
     "figure_number": 6,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/cell/2025_Giuntini_myc_inhibition_by_omomyc_causes_dna_dama/figures/fig06_fig6.jpg",
+    "image": "../make_my_plot/figure_library/cell/2025_Giuntini_myc_inhibition_by_omomyc_causes_dna_dama/figures/fig06_fig6.jpg",
     "caption": "MYC transcriptional signature can serve as a predictor of PARPi response (A) Schematic representing DSP workflow. Created with BioRender.com. (B) GSEA comparing MYC target V1 gene set in PD as compared to PR+CR in PANCK+ regions. (C) GSEA comparing DNA repair gene set in PD as compared to PR+CR in PANCK+ regions. (D) GSEA for the Hallmark gene sets regulated in PD patients versus PR+CR patients in"
    }
   ]
@@ -400,22 +400,22 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/cell/2025_Matake_ent3_a_lysosomal_urate_transporter_regul/figures/fig01_fig1.jpg",
+    "image": "../make_my_plot/figure_library/cell/2025_Matake_ent3_a_lysosomal_urate_transporter_regul/figures/fig01_fig1.jpg",
     "caption": "Urate transport activity of ENT3 and ENT3-AA (A) Lysosomal urate accumulation was assessed by isolating lysosomes after cellular uptake of [14C]urate (10 \u03bcM) for 30 min at pH 7.4 and 37\u00b0C in HEK293 cells transiently transfected with the plasmid encoding HA-SNBT1 (0.5 \u03bcg), with or without co-transfection of FLAG-ENT3 plasmid (0.5 \u03bcg). (B) Western blotting was performed using anti-FLAG and anti-HA a"
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/cell/2025_Matake_ent3_a_lysosomal_urate_transporter_regul/figures/fig02_fig2.jpg",
+    "image": "../make_my_plot/figure_library/cell/2025_Matake_ent3_a_lysosomal_urate_transporter_regul/figures/fig02_fig2.jpg",
     "caption": "Functional characteristics of ENT3-AA in urate transport in HEK293 cells transiently expressing ENT3-AA (A) The effect of pH on [14C]urate (4 \u03bcM) uptake was evaluated over 2 min at 37\u00b0C. (B) The effect of protonophores on ENT3-AA-mediated [14C]urate (4 \u03bcM) uptake was assessed over 2 min at pH 5.0 and 37\u00b0C in the presence or absence of a protonophore (50 \u03bcM). CCCP, carbonyl cyanide m-chlorophenylhy"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/cell/2025_Matake_ent3_a_lysosomal_urate_transporter_regul/figures/fig03_fig3.jpg",
+    "image": "../make_my_plot/figure_library/cell/2025_Matake_ent3_a_lysosomal_urate_transporter_regul/figures/fig03_fig3.jpg",
     "caption": "Effects of genetic mutations on urate transport by ENT3-AA (A) Uptake of [14C]urate (4 \u03bcM) by FLAG-tagged ENT3-AA (WT) and its mutants was evaluated over 2 min at pH 5.0 and 37\u00b0C in transiently transfected HEK293 cells. ND, not detected. (B) Western blotting was performed using anti-FLAG antibody on whole-cell lysates (10 \u03bcg protein per lane) prepared from transiently transfected HEK293 cells. \u03b2-a"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/cell/2025_Matake_ent3_a_lysosomal_urate_transporter_regul/figures/fig04_fig4.jpg",
+    "image": "../make_my_plot/figure_library/cell/2025_Matake_ent3_a_lysosomal_urate_transporter_regul/figures/fig04_fig4.jpg",
     "caption": "Effect of knockdown of endogenous ENT3 on accumulation of MSU-derived urate and inflammation in differentiated THP-1 cells (A) Schematic overview of the experimental timelines. (B and C) mRNA levels of ENT3 and CD11b were quantified by real-time PCR in undifferentiated and differentiated THP-1 cells. (D) Real-time PCR analysis of ENT3 mRNA levels in differentiated control and ENT3-knocked down (EN"
    }
   ]
@@ -428,22 +428,22 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/cell/2025_Miyauchi_dog_ownership_during_adolescence_alters_/figures/fig01_fig1.jpg",
+    "image": "../make_my_plot/figure_library/cell/2025_Miyauchi_dog_ownership_during_adolescence_alters_/figures/fig01_fig1.jpg",
     "caption": "Mental health and behavioral problems among dog-owning and non-dog-owning adolescents CBCL subscale scores were compared between dog-owning and non-dog-owning adolescents. The analysis included participants for whom both pet ownership data at age 13 and CBCL scores at age 14 were available (n = 266; dog owners = 74, non-dog owners = 192). The subscales included social withdrawal, somatic complaint"
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/cell/2025_Miyauchi_dog_ownership_during_adolescence_alters_/figures/fig02_fig2.jpg",
+    "image": "../make_my_plot/figure_library/cell/2025_Miyauchi_dog_ownership_during_adolescence_alters_/figures/fig02_fig2.jpg",
     "caption": "The effects of dog ownership on salivary microbiota (A) Bar plot representing the top 15 genera in the salivary samples of participants with (n = 96) or without dogs (n = 247); the remainder were labeled \u201cothers.\u201d The x axis represents individual participant samples. (B) Chao1 index (left) and Shannon index (right) of the salivary microbiota. (C) Principal coordinate analysis of Bray-Curtis dissim"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/cell/2025_Miyauchi_dog_ownership_during_adolescence_alters_/figures/fig03_fig3.jpg",
+    "image": "../make_my_plot/figure_library/cell/2025_Miyauchi_dog_ownership_during_adolescence_alters_/figures/fig03_fig3.jpg",
     "caption": "Behavioral differences between dog-owning and non-dog-owning groups of ex-germ-free mice (A and B) In the sociality test, the dog-owning group showed higher anogenital sniffing at 4 weeks of age and longer individual distance at 6 weeks of age compared to the non-dog-owning group (PERMANOVA followed by Mann-Whitney post hoc test). (C) The social approach to trapped mice test showed a longer social"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/figure_library/cell/2025_Miyauchi_dog_ownership_during_adolescence_alters_/figures/fig04_fig4.jpg",
+    "image": "../make_my_plot/figure_library/cell/2025_Miyauchi_dog_ownership_during_adolescence_alters_/figures/fig04_fig4.jpg",
     "caption": "Associations between microbiota and behaviors in ex-germ-free mice; n = 17 mice (no) and n = 18 mice (yes), with three longitudinal fecal samples and behavioral scores collected from each mouse (A) Heatmap showing the associations between behavioral scores and ASV abundance in fecal samples of ex-germ-free mice transplanted with the participants\u2019 salivary bacteria. ASVs showing significant associa"
    }
   ]
@@ -456,32 +456,32 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12916471/figures/Fig1.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12916471/figures/Fig1.jpg",
     "caption": "VISUN: A technology to image single IAV vRNPs in live cells (A) Cartoon of the IAV infection cycle. Early (yellow shading) and late (gray shading) phases of infection are characterized by low and high abundance, respectively, of viral material in the cell. (B) Cartoon of the VISUN single-vRNP imaging assay. Upon entry, fluorescently labeled Nb NP molecules bind to multiple copies of NP present in "
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12916471/figures/Fig2.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12916471/figures/Fig2.gif",
     "caption": "Nb HA imaging reveals dynamics of viral protein synthesis and progeny production (A) Cartoon illustrating the extracellular HA and progeny labeling method using the Nb HA . Red circles indicate a fluorescent protein associated with the Nb HA . (B) Example images from a time-lapse movie of an IAV-infected cell labeled with Nb HA . Orange dashed square indicates a zoom-in highlighting viral progeny "
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12916471/figures/Fig3.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12916471/figures/Fig3.gif",
     "caption": "Mapping IAV infection cycle kinetics (A) Quantification of the time of first nuclear detection of VISUN spots relative to the moment of inoculation (left) or to the moment of pH change (which induces virion-endosome fusion) (right). (B) Example images of a time-lapse movie of IAV inoculated A549-Nb NP -NLS cells showing vRNP cytoplasmic entry. Arrowheads indicate the slow-moving vRNP assembly, fro"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12916471/figures/Fig4.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12916471/figures/Fig4.gif",
     "caption": "IAV infections abort at multiple steps in the viral infection cycle (A) Viral titer for virus stocks produced in either A549 cells, MDCKII cells, or chicken eggs. The titer was determined either by VISUN, which detects vRNPs after entering the host cell nucleus, or by TCID 50 , which detects only successful infections that cause a detectable cytopathic effect. Titers are shown relative to the medi"
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12916471/figures/Fig5.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12916471/figures/Fig5.gif",
     "caption": "Abortive infections are caused by gene expression defects (A) Schematic of the experimental procedure combining VISUN and Nb HA imaging with fixed-cell multiplexed smFISH. (B) Example images of multiplexed smFISH for three cells with varying levels of different viral mRNAs. Scale bar, 10 \u03bcm. (C) Heatmap of mRNA levels for all eight viral genome segments. Each horizontal line represents one cell. C"
    },
    {
     "figure_number": 6,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC12916471/figures/Fig6.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12916471/figures/Fig6.gif",
     "caption": "Mechanisms underlying viral gene expression defects and host cell response (A) Boxplots showing the number of vRNPs per cell, as assessed by VISUN, for cells infected by a single virion in which no vRNP replication is observed. vRNP number was assessed for the same cells at both 1 and 16 hpi. Lines between boxplots link individual cells in both analyses. Slight variations in spot number at early a"
    }
   ]
@@ -494,22 +494,22 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13083267/figures/Fig1.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13083267/figures/Fig1.jpg",
     "caption": "Evaluation of the fragmentation methods, CID, EAD, and hybrid EAciD (A) Absolute MS2 scans and PSM counts for each MS method. The percentages indicate the success rate of the identified MS2 scans (PSMs, light green), as well as the PSMs that meet the cutoff scores selected to filter the Byonic data (PSMs, dark green); Byonic score \u2265 150 and LogProb \u2265 3. EAciD has a higher success rate at both the "
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13083267/figures/Fig2.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13083267/figures/Fig2.gif",
     "caption": "Peptide data for the mAb mixture following parallel digestion with the 4 proteases: trypsin (purple), chymotrypsin (blue), Vesuvius (pink), and Krakatoa (orange) (A) Obtained median peptide spectrum matches (PSMs) (left) and median unique peptides (right) identified per protease, median of n = 3 replicates. The percentages represent increases in unique peptides relative to trypsin. The whiskers re"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13083267/figures/Fig3.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13083267/figures/Fig3.gif",
     "caption": "Redundant reads per amino acid Each graph depicts the number of times each amino acid in the sequence of one of the antibody chains is covered by unique peptides across the three replicates. The data displayed originate from trypsin (purple), chymotrypsin (blue), Vesuvius (pink), or Krakatoa (orange) digests. The HTA-proteases, Vesuvius and Krakatoa, consistently provide substantially more sequenc"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13083267/figures/Fig4.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13083267/figures/Fig4.gif",
     "caption": "HTA-proteases combined with EAciD provide redundant and confident de novo reads (A) Distribution of the unique redundant reads per protease, cumulative data from analyzing both the Lc and Hc chains of all four investigated antibodies. The median number of redundant reads corresponds to 1, 3, 23, and 24 for trypsin, chymotrypsin, Vesuvius, and Krakatoa, respectively. (B) Distribution of the unique "
    }
   ]
@@ -522,27 +522,27 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13124994/figures/Fig1.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13124994/figures/Fig1.jpg",
     "caption": "In virion RNA interactome capture (ivRIC) reveals the composition of the genomic ribonucleoprotein packaged within HIV-1 virions (ivRNP) (A) Schematic representation of the ivRIC protocol. Samples and controls are depicted in Figure S1 . (B) Western blotting of the viral particles before and after sucrose cushion purification using antibodies against markers of extracellular vesicles (CD45, CD43, "
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13124994/figures/Fig2.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13124994/figures/Fig2.gif",
     "caption": "Analysis of the properties of ivRBPs (A) Analysis of the GO terms enriched in the ivRNP over the cellular proteome. (B and C) Volcano plots of the comparison between ivRIC inputs (I, purified viral particles) from HIV-1 infected and mock-infected cells (B) and ivRIC inputs versus eluates (E, ivRNP) (C); n = 4. Red and dark blue dots are proteins enriched with 1% FDR, while orange and cyan dots are"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13124994/figures/Fig3.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13124994/figures/Fig3.gif",
     "caption": "The Rev protein-protein interactome and its similarities with the ivRNP (A) Schematic representation of the HIV-1 R-E-Rev-Flag-Myc replicon. (B\u2013D) Western blotting showing viral protein expression in CD4 + T lymphocytic cells (SupT1) infected with HIV-1 R-E-Rev-Flag-Myc (B), HIV-1 R-E-Rev-Halo (C), or HIV-1 R-E-\u0394Rev (D) relative to the parental HIV-1 R-E-mCherry-Nef . hpi , hours post-infection; r"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13124994/figures/Fig4.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13124994/figures/Fig4.gif",
     "caption": "Effect of ivRBPs in viral gene expression and virion production and infectivity (A) Representation of the experimental design. (B) Flow cytometry analysis of WT and KO SupT1 cells infected with HIV-1 mCherry-Nef for 48 h. y axis show the percentage of KO cells expressing mCherry as compared to WT cells (dashed line). (C) Western blotting analysis of WT, PURA, and PURB KO SupT1 cells infected with "
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13124994/figures/Fig5.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13124994/figures/Fig5.gif",
     "caption": "Analysis of the interactions that PURA and PURB establish in CD4 + lymphocytic cells (A) Volcano plot showing the proteins enriched in PURA-EGFP IP over the EGFP control IP in Jurkat Flp-In T-REx cells expressing these proteins. Dots represent proteins enriched with 1% FDR (red and dark blue) or with 10% FDR (orange and cyan). Gray dots are non-enriched proteins; n = 3. (B) Venn diagram comparing "
    }
   ]
@@ -555,32 +555,32 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13125397/figures/Fig1.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13125397/figures/Fig1.jpg",
     "caption": "Right dCA1 pyramidal neurons project to contralateral dorsal CA1 and contralateral dSUB (A) Lypd1-Cre mice injected in right dCA1 with AAV2/DJ hSyn.FLEX.mGFP.2A.Synaptophysin-mRuby. (B and C) Coronal sections labeled for GFP and mRuby. (D and E) Number and percentage of GFP + cells in deep and superficial layers of dCA1. Each point corresponds to one observation (4 mice, 3 sections per mouse). (F\u2013"
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13125397/figures/Fig2.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13125397/figures/Fig2.gif",
     "caption": "Projection from the right dCA1 to contralateral dSUB is necessary for spatial memory (A) Lypd1-Cre or WT mice injected in the right dCA1 with AAV2/1 hSyn1-DIO-eOPN3-mScarlet-WPRE and implanted with an optic fiber above the left dSUB to silence dCA1 to dSUB interhemispheric terminals. (B) Schematic of the object location test of spatial memory. (C) Time of interaction with the object located in the"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13125397/figures/Fig3.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13125397/figures/Fig3.gif",
     "caption": "Projection from the right dCA1 to contralateral dSUB is necessary for spatial working memory (A) Lypd1-Cre or WT mice injected in the right dCA1 with AAV2/1 hSyn1-DIO-eOPN3-mScarlet-WPRE and implanted with an optic fiber above the left dSUB to silence dCA1 to dSUB interhemispheric terminals. (B) Schematic of the spontaneous alternation T-maze test for spatial working memory. (C) Percentage of alte"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13125397/figures/Fig4.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13125397/figures/Fig4.gif",
     "caption": "Spatial cognition of male and female Df16(A) +/\u2212 mice is impaired (A) Df16(A) +/\u2212 or WT female and male mice were tested. (B) Schematic of the object location test of spatial memory. (C) Discrimination index for the novel vs. familiar location. In (C\u2013E), each point represents one mouse (20 WT males, 22 Df16(A) +/\u2212 males, 20 WT females, and 16 Df16(A) +/\u2212 females). (D) Total distance traveled durin"
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13125397/figures/Fig5.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13125397/figures/Fig5.gif",
     "caption": "Projection from the right dCA1 to contralateral dCA1 is dysregulated in Df16(A) +/\u2212 mice (A) Injection of CTB-488 in the left dCA1 of Df16(A) +/\u2212 mice and littermates. (B) Coronal section showing injection site and diffusion of CTB-488. (C and D) Representative images of CTB + cells in the distal, intermediate, and proximal contralateral (right) dCA1 from Df16(A) +/\u2212 mice and littermates. (E) Numb"
    },
    {
     "figure_number": 6,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13125397/figures/Fig6.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13125397/figures/Fig6.gif",
     "caption": "Projection from the right dCA1 to contralateral dSUB is dysregulated in Df16(A) +/\u2212 mice (A) WT and Df16(A) +/\u2212 mice injected with CTB-488 in the left dSUB. (B) Coronal section showing the injection site and diffusion of CTB-488. (C and D) Representative images of CTB + cells in the distal, intermediate, and proximal contralateral (right) dCA1 of Df16(A) +/\u2212 mice and littermates. (E) Number of CTB"
    }
   ]
@@ -593,37 +593,37 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13125401/figures/Fig1.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13125401/figures/Fig1.jpg",
     "caption": "Regulatory landscape of the DAB1 gene and enhancer marks at the DRL region (A) Hi-C data from human cerebellar cells, obtained from the ENCODE project, visualized with the 3D Genome Browser, at 10 kb resolution, showing the TAD organization of DAB1 (hg38, chr1:56800000\u201358700000); DAB1 mRNA variants and (ATTTT) n location are depicted. (B) Expression levels of DAB1 mRNA variants across different br"
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13125401/figures/Fig2.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13125401/figures/Fig2.jpg",
     "caption": "The DRL shows neurodevelopmental enhancer activity (A) Schematic representation of the DRL/FragT sequence in DAB1 -antisense strand. The zoom-in box (pale brown box) shows the (AAAAT) n (blue box) in the middle A-rich region of the AluJb element with left (LM) and right (RM) monomers, close to the CpG island (yellow box) and the TFBS (green box), flanked by CTCF-binding sites. The ENCODE-annotated"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13125401/figures/Fig3.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13125401/figures/Fig3.gif",
     "caption": "DRL interaction with neural regulatory elements and silencer activity outside of the DAB1 expression domain (A) Schematics of interactions between the DRL sequence and the zebrafish midbrain-specific Z48 enhancer at 48 hpf. Top: FragT14-AS, Frag1-AS, and Frag3-AS sequences cloned upstream of a promoter-less EGFP and Z48 with schematics of their driven EGFP expression to zebrafish somites and upon "
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13125401/figures/Fig4.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13125401/figures/Fig4.jpg",
     "caption": "The DRL is an enhancer of DAB1 in human neural stem cells (A) Schematics of DRL sequences cloned upstream of a minimal promoter in the control of luciferase expression for transcriptional enhancer assay in hNSCs. (B) Scheme of reporter vector (top) and graphical representation of assay in hNSCs (bottom); luciferase activity is measured by the luciferase/NanoLuc (luc2/Nluc) expression ratios relati"
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13125401/figures/Fig5.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13125401/figures/Fig5.jpg",
     "caption": "iPSNs expressing neuronal-specific markers and DAB1 (A) Schematic representation showing the process used for differentiation in cortical glutamatergic neurons (iPSN) from reprogrammed fibroblasts. Reprogramming of fibroblasts in iPSCs was achieved by overexpression of OCT3/4, SOX2, KLF4, L-MYC, and LIN28. The iPSNs were obtained from iPSCs upon NGN2 overexpression (for 8 days) for neuronal differ"
    },
    {
     "figure_number": 6,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13125401/figures/Fig6.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13125401/figures/Fig6.jpg",
     "caption": "Upregulation of DAB1 and dysregulation of the Reelin pathway in SCA37 (A) Volcano plot showing all deregulated gene transcripts found in SCA37-derived iPSNs; red: upregulated gene transcripts ( p < 0.05), blue: down-regulated gene transcripts ( p < 0.05), and gray: no statistical significance. (B\u2013E) DAVID functional annotation of the 457 DE genes in SCA37, with p < 0.05 and \u22121.5 < log 2 (FC) > 1.5"
    },
    {
     "figure_number": 7,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13125401/figures/Fig7.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13125401/figures/Fig7.gif",
     "caption": "DAB1 overexpression induces axonal defects during development (A) Schematic representation of cerebellar and cerebellar-like structures in zebrafish. Granule cell (GC) axons, named parallel fibers (PFs), innervate Purkinje cells (PCs) in the molecular cell layer. Axons from GCs in eminentia granularis (EG) innervate a type of Purkinje-like neuron called crest cells (CrCs). (B) Representative confo"
    }
   ]
@@ -636,27 +636,27 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13237580/figures/Fig1.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13237580/figures/Fig1.jpg",
     "caption": "Muscle strength and mass after 12 weeks of resistance training Quadriceps femoris volume (A), cross-sectional area (B), submaximal leg extension (C), and flexion strength (D) before and after 12 weeks of blood-flow restriction (BFRT) and conventional resistance training (CREST). Data are shown as means \u00b1 SD; W, week."
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13237580/figures/Fig2.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13237580/figures/Fig2.jpg",
     "caption": "Skeletal muscle mitochondrial respiration and content Complex I (CI)-OXPHOS capacity ([CI]P, A), CI+II-OXPHOS capacity ([CI+II]P, B), citrate synthase (CS) activity (C), mitochondrial DNA (mtDNA; D), and kinetics for ADP sensitivity (E) and maximal velocity (F) in skeletal muscle before and after 12 weeks of blood-flow restriction (BFRT) and conventional resistance training (CREST). Data are shown"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13237580/figures/Fig3.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13237580/figures/Fig3.jpg",
     "caption": "Molecular responses of skeletal muscle to BFRT and CREST Hypoxia-inducible factor 1 \u03b1 (HIF-1\u03b1, A), peroxisome proliferator-activated receptor gamma coactivator 1 \u03b1 (PGC-1\u03b1, B), mitochondrial transcription factor A (TFAM, C), AMP-activated protein kinase (AMPK) \u03b1 (D), hexokinase (HXK) 2 (E), and myostatin (F) protein levels before and after 12 weeks of blood-flow restriction (BFRT) and conventional"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13237580/figures/Fig4.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13237580/figures/Fig4.jpg",
     "caption": "Transcriptional response to BFRT and CREST (A and B) Volcano plots showing differentially expressed genes (DEGs) for each contrast, including blood-flow restriction training (BFRT) weeks 0 vs. 12 (A) and conventional resistance training (CREST) weeks 0 vs. 12 (B). Red indicates significantly upregulated, and blue indicates significantly downregulated according to adjusted p < 0.05, |FC| > 1.5. Gen"
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13237580/figures/Fig5.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13237580/figures/Fig5.jpg",
     "caption": "Changes in adipose tissue after 12 weeks of resistance training Whole-body adiposity (A), visceral adiposity (B), and subcutaneous adiposity (C) measured by magnetic resonance imaging before and after 12 weeks of blood-flow restriction (BFRT) and conventional resistance training (CREST). Data are shown as mean \u00b1 SD; W, week."
    }
   ]
@@ -669,32 +669,32 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13291444/figures/Fig1.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13291444/figures/Fig1.jpg",
     "caption": "TENT5 proteins differ in their interaction with FNDC3 proteins, cellular localization, and effects on ER-targeted proteins (A) TENT5 proteins alignment using Blastp (blast.ncbi.nlm.nih.gov/Blast.cgi), in gray conserved amino acids, while red highlights variability. (B) AlphaFold-predicted model of TENT5C (AF- Q5VWP2 -F1-v4), visualized in PyMOL. The structure is colored according to the domains in"
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13291444/figures/Fig2.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13291444/figures/Fig2.jpg",
     "caption": "Cytosolic TENT5B has minor effects on the secretory proteome (A) Proteome changes in LP1 cells overexpressing TENT5D (left) or TENT5B (right) compared to mock-infected cells by label-free LC-MS/MS analysis. The 6910 proteins quantified were grouped by the indicated gene ontology (GO) categories (Nucleus GO:0005634; Cytosol GO:0005829; Mitochondria GO:0005739; Ribosome GO:0005840; Peroxisome GO:000"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13291444/figures/Fig3.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13291444/figures/Fig3.jpg",
     "caption": "FNDC3 interaction determines spatially regulated ER-associated mRNA stabilization (A) TAIL-seq analysis of poly(A) tail length in the indicated mRNAs (HSPA5 = ENST00000324460; LMAN1 = ENST00000251047; IGLC1 = ENSG00000211675.t1; P4HB = ENST00000948310; PRDX4 = ENST00000379341) from LP1 cells expressing TENT5D, TENT5B, or control cells (median-Min to Max; Kruskal Wallis test with Dunn\u2019s multiple co"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13291444/figures/Fig4.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13291444/figures/Fig4.gif",
     "caption": "The C-terminal part of TENT5 proteins determines their association with the ER-membrane (A) Co-immunoprecipitation of FNDC3 proteins with FLAG-TENT5D/TENT5B chimeras in LP1 cells. Left: schematic representations of TENT5D/TENT5B chimeras, right: Representative immunoblots. (B) Immunoblot analysis of the cellular distribution of TENT5D/TENT5B chimeras in LP1 cells. Top: representative blot; bottom:"
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13291444/figures/Fig5.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13291444/figures/Fig5.gif",
     "caption": "The C-terminal region mediates the interaction with FNDC3 proteins (A) TENT5 C-terminal tails alignment using Blastp (blast.ncbi.nlm.nih.gov/Blast.cgi), in gray conserved amino acids, while red highlights variability. Black boxes indicate generated mutants. (B) Co-immunoprecipitation of FNDC3 proteins with FLAG-TENT5D or its C-terminal tail variants in LP1 cells. (C) Immunoblot analysis of the cel"
    },
    {
     "figure_number": 6,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13291444/figures/Fig6.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13291444/figures/Fig6.jpg",
     "caption": "Multiple myeloma mutations in the helical domain affect TENT5C protein stability (A) TENT5s alignment using Blastp (blast.ncbi.nlm.nih.gov/Blast.cgi), in gray conserved amino acids, while red highlights variability. Black boxes indicate mutation positions. (B) Co-immunoprecipitation of FNDC3 proteins with FLAG-TENT5C or its MM-derived mutants in LP1 cells. (C) Immunoblot analysis of the cellular d"
    }
   ]
@@ -707,22 +707,22 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13396705/figures/Fig1.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13396705/figures/Fig1.gif",
     "caption": "CIII impairment selectively dampens the responsiveness of primary cDC1s to immunogenic activation and impairs their capacity to prime cancer-controlling T cell responses (A) Representative OCR of XCR1 + cDC1s (left) or SIRP\u03b1 + cDC2s (right) purified from FLDC cultures (cDCs differentiated from bone marrow by treatment with Flt3L) and stimulated or not with CpG-ODN for 1, 4, or 20 h ( n = 3\u20135). O, "
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13396705/figures/Fig2.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13396705/figures/Fig2.jpg",
     "caption": "CIII dysfunction globally downregulates the expression of immune function-related genes in cDC1s (A) Experimental overview of (B)\u2013(H): Uqcrq f/f and Itgax \u0394 Uqcrq mice were intravenously injected with PIC + R848 (1.5 h stimulated) or PBS as control (steady state), and after 1.5 h, splenic CD11c + MHCII + CD8a + cDC1s or CD11b + cDC2s were subjected to RNA-seq ( n = 3 from 3 independent experiments"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13396705/figures/Fig3.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13396705/figures/Fig3.jpg",
     "caption": "Uqcrq deficiency in cDC1s causes DNA hypermethylation at PU.1 binding sites (A) Experimental overview of (B)\u2013(G): splenic CD11c + MHCII + CD8a + cDC1s and CD11b + cDC2 were purified from Uqcrq f/f and Itgax \u0394 Uqcrq mice, and the epigenetic state of the nuclear DNA was analyzed by ATAC-seq (B and C) and DNA methylation array (D\u2013G) ( n = 3). (B and C) PCA (B) of all differentially accessible chromat"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13396705/figures/Fig4.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13396705/figures/Fig4.gif",
     "caption": "CIII impairment dysregulates metabolite and redox balance in cDC1s, and re-establishment of electron flow through CI and CII rescues their immunogenic functionality (A\u2013C) Splenic CD11c + MHCII + CD8a + cDC1s and CD11b + cDC2s were purified from Uqcrq f/f and Itgax \u0394 Uqcrq mice that were intravenously treated with PIC + R848 or control PBS 4 h prior, and the following analyses were performed: quant"
    }
   ]
@@ -735,42 +735,42 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13471043/figures/Fig1.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13471043/figures/Fig1.gif",
     "caption": "Gut dysbiosis perturbs BA composition (A) Experimental settings at two different centers; D, day. (B) Supervised hierarchical clustering of BAs significantly different between ABX and water-fed tumor bearers assessed by metabolomics. (C and D) Kinetics of the percentages of distinct circulating BAs among the total BA. (E) Id. in the plasma of naive mice at GRCC and orally gavaged with E. clostridi"
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13471043/figures/Fig2.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13471043/figures/Fig2.jpg",
     "caption": "GDCA rescues gut dysbiosis-associated resistance to immunotherapy (A) Experimental setting at GRCC. (B\u2013F) Effect of E. clostridioformis with or without GDCA on the response to PD-1 blockade (B and C) or PD-1+CTLA-4 blockade (D and E) against MCA205 fibrosarcomas (B and C) or RET (D and E). Tumor size at day 13\u201314 (B and D, left) or tumor growth kinetics (B right and E left) in three (C) or two (D)"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13471043/figures/Fig3.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13471043/figures/Fig3.gif",
     "caption": "Modulations of tauro-conjugated primary BAs and efficacy of PD-1 blockade (A) Surgical bile duct ligation (BDL) in MCA205 tumor-bearing mice treated with anti-PD-1 Abs at Centre de Recherche des Cordeliers. (B) Livers were stained with hematoxylin and eosin (top) as well as Sirius Red (bottom). One representative photograph of each liver in each group of 8\u201310 mice is shown. (C and D) Percentages o"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13471043/figures/Fig4.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13471043/figures/Fig4.jpg",
     "caption": "GDCA acts at sites distal from the liver to reprogram the TME (A\u2013D) Intratumoral abundance of orally gavaged BAs determined by mass-spectrometry-based metabolomics in E. clostridioformis dysbiotic mice treated with \u03b1-PD-1 on day 12 post MCA205 injection, comparing BA vs. water + corn oil controls using Z scores of AreaQCcorr. Shown is the concatenation of 2 experiments including 3\u20135 mice/group. (E"
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13471043/figures/Fig5.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13471043/figures/Fig5.gif",
     "caption": "Gut dysbiosis alters BA composition in cancer patients (A\u2013D) Percentages of each BA among the total BAs in the plasma, assessed using metabolomics in 133 cancer patients ( n = 138 samples) from the ONCOBIOTICS cohort who took ABX ( n = 16 + [0\u201330 days] (A\u2013D); n = 9 +[>30 days] and n = 13 + [>60 days] (B\u2013D)) or did not take ABX ( n = 100) (A\u2013D) within different time windows post-ABX cessation as we"
    },
    {
     "figure_number": 6,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13471043/figures/Fig6.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13471043/figures/Fig6.gif",
     "caption": "Cancer patients can be stratified based upon plasma BA composition (A) Non-supervised hierarchical clustering of the percentages of plasma BAs in 111 ONCOBIOTICS patients before and until 42 days post ICB initiation. (B\u2013E) Dot plots of the percentages of BAs or conjugated BAs and calprotectin (S100A9) measured in the plasma according to the three clusters illustrated in (A). Also refer to Table S4"
    },
    {
     "figure_number": 7,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13471043/figures/Fig7.jpg",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13471043/figures/Fig7.jpg",
     "caption": "Subclinical cholestasis reduces cancer patient survival (A) Patient cohorts amenable to immunotherapy (ICB), +/\u2212 chemotherapy (CT), radiotherapy (RT), or tyrosine kinase inhibitors (TKI) and randomized in 2 arms (AtezoTRIBE) for whom \u03b3GT and alkaline phosphatase (ALP) levels were assessed in the plasma. (B\u2013G) Univariate analyses for overall survival (OS) (B, F, and G) and progression-free survival"
    },
    {
     "figure_number": 8,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13471043/figures/Fig8.gif",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13471043/figures/Fig8.gif",
     "caption": "Subclinical cholestasis is a surrogate marker of gut dysbiosis (A) Absolute number and percentages of SIG1 bacteria among the 37 SIG1 36 in patient feces according to plasma \u03b3GT < or \u2265 2 ULN ( n = 73 and 8 samples, respectively). (B) Plasma \u03b3GT levels (in U/L) in patients treated with ABX according to the window of blood sampling before ABX ( n = 85 in no ABX and 18 samples in ABX cessation less t"
    }
   ]
@@ -783,22 +783,22 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506674/figures/Fig1.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506674/figures/Fig1.webp",
     "caption": "Framework for computing PCI and FDT violations from evoked and spontaneous brain dynamics (A) PCI is computed from TMS-evoked or intracortical responses by binarizing spatiotemporal patterns of cortical source activations and quantifying their algorithmic complexity using Lempel-Ziv compression. PCI has proven to be a reliable and robust indicator, consistently distinguishing between conscious and"
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506674/figures/Fig2.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506674/figures/Fig2.webp",
     "caption": "FDT violations track graded levels of anesthesia in mice and correlate with the PCI (A) PCI, calculated from multi-unit activity-based evoked responses, significantly discriminated between all anesthesia conditions. PCI consistently tracked the anesthesia levels in mice (Spearman\u2019s \u03c1 = 0.71, p < 0.001). (B) FDT violations calculated from the whole-brain model fitted to empirical spontaneous activi"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506674/figures/Fig3.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506674/figures/Fig3.webp",
     "caption": "FDT violations in human EEG track level of consciousness during wakefulness and anesthesia and correlate with PCI (A) PCI discriminated between participants who retrospectively reported some form of conscious experience (wakefulness and ketamine; B+) and those who did not (xenon and propofol; B-). PCI showed perfect group separation in this sample (AROC = 1.0). A strong monotonic relationship with"
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506674/figures/Fig4.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506674/figures/Fig4.webp",
     "caption": "FDT violations distinguish behaviorally responsive from behaviorally unresponsive patients with disorders of consciousness and correlate with PCI and clinical scores (A) PCI discriminated between behaviorally responsive (MCS\u2212/MCS+) and behaviorally unresponsive patients (UWS) with high accuracy (Cliff\u2019s \u03b4 = 1.0, p < 0.001) and showed perfect group separation in this sample (AROC = 1.0). (B) FDT vi"
    }
   ]
@@ -811,37 +811,37 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506676/figures/Fig1.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506676/figures/Fig1.webp",
     "caption": "Localization of Wapl versus Spo76/Pds5 (A) Vegetative cycle: Wapl is present in all mycelial nuclei. For details, see Figure S1 A. (B\u2013G) Sexual/meiotic cycle. DAPI shows DNA/chromatin staining. (B) Wapl exhibits a diffuse signal in the two prekaryogamy nuclei (left), while Spo76/Pds5-GFP is visible along the forming axes (right). (C) At early and mid-leptotene, in contrast to Spo76-Tred (middle), "
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506676/figures/Fig2.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506676/figures/Fig2.webp",
     "caption": "Role of Wapl in chromosome axis structure and chromatin compaction (A and B) Wild-type (WT, A) and wapl\u0394 (B) phenotypes at leptotene (left) and early pachytene (right). At pachytene, WT homolog-axes can be seen as single lines (due to lack of microscope resolution when axes are separated by 100 nm), and as widely separated entities in wapl\u0394 . Chromatin is diffuse in WT (arrows in A) and clearly vi"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506676/figures/Fig3.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506676/figures/Fig3.webp",
     "caption": "Defective homolog juxtaposition and inter-axis bridges in the absence of Wapl (A\u2013E) Pairing in WT and wapl\u0394 . (A) Perfect synchronization of the WT homologs during their progression from leptotene to pachytene. (B) wapl\u0394 : co-alignment occurs between homologs of similar lengths (right), but homolog axes are not regularly spaced. (C) Homologs co-align in both sme4/zip1\u0394 wapl\u0394 (left) and sme4/zip1\u0394 "
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506676/figures/Fig4.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506676/figures/Fig4.webp",
     "caption": "Synaptonemal complex formation is not Wapl dependent (A) SC initiation in wapl\u0394 . Left: Sme4-GFP colocalization with chromatin (DAPI in red; 3D-SIM Zeiss Elyra 7) shows that all homolog ends (arrows) have initiated SC (corresponding drawing, middle). Right (widefield microscopy): SC initiates at Spo76-Tred inter-axis bridges (arrows). (B) Comparison between WT (top) and wapl\u0394 (bottom) SCs, using S"
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506676/figures/Fig5.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506676/figures/Fig5.webp",
     "caption": "Defective bouquet formation and entanglement resolution in the absence of Wapl (A\u2013D) Bouquet in WT and wapl\u0394. Axes are marked by Spo76-GFP or -Tred (A) WT: loose bouquet (left, and corresponding drawing) and tight bouquet (right). Note that all homologs are co-aligned. (B) Two wapl\u0394 bouquets: homologs are co-aligned; only one end of each chromosome is present in the cluster, and all homolog pairs "
    },
    {
     "figure_number": 6,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506676/figures/Fig6.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506676/figures/Fig6.webp",
     "caption": "Recombination in the absence of Wapl (A) Quantification of the number of Rad51 (blue), Mer3 (cyan), Msh4 (red), Zip4 (green), and Hei10 (pink) foci in WT (left) and wapl\u0394 (right). Mean and error bars are indicated for each set (number of foci, significance and number of nuclei in text). (B\u2013E) Comparison between the localization of the recombination-related foci in WT and wapl\u0394 . Foci (GFP-labelled"
    },
    {
     "figure_number": 7,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506676/figures/Fig7.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506676/figures/Fig7.webp",
     "caption": "Role of Wapl during the pachytene-anaphase I transition (A and B) At the early diffuse stage, WT (A) and mutant (B) nuclei contain only residual SCs (marked by Sme4-GFP, arrows). Note the absence of axis and diffuse chromatin (DAPI) in WT (left) and presence of axes and compact chromatin in the mutant (right). (C) During the diffuse stage, Rec8 is disassembled in wild type (left) but remains prese"
    }
   ]
@@ -854,37 +854,37 @@
   "figures": [
    {
     "figure_number": 1,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506677/figures/Fig1.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506677/figures/Fig1.webp",
     "caption": "Absence of STING does not rescue weight loss and premature death in Terc -deficient mice (A) G3 male and female Terc \u2212/\u2212 mice showed reduced telomere length in peripheral blood leukocytes, irrespective of STING status, compared with wild-type controls. Plots show the mean telomere spot signal intensity in males (left) and females (right). Data are presented as the mean \u00b1 SEM; number of animals per"
    },
    {
     "figure_number": 2,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506677/figures/Fig2.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506677/figures/Fig2.webp",
     "caption": "Skin and spleen pathologies are not rescued by the absence of STING in Terc -deficient mice (A) Representative H&E skin sections from males (left) and females (right) for each genotype. Scale bars, 200 \u03bcm. (B) Percentage of male (left) and female (right) mice showing skin alterations at each histopathological grade (healthy, mild, medium, and severe; see STAR Methods for grading). n = 5 mice per g"
    },
    {
     "figure_number": 3,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506677/figures/Fig3.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506677/figures/Fig3.webp",
     "caption": "Intestinal injury in Terc -deficient mice is not rescued upon STING depletion (A) (Top) Representative H&E-stained small intestinal sections from males (left) and females (right) for each genotype. Scale bars, 50 \u03bcm. (Bottom) Percentage of male (left) and female (right) animals showing small intestine alterations at each histopathological grade (healthy, mild, medium, and severe; see STAR Methods "
    },
    {
     "figure_number": 4,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506677/figures/Fig4.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506677/figures/Fig4.webp",
     "caption": "Activation of p53 pathway in Terc -deficient mice is independent of STING whose signaling pathway is not activated in these mice (A) RNA-seq was performed in the small intestine. Genes showing significant differential expression were analyzed using EnrichR. Significantly upregulated WikiPathways are shown. Note that pathways significantly upregulated when deleting Terc in a Sting wild-type context"
    },
    {
     "figure_number": 5,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506677/figures/Fig5.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506677/figures/Fig5.webp",
     "caption": "Absence of STING does not rescue weight loss or premature death in Tert -deficient mice (A) Body weight curves of male (top) and female (bottom) mice of the indicated genotypes. Note that reduced body weight shown in G4 Tert \u2212/\u2212/ Sting +/+ mice was not alleviated in G4 Tert \u2212/\u2212 / Sting gt/gt mice. (B) Kaplan-Meier survival curves of male (top) and female (bottom) mice of the indicated genotypes. N"
    },
    {
     "figure_number": 6,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506677/figures/Fig6.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506677/figures/Fig6.webp",
     "caption": "Intestinal injury is not rescued in Tert -deficient mice upon STING depletion (A) (Top) Representative H&E-stained images of small intestinal sections from males of the indicated genotypes. Scale bars, 100 \u03bcm. (Bottom) Percentage of male mice showing small intestine alterations at each histopathological grade (healthy, mild, medium, and severe; see STAR Methods for grading). n = 5 mice per group. "
    },
    {
     "figure_number": 7,
-    "image": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/PRIVATE_REFERENCE_ONLY/corpus/PMC13506677/figures/Fig7.webp",
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13506677/figures/Fig7.webp",
     "caption": "Activation of p53 pathway in Tert -deficient mice is independent of STING whose signaling pathway is not activated in these mice (A) The expression (left) and the quantification (right) of p53 in the small intestine of the indicated genotypes. (B) Representative images (top) and quantification (bottom) of p21 staining in the small intestine of the indicated genotypes. n = 5 mice per group. Scale b"
    }
   ]

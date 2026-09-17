@@ -1,11 +1,11 @@
     fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.42))
 
 tests/test_reproducibility_export_qc.py::test_plotspec_roundtrip_reproduces_key_metadata[barplot_with_error_bar]
-  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_v111/make_my_figure_core/plots/barplot.py:50: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  <workspace>/make_my_plot_v111/make_my_figure_core/plots/barplot.py:50: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
     fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.8))
 
 tests/test_style_font_stack.py::test_font_stack_is_kept_outside_the_style_context
-  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_v111/make_my_figure_core/plots/scatter.py:119: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  <workspace>/make_my_plot_v111/make_my_figure_core/plots/scatter.py:119: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
     fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.78))
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html

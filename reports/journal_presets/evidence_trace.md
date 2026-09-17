@@ -1,6 +1,6 @@
 # Evidence trace for the experimental publication presets
 
-Generated 2026-09-16 by journal_preset_research/tools/derive_presets.py from /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/journal_preset_research/analysis and /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/journal_preset_research/analysis/group_comparison_summary.json. Evidence classes: OFFICIAL (publisher statement), INFERRED (typeset-PDF measurement with observed scale), OBSERVED (corpus convention, share of coded panels), ESTIMATED (stated assumption), SHARED (no meaningful family difference; applied to every preset).
+Generated 2026-09-16 by journal_preset_research/tools/derive_presets.py from journal_preset_research/analysis and journal_preset_research/analysis/group_comparison_summary.json. Evidence classes: OFFICIAL (publisher statement), INFERRED (typeset-PDF measurement with observed scale), OBSERVED (corpus convention, share of coded panels), ESTIMATED (stated assumption), SHARED (no meaningful family difference; applied to every preset).
 
 Papers per evidence family: {'Nature': 63, 'Science': 50, 'Cell': 51}
 
