@@ -149,6 +149,27 @@ d9ef415047b28ec6f57c042d24559776bd0cafec6dd5f1a7be8aa96a5b782a38  make_my_figure
 46c99eb94f21657d20bb5facdb68e5b05c13158e8090b766d25b07ab1bc7c6fe  make_my_figure_core-1.1.0.tar.gz
 ```
 
+**Addendum, 2026-09-17 - assets rebuilt with the licence bundled.** The installers, wheel and
+sdist on the v1.1.0 GitHub Release were rebuilt from `main` at f7f1f46 (workflow run
+35180683713 with `publish_release_tag=v1.1.0`) so that `LICENSE`, `README.md` and `CHANGELOG.md`
+are included in every bundle (`_internal/LICENSE` in the Windows, macOS and Linux builds; wheel
+metadata `License: MIT License`, `License-File: LICENSE`). Between the tag (3da8563) and f7f1f46
+the only commits are release-note edits, the packaging/dependency-bound change (#10) and the
+republish workflow option (#11); no application code changed. `SHA256SUMS.txt` on the release
+now reads:
+
+```
+120dd92fc699356155da138719f364d671ddf3ffe274c325e00d13c959a5b8e5  MakeMyFigure-1.1.0-Setup.exe
+9a87cc97be3099113ab8227e348f076b8ee0b2b8146bf5c98cc25cceb80af3e3  MakeMyFigure-1.1.0-linux-x86_64.tar.gz
+5ca5a05a68f881c97f342c235f5c1c987917a598fc734fefed5954ac29c58788  MakeMyFigure-1.1.0-windows.zip
+196e3bdabcd867887393d80003748c599381da70ebc74d3b4a42c107cb591e74  MakeMyFigure-1.1.0.AppImage
+251a96fee7ed20cfc2455ea4bb9e5f7cac0e8d5f03d1ab55a9e1e35e68a00412  MakeMyFigure-1.1.0.dmg
+a9c5b785c1569883055d78bcc95ca84ebfafb5dfd1566f66946bd588abcd4c86  make_my_figure_core-1.1.0-py3-none-any.whl
+596279b21fdd2ce4451e51762dc33d7eaa3ee21bc0b3aa32a3977886595ea707  make_my_figure_core-1.1.0.tar.gz
+d9ac22bc79db1fa02b2757c6693287b34253d003a22fae76947338c3381fb3c5  MakeMyFigure_v1.1.0_Quick_Start.pdf
+20e244a5aa89c4331e9784f9314163dc6f4d58e394573864ca4046ecb363543b  MakeMyFigure_v1.1.0_User_Manual.pdf
+```
+
 ## 8. Privacy and repository-content audit (integration branch)
 
 Commands: `git ls-files`, `git ls-files | grep -i -E "manuscript|JUMP|Concerns|PRIVATE_REFERENCE|EndNote|\.enl|claude|prompt|\.ttf|\.otf|publisher"`,
