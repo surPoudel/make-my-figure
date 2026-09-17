@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Packaging: the MIT `LICENSE`, `README.md` and `CHANGELOG.md` are bundled at the top level of the
+  desktop builds (Windows zip and installer, macOS app, Linux tar.gz/AppImage); the installer shows
+  the licence; `pyproject.toml` declares the licence and classifiers.
+- Dependencies: bounded ranges (next major excluded) in `pyproject.toml` and `requirements.txt`, and
+  a new `requirements-lock.txt` with the exact versions the release was tested with.
+
+
 All notable changes to Make My Figure are recorded here. This project uses a
 single, evolving `Publication` style — it does not target or claim compliance
 with any journal.
