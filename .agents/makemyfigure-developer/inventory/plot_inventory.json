@@ -1,0 +1,5700 @@
+{
+ "checkout": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_agent",
+ "branch": "feature/makemyfigure-developer-agent",
+ "commit": "bb45c12",
+ "app_version": "1.1.0",
+ "plot_count": 38,
+ "features": {
+  "figure_package": false,
+  "experimental_presets": false,
+  "preset_preview": false,
+  "publication_score": true,
+  "text_layout_qc": false,
+  "recommendations": true,
+  "panels": true,
+  "presets": true,
+  "ui_hints": true,
+  "style_capabilities": true,
+  "pyside6": false,
+  "pyinstaller": true,
+  "streamlit": true
+ },
+ "tests_pinning_plot_count": [
+  "tests/test_desktop_controller.py:29: assert len(controller.plot_types()) == 38",
+  "tests/test_renderers_m2.py:23: assert len(available_plot_types()) == 38"
+ ],
+ "plots": [
+  {
+   "plot_type": "barplot_with_error_bar",
+   "display_name": "Bar plot with error bars",
+   "renderer_module": "make_my_figure_core.plots.barplot",
+   "renderer_path": "make_my_figure_core/plots/barplot.py",
+   "default_mapping": {
+    "x": "condition",
+    "y": "measurement",
+    "error": "sem",
+    "color": "condition"
+   },
+   "column_roles": [
+    "x",
+    "y",
+    "color"
+   ],
+   "options": [
+    {
+     "key": "error",
+     "label": "Error bar",
+     "kind": "choice",
+     "default": "sem",
+     "choices": [
+      "sem",
+      "sd",
+      "ci95",
+      "none"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "x_tick_rotation",
+     "label": "X-axis label angle",
+     "kind": "choice",
+     "default": "auto",
+     "choices": [
+      "auto",
+      "horizontal",
+      "45",
+      "vertical"
+     ],
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": false,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": false,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": true,
+    "draws_brackets": true,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "bar_error",
+    "files": {
+     "csv": "examples/by_plot_type/bar_error/data.csv",
+     "tsv": "examples/by_plot_type/bar_error/data.tsv",
+     "xlsx": "examples/by_plot_type/bar_error/data.xlsx",
+     "plotspec": "examples/by_plot_type/bar_error/plotspec.json",
+     "readme": "examples/by_plot_type/bar_error/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "condition",
+     "replicate",
+     "measurement"
+    ],
+    "optional_columns": [
+     "unit",
+     "experiment_batch"
+    ],
+    "n_rows": 24
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: mock sample | legend_roundtrip: N/A - this plot type draws no legend"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_above_bar_annotation.py",
+     "tests/test_annotation_formatting.py",
+     "tests/test_desktop_controller.py",
+     "tests/test_desktop_gui.py",
+     "tests/test_figure_presets.py",
+     "tests/test_imported_panels.py",
+     "tests/test_layout_and_annotations.py",
+     "tests/test_layout_qc.py",
+     "tests/test_layout_rotation_words.py",
+     "tests/test_multipanel.py",
+     "tests/test_publication_qc.py",
+     "tests/test_publication_style.py",
+     "tests/test_renderers.py",
+     "tests/test_reproducibility_export_qc.py",
+     "tests/test_stats_annotations.py",
+     "tests/test_stats_integration.py",
+     "tests/test_streamlit_presets.py",
+     "tests/test_style_capabilities_audit.py",
+     "tests/test_style_capabilities_network.py",
+     "tests/test_v05_features.py",
+     "tests/test_xlabel_overlap_qc.py"
+    ],
+    "docs": [
+     "docs/EXAMPLE_DATA.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/V0_6_IMPLEMENTATION_PLAN.md",
+     "docs/WINDOWS_PERFORMANCE.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py",
+     "make_my_figure_core/recommendations/transform_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/desktop_app/main.py",
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "grouped_barplot_with_error_bar",
+   "display_name": "Grouped bar plot with error bars",
+   "renderer_module": "make_my_figure_core.plots.grouped_barplot",
+   "renderer_path": "make_my_figure_core/plots/grouped_barplot.py",
+   "default_mapping": {
+    "x": "genotype",
+    "group": "treatment",
+    "y": "expression",
+    "error": "sem"
+   },
+   "column_roles": [
+    "x",
+    "group",
+    "y"
+   ],
+   "options": [
+    {
+     "key": "error",
+     "label": "Error bar",
+     "kind": "choice",
+     "default": "sem",
+     "choices": [
+      "sem",
+      "sd",
+      "ci95",
+      "none"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "x_tick_rotation",
+     "label": "X-axis label angle",
+     "kind": "choice",
+     "default": "auto",
+     "choices": [
+      "auto",
+      "horizontal",
+      "45",
+      "vertical"
+     ],
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": false,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": true,
+    "draws_brackets": true,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "grouped_bar",
+    "files": {
+     "csv": "examples/by_plot_type/grouped_bar/data.csv",
+     "tsv": "examples/by_plot_type/grouped_bar/data.tsv",
+     "xlsx": "examples/by_plot_type/grouped_bar/data.xlsx",
+     "plotspec": "examples/by_plot_type/grouped_bar/plotspec.json",
+     "readme": "examples/by_plot_type/grouped_bar/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "genotype",
+     "treatment",
+     "replicate",
+     "expression"
+    ],
+    "optional_columns": [
+     "gene",
+     "unit"
+    ],
+    "n_rows": 20
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: mock sample"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_desktop_controller.py",
+     "tests/test_layout_and_annotations.py",
+     "tests/test_publication_style.py",
+     "tests/test_stats_annotations.py"
+    ],
+    "docs": [
+     "docs/EXAMPLE_DATA.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/V0_6_IMPLEMENTATION_PLAN.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/desktop_app/main.py",
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "heatmap_clustered_matrix",
+   "display_name": "Clustered heatmap",
+   "renderer_module": "make_my_figure_core.plots.heatmap",
+   "renderer_path": "make_my_figure_core/plots/heatmap.py",
+   "default_mapping": {
+    "row_id": "gene",
+    "cluster_rows": true,
+    "cluster_columns": true,
+    "color_scale": "diverging"
+   },
+   "column_roles": [
+    "row_id"
+   ],
+   "options": [
+    {
+     "key": "cluster_rows",
+     "label": "Cluster rows",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "cluster_columns",
+     "label": "Cluster columns",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "color_scale",
+     "label": "Color scale",
+     "kind": "choice",
+     "default": "diverging",
+     "choices": [
+      "diverging",
+      "sequential"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "colormap",
+     "label": "Colormap",
+     "kind": "choice",
+     "default": "auto",
+     "choices": [
+      "auto",
+      "RdBu_r",
+      "coolwarm",
+      "seismic",
+      "RdYlBu_r",
+      "PuOr",
+      "BrBG",
+      "viridis",
+      "magma",
+      "cividis",
+      "Blues",
+      "YlOrRd",
+      "Greys"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "y_label_rotation",
+     "label": "Y-label angle",
+     "kind": "choice",
+     "default": "vertical",
+     "choices": [
+      "vertical",
+      "horizontal"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "scale",
+     "label": "Scale",
+     "kind": "choice",
+     "default": "none",
+     "choices": [
+      "none",
+      "row_zscore",
+      "column_zscore",
+      "center_rows",
+      "log",
+      "log_zscore"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "distance_metric",
+     "label": "Distance",
+     "kind": "choice",
+     "default": "euclidean",
+     "choices": [
+      "euclidean",
+      "correlation",
+      "cosine",
+      "cityblock"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "linkage_method",
+     "label": "Linkage",
+     "kind": "choice",
+     "default": "average",
+     "choices": [
+      "average",
+      "complete",
+      "single",
+      "ward"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "cluster_k_rows",
+     "label": "Row clusters (k, 0=off)",
+     "kind": "number",
+     "default": 0,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "cluster_k_columns",
+     "label": "Column clusters (k, 0=off)",
+     "kind": "number",
+     "default": 0,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "sort_by_cluster",
+     "label": "Sort by cluster",
+     "kind": "bool",
+     "default": false,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "group_separators",
+     "label": "Group separator lines",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "cell_border_color",
+     "label": "Cell grid color",
+     "kind": "choice",
+     "default": "white",
+     "choices": [
+      "white",
+      "black",
+      "#888888",
+      "none"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "cell_border_width",
+     "label": "Cell grid width (0 = off)",
+     "kind": "number",
+     "default": 0.6,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "group_separator_color",
+     "label": "Group separator color",
+     "kind": "choice",
+     "default": "#222222",
+     "choices": [
+      "#222222",
+      "black",
+      "white",
+      "#B2182B"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "group_separator_width",
+     "label": "Group separator width",
+     "kind": "number",
+     "default": 1.6,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "max_features",
+     "label": "Max features (rows) for clustering",
+     "kind": "number",
+     "default": 2000,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "colorbar_location",
+     "label": "Colorbar location",
+     "kind": "choice",
+     "default": "right",
+     "choices": [
+      "right",
+      "left",
+      "top",
+      "bottom"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "colorbar_pad",
+     "label": "Colorbar pad",
+     "kind": "number",
+     "default": 0.03,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "colorbar_shrink",
+     "label": "Colorbar size",
+     "kind": "number",
+     "default": 1.0,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "row_label_fontsize",
+     "label": "Row label font (0=auto)",
+     "kind": "number",
+     "default": 0,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "col_label_fontsize",
+     "label": "Column label font (0=auto)",
+     "kind": "number",
+     "default": 0,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "y_label_pad",
+     "label": "Y-axis label padding",
+     "kind": "number",
+     "default": 6.0,
+     "choices": null,
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": false,
+    "supports_continuous_colormap": true,
+    "supports_colorbar": true,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": false,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "heatmap",
+    "files": {
+     "csv": "examples/by_plot_type/heatmap/data.csv",
+     "tsv": "examples/by_plot_type/heatmap/data.tsv",
+     "xlsx": "examples/by_plot_type/heatmap/data.xlsx",
+     "plotspec": "examples/by_plot_type/heatmap/plotspec.json",
+     "readme": "examples/by_plot_type/heatmap/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "gene",
+     "<sample columns>"
+    ],
+    "optional_columns": [],
+    "n_rows": 30
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: mock sample"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_desktop_controller.py",
+     "tests/test_desktop_gui.py",
+     "tests/test_figure_presets.py",
+     "tests/test_grouping.py",
+     "tests/test_heatmap_scaling.py",
+     "tests/test_layout_and_annotations.py",
+     "tests/test_matrix_handoff.py",
+     "tests/test_matrix_workflow_rendering.py",
+     "tests/test_memory_guards.py",
+     "tests/test_plot_recommendations.py",
+     "tests/test_processed_matrix_differential_summary.py",
+     "tests/test_publication_qc.py",
+     "tests/test_recommendations.py",
+     "tests/test_renderers.py",
+     "tests/test_reproducibility_export_qc.py",
+     "tests/test_transforms.py",
+     "tests/test_v05_features.py",
+     "tests/test_v1_1_renderer_options.py"
+    ],
+    "docs": [
+     "docs/EXAMPLE_DATA.md",
+     "docs/HEATMAP_HIGHLIGHTING.md",
+     "docs/HIERARCHICAL_CLUSTERING.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/V0_6_IMPLEMENTATION_PLAN.md",
+     "docs/WINDOWS_PERFORMANCE.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py",
+     "make_my_figure_core/recommendations/transform_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/desktop_app/main.py",
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "volcano_plot",
+   "display_name": "Volcano plot",
+   "renderer_module": "make_my_figure_core.plots.volcano",
+   "renderer_path": "make_my_figure_core/plots/volcano.py",
+   "default_mapping": {
+    "x": "log2_fold_change",
+    "p": "adjusted_p_value",
+    "label": "label",
+    "lfc_cutoff": 1.0,
+    "p_cutoff": 0.05,
+    "annotate": true,
+    "label_mode": "top_fdr",
+    "top_n": 10,
+    "show_arrows": true
+   },
+   "column_roles": [
+    "x",
+    "p",
+    "label",
+    "id_col"
+   ],
+   "options": [
+    {
+     "key": "show_legend",
+     "label": "Show Up / Down / n.s. legend",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "color_up",
+     "label": "Up-regulated colour",
+     "kind": "choice",
+     "default": "#B2182B",
+     "choices": [
+      "#B2182B",
+      "#2166AC",
+      "#BBBBBB",
+      "#B8B8B8",
+      "#D6604D",
+      "#4393C3",
+      "#E08214",
+      "#8073AC",
+      "#1B7837",
+      "#762A83",
+      "#333333",
+      "#888888",
+      "black"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "color_down",
+     "label": "Down-regulated colour",
+     "kind": "choice",
+     "default": "#2166AC",
+     "choices": [
+      "#B2182B",
+      "#2166AC",
+      "#BBBBBB",
+      "#B8B8B8",
+      "#D6604D",
+      "#4393C3",
+      "#E08214",
+      "#8073AC",
+      "#1B7837",
+      "#762A83",
+      "#333333",
+      "#888888",
+      "black"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "color_ns",
+     "label": "Not-significant colour",
+     "kind": "choice",
+     "default": "#BBBBBB",
+     "choices": [
+      "#B2182B",
+      "#2166AC",
+      "#BBBBBB",
+      "#B8B8B8",
+      "#D6604D",
+      "#4393C3",
+      "#E08214",
+      "#8073AC",
+      "#1B7837",
+      "#762A83",
+      "#333333",
+      "#888888",
+      "black"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "lfc_cutoff",
+     "label": "log2FC cutoff",
+     "kind": "number",
+     "default": 1.0,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "p_cutoff",
+     "label": "p-value / FDR cutoff",
+     "kind": "number",
+     "default": 0.05,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "use_fdr",
+     "label": "P column is FDR/adjusted (y-axis = \u2212log10 FDR)",
+     "kind": "bool",
+     "default": false,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "annotate",
+     "label": "Show labels",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "label_mode",
+     "label": "Label mode",
+     "kind": "choice",
+     "default": "top_fdr",
+     "choices": [
+      "top_fdr",
+      "top_lfc",
+      "top_up_down",
+      "selected",
+      "pasted",
+      "significant_all"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "top_n",
+     "label": "Top N labels",
+     "kind": "number",
+     "default": 10,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "top_n_up",
+     "label": "Top N up",
+     "kind": "number",
+     "default": 8,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "top_n_down",
+     "label": "Top N down",
+     "kind": "number",
+     "default": 8,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "label_by",
+     "label": "Label by",
+     "kind": "choice",
+     "default": "symbol",
+     "choices": [
+      "symbol",
+      "id",
+      "both"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "show_arrows",
+     "label": "Arrows to points",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "label_box",
+     "label": "Label background box",
+     "kind": "bool",
+     "default": false,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "duplicate_label_policy",
+     "label": "Duplicate labels",
+     "kind": "choice",
+     "default": "all",
+     "choices": [
+      "all",
+      "unique",
+      "count"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "duplicate_label_representative_rule",
+     "label": "Representative point",
+     "kind": "choice",
+     "default": "pvalue",
+     "choices": [
+      "pvalue",
+      "padj",
+      "effect",
+      "statistic",
+      "first"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "duplicate_label_show_count",
+     "label": "Append (n=\u2026) count",
+     "kind": "bool",
+     "default": false,
+     "choices": null,
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": false,
+    "supports_group_colors": false,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": false,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "volcano",
+    "files": {
+     "csv": "examples/by_plot_type/volcano/data.csv",
+     "tsv": "examples/by_plot_type/volcano/data.tsv",
+     "xlsx": "examples/by_plot_type/volcano/data.xlsx",
+     "plotspec": "examples/by_plot_type/volcano/plotspec.json",
+     "readme": "examples/by_plot_type/volcano/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "gene",
+     "log2_fold_change",
+     "p_value"
+    ],
+    "optional_columns": [
+     "adjusted_p_value",
+     "gene_class",
+     "label"
+    ],
+    "n_rows": 500
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: mock sample | palette control declared inapplicable: a volcano colours points by significance class (up / down / not significant) - set those three colours in the plot options; the palette d"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_annotation_state.py",
+     "tests/test_controller_workbook.py",
+     "tests/test_desktop_controller.py",
+     "tests/test_desktop_gui.py",
+     "tests/test_desktop_matrix_controller.py",
+     "tests/test_differential.py",
+     "tests/test_duplicate_labels.py",
+     "tests/test_figure_presets.py",
+     "tests/test_layout_and_annotations.py",
+     "tests/test_loaders.py",
+     "tests/test_matrix_handoff.py",
+     "tests/test_matrix_qc_polish.py",
+     "tests/test_matrix_workflow_rendering.py",
+     "tests/test_pick_identify.py",
+     "tests/test_plot_recommendations.py",
+     "tests/test_processed_matrix_differential_summary.py",
+     "tests/test_publication_qc.py",
+     "tests/test_recommendations.py",
+     "tests/test_renderers.py",
+     "tests/test_reproducibility_export_qc.py",
+     "tests/test_stats_integration.py",
+     "tests/test_streamlit_presets.py",
+     "tests/test_style_capabilities_audit.py",
+     "tests/test_style_migration.py",
+     "tests/test_v05_features.py",
+     "tests/test_v1_1_renderer_options.py",
+     "tests/test_validate.py"
+    ],
+    "docs": [
+     "docs/EXAMPLE_DATA.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/QUICKSTART.md",
+     "docs/RAW_COUNTS_TUTORIAL.md",
+     "docs/V0_6_IMPLEMENTATION_PLAN.md",
+     "docs/VOLCANO_ANNOTATIONS.md",
+     "docs/WINDOWS_PERFORMANCE.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py",
+     "make_my_figure_core/recommendations/transform_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/desktop_app/main.py",
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "scatterplot_with_regression",
+   "display_name": "Scatter plot",
+   "renderer_module": "make_my_figure_core.plots.scatter",
+   "renderer_path": "make_my_figure_core/plots/scatter.py",
+   "default_mapping": {
+    "x": "x_marker",
+    "y": "y_response",
+    "color": "group",
+    "fit_line": true
+   },
+   "column_roles": [
+    "x",
+    "y",
+    "color",
+    "label"
+   ],
+   "options": [
+    {
+     "key": "fit_line",
+     "label": "Fit regression line",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "show_fit_stats",
+     "label": "Show regression stats box",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "show_slope",
+     "label": "  \u2022 slope",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "show_r2",
+     "label": "  \u2022 R\u00b2",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "show_p",
+     "label": "  \u2022 p-value",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "show_r",
+     "label": "  \u2022 Pearson r",
+     "kind": "bool",
+     "default": false,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "show_intercept",
+     "label": "  \u2022 intercept",
+     "kind": "bool",
+     "default": false,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "show_n",
+     "label": "  \u2022 n",
+     "kind": "bool",
+     "default": false,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "show_equation",
+     "label": "  \u2022 full equation (y = a\u00b7x + b)",
+     "kind": "bool",
+     "default": false,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "fit_stats_loc",
+     "label": "Stats box location",
+     "kind": "choice",
+     "default": "lower right",
+     "choices": [
+      "lower right",
+      "lower left",
+      "upper right",
+      "upper left"
+     ],
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": false
+   },
+   "statistics": {
+    "uses_statistics_engine": true,
+    "draws_brackets": true,
+    "corner_panel": true
+   },
+   "example": {
+    "present": true,
+    "slug": "scatter",
+    "files": {
+     "csv": "examples/by_plot_type/scatter/data.csv",
+     "tsv": "examples/by_plot_type/scatter/data.tsv",
+     "xlsx": "examples/by_plot_type/scatter/data.xlsx",
+     "plotspec": "examples/by_plot_type/scatter/plotspec.json",
+     "readme": "examples/by_plot_type/scatter/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "sample_id",
+     "x_marker",
+     "y_response"
+    ],
+    "optional_columns": [
+     "group",
+     "label"
+    ],
+    "n_rows": 60
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: mock sample"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_desktop_controller.py",
+     "tests/test_desktop_gui.py",
+     "tests/test_figure_preset_palette_transfer.py",
+     "tests/test_figure_presets.py",
+     "tests/test_imported_panels.py",
+     "tests/test_layout_and_annotations.py",
+     "tests/test_matrix_qc_polish.py",
+     "tests/test_multipanel.py",
+     "tests/test_pick_identify.py",
+     "tests/test_publication_qc.py",
+     "tests/test_publication_style.py",
+     "tests/test_renderers.py",
+     "tests/test_reproducibility_export_qc.py",
+     "tests/test_stats_annotations.py",
+     "tests/test_streamlit_presets.py",
+     "tests/test_style_capabilities_network.py",
+     "tests/test_style_font_stack.py",
+     "tests/test_v05_features.py",
+     "tests/test_workbook_provenance.py"
+    ],
+    "docs": [
+     "docs/EXAMPLE_DATA.md",
+     "docs/FEATURE_LEVEL_STATISTICS.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/V0_6_IMPLEMENTATION_PLAN.md",
+     "docs/WINDOWS_PERFORMANCE.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [],
+    "frontends": [
+     "apps/desktop_app/main.py",
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "boxplot_or_violin_with_points",
+   "display_name": "Box / violin plot with points",
+   "renderer_module": "make_my_figure_core.plots.box_violin",
+   "renderer_path": "make_my_figure_core/plots/box_violin.py",
+   "default_mapping": {
+    "x": "group",
+    "y": "value",
+    "kind": "box",
+    "points": true
+   },
+   "column_roles": [
+    "x",
+    "y"
+   ],
+   "options": [
+    {
+     "key": "point_size",
+     "label": "Point size (pt\u00b2)",
+     "kind": "number",
+     "default": 8.0,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "kind",
+     "label": "Kind",
+     "kind": "choice",
+     "default": "box",
+     "choices": [
+      "box",
+      "violin"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "points",
+     "label": "Overlay points",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "x_tick_rotation",
+     "label": "X-axis label angle",
+     "kind": "choice",
+     "default": "auto",
+     "choices": [
+      "auto",
+      "horizontal",
+      "45",
+      "vertical"
+     ],
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": false,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": true,
+    "draws_brackets": true,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "box_violin",
+    "files": {
+     "csv": "examples/by_plot_type/box_violin/data.csv",
+     "tsv": "examples/by_plot_type/box_violin/data.tsv",
+     "xlsx": "examples/by_plot_type/box_violin/data.xlsx",
+     "plotspec": "examples/by_plot_type/box_violin/plotspec.json",
+     "readme": "examples/by_plot_type/box_violin/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "sample_id",
+     "group",
+     "value"
+    ],
+    "optional_columns": [
+     "batch",
+     "sex"
+    ],
+    "n_rows": 72
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: mock sample | legend_roundtrip: N/A - this plot type draws no legend"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_above_bar_annotation.py",
+     "tests/test_desktop_gui.py",
+     "tests/test_figure_presets.py",
+     "tests/test_grouping.py",
+     "tests/test_matrix_handoff.py",
+     "tests/test_matrix_workflow_rendering.py",
+     "tests/test_plot_recommendations.py",
+     "tests/test_publication_style.py",
+     "tests/test_recommendations.py",
+     "tests/test_renderers_m2.py",
+     "tests/test_stats_annotations.py",
+     "tests/test_stats_integration.py",
+     "tests/test_style_capabilities_audit.py",
+     "tests/test_v1_1_renderer_options.py",
+     "tests/test_xlabel_overlap_qc.py"
+    ],
+    "docs": [
+     "docs/EXAMPLE_DATA.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/V0_6_IMPLEMENTATION_PLAN.md",
+     "docs/WINDOWS_PERFORMANCE.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py",
+     "make_my_figure_core/recommendations/recommendation_runner.py",
+     "make_my_figure_core/recommendations/transform_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/desktop_app/main.py",
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "lineplot_timecourse_with_error_band",
+   "display_name": "Line / time-course with error band",
+   "renderer_module": "make_my_figure_core.plots.lineplot",
+   "renderer_path": "make_my_figure_core/plots/lineplot.py",
+   "default_mapping": {
+    "x": "time_hours",
+    "y": "signal",
+    "color": "treatment",
+    "error": "sem"
+   },
+   "column_roles": [
+    "x",
+    "y",
+    "color",
+    "style_by"
+   ],
+   "options": [
+    {
+     "key": "error",
+     "label": "Error band",
+     "kind": "choice",
+     "default": "sem",
+     "choices": [
+      "sem",
+      "sd",
+      "ci95",
+      "iqr",
+      "range",
+      "none"
+     ],
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "line_timecourse",
+    "files": {
+     "csv": "examples/by_plot_type/line_timecourse/data.csv",
+     "tsv": "examples/by_plot_type/line_timecourse/data.tsv",
+     "xlsx": "examples/by_plot_type/line_timecourse/data.xlsx",
+     "plotspec": "examples/by_plot_type/line_timecourse/plotspec.json",
+     "readme": "examples/by_plot_type/line_timecourse/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "time_hours",
+     "treatment",
+     "replicate",
+     "signal"
+    ],
+    "optional_columns": [
+     "unit"
+    ],
+    "n_rows": 84
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: mock sample"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_band_and_axis_scale.py",
+     "tests/test_header_row_and_merged_headers.py",
+     "tests/test_publication_style_engine.py",
+     "tests/test_renderers_m2.py"
+    ],
+    "docs": [
+     "docs/EXAMPLE_DATA.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/V0_6_IMPLEMENTATION_PLAN.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "ridge_or_density_plot",
+   "display_name": "Ridge / density plot",
+   "renderer_module": "make_my_figure_core.plots.ridge",
+   "renderer_path": "make_my_figure_core/plots/ridge.py",
+   "default_mapping": {
+    "x": "pseudotime",
+    "group": "condition",
+    "overlap": 0.7
+   },
+   "column_roles": [
+    "x",
+    "group"
+   ],
+   "options": [
+    {
+     "key": "density_mode",
+     "label": "Density mode",
+     "kind": "choice",
+     "default": "ridge",
+     "choices": [
+      "ridge",
+      "overlay"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "overlap",
+     "label": "Ridge overlap",
+     "kind": "number",
+     "default": 0.7,
+     "choices": null,
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "ridge",
+    "files": {
+     "csv": "examples/by_plot_type/ridge/data.csv",
+     "tsv": "examples/by_plot_type/ridge/data.tsv",
+     "xlsx": "examples/by_plot_type/ridge/data.xlsx",
+     "plotspec": "examples/by_plot_type/ridge/plotspec.json",
+     "readme": "examples/by_plot_type/ridge/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "cell_id",
+     "condition",
+     "pseudotime"
+    ],
+    "optional_columns": [
+     "sample_id",
+     "score"
+    ],
+    "n_rows": 1050
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: mock sample"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_desktop_gui.py",
+     "tests/test_header_row_and_merged_headers.py",
+     "tests/test_recommendations.py",
+     "tests/test_renderers_m2.py",
+     "tests/test_transforms.py"
+    ],
+    "docs": [
+     "docs/EXAMPLE_DATA.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/V0_6_IMPLEMENTATION_PLAN.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md",
+     "docs/releases/v1.1.0/release_v1.1.0_audit.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py",
+     "make_my_figure_core/recommendations/transform_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/desktop_app/main.py",
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "histogram_distribution",
+   "display_name": "Histogram (binned distribution)",
+   "renderer_module": "make_my_figure_core.plots.histogram",
+   "renderer_path": "make_my_figure_core/plots/histogram.py",
+   "default_mapping": {
+    "x": "measurement",
+    "group": "group",
+    "panel_mode": "panels",
+    "normalize": "count"
+   },
+   "column_roles": [
+    "x",
+    "group",
+    "value_columns"
+   ],
+   "options": [
+    {
+     "key": "input_form",
+     "label": "Input form",
+     "kind": "choice",
+     "default": "long",
+     "choices": [
+      "long",
+      "wide"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "panel_mode",
+     "label": "Arrangement",
+     "kind": "choice",
+     "default": "panels",
+     "choices": [
+      "panels",
+      "overlay"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "draw_style",
+     "label": "Draw as",
+     "kind": "choice",
+     "default": "bars",
+     "choices": [
+      "bars",
+      "line",
+      "both"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "normalize",
+     "label": "Y axis shows",
+     "kind": "choice",
+     "default": "count",
+     "choices": [
+      "count",
+      "frequency",
+      "percent",
+      "density"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "cumulative",
+     "label": "Cumulative",
+     "kind": "bool",
+     "default": false,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "bins",
+     "label": "Number of bins",
+     "kind": "number",
+     "default": null,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "bin_width",
+     "label": "Bin width",
+     "kind": "number",
+     "default": null,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "show_mean",
+     "label": "Mark the mean",
+     "kind": "bool",
+     "default": false,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "show_median",
+     "label": "Mark the median",
+     "kind": "bool",
+     "default": false,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "bar_alpha",
+     "label": "Fill opacity",
+     "kind": "number",
+     "default": null,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "log_y",
+     "label": "Logarithmic Y axis",
+     "kind": "bool",
+     "default": false,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "share_axes",
+     "label": "Panels share both axes",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "x_min",
+     "label": "X-axis minimum",
+     "kind": "number",
+     "default": null,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "x_max",
+     "label": "X-axis maximum",
+     "kind": "number",
+     "default": null,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "y_min",
+     "label": "Y-axis minimum",
+     "kind": "number",
+     "default": null,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "y_max",
+     "label": "Y-axis maximum",
+     "kind": "number",
+     "default": null,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "x_tick_rotation",
+     "label": "X-axis label angle",
+     "kind": "choice",
+     "default": "auto",
+     "choices": [
+      "auto",
+      "horizontal",
+      "45",
+      "vertical"
+     ],
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": false
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "histogram",
+    "files": {
+     "csv": "examples/by_plot_type/histogram/data.csv",
+     "tsv": "examples/by_plot_type/histogram/data.tsv",
+     "xlsx": "examples/by_plot_type/histogram/data.xlsx",
+     "plotspec": "examples/by_plot_type/histogram/plotspec.json",
+     "readme": "examples/by_plot_type/histogram/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "group",
+     "measurement"
+    ],
+    "optional_columns": [
+     "cell_id",
+     "replicate"
+    ],
+    "n_rows": 1100
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_figure_presets.py",
+     "tests/test_histogram_distribution.py"
+    ],
+    "docs": [
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md",
+     "docs/releases/v1.1.0/release_v1.1.0_audit.md"
+    ],
+    "recommendations": [],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [],
+    "frontends": []
+   }
+  },
+  {
+   "plot_type": "enrichment_dotplot",
+   "display_name": "Enrichment dot plot",
+   "renderer_module": "make_my_figure_core.plots.enrichment",
+   "renderer_path": "make_my_figure_core/plots/enrichment.py",
+   "default_mapping": {
+    "y": "term",
+    "x": "gene_ratio",
+    "size": "gene_count",
+    "color": "neg_log10_fdr",
+    "fdr": "fdr"
+   },
+   "column_roles": [
+    "y",
+    "x",
+    "size",
+    "color"
+   ],
+   "options": [
+    {
+     "key": "top_n",
+     "label": "Top N terms",
+     "kind": "number",
+     "default": 20,
+     "choices": null,
+     "scope": "config"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": false,
+    "supports_continuous_colormap": true,
+    "supports_colorbar": true,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": false,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "enrichment",
+    "files": {
+     "csv": "examples/by_plot_type/enrichment/data.csv",
+     "tsv": "examples/by_plot_type/enrichment/data.tsv",
+     "xlsx": "examples/by_plot_type/enrichment/data.xlsx",
+     "plotspec": "examples/by_plot_type/enrichment/plotspec.json",
+     "readme": "examples/by_plot_type/enrichment/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "term",
+     "gene_ratio",
+     "fdr"
+    ],
+    "optional_columns": [
+     "category",
+     "gene_count",
+     "neg_log10_fdr"
+    ],
+    "n_rows": 12
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: mock sample | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_recommendations.py"
+    ],
+    "docs": [
+     "docs/EXAMPLE_DATA.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/QUICKSTART.md",
+     "docs/V0_6_IMPLEMENTATION_PLAN.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "kaplan_meier_survival_curve",
+   "display_name": "Kaplan-Meier survival curve",
+   "renderer_module": "make_my_figure_core.plots.survival",
+   "renderer_path": "make_my_figure_core/plots/survival.py",
+   "default_mapping": {
+    "time": "time_months",
+    "event": "event",
+    "group": "group"
+   },
+   "column_roles": [
+    "time",
+    "event",
+    "group",
+    "survival_columns"
+   ],
+   "options": [
+    {
+     "key": "input_form",
+     "label": "Input form",
+     "kind": "choice",
+     "default": "subject_level",
+     "choices": [
+      "subject_level",
+      "precomputed"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "y_scale",
+     "label": "Y-axis scale",
+     "kind": "choice",
+     "default": "fraction",
+     "choices": [
+      "fraction",
+      "percent"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "reference_line",
+     "label": "Reference line (y-axis units, blank for none)",
+     "kind": "number",
+     "default": null,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "curve_style",
+     "label": "Curve style (line: precomputed curves only)",
+     "kind": "choice",
+     "default": "step",
+     "choices": [
+      "step",
+      "line"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "y_ticks",
+     "label": "Y ticks",
+     "kind": "choice",
+     "default": "auto",
+     "choices": [
+      "auto",
+      "ends_and_midpoint"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "x_min",
+     "label": "X-axis minimum (blank for auto)",
+     "kind": "number",
+     "default": null,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "x_max",
+     "label": "X-axis maximum (blank for auto)",
+     "kind": "number",
+     "default": null,
+     "choices": null,
+     "scope": "config"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": true,
+    "draws_brackets": true,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "kaplan_meier",
+    "files": {
+     "csv": "examples/by_plot_type/kaplan_meier/data.csv",
+     "tsv": "examples/by_plot_type/kaplan_meier/data.tsv",
+     "xlsx": "examples/by_plot_type/kaplan_meier/data.xlsx",
+     "plotspec": "examples/by_plot_type/kaplan_meier/plotspec.json",
+     "readme": "examples/by_plot_type/kaplan_meier/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "sample_id",
+     "group",
+     "time_months",
+     "event"
+    ],
+    "optional_columns": [
+     "censor_reason"
+    ],
+    "n_rows": 120
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: mock sample"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_desktop_gui.py",
+     "tests/test_figure_presets.py",
+     "tests/test_header_row_and_merged_headers.py",
+     "tests/test_recommendations.py",
+     "tests/test_renderers_m2.py",
+     "tests/test_reproducibility_export_qc.py",
+     "tests/test_stats_annotations.py",
+     "tests/test_style_capabilities_audit.py",
+     "tests/test_survival_input_forms.py",
+     "tests/test_tick_density_follows_font.py",
+     "tests/test_v1_1_renderer_options.py"
+    ],
+    "docs": [
+     "docs/EXAMPLE_DATA.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/V0_6_IMPLEMENTATION_PLAN.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "stacked_bar_composition",
+   "display_name": "Stacked composition bar plot",
+   "renderer_module": "make_my_figure_core.plots.stacked",
+   "renderer_path": "make_my_figure_core/plots/stacked.py",
+   "default_mapping": {
+    "x": "sample_id",
+    "stack": "cell_type",
+    "y": "fraction",
+    "facet_or_sort_by": "group"
+   },
+   "column_roles": [
+    "x",
+    "stack",
+    "y",
+    "facet_or_sort_by"
+   ],
+   "options": [
+    {
+     "key": "x_tick_rotation",
+     "label": "X-axis label angle",
+     "kind": "choice",
+     "default": "auto",
+     "choices": [
+      "auto",
+      "horizontal",
+      "45",
+      "vertical"
+     ],
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": false,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": true,
+    "draws_brackets": true,
+    "corner_panel": true
+   },
+   "example": {
+    "present": true,
+    "slug": "stacked",
+    "files": {
+     "csv": "examples/by_plot_type/stacked/data.csv",
+     "tsv": "examples/by_plot_type/stacked/data.tsv",
+     "xlsx": "examples/by_plot_type/stacked/data.xlsx",
+     "plotspec": "examples/by_plot_type/stacked/plotspec.json",
+     "readme": "examples/by_plot_type/stacked/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "sample_id",
+     "cell_type",
+     "fraction"
+    ],
+    "optional_columns": [
+     "group"
+    ],
+    "n_rows": 150
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: mock sample"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_layout_and_annotations.py",
+     "tests/test_renderers_m2.py"
+    ],
+    "docs": [
+     "docs/EXAMPLE_DATA.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/V0_6_IMPLEMENTATION_PLAN.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "waterfall_plot",
+   "display_name": "Waterfall plot",
+   "renderer_module": "make_my_figure_core.plots.waterfall",
+   "renderer_path": "make_my_figure_core/plots/waterfall.py",
+   "default_mapping": {
+    "x": "patient_id",
+    "y": "best_percent_change",
+    "color": "response_category",
+    "sort": "ascending"
+   },
+   "column_roles": [
+    "x",
+    "y",
+    "color"
+   ],
+   "options": [
+    {
+     "key": "sort",
+     "label": "Sort",
+     "kind": "choice",
+     "default": "ascending",
+     "choices": [
+      "ascending",
+      "descending"
+     ],
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": false,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "waterfall",
+    "files": {
+     "csv": "examples/by_plot_type/waterfall/data.csv",
+     "tsv": "examples/by_plot_type/waterfall/data.tsv",
+     "xlsx": "examples/by_plot_type/waterfall/data.xlsx",
+     "plotspec": "examples/by_plot_type/waterfall/plotspec.json",
+     "readme": "examples/by_plot_type/waterfall/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "patient_id",
+     "best_percent_change"
+    ],
+    "optional_columns": [
+     "treatment_arm",
+     "response_category",
+     "duration_months"
+    ],
+    "n_rows": 40
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: mock sample"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_renderers_m2.py"
+    ],
+    "docs": [
+     "docs/EXAMPLE_DATA.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/V0_6_IMPLEMENTATION_PLAN.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "pca_scatter_from_matrix",
+   "display_name": "PCA scatter (matrix + metadata)",
+   "renderer_module": "make_my_figure_core.plots.pca",
+   "renderer_path": "make_my_figure_core/plots/pca.py",
+   "default_mapping": {
+    "matrix_row_id": "gene",
+    "metadata_key": "sample_id",
+    "color": "group",
+    "shape": "batch"
+   },
+   "column_roles": [
+    "matrix_row_id"
+   ],
+   "options": [],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": false,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "pca",
+    "files": {
+     "csv": "examples/by_plot_type/pca/data.csv",
+     "tsv": "examples/by_plot_type/pca/data.tsv",
+     "xlsx": "examples/by_plot_type/pca/data.xlsx",
+     "plotspec": "examples/by_plot_type/pca/plotspec.json",
+     "readme": "examples/by_plot_type/pca/README.md"
+    },
+    "aux_tables": {
+     "metadata": "examples/by_plot_type/pca/metadata.csv"
+    },
+    "required_columns": [
+     "gene",
+     "<sample columns>"
+    ],
+    "optional_columns": [],
+    "n_rows": 50
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: mock sample | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_desktop_controller.py",
+     "tests/test_desktop_gui.py",
+     "tests/test_header_row_and_merged_headers.py",
+     "tests/test_layout_and_annotations.py",
+     "tests/test_matrix_handoff.py",
+     "tests/test_matrix_workflow_rendering.py",
+     "tests/test_memory_guards.py",
+     "tests/test_plot_recommendations.py",
+     "tests/test_processed_matrix_differential_summary.py",
+     "tests/test_recommendations.py",
+     "tests/test_renderers_m2.py",
+     "tests/test_v1_1_renderer_options.py"
+    ],
+    "docs": [
+     "docs/EXAMPLE_DATA.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/V0_6_IMPLEMENTATION_PLAN.md",
+     "docs/WINDOWS_PERFORMANCE.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/desktop_app/main.py",
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "oncoprint_mutation_heatmap",
+   "display_name": "Oncoprint mutation heatmap",
+   "renderer_module": "make_my_figure_core.plots.oncoprint",
+   "renderer_path": "make_my_figure_core/plots/oncoprint.py",
+   "default_mapping": {
+    "sample": "patient_id",
+    "row": "gene",
+    "fill": "alteration_type"
+   },
+   "column_roles": [
+    "sample",
+    "row",
+    "fill"
+   ],
+   "options": [
+    {
+     "key": "order",
+     "label": "Row / column order",
+     "kind": "choice",
+     "default": "frequency",
+     "choices": [
+      "frequency",
+      "input"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "show_sample_labels",
+     "label": "Show sample labels (auto: <= 12 samples)",
+     "kind": "bool",
+     "default": null,
+     "choices": null,
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": false,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "oncoprint",
+    "files": {
+     "csv": "examples/by_plot_type/oncoprint/data.csv",
+     "tsv": "examples/by_plot_type/oncoprint/data.tsv",
+     "xlsx": "examples/by_plot_type/oncoprint/data.xlsx",
+     "plotspec": "examples/by_plot_type/oncoprint/plotspec.json",
+     "readme": "examples/by_plot_type/oncoprint/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "patient_id",
+     "gene",
+     "alteration_type"
+    ],
+    "optional_columns": [
+     "variant_annotation",
+     "variant_allele_fraction"
+    ],
+    "n_rows": 91
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: mock sample | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_band_and_axis_scale.py",
+     "tests/test_recommendations.py",
+     "tests/test_renderers_m2.py"
+    ],
+    "docs": [
+     "docs/EXAMPLE_DATA.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/V0_6_IMPLEMENTATION_PLAN.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "lollipop_mutation_plot",
+   "display_name": "Lollipop mutation plot",
+   "renderer_module": "make_my_figure_core.plots.lollipop",
+   "renderer_path": "make_my_figure_core/plots/lollipop.py",
+   "default_mapping": {
+    "x": "protein_position",
+    "y": "sample_count",
+    "color": "mutation_type",
+    "label": "amino_acid_change"
+   },
+   "column_roles": [
+    "x",
+    "y",
+    "color",
+    "label"
+   ],
+   "options": [
+    {
+     "key": "show_labels",
+     "label": "Show mutation labels",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "label_top_n",
+     "label": "Label top N mutations",
+     "kind": "number",
+     "default": 6,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "legend_loc",
+     "label": "Legend position",
+     "kind": "choice",
+     "default": "right",
+     "choices": [
+      "right",
+      "bottom"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "marker_scale",
+     "label": "Marker scale",
+     "kind": "number",
+     "default": 16.0,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "y_margin",
+     "label": "Top y-margin",
+     "kind": "number",
+     "default": 0.42,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "label_font_size",
+     "label": "Label font size (0=auto)",
+     "kind": "number",
+     "default": 0,
+     "choices": null,
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "lollipop",
+    "files": {
+     "csv": "examples/by_plot_type/lollipop/data.csv",
+     "tsv": "examples/by_plot_type/lollipop/data.tsv",
+     "xlsx": "examples/by_plot_type/lollipop/data.xlsx",
+     "plotspec": "examples/by_plot_type/lollipop/plotspec.json",
+     "readme": "examples/by_plot_type/lollipop/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "gene",
+     "protein_position",
+     "sample_count"
+    ],
+    "optional_columns": [
+     "amino_acid_change",
+     "mutation_type",
+     "domain"
+    ],
+    "n_rows": 39
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: mock sample"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_desktop_gui.py",
+     "tests/test_layout_and_annotations.py",
+     "tests/test_renderers_m2.py"
+    ],
+    "docs": [
+     "docs/EXAMPLE_DATA.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/V0_6_IMPLEMENTATION_PLAN.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/desktop_app/main.py",
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "roc_curve",
+   "display_name": "ROC curve",
+   "renderer_module": "make_my_figure_core.plots.roc",
+   "renderer_path": "make_my_figure_core/plots/roc.py",
+   "default_mapping": {
+    "label": "true_label",
+    "score": "score_model_a",
+    "score2": "score_model_b"
+   },
+   "column_roles": [
+    "label",
+    "score",
+    "score2"
+   ],
+   "options": [],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "roc",
+    "files": {
+     "csv": "examples/by_plot_type/roc/data.csv",
+     "tsv": "examples/by_plot_type/roc/data.tsv",
+     "xlsx": "examples/by_plot_type/roc/data.xlsx",
+     "plotspec": "examples/by_plot_type/roc/plotspec.json",
+     "readme": "examples/by_plot_type/roc/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "sample_id",
+     "true_label",
+     "score_model_a"
+    ],
+    "optional_columns": [
+     "score_model_b",
+     "cohort"
+    ],
+    "n_rows": 120
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: mock sample | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_figure_presets.py",
+     "tests/test_layout_and_annotations.py",
+     "tests/test_r_validation_regressions.py",
+     "tests/test_recommendations.py",
+     "tests/test_renderers_m2.py"
+    ],
+    "docs": [
+     "docs/EXAMPLE_DATA.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/QUICKSTART.md",
+     "docs/V0_6_IMPLEMENTATION_PLAN.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "forest_plot",
+   "display_name": "Forest plot",
+   "renderer_module": "make_my_figure_core.plots.forest",
+   "renderer_path": "make_my_figure_core/plots/forest.py",
+   "default_mapping": {
+    "label": "subgroup",
+    "estimate": "hazard_ratio",
+    "lower": "ci_low",
+    "upper": "ci_high",
+    "reference": 1.0
+   },
+   "column_roles": [
+    "label",
+    "estimate",
+    "lower",
+    "upper"
+   ],
+   "options": [
+    {
+     "key": "reference",
+     "label": "Reference line",
+     "kind": "number",
+     "default": 1.0,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "log_scale",
+     "label": "Log x-axis",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": false,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "forest",
+    "files": {
+     "csv": "examples/by_plot_type/forest/data.csv",
+     "tsv": "examples/by_plot_type/forest/data.tsv",
+     "xlsx": "examples/by_plot_type/forest/data.xlsx",
+     "plotspec": "examples/by_plot_type/forest/plotspec.json",
+     "readme": "examples/by_plot_type/forest/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "subgroup",
+     "hazard_ratio",
+     "ci_low",
+     "ci_high"
+    ],
+    "optional_columns": [
+     "study",
+     "p_value",
+     "n"
+    ],
+    "n_rows": 9
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: mock sample | legend_roundtrip: N/A - this plot type draws no legend"
+   },
+   "mentions": {
+    "tests": [
+     "tests/conftest.py",
+     "tests/test_desktop_gui.py",
+     "tests/test_figure_presets.py",
+     "tests/test_renderers_m2.py",
+     "tests/test_style_capabilities_audit.py",
+     "tests/test_v1_1_renderer_options.py"
+    ],
+    "docs": [
+     "docs/EXAMPLE_DATA.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/QUICKSTART.md",
+     "docs/V0_6_IMPLEMENTATION_PLAN.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "dot_strip_plot",
+   "display_name": "Dot / strip plot",
+   "renderer_module": "make_my_figure_core.plots.dot_strip",
+   "renderer_path": "make_my_figure_core/plots/dot_strip.py",
+   "default_mapping": {
+    "x": "group",
+    "y": "value",
+    "summary": "mean",
+    "jitter": true
+   },
+   "column_roles": [
+    "x",
+    "y",
+    "color"
+   ],
+   "options": [
+    {
+     "key": "summary",
+     "label": "Summary overlay",
+     "kind": "choice",
+     "default": "mean",
+     "choices": [
+      "none",
+      "mean",
+      "median",
+      "ci",
+      "sd",
+      "sem"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "jitter",
+     "label": "Jitter points",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "x_tick_rotation",
+     "label": "X-axis label angle",
+     "kind": "choice",
+     "default": "auto",
+     "choices": [
+      "auto",
+      "horizontal",
+      "45",
+      "vertical"
+     ],
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": false
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "dot_strip",
+    "files": {
+     "csv": "examples/by_plot_type/dot_strip/data.csv",
+     "tsv": "examples/by_plot_type/dot_strip/data.tsv",
+     "xlsx": "examples/by_plot_type/dot_strip/data.xlsx",
+     "plotspec": "examples/by_plot_type/dot_strip/plotspec.json",
+     "readme": "examples/by_plot_type/dot_strip/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "group",
+     "value"
+    ],
+    "optional_columns": [
+     "cohort"
+    ],
+    "n_rows": 78
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_font_survives_export.py",
+     "tests/test_legend_location_keeps_profile_fonts.py",
+     "tests/test_v04_plots.py",
+     "tests/test_xlabel_overlap_qc.py"
+    ],
+    "docs": [
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [],
+    "frontends": []
+   }
+  },
+  {
+   "plot_type": "beeswarm_plot",
+   "display_name": "Beeswarm plot",
+   "renderer_module": "make_my_figure_core.plots.beeswarm",
+   "renderer_path": "make_my_figure_core/plots/beeswarm.py",
+   "default_mapping": {
+    "x": "group",
+    "y": "value",
+    "summary": "mean"
+   },
+   "column_roles": [
+    "x",
+    "y",
+    "color"
+   ],
+   "options": [
+    {
+     "key": "summary",
+     "label": "Summary overlay",
+     "kind": "choice",
+     "default": "mean",
+     "choices": [
+      "none",
+      "mean",
+      "median",
+      "ci",
+      "sd",
+      "sem"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "x_tick_rotation",
+     "label": "X-axis label angle",
+     "kind": "choice",
+     "default": "auto",
+     "choices": [
+      "auto",
+      "horizontal",
+      "45",
+      "vertical"
+     ],
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": false
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "beeswarm",
+    "files": {
+     "csv": "examples/by_plot_type/beeswarm/data.csv",
+     "tsv": "examples/by_plot_type/beeswarm/data.tsv",
+     "xlsx": "examples/by_plot_type/beeswarm/data.xlsx",
+     "plotspec": "examples/by_plot_type/beeswarm/plotspec.json",
+     "readme": "examples/by_plot_type/beeswarm/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "group",
+     "value"
+    ],
+    "optional_columns": [
+     "sex"
+    ],
+    "n_rows": 84
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_v04_plots.py",
+     "tests/test_xlabel_overlap_qc.py"
+    ],
+    "docs": [
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [],
+    "frontends": []
+   }
+  },
+  {
+   "plot_type": "paired_slopegraph",
+   "display_name": "Paired dot plot / slopegraph",
+   "renderer_module": "make_my_figure_core.plots.paired_slope",
+   "renderer_path": "make_my_figure_core/plots/paired_slope.py",
+   "default_mapping": {
+    "subject": "subject",
+    "condition": "condition",
+    "value": "value"
+   },
+   "column_roles": [
+    "subject",
+    "condition",
+    "value",
+    "color"
+   ],
+   "options": [
+    {
+     "key": "point_color",
+     "label": "Point color",
+     "kind": "choice",
+     "default": "(group)",
+     "choices": [
+      "(group)",
+      "#2166AC",
+      "#B2182B",
+      "#1B7837",
+      "#333333",
+      "black"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "line_color",
+     "label": "Line color",
+     "kind": "choice",
+     "default": "(group)",
+     "choices": [
+      "(group)",
+      "#BBBBBB",
+      "#888888",
+      "#2166AC",
+      "#B2182B",
+      "black"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "point_size",
+     "label": "Point size",
+     "kind": "number",
+     "default": 6.0,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "line_width",
+     "label": "Line width",
+     "kind": "number",
+     "default": 1.5,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "line_alpha",
+     "label": "Line alpha",
+     "kind": "number",
+     "default": 0.7,
+     "choices": null,
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": false
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "paired_slope",
+    "files": {
+     "csv": "examples/by_plot_type/paired_slope/data.csv",
+     "tsv": "examples/by_plot_type/paired_slope/data.tsv",
+     "xlsx": "examples/by_plot_type/paired_slope/data.xlsx",
+     "plotspec": "examples/by_plot_type/paired_slope/plotspec.json",
+     "readme": "examples/by_plot_type/paired_slope/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "subject",
+     "condition",
+     "value"
+    ],
+    "optional_columns": [
+     "arm"
+    ],
+    "n_rows": 44
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_layout_and_annotations.py",
+     "tests/test_v04_plots.py"
+    ],
+    "docs": [
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [],
+    "frontends": []
+   }
+  },
+  {
+   "plot_type": "raincloud_plot",
+   "display_name": "Raincloud plot",
+   "renderer_module": "make_my_figure_core.plots.raincloud",
+   "renderer_path": "make_my_figure_core/plots/raincloud.py",
+   "default_mapping": {
+    "x": "group",
+    "y": "value"
+   },
+   "column_roles": [
+    "x",
+    "y"
+   ],
+   "options": [
+    {
+     "key": "x_tick_rotation",
+     "label": "X-axis label angle",
+     "kind": "choice",
+     "default": "auto",
+     "choices": [
+      "auto",
+      "horizontal",
+      "45",
+      "vertical"
+     ],
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": false,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "raincloud",
+    "files": {
+     "csv": "examples/by_plot_type/raincloud/data.csv",
+     "tsv": "examples/by_plot_type/raincloud/data.tsv",
+     "xlsx": "examples/by_plot_type/raincloud/data.xlsx",
+     "plotspec": "examples/by_plot_type/raincloud/plotspec.json",
+     "readme": "examples/by_plot_type/raincloud/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "group",
+     "value"
+    ],
+    "optional_columns": [
+     "batch"
+    ],
+    "n_rows": 105
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed | legend_roundtrip: N/A - this plot type draws no legend"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_v04_plots.py",
+     "tests/test_xlabel_overlap_qc.py"
+    ],
+    "docs": [
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": []
+   }
+  },
+  {
+   "plot_type": "hierarchical_dendrogram",
+   "display_name": "Hierarchical clustering dendrogram",
+   "renderer_module": "make_my_figure_core.plots.dendrogram",
+   "renderer_path": "make_my_figure_core/plots/dendrogram.py",
+   "default_mapping": {
+    "row_id": "gene",
+    "method": "average",
+    "metric": "euclidean",
+    "cluster": "rows",
+    "orientation": "top"
+   },
+   "column_roles": [
+    "row_id"
+   ],
+   "options": [
+    {
+     "key": "method",
+     "label": "Linkage method",
+     "kind": "choice",
+     "default": "average",
+     "choices": [
+      "average",
+      "complete",
+      "single",
+      "ward"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "cluster",
+     "label": "Cluster",
+     "kind": "choice",
+     "default": "rows",
+     "choices": [
+      "rows",
+      "columns"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "orientation",
+     "label": "Orientation",
+     "kind": "choice",
+     "default": "top",
+     "choices": [
+      "top",
+      "left"
+     ],
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": false,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": false,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "dendrogram",
+    "files": {
+     "csv": "examples/by_plot_type/dendrogram/data.csv",
+     "tsv": "examples/by_plot_type/dendrogram/data.tsv",
+     "xlsx": "examples/by_plot_type/dendrogram/data.xlsx",
+     "plotspec": "examples/by_plot_type/dendrogram/plotspec.json",
+     "readme": "examples/by_plot_type/dendrogram/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "gene",
+     "<sample columns>"
+    ],
+    "optional_columns": [],
+    "n_rows": 24
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed | legend_roundtrip: N/A - this plot type draws no legend"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_memory_guards.py",
+     "tests/test_v04_plots.py"
+    ],
+    "docs": [
+     "docs/HIERARCHICAL_CLUSTERING.md",
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/desktop_app/main.py",
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "ma_plot",
+   "display_name": "MA plot (differential expression)",
+   "renderer_module": "make_my_figure_core.plots.ma_plot",
+   "renderer_path": "make_my_figure_core/plots/ma_plot.py",
+   "default_mapping": {
+    "x": "AveExpr",
+    "y": "logFC",
+    "p": "adj.P.Val",
+    "label": "gene",
+    "p_cutoff": 0.05,
+    "label_top_n": 8
+   },
+   "column_roles": [
+    "x",
+    "y",
+    "p",
+    "label",
+    "id_col"
+   ],
+   "options": [
+    {
+     "key": "color_ns",
+     "label": "Not-significant colour",
+     "kind": "choice",
+     "default": "#B8B8B8",
+     "choices": [
+      "#B2182B",
+      "#2166AC",
+      "#BBBBBB",
+      "#B8B8B8",
+      "#D6604D",
+      "#4393C3",
+      "#E08214",
+      "#8073AC",
+      "#1B7837",
+      "#762A83",
+      "#333333",
+      "#888888",
+      "black"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "p_cutoff",
+     "label": "Significance cutoff",
+     "kind": "number",
+     "default": 0.05,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "lfc_cutoff",
+     "label": "|log2FC| cutoff (0 = none)",
+     "kind": "number",
+     "default": 0.0,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "label_top_n",
+     "label": "Label top N hits",
+     "kind": "number",
+     "default": 8,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "duplicate_label_policy",
+     "label": "Duplicate labels",
+     "kind": "choice",
+     "default": "all",
+     "choices": [
+      "all",
+      "unique",
+      "count"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "duplicate_label_representative_rule",
+     "label": "Representative point",
+     "kind": "choice",
+     "default": "pvalue",
+     "choices": [
+      "pvalue",
+      "padj",
+      "effect",
+      "statistic",
+      "first"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "duplicate_label_show_count",
+     "label": "Append (n=\u2026) count",
+     "kind": "bool",
+     "default": false,
+     "choices": null,
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": false,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "ma_plot",
+    "files": {
+     "csv": "examples/by_plot_type/ma_plot/data.csv",
+     "tsv": "examples/by_plot_type/ma_plot/data.tsv",
+     "xlsx": "examples/by_plot_type/ma_plot/data.xlsx",
+     "plotspec": "examples/by_plot_type/ma_plot/plotspec.json",
+     "readme": "examples/by_plot_type/ma_plot/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "AveExpr",
+     "logFC",
+     "adj.P.Val"
+    ],
+    "optional_columns": [
+     "gene"
+    ],
+    "n_rows": 600
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_duplicate_labels.py",
+     "tests/test_figure_presets.py",
+     "tests/test_layout_and_annotations.py",
+     "tests/test_matrix_handoff.py",
+     "tests/test_plot_recommendations.py",
+     "tests/test_style_capabilities_audit.py",
+     "tests/test_v04_plots.py",
+     "tests/test_v1_1_renderer_options.py"
+    ],
+    "docs": [
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md",
+     "docs/releases/v1.1.0/release_v1.1.0_audit.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py",
+     "make_my_figure_core/recommendations/transform_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "manhattan_plot",
+   "display_name": "Manhattan plot (GWAS)",
+   "renderer_module": "make_my_figure_core.plots.manhattan",
+   "renderer_path": "make_my_figure_core/plots/manhattan.py",
+   "default_mapping": {
+    "chrom": "chromosome",
+    "pos": "position",
+    "p": "p_value",
+    "snp": "snp"
+   },
+   "column_roles": [
+    "chrom",
+    "pos",
+    "p",
+    "snp"
+   ],
+   "options": [
+    {
+     "key": "x_tick_rotation",
+     "label": "X-axis label angle",
+     "kind": "choice",
+     "default": "auto",
+     "choices": [
+      "auto",
+      "horizontal",
+      "45",
+      "vertical"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "show_cutoff_line",
+     "label": "Genome-wide cutoff line",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "genome_wide_threshold",
+     "label": "Cutoff threshold (p)",
+     "kind": "number",
+     "default": 5e-08,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "cutoff_line_color",
+     "label": "Cutoff line color",
+     "kind": "choice",
+     "default": "#C0392B",
+     "choices": [
+      "#C0392B",
+      "#333333",
+      "black",
+      "#2166AC",
+      "#1B7837"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "cutoff_line_style",
+     "label": "Cutoff line style",
+     "kind": "choice",
+     "default": "--",
+     "choices": [
+      "--",
+      "-",
+      ":",
+      "-."
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "cutoff_line_width",
+     "label": "Cutoff line width",
+     "kind": "number",
+     "default": 1.5,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "show_suggestive_line",
+     "label": "Suggestive line",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": false
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "manhattan",
+    "files": {
+     "csv": "examples/by_plot_type/manhattan/data.csv",
+     "tsv": "examples/by_plot_type/manhattan/data.tsv",
+     "xlsx": "examples/by_plot_type/manhattan/data.xlsx",
+     "plotspec": "examples/by_plot_type/manhattan/plotspec.json",
+     "readme": "examples/by_plot_type/manhattan/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "chromosome",
+     "position",
+     "p_value"
+    ],
+    "optional_columns": [
+     "snp"
+    ],
+    "n_rows": 1575
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_figure_presets.py",
+     "tests/test_layout_and_annotations.py",
+     "tests/test_layout_rotation_words.py",
+     "tests/test_recommendations.py",
+     "tests/test_v04_plots.py"
+    ],
+    "docs": [
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [],
+    "frontends": []
+   }
+  },
+  {
+   "plot_type": "qq_plot",
+   "display_name": "Q-Q plot (p-value / quantile)",
+   "renderer_module": "make_my_figure_core.plots.qq_plot",
+   "renderer_path": "make_my_figure_core/plots/qq_plot.py",
+   "default_mapping": {
+    "mode": "pvalue",
+    "p": "p_value"
+   },
+   "column_roles": [
+    "p"
+   ],
+   "options": [
+    {
+     "key": "mode",
+     "label": "Mode",
+     "kind": "choice",
+     "default": "pvalue",
+     "choices": [
+      "pvalue",
+      "quantile"
+     ],
+     "scope": "config"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": false,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "qq",
+    "files": {
+     "csv": "examples/by_plot_type/qq/data.csv",
+     "tsv": "examples/by_plot_type/qq/data.tsv",
+     "xlsx": "examples/by_plot_type/qq/data.xlsx",
+     "plotspec": "examples/by_plot_type/qq/plotspec.json",
+     "readme": "examples/by_plot_type/qq/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "p_value"
+    ],
+    "optional_columns": [],
+    "n_rows": 1200
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed | legend_roundtrip: N/A - this plot type draws no legend | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belo"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_recommendations.py",
+     "tests/test_v04_plots.py"
+    ],
+    "docs": [
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": []
+   }
+  },
+  {
+   "plot_type": "bland_altman_plot",
+   "display_name": "Bland-Altman (method agreement)",
+   "renderer_module": "make_my_figure_core.plots.bland_altman",
+   "renderer_path": "make_my_figure_core/plots/bland_altman.py",
+   "default_mapping": {
+    "method_a": "device_A",
+    "method_b": "device_B"
+   },
+   "column_roles": [
+    "method_a",
+    "method_b",
+    "label"
+   ],
+   "options": [
+    {
+     "key": "show_ci",
+     "label": "Shade 95% CI of bias",
+     "kind": "bool",
+     "default": false,
+     "choices": null,
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": false,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "bland_altman",
+    "files": {
+     "csv": "examples/by_plot_type/bland_altman/data.csv",
+     "tsv": "examples/by_plot_type/bland_altman/data.tsv",
+     "xlsx": "examples/by_plot_type/bland_altman/data.xlsx",
+     "plotspec": "examples/by_plot_type/bland_altman/plotspec.json",
+     "readme": "examples/by_plot_type/bland_altman/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "device_A",
+     "device_B"
+    ],
+    "optional_columns": [
+     "sample_id"
+    ],
+    "n_rows": 90
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed | legend_roundtrip: N/A - this plot type draws no legend"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_v04_plots.py"
+    ],
+    "docs": [
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": []
+   }
+  },
+  {
+   "plot_type": "precision_recall_curve",
+   "display_name": "Precision-recall curve",
+   "renderer_module": "make_my_figure_core.plots.precision_recall",
+   "renderer_path": "make_my_figure_core/plots/precision_recall.py",
+   "default_mapping": {
+    "label": "true_label",
+    "score": "score_model_a",
+    "score2": "score_model_b"
+   },
+   "column_roles": [
+    "label",
+    "score",
+    "score2"
+   ],
+   "options": [],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "precision_recall",
+    "files": {
+     "csv": "examples/by_plot_type/precision_recall/data.csv",
+     "tsv": "examples/by_plot_type/precision_recall/data.tsv",
+     "xlsx": "examples/by_plot_type/precision_recall/data.xlsx",
+     "plotspec": "examples/by_plot_type/precision_recall/plotspec.json",
+     "readme": "examples/by_plot_type/precision_recall/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "true_label",
+     "score_model_a"
+    ],
+    "optional_columns": [
+     "score_model_b",
+     "cohort"
+    ],
+    "n_rows": 180
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_r_validation_regressions.py",
+     "tests/test_v04_plots.py"
+    ],
+    "docs": [
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": []
+   }
+  },
+  {
+   "plot_type": "confusion_matrix",
+   "display_name": "Confusion matrix",
+   "renderer_module": "make_my_figure_core.plots.confusion_matrix",
+   "renderer_path": "make_my_figure_core/plots/confusion_matrix.py",
+   "default_mapping": {
+    "true": "true_label",
+    "predicted": "predicted_label",
+    "normalize": "none"
+   },
+   "column_roles": [
+    "true",
+    "predicted"
+   ],
+   "options": [
+    {
+     "key": "normalize",
+     "label": "Normalize",
+     "kind": "choice",
+     "default": "none",
+     "choices": [
+      "none",
+      "row",
+      "column",
+      "total"
+     ],
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": false,
+    "supports_palette": true,
+    "supports_group_colors": false,
+    "supports_continuous_colormap": true,
+    "supports_colorbar": true,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": false,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "confusion_matrix",
+    "files": {
+     "csv": "examples/by_plot_type/confusion_matrix/data.csv",
+     "tsv": "examples/by_plot_type/confusion_matrix/data.tsv",
+     "xlsx": "examples/by_plot_type/confusion_matrix/data.xlsx",
+     "plotspec": "examples/by_plot_type/confusion_matrix/plotspec.json",
+     "readme": "examples/by_plot_type/confusion_matrix/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "true_label",
+     "predicted_label"
+    ],
+    "optional_columns": [],
+    "n_rows": 240
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed | legend_roundtrip: N/A - this plot type draws no legend"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_v04_plots.py"
+    ],
+    "docs": [
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": []
+   }
+  },
+  {
+   "plot_type": "calibration_plot",
+   "display_name": "Calibration plot",
+   "renderer_module": "make_my_figure_core.plots.calibration",
+   "renderer_path": "make_my_figure_core/plots/calibration.py",
+   "default_mapping": {
+    "label": "true_label",
+    "prob": "predicted_prob",
+    "n_bins": 10
+   },
+   "column_roles": [
+    "label",
+    "prob"
+   ],
+   "options": [
+    {
+     "key": "n_bins",
+     "label": "Number of bins",
+     "kind": "number",
+     "default": 10,
+     "choices": null,
+     "scope": "config"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": false
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "calibration",
+    "files": {
+     "csv": "examples/by_plot_type/calibration/data.csv",
+     "tsv": "examples/by_plot_type/calibration/data.tsv",
+     "xlsx": "examples/by_plot_type/calibration/data.xlsx",
+     "plotspec": "examples/by_plot_type/calibration/plotspec.json",
+     "readme": "examples/by_plot_type/calibration/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "true_label",
+     "predicted_prob"
+    ],
+    "optional_columns": [],
+    "n_rows": 400
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_v04_plots.py"
+    ],
+    "docs": [
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [],
+    "frontends": []
+   }
+  },
+  {
+   "plot_type": "dose_response_curve",
+   "display_name": "Dose-response curve",
+   "renderer_module": "make_my_figure_core.plots.dose_response",
+   "renderer_path": "make_my_figure_core/plots/dose_response.py",
+   "default_mapping": {
+    "dose": "concentration_uM",
+    "response": "viability_pct",
+    "group": "drug",
+    "fit": true
+   },
+   "column_roles": [
+    "dose",
+    "response",
+    "group"
+   ],
+   "options": [
+    {
+     "key": "fit",
+     "label": "Fit 4PL curve",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "config"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": false
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "dose_response",
+    "files": {
+     "csv": "examples/by_plot_type/dose_response/data.csv",
+     "tsv": "examples/by_plot_type/dose_response/data.tsv",
+     "xlsx": "examples/by_plot_type/dose_response/data.xlsx",
+     "plotspec": "examples/by_plot_type/dose_response/plotspec.json",
+     "readme": "examples/by_plot_type/dose_response/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "concentration_uM",
+     "viability_pct"
+    ],
+    "optional_columns": [
+     "drug"
+    ],
+    "n_rows": 60
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_figure_presets.py",
+     "tests/test_recommendations.py",
+     "tests/test_v04_plots.py"
+    ],
+    "docs": [
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [],
+    "frontends": []
+   }
+  },
+  {
+   "plot_type": "upset_plot",
+   "display_name": "UpSet plot (set intersections)",
+   "renderer_module": "make_my_figure_core.plots.upset",
+   "renderer_path": "make_my_figure_core/plots/upset.py",
+   "default_mapping": {
+    "sets": [
+     "DEG_up",
+     "DEG_down",
+     "Promoter_peak",
+     "Conserved"
+    ]
+   },
+   "column_roles": [],
+   "options": [],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": false,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "upset",
+    "files": {
+     "csv": "examples/by_plot_type/upset/data.csv",
+     "tsv": "examples/by_plot_type/upset/data.tsv",
+     "xlsx": "examples/by_plot_type/upset/data.xlsx",
+     "plotspec": "examples/by_plot_type/upset/plotspec.json",
+     "readme": "examples/by_plot_type/upset/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "DEG_up",
+     "DEG_down",
+     "Promoter_peak",
+     "Conserved"
+    ],
+    "optional_columns": [
+     "gene"
+    ],
+    "n_rows": 280
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed | legend_roundtrip: N/A - this plot type draws no legend | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belo"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_layout_and_annotations.py",
+     "tests/test_v04_plots.py"
+    ],
+    "docs": [
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": []
+   }
+  },
+  {
+   "plot_type": "swimmer_plot",
+   "display_name": "Swimmer plot",
+   "renderer_module": "make_my_figure_core.plots.swimmer",
+   "renderer_path": "make_my_figure_core/plots/swimmer.py",
+   "default_mapping": {
+    "subject": "patient_id",
+    "start": "start_month",
+    "end": "end_month",
+    "event": "event_type",
+    "group": "response"
+   },
+   "column_roles": [
+    "subject",
+    "start",
+    "end",
+    "duration",
+    "event",
+    "group"
+   ],
+   "options": [
+    {
+     "key": "right_pad_frac",
+     "label": "Right-side headroom",
+     "kind": "number",
+     "default": 0.06,
+     "choices": null,
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": false,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "swimmer",
+    "files": {
+     "csv": "examples/by_plot_type/swimmer/data.csv",
+     "tsv": "examples/by_plot_type/swimmer/data.tsv",
+     "xlsx": "examples/by_plot_type/swimmer/data.xlsx",
+     "plotspec": "examples/by_plot_type/swimmer/plotspec.json",
+     "readme": "examples/by_plot_type/swimmer/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "patient_id",
+     "end_month"
+    ],
+    "optional_columns": [
+     "start_month",
+     "duration_month",
+     "event_type",
+     "response"
+    ],
+    "n_rows": 20
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_layout_and_annotations.py",
+     "tests/test_v04_plots.py"
+    ],
+    "docs": [
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": []
+   }
+  },
+  {
+   "plot_type": "spider_plot",
+   "display_name": "Spider plot (longitudinal change)",
+   "renderer_module": "make_my_figure_core.plots.spider",
+   "renderer_path": "make_my_figure_core/plots/spider.py",
+   "default_mapping": {
+    "subject": "patient_id",
+    "time": "week",
+    "value": "pct_change",
+    "group": "arm",
+    "reference": 0
+   },
+   "column_roles": [
+    "subject",
+    "time",
+    "value",
+    "group"
+   ],
+   "options": [
+    {
+     "key": "reference",
+     "label": "Reference line (y)",
+     "kind": "number",
+     "default": 0.0,
+     "choices": null,
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": true,
+    "supports_annotation_controls": true,
+    "explicitly_declared": false
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "spider",
+    "files": {
+     "csv": "examples/by_plot_type/spider/data.csv",
+     "tsv": "examples/by_plot_type/spider/data.tsv",
+     "xlsx": "examples/by_plot_type/spider/data.xlsx",
+     "plotspec": "examples/by_plot_type/spider/plotspec.json",
+     "readme": "examples/by_plot_type/spider/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "patient_id",
+     "week",
+     "pct_change"
+    ],
+    "optional_columns": [
+     "arm"
+    ],
+    "n_rows": 84
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_v04_plots.py"
+    ],
+    "docs": [
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [],
+    "frontends": []
+   }
+  },
+  {
+   "plot_type": "sankey_plot",
+   "display_name": "Sankey / alluvial flow (two-stage)",
+   "renderer_module": "make_my_figure_core.plots.sankey",
+   "renderer_path": "make_my_figure_core/plots/sankey.py",
+   "default_mapping": {
+    "source": "baseline_response",
+    "target": "outcome",
+    "value": "n_patients"
+   },
+   "column_roles": [
+    "source",
+    "target",
+    "value"
+   ],
+   "options": [],
+   "style_capabilities": {
+    "supports_axes": false,
+    "supports_x_tick_rotation": false,
+    "supports_y_tick_rotation": false,
+    "supports_axis_label_padding": false,
+    "supports_legend": false,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": false,
+    "supports_colorbar": false,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": false,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "sankey",
+    "files": {
+     "csv": "examples/by_plot_type/sankey/data.csv",
+     "tsv": "examples/by_plot_type/sankey/data.tsv",
+     "xlsx": "examples/by_plot_type/sankey/data.xlsx",
+     "plotspec": "examples/by_plot_type/sankey/plotspec.json",
+     "readme": "examples/by_plot_type/sankey/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "baseline_response",
+     "outcome",
+     "n_patients"
+    ],
+    "optional_columns": [],
+    "n_rows": 9
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed | legend_roundtrip: N/A - this plot type draws no legend | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belo"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_v04_plots.py"
+    ],
+    "docs": [
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": []
+   }
+  },
+  {
+   "plot_type": "embedding_scatter",
+   "display_name": "UMAP / t-SNE embedding scatter",
+   "renderer_module": "make_my_figure_core.plots.embedding_scatter",
+   "renderer_path": "make_my_figure_core/plots/embedding_scatter.py",
+   "default_mapping": {
+    "x": "UMAP_1",
+    "y": "UMAP_2",
+    "color": "cell_type"
+   },
+   "column_roles": [
+    "x",
+    "y",
+    "color",
+    "shape",
+    "label"
+   ],
+   "options": [],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": true,
+    "supports_colorbar": true,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": true,
+    "supports_line_width": false,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "embedding",
+    "files": {
+     "csv": "examples/by_plot_type/embedding/data.csv",
+     "tsv": "examples/by_plot_type/embedding/data.tsv",
+     "xlsx": "examples/by_plot_type/embedding/data.xlsx",
+     "plotspec": "examples/by_plot_type/embedding/plotspec.json",
+     "readme": "examples/by_plot_type/embedding/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "UMAP_1",
+     "UMAP_2"
+    ],
+    "optional_columns": [
+     "cell_type",
+     "batch",
+     "n_genes"
+    ],
+    "n_rows": 350
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_style_capabilities_audit.py",
+     "tests/test_v04_plots.py"
+    ],
+    "docs": [
+     "docs/V0_4_NEW_PLOT_TYPES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": []
+   }
+  },
+  {
+   "plot_type": "hierarchical_clustering",
+   "display_name": "Hierarchical clustering (heatmap + clusters)",
+   "renderer_module": "make_my_figure_core.plots.hierarchical_clustering",
+   "renderer_path": "make_my_figure_core/plots/hierarchical_clustering.py",
+   "default_mapping": {
+    "row_id": "gene",
+    "cluster": "rows",
+    "k": 3,
+    "scale": "row_zscore",
+    "distance_metric": "euclidean",
+    "linkage_method": "average"
+   },
+   "column_roles": [
+    "row_id"
+   ],
+   "options": [
+    {
+     "key": "cluster",
+     "label": "Cluster",
+     "kind": "choice",
+     "default": "rows",
+     "choices": [
+      "rows",
+      "columns"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "k",
+     "label": "Number of clusters k",
+     "kind": "number",
+     "default": 3,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "scale",
+     "label": "Scale",
+     "kind": "choice",
+     "default": "row_zscore",
+     "choices": [
+      "none",
+      "row_zscore",
+      "column_zscore",
+      "center_rows",
+      "log",
+      "log_zscore"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "distance_metric",
+     "label": "Distance",
+     "kind": "choice",
+     "default": "euclidean",
+     "choices": [
+      "euclidean",
+      "correlation",
+      "cosine",
+      "cityblock"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "linkage_method",
+     "label": "Linkage",
+     "kind": "choice",
+     "default": "average",
+     "choices": [
+      "average",
+      "complete",
+      "single",
+      "ward"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "colormap",
+     "label": "Colormap",
+     "kind": "choice",
+     "default": "auto",
+     "choices": [
+      "auto",
+      "RdBu_r",
+      "coolwarm",
+      "seismic",
+      "RdYlBu_r",
+      "PuOr",
+      "BrBG",
+      "viridis",
+      "magma",
+      "cividis",
+      "Blues",
+      "YlOrRd",
+      "Greys"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "y_label_rotation",
+     "label": "Y-label angle",
+     "kind": "choice",
+     "default": "vertical",
+     "choices": [
+      "vertical",
+      "horizontal"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "cluster_legend_title",
+     "label": "Show cluster legend title",
+     "kind": "bool",
+     "default": false,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "show_dendrogram",
+     "label": "Show dendrogram tree",
+     "kind": "bool",
+     "default": false,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "max_features",
+     "label": "Max features (rows) for clustering",
+     "kind": "number",
+     "default": 2000,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "colorbar_location",
+     "label": "Colorbar location",
+     "kind": "choice",
+     "default": "right",
+     "choices": [
+      "right",
+      "left",
+      "top",
+      "bottom"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "colorbar_pad",
+     "label": "Colorbar pad",
+     "kind": "number",
+     "default": 0.03,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "colorbar_shrink",
+     "label": "Colorbar size",
+     "kind": "number",
+     "default": 1.0,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "row_label_fontsize",
+     "label": "Row label font (0=auto)",
+     "kind": "number",
+     "default": 0,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "col_label_fontsize",
+     "label": "Column label font (0=auto)",
+     "kind": "number",
+     "default": 0,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "y_label_pad",
+     "label": "Y-axis label padding",
+     "kind": "number",
+     "default": 6.0,
+     "choices": null,
+     "scope": "style"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": true,
+    "supports_x_tick_rotation": true,
+    "supports_y_tick_rotation": true,
+    "supports_axis_label_padding": true,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": false,
+    "supports_continuous_colormap": true,
+    "supports_colorbar": true,
+    "supports_node_colors": false,
+    "supports_edge_colors": false,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": false,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "hier_clustering",
+    "files": {
+     "csv": "examples/by_plot_type/hier_clustering/data.csv",
+     "tsv": "examples/by_plot_type/hier_clustering/data.tsv",
+     "xlsx": "examples/by_plot_type/hier_clustering/data.xlsx",
+     "plotspec": "examples/by_plot_type/hier_clustering/plotspec.json",
+     "readme": "examples/by_plot_type/hier_clustering/README.md"
+    },
+    "aux_tables": {},
+    "required_columns": [
+     "gene",
+     "<sample columns>"
+    ],
+    "optional_columns": [],
+    "n_rows": 30
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_layout_and_annotations.py",
+     "tests/test_matrix_transformations.py",
+     "tests/test_memory_guards.py",
+     "tests/test_plot_recommendations.py",
+     "tests/test_reproducibility_export_qc.py",
+     "tests/test_v05_features.py"
+    ],
+    "docs": [
+     "docs/HIERARCHICAL_CLUSTERING.md",
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/RAW_COUNTS_TUTORIAL.md",
+     "docs/TRANSFORMATIONS.md",
+     "docs/V0_5_NEW_FEATURES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/desktop_app/main.py",
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  },
+  {
+   "plot_type": "network_graph",
+   "display_name": "Network graph",
+   "renderer_module": "make_my_figure_core.plots.network_graph",
+   "renderer_path": "make_my_figure_core/plots/network_graph.py",
+   "default_mapping": {
+    "source": "source",
+    "target": "target",
+    "weight": "weight",
+    "layout": "spring",
+    "color_by": "group",
+    "seed": 42
+   },
+   "column_roles": [
+    "source",
+    "target",
+    "weight",
+    "interaction_type"
+   ],
+   "options": [
+    {
+     "key": "layout",
+     "label": "Layout",
+     "kind": "choice",
+     "default": "spring",
+     "choices": [
+      "spring",
+      "kamada_kawai",
+      "circular",
+      "shell",
+      "spectral",
+      "multipartite",
+      "fixed",
+      "random"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "seed",
+     "label": "Layout seed",
+     "kind": "number",
+     "default": 42,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "color_by",
+     "label": "Color nodes by",
+     "kind": "choice",
+     "default": "group",
+     "choices": [
+      "group",
+      "value",
+      "none"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "node_color",
+     "label": "Node color (when 'none')",
+     "kind": "choice",
+     "default": "(palette)",
+     "choices": [
+      "(palette)",
+      "#2166AC",
+      "#B2182B",
+      "#1B7837",
+      "#762A83",
+      "#E08214",
+      "#333333",
+      "#888888",
+      "black",
+      "white"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "node_cmap",
+     "label": "Node colormap (when 'value')",
+     "kind": "choice",
+     "default": "(default)",
+     "choices": [
+      "(default)",
+      "viridis",
+      "magma",
+      "cividis",
+      "coolwarm",
+      "Greys"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "size_by",
+     "label": "Size nodes by",
+     "kind": "choice",
+     "default": "degree",
+     "choices": [
+      "degree",
+      "value",
+      "fixed"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "node_size",
+     "label": "Fixed node size (when 'fixed')",
+     "kind": "number",
+     "default": 300,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "edge_color_by",
+     "label": "Color edges by category",
+     "kind": "choice",
+     "default": "(auto)",
+     "choices": [
+      "(auto)",
+      "none",
+      "interaction_type",
+      "edge_type",
+      "pathway",
+      "sign"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "edge_color",
+     "label": "Edge color (single)",
+     "kind": "choice",
+     "default": "#888888",
+     "choices": [
+      "#888888",
+      "#BBBBBB",
+      "#333333",
+      "black",
+      "#2166AC",
+      "#B2182B"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "edge_color_positive",
+     "label": "Edge color +corr",
+     "kind": "choice",
+     "default": "#B2182B",
+     "choices": [
+      "#888888",
+      "#BBBBBB",
+      "#333333",
+      "black",
+      "#2166AC",
+      "#B2182B",
+      "#B2182B"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "edge_color_negative",
+     "label": "Edge color -corr",
+     "kind": "choice",
+     "default": "#2166AC",
+     "choices": [
+      "#888888",
+      "#BBBBBB",
+      "#333333",
+      "black",
+      "#2166AC",
+      "#B2182B",
+      "#2166AC"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "edge_width_by",
+     "label": "Edge width by",
+     "kind": "choice",
+     "default": "weight",
+     "choices": [
+      "weight",
+      "fixed"
+     ],
+     "scope": "config"
+    },
+    {
+     "key": "edge_width",
+     "label": "Fixed edge width (when 'fixed')",
+     "kind": "number",
+     "default": 1.5,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "node_labels",
+     "label": "Show node labels",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "label_color",
+     "label": "Label color",
+     "kind": "choice",
+     "default": "#222222",
+     "choices": [
+      "#222222",
+      "black",
+      "#555555",
+      "#2166AC",
+      "#B2182B"
+     ],
+     "scope": "style"
+    },
+    {
+     "key": "label_font_size",
+     "label": "Label font size (0=auto)",
+     "kind": "number",
+     "default": 0,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "show_legend",
+     "label": "Show legend (grouped)",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "style"
+    },
+    {
+     "key": "min_weight",
+     "label": "Min edge weight",
+     "kind": "number",
+     "default": 0.0,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "corr_cutoff",
+     "label": "|correlation| cutoff",
+     "kind": "number",
+     "default": 0.3,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "top_n_edges",
+     "label": "Top N edges (0=all)",
+     "kind": "number",
+     "default": 0,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "min_degree",
+     "label": "Min node degree",
+     "kind": "number",
+     "default": 0,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "remove_isolates",
+     "label": "Remove isolated nodes",
+     "kind": "bool",
+     "default": true,
+     "choices": null,
+     "scope": "config"
+    },
+    {
+     "key": "detect_communities",
+     "label": "Detect communities (heuristic)",
+     "kind": "bool",
+     "default": false,
+     "choices": null,
+     "scope": "config"
+    }
+   ],
+   "style_capabilities": {
+    "supports_axes": false,
+    "supports_x_tick_rotation": false,
+    "supports_y_tick_rotation": false,
+    "supports_axis_label_padding": false,
+    "supports_legend": true,
+    "supports_palette": true,
+    "supports_group_colors": true,
+    "supports_continuous_colormap": true,
+    "supports_colorbar": true,
+    "supports_node_colors": true,
+    "supports_edge_colors": true,
+    "supports_label_colors": true,
+    "supports_panel_background": true,
+    "supports_marker_size": false,
+    "supports_line_width": false,
+    "supports_annotation_controls": true,
+    "explicitly_declared": true
+   },
+   "statistics": {
+    "uses_statistics_engine": false,
+    "draws_brackets": false,
+    "corner_panel": false
+   },
+   "example": {
+    "present": true,
+    "slug": "network",
+    "files": {
+     "csv": "examples/by_plot_type/network/data.csv",
+     "tsv": "examples/by_plot_type/network/data.tsv",
+     "xlsx": "examples/by_plot_type/network/data.xlsx",
+     "plotspec": "examples/by_plot_type/network/plotspec.json",
+     "readme": "examples/by_plot_type/network/README.md"
+    },
+    "aux_tables": {
+     "nodes": "examples/by_plot_type/network/nodes.csv"
+    },
+    "required_columns": [
+     "source",
+     "target"
+    ],
+    "optional_columns": [
+     "weight",
+     "interaction_type"
+    ],
+    "n_rows": 44
+   },
+   "preset_qc": {
+    "report": "reports/figure_preset_qc/all_plot_preset_matrix.csv",
+    "status": "PASS",
+    "notes": "new data: example with values perturbed"
+   },
+   "mentions": {
+    "tests": [
+     "tests/test_figure_presets.py",
+     "tests/test_network_spec_consistency.py",
+     "tests/test_recommendations.py",
+     "tests/test_reproducibility_export_qc.py",
+     "tests/test_style_capabilities_network.py",
+     "tests/test_v05_features.py"
+    ],
+    "docs": [
+     "docs/PLOT_TYPE_REQUIREMENTS.md",
+     "docs/V0_5_NEW_FEATURES.md",
+     "docs/manuals/User_Manual/MakeMyFigure_User_Manual.md",
+     "docs/manuals/User_Manual/parts/03_plot_catalog.md"
+    ],
+    "recommendations": [
+     "make_my_figure_core/recommendations/plot_recommender.py"
+    ],
+    "manual_catalog_builder": [
+     "scripts/build_plot_catalog_part.py"
+    ],
+    "example_generator": [
+     "scripts/generate_example_data.py"
+    ],
+    "ui_hints": [
+     "make_my_figure_core/ui_hints.py"
+    ],
+    "capabilities": [
+     "make_my_figure_core/styles/capabilities.py"
+    ],
+    "frontends": [
+     "apps/streamlit_app/streamlit_app.py"
+    ]
+   }
+  }
+ ]
+}

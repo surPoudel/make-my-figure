@@ -90,3 +90,6 @@ CLAUDE.md
 
 # Private diagnostic notes about a collaborator's workbooks stay local
 reports/collaborator_concerns/
+
+# MakeMyFigure Developer agent: per-run test/render reports (regenerated on demand)
+reports/agent_runs/
