@@ -6,3 +6,7 @@
   Also holds the approved commit / push / release runbook. Model-independent and offline-capable.
 
 Start every task by running `python .agents/makemyfigure-developer/scripts/inspect_registry.py`.
+
+Runtime pointer files (`CLAUDE.md`, `GEMINI.md`, this file for Codex-style agents) contain nothing but
+this reference. A runtime without such a convention is told directly:
+"Read .agents/makemyfigure-developer/AGENT.md and follow it."
