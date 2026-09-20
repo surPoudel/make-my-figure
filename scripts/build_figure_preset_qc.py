@@ -96,7 +96,7 @@ def _perturb(df: pd.DataFrame, seed: int = 11) -> pd.DataFrame:
     for col in out.columns:
         s = out[col]
         if pd.api.types.is_float_dtype(s):
-            vals = s.to_numpy(dtype=float)
+            vals = np.array(s.to_numpy(dtype=float), copy=True)   # pandas >= 3 returns read-only views
             finite = np.isfinite(vals)
             if not finite.any():
                 continue
