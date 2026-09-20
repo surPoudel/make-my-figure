@@ -24,6 +24,22 @@ PRIVACY = (
     "your data to any server or cloud service."
 )
 
+ARTIFACTS = (
+    "Three kinds of files, three purposes:\n"
+    "• PlotSpec (name.plot_spec.json) — the recipe for ONE plot: plot type, column roles, "
+    "options, style, statistics configuration. It does NOT contain the data; the source "
+    "table is required to reopen it.\n"
+    "• Figure preset (name.mmfpreset.json) — reusable appearance/configuration to apply to "
+    "NEW data. Never contains data or table names.\n"
+    "• Figure package (name.mmfpackage) — ONE portable file with the PlotSpec (or FigureSpec "
+    "for a composite), a frozen copy of the exact tables used, the original source file when "
+    "available, StatsSpec results, Matrix/SampleMetadata/Preprocessing records where they "
+    "apply, imported images, preview PNG/SVG/PDF and a manifest with a SHA-256 for every "
+    "file. Open it anywhere with 'Open Figure Package'; the application verifies every "
+    "checksum first and refuses to open a package whose contents were changed.\n"
+    "Because a package contains data, share it only with people who may see those data."
+)
+
 FORMATTING = (
     "How to format your data:\n"
     "• Use the first row for column names (headers).\n"

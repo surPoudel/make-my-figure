@@ -408,11 +408,14 @@ class FigureBuilderDialog(QDialog):
     # Publication-ready font defaults (points), matching the style profile.
     _FONT_DEFAULTS = {"text": 11.0, "axis": 12.0, "tick": 10.0, "legend": 10.0, "label": 14.0}
 
-    def __init__(self, controller, saved_panels: List[Dict[str, Any]], parent=None):
+    def __init__(self, controller, saved_panels: List[Dict[str, Any]], parent=None, *,
+                 initial_layout: Optional[Dict[str, Any]] = None, initial_name: Optional[str] = None,
+                 package_context=None):
         super().__init__(parent)
         self.setWindowTitle("Multi-panel Figure Builder")
         self.controller = controller
         self.saved_panels = saved_panels
+        self._package_context = package_context   # FigurePackage this composite was opened from
         # Give every panel an explicit default width so the size field matches
         # what's drawn; height stays "auto" (follows the panel's own ratio).
         for p in self.saved_panels:
@@ -441,6 +444,15 @@ class FigureBuilderDialog(QDialog):
         outer = QVBoxLayout(self)
         outer.addWidget(split)
 
+        if initial_layout:
+            try:
+                from make_my_figure_core.panels import FigureLayout
+
+                self._apply_layout_to_controls(FigureLayout.from_dict(initial_layout))
+            except Exception:  # noqa: BLE001 — a bad layout record must not block opening
+                pass
+        if initial_name:
+            self.name_combo.setCurrentText(str(initial_name))
         self._refresh_list()
         if self.saved_panels:
             self.list.setCurrentRow(0)
@@ -583,7 +595,16 @@ class FigureBuilderDialog(QDialog):
 
         act = QHBoxLayout()
         save = QPushButton("Save figure..."); save.clicked.connect(self._save)
+        save.setToolTip("Write PNG/SVG/PDF plus a FigureSpec JSON next to them (the FigureSpec alone "
+                        "does not carry the panel data).")
         act.addWidget(save)
+        pkg_btn = QPushButton("Save Figure Package…")
+        pkg_btn.setStyleSheet("font-weight: bold;")
+        pkg_btn.setToolTip("Save the composite as ONE portable .mmfpackage: FigureSpec + every panel's "
+                           "PlotSpec/StatsSpec + the exact tables + imported images + previews. "
+                           "Reopens on another computer via Open Figure Package.")
+        pkg_btn.clicked.connect(self._save_package)
+        act.addWidget(pkg_btn)
         close = QPushButton("Close"); close.clicked.connect(self.reject)
         act.addWidget(close)
         v.addLayout(act)
@@ -950,3 +971,71 @@ class FigureBuilderDialog(QDialog):
 
         plt.close(fig)
         QMessageBox.information(self, "Saved", f"Wrote {mpf.name} and sidecar next to:\n{path}{extra}")
+
+    def _save_package(self) -> None:
+        """Save the composite as one reproducible figure package (.mmfpackage)."""
+        if not self.saved_panels:
+            QMessageBox.information(self, "No panels", "Save at least one plot as a panel first.")
+            return
+        from make_my_figure_core.package import (
+            PACKAGE_EXTENSION,
+            PRIVACY_NOTICE,
+            content_for_composite,
+            estimate_package_size,
+            write_figure_package,
+        )
+        from make_my_figure_core.panels import build_figure, draft_legend
+        from make_my_figure_core.plots.registry import render as _render
+
+        mpf = self._build_mpf()
+        try:
+            fig = build_figure(mpf)
+        except Exception as exc:  # noqa: BLE001
+            QMessageBox.critical(self, "Build failed", str(exc))
+            return
+        mpf.legend_text = draft_legend(mpf)
+        # per-panel render results so each panel's statistics are stored
+        results = []
+        for panel in mpf.panels:
+            res = None
+            if not panel.is_external and panel.plot_spec is not None and panel.table is not None \
+                    and (panel.plot_spec.get("statistics") or {}).get("enabled"):
+                try:
+                    res = _render(panel.plot_spec, panel.table, aux=panel.aux or None)
+                except Exception:  # noqa: BLE001
+                    res = None
+            results.append(res)
+        try:
+            content = content_for_composite(mpf, fig, name=mpf.name, panel_results=results,
+                                            preview_dpi=self.dpi_spin.value())
+        except Exception as exc:  # noqa: BLE001
+            QMessageBox.warning(self, "Cannot build figure package", str(exc))
+            return
+        est = estimate_package_size(content) / 1024 ** 2
+        n_tab = len(content.tables); n_img = len(content.assets)
+        msg = (f"<b>Figure packages include the data required to reproduce the figure.</b><br>{PRIVACY_NOTICE}"
+               f"<br><br>This package will contain the FigureSpec, {len(mpf.panels)} panel(s), {n_tab} data table(s), "
+               f"{n_img} imported image(s), statistics where they ran, and PNG/SVG/PDF previews."
+               f"<br>Estimated size before compression: about {max(est, 0.1):.1f} MB.<br><br>Save the package?")
+        if QMessageBox.question(self, "Save Reproducible Figure Package", msg,
+                                QMessageBox.Save | QMessageBox.Cancel, QMessageBox.Save) != QMessageBox.Save:
+            return
+        path, _ = QFileDialog.getSaveFileName(self, "Save Reproducible Figure Package",
+                                              f"{mpf.name.replace(' ', '_')}{PACKAGE_EXTENSION}",
+                                              f"Figure package (*{PACKAGE_EXTENSION})")
+        if not path:
+            return
+        try:
+            rep = write_figure_package(content, path)
+        except Exception as exc:  # noqa: BLE001
+            QMessageBox.critical(self, "Could not save figure package", str(exc))
+            return
+        import matplotlib.pyplot as plt
+
+        plt.close(fig)
+        parent = self.parent()
+        if parent is not None and hasattr(parent, "_add_recent"):
+            parent._add_recent(rep.path)
+        extra = ("\n\nNotes:\n• " + "\n• ".join(rep.warnings)) if rep.warnings else ""
+        QMessageBox.information(self, "Figure package saved",
+                                f"Saved {rep.path} ({rep.n_bytes / 1024 ** 2:.2f} MB).{extra}")

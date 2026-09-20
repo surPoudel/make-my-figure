@@ -116,6 +116,14 @@ _MATRIX_PLOT_TYPES = {
     "hierarchical_dendrogram",
 }
 from make_my_figure_core import ui_hints
+from make_my_figure_core.package import (
+    ARTIFACT_DESCRIPTIONS,
+    PACKAGE_EXTENSION,
+    PRIVACY_NOTICE as PACKAGE_PRIVACY_NOTICE,
+    MatrixContext,
+    PackageError,
+    is_package_path,
+)
 from make_my_figure_core.io.loaders import LoaderError
 from make_my_figure_core.io import workbook as workbook_io
 from make_my_figure_core.plots.base import RenderError
@@ -216,6 +224,21 @@ class HelpDialog(QDialog):
         browser.setHtml("".join(html))
         tabs.addTab(browser, "Plot types")
 
+        # Files & reproducibility tab — PlotSpec vs Figure preset vs Figure package.
+        files_browser = QTextBrowser()
+        files_html = ["<h2>Files written by Make My Figure</h2>",
+                      "<p>" + help_content.ARTIFACTS.replace("\n", "<br>") + "</p>",
+                      "<h3>Sharing a reproducible figure</h3><ol>",
+                      "<li>Finalize the plot.</li>",
+                      "<li>Click <b>Save Figure Package (.mmfpackage)</b> (or File → Save Reproducible Figure Package…).</li>",
+                      "<li>Send the one package file.</li>",
+                      "<li>Your collaborator opens Make My Figure and clicks <b>Open Figure Package</b>.</li>",
+                      "<li>The package integrity is verified (every SHA-256).</li>",
+                      "<li>The figure opens with the frozen data and configuration; it can be inspected, edited and re-exported.</li></ol>",
+                      "<p><b>Export all as ZIP</b> contains the publication files, the PlotSpec/StatsSpec JSON and the figure package.</p>"]
+        files_browser.setHtml("".join(files_html))
+        tabs.addTab(files_browser, "Files & reproducibility")
+
         fmt = QTextBrowser()
         fmt.setPlainText(help_content.FORMATTING)
         tabs.addTab(fmt, "Format your data")
@@ -310,6 +333,7 @@ class MainWindow(QMainWindow):
         # once when opening a recommendation, and provenance recorded on the PlotSpec.
         self._handoff_mapping = {}
         self._handoff_provenance = {}
+        self._package_context = None     # FigurePackage the current session was opened from
         self._matrix_dialog = None        # persisted so returning preserves wizard state
         self._toolbar = None
         self._suppress_change = False   # re-entrancy guard for plot-type changes
@@ -377,6 +401,7 @@ class MainWindow(QMainWindow):
         row.addStretch(1)
         for label, slot in [
             ("Open data file", self.action_open_file),
+            ("Open Figure Package", self.action_open_package),
             ("Use example data", self.action_open_example_dialog),
             ("Recent files", self.action_recent_dialog),
             ("Help", self.action_help),
@@ -384,6 +409,8 @@ class MainWindow(QMainWindow):
             b = QPushButton(label)
             b.setMinimumSize(150, 44)
             b.clicked.connect(slot)
+            if label == "Open Figure Package":
+                b.setToolTip(ARTIFACT_DESCRIPTIONS["figure_package"])
             row.addWidget(b)
         row.addStretch(1)
         v.addLayout(row)
@@ -542,11 +569,20 @@ class MainWindow(QMainWindow):
         export_box = QGroupBox("5. Export")
         eb = QVBoxLayout(export_box)
         for label, fmt in [("Export SVG", "svg"), ("Export PNG", "png"),
-                           ("Export PDF", "pdf"), ("Export PlotSpec JSON", "json")]:
+                           ("Export PDF", "pdf"), ("Export PlotSpec JSON (specification only)", "json")]:
             b = QPushButton(label)
             b.clicked.connect(lambda _=False, f=fmt: self.export_single(f))
+            if fmt == "json":
+                b.setToolTip(ARTIFACT_DESCRIPTIONS["plot_spec"])
             eb.addWidget(b)
+        pkg_btn = QPushButton("Save Figure Package (.mmfpackage)")
+        pkg_btn.setToolTip(ARTIFACT_DESCRIPTIONS["figure_package"] + "\n\n" + PACKAGE_PRIVACY_NOTICE)
+        pkg_btn.setStyleSheet("font-weight: bold;")
+        pkg_btn.clicked.connect(self.action_save_package)
+        eb.addWidget(pkg_btn)
         zip_btn = QPushButton("Export all as ZIP")
+        zip_btn.setToolTip("SVG + PNG + PDF + PlotSpec/StatsSpec JSON + the reproducible figure "
+                           "package (.mmfpackage) in one ZIP.")
         zip_btn.clicked.connect(self.export_zip)
         eb.addWidget(zip_btn)
         tmpl_btn = QPushButton("Save template (example table)")
@@ -1208,10 +1244,21 @@ class MainWindow(QMainWindow):
         a_open = QAction("Open data file…", self)
         a_open.triggered.connect(self.action_open_file)
         filem.addAction(a_open)
-        a_open_spec = QAction("Open PlotSpec… (reproduce a saved figure)", self)
+        a_open_pkg = QAction("Open Figure Package… (.mmfpackage: specification + frozen data)", self)
+        a_open_pkg.setShortcut("Ctrl+Shift+P")
+        a_open_pkg.setToolTip(ARTIFACT_DESCRIPTIONS["figure_package"])
+        a_open_pkg.triggered.connect(self.action_open_package)
+        filem.addAction(a_open_pkg)
+        a_open_spec = QAction("Open PlotSpec… (specification only; needs the data file)", self)
         a_open_spec.setShortcut("Ctrl+Shift+O")
+        a_open_spec.setToolTip(ARTIFACT_DESCRIPTIONS["plot_spec"])
         a_open_spec.triggered.connect(self.action_open_plotspec)
         filem.addAction(a_open_spec)
+        a_save_pkg = QAction("Save Reproducible Figure Package…", self)
+        a_save_pkg.setShortcut("Ctrl+Shift+S")
+        a_save_pkg.setToolTip(ARTIFACT_DESCRIPTIONS["figure_package"])
+        a_save_pkg.triggered.connect(self.action_save_package)
+        filem.addAction(a_save_pkg)
 
         ex_menu = filem.addMenu("Open example")
         for pt, label in self.controller.plot_types():
@@ -1461,8 +1508,202 @@ class MainWindow(QMainWindow):
         dlg.exec()
         self.panel_count_label.setText(f"{len(self._saved_panels)} panel(s) saved.")
 
+    # --- reproducible figure packages (.mmfpackage) -------------------------
+    def _matrix_context(self):
+        """MatrixContext for the current plot when it came from the Matrix Workflow (else None)."""
+        dlg = getattr(self, "_matrix_dialog", None)
+        from_matrix = bool((self._handoff_provenance or {}).get("source_workflow") == "matrix")
+        if dlg is not None and getattr(dlg, "matrix_spec", None) is not None and (from_matrix or dlg.data is self.data):
+            raw = getattr(dlg, "_raw_data", None) or dlg.data
+            return MatrixContext(
+                source_dataframe=raw.info.dataframe, source_name=raw.table_name,
+                source_path=None if raw.is_example else raw.source_path, source_sheet=raw.sheet_name,
+                source_provenance=raw.source_provenance(), matrix_spec=dlg.matrix_spec,
+                sample_metadata_spec=getattr(dlg, "metadata", None),
+                preprocessing_spec=getattr(dlg, "_prep_spec", None))
+        pkg = self._package_context
+        if pkg is not None and pkg.matrix_spec and pkg.source_table() is not None:
+            src = pkg.source_table()
+            return MatrixContext(
+                source_dataframe=src.dataframe, source_name=src.display_name,
+                source_provenance=src.meta.get("provenance") or {}, matrix_spec=pkg.matrix_spec,
+                sample_metadata_spec=pkg.sample_metadata_spec, preprocessing_spec=pkg.preprocessing_spec)
+        return None
+
+    def action_save_package(self):
+        """Save the current figure as ONE portable file: specification + frozen data + records."""
+        if not self._ensure_rendered():
+            return
+        from make_my_figure_core.package import estimate_package_size
+
+        pt = self.plot_combo.currentData()
+        stem = self._export_basename(pt)
+        try:
+            content = self.controller.package_content(
+                self.data, self._current_spec, self._current_result, matrix=self._matrix_context(),
+                name=stem, dpi=self.dpi_spin.value())
+        except Exception as exc:  # noqa: BLE001
+            QMessageBox.warning(self, "Cannot build figure package", str(exc))
+            return
+        est = estimate_package_size(content) / 1024 ** 2
+        parts = []
+        for t in content.tables:
+            role = {"source_table": "source table", "derived_table": "derived (plotted) table",
+                    "aux_table": "auxiliary table", "metadata_table": "metadata table"}.get(t.role, t.role)
+            orig = " + original file" if (t.original_path and t.include_original_file) else ""
+            parts.append(f"• {role}: {t.display_name} ({t.dataframe.shape[0]} × {t.dataframe.shape[1]}){orig}")
+        specs = ["PlotSpec"] + (["StatsSpec (results included)"] if content.components[0].stats_payload else []) \
+            + (["MatrixSpec"] if content.matrix_spec else []) + (["SampleMetadataSpec"] if content.sample_metadata_spec else []) \
+            + (["PreprocessingSpec"] if content.preprocessing_spec else [])
+        msg = (f"<b>Figure packages include the data required to reproduce the figure.</b><br>"
+               f"{PACKAGE_PRIVACY_NOTICE}<br><br><b>This package will contain</b><br>"
+               + "<br>".join(parts) + f"<br>• records: {', '.join(specs)}<br>• previews: PNG, SVG, PDF"
+               f"<br><br>Estimated size before compression: about {max(est, 0.1):.1f} MB."
+               + ("<br><b>This is a large package.</b>" if est > 200 else "")
+               + "<br><br>Save the package?")
+        if QMessageBox.question(self, "Save Reproducible Figure Package", msg,
+                                QMessageBox.Save | QMessageBox.Cancel, QMessageBox.Save) != QMessageBox.Save:
+            return
+        dest, _ = QFileDialog.getSaveFileName(
+            self, "Save Reproducible Figure Package", f"{stem}{PACKAGE_EXTENSION}",
+            f"Figure package (*{PACKAGE_EXTENSION})")
+        if not dest:
+            return
+        try:
+            rep = self.controller.write_package(content, dest)
+        except Exception as exc:  # noqa: BLE001
+            QMessageBox.critical(self, "Could not save figure package", str(exc))
+            return
+        self._add_recent(rep.path)
+        extra = ("\n\nNotes:\n• " + "\n• ".join(rep.warnings)) if rep.warnings else ""
+        QMessageBox.information(
+            self, "Figure package saved",
+            f"Saved {rep.path}\n({rep.n_bytes / 1024 ** 2:.2f} MB). Copy this one file to another folder or "
+            f"computer and use Open Figure Package to reproduce the figure.{extra}")
+        self.statusBar().showMessage(f"Saved figure package {rep.path}", 6000)
+
+    def action_open_package(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Open Figure Package", "", f"Figure package (*{PACKAGE_EXTENSION});;All files (*)")
+        if path:
+            self.open_package_path(path)
+
+    def open_package_path(self, path: str):
+        """Validate, verify and reopen a figure package; render from the frozen data."""
+        import os as _os
+
+        try:
+            pkg = self.controller.open_package(path)
+        except PackageError as exc:
+            QMessageBox.critical(self, "Could not open figure package", str(exc))
+            return
+        except Exception as exc:  # noqa: BLE001
+            QMessageBox.critical(self, "Could not open figure package", f"Unexpected error: {exc}")
+            return
+        if pkg.kind == "composite":
+            self._open_composite_package(pkg, path)
+            return
+        try:
+            loaded, spec = self.controller.loaded_from_package(pkg)
+        except PackageError as exc:
+            QMessageBox.critical(self, "Could not open figure package", str(exc))
+            return
+        self._handoff_mapping = {}
+        # keep the matrix provenance recorded in the spec so re-saving carries it on
+        self._handoff_provenance = {k: v for k, v in (spec.get("source") or {}).items()
+                                    if str(k).startswith("source_") and k not in ("source_table_sha256", "source_table_shape")} \
+            if (spec.get("source") or {}).get("source_workflow") == "matrix" else {}
+        self._matrix_dialog = None
+        self._package_context = pkg
+        self.data = loaded
+        self.stack.setCurrentIndex(1)
+        self._populate_sheet_selector(loaded)
+        self._populate_table()
+        self._apply_plotspec_to_ui(spec)
+        try:
+            result = self.controller.render(spec, loaded)
+        except Exception as exc:  # noqa: BLE001
+            self._show_warning(f"Opened the figure package but rendering failed: {exc}")
+            return
+        self._display_result(spec, result)
+        notes = []
+        from make_my_figure_core.package import verify_preprocessing, verify_statistics
+
+        stat_problems = verify_statistics(pkg.stats_payload, getattr(result, "stats_report", None))
+        if stat_problems:
+            notes.append("Statistics recomputed from the frozen data differ from the stored StatsSpec:\n  - "
+                         + "\n  - ".join(stat_problems[:6]))
+        if pkg.preprocessing_spec:
+            chk = verify_preprocessing(pkg)
+            if chk["status"] in ("differs", "error"):
+                notes.append("The recorded preprocessing chain no longer reproduces the frozen derived matrix "
+                             f"({chk['detail']}). The figure is drawn from the frozen derived matrix as saved.")
+        if notes:
+            QMessageBox.warning(self, "Figure package opened with notes", "\n\n".join(notes))
+        if getattr(self, "_auto_recommend", True):
+            self._refresh_recommendations()
+        self._add_recent(path)
+        created = pkg.manifest.get("created_at", "")
+        self.statusBar().showMessage(
+            f"Opened figure package {_os.path.basename(path)} — integrity verified; frozen data from {created}. "
+            "Editing and re-exporting work as usual.", 10000)
+
+    def _open_composite_package(self, pkg, path: str):
+        import os as _os
+
+        from make_my_figure_core.package import rebuild_composite
+
+        try:
+            mpf = rebuild_composite(pkg)
+        except PackageError as exc:
+            QMessageBox.critical(self, "Could not open figure package", str(exc))
+            return
+        if self._saved_panels:
+            ans = QMessageBox.question(
+                self, "Open multi-panel figure package",
+                f"The Figure Builder already holds {len(self._saved_panels)} panel(s). Replace them with the "
+                f"{len(mpf.panels)} panel(s) from the package?", QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel,
+                QMessageBox.Yes)
+            if ans == QMessageBox.Cancel:
+                return
+            if ans == QMessageBox.Yes:
+                self._saved_panels.clear()
+        for panel in mpf.panels:
+            if panel.is_external:
+                self._saved_panels.append({
+                    "image_path": panel.image_path, "image_meta": panel.image_meta or {},
+                    "width_in": panel.width_in or 3.2, "height_in": panel.height_in, "title": panel.title,
+                    "fit_mode": panel.fit_mode, "rotate": panel.rotate, "crop": panel.crop or {},
+                    "border": panel.border, "auto_trim": panel.auto_trim, "background": panel.background,
+                    "annotations": panel.annotations or [],
+                    "plot_type": f"imported:{(panel.image_meta or {}).get('file_type', 'file')}"})
+            else:
+                self._saved_panels.append({
+                    "plot_spec": panel.plot_spec, "table": panel.table, "aux": panel.aux or {},
+                    "title": panel.title, "plot_type": (panel.plot_spec or {}).get("plot_type"),
+                    "width_in": panel.width_in or 3.2, "height_in": panel.height_in})
+        self._package_context = pkg
+        self.panel_count_label.setText(f"{len(self._saved_panels)} panel(s) saved.")
+        self._add_recent(path)
+        if self.stack.currentIndex() == 0 and self.data is None:
+            # keep the welcome page but make the builder reachable from the dialog
+            pass
+        from apps.desktop_app.stats_panel import FigureBuilderDialog
+
+        dlg = FigureBuilderDialog(self.controller, self._saved_panels, self,
+                                  initial_layout=(pkg.figure_spec or {}).get("figure", {}).get("layout"),
+                                  initial_name=mpf.name, package_context=pkg)
+        self.statusBar().showMessage(
+            f"Opened multi-panel figure package {_os.path.basename(path)} — integrity verified; "
+            f"{len(mpf.panels)} panel(s) restored with their frozen data.", 10000)
+        dlg.exec()
+        self.panel_count_label.setText(f"{len(self._saved_panels)} panel(s) saved.")
+
     # --- loading ---------------------------------------------------------
     def load_path(self, path: str):
+        if is_package_path(path):
+            self.open_package_path(path)
+            return
         try:
             data = self.controller.load_file(path)
         except LoaderError as exc:
@@ -1476,6 +1717,7 @@ class MainWindow(QMainWindow):
         # A genuinely new dataset starts a fresh Matrix Workflow + no handoff state.
         self._handoff_mapping = {}
         self._handoff_provenance = {}
+        self._package_context = None
         self._matrix_dialog = None
         # Uploaded data starts with NO plot selected — don't auto-draw a chart.
         prev = self._suppress_change
@@ -1492,6 +1734,7 @@ class MainWindow(QMainWindow):
         except Exception as exc:
             QMessageBox.warning(self, "Could not load example", str(exc))
             return
+        self._package_context = None
         # Switch the plot type to match the example (guard against re-entrancy so
         # setting the combo doesn't recursively re-trigger the change handler).
         prev = self._suppress_change
@@ -1730,6 +1973,10 @@ class MainWindow(QMainWindow):
         except Exception as exc:
             self._show_warning(f"Could not load data '{_os.path.basename(data_path)}': {exc}")
             return
+        digest_warning = self.controller.check_source_digest(spec, loaded)
+        if digest_warning:
+            QMessageBox.warning(self, "Data differ from the saved PlotSpec", digest_warning)
+        self._package_context = None
         self.data = loaded
         self.stack.setCurrentIndex(1)
         self._populate_table()
@@ -1851,12 +2098,16 @@ class MainWindow(QMainWindow):
         import json
 
         pt = self.plot_combo.currentData()
-        dest, _ = QFileDialog.getSaveFileName(self, "Save PlotSpec", f"{pt}.plot_spec.json",
-                                              "PlotSpec JSON (*.json)")
+        dest, _ = QFileDialog.getSaveFileName(
+            self, "Save Plot Specification (.json) — specification only; the source data are required to reopen",
+            f"{pt}.plot_spec.json", "PlotSpec JSON (*.json)")
         if not dest:
             return False
         with open(dest, "w", encoding="utf-8") as fh:
-            json.dump(self._current_spec, fh, indent=2)
+            import copy as _copy
+
+            json.dump(self.controller.stamp_source_digest(_copy.deepcopy(self._current_spec), self.data),
+                      fh, indent=2)
         self.statusBar().showMessage(f"Saved PlotSpec to {dest}", 5000)
         return True
 
@@ -2879,7 +3130,10 @@ class MainWindow(QMainWindow):
                 return
             import json
 
-            sidecar = {"plot_spec": self._current_spec,
+            import copy as _copy
+
+            spec_out = self.controller.stamp_source_digest(_copy.deepcopy(self._current_spec), self.data)
+            sidecar = {"plot_spec": spec_out,
                        "render_metadata": {k: v for k, v in self._current_result.metadata.items()
                                            if k != "spec"}}
             with open(dest, "w", encoding="utf-8") as fh:
@@ -2904,17 +3158,18 @@ class MainWindow(QMainWindow):
             return
         pt = self.plot_combo.currentData()
         stem = self._export_basename(pt)
-        dest, _ = QFileDialog.getSaveFileName(self, "Export all as ZIP",
+        dest, _ = QFileDialog.getSaveFileName(self, "Export all as ZIP (figures + specs + figure package)",
                                               f"{stem}_bundle.zip", "ZIP (*.zip)")
         if not dest:
             return
         try:
-            data = self.controller.export_bundle(
-                self._current_spec, self._current_result,
-                ["svg", "png", "pdf"], dpi=self.dpi_spin.value(), basename=stem)
+            data = self.controller.export_all_bundle(
+                self.data, self._current_spec, self._current_result,
+                formats=["svg", "png", "pdf"], dpi=self.dpi_spin.value(), basename=stem,
+                matrix=self._matrix_context())
             with open(dest, "wb") as fh:
                 fh.write(data)
-            self.statusBar().showMessage(f"Saved bundle {dest}")
+            self.statusBar().showMessage(f"Saved bundle {dest} (includes {stem}{PACKAGE_EXTENSION})")
         except Exception as exc:
             QMessageBox.warning(self, "Export failed", str(exc))
 
@@ -2944,7 +3199,9 @@ class MainWindow(QMainWindow):
             self.recent_menu.addAction(act)
             return
         for p in recents:
-            act = QAction(p, self)
+            act = QAction(("📦 " if is_package_path(p) else "") + p, self)
+            if is_package_path(p):
+                act.setToolTip("Reproducible figure package — opens with the package loader")
             act.triggered.connect(lambda _=False, path=p: self.load_path(path))
             self.recent_menu.addAction(act)
 
@@ -2969,6 +3226,11 @@ def _selftest() -> int:
             result = ctrl.render(spec, data)
             blob = ctrl.export_bundle(spec, result, ["svg", "png", "pdf"], basename=pt)
             assert blob and len(blob) > 300
+            # reproducible figure package: save -> open -> render from the frozen data
+            content = ctrl.package_content(data, spec, result, name=pt)
+            pkg = ctrl.open_package(ctrl.package_bytes(content))
+            loaded2, spec2 = ctrl.loaded_from_package(pkg)
+            ctrl.render(spec2, loaded2)
         except Exception as exc:  # noqa: BLE001
             failures.append(f"{pt}: {exc}")
     # Exercise the statistics engine end-to-end so a frozen build fails loudly if

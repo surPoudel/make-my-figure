@@ -13,6 +13,59 @@ All notable changes to Make My Figure are recorded here. This project uses a
 single, evolving `Publication` style — it does not target or claim compliance
 with any journal.
 
+## [Unreleased — v1.1.1 candidate] — Reproducible figure packages
+
+Not released: no tag, no installers, no merge. Awaiting the author's acceptance test
+(`reports/v1.1.1_manual_acceptance_test.md`).
+
+### Added
+- **Reproducible figure packages (`.mmfpackage`)** — one portable file that reopens a figure on
+  another computer without the original data files: the PlotSpec (or FigureSpec + every panel's
+  PlotSpec/StatsSpec), a frozen lossless copy of the exact table(s) the plot used (`mmftable`
+  JSON: doubles bit-exact incl. NaN/±Inf/−0.0, missing values, strings, categories, dates), the
+  original CSV/TSV/XLSX when available, the StatsSpec with results, the MatrixSpec /
+  SampleMetadataSpec / PreprocessingSpec with both the original and the derived matrix, imported
+  panel images, PNG/SVG/PDF previews, the software environment, and `manifest.json` (format
+  version 1, JSON Schema `schemas/figure_package_manifest.schema.json`) with a SHA-256 for every
+  file. Core: `make_my_figure_core.package` (writer, reader, assembly helpers, security scan).
+- **Desktop:** *Open Figure Package* on the landing page and File menu (Ctrl+Shift+P), *Save
+  Reproducible Figure Package…* (Ctrl+Shift+S) and *Save Figure Package (.mmfpackage)* in the
+  Export group with a privacy notice ("Figure packages include the data required to reproduce the
+  figure"), content list and size estimate; packages open from drag-and-drop and *Recent files*
+  (📦); composite packages reopen in the Figure Builder with their layout and frozen panel data;
+  Figure Builder *Save Figure Package…*; Help tab *Files & reproducibility*.
+- **Browser:** *Data source → Open Figure Package* and a *Figure Package* download.
+- On opening a package the statistics are recomputed from the frozen data and compared with the
+  stored StatsSpec, and a recorded preprocessing chain is replayed on the frozen source and
+  compared with the frozen derived matrix; differences are reported, frozen values are never
+  replaced.
+- Exported PlotSpecs carry `source.source_table_sha256`, a content digest of the plotted table;
+  *Open PlotSpec* warns when the data it finds differ from the recorded table.
+- `PreprocessingStep.user_parameters` records the requested parameters so a chain can be replayed
+  exactly (older records are replayed by signature filtering).
+
+### Changed
+- **Export all as ZIP** now contains the publication files, `name.plot_spec.json`,
+  `name.stats_spec.json` (when statistics ran), **`name.mmfpackage`** and a README.
+- Desktop wording makes the three artifacts unmistakable: *Export PlotSpec JSON (specification
+  only)*, *Open PlotSpec… (specification only; needs the data file)*, Figure preset (no data),
+  Figure package (frozen data + specifications).
+- *Open PlotSpec* accepts the `{"plot_spec": …, "render_metadata": …}` sidecar written by *Export
+  PlotSpec JSON* (previously only the bare spec from *Save PlotSpec* reopened).
+
+### Security
+- Packages are untrusted input: member names are checked (no `..`, absolute paths, drive letters,
+  backslashes, control characters), symbolic links and device entries are rejected, entry count,
+  entry size, total size and compression ratio are capped, unlisted or altered files fail the
+  integrity check, nothing is unpickled or executed.
+
+### Documentation
+- `docs/FIGURE_PACKAGES.md`; Quick Start and User Manual (Parts I §6, XV §61–63a, XVI §68, XVII
+  §70, XXIII, XXIV, glossary) describe PlotSpec vs Figure preset vs Figure package and the
+  eight-step "Sharing a reproducible figure" workflow; `reports/portable_package_current_state.md`
+  (live-code audit of v1.1.0), `reports/v1.1.1_manuscript_claim_audit.md`,
+  `reports/v1.1.1_manual_acceptance_test.md`.
+
 ## [1.1.0] — Figure presets, validated statistics, export and packaging fixes
 
 ### Added

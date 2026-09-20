@@ -164,7 +164,79 @@ if _pending:
 
 st.sidebar.header("1. Data")
 source_mode = st.sidebar.radio("Data source",
-                               ["Bundled sample", "Upload file", "Open PlotSpec"])
+                               ["Bundled sample", "Upload file", "Open PlotSpec", "Open Figure Package"],
+                               help=("Open PlotSpec = specification only (needs the data table). "
+                                     "Open Figure Package = .mmfpackage with the frozen data inside."))
+
+# --- Open a figure package: specification + frozen data + records, verified by checksum ---
+if source_mode == "Open Figure Package":
+    from make_my_figure_core.package import (
+        PACKAGE_EXTENSION,
+        PackageError,
+        open_figure_package,
+        rebuild_composite,
+        single_plot_inputs,
+        verify_preprocessing,
+        verify_statistics,
+    )
+
+    st.subheader("Open a reproducible figure package")
+    st.caption(f"Upload a `*{PACKAGE_EXTENSION}` saved by Make My Figure. It carries the plot specification, "
+               "a frozen copy of the data, statistics/preprocessing records and previews; every file is "
+               "checked against the SHA-256 recorded in its manifest before anything is drawn.")
+    pkg_file = st.file_uploader("Figure package", type=[PACKAGE_EXTENSION.lstrip(".")], key="pkg_upload")
+    if pkg_file is None:
+        st.info("Upload a figure package to reproduce the figure.")
+        st.stop()
+    try:
+        _pkg = open_figure_package(pkg_file.getvalue())
+    except PackageError as _exc:
+        st.error(f"Could not open figure package: {_exc}")
+        st.stop()
+    except Exception as _exc:  # noqa: BLE001
+        st.error(f"Could not open figure package (unexpected error): {_exc}")
+        st.stop()
+    st.success("Package integrity verified — " + "; ".join(_pkg.summary_lines()))
+    try:
+        if _pkg.kind == "composite":
+            from make_my_figure_core.panels import build_figure as _build_figure
+
+            _mpf = rebuild_composite(_pkg)
+            _fig = _build_figure(_mpf)
+            st.pyplot(_fig, use_container_width=False)
+            st.caption(f"{len(_mpf.panels)} panel(s) rebuilt from the frozen panel data.")
+            _stem = _mpf.name.replace(" ", "_")
+        else:
+            _spec, _df, _aux = single_plot_inputs(_pkg)
+            _res = render(_spec, _df, aux=_aux or None)
+            _fig = _res.figure
+            st.pyplot(_fig, use_container_width=False)
+            for _w in (_res.warnings or []):
+                st.warning(_w)
+            _probs = verify_statistics(_pkg.stats_payload, getattr(_res, "stats_report", None))
+            if _probs:
+                st.warning("Statistics recomputed from the frozen data differ from the stored StatsSpec: "
+                           + "; ".join(_probs[:5]))
+            elif _pkg.stats_payload:
+                st.caption("Statistics recomputed from the frozen data match the stored StatsSpec.")
+            if _pkg.preprocessing_spec:
+                _chk = verify_preprocessing(_pkg)
+                (st.warning if _chk["status"] in ("differs", "error") else st.caption)(
+                    f"Preprocessing record check: {_chk['status']} — {_chk['detail']}")
+            with st.expander("Frozen data table"):
+                st.dataframe(_df, use_container_width=True)
+            with st.expander("Plot specification (from the package)"):
+                st.json(_spec)
+            _stem = _pkg.name.replace(" ", "_")
+        from make_my_figure_core.plots.registry import figure_to_bytes as _f2b
+
+        _c1, _c2, _c3 = st.columns(3)
+        _c1.download_button("PNG", _f2b(_fig, "png", dpi=300), file_name=f"{_stem}.png", mime="image/png")
+        _c2.download_button("SVG", _f2b(_fig, "svg"), file_name=f"{_stem}.svg", mime="image/svg+xml")
+        _c3.download_button("PDF", _f2b(_fig, "pdf"), file_name=f"{_stem}.pdf", mime="application/pdf")
+    except Exception as _exc:  # noqa: BLE001
+        st.error(f"Opened the package but could not reproduce the figure: {_exc}")
+    st.stop()
 
 # --- Open a saved PlotSpec: reproduce an exported figure from its JSON + data ---
 if source_mode == "Open PlotSpec":
@@ -200,6 +272,7 @@ if source_mode == "Open PlotSpec":
 
 table_info = None
 table_name = None
+_upload_raw, _upload_name = None, None
 bundled_aux = None
 
 _use_examples = examples.has_manifest()
@@ -234,6 +307,7 @@ else:
     _empty_sheet_selected = False
     if uploaded is not None:
         raw = uploaded.getvalue()
+        _upload_raw, _upload_name = raw, uploaded.name
         if workbook_io.is_excel_source(uploaded.name):
             # --- Multi-sheet workbook browser -------------------------------
             try:
@@ -1298,7 +1372,7 @@ try:
     base = workbook_io.output_basename(
         _prov.get("source_workbook_name") or table_name,
         _prov.get("source_sheet_name"), plot_type)
-    c1, c2, c3, c4 = st.columns(4)
+    c1, c2, c3, c4, c5 = st.columns(5)
     c1.download_button("SVG", _fig_bytes("svg"), file_name=f"{base}.svg", mime="image/svg+xml")
     c2.download_button("PNG", _fig_bytes("png"), file_name=f"{base}.png", mime="image/png")
     c3.download_button("PDF", _fig_bytes("pdf"), file_name=f"{base}.pdf", mime="application/pdf")
@@ -1311,7 +1385,50 @@ try:
         json.dumps(sidecar, indent=2).encode("utf-8"),
         file_name=f"{base}.plot_spec.json",
         mime="application/json",
+        help="Specification only — the source data are required to reopen it.",
     )
+    # --- reproducible figure package: specification + frozen data + records in ONE file ---
+    from make_my_figure_core.package import (
+        ARTIFACT_DESCRIPTIONS as _ART,
+        PACKAGE_EXTENSION as _PKG_EXT,
+        PRIVACY_NOTICE as _PKG_PRIVACY,
+        MatrixContext as _MatrixContext,
+        build_package_bytes as _build_pkg,
+        content_for_single_plot as _content_single,
+        table_digest as _table_digest,
+    )
+
+    _mc = None
+    if (_source_prov or {}).get("source_workflow") == "matrix" and st.session_state.get("mw_raw_matrix_df") is not None:
+        _mc = _MatrixContext(
+            source_dataframe=st.session_state.get("mw_raw_matrix_df"),
+            source_name=st.session_state.get("mw_raw_matrix_name"),
+            source_provenance=st.session_state.get("_mw_source_prov") or None,
+            matrix_spec=st.session_state.get("mw_processed_spec") or st.session_state.get("mw_raw_matrix_spec"),
+            sample_metadata_spec=st.session_state.get("mw_meta_spec"),
+            preprocessing_spec=st.session_state.get("mw_prep_spec"))
+    _pkg_spec = json.loads(json.dumps(spec))
+    _pkg_spec["source"] = {**(_pkg_spec.get("source") or {}),
+                           "source_table_sha256": _table_digest(table_info.dataframe),
+                           "source_table_shape": [int(table_info.dataframe.shape[0]), int(table_info.dataframe.shape[1])]}
+    try:
+        _content = _content_single(_pkg_spec, table_info.dataframe, result, table_name=table_name,
+                                   aux=render_aux, provenance=_prov or None, matrix=_mc, name=base, preview_dpi=dpi)
+        if _upload_raw is not None and _content.tables and _content.tables[0].role == "source_table" and _mc is None:
+            _content.tables[0].original_bytes = _upload_raw
+            _content.tables[0].original_filename = _upload_name
+            _content.tables[0].sheet_name = (_prov or {}).get("source_sheet_name")
+        _pkg_bytes, _pkg_manifest, _pkg_warn = _build_pkg(_content)
+        c5.download_button(
+            "Figure Package", _pkg_bytes, file_name=f"{base}{_PKG_EXT}", mime="application/zip",
+            help=_ART["figure_package"] + "\n\n" + _PKG_PRIVACY,
+        )
+        st.caption(f"**Figure package** ({len(_pkg_bytes) / 1024 ** 2:.2f} MB): {_ART['figure_package']} "
+                   "Figure packages include the data required to reproduce the figure.")
+        for _w in _pkg_warn:
+            st.caption("Package note: " + _w)
+    except Exception as _exc:  # noqa: BLE001
+        c5.caption(f"Figure package unavailable: {_exc}")
 
 except (RenderError, SpecValidationError) as exc:
     st.error(f"Could not render figure: {exc}")

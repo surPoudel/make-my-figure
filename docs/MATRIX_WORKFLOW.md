@@ -16,6 +16,8 @@ plotted or analysed.
 > look. Matrix/metadata/preprocessing/statistics/workbook **provenance** travels with
 > the plot into the exported PlotSpec (`source` block), and you can **return to the
 > Matrix Workflow** without losing its state.
+>
+> The PlotSpec `source` block carries identifiers and a method sentence only. To keep the full records **and** the data, **Save Figure Package**: the `.mmfpackage` holds the original matrix, the exact derived matrix the plot used, and the MatrixSpec, SampleMetadataSpec and PreprocessingSpec as JSON; on reopening the chain is replayed and checked against the frozen derived matrix (see `FIGURE_PACKAGES.md`).
 
 > **Multi-sheet Excel:** if your matrix lives in one worksheet of a workbook, select
 > that sheet first (see [MULTI_SHEET_EXCEL.md](MULTI_SHEET_EXCEL.md)). The selected

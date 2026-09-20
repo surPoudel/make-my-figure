@@ -73,6 +73,8 @@ The composite exports to **SVG / PDF / PNG** plus the **FigureSpec JSON**. Panel
 labels and annotations stay vector/editable; imported raster/rasterized-vector
 content appears at its resolution. Nothing is clipped (tight bounding box).
 
+**Save Figure Package…** additionally bundles the imported assets, every panel's data and specifications into one `.mmfpackage` that reopens with **Open Figure Package** — no `figure_builder_assets/` folder to keep alongside.
+
 ## Limitations
 - Imported PDF/SVG are rasterized in the composite (see above).
 - SVG/PDF import needs an optional converter (cairosvg / PyMuPDF); without it you

@@ -1,8 +1,8 @@
 # Make My Figure — User Manual
 
 **MakeMyFigure version:** 1.1.0  
-**Documentation generated from commit:** `cea315c`  
-**Date:** 2026-09-06
+**Documentation generated from commit:** `473d495`  
+**Date:** 2026-09-11
 
 This manual describes the application exactly as built at the commit above. Where the packaged installers of an earlier release differ, the text says so.
 
@@ -36,7 +36,7 @@ Bench and computational scientists who have a table of results and need a clean,
 - Supports **annotations** (click-to-label points, duplicate-label policies, a manual annotation layer in the PlotSpec).
 - Saves and applies **Figure presets** (style-only or full configuration) across datasets.
 - Assembles **multi-panel figures** from generated and imported panels.
-- Exports **SVG, PDF, EPS, PNG, TIFF** with a **PlotSpec** (and StatsSpec / FigureSpec) record.
+- Exports **SVG, PDF, EPS, PNG, TIFF** with a **PlotSpec** (and StatsSpec / FigureSpec) record, and saves **figure packages** (`.mmfpackage`) that carry the specification together with the frozen data.
 
 ### 5. What Make My Figure does not do
 
@@ -48,9 +48,11 @@ Bench and computational scientists who have a table of results and need a clean,
 
 ### 6. Reproducibility and provenance model
 
-Every export writes a **PlotSpec** (`name.plot_spec.json`): the plot type, the table name, the column roles, every option, the style tokens, the layout, statistics settings, manual annotations, worksheet provenance, and the render metadata (including the software versions used for statistics). When statistics ran, a **StatsSpec** (`name.stats_spec.json`) stores every result. The Matrix Workflow records a **MatrixSpec**, a **SampleMetadataSpec** and a **PreprocessingSpec**. The Figure Builder writes a **FigureSpec** referencing each panel's PlotSpec.
+**Export PlotSpec JSON**, **Export all as ZIP** and the browser downloads write a **PlotSpec** (`name.plot_spec.json`): the plot type, the table name, the column roles, every option, the style tokens, the layout, statistics settings, manual annotations, worksheet provenance, a content digest of the table, and the render metadata (including the software versions used for statistics). The single-format desktop buttons (SVG/PNG/PDF) write the figure file only. When statistics ran, **Export all as ZIP** and the browser also write a **StatsSpec** (`name.stats_spec.json`) with every result. The Figure Builder writes a **FigureSpec** referencing each panel's PlotSpec. A PlotSpec or FigureSpec records the *identity* of its tables, not their values, so it needs the data to reopen. The Matrix Workflow's **MatrixSpec**, **SampleMetadataSpec** and **PreprocessingSpec** reach an export only through the figure package.
 
-A figure is therefore **reconstructable under a recorded software environment**: open the PlotSpec with its data and the same code, and the same figure is rebuilt. Byte-identical output across different machines is not promised — fonts, Matplotlib versions and platform text rendering differ slightly.
+The **figure package** (`name.mmfpackage`) is the portable record: one file with the PlotSpec (or FigureSpec), a frozen lossless copy of the exact table(s) the plot used, the original source file when available, the StatsSpec results, the MatrixSpec / SampleMetadataSpec / PreprocessingSpec where they apply, imported images, PNG/SVG/PDF previews, the software environment and a manifest with a SHA-256 for every file. **Open Figure Package** verifies every checksum and reopens the figure from the frozen data on any computer (Part XV).
+
+A figure is therefore **reconstructable under a recorded software environment**: open the figure package (or the PlotSpec with its data) with the same code, and the same figure is rebuilt. Byte-identical output across different machines is not promised — fonts, Matplotlib versions and platform text rendering differ slightly.
 
 ### 7. Local, open-source architecture
 
@@ -151,7 +153,7 @@ Right: **Data preview** (editable — edits re-render the figure) and **Messages
 
 ![The controls column: plot type, recommended figures, column mapping, options and labels.](../assets/screenshots/desktop_03_plot_selector_and_mapping.png)
 
-**Menus.** *File:* Home / Upload New Data, Open data file…, Open PlotSpec…, Open example ▸ (all 38), Recent files, Save template…, Figure preset ▸ (Apply, Save, Import, Export, Delete, Reset), Quit. *View:* Reset Layout, Maximize Figure Panel, Show Data Preview, Dock All Panels. *Help:* Help…, About, Copy debug info, Diagnose toolbar.
+**Menus.** *File:* Home / Upload New Data, Open data file…, Open Figure Package…, Open PlotSpec… (specification only), Save Reproducible Figure Package…, Open example ▸ (all 38), Recent files (packages marked 📦), Save template…, Figure preset ▸ (Apply, Save, Import, Export, Delete, Reset), Quit. *View:* Reset Layout, Maximize Figure Panel, Show Data Preview, Dock All Panels. *Help:* Help…, About, Copy debug info, Diagnose toolbar.
 
 **Pop-out panels.** *Plot Controls*, *Data & Messages* and the *Figure* can each be popped out into their own window (for a second monitor) and docked back with **⮊ Dock back** or **View → Dock All Panels**; the arrangement persists between sessions.
 
@@ -165,7 +167,7 @@ Right: **Data preview** (editable — edits re-render the figure) and **Messages
 
 ![Browser app before data is chosen: data source, workflow, plot type and style in the sidebar.](../assets/screenshots/streamlit_01_home.png)
 
-Sidebar: **1. Data** (Bundled sample / Upload file / Open PlotSpec; Worksheet + Header row for workbooks; **Workflow**: Quick plot or Matrix workflow (guided)); **2. Plot type**; **3. Style**; **4. Column mapping** (plus the plot's own options); **Figure preset**; **5. Publication style** (five expanders); **6. Statistics**. Main column: the editable table with row/column counts, **🗂 Define groups**, **🔮 Recommended figures**, **Figure preview** with warnings and the publication check, **✅ Publication QC**, **Render metadata**, and **Export** (SVG / PNG / PDF / PlotSpec JSON downloads). **🏠 Reset / Upload new data** clears the session.
+Sidebar: **1. Data** (Bundled sample / Upload file / Open PlotSpec / Open Figure Package; Worksheet + Header row for workbooks; **Workflow**: Quick plot or Matrix workflow (guided)); **2. Plot type**; **3. Style**; **4. Column mapping** (plus the plot's own options); **Figure preset**; **5. Publication style** (five expanders); **6. Statistics**. Main column: the editable table with row/column counts, **🗂 Define groups**, **🔮 Recommended figures**, **Figure preview** with warnings and the publication check, **✅ Publication QC**, **Render metadata**, and **Export** (SVG / PNG / PDF / PlotSpec JSON / Figure Package downloads). **🏠 Reset / Upload new data** clears the session.
 
 ### 16. Functional equivalence and differences
 
@@ -1920,19 +1922,35 @@ If you had saved a **full** configuration in step 2 instead, step 4 would also t
 
 **Categorical colours after applying a preset.** A preset stores the *palette*, not a table of category → colour pairs. Categories of dataset B receive the palette colours in the order in which they appear in dataset B (Section 47), so the first category in B gets the first palette colour even if a category of the same name was second in A. To pin a category to a colour, order the categories in the table (or in the grouping step) identically in both datasets. The exceptions are plots whose colours are options rather than palette entries — volcano and MA class colours (`color_up`, `color_down`, `color_ns`), Manhattan threshold-line colour, network node/edge colours, paired-slopegraph point/line colours: these are style options and are carried by the preset exactly.
 
-## Part XV — PlotSpec and reproducibility
+## Part XV — PlotSpec, figure packages and reproducibility
 
 ### 61. What a PlotSpec records
 
-`plot_type`, `input_table`, `mapping` (roles + options + click selections), `journal_style`, `output` (formats, width/height mm, DPI), `layout` (labels, geometry, legend, margins), `style` (token overrides), `statistics` (test, comparison, correction, annotation, columns), `annotations`, `column_annotations` (heatmap group strips), `source` (workbook name and hash, worksheet name/index/type, header row, Matrix Workflow provenance). The sidecar adds `render_metadata`: rows and columns used, plot-specific facts (bins, n per group, clusters…), the publication check, layout QC, software versions for statistics, and the Publication disclaimer.
+`plot_type`, `input_table`, `mapping` (roles + options + click selections), `journal_style`, `output` (formats, width/height mm, DPI), `layout` (labels, geometry, legend, margins), `style` (token overrides), `statistics` (test, comparison, correction, annotation, columns), `annotations`, `column_annotations` (heatmap group strips), `source` (workbook name and hash, worksheet name/index/type, header row, Matrix Workflow provenance, and since v1.1.1 `source_table_sha256`, a content digest of the table). The sidecar adds `render_metadata`: rows and columns used, plot-specific facts (bins, n per group, clusters…), the publication check, layout QC, software versions for statistics, and the Publication disclaimer.
 
 ### 62. Reload
 
-**Desktop:** *File → Open PlotSpec…* — pick the JSON; the app looks for the data table by name next to it (or the only data file in that folder) and otherwise asks. Every control is restored through the same path a preset uses. **Browser:** *Data source → Open PlotSpec* — upload the JSON and the data table. The figure is **reconstructable under a recorded software environment**: same code, same data, same figure. Different machines may differ in fonts and text metrics; that is expected and not a reproducibility failure.
+**Desktop:** *File → Open PlotSpec… (specification only; needs the data file)* — pick the JSON; the app looks for the data table by name next to it (or the only data file in that folder) and otherwise asks; when the PlotSpec carries a content digest and the table differs, a warning says so. Every control is restored through the same path a preset uses. **Browser:** *Data source → Open PlotSpec* — upload the JSON and the data table. The figure is **reconstructable under a recorded software environment**: same code, same data, same figure. Different machines may differ in fonts and text metrics; that is expected and not a reproducibility failure.
+
+A PlotSpec is **not** portable on its own: it names the table, it does not contain it. To move a figure to another folder, computer or laboratory use a **figure package** (§63a).
 
 ### 63. Related records
 
-`name.stats_spec.json` (every statistical result), `name.figure_spec.json` (a composite: panels with their PlotSpecs, layout, draft legend), MatrixSpec / SampleMetadataSpec / PreprocessingSpec inside the Matrix Workflow provenance and QC report.
+`name.stats_spec.json` (every statistical result), `name.figure_spec.json` (a composite: panels with their PlotSpecs, layout, draft legend), MatrixSpec / SampleMetadataSpec / PreprocessingSpec (as JSON inside a figure package; as identifiers and a method sentence in the PlotSpec `source` block).
+
+### 63a. Figure packages (`.mmfpackage`)
+
+**What it is.** One portable file containing everything needed to reopen the figure: the PlotSpec (or, for a composite, the FigureSpec and every panel's PlotSpec), a frozen lossless copy of the exact table(s) the plot used (`data/*.mmftable.json`; doubles, missing values, strings, category order and row/column order are reproduced bit for bit), the original CSV/TSV/XLSX when it was available, the StatsSpec with its results, the MatrixSpec / SampleMetadataSpec / PreprocessingSpec when the plot came from the Matrix Workflow (with **both** the original and the derived matrix), imported panel images, PNG/SVG/PDF previews, the software environment, and `manifest.json` listing every file with its SHA-256.
+
+**Save.** *5. Export → Save Figure Package (.mmfpackage)* or *File → Save Reproducible Figure Package…* (Ctrl+Shift+S). A dialog states that **figure packages include the data required to reproduce the figure**, lists the tables and records that will be included and the estimated size, then asks where to save. In the Figure Builder, **Save Figure Package…** packages the composite. **Export all as ZIP** contains the figure files, the PlotSpec/StatsSpec JSON and the package.
+
+**Open.** Landing page **Open Figure Package**, *File → Open Figure Package…* (Ctrl+Shift+P), drag-and-drop, or *Recent files* (📦). The application validates the container, checks the manifest against its schema, verifies every checksum, loads the frozen tables and specifications and renders the figure in the normal editor — you never locate the original data. The status bar reports *integrity verified*. Statistics are recomputed from the frozen data and compared with the stored StatsSpec; a preprocessing chain is replayed on the frozen source and compared with the frozen derived matrix; differences are reported, the frozen values are never replaced. Composite packages open in the Figure Builder with the recorded layout and every panel's data.
+
+**If something is wrong.** A package whose files were edited fails with *Package integrity check failed: data differ from the values recorded when the package was created* and is not rendered. Missing files, an invalid manifest, a corrupt container or a newer format version give a plain message, never a traceback. Packages are treated as untrusted input (no path traversal, links, oversized or over-compressed entries; nothing is executed).
+
+**Privacy.** A package contains data. Share it only with people who may see those data.
+
+**Three artifacts.** PlotSpec = recipe for one plot, source data required. Figure preset = reusable configuration, no data. Figure package = portable reproducibility bundle, frozen data + specifications.
 
 ## Part XVI — Figure Builder
 
@@ -1972,7 +1990,7 @@ There is **no** free x/y positioning, z-order or snap grid: the builder is a gri
 
 ### 68. Export and FigureSpec
 
-**Save figure…** writes PNG (and SVG and PDF alongside) at the export DPI, plus `name.figure_spec.json` (panels with PlotSpecs, stats specs, sizes, imported-asset records, layout, auto-drafted legend text — verify the draft before use). Imported assets are copied to `figure_builder_assets/` next to the figure so the FigureSpec reloads.
+**Save figure…** writes PNG (and SVG and PDF alongside) at the export DPI, plus `name.figure_spec.json` (panels with PlotSpecs, stats specs, sizes, imported-asset records, layout, auto-drafted legend text — verify the draft before use). Imported assets are copied to `figure_builder_assets/` next to the figure. The FigureSpec records the panels' table *identities*, not their values. **Save Figure Package…** writes one `.mmfpackage` with the FigureSpec, every panel's PlotSpec/StatsSpec, the exact tables and the imported images; **Open Figure Package** (landing page or File menu) rebuilds the composite in the Figure Builder with its layout (§63a).
 
 **Warning:** the composite embeds each panel as a **raster** image at the export DPI; only panel letters and titles are vector text, even in the SVG/PDF. For fully vector output export single plots directly.
 
@@ -1992,7 +2010,7 @@ Inside the guided Matrix workflow, step **⑤ Figure Builder** lists the panels 
 | **PNG** | raster | 150–600 (Raster DPI) | rasterised | white background | grows with DPI² | slides, quick sharing, journals requiring raster |
 | **TIFF** | raster, LZW-compressed | as PNG | rasterised | white | larger than PNG | journals requiring TIFF |
 
-All exports use a tight bounding box that also includes the axis labels and title, so a long axis label is never clipped. Desktop buttons: **Export SVG / PNG / PDF / PlotSpec JSON**, **Export all as ZIP** (every format incl. TIFF/EPS plus sidecars). Browser: **SVG / PNG / PDF / PlotSpec JSON** downloads. Every export writes `name.plot_spec.json`, and `name.stats_spec.json` when statistics ran. The Figure Builder exports PNG + SVG + PDF + `name.figure_spec.json` with panel content embedded as raster at the export DPI.
+All exports use a tight bounding box that also includes the axis labels and title, so a long axis label is never clipped. Desktop buttons: **Export SVG / PNG / PDF** (figure file only), **Export PlotSpec JSON (specification only)**, **Save Figure Package (.mmfpackage)**, **Export all as ZIP** (SVG, PNG, PDF, `name.plot_spec.json`, `name.stats_spec.json` when statistics ran, and `name.mmfpackage`; TIFF/EPS are available through the core API). Browser: **SVG / PNG / PDF / PlotSpec JSON / Figure Package** downloads (plus **StatsSpec JSON** when statistics ran). The Figure Builder exports PNG + SVG + PDF + `name.figure_spec.json` with panel content embedded as raster at the export DPI, and **Save Figure Package…** for the portable composite.
 
 ![Browser: figure preview with the Export downloads (SVG, PNG, PDF, PlotSpec JSON).](../assets/screenshots/streamlit_16_export.png)
 
@@ -2096,7 +2114,9 @@ Each entry: **Problem · Likely cause · Diagnose · Fix**.
 
 **3. DE result → volcano → preset → Figure Builder.** Load the DE table (or the DE sheet of a workbook), confirm the detected columns, set thresholds and class colours, label top genes, save *Lab volcano* (full, to keep thresholds). **Save current plot as panel** for each comparison, then compose in the Figure Builder with a 1 × 3 grid; save the layout preset *Three volcanoes*.
 
-**4. Matrix → QC → transformation → PCA/heatmap.** Matrix Workflow: map, confirm raw scale, groups from metadata, `log2` → `median_scale` → `row_zscore` steps, **Run diagnostics**, save the before/after report, **Open in plot editor** for the heatmap and PCA; the PlotSpecs carry the PreprocessingSpec.
+**4. Matrix → QC → transformation → PCA/heatmap.** Matrix Workflow: map, confirm raw scale, groups from metadata, `log2` → `median_scale` → `row_zscore` steps, **Run diagnostics**, save the before/after report, **Open in plot editor** for the heatmap and PCA; the PlotSpecs carry the preprocessing identifiers and method sentence, and **Save Figure Package** stores the MatrixSpec, SampleMetadataSpec, PreprocessingSpec, the original and the derived matrix with the plot.
+
+**6. Sharing a reproducible figure with another laboratory.** Finalise the plot → **Save Figure Package** → send the one `.mmfpackage` file → the collaborator opens Make My Figure → **Open Figure Package** → integrity is verified → the figure opens with the frozen data and configuration → they inspect, edit and re-export. No original data file, worksheet or sidecar folder is needed.
 
 **5. Multi-sheet workbook → several comparisons → separate exports.** Upload once; for each DE sheet choose it, apply *Lab volcano*, export — file names start with the sheet name and each PlotSpec's `source` names the sheet.
 
@@ -2105,10 +2125,13 @@ Each entry: **Problem · Likely cause · Diagnose · Fix**.
 ```
 <Sheet>_<plot_type>.png / .svg / .pdf / .tiff / .eps   the figure(s); the stem is the worksheet
                                                        name (or the file stem) plus the plot type
-<stem>.plot_spec.json                                  PlotSpec + render metadata (every export)
-<stem>.stats_spec.json                                 every statistical result (when statistics ran)
+<stem>.plot_spec.json                                  PlotSpec + render metadata (Export PlotSpec JSON, ZIP, browser)
+<stem>.stats_spec.json                                 every statistical result (ZIP and browser, when statistics ran)
+<stem>.mmfpackage                                      figure package: specification + frozen data + records + previews
+                                                       + manifest with SHA-256 per file (Save Figure Package; also in the ZIP)
 Figure_1.png / .svg / .pdf                             Figure Builder composite
-Figure_1.figure_spec.json                              FigureSpec (panels, PlotSpecs, layout, draft legend)
+Figure_1.figure_spec.json                              FigureSpec (panels, PlotSpecs, layout, draft legend; table identities only)
+Figure_1.mmfpackage                                    composite figure package (FigureSpec + panel specs + tables + images)
 figure_builder_assets/                                 copies of imported panel files
 <table> (grouped)  /  <table>__diff.csv                grouped table / differential screen (Define groups)
 <report folder>/before_after_contact_sheet.pdf, .png   Matrix Workflow before/after QC report
@@ -2142,6 +2165,7 @@ figure_builder_assets/                                 copies of imported panel 
 - **SampleMetadataSpec** — the sample → group (and other attribute) assignment used by the Matrix Workflow.
 - **FigureSpec** — the JSON record of a multi-panel composite (panels, PlotSpecs, layout, legend draft).
 - **Figure preset** — reusable configuration without data: style-only or full configuration.
+- **Figure package** — one portable `.mmfpackage` file: PlotSpec/FigureSpec + frozen data + StatsSpec/Matrix/Preprocessing records + assets + previews + checksums; reopens without the original files.
 - **Layout preset** — reusable Figure Builder geometry without panel content.
 - **Derived matrix** — a new table produced by preprocessing or grouping; the source table is unchanged.
 - **Publication style** — the single visual style profile (tokens for fonts, widths, palette).
@@ -2183,9 +2207,10 @@ figure_builder_assets/                                 copies of imported panel 
 
 | File | Purpose |
 |---|---|
-| `.plot_spec.json` | rebuild one figure |
+| `.plot_spec.json` | the recipe of one figure (needs the source data) |
 | `.stats_spec.json` | every statistic behind it |
-| `.figure_spec.json` | rebuild a composite |
+| `.figure_spec.json` | the recipe of a composite (needs the panel tables) |
+| `.mmfpackage` | reopen a figure or composite anywhere: recipe + frozen data |
 | `.mmfpreset.json` | reuse a configuration on new data |
 | `.mmflayout.json` | reuse a composite layout |
 

@@ -44,7 +44,7 @@ no Python, no terminal required.
   and the bottom figure area. The figure canvas grows/shrinks with the window and the
   splitters. **Your panel layout and window size are remembered between sessions**
   (stored via `QSettings`).
-- **Export** — SVG, PNG, PDF, PlotSpec JSON, or **all as a ZIP bundle**.
+- **Export** — SVG, PNG, PDF, PlotSpec JSON (specification only), **Save Figure Package (.mmfpackage)** — one portable file with the specification, the frozen data and all records — or **all as a ZIP bundle** (figures + specs + package). **Open Figure Package** on the landing page / File menu reopens a package with its frozen data after verifying every checksum (see `FIGURE_PACKAGES.md`).
 - **Examples & templates** — every supported plot type has a bundled example
   (File → Open example). “Save template” exports an example table so you can
   replace the rows with your own data while keeping the column names.
@@ -133,7 +133,7 @@ margin and staggering so they never touch markers or clip at the top. Options
   labels in Illustrator/Inkscape.
 - **PNG at 300–600 DPI** for raster use (slides, previews). The desktop **Raster DPI**
   control sets PNG/TIFF resolution.
-- **PlotSpec JSON** sidecar for reproducibility.
+- **PlotSpec JSON** sidecar (the recipe; source data required) and **figure packages** (`.mmfpackage`, recipe + frozen data; see `FIGURE_PACKAGES.md`).
 - Exports use tight bounding boxes so an outside legend is always fully included.
 
 ## Architecture

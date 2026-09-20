@@ -28,7 +28,7 @@ Bench and computational scientists who have a table of results and need a clean,
 - Supports **annotations** (click-to-label points, duplicate-label policies, a manual annotation layer in the PlotSpec).
 - Saves and applies **Figure presets** (style-only or full configuration) across datasets.
 - Assembles **multi-panel figures** from generated and imported panels.
-- Exports **SVG, PDF, EPS, PNG, TIFF** with a **PlotSpec** (and StatsSpec / FigureSpec) record.
+- Exports **SVG, PDF, EPS, PNG, TIFF** with a **PlotSpec** (and StatsSpec / FigureSpec) record, and saves **figure packages** (`.mmfpackage`) that carry the specification together with the frozen data.
 
 ### 5. What Make My Figure does not do
 
@@ -40,9 +40,11 @@ Bench and computational scientists who have a table of results and need a clean,
 
 ### 6. Reproducibility and provenance model
 
-Every export writes a **PlotSpec** (`name.plot_spec.json`): the plot type, the table name, the column roles, every option, the style tokens, the layout, statistics settings, manual annotations, worksheet provenance, and the render metadata (including the software versions used for statistics). When statistics ran, a **StatsSpec** (`name.stats_spec.json`) stores every result. The Matrix Workflow records a **MatrixSpec**, a **SampleMetadataSpec** and a **PreprocessingSpec**. The Figure Builder writes a **FigureSpec** referencing each panel's PlotSpec.
+**Export PlotSpec JSON**, **Export all as ZIP** and the browser downloads write a **PlotSpec** (`name.plot_spec.json`): the plot type, the table name, the column roles, every option, the style tokens, the layout, statistics settings, manual annotations, worksheet provenance, a content digest of the table, and the render metadata (including the software versions used for statistics). The single-format desktop buttons (SVG/PNG/PDF) write the figure file only. When statistics ran, **Export all as ZIP** and the browser also write a **StatsSpec** (`name.stats_spec.json`) with every result. The Figure Builder writes a **FigureSpec** referencing each panel's PlotSpec. A PlotSpec or FigureSpec records the *identity* of its tables, not their values, so it needs the data to reopen. The Matrix Workflow's **MatrixSpec**, **SampleMetadataSpec** and **PreprocessingSpec** reach an export only through the figure package.
 
-A figure is therefore **reconstructable under a recorded software environment**: open the PlotSpec with its data and the same code, and the same figure is rebuilt. Byte-identical output across different machines is not promised — fonts, Matplotlib versions and platform text rendering differ slightly.
+The **figure package** (`name.mmfpackage`) is the portable record: one file with the PlotSpec (or FigureSpec), a frozen lossless copy of the exact table(s) the plot used, the original source file when available, the StatsSpec results, the MatrixSpec / SampleMetadataSpec / PreprocessingSpec where they apply, imported images, PNG/SVG/PDF previews, the software environment and a manifest with a SHA-256 for every file. **Open Figure Package** verifies every checksum and reopens the figure from the frozen data on any computer (Part XV).
+
+A figure is therefore **reconstructable under a recorded software environment**: open the figure package (or the PlotSpec with its data) with the same code, and the same figure is rebuilt. Byte-identical output across different machines is not promised — fonts, Matplotlib versions and platform text rendering differ slightly.
 
 ### 7. Local, open-source architecture
 
@@ -143,7 +145,7 @@ Right: **Data preview** (editable — edits re-render the figure) and **Messages
 
 ![The controls column: plot type, recommended figures, column mapping, options and labels.](../../assets/screenshots/desktop_03_plot_selector_and_mapping.png)
 
-**Menus.** *File:* Home / Upload New Data, Open data file…, Open PlotSpec…, Open example ▸ (all 38), Recent files, Save template…, Figure preset ▸ (Apply, Save, Import, Export, Delete, Reset), Quit. *View:* Reset Layout, Maximize Figure Panel, Show Data Preview, Dock All Panels. *Help:* Help…, About, Copy debug info, Diagnose toolbar.
+**Menus.** *File:* Home / Upload New Data, Open data file…, Open Figure Package…, Open PlotSpec… (specification only), Save Reproducible Figure Package…, Open example ▸ (all 38), Recent files (packages marked 📦), Save template…, Figure preset ▸ (Apply, Save, Import, Export, Delete, Reset), Quit. *View:* Reset Layout, Maximize Figure Panel, Show Data Preview, Dock All Panels. *Help:* Help…, About, Copy debug info, Diagnose toolbar.
 
 **Pop-out panels.** *Plot Controls*, *Data & Messages* and the *Figure* can each be popped out into their own window (for a second monitor) and docked back with **⮊ Dock back** or **View → Dock All Panels**; the arrangement persists between sessions.
 
@@ -157,7 +159,7 @@ Right: **Data preview** (editable — edits re-render the figure) and **Messages
 
 ![Browser app before data is chosen: data source, workflow, plot type and style in the sidebar.](../../assets/screenshots/streamlit_01_home.png)
 
-Sidebar: **1. Data** (Bundled sample / Upload file / Open PlotSpec; Worksheet + Header row for workbooks; **Workflow**: Quick plot or Matrix workflow (guided)); **2. Plot type**; **3. Style**; **4. Column mapping** (plus the plot's own options); **Figure preset**; **5. Publication style** (five expanders); **6. Statistics**. Main column: the editable table with row/column counts, **🗂 Define groups**, **🔮 Recommended figures**, **Figure preview** with warnings and the publication check, **✅ Publication QC**, **Render metadata**, and **Export** (SVG / PNG / PDF / PlotSpec JSON downloads). **🏠 Reset / Upload new data** clears the session.
+Sidebar: **1. Data** (Bundled sample / Upload file / Open PlotSpec / Open Figure Package; Worksheet + Header row for workbooks; **Workflow**: Quick plot or Matrix workflow (guided)); **2. Plot type**; **3. Style**; **4. Column mapping** (plus the plot's own options); **Figure preset**; **5. Publication style** (five expanders); **6. Statistics**. Main column: the editable table with row/column counts, **🗂 Define groups**, **🔮 Recommended figures**, **Figure preview** with warnings and the publication check, **✅ Publication QC**, **Render metadata**, and **Export** (SVG / PNG / PDF / PlotSpec JSON / Figure Package downloads). **🏠 Reset / Upload new data** clears the session.
 
 ### 16. Functional equivalence and differences
 

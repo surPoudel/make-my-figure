@@ -196,6 +196,8 @@ full results, the method paragraph, the correction method, warnings, and library
 versions — so any figure's statistics are fully reproducible. The StatsSpec is
 also embedded inside the PlotSpec under `statistics`.
 
+A figure package (`.mmfpackage`) stores the StatsSpec with its results next to the frozen data; on reopening, the statistics are recomputed from the frozen data and compared with the stored results, and any difference is reported (see `FIGURE_PACKAGES.md`).
+
 ## Limitations and warnings
 
 - Test *selection* is advisory. The app cannot know your design; you must confirm
