@@ -1,4 +1,4 @@
-# Exact versions the v1.1.0 release and its test suite were run with (2026-09).
+# Exact versions the v1.1.1 release (unchanged from v1.1.0) and its test suite were run with (2026-09).
 # Python 3.11 on Windows 11 (portable CPython 3.11.15) and Linux (WSL2, CPython 3.11.8).
 # Use for a reproducible environment:  python -m pip install -r requirements-lock.txt
 # requirements.txt keeps the bounded ranges for normal installs.
