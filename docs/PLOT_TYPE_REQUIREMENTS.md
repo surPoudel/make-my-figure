@@ -16,6 +16,8 @@ Required and optional columns for every supported plot type. Column order does n
 > richer volcano/heatmap labelling — see **[V0_5_NEW_FEATURES.md](V0_5_NEW_FEATURES.md)**,
 > [NETWORK_GRAPH.md](NETWORK_GRAPH.md), [HIERARCHICAL_CLUSTERING.md](HIERARCHICAL_CLUSTERING.md),
 > [ANNOTATIONS.md](ANNOTATIONS.md), and [VOLCANO_ANNOTATIONS.md](VOLCANO_ANNOTATIONS.md).
+>
+> **Unreleased: the Circos-style chord diagram (`chord_diagram`)** — see its section below.
 
 ### Bar plot with error bars  (`barplot_with_error_bar`)
 
@@ -240,6 +242,27 @@ Stacked density (ridgeline) distributions of a value per condition.
   - `score`
 - **Recommended styles:** nature_like, science_like, cell_like
 
+### Circos-style chord diagram  (`chord_diagram`)
+
+Flows between categories that share one set (for example ligand-receptor interaction counts
+between cell types), drawn as a ring of segments sized by total flow with ribbons whose width is
+proportional to each link's value. One row per link.
+
+- **Required columns** (roles `source`, `target`; example names in the bundled data):
+  - `source_cell` — origin category of the link
+  - `target_cell` — destination category (may equal the source: a self-link)
+- **Optional columns** (roles `value`, `group`):
+  - `interactions` — numeric link weight (every link weighs 1 when unmapped)
+  - `compartment` — class of the source category of each row (looked up for categories that only
+    appear as targets too); drawn as a thin outer band with a legend
+- **Options:** `segment_order` (input | alphabetical | by_total_flow), `gap_degrees`, `start_angle`,
+  `ribbon_color_by` (source | target | group), `ribbon_alpha`, `show_labels`, `label_placement`
+  (radial | tangential), `show_ticks`, `show_legend` — appearance (style scope);
+  `min_value`, `directed` (ribbons narrow toward the target; both directions kept separate),
+  `draw_self_links` — change which links are drawn (config scope).
+- **Statistics:** none; a chord diagram summarises flows.
+- **Recommended styles:** publication
+
 ## Statistics per plot type
 
 Statistics are optional and configured via the app's Statistics panel (or the
@@ -255,6 +278,7 @@ Statistics are optional and configured via the app's Statistics panel (or the
 | Scatter | Pearson, Spearman, linear regression (per group if colored) |
 | Volcano | uses supplied p-values; not recomputed |
 | Heatmap, PCA, Lollipop, Forest | no automatic tests (descriptive / input statistics) |
+| Chord diagram, Sankey, Network graph | none — flow / network summaries carry no inferential test |
 
 See [STATISTICS.md](STATISTICS.md) for required columns and test selection, and
 `examples/statistics/` for a worked example of each workflow.

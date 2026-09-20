@@ -53,6 +53,7 @@ COLUMN_FIELDS: Dict[str, List[str]] = {
     # --- v0.5 ---
     "hierarchical_clustering": ["row_id"],
     "network_graph": ["source", "target", "weight", "interaction_type"],
+    "chord_diagram": ["source", "target", "value", "group"],
 }
 
 # Mapping keys that are columns of the PCA *metadata* table, not the matrix.
@@ -409,6 +410,28 @@ OPTIONS: Dict[str, List[Option]] = {
     ],
     "swimmer_plot": [
         Option("right_pad_frac", "Right-side headroom", "number", 0.06, minimum=0.0, maximum=0.4, step=0.02, decimals=2, scope="style"),
+    ],
+    "chord_diagram": [
+        # Appearance-only controls are scope="style"; controls that change which links are shown or
+        # how the ribbons are computed are scope="config".
+        Option("segment_order", "Segment order", "choice", "input",
+               ["input", "alphabetical", "by_total_flow"], scope="style"),
+        Option("gap_degrees", "Gap between segments (degrees)", "number", 3.0,
+               minimum=0.0, maximum=30.0, step=0.5, decimals=1, scope="style"),
+        Option("start_angle", "Start angle (degrees, 90 = top)", "number", 90.0,
+               minimum=-360.0, maximum=360.0, step=5.0, decimals=0, scope="style"),
+        Option("ribbon_color_by", "Colour ribbons by", "choice", "source",
+               ["source", "target", "group"], scope="style"),
+        Option("ribbon_alpha", "Ribbon transparency (alpha)", "number", 0.65,
+               minimum=0.05, maximum=1.0, step=0.05, decimals=2, scope="style"),
+        Option("min_value", "Minimum link value shown", "number", 0.0,
+               minimum=0.0, maximum=1e12, step=1.0, decimals=3, scope="config"),
+        Option("directed", "Directed (ribbons narrow toward the target)", "bool", False, scope="config"),
+        Option("draw_self_links", "Draw self-links", "bool", True, scope="config"),
+        Option("show_labels", "Show segment labels", "bool", True, scope="style"),
+        Option("label_placement", "Label placement", "choice", "radial", ["radial", "tangential"], scope="style"),
+        Option("show_ticks", "Show segment totals as tick marks", "bool", False, scope="style"),
+        Option("show_legend", "Show group legend", "bool", True, scope="style"),
     ],
 }
 

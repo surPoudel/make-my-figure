@@ -264,6 +264,15 @@ def recommend_plots(profile: DataProfile, schema: str, df: pd.DataFrame,
              "target": profile.role_column("target"),
              "weight": profile.role_column("weight") if profile.has_role("weight") else None},
             cost="medium")
+        # Secondary, low-confidence suggestion for the same edge-list shape: a chord diagram
+        # shows the flow between categories on one ring (best for <= ~20 categories).
+        add("chord_diagram", 0.55,
+            "The same source / target edge list can be drawn as a Circos-style chord diagram: one "
+            "ring of categories with ribbons proportional to the link value (no statistics).",
+            {"source": profile.role_column("source"),
+             "target": profile.role_column("target"),
+             "value": profile.role_column("weight") if profile.has_role("weight") else None,
+             "group": None})
 
     # Nothing matched or unknown → offer a scatter if there are 2+ numerics.
     if not recs:

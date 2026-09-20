@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+### Added — plot types
+
+- **Circos-style chord diagram** (`chord_diagram`, `make_my_figure_core/plots/chord_diagram.py`):
+  flows between categories that share one set, from an edge list with one row per link
+  (`source`, `target`, optional numeric `value`, optional `group`). Segments are sized by total
+  flow, ribbons by link value; options with explicit scopes for segment order, gap, start angle,
+  ribbon colouring (source / target / group), transparency, labels (radial / tangential), total
+  tick marks and the group legend (style), and for the minimum link value, directed reading
+  (ribbons narrow toward the target) and self-links (config). No statistics: a chord diagram
+  summarises flows. Bundled synthetic example (six cell types, compartment group), catalogue
+  entry and figure, focused tests (`tests/test_chord_diagram.py`), and a low-confidence
+  recommendation (0.55) alongside the network graph for `source`/`target` edge lists. Genomic
+  multi-track Circos (ideogram coordinates, heatmap or histogram rings) is out of scope for
+  this version; the ring geometry leaves room for tracks.
+
 - Packaging: the MIT `LICENSE`, `README.md` and `CHANGELOG.md` are bundled at the top level of the
   desktop builds (Windows zip and installer, macOS app, Linux tar.gz/AppImage); the installer shows
   the licence; `pyproject.toml` declares the licence and classifiers.

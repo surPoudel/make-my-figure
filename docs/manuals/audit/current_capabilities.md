@@ -32,15 +32,15 @@ Classification key: **impl** = implemented on this commit · **tested** = covere
 | In-app grouping: wide matrix → long, group by column values, guess groups from names | yes | `test_grouping` | 🗂 Define groups… dialog | 🗂 Define groups expander | yes | — |
 | Volcano DE-column auto-detection (edgeR/limma/DESeq2 headers), user-confirmed | yes | `test_de_detect` | prefilled mapping | prefilled mapping | yes | never computes DE |
 
-## 3. Plot registry (38 renderers, enumerated from `plots/registry.py`)
+## 3. Plot registry (39 renderers, enumerated from `plots/registry.py`)
 
-All 38 render from bundled examples in `tests/test_renderers*.py` and the preset QC. Display names as shown in both apps:
+All 39 render from bundled examples in `tests/test_renderers*.py` and the preset QC. Display names as shown in both apps:
 
-Bar plot with error bars · Grouped bar plot with error bars · Clustered heatmap · Volcano plot · Scatter plot · Box / violin plot with points · Line / time-course with error band · Ridge / density plot · Histogram (binned distribution) · Enrichment dot plot · Kaplan-Meier survival curve · Stacked composition bar plot · Waterfall plot · PCA scatter (matrix + metadata) · Oncoprint mutation heatmap · Lollipop mutation plot · ROC curve · Forest plot · Dot / strip plot · Beeswarm plot · Paired dot plot / slopegraph · Raincloud plot · Hierarchical clustering dendrogram · MA plot (differential expression) · Manhattan plot (GWAS) · Q-Q plot (p-value / quantile) · Bland-Altman (method agreement) · Precision-recall curve · Confusion matrix · Calibration plot · Dose-response curve · UpSet plot (set intersections) · Swimmer plot · Spider plot (longitudinal change) · Sankey / alluvial flow (two-stage) · UMAP / t-SNE embedding scatter · Hierarchical clustering (heatmap + clusters) · Network graph
+Bar plot with error bars · Grouped bar plot with error bars · Clustered heatmap · Volcano plot · Scatter plot · Box / violin plot with points · Line / time-course with error band · Ridge / density plot · Histogram (binned distribution) · Enrichment dot plot · Kaplan-Meier survival curve · Stacked composition bar plot · Waterfall plot · PCA scatter (matrix + metadata) · Oncoprint mutation heatmap · Lollipop mutation plot · ROC curve · Forest plot · Dot / strip plot · Beeswarm plot · Paired dot plot / slopegraph · Raincloud plot · Hierarchical clustering dendrogram · MA plot (differential expression) · Manhattan plot (GWAS) · Q-Q plot (p-value / quantile) · Bland-Altman (method agreement) · Precision-recall curve · Confusion matrix · Calibration plot · Dose-response curve · UpSet plot (set intersections) · Swimmer plot · Spider plot (longitudinal change) · Sankey / alluvial flow (two-stage) · UMAP / t-SNE embedding scatter · Hierarchical clustering (heatmap + clusters) · Network graph · Circos-style chord diagram
 
 | Aspect | impl | tested | desktop | browser | documented | limitation |
 |---|---|---|---|---|---|---|
-| Column roles and options from one registry (`ui_hints.py`), 164 options, each with a style/config scope | yes | `test_figure_presets` | generic widgets | generic widgets + hand-written ones | yes | — |
+| Column roles and options from one registry (`ui_hints.py`), 185 options, each with a style/config scope | yes | `test_figure_presets` | generic widgets | generic widgets + hand-written ones | yes | — |
 | Multi-column roles (`survival_columns`, `value_columns`) as multi-select lists | yes | yes | QListWidget | multiselect | yes | — |
 | Optional numeric options shown as "(auto)" | yes | yes | spin-box special value | empty text box | yes | — |
 
@@ -105,7 +105,7 @@ Bar plot with error bars · Grouped bar plot with error bars · Clustered heatma
 
 | Feature | impl | tested | desktop | browser | documented | limitation |
 |---|---|---|---|---|---|---|
-| Style preset and full-configuration preset for every plot type; no data, table name or provenance | yes | `test_figure_presets` (157), `test_figure_preset_qc` (38/38), `test_streamlit_presets`, `test_figure_preset_ui_wiring` | Figure preset group + File → Figure preset | Figure preset expander | yes | — |
+| Style preset and full-configuration preset for every plot type; no data, table name or provenance | yes | `test_figure_presets` (157), `test_figure_preset_qc` (39/39), `test_streamlit_presets`, `test_figure_preset_ui_wiring` | Figure preset group + File → Figure preset | Figure preset expander | yes | — |
 | Apply, Save preset…, Import…, Export…, Delete, Reset to Publication defaults | yes | yes | yes | yes | yes | browser import is a file uploader; export is a download |
 | Missing columns reported for remapping, never substituted | yes | yes | dialog | warning | yes | — |
 | Per-user library: `%APPDATA%\MakeMyFigure\presets`, `~/Library/Application Support/MakeMyFigure/presets`, `$XDG_DATA_HOME/make_my_figure/presets`; `MAKE_MY_FIGURE_PRESETS` override | yes | yes | — | — | yes | macOS/Windows paths derived from platform convention, not exercised here |

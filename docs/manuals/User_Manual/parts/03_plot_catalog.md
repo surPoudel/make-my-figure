@@ -1,6 +1,6 @@
 ## Part X — Plot catalogue
 
-The 38 plot types below are the complete registry on this commit, enumerated from code (`plots/registry.py`) — not a historical list. Each figure was rendered from its bundled synthetic example with Publication defaults. Colour and control facts come from the same capability scan that the test suite enforces, so a control listed here is one the renderer actually reads.
+The 39 plot types below are the complete registry on this commit, enumerated from code (`plots/registry.py`) — not a historical list. Each figure was rendered from its bundled synthetic example with Publication defaults. Colour and control facts come from the same capability scan that the test suite enforces, so a control listed here is one the renderer actually reads.
 
 ### Bar plot with error bars
 
@@ -1293,3 +1293,37 @@ The 38 plot types below are the complete registry on this commit, enumerated fro
 **Known limitations:** Layouts with a random component are reproducible only with the `seed` option; large networks are slow..
 
 ![Network graph: rendered from the bundled synthetic example with Publication defaults.](../../assets/figures/network_graph.png)
+
+### Circos-style chord diagram
+
+*Registry key:* `chord_diagram`
+
+**Purpose:** Flows between categories that share one set, as ribbons around a ring of segments sized by total flow (Circos-style).  
+**When to use:** cell-cell interaction counts, transitions or migrations between states, co-occurrence, any many-to-many edge list with up to ~20 categories
+
+**Required / optional input:** one table with the roles below; the bundled example has columns `source_cell`, `target_cell`, `interactions`, `compartment`.
+
+**Column mapping:** `source`, `target`, `value`, `group`; example mapping `{"source": "source_cell", "target": "target_cell", "value": "interactions", "group": "compartment"}`.
+
+**Statistics supported:** no — a chord diagram summarises flows; no inferential comparison is standard for it.
+
+**Colour controls:** Publication palette (publication / colorblind_safe / high_contrast / grayscale); plot options: `ribbon_color_by`.
+
+**Annotation controls:** manual annotation layer via PlotSpec; statistical annotation (stars / p / effect).
+
+**Axis controls:** title, x/y labels, tick angles, label/title padding, margins (layout engine).
+
+**Legend / colorbar controls:** legend location (inside/outside), legend size.
+
+**Plot-specific controls (visual, carried in a style preset):** `segment_order` — Segment order, `gap_degrees` — Gap between segments (degrees), `start_angle` — Start angle (degrees, 90 = top), `ribbon_color_by` — Colour ribbons by, `ribbon_alpha` — Ribbon transparency (alpha), `show_labels` — Show segment labels, `label_placement` — Label placement, `show_ticks` — Show segment totals as tick marks, `show_legend` — Show group legend.  
+**Analytical / data-dependent options (full preset only):** `min_value` — Minimum link value shown, `directed` — Directed (ribbons narrow toward the target), `draw_self_links` — Draw self-links.
+
+**Recommended export:** SVG or PDF for vector; PNG/TIFF at 300–600 dpi for raster.
+
+**Figure preset support:** style and full presets (verified in the registry-wide preset QC).
+
+**Example data:** `examples/by_plot_type/chord_diagram/` (synthetic).
+
+**Known limitations:** Single ring only: genomic ideogram coordinates and heatmap/histogram tracks are not drawn in this version. No statistics. Labels wrap beyond 14 characters; above ~24 segments the plot warns that labels may overlap..
+
+![Circos-style chord diagram: rendered from the bundled synthetic example with Publication defaults.](../../assets/figures/chord_diagram.png)

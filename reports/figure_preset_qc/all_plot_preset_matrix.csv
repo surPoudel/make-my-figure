@@ -13,7 +13,7 @@ kaplan_meier_survival_curve,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PA
 stacked_bar_composition,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
 waterfall_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
 pca_scatter_from_matrix,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,new data: mock sample | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset
-oncoprint_mutation_heatmap,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,new data: mock sample | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset
+oncoprint_mutation_heatmap,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
 lollipop_mutation_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
 roc_curve,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,new data: mock sample | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset
 forest_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample | legend_roundtrip: N/A - this plot type draws no legend
@@ -37,3 +37,4 @@ sankey_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,N/A,PASS,PASS,PASS,PASS,
 embedding_scatter,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset
 hierarchical_clustering,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed
 network_graph,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed
+chord_diagram,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed

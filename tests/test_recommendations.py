@@ -250,3 +250,29 @@ def test_generic_long_recommends_ridge_and_box():
     types = {r.plot_type for r in recommend_for_table(df, "p").recommendations}
     assert "boxplot_or_violin_with_points" in types
     assert "ridge_or_density_plot" in types
+
+
+def test_edge_list_also_offers_a_chord_diagram_below_the_network_graph_and_it_renders():
+    df = pd.DataFrame({"source": list("ABCA"), "target": list("BCAC"), "weight": [3, 1, 2, 4]})
+    spec = recommend_for_table(df, "links.csv")
+    assert spec.schema == "network_edge_list"
+    by_type = {r.plot_type: r for r in spec.recommendations}
+    assert "chord_diagram" in by_type
+    assert by_type["chord_diagram"].confidence < by_type["network_graph"].confidence
+    draft = by_type["chord_diagram"].plot_spec_draft
+    assert draft["plot_type"] == "chord_diagram" and "group" not in draft["mapping"]
+    assert draft["mapping"]["source"] == "source" and draft["mapping"]["target"] == "target"
+    result = render(draft, df)
+    assert result.metadata["n_categories"] == 3
+    plt.close(result.figure)
+
+
+def test_chord_diagram_is_not_recommended_for_ordinary_tables_or_matrices():
+    plain = recommend_for_table(pd.DataFrame({"group": list("AABB"), "value": [1, 2, 3, 4]}))
+    assert "chord_diagram" not in {r.plot_type for r in plain.recommendations}
+    matrix = recommend_for_table(_matrix())
+    assert "chord_diagram" not in {r.plot_type for r in matrix.recommendations}
+    paired = recommend_for_table(pd.DataFrame({"subject": ["s1", "s1", "s2", "s2"],
+                                               "group": ["pre", "post", "pre", "post"],
+                                               "value": [1.0, 2.0, 1.5, 2.5]}))
+    assert "chord_diagram" not in {r.plot_type for r in paired.recommendations}

@@ -6,7 +6,7 @@ machine-readable record of how every panel was made.**
 ![Version](https://img.shields.io/badge/version-1.1.0-blue)
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Plot types](https://img.shields.io/badge/plot%20types-38-blueviolet)
+![Plot types](https://img.shields.io/badge/plot%20types-39-blueviolet)
 ![Statistics](https://img.shields.io/badge/statistical%20procedures-18-blueviolet)
 ![Platforms](https://img.shields.io/badge/platforms-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey)
 
@@ -70,7 +70,7 @@ prints the exact `apt install` line and exits cleanly, and the browser app is un
 
 ## 3. What you can make
 
-**38 plot types**, all drawn through one registry and one style layer:
+**39 plot types**, all drawn through one registry and one style layer:
 
 - **Comparisons** — bar, grouped bar, box/violin with points, dot/strip, beeswarm, raincloud.
 - **Distributions** — histogram (binned; panels per group or overlaid; frequency polygon)
@@ -85,7 +85,7 @@ prints the exact `apt install` line and exits cleanly, and the browser app is un
   Kaplan–Meier survival (subject-level or precomputed curves).
 - **Genomics-style summaries** — Manhattan, Q–Q, oncoprint, lollipop.
 - **Composition / set / flow / network** — stacked composition, UpSet, Sankey/alluvial,
-  network graph.
+  network graph, Circos-style chord diagram.
 - **Other** — enrichment dot plot, waterfall, dose–response, embedding scatter (UMAP/t-SNE
   from precomputed coordinates).
 

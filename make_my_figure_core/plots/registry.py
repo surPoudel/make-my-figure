@@ -21,6 +21,7 @@ from make_my_figure_core.plots import (
     bland_altman,
     box_violin,
     calibration,
+    chord_diagram,
     confusion_matrix,
     dendrogram,
     dose_response,
@@ -105,6 +106,8 @@ _RENDERERS: Dict[str, Callable[..., RenderResult]] = {
     # --- v0.5 ---
     hierarchical_clustering.PLOT_TYPE: hierarchical_clustering.render,
     network_graph.PLOT_TYPE: network_graph.render,
+    # --- v1.2 ---
+    chord_diagram.PLOT_TYPE: chord_diagram.render,
 }
 
 # Default column mappings per plot type (mirrors the mock-data manifest).
@@ -168,6 +171,10 @@ _DEFAULT_MAPPINGS: Dict[str, Dict[str, Any]] = {
                                         "linkage_method": "average"},
     network_graph.PLOT_TYPE: {"source": "source", "target": "target", "weight": "weight",
                               "layout": "spring", "color_by": "group", "seed": 42},
+    # --- v1.2 ---
+    chord_diagram.PLOT_TYPE: {"source": "source_cell", "target": "target_cell", "value": "interactions",
+                              "group": "compartment",
+                              "segment_order": "input", "ribbon_color_by": "source", "directed": False},
 }
 
 # Human-friendly labels for the UI.
@@ -212,6 +219,8 @@ _DISPLAY_NAMES: Dict[str, str] = {
     # --- v0.5 ---
     hierarchical_clustering.PLOT_TYPE: "Hierarchical clustering (heatmap + clusters)",
     network_graph.PLOT_TYPE: "Network graph",
+    # --- v1.2 ---
+    chord_diagram.PLOT_TYPE: "Circos-style chord diagram",
 }
 
 _EXPORT_FORMATS = ("svg", "png", "pdf", "tiff", "eps")

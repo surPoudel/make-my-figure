@@ -1,8 +1,8 @@
 # Figure Preset QC — every registered plot type
 
-Generated 2026-09-02T16:15:57+00:00 by `scripts/build_figure_preset_qc.py` against the live plot registry (38 renderers, enumerated from code).
+Generated 2026-09-18T16:27:06+00:00 by `scripts/build_figure_preset_qc.py` against the live plot registry (39 renderers, enumerated from code).
 
-**38 / 38 plot types PASS.** 21 individual checks are N/A, each with its reason in the `notes` column (a plot that draws no legend has no legend to round-trip; a plot whose options are all analytical has no visual option to carry in a style preset).
+**39 / 39 plot types PASS.** 20 individual checks are N/A, each with its reason in the `notes` column (a plot that draws no legend has no legend to round-trip; a plot whose options are all analytical has no visual option to carry in a style preset).
 
 Per plot type the harness renders the bundled example with defaults, changes typography, colour, layout, legend and export settings plus one visual plot option where one exists, saves a style preset and a full-configuration preset, loads a *different* dataset of the same type, applies both, and checks that every setting came back, that the new data stayed the new data, that nothing from the original table travelled in either preset, that PNG/PDF/SVG export, and that PlotSpec and preset both survive a JSON round-trip.
 
@@ -22,7 +22,7 @@ Per plot type the harness renders the bundled example with defaults, changes typ
 | stacked_bar_composition | PASS | — |
 | waterfall_plot | PASS | — |
 | pca_scatter_from_matrix | PASS | plot_specific_roundtrip |
-| oncoprint_mutation_heatmap | PASS | plot_specific_roundtrip |
+| oncoprint_mutation_heatmap | PASS | — |
 | lollipop_mutation_plot | PASS | — |
 | roc_curve | PASS | plot_specific_roundtrip |
 | forest_plot | PASS | legend_roundtrip |
@@ -46,6 +46,7 @@ Per plot type the harness renders the bundled example with defaults, changes typ
 | embedding_scatter | PASS | plot_specific_roundtrip |
 | hierarchical_clustering | PASS | — |
 | network_graph | PASS | — |
+| chord_diagram | PASS | — |
 
 Columns of `all_plot_preset_matrix.csv`: plot_type, preset_save, preset_load, style_roundtrip, full_config_roundtrip, color_roundtrip, typography_roundtrip, layout_roundtrip, legend_roundtrip, annotation_roundtrip, plot_specific_roundtrip, new_data_safe, png_export, pdf_export, svg_export, status, notes.
 

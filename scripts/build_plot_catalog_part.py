@@ -27,6 +27,7 @@ STATS_PLOTS = {
     "scatterplot_with_regression": "yes — correlation / regression statistics box",
     "kaplan_meier_survival_curve": "yes — log-rank / Cox in a corner panel (subject-level input only)",
     "stacked_bar_composition": "yes — chi-square / Fisher in a corner panel",
+    "chord_diagram": "no — a chord diagram summarises flows; no inferential comparison is standard for it",
 }
 PURPOSE = {
     "barplot_with_error_bar": ("Compare a mean (or median) per category with an error bar.", "few categories, replicate measurements; consider a box or strip plot when you want to show every point"),
@@ -67,6 +68,7 @@ PURPOSE = {
     "embedding_scatter": ("Precomputed 2-D embedding coordinates coloured by a label or a continuous value.", "UMAP / t-SNE results computed elsewhere"),
     "hierarchical_clustering": ("Clustered heatmap with k clusters marked and a dendrogram.", "grouping features/samples into k clusters"),
     "network_graph": ("Nodes and edges from an edge list with layout, community detection and colour/size mappings.", "interaction or correlation networks"),
+    "chord_diagram": ("Flows between categories that share one set, as ribbons around a ring of segments sized by total flow (Circos-style).", "cell-cell interaction counts, transitions or migrations between states, co-occurrence, any many-to-many edge list with up to ~20 categories"),
 }
 LIMITS = {
     "kaplan_meier_survival_curve": "A precomputed curve cannot yield a log-rank test (no numbers at risk); the app refuses rather than invents one.",
@@ -74,6 +76,7 @@ LIMITS = {
     "heatmap_clustered_matrix": "Rows are capped at `max_features` (default 2 000, selected by variance) for responsiveness.",
     "hierarchical_clustering": "Rows are capped at `max_features` (default 2 000).",
     "network_graph": "Layouts with a random component are reproducible only with the `seed` option; large networks are slow.",
+    "chord_diagram": "Single ring only: genomic ideogram coordinates and heatmap/histogram tracks are not drawn in this version. No statistics. Labels wrap beyond 14 characters; above ~24 segments the plot warns that labels may overlap.",
     "lineplot_timecourse_with_error_band": "No statistical annotation on this plot type.",
     "ridge_or_density_plot": "A kernel density estimate can merge two modes into one shoulder; use the histogram when shape matters.",
     "histogram_distribution": "Bins are shared across groups by design; an overlay of raw counts with unequal group sizes warns you to use percent.",

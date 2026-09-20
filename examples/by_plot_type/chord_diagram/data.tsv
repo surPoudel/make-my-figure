@@ -1,0 +1,37 @@
+source_cell	target_cell	interactions	compartment
+T cell	T cell	5	Immune
+T cell	B cell	30	Immune
+T cell	Macrophage	32	Immune
+T cell	Fibroblast	14	Immune
+T cell	Endothelial	11	Immune
+T cell	Epithelial	13	Immune
+B cell	T cell	29	Immune
+B cell	B cell	6	Immune
+B cell	Macrophage	28	Immune
+B cell	Fibroblast	10	Immune
+B cell	Endothelial	10	Immune
+B cell	Epithelial	14	Immune
+Macrophage	T cell	22	Immune
+Macrophage	B cell	30	Immune
+Macrophage	Macrophage	15	Immune
+Macrophage	Fibroblast	12	Immune
+Macrophage	Endothelial	7	Immune
+Macrophage	Epithelial	13	Immune
+Fibroblast	T cell	9	Stromal
+Fibroblast	B cell	8	Stromal
+Fibroblast	Macrophage	2	Stromal
+Fibroblast	Fibroblast	3	Stromal
+Fibroblast	Endothelial	14	Stromal
+Fibroblast	Epithelial	29	Stromal
+Endothelial	T cell	3	Stromal
+Endothelial	B cell	12	Stromal
+Endothelial	Macrophage	13	Stromal
+Endothelial	Fibroblast	10	Stromal
+Endothelial	Endothelial	1	Stromal
+Endothelial	Epithelial	29	Stromal
+Epithelial	T cell	5	Epithelial
+Epithelial	B cell	12	Epithelial
+Epithelial	Macrophage	7	Epithelial
+Epithelial	Fibroblast	22	Epithelial
+Epithelial	Endothelial	24	Epithelial
+Epithelial	Epithelial	6	Epithelial

@@ -57,7 +57,7 @@ cleared and it is listed under `missing_mappings` instead).
 | `generic_long` | a group/category column + a numeric value | Box/violin with points (0.72); Bar plot with error bars (0.6); Grouped bar plot if a second categorical column exists (0.55); Scatter + regression if 2+ numeric columns (0.5) |  |
 | `gwas` | chromosome + position + p-value/FDR | Scatter substitute (0.4) | Warns that Manhattan/Q-Q is not implemented. |
 | `dose_response` | dose + response columns | Scatter + regression substitute (0.5) | Warns that dose-response curve fitting is not implemented. |
-| `network_edge_list` | source + target columns | Network graph (0.3) | Not renderable in this version — listed with a warning, no draft. |
+| `network_edge_list` | source + target columns | Network graph (0.8, medium cost); Circos-style chord diagram (0.55) | Both drafts render on the uploaded table; the chord diagram takes the weight column as `value` and no group. |
 | `unknown` | none of the above matched | Scatter + regression fallback (0.4) if 2+ numeric columns exist | Otherwise: pick a plot type manually. |
 
 No RNA-seq differential-expression analysis is ever recommended or run. For a

@@ -175,6 +175,10 @@ _CAPS: Dict[str, PlotStyleCapabilities] = {
         unsupported_controls_reason=(
             "does not apply to network plots (they have no axes; use node/edge colors, node "
             "size and edge width instead)")),
+    "chord_diagram": PlotStyleCapabilities(
+        plot_type="chord_diagram", supports_marker_size=False, supports_line_width=False,
+        supports_axes=False, supports_x_tick_rotation=False,
+        supports_y_tick_rotation=False, supports_axis_label_padding=False),
 }
 
 
