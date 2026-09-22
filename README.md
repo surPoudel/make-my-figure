@@ -201,9 +201,32 @@ If the `pytest-qt` plugin cannot load Qt on a headless machine, run
 
 ## 11. Citation and releases
 
-Please cite the release you used: **Make My Figure v1.1.1**,
-https://github.com/surPoudel/make-my-figure/releases/tag/v1.1.1. A formal software
-citation will be added when an archival record exists.
+If Make My Figure contributed to published work, please cite the preprint:
+
+> Poudel S, Shrestha HK, Crawford JC, Demontis F, Green DR.
+> **MakeMyFigure: An Interactive Platform for Reproducible Quantitative Data Visualization,
+> Analysis, and Scientific Figure Construction.** *bioRxiv* 2026.09.15.751916 (2026).
+> doi:[10.64898/2026.09.15.751916](https://doi.org/10.64898/2026.09.15.751916)
+
+```bibtex
+@article{poudel2026makemyfigure,
+  title   = {MakeMyFigure: An Interactive Platform for Reproducible Quantitative
+             Data Visualization, Analysis, and Scientific Figure Construction},
+  author  = {Poudel, Suresh and Shrestha, Him K. and Crawford, Jeremy C. and
+             Demontis, Fabio and Green, Douglas R.},
+  journal = {bioRxiv},
+  year    = {2026},
+  doi     = {10.64898/2026.09.15.751916},
+  url     = {https://www.biorxiv.org/content/10.64898/2026.09.15.751916v1},
+  note    = {Preprint, posted 21 September 2026}
+}
+```
+
+Please also name the version you used, so the exact behaviour behind a figure stays
+identifiable: **Make My Figure v1.1.1**
+(https://github.com/surPoudel/make-my-figure/releases/tag/v1.1.1). Every release is listed
+at https://github.com/surPoudel/make-my-figure/releases, and each exported PlotSpec and
+figure package records its own version for you.
 
 ## 12. License
 
