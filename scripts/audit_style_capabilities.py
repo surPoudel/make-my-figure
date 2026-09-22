@@ -144,7 +144,7 @@ _REASONS = {
     "sankey_plot": "flows have no axes, markers or lines in the plot sense",
     "hierarchical_dendrogram": "a dendrogram has no markers; branch width follows the profile",
 }
-_NO_AXES = {"network_graph", "sankey_plot"}
+_NO_AXES = {"network_graph", "sankey_plot", "chord_diagram"}
 
 
 def render_caps_block(rows: List[Dict[str, object]]) -> str:

@@ -12,6 +12,7 @@
 #define MyAppExeName "MakeMyFigure.exe"
 
 [Setup]
+LicenseFile=..\LICENSE
 AppId={{B6E3F2A1-MMF0-4C2A-9D1E-MAKEMYFIGURE01}}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}

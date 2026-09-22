@@ -19,6 +19,10 @@ datas = [
     (os.path.join(ROOT, "mock_data"), "mock_data"),
     (os.path.join(ROOT, "examples"), "examples"),
     (os.path.join(ROOT, "assets", "icons"), os.path.join("assets", "icons")),
+    # Licence and notes travel with every bundle (zip, tar.gz, AppImage, DMG, installer).
+    (os.path.join(ROOT, "LICENSE"), "."),
+    (os.path.join(ROOT, "README.md"), "."),
+    (os.path.join(ROOT, "CHANGELOG.md"), "."),
 ]
 
 hiddenimports = [

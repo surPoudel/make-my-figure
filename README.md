@@ -3,10 +3,10 @@
 **Publication-ready scientific plots and multi-panel figures from common data tables — with a
 machine-readable record of how every panel was made.**
 
-![Version](https://img.shields.io/badge/version-1.1.0-blue)
+![Version](https://img.shields.io/badge/version-1.1.1-blue)
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Plot types](https://img.shields.io/badge/plot%20types-38-blueviolet)
+![Plot types](https://img.shields.io/badge/plot%20types-39-blueviolet)
 ![Statistics](https://img.shields.io/badge/statistical%20procedures-18-blueviolet)
 ![Platforms](https://img.shields.io/badge/platforms-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey)
 
@@ -31,16 +31,16 @@ computer: no cloud upload, no telemetry, no account, and no R installation.
 
 Download the installer for your system from the
 [Releases page](https://github.com/surPoudel/make-my-figure/releases) (current release
-**v1.1.0**) and check the file against `SHA256SUMS.txt` if you want to verify it.
+**v1.1.1**) and check the file against `SHA256SUMS.txt` if you want to verify it.
 
 | System | File | Steps |
 |---|---|---|
-| **macOS** | `MakeMyFigure-1.1.0.dmg` | Open the DMG, drag *Make My Figure* to *Applications*, launch. The bundle is not notarised: on first launch right-click → **Open**, or allow it under *System Settings → Privacy & Security*. |
-| **Windows** | `MakeMyFigure-1.1.0-Setup.exe` (or `MakeMyFigure-1.1.0-windows.zip`) | Run the installer (or unzip and start `MakeMyFigure\MakeMyFigure.exe`). SmartScreen may warn about an unsigned program; choose *More info → Run anyway* if you trust the source. |
-| **Linux** | `MakeMyFigure-1.1.0-linux-x86_64.tar.gz` (or `MakeMyFigure-1.1.0.AppImage`) | Unpack the tarball and run `MakeMyFigure/MakeMyFigure`, or `chmod +x` the AppImage and run it. The desktop app needs the usual Qt system libraries (`libxkbcommon0 libgl1 libegl1 libxcb-*`). Built on Ubuntu 24.04: needs glibc 2.38 or newer (Ubuntu 24.04+, Fedora 39+, Debian 13+); on older distributions use the wheel or the source install. |
+| **macOS** | `MakeMyFigure-1.1.1.dmg` | Open the DMG, drag *Make My Figure* to *Applications*, launch. The bundle is not notarised: on first launch right-click → **Open**, or allow it under *System Settings → Privacy & Security*. |
+| **Windows** | `MakeMyFigure-1.1.1-Setup.exe` (or `MakeMyFigure-1.1.1-windows.zip`) | Run the installer (or unzip and start `MakeMyFigure\MakeMyFigure.exe`). SmartScreen may warn about an unsigned program; choose *More info → Run anyway* if you trust the source. |
+| **Linux** | `MakeMyFigure-1.1.1-linux-x86_64.tar.gz` (or `MakeMyFigure-1.1.1.AppImage`) | Unpack the tarball and run `MakeMyFigure/MakeMyFigure`, or `chmod +x` the AppImage and run it. The desktop app needs the usual Qt system libraries (`libxkbcommon0 libgl1 libegl1 libxcb-*`). Built on Ubuntu 24.04: needs glibc 2.38 or newer (Ubuntu 24.04+, Fedora 39+, Debian 13+); on older distributions use the wheel or the source install. |
 | **WSL2** (Linux running under Windows) | no native package | WSL2 is not native Windows: use the source install below with WSLg (Windows 11), or run the browser app inside WSL2 and open it in a Windows browser. |
 
-On launch the desktop status bar shows `Make My Figure v1.1.0 · <commit> · <platform> · <backend>`;
+On launch the desktop status bar shows `Make My Figure v1.1.1 · <commit> · <platform> · <backend>`;
 **Help → About** shows the same version.
 
 ### From source (desktop and browser apps, development)
@@ -50,8 +50,10 @@ git clone https://github.com/surPoudel/make-my-figure.git
 cd make-my-figure
 python3 -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
 python -m pip install --upgrade pip
-python -m pip install -r requirements.txt               # core + browser app + pytest
+python -m pip install -r requirements.txt               # core + browser app + pytest (bounded ranges)
 python -m pip install -e ".[desktop]"                   # adds the PySide6 desktop app
+# reproducible environment with the exact versions the release was tested with:
+# python -m pip install -r requirements-lock.txt
 
 streamlit run apps/streamlit_app/streamlit_app.py       # browser app (no Qt required)
 python -m apps.desktop_app.main                         # desktop app
@@ -60,7 +62,7 @@ python -m apps.desktop_app.main                         # desktop app
 Python 3.10–3.12 is recommended. Optional extras: `desktop` (PySide6), `dev` (pytest,
 pytest-qt), `build` (PyInstaller), `import-panels` (PDF/SVG panel import), `count-de`
 (an opt-in, Python-only count-model differential path; never required). Installing the
-wheel (`pip install make_my_figure_core-1.1.0-py3-none-any.whl`) gives the engine and the
+wheel (`pip install make_my_figure_core-1.1.1-py3-none-any.whl`) gives the engine and the
 bundled resources for use from your own scripts, without a GUI.
 
 On Linux/WSL2 the desktop app needs Qt system libraries; if PySide6 cannot load, the app
@@ -68,7 +70,7 @@ prints the exact `apt install` line and exits cleanly, and the browser app is un
 
 ## 3. What you can make
 
-**38 plot types**, all drawn through one registry and one style layer:
+**39 plot types**, all drawn through one registry and one style layer:
 
 - **Comparisons** — bar, grouped bar, box/violin with points, dot/strip, beeswarm, raincloud.
 - **Distributions** — histogram (binned; panels per group or overlaid; frequency polygon)
@@ -83,7 +85,7 @@ prints the exact `apt install` line and exits cleanly, and the browser app is un
   Kaplan–Meier survival (subject-level or precomputed curves).
 - **Genomics-style summaries** — Manhattan, Q–Q, oncoprint, lollipop.
 - **Composition / set / flow / network** — stacked composition, UpSet, Sankey/alluvial,
-  network graph.
+  network graph, Circos-style chord diagram.
 - **Other** — enrichment dot plot, waterfall, dose–response, embedding scatter (UMAP/t-SNE
   from precomputed coordinates).
 
@@ -199,10 +201,34 @@ If the `pytest-qt` plugin cannot load Qt on a headless machine, run
 
 ## 11. Citation and releases
 
-Please cite the release you used: **Make My Figure v1.1.0**,
-https://github.com/surPoudel/make-my-figure/releases/tag/v1.1.0. A formal software
-citation will be added when an archival record exists.
+If Make My Figure contributed to published work, please cite the preprint:
+
+> Poudel S, Shrestha HK, Crawford JC, Demontis F, Green DR.
+> **MakeMyFigure: An Interactive Platform for Reproducible Quantitative Data Visualization,
+> Analysis, and Scientific Figure Construction.** *bioRxiv* 2026.09.15.751916 (2026).
+> doi:[10.64898/2026.09.15.751916](https://doi.org/10.64898/2026.09.15.751916)
+
+```bibtex
+@article{poudel2026makemyfigure,
+  title   = {MakeMyFigure: An Interactive Platform for Reproducible Quantitative
+             Data Visualization, Analysis, and Scientific Figure Construction},
+  author  = {Poudel, Suresh and Shrestha, Him K. and Crawford, Jeremy C. and
+             Demontis, Fabio and Green, Douglas R.},
+  journal = {bioRxiv},
+  year    = {2026},
+  doi     = {10.64898/2026.09.15.751916},
+  url     = {https://www.biorxiv.org/content/10.64898/2026.09.15.751916v1},
+  note    = {Preprint, posted 21 September 2026}
+}
+```
+
+Please also name the version you used, so the exact behaviour behind a figure stays
+identifiable: **Make My Figure v1.1.1**
+(https://github.com/surPoudel/make-my-figure/releases/tag/v1.1.1). Every release is listed
+at https://github.com/surPoudel/make-my-figure/releases, and each exported PlotSpec and
+figure package records its own version for you.
 
 ## 12. License
 
-Released under the [MIT License](LICENSE).
+Released under the [MIT License](LICENSE). The `LICENSE` file is at the repository root, in the
+source distribution, and (from the next build) inside every desktop bundle and installer.

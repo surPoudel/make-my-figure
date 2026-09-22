@@ -37,3 +37,4 @@ sankey_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,N/A,PASS,PASS,PASS,PASS,
 embedding_scatter,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed | plot_specific_roundtrip: N/A - every option of this plot type is analytical (config scope); none belongs in a style preset
 hierarchical_clustering,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed
 network_graph,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed
+chord_diagram,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed

@@ -1,12 +1,13 @@
-pandas>=1.5
-numpy>=1.23
-matplotlib>=3.6
-scipy>=1.9
-statsmodels>=0.14
-openpyxl>=3.0
-jsonschema>=4.0
-networkx>=3.0
-adjustText>=1.0
-pillow>=9.0
-streamlit>=1.30
-pytest>=7.0
+# Bounded ranges (next major excluded). Exact tested versions: requirements-lock.txt
+pandas>=1.5,<3
+numpy>=1.23,<3
+matplotlib>=3.6,<4
+scipy>=1.9,<2
+statsmodels>=0.14,<0.16
+openpyxl>=3.0,<4
+jsonschema>=4.0,<5
+networkx>=3.0,<4
+adjustText>=1.0,<2
+pillow>=9.0,<13
+streamlit>=1.30,<2
+pytest>=7.0,<10

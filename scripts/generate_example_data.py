@@ -649,6 +649,28 @@ def b_hier_clustering(rng):
     return pd.DataFrame(data), None
 
 
+def b_chord_diagram(rng):
+    # Synthetic ligand-receptor interaction counts between six cell types (one row per ordered
+    # source -> target pair, self-interactions included) with a compartment column that classifies
+    # the SOURCE cell type of each row. Immune-immune and stromal-epithelial pairs are enriched so
+    # the ribbons are visibly weighted. Nothing here is derived from a publication.
+    cell_types = ["T cell", "B cell", "Macrophage", "Fibroblast", "Endothelial", "Epithelial"]
+    compartment = {"T cell": "Immune", "B cell": "Immune", "Macrophage": "Immune",
+                   "Fibroblast": "Stromal", "Endothelial": "Stromal", "Epithelial": "Epithelial"}
+    base = {("Immune", "Immune"): 28, ("Immune", "Stromal"): 10, ("Immune", "Epithelial"): 12,
+            ("Stromal", "Immune"): 9, ("Stromal", "Stromal"): 16, ("Stromal", "Epithelial"): 30,
+            ("Epithelial", "Immune"): 8, ("Epithelial", "Stromal"): 24, ("Epithelial", "Epithelial"): 14}
+    rows = []
+    for s in cell_types:
+        for t in cell_types:
+            mu = base[(compartment[s], compartment[t])]
+            if s == t:
+                mu = max(3, mu // 3)
+            n = int(rng.poisson(mu))
+            rows.append({"source_cell": s, "target_cell": t, "interactions": n, "compartment": compartment[s]})
+    return pd.DataFrame(rows), None
+
+
 @dataclass
 class Example:
     plot_type: str
@@ -931,6 +953,17 @@ EXAMPLES: List[Example] = [
             ["Do not pre-bin the data - supply the raw values and let the plot count them.",
              "With unequal group sizes, overlaid raw counts favour the larger group: set the Y "
              "axis to 'percent', or keep separate panels."]),
+    Example("chord_diagram", "chord_diagram", "Chord_diagram",
+            "Ligand-receptor interaction counts between cell types drawn as a Circos-style chord "
+            "diagram: one segment per cell type sized by its total interactions, ribbons sized by "
+            "the count of each pair, and a compartment band on the outside.",
+            b_chord_diagram, ["source_cell", "target_cell"], ["interactions", "compartment"],
+            "One row per link. 'source_cell' and 'target_cell' are the two categories (they share one "
+            "set); 'interactions' is the link weight (leave the value role unmapped for equal weights); "
+            "'compartment' classifies the source category of each row and colours the outer band.",
+            ["Do not supply a matrix: melt it to one row per source/target pair first.",
+             "Negative or missing values are not drawn and are counted in the export warnings.",
+             "A chord diagram summarises flows; it carries no statistical test."]),
 ]
 
 

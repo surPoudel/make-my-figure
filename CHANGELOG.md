@@ -1,15 +1,33 @@
 # Changelog
 
+## Unreleased
+
+(nothing yet)
+
 All notable changes to Make My Figure are recorded here. This project uses a
 single, evolving `Publication` style — it does not target or claim compliance
 with any journal.
 
-## [Unreleased — v1.1.1 candidate] — Reproducible figure packages
+## [1.1.1] — Reproducible figure packages, Circos chord diagram, compatibility fixes
 
-Not released: no tag, no installers, no merge. Awaiting the author's acceptance test
-(`reports/v1.1.1_manual_acceptance_test.md`).
+Prepared on `main` on 2026-09-20. The `v1.1.1` tag, installers and GitHub release follow after the author's final check.
 
-### Added
+### Added — plot types
+
+- **Circos-style chord diagram** (`chord_diagram`, `make_my_figure_core/plots/chord_diagram.py`):
+  flows between categories that share one set, from an edge list with one row per link
+  (`source`, `target`, optional numeric `value`, optional `group`). Segments are sized by total
+  flow, ribbons by link value; options with explicit scopes for segment order, gap, start angle,
+  ribbon colouring (source / target / group), transparency, labels (radial / tangential), total
+  tick marks and the group legend (style), and for the minimum link value, directed reading
+  (ribbons narrow toward the target) and self-links (config). No statistics: a chord diagram
+  summarises flows. Bundled synthetic example (six cell types, compartment group), catalogue
+  entry and figure, focused tests (`tests/test_chord_diagram.py`), and a low-confidence
+  recommendation (0.55) alongside the network graph for `source`/`target` edge lists. Genomic
+  multi-track Circos (ideogram coordinates, heatmap or histogram rings) is out of scope for
+  this version; the ring geometry leaves room for tracks.
+
+### Added — reproducible figure packages
 - **Reproducible figure packages (`.mmfpackage`)** — one portable file that reopens a figure on
   another computer without the original data files: the PlotSpec (or FigureSpec + every panel's
   PlotSpec/StatsSpec), a frozen lossless copy of the exact table(s) the plot used (`mmftable`
@@ -56,6 +74,19 @@ Not released: no tag, no installers, no merge. Awaiting the author's acceptance 
   eight-step "Sharing a reproducible figure" workflow; `reports/portable_package_current_state.md`
   (live-code audit of v1.1.0), `reports/v1.1.1_manuscript_claim_audit.md`,
   `reports/v1.1.1_manual_acceptance_test.md`.
+
+### Fixed — library compatibility
+- Figure-package tables written with pandas 3 (default `str` dtype) reopen with their dtype
+  intact; on pandas 2 they reopen as `object`, which is what that pandas infers itself
+  (`make_my_figure_core/package/tabledata.py`, test in `tests/test_figure_package_integrity.py`).
+- The figure-preset QC script no longer writes into read-only pandas 3 array views.
+
+### Packaging
+- Packaging: the MIT `LICENSE`, `README.md` and `CHANGELOG.md` are bundled at the top level of the
+  desktop builds (Windows zip and installer, macOS app, Linux tar.gz/AppImage); the installer shows
+  the licence; `pyproject.toml` declares the licence and classifiers.
+- Dependencies: bounded ranges (next major excluded) in `pyproject.toml` and `requirements.txt`, and
+  a new `requirements-lock.txt` with the exact versions the release was tested with.
 
 ## [1.1.0] — Figure presets, validated statistics, export and packaging fixes
 

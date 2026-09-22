@@ -1,0 +1,27 @@
+{
+  "plot_type": "chord_diagram",
+  "input_table": "data.csv",
+  "mapping": {
+    "source": "source_cell",
+    "target": "target_cell",
+    "value": "interactions",
+    "group": "compartment",
+    "segment_order": "input",
+    "ribbon_color_by": "source",
+    "directed": false
+  },
+  "journal_style": "publication",
+  "output": {
+    "formats": [
+      "svg",
+      "png",
+      "pdf"
+    ],
+    "width_mm": 89,
+    "height_mm": 70,
+    "dpi": 300
+  },
+  "layout": {
+    "column_width": "single"
+  }
+}

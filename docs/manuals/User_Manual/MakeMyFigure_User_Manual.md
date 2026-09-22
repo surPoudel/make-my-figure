@@ -1,8 +1,8 @@
 # Make My Figure — User Manual
 
-**MakeMyFigure version:** 1.1.0  
-**Documentation generated from commit:** `473d495`  
-**Date:** 2026-09-11
+**MakeMyFigure version:** 1.1.1  
+**Documentation generated from commit:** `15b6b40`  
+**Date:** 2026-09-20
 
 This manual describes the application exactly as built at the commit above. Where the packaged installers of an earlier release differ, the text says so.
 
@@ -10,7 +10,7 @@ This manual describes the application exactly as built at the commit above. Wher
 
 ### 1. About Make My Figure
 
-Make My Figure (package `make_my_figure_core`, version 1.1.0) turns tabular scientific data — CSV/TSV/TXT files and Excel workbooks — into manuscript-style figures, and records how each figure was made. One engine serves two interfaces: a **desktop application** built with Qt (PySide6) and a **browser application** built with Streamlit. Both run entirely on your own computer.
+Make My Figure (package `make_my_figure_core`, version 1.1.1) turns tabular scientific data — CSV/TSV/TXT files and Excel workbooks — into manuscript-style figures, and records how each figure was made. One engine serves two interfaces: a **desktop application** built with Qt (PySide6) and a **browser application** built with Streamlit. Both run entirely on your own computer.
 
 ### 2. Intended users
 
@@ -68,11 +68,11 @@ Python, pandas, NumPy, SciPy, statsmodels, Matplotlib, openpyxl, networkx. The d
 | Run the newest code, the browser app, or develop | **Source install** with Python 3.10–3.12 |
 | Use Make My Figure from your own scripts | `pip install` the core wheel (`make_my_figure_core-*.whl`) — no GUI included |
 
-The installers attached to release **v1.1.0** (`MakeMyFigure-1.1.0.dmg`, `MakeMyFigure-1.1.0-Setup.exe` / `MakeMyFigure-1.1.0-windows.zip`, `MakeMyFigure-1.1.0.AppImage` / `MakeMyFigure-1.1.0-linux.tar.gz`) are built from the tagged v1.1.0 source on native macOS, Windows and Linux runners and contain everything this manual documents (Figure presets, the histogram plot, survival-curve and merged-header fixes, the R-validated statistical corrections). Download them from the project's GitHub *Releases* page and check the file's SHA-256 against `SHA256SUMS.txt` if you want to verify the download.
+The installers attached to release **v1.1.1** (`MakeMyFigure-1.1.1.dmg`, `MakeMyFigure-1.1.1-Setup.exe` / `MakeMyFigure-1.1.1-windows.zip`, `MakeMyFigure-1.1.1.AppImage` / `MakeMyFigure-1.1.1-linux.tar.gz`) are built from the tagged v1.1.1 source on native macOS, Windows and Linux runners and contain everything this manual documents (Figure presets, the histogram plot, survival-curve and merged-header fixes, the R-validated statistical corrections). Download them from the project's GitHub *Releases* page and check the file's SHA-256 against `SHA256SUMS.txt` if you want to verify the download.
 
 ### 9. macOS
 
-**Packaged:** open `MakeMyFigure-1.1.0.dmg`, drag *Make My Figure* to *Applications*. The bundle is not notarised: on first launch right-click → **Open**, or allow it in *System Settings → Privacy & Security*.
+**Packaged:** open `MakeMyFigure-1.1.1.dmg`, drag *Make My Figure* to *Applications*. The bundle is not notarised: on first launch right-click → **Open**, or allow it in *System Settings → Privacy & Security*.
 
 **Source:**
 
@@ -99,7 +99,7 @@ Common macOS startup errors:
 
 ### 10. Windows
 
-**Packaged:** run `MakeMyFigure-1.1.0-Setup.exe` (Inno Setup installer) or unzip `MakeMyFigure-1.1.0-windows.zip` and start `MakeMyFigure\MakeMyFigure.exe`. Windows Defender may show a SmartScreen prompt for an unsigned binary; choose *More info → Run anyway* if you trust the source.
+**Packaged:** run `MakeMyFigure-1.1.1-Setup.exe` (Inno Setup installer) or unzip `MakeMyFigure-1.1.1-windows.zip` and start `MakeMyFigure\MakeMyFigure.exe`. Windows Defender may show a SmartScreen prompt for an unsigned binary; choose *More info → Run anyway* if you trust the source.
 
 **Source (PowerShell):**
 
@@ -118,7 +118,7 @@ First launch of the packaged app can take 10–20 s while Windows unpacks and sc
 
 ### 11. Linux
 
-**Packaged:** `chmod +x MakeMyFigure-1.1.0.AppImage && ./MakeMyFigure-1.1.0.AppImage`, or unpack `MakeMyFigure-1.1.0-linux.tar.gz` and run `MakeMyFigure/MakeMyFigure`.
+**Packaged:** `chmod +x MakeMyFigure-1.1.1.AppImage && ./MakeMyFigure-1.1.1.AppImage`, or unpack `MakeMyFigure-1.1.1-linux.tar.gz` and run `MakeMyFigure/MakeMyFigure`.
 
 **Source:** as for macOS, using the distribution's `python3` (3.10+). The Qt binding needs system libraries that server and container images usually lack:
 
@@ -136,7 +136,7 @@ WSL2 is Linux running inside Windows; it is not native Windows and the Windows i
 
 ### 13. Launching, verifying the version, updating, uninstalling
 
-- **Desktop:** `python -m apps.desktop_app.main` (source) or the installed application. The status bar shows the build banner on launch (`Make My Figure v1.1.0 · <commit> · <platform> · <backend>`); **Help → About** shows the version.
+- **Desktop:** `python -m apps.desktop_app.main` (source) or the installed application. The status bar shows the build banner on launch (`Make My Figure v1.1.1 · <commit> · <platform> · <backend>`); **Help → About** shows the version.
 - **Browser:** `streamlit run apps/streamlit_app/streamlit_app.py`; the banner is in the sidebar, with a **🔧 Diagnostics** expander listing the module path and backend. If the commit there does not match your pulled HEAD, an older installed package is shadowing the checkout — run `python -m pip install -e .`.
 - **Update a source install:** `git pull`, then re-run the two `pip install` lines.
 - **Uninstall:** delete the project folder and the venv; packaged apps uninstall like any application. User presets live in a separate folder (Part XIV) and are not removed with the app.
@@ -468,7 +468,7 @@ Supported on: bar plot, grouped bar plot (within-x brackets), box/violin (bracke
 
 ## Part X — Plot catalogue
 
-The 38 plot types below are the complete registry on this commit, enumerated from code (`plots/registry.py`) — not a historical list. Each figure was rendered from its bundled synthetic example with Publication defaults. Colour and control facts come from the same capability scan that the test suite enforces, so a control listed here is one the renderer actually reads.
+The 39 plot types below are the complete registry on this commit, enumerated from code (`plots/registry.py`) — not a historical list. Each figure was rendered from its bundled synthetic example with Publication defaults. Colour and control facts come from the same capability scan that the test suite enforces, so a control listed here is one the renderer actually reads.
 
 ### Bar plot with error bars
 
@@ -1762,6 +1762,40 @@ The 38 plot types below are the complete registry on this commit, enumerated fro
 
 ![Network graph: rendered from the bundled synthetic example with Publication defaults.](../assets/figures/network_graph.png)
 
+### Circos-style chord diagram
+
+*Registry key:* `chord_diagram`
+
+**Purpose:** Flows between categories that share one set, as ribbons around a ring of segments sized by total flow (Circos-style).  
+**When to use:** cell-cell interaction counts, transitions or migrations between states, co-occurrence, any many-to-many edge list with up to ~20 categories
+
+**Required / optional input:** one table with the roles below; the bundled example has columns `source_cell`, `target_cell`, `interactions`, `compartment`.
+
+**Column mapping:** `source`, `target`, `value`, `group`; example mapping `{"source": "source_cell", "target": "target_cell", "value": "interactions", "group": "compartment"}`.
+
+**Statistics supported:** no — a chord diagram summarises flows; no inferential comparison is standard for it.
+
+**Colour controls:** Publication palette (publication / colorblind_safe / high_contrast / grayscale); plot options: `ribbon_color_by`.
+
+**Annotation controls:** manual annotation layer via PlotSpec; statistical annotation (stars / p / effect).
+
+**Axis controls:** title, x/y labels, tick angles, label/title padding, margins (layout engine).
+
+**Legend / colorbar controls:** legend location (inside/outside), legend size.
+
+**Plot-specific controls (visual, carried in a style preset):** `segment_order` — Segment order, `gap_degrees` — Gap between segments (degrees), `start_angle` — Start angle (degrees, 90 = top), `ribbon_color_by` — Colour ribbons by, `ribbon_alpha` — Ribbon transparency (alpha), `show_labels` — Show segment labels, `label_placement` — Label placement, `show_ticks` — Show segment totals as tick marks, `show_legend` — Show group legend.  
+**Analytical / data-dependent options (full preset only):** `min_value` — Minimum link value shown, `directed` — Directed (ribbons narrow toward the target), `draw_self_links` — Draw self-links.
+
+**Recommended export:** SVG or PDF for vector; PNG/TIFF at 300–600 dpi for raster.
+
+**Figure preset support:** style and full presets (verified in the registry-wide preset QC).
+
+**Example data:** `examples/by_plot_type/chord_diagram/` (synthetic).
+
+**Known limitations:** Single ring only: genomic ideogram coordinates and heatmap/histogram tracks are not drawn in this version. No statistics. Labels wrap beyond 14 characters; above ~24 segments the plot warns that labels may overlap..
+
+![Circos-style chord diagram: rendered from the bundled synthetic example with Publication defaults.](../assets/figures/chord_diagram.png)
+
 ## Part XI — Publication controls
 
 ### 41. The Publication style
@@ -2153,7 +2187,7 @@ figure_builder_assets/                                 copies of imported panel 
 - The recommendation engine is rule-based.
 - No transformation is ever applied silently; conversely nothing is auto-normalised for you.
 - Cross-platform font differences; no byte-identical guarantee.
-- Packaged v1.1.0 installers are built from the same tagged source as this manual; the two cosmetic Qt defects below are present in them as well.
+- Packaged v1.1.1 installers are built from the same tagged source as this manual; the two cosmetic Qt defects below are present in them as well.
 - Statistics annotation is not available on the line/time-course plot.
 
 ## Part XXVI — Glossary

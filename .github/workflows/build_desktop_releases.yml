@@ -8,6 +8,14 @@ name: Build desktop releases
 # nothing (tag a version to cut a release).
 on:
   workflow_dispatch:
+    inputs:
+      publish_release_tag:
+        description: >-
+          Optional. Name of an EXISTING release tag (e.g. v1.1.0) whose installer assets should be
+          rebuilt from this ref and replaced (--clobber). Leave empty to build and smoke-test only.
+        required: false
+        default: ""
+        type: string
   push:
     tags:
       - "v*"
@@ -101,14 +109,20 @@ jobs:
         # Attaches this platform's installers to the Release for the tag being
         # built. Release assets live outside the Actions artifact-storage quota,
         # so this never hits the "Artifact storage quota" limit that previously
-        # blocked uploads. Tag builds only (a Release exists only for a tag).
-        if: startsWith(github.ref, 'refs/tags/')
+        # blocked uploads. Runs for tag builds, and for a manual run that names an
+        # existing release tag in `publish_release_tag` (assets are replaced).
+        if: startsWith(github.ref, 'refs/tags/') || github.event.inputs.publish_release_tag != ''
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
+          PUBLISH_TAG: ${{ github.event.inputs.publish_release_tag }}
         run: |
           set -euo pipefail
           shopt -s nullglob
+          if [ -n "${PUBLISH_TAG:-}" ]; then
+            GITHUB_REF_NAME="$PUBLISH_TAG"
+            gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" >/dev/null   # must already exist
+          fi
           files=(dist/*.dmg dist/*.AppImage dist/*.exe dist/*-windows.zip dist/*-macos.zip dist/*-linux-*.tar.gz)
           if [ ${#files[@]} -eq 0 ]; then
             echo "No installer files found in dist/ — nothing to publish."

@@ -23,7 +23,7 @@ def save(fig, name):
     fig.savefig(os.path.join(OUT, name + ".svg"), bbox_inches="tight"); plt.close(fig)
 
 fig, ax = canvas(12, 3.2)
-steps = ["Load data\n(CSV / TSV / TXT /\nExcel workbook)", "Map columns\n(you confirm roles)", "Choose a plot\n(38 types) or take a\nrecommendation", "Statistics\n(optional)", "Publication\nstyle, annotations", "Export\n(SVG / PDF / PNG /\nTIFF / EPS + PlotSpec)"]
+steps = ["Load data\n(CSV / TSV / TXT /\nExcel workbook)", "Map columns\n(you confirm roles)", "Choose a plot\n(39 types) or take a\nrecommendation", "Statistics\n(optional)", "Publication\nstyle, annotations", "Export\n(SVG / PDF / PNG /\nTIFF / EPS + PlotSpec)"]
 x = 0.3
 for i, s in enumerate(steps):
     box(ax, x, 1.0, 1.7, 1.4, s)

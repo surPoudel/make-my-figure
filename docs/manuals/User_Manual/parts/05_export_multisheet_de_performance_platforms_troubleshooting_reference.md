@@ -153,7 +153,7 @@ figure_builder_assets/                                 copies of imported panel 
 - The recommendation engine is rule-based.
 - No transformation is ever applied silently; conversely nothing is auto-normalised for you.
 - Cross-platform font differences; no byte-identical guarantee.
-- Packaged v1.1.0 installers are built from the same tagged source as this manual; the two cosmetic Qt defects below are present in them as well.
+- Packaged v1.1.1 installers are built from the same tagged source as this manual; the two cosmetic Qt defects below are present in them as well.
 - Statistics annotation is not available on the line/time-course plot.
 
 ## Part XXVI — Glossary
