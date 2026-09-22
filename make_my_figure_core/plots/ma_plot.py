@@ -136,14 +136,14 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             text_pts: List = []
             if selected_set:
                 sel = work[label_series.str.lower().isin(selected_set) & has_text]
-                ranked = list(sel.reindex(sel[y].abs().sort_values(ascending=False).index).index)
+                ranked = list(sel.reindex(sel[y].abs().sort_values(ascending=False, kind="stable").index).index)
                 text_pts = _pts(ranked, policy=dup_policy)
 
             mode_pts: List = []
             if not selected_set and not selected_points and label_top_n > 0:
                 sig_frame = work[sig_series & has_text]
                 ranked = list(sig_frame.reindex(
-                    sig_frame[y].abs().sort_values(ascending=False).index).index)
+                    sig_frame[y].abs().sort_values(ascending=False, kind="stable").index).index)
                 mode_pts = _pts(ranked, policy=dup_policy, limit=label_top_n)
 
             label_points: List = []

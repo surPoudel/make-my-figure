@@ -53,7 +53,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     with style.apply():
         fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.72))
         for si, subj in enumerate(subjects):
-            sub = work[work[subject] == subj].sort_values(time)
+            sub = work[work[subject] == subj].sort_values(time, kind="stable")
             xs = sub[time].to_numpy(float)
             ys = sub[value].to_numpy(float)
             mask = np.isfinite(xs) & np.isfinite(ys)

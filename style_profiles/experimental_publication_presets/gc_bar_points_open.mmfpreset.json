@@ -58,14 +58,19 @@
       "barplot_with_error_bar"
     ],
     "qc": {
-      "date": "2026-09-16",
-      "cells": 38,
+      "date": "2026-09-22",
+      "cells": 39,
       "pass": 27,
       "warn": 2,
-      "fail": 9,
+      "fail": 10,
       "not_pass": [
         {
           "plot_type": "bland_altman_plot",
+          "status": "FAIL",
+          "issues": "3 overlapping text pair(s)"
+        },
+        {
+          "plot_type": "chord_diagram",
           "status": "FAIL",
           "issues": "3 overlapping text pair(s)"
         },

@@ -228,7 +228,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             text_pts: List = []
             if selected_set:
                 sel = work[label_series.str.lower().isin(selected_set) & has_text]
-                ranked = list(sel.sort_values("_neglog10p", ascending=False).index)
+                ranked = list(sel.sort_values("_neglog10p", ascending=False, kind="stable").index)
                 text_pts = _pts(ranked, policy=dup_policy)
 
             # 3) Mode-driven candidates — ranked, then policy applied.
@@ -236,20 +236,20 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             mode_pts: List = []
             if label_mode == "pasted":
                 m = work[label_series.str.lower().isin(pasted_set) & has_text]
-                ranked = list(m.sort_values("_neglog10p", ascending=False).index)
+                ranked = list(m.sort_values("_neglog10p", ascending=False, kind="stable").index)
                 mode_pts = _pts(ranked, policy=dup_policy)
             elif label_mode == "selected":
                 mode_pts = []  # only explicit / text selections above
             elif label_mode == "top_lfc":
-                ranked = list(pool.reindex(pool[x].abs().sort_values(ascending=False).index).index)
+                ranked = list(pool.reindex(pool[x].abs().sort_values(ascending=False, kind="stable").index).index)
                 mode_pts = _pts(ranked, policy=dup_policy, limit=top_n)
             elif label_mode == "top_up_down":
-                up_ranked = list(work[up & has_text].sort_values("_neglog10p", ascending=False).index)
-                dn_ranked = list(work[down & has_text].sort_values("_neglog10p", ascending=False).index)
+                up_ranked = list(work[up & has_text].sort_values("_neglog10p", ascending=False, kind="stable").index)
+                dn_ranked = list(work[down & has_text].sort_values("_neglog10p", ascending=False, kind="stable").index)
                 mode_pts = _pts(up_ranked, policy=dup_policy, limit=top_n_up) + \
                     _pts(dn_ranked, policy=dup_policy, limit=top_n_down)
             elif label_mode == "significant_all":
-                sig_frame = work[sig_mask & has_text].sort_values("_neglog10p", ascending=False)
+                sig_frame = work[sig_mask & has_text].sort_values("_neglog10p", ascending=False, kind="stable")
                 ranked = list(sig_frame.index)
                 mode_pts = _pts(ranked, policy=dup_policy)
                 if len(mode_pts) > max_labels_warn:
@@ -258,7 +258,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                         f"labeled the top {top_n}. Reduce the count or enlarge the figure.")
                     mode_pts = _pts(ranked, policy=dup_policy, limit=top_n)
             else:  # top_fdr (default)
-                ranked = list(pool.sort_values("_neglog10p", ascending=False).index)
+                ranked = list(pool.sort_values("_neglog10p", ascending=False, kind="stable").index)
                 mode_pts = _pts(ranked, policy=dup_policy, limit=top_n)
 
             # Merge, keeping point identity (never collapse duplicates by text).

@@ -134,6 +134,7 @@
       "bland_altman_plot",
       "boxplot_or_violin_with_points",
       "calibration_plot",
+      "chord_diagram",
       "confusion_matrix",
       "dot_strip_plot",
       "enrichment_dotplot",
@@ -154,9 +155,9 @@
       "swimmer_plot"
     ],
     "qc": {
-      "date": "2026-09-16",
-      "cells": 38,
-      "pass": 23,
+      "date": "2026-09-22",
+      "cells": 39,
+      "pass": 24,
       "warn": 6,
       "fail": 9,
       "not_pass": [
@@ -173,7 +174,7 @@
         {
           "plot_type": "lollipop_mutation_plot",
           "status": "FAIL",
-          "issues": "2 overlapping text pair(s); exported width 73.0 mm deviates -18% from target 89.0 mm"
+          "issues": "1 overlapping text pair(s); exported width 73.0 mm deviates -18% from target 89.0 mm"
         },
         {
           "plot_type": "ma_plot",

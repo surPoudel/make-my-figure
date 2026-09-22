@@ -111,7 +111,7 @@ def _filter_edges(spec: Dict[str, Any], edges: pd.DataFrame, mode: str,
         e = e[e["_p"] <= float(p_cut)]
     top_n = get_mapping(spec, "top_n_edges", None)
     if top_n:
-        e = e.reindex(e["weight"].abs().sort_values(ascending=False).index).head(int(top_n))
+        e = e.reindex(e["weight"].abs().sort_values(ascending=False, kind="stable").index).head(int(top_n))
     return e.reset_index(drop=True)
 
 

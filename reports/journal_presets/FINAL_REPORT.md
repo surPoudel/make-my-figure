@@ -1,9 +1,11 @@
 # Experimental evidence-derived publication presets - final report (2026-09-16)
 
 Branch `feature/evidence-derived-journal-presets`, worktree `make_my_plot_journal_presets`, forked from
-`feature/portable-figure-package-v1.1.1` at 193f637. **Nothing was merged, tagged, pushed to main or
+`feature/portable-figure-package-v1.1.1` at 193f637. **Nothing was merged into main, tagged or
 released; the shipping preset library (`style_profiles/starter_journal_style_profiles.json`,
 `style_profiles/learned/`) is untouched; the manuscript was not changed.**
+
+**Update 2026-09-22:** `origin/main` (v1.1.1 candidate: figure packages, Circos chord diagram, version 1.1.1) was merged into this branch (c5bb8b0), so the experimental work now sits on the 39-plot-type base. The whole-library fingerprint on matplotlib 3.8.4 / 3.10.8 / 3.11.2 found one new library-version defect (pandas-dependent sample order in stacked composition bars from an unstable sort; every renderer sort is now stable) and the preset QC was re-run on 39 plot types. Details and test records: `matplotlib_compat_check.md`, section "Re-check on 2026-09-22".
 
 ## 1. What was built
 
@@ -51,10 +53,10 @@ publishers' stated ranges, not measurement (stated as a limitation in each prese
 
 ## 4. QC
 
-* `qc/qc_matrix.csv` - 12 presets x 38 plot types = 456 cells: **288 PASS, 69 WARN, 99 FAIL**. Family-preset non-PASS reasons: exported width off target in 72 cells (renderers that size themselves: grouped bars, waterfall, dose-response, UpSet, spider, Sankey, embedding scatter, oncoprint, lollipop, and legends placed outside), legend over data 36, text overlap 37 (gene labels in volcano/MA, dense tick labels at 57 mm), text under 5 pt 9 (Sankey/UpSet at narrow widths), clipped annotations 3. Overlap was never resolved by shrinking text; each preset now lists its PASS plot types in `experimental.recommended_for` (23 of 38 for the 85/89 mm presets, 22 for full width, 15 for the 57 mm preset). All six gc presets PASS on their own plot type.
+* `qc/qc_matrix.csv` (re-run 2026-09-22 on the merged v1.1.1 base) - 12 presets x 39 plot types = 468 cells: **293 PASS, 69 WARN, 106 FAIL** (2026-09-16, 38 plot types: 456 cells, 289 / 69 / 98). Family-preset non-PASS reasons: exported width off target in 72 cells (renderers that size themselves: grouped bars, waterfall, dose-response, UpSet, spider, Sankey, embedding scatter, oncoprint, lollipop, and legends placed outside), legend over data 35, text overlap 40 (gene labels in volcano/MA, dense tick labels at 57 mm, chord-diagram segment labels at the larger text sizes), text under 5 pt 9 (Sankey/UpSet at narrow widths), clipped annotations 3. Overlap was never resolved by shrinking text; each preset lists its PASS plot types in `experimental.recommended_for` (24 of 39 for 89 mm (N), 23 for 85 mm (C) and 183 mm (N), 22 for 174 mm (C) and 184 mm (S), 16 for 57 mm (S)). The new chord diagram PASSes under three family presets (57 mm S, 89 mm N, 183 mm N). All six gc presets PASS on their own plot type. Two adjustText-dependent cells (lollipop, network) are borderline; see `matplotlib_compat_check.md`.
 * `group_comparison_acceptance/` - 6 gc presets x 17 synthetic datasets x 2 widths with statistics on: **196 PASS, 4 WARN** (the 2 x 3 hue design renders 147 mm at a 183 mm target because the legend sits outside), 0 FAIL; every observation drawn (n_points_drawn == n), brackets above points and error bars.
 * `comparison_sheets/` - 10 plot types, Publication defaults vs every applicable preset at one physical scale.
-* `reports/figure_preset_qc/all_plot_preset_matrix.csv` regenerated: 38/38 PASS with the new options; `scripts/audit_style_capabilities.py`: capabilities agree with renderer source.
+* `reports/figure_preset_qc/all_plot_preset_matrix.csv`: 39/39 PASS with the new options (regenerated on main for v1.1.1, merged here); `scripts/audit_style_capabilities.py`: capabilities agree with renderer source.
 * Scientific identity: `tests/test_preset_scientific_identity.py` - raw values, group n, summary, error definition, tests, P and adjusted P identical before/after a demanding preset on unequal designs.
 
 ## 5. Tests
@@ -62,6 +64,7 @@ publishers' stated ranges, not measurement (stated as a limitation in each prese
 * Baseline (before any change, headless WSL, `-p no:pytest-qt`): 1706 passed, 5 skipped (`baseline_test_run.md`).
 * Final full suite (same environment, all changes applied): **2360 passed, 5 skipped, 9 warnings**, no failures (`final_test_run.md`); targeted re-run of the new modules after the last fix: 708 passed.
 * Windows portable Python with PySide6 (Qt GUI, controllers, pop-out panels, performance, wiring, Streamlit presets): **87 passed, 1 skipped** (`windows_qt_tests_final.txt`).
+* **2026-09-22, merged v1.1.1 base + stable-sort fix:** development stack **2449 passed, 4 skipped, 0 failed**; matplotlib 3.8.4 / pandas 2.2.3 and matplotlib 3.11.2 / pandas 3.0.6 non-GUI suites **2371 passed, 9 skipped, 0 failed** each (`matplotlib_compat_full_suite_*_2026-09-22.txt`); whole-library fingerprints identical across 3.8.4 and 3.10.8 except adjustText label nudges (`matplotlib_compat_check.md`).
 * New test modules: experimental library (rules + every shipped preset on every plot type), preview & layout QC, scientific identity, box/violin options (79), bar observations (36), bracket geometry (20), UI wiring additions.
 
 ## 6. Author decisions and manual testing

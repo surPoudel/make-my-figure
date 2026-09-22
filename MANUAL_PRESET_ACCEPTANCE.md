@@ -58,6 +58,7 @@ result in the table at the end. A step that cannot be completed is a blocker for
 | Step | Result (pass / fail / n.a.) | Notes | Tester | Date |
 |---|---|---|---|---|
 | D1 (macOS, matplotlib < 3.10) | fail -> fixed | `boxplot() got an unexpected keyword argument 'orientation'`; fixed in `plots/box_violin.py`, see `reports/journal_presets/matplotlib_compat_check.md`; re-test required | author | 2026-09-17 |
+| all (re-test on the merged base) | pending | 2026-09-22: `origin/main` v1.1.1 (39 plot types) merged into this branch (c5bb8b0); stable-sort fix for pandas-dependent sample order (stacked bars, oncoprint / lollipop tie order), see `reports/journal_presets/matplotlib_compat_check.md`. Pull the branch again before repeating D1-D14 / S1-S7; the stacked composition example should list samples S01, S02, S03, ... within each group on every machine. | author | |
 | D1-D14 | | | | |
 | S1-S7 | | | | |
 | W1-W3 | | | | |

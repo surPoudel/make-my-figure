@@ -156,14 +156,19 @@
       "swimmer_plot"
     ],
     "qc": {
-      "date": "2026-09-16",
-      "cells": 38,
+      "date": "2026-09-22",
+      "cells": 39,
       "pass": 23,
       "warn": 6,
-      "fail": 9,
+      "fail": 10,
       "not_pass": [
         {
           "plot_type": "bland_altman_plot",
+          "status": "FAIL",
+          "issues": "1 overlapping text pair(s)"
+        },
+        {
+          "plot_type": "chord_diagram",
           "status": "FAIL",
           "issues": "1 overlapping text pair(s)"
         },
@@ -180,7 +185,7 @@
         {
           "plot_type": "lollipop_mutation_plot",
           "status": "FAIL",
-          "issues": "2 overlapping text pair(s); legend covers data (33% of legend box); exported width 68.9 mm deviates -19% from target 85.0 mm"
+          "issues": "5 overlapping text pair(s); legend covers data (33% of legend box); exported width 68.9 mm deviates -19% from target 85.0 mm"
         },
         {
           "plot_type": "ma_plot",

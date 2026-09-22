@@ -155,12 +155,17 @@
       "roc_curve"
     ],
     "qc": {
-      "date": "2026-09-16",
-      "cells": 38,
+      "date": "2026-09-22",
+      "cells": 39,
       "pass": 22,
       "warn": 13,
-      "fail": 3,
+      "fail": 4,
       "not_pass": [
+        {
+          "plot_type": "chord_diagram",
+          "status": "FAIL",
+          "issues": "1 overlapping text pair(s)"
+        },
         {
           "plot_type": "dose_response_curve",
           "status": "FAIL",

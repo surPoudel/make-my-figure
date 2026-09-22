@@ -135,6 +135,7 @@
       "bland_altman_plot",
       "boxplot_or_violin_with_points",
       "calibration_plot",
+      "chord_diagram",
       "dot_strip_plot",
       "forest_plot",
       "histogram_distribution",
@@ -148,9 +149,9 @@
       "roc_curve"
     ],
     "qc": {
-      "date": "2026-09-16",
-      "cells": 38,
-      "pass": 15,
+      "date": "2026-09-22",
+      "cells": 39,
+      "pass": 16,
       "warn": 6,
       "fail": 17,
       "not_pass": [
@@ -232,7 +233,7 @@
         {
           "plot_type": "volcano_plot",
           "status": "FAIL",
-          "issues": "4 overlapping text pair(s); legend covers data (21% of legend box); smallest text 3.99 pt at 57.0 mm (minimum 5.0 pt; role tick); exported width 92.9 mm deviate"
+          "issues": "5 overlapping text pair(s); legend covers data (21% of legend box); smallest text 3.99 pt at 57.0 mm (minimum 5.0 pt; role tick); exported width 92.9 mm deviate"
         },
         {
           "plot_type": "waterfall_plot",

@@ -123,3 +123,82 @@ python -c "import matplotlib; print(matplotlib.__version__)"
 Any version from 3.6 upward now works for the box/violin renderer. After pulling this branch, repeat
 D1-D14 of `MANUAL_PRESET_ACCEPTANCE.md`; the exported figure must match the Windows/WSL render except
 for the adjustText label nudges named above.
+
+## Re-check on 2026-09-22 after merging `main` (v1.1.1 candidate, 39 plot types)
+
+`origin/main` at 84458dd (figure packages, the Circos-style chord diagram, the pandas 3 fixes already on
+this branch, version 1.1.1) was merged into this branch (c5bb8b0; the only conflict was the header of
+`reports/figure_preset_qc/README.md`, resolved to main's 39-renderer version). The whole-library
+fingerprint was then re-run in three fresh environments: development (matplotlib 3.10.8 / numpy 2.1.2 /
+pandas 2.2.3), legacy (`/tmp/mpl38`: 3.8.4 / 2.0.2 / 2.2.3) and newest (`/tmp/mplnew`: 3.11.2 / 2.4.6 /
+pandas 3.0.6). 1051 renders per environment (1038 + the 13 chord-diagram cells), 0 failed everywhere.
+
+### New defect found: pandas-version-dependent sample order (stacked composition bars)
+
+Compared with the development stack, the newest stack drew `stacked_bar_composition` with a different
+sample order in all 13 renders (development: S01, S14, S13, S12, ...; pandas 3: S01, S02, S03, ...).
+Cause: `plots/stacked.py` ordered samples by the grouping column with `Series.sort_values()`, whose
+default kind is quicksort, which is not stable. Rows that tie on the key (every sample in the same group)
+come out in an arbitrary order that depends on the dtype path - pandas 2 `object` columns and pandas 3
+default `str` columns sort ties differently. The bars' values were identical; only their order changed.
+The same latent tie-order dependence existed in 19 further `sort_values` calls across the renderers
+(oncoprint gene frequency, lollipop position and top-n label selection, volcano / MA label ranking,
+enrichment top-n, network top-n edges, waterfall, calibration, precision-recall, Manhattan, spider).
+
+Fix: every `sort_values` in `make_my_figure_core/plots/` now passes `kind="stable"`, so ties keep the
+input order on every pandas version. `tests/test_renderer_sort_stability.py` scans the renderers for
+unstable sorts and renders a stacked composition with scrambled input under both `object` and `string`
+dtypes (passes on all three environments). On the development stack the fix changes 39 renders:
+`stacked_bar_composition` (sample order within a group now follows the table), `oncoprint_mutation_heatmap`
+(two genes with the same frequency, PTEN and BRAF in the bundled example, now keep table order) and
+`lollipop_mutation_plot` (draw order of lollipops at tied positions and tie-breaking of the top-n labels).
+All are orders that were previously arbitrary; no value, count or statistic changed.
+
+### Fingerprint results after the fix
+
+| comparison | renders | failed | data / limits / tick-label text differ | label position only |
+|---|---|---|---|---|
+| 3.8.4 vs 3.10.8 (`matplotlib_compat_compare_raw_2026-09-22.txt`) | 1051 | 0 | **0** | 18 (adjustText: lollipop, network, volcano) |
+| 3.10.8 vs 3.11.2 + pandas 3.0.6 (`matplotlib_compat_compare_newest_raw_2026-09-22.txt`) | 1051 | 0 | 292 | 279 |
+
+The 292 newest-stack differences are exactly the set documented above on 2026-09-17: 16 renders whose
+automatic tick labels matplotlib 3.11 chooses differently (`dose_response_curve` log ticks under every
+preset, one bar plot, one clustered heatmap, one ridge plot) and the 276 group-comparison renders whose
+points-based significance bracket lands on a marginally different data value because matplotlib 3.11
+places the axes box slightly differently. No data artist differs in any of the 1051 renders, and the
+chord diagram is identical on all three stacks. Before the fix the same comparison had 305 differences
+(the 13 stacked-bar renders on top of these 292).
+
+### Experimental preset QC on 39 plot types
+
+`scripts/experimental_preset_qc.py` re-run on the merged tree (`qc/qc_matrix.csv`, `qc/README.md`,
+previews regenerated): 12 presets x 39 plot types = 468 cells, **293 PASS, 69 WARN, 106 FAIL**
+(2026-09-16: 456 cells, 289 / 69 / 98). The chord diagram PASSes under Single column 57 mm (S),
+Single column 89 mm (N) and Full width 183 mm (N) and FAILs under the other nine with one to three
+overlapping label pairs (segment labels around the ring at the larger preset text sizes) - reported and
+left out of `recommended_for`, never fixed by shrinking text, like the volcano and MA gene labels.
+`recommended_for` and the `experimental.qc` block of every preset were refreshed from the matrix
+(`journal_preset_research/tools/apply_qc_to_presets.py`): 24 / 23 / 22 / 22 / 23 / 16 plot types for
+the 89 mm (N) / 85 mm (C) / 174 mm (C) / 184 mm (S) / 183 mm (N) / 57 mm (S) presets; each gc preset
+still PASSes on its own plot type.
+
+Two cells depend on adjustText's label placement and flipped between otherwise identical runs
+(`gc_box_points_light` x `lollipop_mutation_plot` and `gc_bar_points_jittered` x `network_graph`,
+FAIL in the first run, PASS in the second and in five isolated re-runs). Their status in the committed
+matrix is the second run's; they should be read as borderline.
+
+### Test suites after the merge and the fix
+
+Run one after the other's start on 2026-09-22 (concurrent processes, disjoint output paths), all after the
+merge and the stable-sort fix:
+
+| environment | command | result | log |
+|---|---|---|---|
+| development: matplotlib 3.10.8 / numpy 2.1.2 / pandas 2.2.3 | full headless suite (`-p no:pytest-qt --ignore=tests/test_desktop_gui.py`) | **2449 passed, 4 skipped, 0 failed** | `matplotlib_compat_full_suite_mpl310_2026-09-22.txt` |
+| legacy: matplotlib 3.8.4 / numpy 2.0.2 / pandas 2.2.3 | non-GUI suite (`-k "not qt and not Qt and not streamlit and not desktop" --deselect tests/test_release_guardrails.py`) | **2371 passed, 9 skipped, 73 deselected, 0 failed** | `matplotlib_compat_full_suite_mpl38_2026-09-22.txt` |
+| newest: matplotlib 3.11.2 / numpy 2.4.6 / pandas 3.0.6 | same non-GUI suite | **2371 passed, 9 skipped, 73 deselected, 0 failed** | `matplotlib_compat_full_suite_newest_2026-09-22.txt` |
+
+The merged tree before the stable-sort fix also passed the development-stack suite (2446 passed, 4
+skipped); the three additional tests are `tests/test_renderer_sort_stability.py`. The 73 deselected
+tests in the throwaway environments are the Qt / Streamlit / desktop-controller tests (PySide6 and
+Streamlit are not installed there) and the release-guardrail test, which checks the release tag state.

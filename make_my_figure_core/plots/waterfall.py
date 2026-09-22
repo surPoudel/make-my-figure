@@ -33,7 +33,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     work = work.dropna(subset=[y])
 
     ascending = sort != "descending"
-    work = work.sort_values(y, ascending=ascending).reset_index(drop=True)
+    work = work.sort_values(y, ascending=ascending, kind="stable").reset_index(drop=True)
     positions = np.arange(len(work))
     warnings: List[str] = []
 

@@ -134,6 +134,7 @@
       "bland_altman_plot",
       "boxplot_or_violin_with_points",
       "calibration_plot",
+      "chord_diagram",
       "confusion_matrix",
       "dot_strip_plot",
       "enrichment_dotplot",
@@ -153,9 +154,9 @@
       "roc_curve"
     ],
     "qc": {
-      "date": "2026-09-16",
-      "cells": 38,
-      "pass": 22,
+      "date": "2026-09-22",
+      "cells": 39,
+      "pass": 23,
       "warn": 13,
       "fail": 3,
       "not_pass": [
