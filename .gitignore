@@ -101,3 +101,8 @@ tutorial/slides/_render/
 tutorial/slides/_crops/
 # publisher figures used only as research references (never distributed)
 PRIVATE_REFERENCE_ONLY/
+tutorial/slides/_render_seminar/
+# seminar deck embeds manuscript figures: kept in OneDrive, not in the public repo
+tutorial/slides/MakeMyFigure_Seminar_Revised.pptx
+tutorial/slides/MakeMyFigure_Seminar_Revised.pdf
+tutorial/slides/MakeMyFigure_Seminar_Revised_contact_sheet.png

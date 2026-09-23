@@ -1,0 +1,98 @@
+MakeMyFigure_Seminar_Revised.pptx - revision notes (2026-09-23)
+
+Source deck: tutorial/slides/MakeMyFigure_Tutorial_Seminar.pptx (22 slides, unchanged, not overwritten).
+Revised deck: tutorial/slides/MakeMyFigure_Seminar_Revised.pptx - 39 slides = 19 main + 20 backup.
+PDF: MakeMyFigure_Seminar_Revised.pdf (PowerPoint export). Contact sheet: MakeMyFigure_Seminar_Revised_contact_sheet.png.
+Renders: tutorial/slides/_render_seminar/slide_NN.png (1600 x 1200, PowerPoint).
+Manuscript: Nature_Methods_FINAL_SUBMISSION/05_SUBMISSION_PACKAGE/01_Main_Manuscript/Poudel_et_al_2026_MMF_NatMet.docx;
+figures: Manuscript_reorganization_091026/02_Main_Figures/Figure1-6.png (identical SHA-256 to the submission package copies).
+
+REVISED SLIDE -> ORIGINAL SLIDE (main story first)
+   1 [main  ] (title slide)  <- original 1   | sources: new wording; template title band
+   2 [main  ] A real table rarely arrives ready to plot  <- original 2   | sources: tutorial deck 2; ambiguous_columns.csv excerpt; showcase J4
+   3 [main  ] The application suggests. The researcher decides.  <- original 4   | sources: tutorial deck 4, restructured into three columns
+   4 [main  ] What Make My Figure is  <- original 3   | sources: tutorial deck 3, condensed; claims verified against the application
+   5 [main  ] Same data, controlled views  <- original 5   | sources: tutorial deck 5; showcase B/C/D presentation renders
+   6 [main  ] Observations are first-class data  <- original 6   | sources: tutorial deck 6; showcase J1-J6
+   7 [main  ] What I am going to do in the next five minutes  <- original NEW   | sources: new; demo dataset showcase_group_comparison.csv
+   8 [main  ] One workflow, many scientific figures  <- original 10-13 (four renders on one slide)   | sources: tutorial deck 10-13 refined renders (volcano, heatmap, scatter, Kaplan-Meier)
+   9 [main  ] From application capability to manuscript figure (Fig. 1)  <- original NEW   | sources: manuscript Figure 1 (legend: fragmented tools vs connected six-stage workflow); panel B enlarged, whole figure as context
+  10 [main  ] Decisions remain explicit: the guided matrix workflow (Fig. 2A-F)  <- original NEW   | sources: manuscript Figure 2 panels A-F (legend), whole figure as context
+  11 [main  ] The plots come from the same workflow (Fig. 2G)  <- original NEW   | sources: manuscript Figure 2 panel G, whole figure as context
+  12 [main  ] Reproducibility in the manuscript: reconstruct and reuse (Fig. 3A-B)  <- original NEW   | sources: manuscript Figure 3 panels A-B (legend), whole figure as context
+  13 [main  ] Reproducibility in the manuscript: compose (Fig. 3C)  <- original NEW   | sources: manuscript Figure 3 panel C (legend); package statement from Results
+  14 [main  ] Manuscript Figures 1-6: what the paper demonstrates  <- original NEW   | sources: manuscript Figures 1-6; roles from the figure legends
+  15 [main  ] A figure should carry its provenance  <- original 16 (rebuilt as diagram)   | sources: tutorial deck 16 (package confirmation); package members from the validated run
+  16 [main  ] From one plot to a complete figure  <- original 17   | sources: tutorial deck 17 composite; manuscript Figure 3 as context (panel C = Compose)
+  17 [main  ] The tutorial is executed, not mocked up  <- original 18 (+ totals from validation records)   | sources: tutorial deck 18 + validation totals from audit/validation/*.json
+  18 [main  ] What comes next  <- original 21 (rewritten: no branch/merge talk)   | sources: tutorial MAINTAINING doc; manuscript Discussion (future development principle, Builder limits)
+  19 [main  ] (title slide)  <- original 22 (rewritten as closing message)   | sources: new closing slide; QR to the repository
+  20 [backup] (title slide)  <- original NEW   | sources: divider
+  21 [backup] Publication presets: presentation may change, scientific meaning must not  <- original 8+9 (simplified may/must-not)   | sources: tutorial deck 8-9 simplified; preview dialog screenshot
+  22 [backup] Same data, different presentation - volcano  <- original 10   | sources: tutorial deck pair; showcase 2_volcano
+  23 [backup] Same data, different presentation - clustered heatmap  <- original 11   | sources: tutorial deck pair; showcase 3_heatmap
+  24 [backup] Same data, different presentation - scatter with regression  <- original 12   | sources: tutorial deck pair; showcase 4_scatter
+  25 [backup] Same data, different presentation - Kaplan-Meier  <- original 13   | sources: tutorial deck pair; showcase 5_survival
+  26 [backup] When the detector does not know your headers, you assign the roles  <- original 15   | sources: tutorial deck 15
+  27 [backup] From an ambiguous table to a publication figure  <- original 14   | sources: tutorial deck 14
+  28 [backup] Statistics on the figure - the panel and its output  <- original 7   | sources: tutorial deck 7
+  29 [backup] Fig. 4A-B - input equivalence and platform agreement  <- original NEW   | sources: manuscript Figure 4 panels A-B (legend and Results), whole figure as context
+  30 [backup] Fig. 4C-D - rendering consistency and export fidelity  <- original NEW   | sources: manuscript Figure 4 panels C-D (legend and Results), whole figure as context
+  31 [backup] Fig. 4E-F - computational scaling and repeatability  <- original NEW   | sources: manuscript Figure 4 panels E-F (legend and Results), whole figure as context
+  32 [backup] Fig. 5A-C - published panels recreated from source data  <- original NEW   | sources: manuscript Figure 5 panels A-C (legend and Results), whole figure as context
+  33 [backup] Fig. 5D-F - published panels recreated from source data  <- original NEW   | sources: manuscript Figure 5 panels D-F (legend and Results), whole figure as context
+  34 [backup] Fig. 6A-B - agreement with independent R calculations  <- original NEW   | sources: manuscript Figure 6 panels A-B (legend and Results), whole figure as context
+  35 [backup] Fig. 6C-D - published statistics reproduced  <- original NEW   | sources: manuscript Figure 6 panels C-D (legend and Results), whole figure as context
+  36 [backup] Fig. 6E-F - imported results plotted; survival reproduced  <- original NEW   | sources: manuscript Figure 6 panels E-F (legend and Results), whole figure as context
+  37 [backup] Every tutorial instruction executed against the application  <- original 19   | sources: tutorial deck 19; audit/validation/*.json
+  38 [backup] 39 plot types, one workflow  <- original 20   | sources: tutorial deck 20; PLOT_GALLERY thumbnails
+  39 [backup] Development status of the tutorial branch  <- original 21   | sources: tutorial deck 21
+
+MANUSCRIPT FIGURES ON SLIDES
+  Fig. 1: slides [9] - fragmented tools vs connected six-stage workflow (legend Fig. 1)
+  Fig. 2: slides [10, 11] - guided matrix workflow, GSE299655 (legend Fig. 2)
+  Fig. 3: slides [12, 13, 16] - reconstruct / reuse / compose (legend Fig. 3)
+  Fig. 4: slides [29, 30, 31] - consistency across formats, platforms, exports, sizes, repeats (legend Fig. 4)
+  Fig. 5: slides [32, 33] - published panels recreated from source data (legend Fig. 5)
+  Fig. 6: slides [34, 35, 36] - independent validation of statistics; published values reproduced; imported DESeq2 (legend Fig. 6)
+
+  Panel-row details (slides 9-13 and backup 29-36) are horizontal crops of whole panel rows; every cut lies in a
+  white gutter (checked programmatically: min pixel 255 at each cut row), so panel letters, axes, legends and
+  annotations stay intact. The whole figure is shown alongside as context. Figure pixels are otherwise unmodified.
+
+MOVED TO BACKUP (original slide -> revised slide)
+  8+9 preset preview/protection -> 21 (simplified may / must-not); 10 volcano -> 22; 11 heatmap -> 23; 12 scatter -> 24;
+  13 Kaplan-Meier -> 25; 15 manual mapping -> 26; 14 table-to-figure hero -> 27; 7 statistics detail -> 28;
+  19 full validation table -> 37; 20 gallery -> 38; 21 development status -> 39.
+  Removed from the main flow (kept nowhere): none. Original 22 (summary) replaced by the new closing slide 19.
+
+CLAIMS CHECKED / COULD NOT VERIFY
+  - Totals on slide 17 are computed from tutorial/audit/validation/*.json: 12 workflows, 98 checks, 98 captures, all PASS.
+  - '39 plot types' / '19 registered tests' come from the running application (registry, statistics/test_registry.py).
+    The manuscript text says 38 plot types and 18 statistical procedures (v1.1.0 at submission); the deck describes the
+    current build (1.1.1 candidate) and does not attribute its counts to the paper.
+  - 'Observations stay visible' controls (size, jitter, fill, edge, arrangement) and experimental presets exist only
+    with the presets branch merged into the tutorial branch; they are not in the v1.1.1 candidate on main and are not
+    claimed by the manuscript. Backup slide 21 states presets are experimental, not journal endorsements.
+  - Figure Package contents on slide 15 are the members of the package written in the validated run
+    (audit/validation/figure_package.json), not an inferred list.
+  - 'Browser version' on slide 4: apps/streamlit_app exists in the repository (Streamlit); not claimed to be feature-complete.
+  - Not verified and therefore not claimed: any performance figure beyond Fig. 4E as drawn; macOS testing (manuscript says
+    macOS was not tested); 'publication-ready' is used only as 'publication-style'.
+  - 'What comes next' (slide 18) is limited to the tutorial plan (MAINTAINING_THE_TUTORIAL.md) and the manuscript
+    Discussion's stated principle and Builder limitation; no roadmap items were invented. The brief's third area
+    ('researcher evaluation') is not documented in the manuscript or project and was replaced by the manuscript's own
+    stated principle for future development.
+
+MANUSCRIPT FIGURES NOT TIED TO A PROPOSED CAPABILITY, AND WHY
+  - Fig. 4 (consistency / benchmarks) is shown only in the capability map (slide 14) and in backup detail (29-31): the
+    legend concerns input equivalence, platform agreement, export fidelity and scaling, not the live-demo capabilities.
+  - Fig. 5 (published panels) and Fig. 6 (statistics validation) are in the capability map and backup (32-36); they
+    support 'what MMF can produce' and 'how statistics are validated', not column mapping or presets, so no such
+    callouts were added. Fig. 6E is described as visualisation of imported DESeq2 results, exactly as the paper states.
+  - Fig. 3 supports reproducibility and the Figure Builder (slides 12, 13, 16); it does not show a Figure Package, so the
+    package statement on slide 13 is quoted from the Results text, not attributed to the figure.
+
+LIVE DEMO
+  Slide 7 stays on screen; the presenter switches to the application and follows tutorial/video_scripts/
+  group_comparison_box.md (dataset showcase_group_comparison.csv). Nothing is simulated in PowerPoint.

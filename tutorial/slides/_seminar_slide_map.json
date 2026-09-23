@@ -1,0 +1,236 @@
+[
+ [
+  1,
+  "main",
+  "(title slide)",
+  "new wording; template title band"
+ ],
+ [
+  2,
+  "main",
+  "A real table rarely arrives ready to plot",
+  "tutorial deck 2; ambiguous_columns.csv excerpt; showcase J4"
+ ],
+ [
+  3,
+  "main",
+  "The application suggests. The researcher decides.",
+  "tutorial deck 4, restructured into three columns"
+ ],
+ [
+  4,
+  "main",
+  "What Make My Figure is",
+  "tutorial deck 3, condensed; claims verified against the application"
+ ],
+ [
+  5,
+  "main",
+  "Same data, controlled views",
+  "tutorial deck 5; showcase B/C/D presentation renders"
+ ],
+ [
+  6,
+  "main",
+  "Observations are first-class data",
+  "tutorial deck 6; showcase J1-J6"
+ ],
+ [
+  7,
+  "main",
+  "What I am going to do in the next five minutes",
+  "new; demo dataset showcase_group_comparison.csv"
+ ],
+ [
+  8,
+  "main",
+  "One workflow, many scientific figures",
+  "tutorial deck 10-13 refined renders (volcano, heatmap, scatter, Kaplan-Meier)"
+ ],
+ [
+  9,
+  "main",
+  "From application capability to manuscript figure (Fig. 1)",
+  "manuscript Figure 1 (legend: fragmented tools vs connected six-stage workflow); panel B enlarged, whole figure as context"
+ ],
+ [
+  10,
+  "main",
+  "Decisions remain explicit: the guided matrix workflow (Fig. 2A-F)",
+  "manuscript Figure 2 panels A-F (legend), whole figure as context"
+ ],
+ [
+  11,
+  "main",
+  "The plots come from the same workflow (Fig. 2G)",
+  "manuscript Figure 2 panel G, whole figure as context"
+ ],
+ [
+  12,
+  "main",
+  "Reproducibility in the manuscript: reconstruct and reuse (Fig. 3A-B)",
+  "manuscript Figure 3 panels A-B (legend), whole figure as context"
+ ],
+ [
+  13,
+  "main",
+  "Reproducibility in the manuscript: compose (Fig. 3C)",
+  "manuscript Figure 3 panel C (legend); package statement from Results"
+ ],
+ [
+  14,
+  "main",
+  "Manuscript Figures 1-6: what the paper demonstrates",
+  "manuscript Figures 1-6; roles from the figure legends"
+ ],
+ [
+  15,
+  "main",
+  "A figure should carry its provenance",
+  "tutorial deck 16 (package confirmation); package members from the validated run"
+ ],
+ [
+  16,
+  "main",
+  "From one plot to a complete figure",
+  "tutorial deck 17 composite; manuscript Figure 3 as context (panel C = Compose)"
+ ],
+ [
+  17,
+  "main",
+  "The tutorial is executed, not mocked up",
+  "tutorial deck 18 + validation totals from audit/validation/*.json"
+ ],
+ [
+  18,
+  "main",
+  "What comes next",
+  "tutorial MAINTAINING doc; manuscript Discussion (future development principle, Builder limits)"
+ ],
+ [
+  19,
+  "main",
+  "(title slide)",
+  "new closing slide; QR to the repository"
+ ],
+ [
+  20,
+  "backup",
+  "(title slide)",
+  "divider"
+ ],
+ [
+  21,
+  "backup",
+  "Publication presets: presentation may change, scientific meaning must not",
+  "tutorial deck 8-9 simplified; preview dialog screenshot"
+ ],
+ [
+  22,
+  "backup",
+  "Same data, different presentation - volcano",
+  "tutorial deck pair; showcase 2_volcano"
+ ],
+ [
+  23,
+  "backup",
+  "Same data, different presentation - clustered heatmap",
+  "tutorial deck pair; showcase 3_heatmap"
+ ],
+ [
+  24,
+  "backup",
+  "Same data, different presentation - scatter with regression",
+  "tutorial deck pair; showcase 4_scatter"
+ ],
+ [
+  25,
+  "backup",
+  "Same data, different presentation - Kaplan-Meier",
+  "tutorial deck pair; showcase 5_survival"
+ ],
+ [
+  26,
+  "backup",
+  "When the detector does not know your headers, you assign the roles",
+  "tutorial deck 15"
+ ],
+ [
+  27,
+  "backup",
+  "From an ambiguous table to a publication figure",
+  "tutorial deck 14"
+ ],
+ [
+  28,
+  "backup",
+  "Statistics on the figure - the panel and its output",
+  "tutorial deck 7"
+ ],
+ [
+  29,
+  "backup",
+  "Fig. 4A-B - input equivalence and platform agreement",
+  "manuscript Figure 4 panels A-B (legend and Results), whole figure as context"
+ ],
+ [
+  30,
+  "backup",
+  "Fig. 4C-D - rendering consistency and export fidelity",
+  "manuscript Figure 4 panels C-D (legend and Results), whole figure as context"
+ ],
+ [
+  31,
+  "backup",
+  "Fig. 4E-F - computational scaling and repeatability",
+  "manuscript Figure 4 panels E-F (legend and Results), whole figure as context"
+ ],
+ [
+  32,
+  "backup",
+  "Fig. 5A-C - published panels recreated from source data",
+  "manuscript Figure 5 panels A-C (legend and Results), whole figure as context"
+ ],
+ [
+  33,
+  "backup",
+  "Fig. 5D-F - published panels recreated from source data",
+  "manuscript Figure 5 panels D-F (legend and Results), whole figure as context"
+ ],
+ [
+  34,
+  "backup",
+  "Fig. 6A-B - agreement with independent R calculations",
+  "manuscript Figure 6 panels A-B (legend and Results), whole figure as context"
+ ],
+ [
+  35,
+  "backup",
+  "Fig. 6C-D - published statistics reproduced",
+  "manuscript Figure 6 panels C-D (legend and Results), whole figure as context"
+ ],
+ [
+  36,
+  "backup",
+  "Fig. 6E-F - imported results plotted; survival reproduced",
+  "manuscript Figure 6 panels E-F (legend and Results), whole figure as context"
+ ],
+ [
+  37,
+  "backup",
+  "Every tutorial instruction executed against the application",
+  "tutorial deck 19; audit/validation/*.json"
+ ],
+ [
+  38,
+  "backup",
+  "39 plot types, one workflow",
+  "tutorial deck 20; PLOT_GALLERY thumbnails"
+ ],
+ [
+  39,
+  "backup",
+  "Development status of the tutorial branch",
+  "tutorial deck 21"
+ ]
+]
