@@ -47,7 +47,12 @@ python3 tutorial/automation/run_tutorial.py volcano_manual_mapping --onscreen --
 
 * **QuickTime Player > File > New Screen Recording** (or Cmd + Shift + 5): choose the window or a
   1680 x 1000 region, enable *Show Mouse Clicks in Recording*.
-* **ffmpeg (avfoundation)**: `ffmpeg -f avfoundation -capture_cursor 1 -capture_mouse_clicks 1 -i "1:none" -r 30 out.mp4`.
+* **ffmpeg (avfoundation)** through `automation/record_screen.py`: the script finds the "Capture screen"
+  device itself (`--list-devices` prints them; `--mac-screen N` overrides). Two one-time requirements:
+  System Settings > Privacy & Security > **Screen Recording** must list your terminal application
+  (Terminal, iTerm, VS Code ...) and you must quit and reopen the terminal afterwards - without this
+  permission ffmpeg records **black frames**; and the recording is video only (`:none` = no audio
+  device), so narration is added afterwards.
 
 ## Linux
 

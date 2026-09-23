@@ -35,6 +35,26 @@ def ffmpeg_exe() -> str:
         raise SystemExit("ffmpeg not found: install ffmpeg or `pip install imageio-ffmpeg`") from exc
 
 
+def mac_screen_index(ff: str, requested: str) -> str:
+    """Return the avfoundation index of the first 'Capture screen' device (macOS). ffmpeg prints the
+    device list on stderr and exits non-zero; that is expected."""
+    if requested not in ("auto", None, ""):
+        return requested
+    try:
+        out = subprocess.run([ff, "-f", "avfoundation", "-list_devices", "true", "-i", ""],
+                             capture_output=True, text=True, timeout=20).stderr
+    except Exception:  # noqa: BLE001
+        return "1"
+    for line in out.splitlines():
+        if "Capture screen" in line and "[" in line:
+            idx = line.split("]")[-2].split("[")[-1].strip()
+            if idx.isdigit():
+                print(f"avfoundation screen device: [{idx}] {line.split(']')[-1].strip()}")
+                return idx
+    print("could not find a 'Capture screen' device; devices were:\n" + out)
+    return "1"
+
+
 def capture_args(system: str, a: argparse.Namespace) -> list[str]:
     if system == "Windows":
         args = ["-f", "gdigrab", "-framerate", str(a.fps), "-draw_mouse", "1"]
@@ -44,8 +64,9 @@ def capture_args(system: str, a: argparse.Namespace) -> list[str]:
             args += ["-offset_x", x, "-offset_y", y, "-video_size", size]
         return args + ["-i", "desktop"]
     if system == "Darwin":
+        idx = mac_screen_index(a.ffmpeg, a.mac_screen)
         return ["-f", "avfoundation", "-capture_cursor", "1", "-capture_mouse_clicks", "1",
-                "-framerate", str(a.fps), "-i", f"{a.mac_screen}:none"]
+                "-framerate", str(a.fps), "-pixel_format", "uyvy422", "-i", f"{idx}:none"]
     disp = os.environ.get("DISPLAY", ":0.0")
     args = ["-f", "x11grab", "-framerate", str(a.fps), "-draw_mouse", "1"]
     if a.region:
@@ -60,15 +81,20 @@ def main() -> int:
     ap.add_argument("--out", required=True, help="output .mp4")
     ap.add_argument("--fps", type=int, default=30)
     ap.add_argument("--region", default=None, help="WxH+X,Y (default: whole screen)")
-    ap.add_argument("--mac-screen", default="1", help="avfoundation screen index (macOS)")
+    ap.add_argument("--mac-screen", default="auto", help="avfoundation screen index (macOS); default: detect 'Capture screen'")
+    ap.add_argument("--list-devices", action="store_true", help="macOS: print avfoundation devices and exit")
     ap.add_argument("--lead-in", type=float, default=2.0, help="seconds of recording before the command starts")
     ap.add_argument("--tail", type=float, default=2.0, help="seconds after the command ends")
     ap.add_argument("command", nargs=argparse.REMAINDER, help="-- command to run while recording")
     a = ap.parse_args()
+    a.ffmpeg = ffmpeg_exe()
+    if a.list_devices:
+        subprocess.run([a.ffmpeg, "-f", "avfoundation", "-list_devices", "true", "-i", ""])
+        return 0
     cmd = a.command[1:] if a.command and a.command[0] == "--" else a.command
     os.makedirs(os.path.dirname(os.path.abspath(a.out)) or ".", exist_ok=True)
     system = platform.system()
-    ff = [ffmpeg_exe(), "-y", "-loglevel", "error", *capture_args(system, a),
+    ff = [a.ffmpeg, "-y", "-loglevel", "error", *capture_args(system, a),
           "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p",
           "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2", a.out]
     print("recorder:", " ".join(ff))
@@ -89,7 +115,13 @@ def main() -> int:
         except Exception:  # noqa: BLE001
             rec.terminate()
         rec.wait(timeout=30)
-    print(f"saved {a.out} ({os.path.getsize(a.out) / 1e6:.1f} MB)" if os.path.exists(a.out) else "no video written")
+    if os.path.exists(a.out):
+        print(f"saved {a.out} ({os.path.getsize(a.out) / 1e6:.1f} MB)")
+        if system == "Darwin":
+            print("If the video is black: System Settings > Privacy & Security > Screen Recording > enable your terminal "
+                  "app, then quit and reopen the terminal. Check the device list with --list-devices.")
+    else:
+        print("no video written")
     return rc
 
 
