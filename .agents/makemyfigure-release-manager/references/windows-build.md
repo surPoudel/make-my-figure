@@ -13,10 +13,16 @@ Agent: `build_current_platform.py` run **from a Windows Python** (`py -3.11` or 
 - Run outside OneDrive if possible: PyInstaller writes tens of thousands of files under `build/` and `dist/`,
   which OneDrive tries to sync. Cloning the tagged commit to `C:\src\make_my_figure` is the fastest path.
 
-## From WSL
-The Windows interpreter at `/mnt/c/Users/<user>/mmf_winpy311/Scripts/python.exe` can drive a native
-Windows build (PyInstaller 6.x installed there on 2026-09-23), but the repository path is on OneDrive and
-`Compress-Archive` of a 400 MB folder over the 9P mount is slow. It is a fallback, not the standard path.
+## From WSL (done 2026-09-23)
+The Windows interpreter at `/mnt/c/Users/<user>/mmf_winpy311/Scripts/python.exe` drove a native Windows
+build of commit b08be20: `git clone --branch <branch> <worktree> /mnt/c/src/mmf_release_<commit>` (a plain
+path: `git.exe` cannot read a WSL worktree, and OneDrive is avoided), then
+`python.exe C:\src\mmf_release_<commit>\.agents\makemyfigure-release-manager\scripts\build_current_platform.py --version <v>`.
+The agent created `%LOCALAPPDATA%\makemyfigure-release\venv-windows-py3.11`, installed `.[desktop,build]`
+(PyInstaller 6.22.3, PySide6 6.11.2), ran `scripts\build_windows.ps1`, self-tested `MakeMyFigure.exe`
+(39 plot types OK) and staged `MakeMyFigure-1.1.1-windows.zip` 147.5 MB (v1.1.0: 152 MB, 0.97x) from a
+333 MB / 2270-file app folder in 352 s. No `-Setup.exe` because Inno Setup is not installed. Copy
+`release_staging\<v>\windows\` into the coordinating checkout's `release_staging/<v>/` and reconcile.
 
 ## Verification
 `dist\MakeMyFigure\MakeMyFigure.exe --selftest` (run by the agent). SmartScreen shows "unrecognized app"

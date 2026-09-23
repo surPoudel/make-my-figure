@@ -21,8 +21,12 @@ the script.
   `export LD_LIBRARY_PATH=/tmp/qtdeb/root/usr/lib/x86_64-linux-gnu QT_QPA_PLATFORM=offscreen`.
   `/tmp` does not survive a reboot; re-create by extracting the debs (libxkbcommon0, libxcb-*, libgl1,
   libegl1, libfontconfig1, libdbus-1-3, libxkbcommon-x11-0, libxcb-cursor0) with `dpkg-deb -x` into that root.
-- `appimagetool` at `/tmp/rmtools/appimagetool` (download AppImageKit continuous x86_64, `chmod +x`;
-  put `/tmp/rmtools` on PATH). Same reboot caveat.
+- `appimagetool` at `/tmp/rmtools/appimagetool`: download AppImageKit continuous x86_64 as
+  `appimagetool.AppImage`, run `--appimage-extract` (no FUSE on WSL), and make `appimagetool` a shell
+  script that execs `squashfs-root/AppRun "$@"`; put `/tmp/rmtools` on PATH. Same reboot caveat.
+- Worktrees cannot be used from Windows git: the worktree's `.git` file points at a Linux path, so
+  `git.exe` sees no repository (branch/commit `None`). For a native Windows build, `git clone` the branch to
+  a plain path such as `C:\src\mmf_release_<commit>` and run the agent there.
 - Windows Python for native Windows work: `/mnt/c/Users/<user>/mmf_winpy311/Scripts/python.exe`
   (PySide6, pywin32, PyInstaller 6.x installed 2026-09-23). No Inno Setup on the Windows host.
 - OneDrive: worktrees live under OneDrive. Large build trees sync slowly; `build/` and `dist/` are

@@ -20,5 +20,7 @@
    change plot type and style, export PNG/SVG/PDF, save and reopen a `.mmfpackage`. Not scriptable
    from here; the checklist in `docs/RELEASE_CHECKLIST.md` section 2 applies.
 
-Runtime reference points measured on WSL (2026-09-23, Intel host): wheel+sdist build 2m19s,
-wheel smoke test 46 s, PyInstaller one-folder build ~5-6 min, `--selftest` of the bundle 4m06s.
+Runtime reference points measured on WSL (2026-09-23, repository on OneDrive): wheel+sdist build 2m19s,
+wheel smoke test 46 s, PyInstaller one-folder build 9-10 min in the clean venv, `--selftest` of the bundle
+4-10 min, release-gate pytest subset 34 passed / 2 skipped in 21 s. A full `release_manager.py build-local`
+run took about 25 min.

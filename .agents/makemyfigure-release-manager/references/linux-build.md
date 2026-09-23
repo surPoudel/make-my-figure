@@ -25,12 +25,19 @@ No display: `QT_QPA_PLATFORM=offscreen`. The Qt xcb/offscreen plugins still need
 `local-model-runtime.md`). On a normal desktop Linux none of this is needed.
 
 ## AppImage
-`appimagetool` (AppImageKit continuous, x86_64) is not packaged by apt; CI downloads it. Locally it was
-placed at `/tmp/rmtools/appimagetool` and put on PATH for the wrapper. If absent the wrapper skips the
-AppImage and the tar.gz is still produced; `reconcile_platforms.py` lists `MakeMyFigure-<v>.AppImage`
+`appimagetool` (AppImageKit continuous, x86_64) is not packaged by apt; CI downloads it. It is itself an
+AppImage and needs FUSE (`libfuse.so.2`) to run; WSL has none, so the wrapper printed "appimagetool failed;
+tarball available". Fix used here: `./appimagetool.AppImage --appimage-extract` once, then a two-line shell
+script named `appimagetool` on PATH that runs `squashfs-root/AppRun "$@"` (kept in `/tmp/rmtools`). If
+appimagetool is absent or fails, the wrapper skips the AppImage and the tar.gz is still produced; `reconcile_platforms.py` lists `MakeMyFigure-<v>.AppImage`
 as "not produced". FUSE is not required to *build*; users of old distributions may need
 `--appimage-extract-and-run`.
 
 ## Artefacts
 `MakeMyFigure-<v>-linux-x86_64.tar.gz` (always), `MakeMyFigure-<v>.AppImage` (when appimagetool is
 available). Both go to `release_staging/<v>/linux/`.
+
+## Reference run (2026-09-23, commit b08be20, version 1.1.1, WSL glibc 2.35, clean venv)
+PyInstaller 6.22.3, PySide6 6.11.2, numpy 2.4.6, pandas 2.3.3, scipy 1.17.1, statsmodels 0.15.0.
+App folder 610 MB / 2398 files, build 604 s, `--selftest` OK in 628 s (39 plot types), tar.gz 181.0 MB,
+AppImage 181.1 MB (v1.1.0: 188 MB each, ratio 0.96x).
