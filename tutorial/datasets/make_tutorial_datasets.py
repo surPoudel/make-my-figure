@@ -268,6 +268,27 @@ def one_table_many_plots() -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def showcase_group_comparison() -> pd.DataFrame:
+    """Showcase dataset: four groups, unequal n (7, 9, 11, 13), one readout.
+
+    Designed for the same-data / different-presentation demonstrations: a control, a treatment
+    with a clear shift, one with a modest shift and one that overlaps the control. Two obvious
+    comparisons (Control vs Treatment B, Treatment A vs Treatment B) and one that is not.
+    Simulated; no biological meaning.
+    """
+    rng = _rng(16)
+    rows = []
+    spec = [("Control", 7, 12.0, 2.2), ("Treatment A", 9, 15.5, 2.6), ("Treatment B", 11, 21.0, 3.0),
+            ("Treatment C", 13, 13.5, 3.2)]
+    k = 0
+    for group, n, mu, sd in spec:
+        for _ in range(n):
+            k += 1
+            rows.append({"animal_id": f"M{k:03d}", "group": group, "sex": rng.choice(["F", "M"]),
+                         "cytokine_pg_ml": round(float(max(rng.normal(mu, sd), 0.5)), 2)})
+    return pd.DataFrame(rows)
+
+
 def main() -> int:
     de = rnaseq_results()
     tables = {
@@ -287,6 +308,7 @@ def main() -> int:
         "categorical_data.csv": categorical_data(),
         "ambiguous_columns.csv": ambiguous_columns(),
         "one_table_many_plots.csv": one_table_many_plots(),
+        "showcase_group_comparison.csv": showcase_group_comparison(),
     }
     manifest = {"note": NOTE, "seed": SEED, "files": {}}
     for name, df in tables.items():

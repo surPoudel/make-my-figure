@@ -164,6 +164,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export PNG",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/volcano_manual_mapping/volcano.png"
     },
     {
@@ -171,6 +172,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export PDF",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/volcano_manual_mapping/volcano.pdf"
     },
     {
@@ -178,6 +180,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export PlotSpec JSON",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/volcano_manual_mapping/volcano.plot_spec.json"
     }
   ]

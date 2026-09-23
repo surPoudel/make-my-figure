@@ -86,6 +86,16 @@ PreprocessingSpec.
 **Export PNG** and **Export PDF** were used. Large matrices export faster as PNG; PDF and SVG
 stay vector.
 
+## Before / after - the same 30 most variable features
+
+| basic (unscaled, auto colormap, clustered columns) | refined (row z-score, RdBu_r, samples in file order, labelled) | with the tree (Hierarchical clustering plot type) |
+|---|---|---|
+| ![basic](../showcase/3_heatmap/A_basic.png) | ![refined](../showcase/3_heatmap/B_refined.png) | ![tree](../showcase/3_heatmap/C_heatmap_with_dendrogram.png) |
+
+The Clustered heatmap reorders rows and columns but does not draw the dendrogram; the combined
+*Hierarchical clustering (heatmap + clusters)* plot type does. A sample-group colour strip is
+added through **Define groups...**, not as a plain option.
+
 ## Common mistakes
 
 * Leaving **row_id** at `(none)` and wondering where the row labels are.

@@ -7,7 +7,7 @@
   "mode": "offscreen",
   "status": "PASS",
   "error": "",
-  "seconds": 36.3,
+  "seconds": 29.9,
   "checks": [
     {
       "check": "data loaded",
@@ -63,7 +63,7 @@
       "name": "02_mapping",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/group_comparison_box/02_mapping.png",
       "widget": "mapping",
-      "size": "566x91",
+      "size": "566x119",
       "note": ""
     },
     {
@@ -77,7 +77,7 @@
       "name": "04_customization",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/group_comparison_box/04_customization.png",
       "widget": "options",
-      "size": "566x141",
+      "size": "566x647",
       "note": ""
     },
     {
@@ -151,6 +151,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export PNG",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/group_comparison_box/box_stats.png"
     },
     {
@@ -158,6 +159,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export SVG",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/group_comparison_box/box_stats.svg"
     },
     {
@@ -165,6 +167,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export statistics table",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/group_comparison_box/box_stats_table.csv"
     },
     {
@@ -172,6 +175,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export method report",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/group_comparison_box/box_methods.md"
     }
   ],
@@ -194,11 +198,14 @@
     ],
     "proposed_mapping": {
       "x": "group",
-      "y": "response"
+      "y": "response",
+      "hue": "(none)"
     },
     "kind_choices": [
       "box",
-      "violin"
+      "violin",
+      "box+violin",
+      "summary"
     ],
     "test_choices": [
       "Auto-suggest",
@@ -251,6 +258,7 @@
     "suggested_test_note": "",
     "stats_metadata_keys": [
       "statistics",
+      "statistics_annotation",
       "statistics_report"
     ],
     "stats_method_sentence": "Statistical analyses were performed with Python (scipy 1.17.1, statsmodels 0.14.6, numpy 2.1.2). Tests used: Welch's t-test. P-values were adjusted across 3 comparisons using Holm-Bonferroni correction. Exact p-values are reported unless otherwise noted. Non-finite values were removed listwise before testing. Users are responsible for confirming that each test is appropriate for their experimental design.",
@@ -282,5 +290,5 @@
     ]
   },
   "notes": [],
-  "generated": "2026-09-22T19:59:48"
+  "generated": "2026-09-22T20:40:18"
 }

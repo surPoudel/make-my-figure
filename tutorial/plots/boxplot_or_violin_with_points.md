@@ -107,6 +107,16 @@ reproducibility tutorial).
 **Export PNG** and **Export SVG** were used; PDF is the third button. The stats table and the
 method report were exported from the statistics panel.
 
+## Before / after - the same observations, other presentations
+
+See [Showing individual observations and controlling jitter](../03_Group_Comparisons/showing_individual_observations_and_jitter.md)
+for the full control list, and [Publication presets](../10_Figure_Presets/publication_presets.md)
+for the same 40 observations under five experimental presets.
+
+| default | Box + observations (outline) preset + statistics | Violin + observations preset |
+|---|---|---|
+| ![A](../showcase/1_group_comparison/A_default_box.png) | ![B](../showcase/1_group_comparison/B_box_points_outline_preset.png) | ![C](../showcase/1_group_comparison/C_violin_points_preset.png) |
+
 ## Common mistakes
 
 * Forgetting the group title checkbox: the whole **6. Statistics** panel is greyed out until it

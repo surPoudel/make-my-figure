@@ -175,6 +175,15 @@
         "viability_pct",
         "batch"
       ]
+    },
+    "showcase_group_comparison.csv": {
+      "rows": 40,
+      "columns": [
+        "animal_id",
+        "group",
+        "sex",
+        "cytokine_pg_ml"
+      ]
     }
   }
 }

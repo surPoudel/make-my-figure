@@ -27,6 +27,15 @@ script. This is the loop to run when the application changes and when a plot typ
 8. **Validate**: `python tutorial/automation/validate_tutorials.py` and check
    `audit/validation_report.md`; run the screenshot checklist (`audit/screenshot_validation_checklist.md`).
 
+## Showcases and slides
+
+`tutorial/showcase/build_showcase.py` re-renders the same-data / different-presentation pairs
+and rewrites `audit/showcase_data_integrity.csv` and `showcase/presets_used.md`; run it after any
+renderer or preset change. `tutorial/slides/build_slides.py` rebuilds the deck from the template,
+`tutorial/slides/plot_font_qc.py` checks effective font sizes of every placed image,
+`tutorial/slides/render_pptx_windows.py` renders the slides with PowerPoint, and
+`tutorial/review/build_review_pdfs.py` regenerates both author review PDFs.
+
 ## When the application changes
 
 Run `validate_tutorials.py`. A renamed control, a removed option or a changed proposal fails

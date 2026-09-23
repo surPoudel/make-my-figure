@@ -5,7 +5,7 @@
   "mode": "offscreen",
   "status": "PASS",
   "error": "",
-  "seconds": 21.6,
+  "seconds": 13.7,
   "checks": [],
   "failed_checks": [],
   "captures": [
@@ -41,7 +41,7 @@
       "name": "05_controls_full",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/getting_started/05_controls_full.png",
       "widget": "controls_full",
-      "size": "584x3357",
+      "size": "584x3916",
       "note": "the whole control column, top to bottom"
     },
     {
@@ -137,5 +137,5 @@
     ]
   },
   "notes": [],
-  "generated": "2026-09-22T20:12:37"
+  "generated": "2026-09-22T20:39:48"
 }

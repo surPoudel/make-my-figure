@@ -1,0 +1,341 @@
+{
+  "tutorial_id": "publication_presets",
+  "title": "Publication presets: preview, apply, keep adjusting",
+  "datasets": [
+    "showcase_group_comparison.csv"
+  ],
+  "mode": "offscreen",
+  "status": "PASS",
+  "error": "",
+  "seconds": 50.6,
+  "checks": [
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "showcase_group_comparison.csv"
+    },
+    {
+      "check": "statistics ran",
+      "ok": true,
+      "detail": "6 comparison row(s)"
+    },
+    {
+      "check": "experimental presets listed",
+      "ok": true,
+      "detail": "11 entries"
+    },
+    {
+      "check": "preset preview opened",
+      "ok": true,
+      "detail": "Preview preset: Violin + observations"
+    },
+    {
+      "check": "preset preview opened",
+      "ok": true,
+      "detail": "Preview preset: Violin + observations"
+    },
+    {
+      "check": "preset applied from preview",
+      "ok": true,
+      "detail": "Applied preset \u201cViolin + observations\u201d after preview: 10 setting(s)."
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "preset preview opened",
+      "ok": true,
+      "detail": "Preview preset: Single column 89 mm (N)"
+    },
+    {
+      "check": "preset applied from preview",
+      "ok": true,
+      "detail": "Applied preset \u201cSingle column 89 mm (N)\u201d after preview: 38 setting(s)."
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "export pdf",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/publication_presets/preset_final.pdf"
+    },
+    {
+      "check": "export png",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/publication_presets/preset_final.png"
+    }
+  ],
+  "failed_checks": [],
+  "captures": [
+    {
+      "name": "01_before_preset",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/01_before_preset.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "before any preset"
+    },
+    {
+      "name": "02_preset_panel_default",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/02_preset_panel_default.png",
+      "widget": "preset",
+      "size": "566x164",
+      "note": "Figure preset panel, experimental presets hidden"
+    },
+    {
+      "name": "03_preset_panel_experimental",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/03_preset_panel_experimental.png",
+      "widget": "preset",
+      "size": "566x164",
+      "note": "after ticking Show experimental presets"
+    },
+    {
+      "name": "04_preview_dialog_violin",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/04_preview_dialog_violin.png",
+      "widget": "QDialog",
+      "size": "908x635",
+      "note": "Preview preset: Violin + observations"
+    },
+    {
+      "name": "05_after_violin_preset",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/05_after_violin_preset.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "Violin + observations applied"
+    },
+    {
+      "name": "06_preview_dialog_89mm",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/06_preview_dialog_89mm.png",
+      "widget": "QDialog",
+      "size": "849x635",
+      "note": "Preview preset: Single column 89 mm (N)"
+    },
+    {
+      "name": "07_after_89mm_preset",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/07_after_89mm_preset.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "Single column 89 mm (N) applied"
+    },
+    {
+      "name": "08_adjusted_after_presets",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/08_adjusted_after_presets.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "open circles after the presets"
+    },
+    {
+      "name": "09_final_window",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/09_final_window.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": ""
+    }
+  ],
+  "steps": [
+    {
+      "step": "Open data file: showcase_group_comparison.csv"
+    },
+    {
+      "step": "Plot type: Box / violin plot with points"
+    },
+    {
+      "step": "Map columns: x <- group"
+    },
+    {
+      "step": "Map columns: y <- cytokine_pg_ml"
+    },
+    {
+      "step": "Labels & size: x='', y='Cytokine (pg/ml)'"
+    },
+    {
+      "step": "Statistics: test=welch_t, comparison=all_pairs, group=group, correction=holm, annotation=p"
+    },
+    {
+      "step": "Run statistics"
+    },
+    {
+      "step": "Figure preset: Show experimental presets = True"
+    },
+    {
+      "step": "Figure preset: Preview & apply... for 'Violin + observations' -> Cancel"
+    },
+    {
+      "step": "Figure preset: Preview & apply... for 'Violin + observations' -> Apply"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Figure preset: Preview & apply... for 'Single column 89 mm (N)' -> Apply"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_size = 30"
+    },
+    {
+      "step": "Options: point_fill = open"
+    },
+    {
+      "step": "Options: point_edge = same"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Labels & size: y='Cytokine (pg/ml)'"
+    },
+    {
+      "step": "Export PDF -> preset_final.pdf"
+    },
+    {
+      "dialog": "file",
+      "title": "Export PDF",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/publication_presets/preset_final.pdf"
+    },
+    {
+      "step": "Export PNG -> preset_final.png"
+    },
+    {
+      "dialog": "file",
+      "title": "Export PNG",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/publication_presets/preset_final.png"
+    }
+  ],
+  "facts": {
+    "stats_before": [
+      {
+        "Comparison": "Control vs Treatment A",
+        "Test": "Welch's t-test",
+        "p": "0.0215",
+        "adj p": "0.043",
+        "effect": "Hedges' g=-1.39",
+        "n": "16"
+      },
+      {
+        "Comparison": "Control vs Treatment B",
+        "Test": "Welch's t-test",
+        "p": "6.076e-05",
+        "adj p": "0.0003038",
+        "effect": "Hedges' g=-3.06",
+        "n": "18"
+      },
+      {
+        "Comparison": "Control vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "0.9681",
+        "adj p": "0.9681",
+        "effect": "Hedges' g=-0.0172",
+        "n": "20"
+      },
+      {
+        "Comparison": "Treatment A vs Treatment B",
+        "Test": "Welch's t-test",
+        "p": "6.612e-05",
+        "adj p": "0.0003038",
+        "effect": "Hedges' g=-2.16",
+        "n": "20"
+      },
+      {
+        "Comparison": "Treatment A vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "0.008637",
+        "adj p": "0.02591",
+        "effect": "Hedges' g=1.09",
+        "n": "22"
+      },
+      {
+        "Comparison": "Treatment B vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "1.1e-06",
+        "adj p": "6.6e-06",
+        "effect": "Hedges' g=2.59",
+        "n": "24"
+      }
+    ],
+    "preset_entries": [
+      "(choose a preset)",
+      "Full width 174 mm (C)  [experimental, 174 mm]",
+      "Full width 183 mm (N)  [experimental, 183 mm]",
+      "Full width 184 mm (S)  [experimental, 184 mm]",
+      "Box + observations (light fill)  [experimental]",
+      "Box + observations (outline)  [experimental]",
+      "Many observations per group  [experimental]",
+      "Violin + observations  [experimental]",
+      "Single column 57 mm (S)  [experimental, 57 mm]",
+      "Single column 85 mm (C)  [experimental, 85 mm]",
+      "Single column 89 mm (N)  [experimental, 89 mm]"
+    ],
+    "preset_status_after_toggle": "0 presets for this plot type. 10 experimental presets (preview required).",
+    "preview_violin_changes": "style.marker_alpha: None -> 0.9\nmapping.kind: 'box' -> 'violin'\nmapping.point_edge_width: 0.5 -> 0.4\n\nExperimental presets describe visual conventions measured in published open-access figures and the publishers' stated artwork requirements. They are not official journal templates, carry no endorsement, and do not guarantee acceptance. They change only how a figure is drawn, never your data, statistics or thresholds. Preview before applying.\n\nEvidence family: group-comparison corpus (all three families)\nSummary: biological_group_comparison_corpus.csv: bar/box/violin/dot panels coded for representation, markers, error bars, statistics and colour\nDerived from 164 papers / see biological_group_comparison_corpus.csv figures / see biological_group_comparison_corpus.csv panels measured; official requirements: none (representation choices are observed practice).\nPer-value evidence class (observed / inferred / estimated / official):\n  points: OBSERVED:individual observations visible in 78% of group-comparison panels\n  point_arrangement: OBSERVED:jitter 56%, centred 20%, beeswarm 3%\n  point_fill: OBSERVED:filled 53% vs open 19%\n  point_edge: OBSERVED:dark edge 31%, none 37%, same colour 12%\n  point_edge_width: ESTIMATED:0.4 pt light edge\n  point_size: SHARED:0 = adaptive - the renderer scales markers by the number of observations within fixed bounds (never hides points)\n  point_alpha: SHARED:0 = adaptive opacity by group size\n  kind: OBSERVED:violin+points 3% of panels (most common at",
+    "preview_violin_safety": "Checked: no data, column role, statistical test, threshold or transformation changes.",
+    "preview_violin_status": "Preview closed; nothing applied.",
+    "apply_violin_status": "Applied preset \u201cViolin + observations\u201d after preview: 10 setting(s).",
+    "stats_after_violin": [
+      {
+        "Comparison": "Control vs Treatment A",
+        "Test": "Welch's t-test",
+        "p": "0.0215",
+        "adj p": "0.043",
+        "effect": "Hedges' g=-1.39",
+        "n": "16"
+      },
+      {
+        "Comparison": "Control vs Treatment B",
+        "Test": "Welch's t-test",
+        "p": "6.076e-05",
+        "adj p": "0.0003038",
+        "effect": "Hedges' g=-3.06",
+        "n": "18"
+      },
+      {
+        "Comparison": "Control vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "0.9681",
+        "adj p": "0.9681",
+        "effect": "Hedges' g=-0.0172",
+        "n": "20"
+      },
+      {
+        "Comparison": "Treatment A vs Treatment B",
+        "Test": "Welch's t-test",
+        "p": "6.612e-05",
+        "adj p": "0.0003038",
+        "effect": "Hedges' g=-2.16",
+        "n": "20"
+      },
+      {
+        "Comparison": "Treatment A vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "0.008637",
+        "adj p": "0.02591",
+        "effect": "Hedges' g=1.09",
+        "n": "22"
+      },
+      {
+        "Comparison": "Treatment B vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "1.1e-06",
+        "adj p": "6.6e-06",
+        "effect": "Hedges' g=2.59",
+        "n": "24"
+      }
+    ],
+    "statistics_unchanged": true,
+    "apply_89mm_status": "Applied preset \u201cSingle column 89 mm (N)\u201d after preview: 38 setting(s).",
+    "preview_89mm_changes": "style.annotation_pt: 10.0 -> 5.5\nstyle.axis_font_pt: 12.0 -> 6.5\nstyle.bar_edge_width: None -> 0.5\nstyle.base_font_pt: None -> 5.5\nstyle.errorbar_capsize: None -> 1.5\nstyle.errorbar_line_width: None -> 0.5\nstyle.font_family: None -> 'Arial'\nstyle.font_weight: None -> 'normal'\nstyle.grid_width: None -> 0.4\nstyle.legend_frameon: None -> False\nstyle.legend_loc: None -> 'best'\nstyle.legend_ncol: None -> 1\nstyle.legend_pt: 10.0 -> 5.5\nstyle.legend_title_pt: None -> 6.5\nstyle.line_width_pt: 1.8 -> 0.75\nstyle.marker_alpha: None -> 0.9\nstyle.marker_edge_width: None -> 0.4\nstyle.marker_size: 45.0 -> 20.0\nstyle.palette_name: None -> 'publication'\nstyle.panel_label_pt: None -> 8.0\nstyle.regression_line_width: 1.8 -> 0.75\nstyle.show_right_spine: None -> False\nstyle.show_top_spine: None -> False\nstyle.spine_width_pt: 1.1 -> 0.5\nstyle.text_color: None -> '#000000'\nstyle.tick_direction: None -> 'out'\nstyle.tick_label_pt: 10.0 -> 5.5\nstyle.tick_length: None -> 2.5\nstyle.tick_width: None -> 0.5\nstyle.title_font_pt: 14.0 -> 6.5\nlayout.column_width: 'default' -> '89mm'\nlayout.legend_location: None -> 'best'\noutput.dpi: 300 -> 450\noutput.formats: ['svg', 'png', 'pdf'] -> ['pdf', 'svg', 'png']\noutput.width_mm: 110.0 -> 89.0\nstatistics.annotation: {'mode': 'stars', 'content': 'p', 'template': '', 'digits': 3, 'sci_threshold': 0.001, 'stat_digits': 2, 'effect_digits': 2, 'p_less_than_style': True, 'use_ns': True, 'show_p': False, 'show_p_adj': False, 'show_stars': False, 'show_stat': False, 'show_e"
+  },
+  "notes": [],
+  "generated": "2026-09-22T20:43:39"
+}

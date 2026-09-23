@@ -1,0 +1,614 @@
+{
+  "tutorial_id": "observations_jitter",
+  "title": "Showing individual observations and controlling jitter",
+  "datasets": [
+    "showcase_group_comparison.csv"
+  ],
+  "mode": "offscreen",
+  "status": "PASS",
+  "error": "",
+  "seconds": 74.1,
+  "checks": [
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "showcase_group_comparison.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "statistics ran",
+      "ok": true,
+      "detail": "6 comparison row(s)"
+    },
+    {
+      "check": "experimental presets listed",
+      "ok": true,
+      "detail": "11 entries"
+    },
+    {
+      "check": "preset preview opened",
+      "ok": true,
+      "detail": "Preview preset: Box + observations (outline)"
+    },
+    {
+      "check": "preset applied from preview",
+      "ok": true,
+      "detail": "Applied preset \u201cBox + observations (outline)\u201d after preview: 12 setting(s)."
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "export pdf",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/observations_jitter/observations.pdf"
+    },
+    {
+      "check": "export svg",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/observations_jitter/observations.svg"
+    },
+    {
+      "check": "export png",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/observations_jitter/observations.png"
+    }
+  ],
+  "failed_checks": [],
+  "captures": [
+    {
+      "name": "01_defaults_options",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/01_defaults_options.png",
+      "widget": "options",
+      "size": "566x647",
+      "note": "3. Options as first shown"
+    },
+    {
+      "name": "01b_defaults_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/01b_defaults_plot.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "default rendering: box, adaptive points"
+    },
+    {
+      "name": "02_points_off",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/02_points_off.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "Show individual observations off"
+    },
+    {
+      "name": "03_jitter_narrow",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/03_jitter_narrow.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "Jitter width 0.10"
+    },
+    {
+      "name": "03b_jitter_default",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/03b_jitter_default.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "Jitter width 0.35"
+    },
+    {
+      "name": "04_point_size_60",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/04_point_size_60.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "Point size 60 pt2"
+    },
+    {
+      "name": "05_open_circles",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/05_open_circles.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "open circles, edge in the group colour"
+    },
+    {
+      "name": "05b_filled_dark_edge",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/05b_filled_dark_edge.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "filled, dark edge"
+    },
+    {
+      "name": "06_beeswarm",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/06_beeswarm.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "beeswarm arrangement"
+    },
+    {
+      "name": "07_box_outline_n_labels",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/07_box_outline_n_labels.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "outline boxes, n below each group"
+    },
+    {
+      "name": "07b_options_after",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/07b_options_after.png",
+      "widget": "options",
+      "size": "566x647",
+      "note": "3. Options after the changes"
+    },
+    {
+      "name": "08_statistics_brackets",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/08_statistics_brackets.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "Welch all pairs, Holm, exact P"
+    },
+    {
+      "name": "08b_statistics_panel",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/08b_statistics_panel.png",
+      "widget": "stats",
+      "size": "566x847",
+      "note": ""
+    },
+    {
+      "name": "09_preview_dialog",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/09_preview_dialog.png",
+      "widget": "QDialog",
+      "size": "908x638",
+      "note": "Preview preset: Box + observations (outline)"
+    },
+    {
+      "name": "10_after_preset",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/10_after_preset.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "after the preset"
+    },
+    {
+      "name": "11_adjusted_after_preset",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/11_adjusted_after_preset.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "point size and jitter changed after the preset"
+    },
+    {
+      "name": "12_final",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/12_final.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "final state"
+    }
+  ],
+  "steps": [
+    {
+      "step": "Open data file: showcase_group_comparison.csv"
+    },
+    {
+      "step": "Plot type: Box / violin plot with points"
+    },
+    {
+      "step": "Map columns: x <- group"
+    },
+    {
+      "step": "Map columns: y <- cytokine_pg_ml"
+    },
+    {
+      "step": "Labels & size: x='', y='Cytokine (pg/ml)'"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: points = False"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: points = True"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_jitter_width = 0.1"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_jitter_width = 0.35"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_size = 60"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_fill = open"
+    },
+    {
+      "step": "Options: point_edge = same"
+    },
+    {
+      "step": "Options: point_edge_width = 1.2"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_fill = filled"
+    },
+    {
+      "step": "Options: point_edge = dark"
+    },
+    {
+      "step": "Options: point_edge_width = 1.0"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_arrangement = beeswarm"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_arrangement = jitter"
+    },
+    {
+      "step": "Options: box_fill = outline"
+    },
+    {
+      "step": "Options: show_n = below"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Statistics: test=welch_t, comparison=all_pairs, group=group, correction=holm, annotation=p"
+    },
+    {
+      "step": "Run statistics"
+    },
+    {
+      "step": "Figure preset: Show experimental presets = True"
+    },
+    {
+      "step": "Figure preset: Preview & apply... for 'Box + observations (outline)' -> Apply"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_size = 40"
+    },
+    {
+      "step": "Options: point_jitter_width = 0.25"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Export PDF -> observations.pdf"
+    },
+    {
+      "dialog": "file",
+      "title": "Export PDF",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/observations_jitter/observations.pdf"
+    },
+    {
+      "step": "Export SVG -> observations.svg"
+    },
+    {
+      "dialog": "file",
+      "title": "Export SVG",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/observations_jitter/observations.svg"
+    },
+    {
+      "step": "Export PNG -> observations.png"
+    },
+    {
+      "dialog": "file",
+      "title": "Export PNG",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/observations_jitter/observations.png"
+    }
+  ],
+  "facts": {
+    "columns": [
+      "animal_id",
+      "group",
+      "sex",
+      "cytokine_pg_ml"
+    ],
+    "recommendation_header": "Detected data type: <b>generic_long</b>. 5 suggested figure(s) \u2014 all use the Publication style.",
+    "proposed_mapping": {
+      "x": "group",
+      "y": "cytokine_pg_ml",
+      "hue": "(none)"
+    },
+    "option_defaults": {
+      "kind": "box",
+      "points": true,
+      "point_arrangement": "jitter",
+      "point_jitter_width": 0.35,
+      "point_size": 0.0,
+      "point_marker": "o",
+      "point_fill": "filled",
+      "point_edge": "dark",
+      "point_edge_width": 0.5,
+      "point_alpha": 0.0,
+      "box_width": 0.5,
+      "box_fill": "light",
+      "box_line_width": 0.0,
+      "median_line_width": 0.0,
+      "whisker_cap_width": 0.5,
+      "show_outliers": false,
+      "violin_alpha": 0.45,
+      "orientation": "vertical",
+      "group_spacing": 1.0,
+      "category_order": "data",
+      "show_n": "none",
+      "x_tick_rotation": "auto"
+    },
+    "option_labels": {
+      "kind": "Kind",
+      "points": "Show individual observations",
+      "point_arrangement": "Point arrangement",
+      "point_jitter_width": "Jitter width (fraction of spacing)",
+      "point_size": "Point size (pt\u00b2; 0 = adaptive)",
+      "point_marker": "Point marker",
+      "point_fill": "Point fill",
+      "point_edge": "Point edge",
+      "point_edge_width": "Point edge width (pt)",
+      "point_alpha": "Point opacity (0 = adaptive)",
+      "box_width": "Box / violin width (fraction of spacing)",
+      "box_fill": "Box fill",
+      "box_line_width": "Box line width (pt; 0 = style)",
+      "median_line_width": "Median line width (pt; 0 = style)",
+      "whisker_cap_width": "Whisker cap width (fraction of box width)",
+      "show_outliers": "Show outlier markers",
+      "violin_alpha": "Violin opacity",
+      "orientation": "Orientation",
+      "group_spacing": "Group spacing (x 1.0)",
+      "category_order": "Category order",
+      "show_n": "Sample-size labels",
+      "x_tick_rotation": "X-axis label angle"
+    },
+    "group_n": {
+      "Control": 7,
+      "Treatment A": 9,
+      "Treatment B": 11,
+      "Treatment C": 13
+    },
+    "options_after_changes": {
+      "kind": "box",
+      "points": true,
+      "point_arrangement": "jitter",
+      "point_jitter_width": 0.35,
+      "point_size": 60.0,
+      "point_marker": "o",
+      "point_fill": "filled",
+      "point_edge": "dark",
+      "point_edge_width": 1.0,
+      "point_alpha": 0.0,
+      "box_width": 0.5,
+      "box_fill": "outline",
+      "box_line_width": 0.0,
+      "median_line_width": 0.0,
+      "whisker_cap_width": 0.5,
+      "show_outliers": false,
+      "violin_alpha": 0.45,
+      "orientation": "vertical",
+      "group_spacing": 1.0,
+      "category_order": "data",
+      "show_n": "below",
+      "x_tick_rotation": "auto"
+    },
+    "stats_table_rows": [
+      {
+        "Comparison": "Control vs Treatment A",
+        "Test": "Welch's t-test",
+        "p": "0.0215",
+        "adj p": "0.043",
+        "effect": "Hedges' g=-1.39",
+        "n": "16"
+      },
+      {
+        "Comparison": "Control vs Treatment B",
+        "Test": "Welch's t-test",
+        "p": "6.076e-05",
+        "adj p": "0.0003038",
+        "effect": "Hedges' g=-3.06",
+        "n": "18"
+      },
+      {
+        "Comparison": "Control vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "0.9681",
+        "adj p": "0.9681",
+        "effect": "Hedges' g=-0.0172",
+        "n": "20"
+      },
+      {
+        "Comparison": "Treatment A vs Treatment B",
+        "Test": "Welch's t-test",
+        "p": "6.612e-05",
+        "adj p": "0.0003038",
+        "effect": "Hedges' g=-2.16",
+        "n": "20"
+      },
+      {
+        "Comparison": "Treatment A vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "0.008637",
+        "adj p": "0.02591",
+        "effect": "Hedges' g=1.09",
+        "n": "22"
+      },
+      {
+        "Comparison": "Treatment B vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "1.1e-06",
+        "adj p": "6.6e-06",
+        "effect": "Hedges' g=2.59",
+        "n": "24"
+      }
+    ],
+    "preset_entries": [
+      "(choose a preset)",
+      "Full width 174 mm (C)  [experimental, 174 mm]",
+      "Full width 183 mm (N)  [experimental, 183 mm]",
+      "Full width 184 mm (S)  [experimental, 184 mm]",
+      "Box + observations (light fill)  [experimental]",
+      "Box + observations (outline)  [experimental]",
+      "Many observations per group  [experimental]",
+      "Violin + observations  [experimental]",
+      "Single column 57 mm (S)  [experimental, 57 mm]",
+      "Single column 85 mm (C)  [experimental, 85 mm]",
+      "Single column 89 mm (N)  [experimental, 89 mm]"
+    ],
+    "preview_changes": "style.marker_alpha: None -> 0.9\nmapping.point_edge_width: 1.0 -> 0.4\nmapping.point_size: 60.0 -> 0.0\n\nExperimental presets describe visual conventions measured in published open-access figures and the publishers' stated artwork requirements. They are not official journal templates, carry no endorsement, and do not guarantee acceptance. They change only how a figure is drawn, never your data, statistics or thresholds. Preview before applying.\n\nEvidence family: group-comparison corpus (all three families)\nSummary: biological_group_comparison_corpus.csv: bar/box/violin/dot panels coded for representation, markers, error bars, statistics and colour\nDerived from 164 papers / see biological_group_comparison_corpus.csv figures / see biological_group_comparison_corpus.csv panels measured; official requirements: none (representation choices are observed practice).\nPer-value evidence class (observed / inferred / estimated / official):\n  points: OBSERVED:individual observations visible in 78% of group-comparison panels\n  point_arrangement: OBSERVED:jitter 56%, centred 20%, beeswarm 3%\n  point_fill: OBSERVED:filled 53% vs open 19%\n  point_edge: OBSERVED:dark edge 31%, none 37%, same colour 12%",
+    "preview_safety": "Checked: no data, column role, statistical test, threshold or transformation changes.",
+    "preview_buttons": [
+      "Cancel",
+      "Save as my preset\u2026",
+      "Apply"
+    ],
+    "preview_status": "Applied preset \u201cBox + observations (outline)\u201d after preview: 12 setting(s).",
+    "options_after_preset": {
+      "kind": "box",
+      "points": true,
+      "point_arrangement": "jitter",
+      "point_jitter_width": 0.35,
+      "point_size": 0.0,
+      "point_marker": "o",
+      "point_fill": "filled",
+      "point_edge": "dark",
+      "point_edge_width": 0.4,
+      "point_alpha": 0.0,
+      "box_width": 0.5,
+      "box_fill": "outline",
+      "box_line_width": 0.0,
+      "median_line_width": 0.0,
+      "whisker_cap_width": 0.5,
+      "show_outliers": false,
+      "violin_alpha": 0.45,
+      "orientation": "vertical",
+      "group_spacing": 1.0,
+      "category_order": "data",
+      "show_n": "below",
+      "x_tick_rotation": "auto"
+    },
+    "stats_table_rows_after_preset": [
+      {
+        "Comparison": "Control vs Treatment A",
+        "Test": "Welch's t-test",
+        "p": "0.0215",
+        "adj p": "0.043",
+        "effect": "Hedges' g=-1.39",
+        "n": "16"
+      },
+      {
+        "Comparison": "Control vs Treatment B",
+        "Test": "Welch's t-test",
+        "p": "6.076e-05",
+        "adj p": "0.0003038",
+        "effect": "Hedges' g=-3.06",
+        "n": "18"
+      },
+      {
+        "Comparison": "Control vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "0.9681",
+        "adj p": "0.9681",
+        "effect": "Hedges' g=-0.0172",
+        "n": "20"
+      },
+      {
+        "Comparison": "Treatment A vs Treatment B",
+        "Test": "Welch's t-test",
+        "p": "6.612e-05",
+        "adj p": "0.0003038",
+        "effect": "Hedges' g=-2.16",
+        "n": "20"
+      },
+      {
+        "Comparison": "Treatment A vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "0.008637",
+        "adj p": "0.02591",
+        "effect": "Hedges' g=1.09",
+        "n": "22"
+      },
+      {
+        "Comparison": "Treatment B vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "1.1e-06",
+        "adj p": "6.6e-06",
+        "effect": "Hedges' g=2.59",
+        "n": "24"
+      }
+    ]
+  },
+  "notes": [],
+  "generated": "2026-09-22T20:44:02"
+}

@@ -7,7 +7,7 @@
   "mode": "offscreen",
   "status": "PASS",
   "error": "",
-  "seconds": 41.6,
+  "seconds": 32.7,
   "checks": [
     {
       "check": "data loaded",
@@ -153,7 +153,7 @@
     {
       "messagebox": "information",
       "title": "Figure package saved",
-      "text": "Saved /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_package/box.mmfpackage\n(0.09 MB). Copy this one file to another folder or computer and use Open Figure Package to reproduce the figure."
+      "text": "Saved /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_package/box.mmfpackage\n(0.11 MB). Copy this one file to another folder or computer and use Open Figure Package to reproduce the figure."
     },
     {
       "step": "Home / Upload New Data"
@@ -227,16 +227,35 @@
       "README.txt",
       "manifest.json"
     ],
-    "package_size_kb": 93.6,
+    "package_size_kb": 109.6,
     "reopened_mapping": {
       "x": "group",
       "y": "response",
-      "point_size": 8.0,
+      "hue": null,
       "kind": "box",
       "points": true,
+      "point_arrangement": "jitter",
+      "point_jitter_width": 0.35,
+      "point_size": 0.0,
+      "point_marker": "o",
+      "point_fill": "filled",
+      "point_edge": "dark",
+      "point_edge_width": 0.5,
+      "point_alpha": 0.0,
+      "box_width": 0.5,
+      "box_fill": "light",
+      "box_line_width": 0.0,
+      "median_line_width": 0.0,
+      "whisker_cap_width": 0.5,
+      "show_outliers": false,
+      "violin_alpha": 0.45,
+      "orientation": "vertical",
+      "group_spacing": 1.0,
+      "category_order": "data",
+      "show_n": "none",
       "x_tick_rotation": "auto"
     },
-    "reopened_status": "Opened figure package box_copy.mmfpackage \u2014 integrity verified; frozen data from 2026-09-23T01:01:51Z. Editing and re-exporting work as usual.",
+    "reopened_status": "Opened figure package box_copy.mmfpackage \u2014 integrity verified; frozen data from 2026-09-23T01:38:54Z. Editing and re-exporting work as usual.",
     "reopened_stats_enabled": true,
     "plotspec_file_dialogs": [
       {
@@ -254,5 +273,5 @@
     "plotspec_reopened_message": "Publication check: passed"
   },
   "notes": [],
-  "generated": "2026-09-22T20:02:03"
+  "generated": "2026-09-22T20:39:06"
 }

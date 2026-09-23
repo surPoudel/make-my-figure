@@ -1,21 +1,27 @@
-# Box / violin plot with points and statistics
+# Group comparison: from default plot to publication figure, live
 
-TITLE: Comparing groups - box or violin with points and a test
-TARGET LENGTH: 3:30
-DATASET: tutorial/datasets/group_comparison.csv
-START STATE: start screen, no data.
-ACTION SCRIPT: `python tutorial/automation/run_tutorial.py group_comparison_box --onscreen --pause 1.5`
+TITLE: Showing every observation - box, jitter, markers, statistics, preset
+TARGET LENGTH: 4:00
+DATASET: tutorial/datasets/showcase_group_comparison.csv
+START STATE: start screen, no data; experimental presets hidden.
+ACTION SCRIPT: `python tutorial/automation/run_tutorial.py observations_jitter --onscreen --pause 1.5`
+PACING: show the action, pause 1-2 s on the result, continue. The transformation happens on screen; no finished plot is opened.
 
 | time | screen | action | narration |
 |---|---|---|---|
-| 0:00-0:08 | start screen | - | "Three groups of unequal size, one readout: the most common comparison figure." |
-| 0:08-0:30 | Data preview, Recommended figures | **Open data file**, `group_comparison.csv` | "Thirty rows, a group column, a response. The first recommendation is the box / violin plot with points." |
-| 0:30-0:50 | 2. Map columns | **Box / violin plot with points** | "The proposal is group on x, response on y. Every observation is a point over its box." |
-| 0:50-1:20 | 3. Options | Kind violin, Point size 12; back to box | "Kind switches between box and violin. Point size and overlay points are here too." |
-| 1:20-2:30 | 6. Statistics | title box, Enable statistics, Welch's t-test, Compare all groups (pairwise), Group column group, Holm-Bonferroni, P-value only, **Run statistics** | "The statistics panel has two switches: the box in its title and Enable statistics. It suggests a test from the number of groups; the choice remains yours. Welch's t-test for every pair, Holm correction, exact P values on the figure. Run. Brackets appear; the table lists each comparison with the adjusted P, Hedges' g and n." |
-| 2:30-3:00 | statistics table, method sentence | **Export stats table**, **Export method report** | "Export the table and the method report. The sentence under the table is the one for your methods section; it also says that you are responsible for choosing an appropriate test." |
-| 3:00-3:30 | 5. Export | **Export PNG**, **Export SVG** | "Export the figure. The brackets are part of it." |
+| 0:00-0:10 | start screen | - | "Forty animals in four groups of different size. We build the figure a reviewer expects: the summary, every observation, and the test." |
+| 0:10-0:30 | Data preview | **Open data file**, `showcase_group_comparison.csv`; **Box / violin plot with points** | "The application proposes group on x and the cytokine on y and draws boxes with every observation on top." |
+| 0:30-0:45 | 3. Options, figure | untick and tick **Show individual observations** | "Observations off - only the boxes. On again." |
+| 0:45-1:05 | 3. Options, figure | **Jitter width** 0.10, then 0.35 | "Jitter width: how far the points spread within each group." |
+| 1:05-1:20 | 3. Options, figure | **Point size** 60 | "Point size in points squared. Zero lets the application choose from the number of observations." |
+| 1:20-1:50 | 3. Options, figure | **Point fill** open, **Point edge** same, **Point edge width** 1.2; then filled, dark, 1.0 | "Open circles in the group colour, or filled circles with a dark rim - both common in published figures." |
+| 1:50-2:05 | 3. Options, figure | **Point arrangement** beeswarm, back to jitter | "Beeswarm places points without overlap." |
+| 2:05-2:20 | 3. Options, figure | **Box fill** outline, **Sample-size labels** below | "Outline boxes, and n under each group." |
+| 2:20-2:55 | 6. Statistics, figure | title box, Enable statistics, Welch's t-test, Compare all groups (pairwise), Holm-Bonferroni, P-value only, **Run statistics** | "The statistics panel: Welch's t-test for the pairs, Holm correction, exact P on brackets. The brackets start above the highest point and stack without colliding; the table and the methods sentence appear below." |
+| 2:55-3:35 | Figure preset, preview dialog | tick **Show experimental presets**; select **Box + observations (outline)**; **Preview & apply...**; read the change list; **Apply** | "Experimental publication presets are previewed on your own data. The dialog shows before and after, lists the three settings that change, and confirms that no data, role, test or threshold changes. Apply." |
+| 3:35-3:50 | 3. Options, figure | **Point size** 40, **Jitter width** 0.25 | "A preset is a starting point. Keep adjusting." |
+| 3:50-4:00 | 5. Export | **Export PDF**, **Export SVG** | "Export. Same data throughout; only the presentation changed." |
 
-FINAL STATE: box plot with three P-value brackets.
-EXPORT: `box_stats.png`, `box_stats.svg`, `box_stats_table.csv`, `box_methods.md`.
-KEY MESSAGE: The application runs the test you choose and writes it up; it does not choose for you.
+FINAL STATE: outline boxes with edged points, three brackets, preset applied and adjusted.
+EXPORT: `observations.pdf`, `observations.svg`, `observations.png`.
+KEY MESSAGE: The observations are shown the way you decide; the data and the test never change.

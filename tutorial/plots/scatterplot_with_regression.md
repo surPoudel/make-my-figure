@@ -100,6 +100,17 @@ figure configuration and travel only in a *Full figure configuration* preset.
 
 **Export PDF** and **Export PNG** were used (5. Export); SVG is the third button.
 
+## Before / after - the same 60 points
+
+| basic (two roles, defaults) | refined (colour role, per-group fit, r / R² / P / n, larger edged markers) |
+|---|---|
+| ![basic](../showcase/4_scatter/A_basic.png) | ![refined](../showcase/4_scatter/B_refined.png) |
+
+Rendered by the application's renderer from `relationship_data.csv`; presentation copies with
+larger typography in `showcase/4_scatter/*_pres.png`. Marker size and edge width come from the
+Publication style profile, not from a per-plot option (see `audit/MISSING_SHOWCASE_CAPABILITIES.md`);
+a confidence band around the fit is not available.
+
 ## Common mistakes
 
 * Accepting the proposed x / y. They are simply the first two numeric columns.

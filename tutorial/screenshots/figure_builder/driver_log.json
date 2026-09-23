@@ -118,6 +118,7 @@
     },
     {
       "dialog": "file",
+      "title": "Save multi-panel figure",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_builder/composite.png"
     },
     {
@@ -129,18 +130,19 @@
       "step": "Figure Builder: Save Figure Package... -> composite.mmfpackage"
     },
     {
-      "dialog": "file",
-      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_builder/composite.mmfpackage"
-    },
-    {
       "messagebox": "question",
       "title": "Save Reproducible Figure Package",
       "text": "<b>Figure packages include the data required to reproduce the figure.</b><br>This figure package contains the data required to reproduce the figure: a frozen copy of every table the plot was drawn from (and, when available, the original source file), the plot specification, statistics, preprocessing records and preview images. Share it only with people who may see these data.<br><br>This package w"
     },
     {
+      "dialog": "file",
+      "title": "Save Reproducible Figure Package",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_builder/composite.mmfpackage"
+    },
+    {
       "messagebox": "information",
       "title": "Figure package saved",
-      "text": "Saved /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_builder/composite.mmfpackage (0.23 MB)."
+      "text": "Saved /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_builder/composite.mmfpackage (0.24 MB)."
     }
   ]
 }

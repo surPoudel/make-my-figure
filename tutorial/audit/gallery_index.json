@@ -54,7 +54,7 @@
     "display": "Box / violin plot with points",
     "family": "03_Group_Comparisons",
     "purpose": "Show full distributions per group as box or violin plots with overlaid points",
-    "required": "x, y",
+    "required": "x, y, hue",
     "thumb": "screenshots/gallery/boxplot_or_violin_with_points.png",
     "tutorial": "plots/boxplot_or_violin_with_points.md",
     "video": ""

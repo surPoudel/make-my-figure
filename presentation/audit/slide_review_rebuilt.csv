@@ -1,0 +1,23 @@
+slide,purpose,classification,problem,fix,plot_readability,text_readability,scientific_accuracy,visual_impact
+1,title,KEEP,none,template band; white 40 pt title,n/a,good,good,good
+2,motivate: raw table to figure,KEEP (redesigned),was two miniatures + five bullets,6-row table excerpt (14 pt) + 5.1 in presentation render + one message,good (ticks 13 pt),good,good,good
+3,what the application is,KEEP (split: text only),was bullets + shrunk windows,text only; the workspace is shown in the tutorial,n/a,good,good,adequate
+4,design principle,KEEP,none,none,n/a,good,good,good
+5,HERO one dataset multiple views,NEW,-,three 3.6 in presentation renders (170 x 150 mm; ticks ~9 pt) same data same tests,good,good,good (integrity CSV),strong
+6,observations under your control,NEW,-,six same-data renders 3.6 in each; one message,good (ticks ~9 pt),good,good,strong
+7,statistics on the figure,KEEP (minor fix),plot was 5.6 in with 9 px labels,5.5 in presentation render (annotation 12 pt) + 5.4 in panel crop (8.2 pt UI text),good,borderline UI crop,good,good
+8,preset preview: before / after,NEW (split from old 9),-,11 in crop of the real preview dialog's two figures + one message,good,good,good,strong
+9,preset preview: changes and protection,NEW (split),-,11 in crop of the change list and safety line + three bullets,n/a,good (10.4 pt UI text),good,good
+10,same data - volcano,NEW,-,two 5.4 in presentation renders,good,good,good,strong
+11,same data - heatmap,NEW,-,two 5.4 in presentation renders (30 features),good,good,good,strong
+12,same data - scatter,NEW,-,two 5.4 in presentation renders,good,good,good,good
+13,same data - Kaplan-Meier,NEW,-,two 5.4 in presentation renders,good,good,good,good
+14,HERO raw table to figure,NEW (replaces old 5+6),-,table excerpt + 5.4 in options crop + 3.9 in final render + one message,good,borderline UI crop (8.2 pt),good,good
+15,manual mapping (volcano),KEEP (redesigned from old 7),two shrunk windows,Messages crop 11 in (8.9 pt) + two mapping crops 5.4 in (8.2 pt) + 5.5 in render,good,borderline UI crops,good,good
+16,reproducibility,KEEP (redesigned),shrunk window,confirmation dialog 5 in + package member list + one message,n/a,good,good,adequate
+17,figure builder,KEEP (minor fix),dialog inset 5 pt text,exported composite at 11 in only (panel text ~15 pt),good,good,good,good
+18,tutorial system,KEEP (split),six dense bullets,flow diagram + one message + two bullets,n/a,good,good,adequate
+19,validation table,KEEP,12 rows now,rows 13 pt,n/a,good,good,good
+20,39 plot types mosaic,KEEP,thumbnails by design,caption says so,n/a,good,good,good
+21,where this goes next,KEEP,none,mentions the presets-branch decision,n/a,good,good,adequate
+22,summary,KEEP,none,none,n/a,good,good,good

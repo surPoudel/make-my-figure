@@ -143,7 +143,7 @@
     {
       "messagebox": "information",
       "title": "Figure package saved",
-      "text": "Saved /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_package/box.mmfpackage\n(0.09 MB). Copy this one file to another folder or computer and use Open Figure Package to reproduce the figure."
+      "text": "Saved /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_package/box.mmfpackage\n(0.11 MB). Copy this one file to another folder or computer and use Open Figure Package to reproduce the figure."
     },
     {
       "step": "Home / Upload New Data"

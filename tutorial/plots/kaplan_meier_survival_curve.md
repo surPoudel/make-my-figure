@@ -83,6 +83,14 @@ log-rank result.
 
 **Export PDF** and **Export PNG** were used.
 
+## Before / after - the same 80 subjects
+
+| default | refined (percent scale, 50 % reference line, x to 48 months, log-rank P, thicker curves) |
+|---|---|
+| ![default](../showcase/5_survival/A_default.png) | ![refined](../showcase/5_survival/B_refined.png) |
+
+Line width comes from the Publication style profile; a number-at-risk table is not available.
+
 ## Common mistakes
 
 * An **event** column coded the other way round (1 = censored). The application takes 1 as the

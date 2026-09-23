@@ -7,7 +7,7 @@
   "mode": "offscreen",
   "status": "PASS",
   "error": "",
-  "seconds": 30.0,
+  "seconds": 22.1,
   "checks": [
     {
       "check": "data loaded",
@@ -107,6 +107,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export PNG",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/heatmap_clustered/heatmap.png"
     },
     {
@@ -114,6 +115,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export PDF",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/heatmap_clustered/heatmap.pdf"
     }
   ],
@@ -212,5 +214,5 @@
     ]
   },
   "notes": [],
-  "generated": "2026-09-22T19:55:42"
+  "generated": "2026-09-22T20:40:40"
 }

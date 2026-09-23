@@ -11,7 +11,7 @@
       "name": "02_mapping",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/group_comparison_box/02_mapping.png",
       "widget": "mapping",
-      "size": "566x91",
+      "size": "566x119",
       "note": ""
     },
     {
@@ -25,7 +25,7 @@
       "name": "04_customization",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/group_comparison_box/04_customization.png",
       "widget": "options",
-      "size": "566x141",
+      "size": "566x647",
       "note": ""
     },
     {
@@ -141,6 +141,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export PNG",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/group_comparison_box/box_stats.png"
     },
     {
@@ -148,6 +149,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export SVG",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/group_comparison_box/box_stats.svg"
     },
     {
@@ -155,6 +157,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export statistics table",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/group_comparison_box/box_stats_table.csv"
     },
     {
@@ -162,6 +165,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export method report",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/group_comparison_box/box_methods.md"
     }
   ]

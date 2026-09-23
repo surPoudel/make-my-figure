@@ -750,6 +750,67 @@ class MMFDriver:
         self.pump(10)
         return result
 
+
+    # ------------------------------------------------- experimental presets / preview & apply
+    def show_experimental_presets(self, on: bool = True) -> List[str]:
+        """Tick 'Show experimental presets' in the Figure preset panel; returns the list entries."""
+        chk = getattr(self.win, "chk_experimental_presets", None)
+        if chk is None:
+            raise DriverError("this build has no 'Show experimental presets' checkbox")
+        self.step(f"Figure preset: Show experimental presets = {on}")
+        chk.setChecked(bool(on))
+        self.pump(15)
+        combo = self.win.preset_combo
+        entries = [combo.itemText(i) for i in range(combo.count())]
+        self.log.check("experimental presets listed", any("experimental" in e.lower() or "(N)" in e or "(S)" in e or "(C)" in e or "observations" in e for e in entries) if on else True,
+                       f"{len(entries)} entries")
+        self.wait()
+        return entries
+
+    def preview_preset(self, name: str, *, apply: bool = True, capture_name: Optional[str] = None) -> Dict[str, Any]:
+        """Figure preset > Preview & apply...: open the REAL preview dialog for the selected preset,
+        grab it, read the change list and the safety line, then press Apply (or Cancel)."""
+        from PySide6.QtWidgets import QDialog, QDialogButtonBox, QLabel, QPlainTextEdit
+
+        self.select_preset(name)
+        self.step(f"Figure preset: Preview & apply... for {name!r} -> {'Apply' if apply else 'Cancel'}")
+        drv = self
+        info: Dict[str, Any] = {}
+        orig = QDialog.exec
+
+        def _exec(dlg, *a, **k):
+            if not dlg.windowTitle().startswith("Preview preset"):
+                return orig(dlg, *a, **k)
+            dlg.show(); drv.pump(25)
+            info["title"] = dlg.windowTitle()
+            texts = dlg.findChildren(QPlainTextEdit)
+            info["changes"] = texts[0].toPlainText() if texts else ""
+            labels = [l.text() for l in dlg.findChildren(QLabel)]
+            info["safety"] = next((t for t in labels if t.startswith(("Checked:", "Refused:"))), "")
+            info["notice"] = next((t for t in labels if "synthetic" in t.lower() or "your data" in t.lower()), "")
+            bb = dlg.findChildren(QDialogButtonBox)
+            info["buttons"] = [b.text() for b in bb[0].buttons()] if bb else []
+            if capture_name:
+                drv._grab_widget(dlg, capture_name, info["title"])
+            drv.wait()
+            dlg.hide()
+            return QDialog.Accepted if apply else QDialog.Rejected
+
+        QDialog.exec = _exec
+        mb = self._patch_messagebox()
+        try:
+            self.win.action_preview_preset()
+            self.pump(40)
+        finally:
+            QDialog.exec = orig
+            mb.restore()
+        info["status"] = self.win.preset_status.text()
+        self.log.check("preset preview opened", bool(info.get("title")), info.get("title", ""))
+        if apply:
+            self.log.check("preset applied from preview", info["status"].startswith("Applied"), info["status"][:120])
+        self.wait()
+        return info
+
     # ------------------------------------------------------------- utilities
     def _grab_widget(self, widget, name: str, note: str = "") -> str:
         self.pump(10)

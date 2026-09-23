@@ -7,7 +7,7 @@
   "mode": "offscreen",
   "status": "PASS",
   "error": "",
-  "seconds": 33.6,
+  "seconds": 26.7,
   "checks": [
     {
       "check": "data loaded",
@@ -131,6 +131,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export PDF",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/kaplan_meier/km.pdf"
     },
     {
@@ -138,6 +139,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export PNG",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/kaplan_meier/km.png"
     }
   ],
@@ -200,5 +202,5 @@
     ]
   },
   "notes": [],
-  "generated": "2026-09-22T19:59:46"
+  "generated": "2026-09-22T20:41:07"
 }

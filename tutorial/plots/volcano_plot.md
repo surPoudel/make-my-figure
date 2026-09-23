@@ -100,6 +100,15 @@ freezes the table too.
 
 **Export PNG** and **Export PDF** were used.
 
+## Before / after - the same 1,200 features
+
+| default (raw P axis, ten labels) | refined (adjusted P axis, 4 + 4 boxed labels, larger markers, neutral n.s.) |
+|---|---|
+| ![default](../showcase/2_volcano/A_default.png) | ![refined](../showcase/2_volcano/B_refined.png) |
+
+Up / down / n.s. counts differ between the two only because one uses raw P and the other the
+adjusted P for the cut-off; the values are the same table (`audit/showcase_data_integrity.csv`).
+
 ## Common mistakes
 
 * Mapping the adjusted P column to **p** without ticking *P column is FDR/adjusted*: the axis

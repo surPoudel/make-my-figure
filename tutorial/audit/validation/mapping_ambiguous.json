@@ -4,10 +4,10 @@
   "datasets": [
     "ambiguous_columns.csv"
   ],
-  "mode": "onscreen",
+  "mode": "offscreen",
   "status": "PASS",
   "error": "",
-  "seconds": 45.0,
+  "seconds": 34.7,
   "checks": [
     {
       "check": "data loaded",
@@ -37,91 +37,91 @@
     {
       "check": "export png",
       "ok": true,
-      "detail": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_outputs\\mapping_ambiguous\\ambiguous_scatter.png"
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/mapping_ambiguous/ambiguous_scatter.png"
     },
     {
       "check": "export svg",
       "ok": true,
-      "detail": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_outputs\\mapping_ambiguous\\ambiguous_scatter.svg"
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/mapping_ambiguous/ambiguous_scatter.svg"
     }
   ],
   "failed_checks": [],
   "captures": [
     {
       "name": "00_start_screen",
-      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\00_start_screen.png",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/mapping_ambiguous/00_start_screen.png",
       "widget": "window",
-      "size": "1516x963",
+      "size": "1680x1000",
       "note": "start screen before any data"
     },
     {
       "name": "01_open_data",
-      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\01_open_data.png",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/mapping_ambiguous/01_open_data.png",
       "widget": "window",
-      "size": "1516x963",
+      "size": "1680x1000",
       "note": "table loaded, no plot type chosen yet"
     },
     {
       "name": "01b_data_preview",
-      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\01b_data_preview.png",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/mapping_ambiguous/01b_data_preview.png",
       "widget": "data",
-      "size": "882x118",
+      "size": "1048x126",
       "note": "the Data preview tab"
     },
     {
       "name": "02_mapping_proposed",
-      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\02_mapping_proposed.png",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/mapping_ambiguous/02_mapping_proposed.png",
       "widget": "mapping",
-      "size": "566x96",
+      "size": "566x119",
       "note": "the roles the app proposed"
     },
     {
       "name": "02b_first_plot",
-      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\02b_first_plot.png",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/mapping_ambiguous/02b_first_plot.png",
       "widget": "window",
-      "size": "1516x963",
+      "size": "1680x1000",
       "note": "figure drawn from the proposal"
     },
     {
       "name": "03_mapping_corrected",
-      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\03_mapping_corrected.png",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/mapping_ambiguous/03_mapping_corrected.png",
       "widget": "mapping",
-      "size": "566x96",
+      "size": "566x119",
       "note": "y changed to score_final"
     },
     {
       "name": "03b_plot_after_correction",
-      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\03b_plot_after_correction.png",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/mapping_ambiguous/03b_plot_after_correction.png",
       "widget": "figure",
-      "size": "906x679",
+      "size": "1070x729",
       "note": "figure follows the new mapping"
     },
     {
       "name": "04_scatter_mapping",
-      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\04_scatter_mapping.png",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/mapping_ambiguous/04_scatter_mapping.png",
       "widget": "mapping",
-      "size": "566x160",
+      "size": "566x147",
       "note": "same table, different roles"
     },
     {
       "name": "04b_scatter_plot",
-      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\04b_scatter_plot.png",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/mapping_ambiguous/04b_scatter_plot.png",
       "widget": "window",
-      "size": "1516x963",
+      "size": "1680x1000",
       "note": "scatter with regression from the same file"
     },
     {
       "name": "05_bar_plot",
-      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\05_bar_plot.png",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/mapping_ambiguous/05_bar_plot.png",
       "widget": "window",
-      "size": "1516x963",
+      "size": "1680x1000",
       "note": "bar plot with error bars from the same file"
     },
     {
       "name": "06_final",
-      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\06_final.png",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/mapping_ambiguous/06_final.png",
       "widget": "figure",
-      "size": "906x679",
+      "size": "1070x729",
       "note": "final scatter"
     }
   ],
@@ -188,14 +188,16 @@
     },
     {
       "dialog": "file",
-      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_outputs\\mapping_ambiguous\\ambiguous_scatter.png"
+      "title": "Export PNG",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/mapping_ambiguous/ambiguous_scatter.png"
     },
     {
       "step": "Export SVG -> ambiguous_scatter.svg"
     },
     {
       "dialog": "file",
-      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_outputs\\mapping_ambiguous\\ambiguous_scatter.svg"
+      "title": "Export SVG",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/mapping_ambiguous/ambiguous_scatter.svg"
     }
   ],
   "facts": {
@@ -237,14 +239,34 @@
     ],
     "box_proposed_mapping": {
       "x": "condition_code",
-      "y": "measurement_2"
+      "y": "measurement_2",
+      "hue": "(none)"
     },
     "box_mapping_after_change": {
       "x": "condition_code",
       "y": "score_final",
-      "point_size": 8.0,
+      "hue": null,
       "kind": "box",
       "points": true,
+      "point_arrangement": "jitter",
+      "point_jitter_width": 0.35,
+      "point_size": 0.0,
+      "point_marker": "o",
+      "point_fill": "filled",
+      "point_edge": "dark",
+      "point_edge_width": 0.5,
+      "point_alpha": 0.0,
+      "box_width": 0.5,
+      "box_fill": "light",
+      "box_line_width": 0.0,
+      "median_line_width": 0.0,
+      "whisker_cap_width": 0.5,
+      "show_outliers": false,
+      "violin_alpha": 0.45,
+      "orientation": "vertical",
+      "group_spacing": 1.0,
+      "category_order": "data",
+      "show_n": "none",
       "x_tick_rotation": "auto"
     },
     "scatter_proposed_mapping": {
@@ -268,5 +290,5 @@
     "bar_proposed_error_option": "sem"
   },
   "notes": [],
-  "generated": "2026-09-22T19:55:10"
+  "generated": "2026-09-22T20:41:41"
 }

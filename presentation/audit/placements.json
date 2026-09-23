@@ -1,0 +1,641 @@
+[
+ {
+  "file": "tutorial/slides/_crops/table_excerpt.png",
+  "kind": "table",
+  "placed_width_in": 5.2,
+  "placed_height_in": 2.05,
+  "pixel_width": 1603,
+  "pixel_height": 632,
+  "dpi": 199.9996
+ },
+ {
+  "file": "tutorial/showcase/1_group_comparison/J4_black_edged_filled_pres.png",
+  "kind": "plot",
+  "placed_width_in": 5.1,
+  "placed_height_in": 4.03,
+  "pixel_width": 1058,
+  "pixel_height": 837,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/showcase/1_group_comparison/B_box_points_outline_preset_pres.png",
+  "kind": "plot",
+  "placed_width_in": 3.6,
+  "placed_height_in": 2.85,
+  "pixel_width": 1058,
+  "pixel_height": 837,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/showcase/1_group_comparison/C_violin_points_preset_pres.png",
+  "kind": "plot",
+  "placed_width_in": 3.6,
+  "placed_height_in": 2.85,
+  "pixel_width": 1058,
+  "pixel_height": 837,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/showcase/1_group_comparison/D_bar_points_jittered_preset_pres.png",
+  "kind": "plot",
+  "placed_width_in": 3.6,
+  "placed_height_in": 3.63,
+  "pixel_width": 1058,
+  "pixel_height": 1067,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/showcase/1_group_comparison/J1_small_narrow_jitter_pres.png",
+  "kind": "plot",
+  "placed_width_in": 3.41,
+  "placed_height_in": 2.7,
+  "pixel_width": 1058,
+  "pixel_height": 837,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/showcase/1_group_comparison/J2_large_moderate_jitter_pres.png",
+  "kind": "plot",
+  "placed_width_in": 3.41,
+  "placed_height_in": 2.7,
+  "pixel_width": 1058,
+  "pixel_height": 837,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/showcase/1_group_comparison/J3_open_circles_pres.png",
+  "kind": "plot",
+  "placed_width_in": 3.41,
+  "placed_height_in": 2.7,
+  "pixel_width": 1058,
+  "pixel_height": 837,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/showcase/1_group_comparison/J4_black_edged_filled_pres.png",
+  "kind": "plot",
+  "placed_width_in": 3.41,
+  "placed_height_in": 2.7,
+  "pixel_width": 1058,
+  "pixel_height": 837,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/showcase/1_group_comparison/J5_beeswarm_pres.png",
+  "kind": "plot",
+  "placed_width_in": 3.41,
+  "placed_height_in": 2.7,
+  "pixel_width": 1058,
+  "pixel_height": 837,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/showcase/1_group_comparison/J6_centered_no_jitter_pres.png",
+  "kind": "plot",
+  "placed_width_in": 3.41,
+  "placed_height_in": 2.7,
+  "pixel_width": 1058,
+  "pixel_height": 837,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/showcase/1_group_comparison/B_box_points_outline_preset_pres.png",
+  "kind": "plot",
+  "placed_width_in": 5.5,
+  "placed_height_in": 4.35,
+  "pixel_width": 1058,
+  "pixel_height": 837,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/slides/_crops/group_comparison_box_05_statistics_0_20_566.png",
+  "kind": "ui",
+  "placed_width_in": 5.4,
+  "placed_height_in": 4.77,
+  "pixel_width": 566,
+  "pixel_height": 500,
+  "dpi": 96.012
+ },
+ {
+  "file": "tutorial/slides/_crops/observations_jitter_09_preview_dialog_0_0_908.png",
+  "kind": "ui",
+  "placed_width_in": 10.85,
+  "placed_height_in": 4.9,
+  "pixel_width": 908,
+  "pixel_height": 410,
+  "dpi": 96.012
+ },
+ {
+  "file": "tutorial/slides/_crops/observations_jitter_09_preview_dialog_0_410_908.png",
+  "kind": "ui",
+  "placed_width_in": 11.0,
+  "placed_height_in": 2.76,
+  "pixel_width": 908,
+  "pixel_height": 228,
+  "dpi": 96.012
+ },
+ {
+  "file": "tutorial/showcase/2_volcano/A_default_pres.png",
+  "kind": "plot",
+  "placed_width_in": 5.4,
+  "placed_height_in": 3.31,
+  "pixel_width": 1617,
+  "pixel_height": 990,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/showcase/2_volcano/B_refined_pres.png",
+  "kind": "plot",
+  "placed_width_in": 5.4,
+  "placed_height_in": 3.14,
+  "pixel_width": 1699,
+  "pixel_height": 989,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/showcase/3_heatmap/A_basic_pres.png",
+  "kind": "plot",
+  "placed_width_in": 3.87,
+  "placed_height_in": 4.9,
+  "pixel_width": 1058,
+  "pixel_height": 1340,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/showcase/3_heatmap/B_refined_pres.png",
+  "kind": "plot",
+  "placed_width_in": 3.89,
+  "placed_height_in": 4.9,
+  "pixel_width": 1065,
+  "pixel_height": 1340,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/showcase/4_scatter/A_basic_pres.png",
+  "kind": "plot",
+  "placed_width_in": 5.4,
+  "placed_height_in": 4.13,
+  "pixel_width": 1057,
+  "pixel_height": 808,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/showcase/4_scatter/B_refined_pres.png",
+  "kind": "plot",
+  "placed_width_in": 5.4,
+  "placed_height_in": 3.51,
+  "pixel_width": 1337,
+  "pixel_height": 870,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/showcase/5_survival/A_default_pres.png",
+  "kind": "plot",
+  "placed_width_in": 5.4,
+  "placed_height_in": 4.24,
+  "pixel_width": 1058,
+  "pixel_height": 831,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/showcase/5_survival/B_refined_pres.png",
+  "kind": "plot",
+  "placed_width_in": 5.4,
+  "placed_height_in": 4.25,
+  "pixel_width": 1058,
+  "pixel_height": 832,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/slides/_crops/showcase_excerpt.png",
+  "kind": "table",
+  "placed_width_in": 3.55,
+  "placed_height_in": 2.3,
+  "pixel_width": 975,
+  "pixel_height": 632,
+  "dpi": 199.9996
+ },
+ {
+  "file": "tutorial/slides/_crops/observations_jitter_07b_options_after_0_0_566.png",
+  "kind": "ui",
+  "placed_width_in": 5.4,
+  "placed_height_in": 2.29,
+  "pixel_width": 566,
+  "pixel_height": 240,
+  "dpi": 96.012
+ },
+ {
+  "file": "tutorial/showcase/1_group_comparison/B_box_points_outline_preset_pres.png",
+  "kind": "plot",
+  "placed_width_in": 3.9,
+  "placed_height_in": 3.09,
+  "pixel_width": 1058,
+  "pixel_height": 837,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/slides/_crops/volcano_manual_mapping_04b_window_before_612_48_1680.png",
+  "kind": "ui",
+  "placed_width_in": 11.0,
+  "placed_height_in": 0.79,
+  "pixel_width": 1068,
+  "pixel_height": 77,
+  "dpi": 96.012
+ },
+ {
+  "file": "tutorial/screenshots/volcano_manual_mapping/04_mapping_renamed_before.png",
+  "kind": "ui",
+  "placed_width_in": 5.4,
+  "placed_height_in": 1.4,
+  "pixel_width": 566,
+  "pixel_height": 147,
+  "dpi": 96.012
+ },
+ {
+  "file": "tutorial/screenshots/volcano_manual_mapping/05_mapping_renamed_after.png",
+  "kind": "ui",
+  "placed_width_in": 5.4,
+  "placed_height_in": 1.4,
+  "pixel_width": 566,
+  "pixel_height": 147,
+  "dpi": 96.012
+ },
+ {
+  "file": "tutorial/showcase/2_volcano/B_refined_pres.png",
+  "kind": "plot",
+  "placed_width_in": 5.5,
+  "placed_height_in": 3.2,
+  "pixel_width": 1699,
+  "pixel_height": 989,
+  "dpi": 219.9894
+ },
+ {
+  "file": "tutorial/screenshots/figure_package/03_package_confirmation.png",
+  "kind": "ui",
+  "placed_width_in": 5.0,
+  "placed_height_in": 3.85,
+  "pixel_width": 400,
+  "pixel_height": 308,
+  "dpi": 96.012
+ },
+ {
+  "file": "tutorial/automation/_outputs/figure_builder/composite.png",
+  "kind": "plot",
+  "placed_width_in": 11.0,
+  "placed_height_in": 4.61,
+  "pixel_width": 1877,
+  "pixel_height": 787,
+  "dpi": 299.9994
+ },
+ {
+  "file": "tutorial/screenshots/gallery/barplot_with_error_bar.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 1.03,
+  "pixel_width": 360,
+  "pixel_height": 286,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/grouped_barplot_with_error_bar.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.85,
+  "pixel_width": 381,
+  "pixel_height": 250,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/heatmap_clustered_matrix.png",
+  "kind": "thumbnail",
+  "placed_width_in": 0.96,
+  "placed_height_in": 1.2,
+  "pixel_width": 361,
+  "pixel_height": 452,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/volcano_plot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 1.02,
+  "pixel_width": 395,
+  "pixel_height": 310,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/scatterplot_with_regression.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.87,
+  "pixel_width": 403,
+  "pixel_height": 270,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/boxplot_or_violin_with_points.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 1.03,
+  "pixel_width": 360,
+  "pixel_height": 286,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/lineplot_timecourse_with_error_band.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.9,
+  "pixel_width": 360,
+  "pixel_height": 249,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/ridge_or_density_plot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 1.17,
+  "pixel_width": 360,
+  "pixel_height": 323,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/histogram_distribution.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.72,
+  "pixel_width": 360,
+  "pixel_height": 199,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/enrichment_dotplot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 1.18,
+  "pixel_width": 348,
+  "pixel_height": 316,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/kaplan_meier_survival_curve.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 1.03,
+  "pixel_width": 360,
+  "pixel_height": 286,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/stacked_bar_composition.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.9,
+  "pixel_width": 360,
+  "pixel_height": 249,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/waterfall_plot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.77,
+  "pixel_width": 359,
+  "pixel_height": 212,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/pca_scatter_from_matrix.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 1.1,
+  "pixel_width": 360,
+  "pixel_height": 305,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/oncoprint_mutation_heatmap.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.9,
+  "pixel_width": 359,
+  "pixel_height": 249,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/lollipop_mutation_plot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.53,
+  "pixel_width": 412,
+  "pixel_height": 167,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/roc_curve.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.22,
+  "placed_height_in": 1.2,
+  "pixel_width": 367,
+  "pixel_height": 360,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/forest_plot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.9,
+  "pixel_width": 358,
+  "pixel_height": 249,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/dot_strip_plot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.93,
+  "pixel_width": 360,
+  "pixel_height": 257,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/beeswarm_plot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.93,
+  "pixel_width": 360,
+  "pixel_height": 257,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/paired_slopegraph.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 1.1,
+  "pixel_width": 360,
+  "pixel_height": 305,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/raincloud_plot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.93,
+  "pixel_width": 360,
+  "pixel_height": 257,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/hierarchical_dendrogram.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.87,
+  "pixel_width": 360,
+  "pixel_height": 242,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/ma_plot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.9,
+  "pixel_width": 369,
+  "pixel_height": 256,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/manhattan_plot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.64,
+  "pixel_width": 360,
+  "pixel_height": 176,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/qq_plot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 1.2,
+  "pixel_width": 360,
+  "pixel_height": 331,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/bland_altman_plot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.93,
+  "pixel_width": 360,
+  "pixel_height": 257,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/precision_recall_curve.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.22,
+  "placed_height_in": 1.2,
+  "pixel_width": 367,
+  "pixel_height": 360,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/confusion_matrix.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.2,
+  "placed_height_in": 1.2,
+  "pixel_width": 361,
+  "pixel_height": 360,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/calibration_plot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.23,
+  "placed_height_in": 1.2,
+  "pixel_width": 361,
+  "pixel_height": 353,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/dose_response_curve.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.92,
+  "pixel_width": 365,
+  "pixel_height": 257,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/upset_plot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 1.12,
+  "pixel_width": 466,
+  "pixel_height": 400,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/swimmer_plot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.14,
+  "placed_height_in": 1.2,
+  "pixel_width": 427,
+  "pixel_height": 448,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/spider_plot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.8,
+  "pixel_width": 410,
+  "pixel_height": 253,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/sankey_plot.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.83,
+  "pixel_width": 426,
+  "pixel_height": 273,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/embedding_scatter.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.73,
+  "pixel_width": 375,
+  "pixel_height": 210,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/hierarchical_clustering.png",
+  "kind": "thumbnail",
+  "placed_width_in": 0.93,
+  "placed_height_in": 1.2,
+  "pixel_width": 360,
+  "pixel_height": 466,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/network_graph.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 1.08,
+  "pixel_width": 342,
+  "pixel_height": 285,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/chord_diagram.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.08,
+  "placed_height_in": 1.2,
+  "pixel_width": 368,
+  "pixel_height": 409,
+  "dpi": 72.009
+ }
+]

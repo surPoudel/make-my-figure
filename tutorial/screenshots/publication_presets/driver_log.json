@@ -1,0 +1,206 @@
+{
+  "captures": [
+    {
+      "name": "01_before_preset",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/01_before_preset.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "before any preset"
+    },
+    {
+      "name": "02_preset_panel_default",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/02_preset_panel_default.png",
+      "widget": "preset",
+      "size": "566x164",
+      "note": "Figure preset panel, experimental presets hidden"
+    },
+    {
+      "name": "03_preset_panel_experimental",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/03_preset_panel_experimental.png",
+      "widget": "preset",
+      "size": "566x164",
+      "note": "after ticking Show experimental presets"
+    },
+    {
+      "name": "04_preview_dialog_violin",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/04_preview_dialog_violin.png",
+      "widget": "QDialog",
+      "size": "908x635",
+      "note": "Preview preset: Violin + observations"
+    },
+    {
+      "name": "05_after_violin_preset",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/05_after_violin_preset.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "Violin + observations applied"
+    },
+    {
+      "name": "06_preview_dialog_89mm",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/06_preview_dialog_89mm.png",
+      "widget": "QDialog",
+      "size": "849x635",
+      "note": "Preview preset: Single column 89 mm (N)"
+    },
+    {
+      "name": "07_after_89mm_preset",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/07_after_89mm_preset.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "Single column 89 mm (N) applied"
+    },
+    {
+      "name": "08_adjusted_after_presets",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/08_adjusted_after_presets.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "open circles after the presets"
+    },
+    {
+      "name": "09_final_window",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/publication_presets/09_final_window.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": ""
+    }
+  ],
+  "checks": [
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "showcase_group_comparison.csv"
+    },
+    {
+      "check": "statistics ran",
+      "ok": true,
+      "detail": "6 comparison row(s)"
+    },
+    {
+      "check": "experimental presets listed",
+      "ok": true,
+      "detail": "11 entries"
+    },
+    {
+      "check": "preset preview opened",
+      "ok": true,
+      "detail": "Preview preset: Violin + observations"
+    },
+    {
+      "check": "preset preview opened",
+      "ok": true,
+      "detail": "Preview preset: Violin + observations"
+    },
+    {
+      "check": "preset applied from preview",
+      "ok": true,
+      "detail": "Applied preset \u201cViolin + observations\u201d after preview: 10 setting(s)."
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "preset preview opened",
+      "ok": true,
+      "detail": "Preview preset: Single column 89 mm (N)"
+    },
+    {
+      "check": "preset applied from preview",
+      "ok": true,
+      "detail": "Applied preset \u201cSingle column 89 mm (N)\u201d after preview: 38 setting(s)."
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "export pdf",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/publication_presets/preset_final.pdf"
+    },
+    {
+      "check": "export png",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/publication_presets/preset_final.png"
+    }
+  ],
+  "steps": [
+    {
+      "step": "Open data file: showcase_group_comparison.csv"
+    },
+    {
+      "step": "Plot type: Box / violin plot with points"
+    },
+    {
+      "step": "Map columns: x <- group"
+    },
+    {
+      "step": "Map columns: y <- cytokine_pg_ml"
+    },
+    {
+      "step": "Labels & size: x='', y='Cytokine (pg/ml)'"
+    },
+    {
+      "step": "Statistics: test=welch_t, comparison=all_pairs, group=group, correction=holm, annotation=p"
+    },
+    {
+      "step": "Run statistics"
+    },
+    {
+      "step": "Figure preset: Show experimental presets = True"
+    },
+    {
+      "step": "Figure preset: Preview & apply... for 'Violin + observations' -> Cancel"
+    },
+    {
+      "step": "Figure preset: Preview & apply... for 'Violin + observations' -> Apply"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Figure preset: Preview & apply... for 'Single column 89 mm (N)' -> Apply"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_size = 30"
+    },
+    {
+      "step": "Options: point_fill = open"
+    },
+    {
+      "step": "Options: point_edge = same"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Labels & size: y='Cytokine (pg/ml)'"
+    },
+    {
+      "step": "Export PDF -> preset_final.pdf"
+    },
+    {
+      "dialog": "file",
+      "title": "Export PDF",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/publication_presets/preset_final.pdf"
+    },
+    {
+      "step": "Export PNG -> preset_final.png"
+    },
+    {
+      "dialog": "file",
+      "title": "Export PNG",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/publication_presets/preset_final.png"
+    }
+  ]
+}

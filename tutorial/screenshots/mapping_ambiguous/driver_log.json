@@ -25,7 +25,7 @@
       "name": "02_mapping_proposed",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/mapping_ambiguous/02_mapping_proposed.png",
       "widget": "mapping",
-      "size": "566x91",
+      "size": "566x119",
       "note": "the roles the app proposed"
     },
     {
@@ -39,7 +39,7 @@
       "name": "03_mapping_corrected",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/mapping_ambiguous/03_mapping_corrected.png",
       "widget": "mapping",
-      "size": "566x91",
+      "size": "566x119",
       "note": "y changed to score_final"
     },
     {
@@ -178,6 +178,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export PNG",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/mapping_ambiguous/ambiguous_scatter.png"
     },
     {
@@ -185,6 +186,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export SVG",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/mapping_ambiguous/ambiguous_scatter.svg"
     }
   ]

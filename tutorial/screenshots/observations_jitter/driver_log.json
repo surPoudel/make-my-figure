@@ -1,0 +1,365 @@
+{
+  "captures": [
+    {
+      "name": "01_defaults_options",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/01_defaults_options.png",
+      "widget": "options",
+      "size": "566x647",
+      "note": "3. Options as first shown"
+    },
+    {
+      "name": "01b_defaults_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/01b_defaults_plot.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "default rendering: box, adaptive points"
+    },
+    {
+      "name": "02_points_off",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/02_points_off.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "Show individual observations off"
+    },
+    {
+      "name": "03_jitter_narrow",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/03_jitter_narrow.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "Jitter width 0.10"
+    },
+    {
+      "name": "03b_jitter_default",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/03b_jitter_default.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "Jitter width 0.35"
+    },
+    {
+      "name": "04_point_size_60",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/04_point_size_60.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "Point size 60 pt2"
+    },
+    {
+      "name": "05_open_circles",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/05_open_circles.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "open circles, edge in the group colour"
+    },
+    {
+      "name": "05b_filled_dark_edge",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/05b_filled_dark_edge.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "filled, dark edge"
+    },
+    {
+      "name": "06_beeswarm",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/06_beeswarm.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "beeswarm arrangement"
+    },
+    {
+      "name": "07_box_outline_n_labels",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/07_box_outline_n_labels.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "outline boxes, n below each group"
+    },
+    {
+      "name": "07b_options_after",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/07b_options_after.png",
+      "widget": "options",
+      "size": "566x647",
+      "note": "3. Options after the changes"
+    },
+    {
+      "name": "08_statistics_brackets",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/08_statistics_brackets.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "Welch all pairs, Holm, exact P"
+    },
+    {
+      "name": "08b_statistics_panel",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/08b_statistics_panel.png",
+      "widget": "stats",
+      "size": "566x847",
+      "note": ""
+    },
+    {
+      "name": "09_preview_dialog",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/09_preview_dialog.png",
+      "widget": "QDialog",
+      "size": "908x638",
+      "note": "Preview preset: Box + observations (outline)"
+    },
+    {
+      "name": "10_after_preset",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/10_after_preset.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "after the preset"
+    },
+    {
+      "name": "11_adjusted_after_preset",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/11_adjusted_after_preset.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "point size and jitter changed after the preset"
+    },
+    {
+      "name": "12_final",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/observations_jitter/12_final.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "final state"
+    }
+  ],
+  "checks": [
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "showcase_group_comparison.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "statistics ran",
+      "ok": true,
+      "detail": "6 comparison row(s)"
+    },
+    {
+      "check": "experimental presets listed",
+      "ok": true,
+      "detail": "11 entries"
+    },
+    {
+      "check": "preset preview opened",
+      "ok": true,
+      "detail": "Preview preset: Box + observations (outline)"
+    },
+    {
+      "check": "preset applied from preview",
+      "ok": true,
+      "detail": "Applied preset \u201cBox + observations (outline)\u201d after preview: 12 setting(s)."
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "export pdf",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/observations_jitter/observations.pdf"
+    },
+    {
+      "check": "export svg",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/observations_jitter/observations.svg"
+    },
+    {
+      "check": "export png",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/observations_jitter/observations.png"
+    }
+  ],
+  "steps": [
+    {
+      "step": "Open data file: showcase_group_comparison.csv"
+    },
+    {
+      "step": "Plot type: Box / violin plot with points"
+    },
+    {
+      "step": "Map columns: x <- group"
+    },
+    {
+      "step": "Map columns: y <- cytokine_pg_ml"
+    },
+    {
+      "step": "Labels & size: x='', y='Cytokine (pg/ml)'"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: points = False"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: points = True"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_jitter_width = 0.1"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_jitter_width = 0.35"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_size = 60"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_fill = open"
+    },
+    {
+      "step": "Options: point_edge = same"
+    },
+    {
+      "step": "Options: point_edge_width = 1.2"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_fill = filled"
+    },
+    {
+      "step": "Options: point_edge = dark"
+    },
+    {
+      "step": "Options: point_edge_width = 1.0"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_arrangement = beeswarm"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_arrangement = jitter"
+    },
+    {
+      "step": "Options: box_fill = outline"
+    },
+    {
+      "step": "Options: show_n = below"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Statistics: test=welch_t, comparison=all_pairs, group=group, correction=holm, annotation=p"
+    },
+    {
+      "step": "Run statistics"
+    },
+    {
+      "step": "Figure preset: Show experimental presets = True"
+    },
+    {
+      "step": "Figure preset: Preview & apply... for 'Box + observations (outline)' -> Apply"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_size = 40"
+    },
+    {
+      "step": "Options: point_jitter_width = 0.25"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Export PDF -> observations.pdf"
+    },
+    {
+      "dialog": "file",
+      "title": "Export PDF",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/observations_jitter/observations.pdf"
+    },
+    {
+      "step": "Export SVG -> observations.svg"
+    },
+    {
+      "dialog": "file",
+      "title": "Export SVG",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/observations_jitter/observations.svg"
+    },
+    {
+      "step": "Export PNG -> observations.png"
+    },
+    {
+      "dialog": "file",
+      "title": "Export PNG",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/observations_jitter/observations.png"
+    }
+  ]
+}

@@ -121,6 +121,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export PDF",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/kaplan_meier/km.pdf"
     },
     {
@@ -128,6 +129,7 @@
     },
     {
       "dialog": "file",
+      "title": "Export PNG",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/kaplan_meier/km.png"
     }
   ]

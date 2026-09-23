@@ -1,0 +1,17 @@
+slide,purpose,classification,problem,fix,plot_readability,text_readability,scientific_accuracy,visual_impact
+1,title,KEEP,none,none,n/a,good,good,good
+2,motivate the problem,REDESIGN,two miniature pictures compete with five bullets; scatter axis text unreadable,one large before/after visual (raw table excerpt -> figure) with one line,weak,good,good,weak
+3,what the application is,SPLIT,seven bullets plus two shrunk full-window screenshots,text-only capability slide + separate large workspace slide,weak,good,good,weak
+4,design principle,KEEP,none,none,n/a,good,good,good
+5,demo 1 - table with unhelpful names,REDESIGN,full window at 7.2 in is unreadable,5-8 row table excerpt + enlarged recommendation card + mapping rows,n/a,good,good,weak
+6,demo 1 - correction and second plot,REDESIGN,box plot text 8 px; scatter 2.3 in tall,two large exported plots (presentation typography) side by side; mapping crop inset,weak,good,good,adequate
+7,demo 2 - volcano manual mapping,SPLIT,two full windows at 5.5 in,(a) the (none) state with the Messages text enlarged; (b) default vs refined volcano large,weak,good,good,adequate
+8,statistics on the figure,MINOR FIX,plot 5.6 in with 9 px P labels; four bullets,plot at 7 in with presentation fonts; panel crop of settings + table; two bullets,adequate,good,good,adequate
+9,figure presets,REDESIGN,two full windows; only user presets shown,same data default vs publication preset large; second slide Preview & apply,weak,good,good,weak
+10,reproducibility,REDESIGN,full window 7.4 in unreadable,confirmation dialog large + package member list; drop the window,weak,good,good,adequate
+11,figure builder,MINOR FIX,composite panel text 6 px,exported composite large; dialog crop as inset,weak,good,good,adequate
+12,tutorial system,SPLIT,six dense bullets under the flow diagram,flow diagram + one line; details moved to a second slide,n/a,adequate,good,adequate
+13,pilot validation table,KEEP,none,none,n/a,good,good,good
+14,39 plot types mosaic,KEEP,thumbnails unreadable by design (texture slide),caption states they are thumbnails,n/a,good,good,good
+15,roadmap,KEEP,none,none,n/a,good,good,good
+16,summary,KEEP,none,none,n/a,good,good,good

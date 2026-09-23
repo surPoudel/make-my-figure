@@ -22,10 +22,11 @@ figures - the data do not belong to one plot.
 | 2 | [01_Data_and_Column_Mapping/your_table_does_not_need_perfect_column_names.md](01_Data_and_Column_Mapping/your_table_does_not_need_perfect_column_names.md) | the mapping master tutorial |
 | 3 | [01_Data_and_Column_Mapping/reshaping_and_derived_columns.md](01_Data_and_Column_Mapping/reshaping_and_derived_columns.md) | what the app can restructure for you |
 | 4 | [PLOT_GALLERY.md](PLOT_GALLERY.md) | pick a plot, follow its tutorial |
-| 5 | [06_Statistics/statistics.md](06_Statistics/statistics.md), [09_Styling_and_Annotations/styling.md](09_Styling_and_Annotations/styling.md) | tests on the figure, appearance |
-| 6 | [10_Figure_Presets/figure_presets.md](10_Figure_Presets/figure_presets.md), [11_Reproducibility/plotspec_and_figure_package.md](11_Reproducibility/plotspec_and_figure_package.md) | reuse a look; reproduce a figure |
-| 7 | [12_Figure_Builder/figure_builder.md](12_Figure_Builder/figure_builder.md), [13_Export/export.md](13_Export/export.md) | composite figures, files for the journal |
-| 8 | [14_Complete_Workflows/from_data_to_publication_figure.md](14_Complete_Workflows/from_data_to_publication_figure.md) | the whole path in one sitting (master video) |
+| 5 | [03_Group_Comparisons/showing_individual_observations_and_jitter.md](03_Group_Comparisons/showing_individual_observations_and_jitter.md) | summary + every observation: size, jitter, markers, statistics |
+| 6 | [06_Statistics/statistics.md](06_Statistics/statistics.md), [09_Styling_and_Annotations/styling.md](09_Styling_and_Annotations/styling.md) | tests on the figure, appearance |
+| 7 | [10_Figure_Presets/publication_presets.md](10_Figure_Presets/publication_presets.md), [10_Figure_Presets/figure_presets.md](10_Figure_Presets/figure_presets.md), [11_Reproducibility/plotspec_and_figure_package.md](11_Reproducibility/plotspec_and_figure_package.md) | publication presets with preview; your own presets; reproduce a figure |
+| 8 | [12_Figure_Builder/figure_builder.md](12_Figure_Builder/figure_builder.md), [13_Export/export.md](13_Export/export.md) | composite figures, files for the journal |
+| 9 | [14_Complete_Workflows/from_data_to_publication_figure.md](14_Complete_Workflows/from_data_to_publication_figure.md) | the whole path in one sitting (master video) |
 
 ## Folders
 
@@ -37,11 +38,17 @@ figures - the data do not belong to one plot.
 | `screenshots/<tutorial_id>/` | real captures produced by `automation/run_tutorial.py` |
 | `video_scripts/` | timed scripts (screen, action, narration) for each video |
 | `videos/` | recording guide, link mapping (`video_links.json`), raw/final videos (not committed) |
+| `showcase/` | same-data / different-presentation renders (five showcases, `build_showcase.py`), presets used |
 | `automation/` | the driver that operates the real application, action scripts, gallery / inventory / manifest / HTML builders, validation |
 | `audit/` | plot inventory, validation records, screenshot and video checklists |
 | `html/` | browsable copy (`automation/build_html.py`) |
 
 ## Status
+
+Visual review (2026-09-23): the pilot was re-evaluated as a visual demonstration
+(`audit/TUTORIAL_VISUAL_REVIEW.md`, `../presentation/audit/SLIDE_VISUAL_REVIEW.md`); the tutorial
+branch now includes the presets branch so that individual observations, jitter and the experimental
+publication presets can be shown from the real application (`audit/MISSING_SHOWCASE_CAPABILITIES.md`).
 
 Pilot: nine tutorials (scatter / regression, box-violin with statistics, volcano with manual
 mapping, clustered heatmap, Kaplan-Meier, the ambiguous-columns mapping tutorial, figure presets,

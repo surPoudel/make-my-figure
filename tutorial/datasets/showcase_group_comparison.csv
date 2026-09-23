@@ -1,0 +1,41 @@
+animal_id,group,sex,cytokine_pg_ml
+M001,Control,F,13.17
+M002,Control,F,8.53
+M003,Control,M,18.08
+M004,Control,F,10.4
+M005,Control,F,12.2
+M006,Control,F,14.6
+M007,Control,M,12.39
+M008,Treatment A,F,15.28
+M009,Treatment A,F,19.3
+M010,Treatment A,M,18.59
+M011,Treatment A,M,17.76
+M012,Treatment A,F,13.76
+M013,Treatment A,F,17.05
+M014,Treatment A,M,16.19
+M015,Treatment A,F,14.56
+M016,Treatment A,M,14.94
+M017,Treatment B,F,18.16
+M018,Treatment B,M,17.78
+M019,Treatment B,F,21.78
+M020,Treatment B,M,21.38
+M021,Treatment B,M,22.07
+M022,Treatment B,F,23.43
+M023,Treatment B,M,26.06
+M024,Treatment B,M,19.5
+M025,Treatment B,F,20.07
+M026,Treatment B,F,21.83
+M027,Treatment B,M,23.49
+M028,Treatment C,F,16.87
+M029,Treatment C,M,16.42
+M030,Treatment C,M,7.37
+M031,Treatment C,F,15.27
+M032,Treatment C,M,13.09
+M033,Treatment C,F,11.07
+M034,Treatment C,M,8.31
+M035,Treatment C,M,12.13
+M036,Treatment C,M,12.1
+M037,Treatment C,F,9.59
+M038,Treatment C,F,14.25
+M039,Treatment C,F,20.29
+M040,Treatment C,M,10.03
