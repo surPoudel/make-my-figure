@@ -42,7 +42,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     # Optional ordering of samples by a grouping column.
     if sort_by and sort_by in work.columns:
         order_key = work.drop_duplicates(subset=[x]).set_index(x)[sort_by]
-        pivot = pivot.loc[order_key.sort_values().index]
+        pivot = pivot.loc[order_key.sort_values(kind="stable").index]
 
     components = list(pivot.columns)
     samples = [str(s) for s in pivot.index]

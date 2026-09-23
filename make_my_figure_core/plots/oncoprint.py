@@ -36,7 +36,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     # or keep the input order (``order: "input"``), which suits categorical status
     # matrices where the row/column order carries meaning.
     order_mode = str(get_mapping(spec, "order", "frequency")).lower()
-    gene_freq = work.groupby(gene_col)[sample_col].nunique().sort_values(ascending=False)
+    gene_freq = work.groupby(gene_col)[sample_col].nunique().sort_values(ascending=False, kind="stable")
     if order_mode == "input":
         genes: List[str] = list(dict.fromkeys(work[gene_col].tolist()))
     else:

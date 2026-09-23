@@ -15,7 +15,8 @@ COLUMN_FIELDS: Dict[str, List[str]] = {
     "heatmap_clustered_matrix": ["row_id"],
     "volcano_plot": ["x", "p", "label", "id_col"],
     "scatterplot_with_regression": ["x", "y", "color", "label"],
-    "boxplot_or_violin_with_points": ["x", "y"],
+    # "hue" is an optional second grouping: dodged boxes/violins per hue level within each x category.
+    "boxplot_or_violin_with_points": ["x", "y", "hue"],
     "lineplot_timecourse_with_error_band": ["x", "y", "color", "style_by"],
     "ridge_or_density_plot": ["x", "group"],
     # "x"/"group" is the long form; "value_columns" is the wide form (one column per group).
@@ -120,12 +121,83 @@ _HEATMAP_COLORMAP = Option(
 _Y_LABEL_ROTATION = Option("y_label_rotation", "Y-label angle", "choice", "vertical",
                            ["vertical", "horizontal"], scope="style")
 
+def _observation_options() -> List[Option]:
+    """The shared ``points`` / ``point_*`` controls (``plots/observations.py``); imported lazily
+    because that module needs ``Option`` from here."""
+    from make_my_figure_core.plots.observations import observation_options
+    return observation_options()
+
+
+def _point_options_for(arrangement: str, jitter_width: float) -> List[Option]:
+    """The shared ``point_*`` controls for a plot that always shows its observations (no ``points``
+    toggle), with that renderer's legacy arrangement and spread as defaults. Unset size / opacity
+    follow the style profile's marker tokens in these renderers, so the labels say so."""
+    from dataclasses import replace
+
+    out: List[Option] = []
+    for opt in _observation_options():
+        if opt.key == "points":
+            continue
+        if opt.key == "point_arrangement":
+            opt = replace(opt, default=arrangement)
+        elif opt.key == "point_jitter_width":
+            opt = replace(opt, default=jitter_width)
+        elif opt.key == "point_size":
+            opt = replace(opt, label="Point size (pt²; 0 = profile marker size)")
+        elif opt.key == "point_alpha":
+            opt = replace(opt, label="Point opacity (0 = profile marker opacity)")
+        out.append(opt)
+    return out
+
+
 # Extra (non-column) options per plot type.
 OPTIONS: Dict[str, List[Option]] = {
-    "barplot_with_error_bar": [Option("error", "Error bar", "choice", "sem", _ERROR_CHOICES, scope="style"),
-                               _X_TICK_ROTATION],
-    "grouped_barplot_with_error_bar": [Option("error", "Error bar", "choice", "sem", _ERROR_CHOICES, scope="style"),
-                                       _X_TICK_ROTATION],
+    # Bars: the summary (mean/median) and the whisker (sem/sd/ci95/ci95_t/iqr/none) decide what is
+    # computed, so they are config; everything else is appearance. ``ci95`` keeps its historical
+    # normal approximation (1.96 x SEM); ``ci95_t`` is the t-based interval. Defaults reproduce the
+    # pre-existing render (mean, SEM, no points, filled, vertical).
+    "barplot_with_error_bar": [
+        Option("summary", "Bar height (summary statistic)", "choice", "mean", ["mean", "median"],
+               scope="config"),
+        Option("error", "Error bar", "choice", "sem", ["sem", "sd", "ci95", "ci95_t", "iqr", "none"],
+               scope="config"),
+        Option("points", "Show individual observations", "bool", False, scope="style"),
+        *[o for o in _observation_options() if o.key != "points"],
+        Option("bar_width", "Bar width (fraction of spacing)", "number", 0.68, minimum=0.3, maximum=0.9,
+               step=0.02, decimals=2, scope="style"),
+        Option("bar_fill", "Bar fill", "choice", "filled", ["filled", "outline"], scope="style"),
+        Option("bar_edge_width", "Bar edge width (pt; 0 = profile)", "number", 0.0, minimum=0.0,
+               maximum=3.0, step=0.1, decimals=2, scope="style"),
+        Option("bar_alpha", "Bar opacity", "number", 1.0, minimum=0.1, maximum=1.0, step=0.05,
+               decimals=2, scope="style"),
+        Option("error_cap", "Error bar caps", "bool", True, scope="style"),
+        Option("show_n", "Sample-size labels", "choice", "none", ["none", "below", "above", "legend"],
+               scope="style"),
+        Option("orientation", "Orientation", "choice", "vertical", ["vertical", "horizontal"],
+               scope="style"),
+        _X_TICK_ROTATION,
+    ],
+    "grouped_barplot_with_error_bar": [
+        Option("summary", "Bar height (summary statistic)", "choice", "mean", ["mean", "median"],
+               scope="config"),
+        Option("error", "Error bar", "choice", "sem", ["sem", "sd", "ci95", "ci95_t", "iqr", "none"],
+               scope="config"),
+        Option("points", "Show individual observations", "bool", False, scope="style"),
+        *[o for o in _observation_options() if o.key != "points"],
+        Option("bar_width", "Cluster width (fraction of spacing)", "number", 0.8, minimum=0.3,
+               maximum=0.9, step=0.02, decimals=2, scope="style"),
+        Option("bar_fill", "Bar fill", "choice", "filled", ["filled", "outline"], scope="style"),
+        Option("bar_edge_width", "Bar edge width (pt; 0 = profile)", "number", 0.0, minimum=0.0,
+               maximum=3.0, step=0.1, decimals=2, scope="style"),
+        Option("bar_alpha", "Bar opacity", "number", 1.0, minimum=0.1, maximum=1.0, step=0.05,
+               decimals=2, scope="style"),
+        Option("error_cap", "Error bar caps", "bool", True, scope="style"),
+        Option("show_n", "Sample-size labels", "choice", "none", ["none", "below", "above", "legend"],
+               scope="style"),
+        Option("orientation", "Orientation", "choice", "vertical", ["vertical", "horizontal"],
+               scope="style"),
+        _X_TICK_ROTATION,
+    ],
     "heatmap_clustered_matrix": [
         Option("cluster_rows", "Cluster rows", "bool", True),
         Option("cluster_columns", "Cluster columns", "bool", True),
@@ -199,9 +271,31 @@ OPTIONS: Dict[str, List[Option]] = {
                ["lower right", "lower left", "upper right", "upper left"], scope="style"),
     ],
     "boxplot_or_violin_with_points": [
-        Option("point_size", "Point size (pt²)", "number", 8.0, minimum=1.0, maximum=80.0, step=1.0, scope="style"),
-        Option("kind", "Kind", "choice", "box", ["box", "violin"], scope="style"),
-        Option("points", "Overlay points", "bool", True, scope="style"),
+        Option("kind", "Kind", "choice", "box", ["box", "violin", "box+violin", "summary"], scope="style"),
+        # Shared observation controls: ``points`` (legacy toggle), ``point_arrangement``,
+        # ``point_jitter_width``, ``point_size`` (0 = adaptive; a legacy explicit size is honoured
+        # exactly), ``point_marker``, ``point_fill``, ``point_edge``, ``point_edge_width``, ``point_alpha``.
+        *_observation_options(),
+        Option("box_width", "Box / violin width (fraction of spacing)", "number", 0.5,
+               minimum=0.2, maximum=0.9, step=0.05, decimals=2, scope="style"),
+        Option("box_fill", "Box fill", "choice", "light", ["light", "filled", "outline"], scope="style"),
+        Option("box_line_width", "Box line width (pt; 0 = style)", "number", 0.0,
+               minimum=0.0, maximum=4.0, step=0.1, decimals=2, scope="style"),
+        Option("median_line_width", "Median line width (pt; 0 = style)", "number", 0.0,
+               minimum=0.0, maximum=5.0, step=0.1, decimals=2, scope="style"),
+        Option("whisker_cap_width", "Whisker cap width (fraction of box width)", "number", 0.5,
+               minimum=0.0, maximum=1.0, step=0.05, decimals=2, scope="style"),
+        # Unset = legacy coupling (outliers only when points are hidden); set = independent.
+        Option("show_outliers", "Show outlier markers", "bool", False, scope="style"),
+        Option("violin_alpha", "Violin opacity", "number", 0.45, minimum=0.05, maximum=1.0,
+               step=0.05, decimals=2, scope="style"),
+        Option("orientation", "Orientation", "choice", "vertical", ["vertical", "horizontal"], scope="style"),
+        Option("group_spacing", "Group spacing (x 1.0)", "number", 1.0, minimum=0.5, maximum=2.0,
+               step=0.1, decimals=2, scope="style"),
+        Option("category_order", "Category order", "choice", "data",
+               ["data", "alphabetical", "median_ascending", "median_descending"], scope="config"),
+        Option("show_n", "Sample-size labels", "choice", "none", ["none", "below", "above", "legend"],
+               scope="style"),
         _X_TICK_ROTATION,
     ],
     "lineplot_timecourse_with_error_band": [Option("error", "Error band", "choice", "sem", _BAND_CHOICES, scope="style")],
@@ -287,17 +381,21 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("log_scale", "Log x-axis", "bool", True, scope="style"),
     ],
     # --- v0.4 manuscript plot types ---
+    # The point plots always show every observation, so they carry the shared ``point_*`` controls
+    # without the ``points`` toggle; defaults are each renderer's legacy geometry, so a preset that
+    # leaves them unset renders as before. Statistics come from spec["statistics"] (off by default).
     "dot_strip_plot": [
         Option("summary", "Summary overlay", "choice", "mean", ["none", "mean", "median", "ci", "sd", "sem"], scope="style"),
         Option("jitter", "Jitter points", "bool", True, scope="style"),
+        *_point_options_for("jitter", 0.36),
         _X_TICK_ROTATION,
     ],
     "beeswarm_plot": [
         Option("summary", "Summary overlay", "choice", "mean", ["none", "mean", "median", "ci", "sd", "sem"], scope="style"),
+        *_point_options_for("beeswarm", 0.64),
         _X_TICK_ROTATION,
     ],
-    "paired_slopegraph": [],
-    "raincloud_plot": [_X_TICK_ROTATION],
+    "raincloud_plot": [_X_TICK_ROTATION, *_point_options_for("jitter", 0.14)],
     "hierarchical_dendrogram": [
         Option("method", "Linkage method", "choice", "average", ["average", "complete", "single", "ward"]),
         Option("cluster", "Cluster", "choice", "rows", ["rows", "columns"]),

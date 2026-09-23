@@ -87,7 +87,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         else:
             work[pred_col] = coerce_numeric(work, pred_col, context=PLOT_TYPE)
             work[obs_col] = coerce_numeric(work, obs_col, context=PLOT_TYPE)
-            sub = work[[pred_col, obs_col]].dropna().sort_values(pred_col)
+            sub = work[[pred_col, obs_col]].dropna().sort_values(pred_col, kind="stable")
             mp = sub[pred_col].to_numpy(float); ob = sub[obs_col].to_numpy(float)
             ax.plot(mp, ob, color=style.color_for(0), lw=style.line_width_pt, zorder=2)
             ax.scatter(mp, ob, s=style.marker_size, color=style.color_for(0), edgecolors="white",

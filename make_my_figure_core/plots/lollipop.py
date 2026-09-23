@@ -44,7 +44,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     work = df.copy()
     work[x] = coerce_numeric(work, x, context=PLOT_TYPE)
     work[y] = coerce_numeric(work, y, context=PLOT_TYPE)
-    work = work.dropna(subset=[x, y]).sort_values(x)
+    work = work.dropna(subset=[x, y]).sort_values(x, kind="stable")
 
     if color_by and color_by in work.columns:
         types = list(dict.fromkeys(work[color_by].astype(str).tolist()))
@@ -78,7 +78,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if show_labels and label_col and label_col in work.columns and label_top_n > 0:
             import matplotlib.patheffects as pe
 
-            top = work.sort_values(y, ascending=False).head(label_top_n)
+            top = work.sort_values(y, ascending=False, kind="stable").head(label_top_n)
             label_fs = float(get_mapping(spec, "label_font_size", 0) or 0) or max(7, style.axis_font_pt - 1)
             # Per-label manual offsets (points): a listed label is placed at its offset
             # with a leader line to its marker; the rest auto-repel. Movement of one

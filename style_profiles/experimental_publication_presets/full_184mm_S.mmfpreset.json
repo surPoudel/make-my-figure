@@ -1,0 +1,253 @@
+{
+  "format": "make_my_figure.figure_preset",
+  "format_version": 1,
+  "name": "Full width 184 mm (S)",
+  "description": "Style measured from open-access research figures in evidence set S and the publisher's stated artwork requirements, at the stated full-page width of 184 mm. Changes typography, line weights, palette, legend and axis geometry only. Not an official template.",
+  "mode": "style",
+  "plot_type": "boxplot_or_violin_with_points",
+  "journal_style": "publication",
+  "created": "2026-09-16T16:58:27+00:00",
+  "app_version": "1.1.0",
+  "style": {
+    "show_top_spine": false,
+    "show_right_spine": false,
+    "tick_direction": "out",
+    "grid": false,
+    "legend_frameon": false,
+    "font_weight": "normal",
+    "palette_name": "publication",
+    "text_color": "#000000",
+    "tick_label_pt": 6.5,
+    "axis_font_pt": 7.5,
+    "legend_pt": 6.5,
+    "annotation_pt": 6.5,
+    "legend_title_pt": 7.5,
+    "title_font_pt": 7.5,
+    "base_font_pt": 6.5,
+    "panel_label_pt": 10.0,
+    "font_family": "Helvetica",
+    "spine_width_pt": 0.5,
+    "line_width_pt": 0.75,
+    "tick_width": 0.5,
+    "tick_length": 2.5,
+    "errorbar_line_width": 0.5,
+    "bar_edge_width": 0.5,
+    "marker_edge_width": 0.4,
+    "regression_line_width": 0.75,
+    "grid_width": 0.4,
+    "marker_size": 20.0,
+    "marker_alpha": 0.9,
+    "errorbar_capsize": 1.5,
+    "legend_loc": "best",
+    "legend_outside": false,
+    "legend_ncol": 1
+  },
+  "layout": {
+    "column_width": "184mm",
+    "legend_location": "best"
+  },
+  "options": {},
+  "output": {
+    "formats": [
+      "pdf",
+      "svg",
+      "png"
+    ],
+    "width_mm": 184.0,
+    "dpi": 300
+  },
+  "statistics_display": {
+    "annotation": {
+      "font_size": 6.5,
+      "line_width": 0.5
+    }
+  },
+  "universal": true,
+  "experimental": {
+    "preset_id": "full_184mm_S",
+    "status": "experimental",
+    "evidence_family": "evidence set S",
+    "evidence_family_journals": "Science-family journals (see corpus_manifest_expanded.csv)",
+    "evidence_summary": "50 open-access papers; visual review of panels plus typeset-PDF measurements where available; official requirements audited 2026-09-16",
+    "derived_from": {
+      "papers": 50,
+      "figures": "see journal_preset_research/analysis/style_measurements.csv",
+      "panels": "see style_measurements.csv",
+      "official_sources": "Science instructions for preparing initial/revised manuscripts (science.org, Wayback captures 2025-08-10 / 2025-03-30): 5.7 / 12.1 / 18.4 cm widths, Helvetica preferred, not smaller than 5 pt and about 7 pt after reduction, lines >= 0.5 pt, 10 pt bold capital panel letters, >= 300 dpi; accessed 2026-09-16"
+    },
+    "not_official": true,
+    "target_width_mm": 184.0,
+    "width_class": "full",
+    "width_source": "OFFICIAL:Science instructions for preparing initial/revised manuscripts (science.org, Wayback captures 2025-08-10 / 2025-03-30)",
+    "value_evidence": {
+      "show_top_spine": "SHARED:Nature LB 60%/Science LB 72%/Cell LB 62%",
+      "show_right_spine": "SHARED:Nature LB 60%/Science LB 72%/Cell LB 62%",
+      "tick_direction": "SHARED:Nature out 70%/Science out 85%/Cell out 80%",
+      "grid": "SHARED:Nature no grid 96%/Science no grid 94%/Cell no grid 96%",
+      "legend_frameon": "SHARED:Nature unframed 96%/Science unframed 86%/Cell unframed 95%",
+      "font_weight": "SHARED:Nature regular 90%/Science regular 93%/Cell regular 93%",
+      "palette_name": "SHARED:colour-blind-aware categorical palette; corpus modes Nature saturated 39%/Science mixed 40%/Cell saturated 32%; OFFICIAL: Nature figure guide requires an accessible palette",
+      "text_color": "OBSERVED:axis and tick text black in the reviewed panels; publishers require standard fonts in black",
+      "tick_label_pt": "OFFICIAL:Science instructions for preparing initial/revised manuscripts (science.org, Wayback captures 2025-08-10 / 2025-03-30): 5.7 / 12.1 / 18.4 cm widths, Helvetica preferred, not smaller than 5 pt and about 7 pt after reduction, lines >= 0.5 pt, 10 pt bold capital panel letters, >= 300 dpi; accessed 2026-09-16 (no typeset-scale measurement available for this family; web images give relative sizes only)",
+      "axis_font_pt": "OFFICIAL:Science instructions for preparing initial/revised manuscripts (science.org, Wayback captures 2025-08-10 / 2025-03-30): 5.7 / 12.1 / 18.4 cm widths, Helvetica preferred, not smaller than 5 pt and about 7 pt after reduction, lines >= 0.5 pt, 10 pt bold capital panel letters, >= 300 dpi; accessed 2026-09-16 (no typeset-scale measurement available for this family; web images give relative sizes only)",
+      "legend_pt": "SHARED:set equal to the tick-label size (legend and annotation text were not larger than tick labels in the corpus)",
+      "annotation_pt": "SHARED:set equal to the tick-label size (legend and annotation text were not larger than tick labels in the corpus)",
+      "base_font_pt": "SHARED:set equal to the tick-label size (legend and annotation text were not larger than tick labels in the corpus)",
+      "legend_title_pt": "SHARED:set equal to the axis-label size",
+      "title_font_pt": "SHARED:set equal to the axis-label size",
+      "panel_label_pt": "OFFICIAL:10.0 pt bold panel letters",
+      "font_family": "OFFICIAL:Helvetica (Science instructions for preparing initial/revised manuscripts (science.org, Wayback captures 2025-08-10 / 2025-03-30))",
+      "spine_width_pt": "OFFICIAL:minimum line weight 0.5 pt (Science instructions for preparing initial/revised manuscripts (science.org, Wayback captures 2025-08-10 / 2025-03-30)); no typeset-scale measurement for this family",
+      "line_width_pt": "ESTIMATED:data lines drawn 0.25 pt heavier than axes, within the official range",
+      "tick_width": "SHARED:same weight as the axis line (reviewers coded axis-line weight 'regular', i.e. similar to text strokes)",
+      "errorbar_line_width": "SHARED:same weight as the axis line (reviewers coded axis-line weight 'regular', i.e. similar to text strokes)",
+      "bar_edge_width": "SHARED:same weight as the axis line (reviewers coded axis-line weight 'regular', i.e. similar to text strokes)",
+      "tick_length": "ESTIMATED:2.5 pt, about half the tick-label height",
+      "marker_edge_width": "ESTIMATED:0.4 pt - a visible but light edge; marker edges were 'dark' or 'none' in similar shares",
+      "regression_line_width": "SHARED:same as data lines",
+      "grid_width": "SHARED:grid is off; width kept light if a user turns it on",
+      "marker_size": "ESTIMATED:corpus marker class 'small' (81% of coded panels) -> diameter about 0.8 x tick-label height -> 20.0 pt^2",
+      "marker_alpha": "ESTIMATED:0.9 so overlapping observations remain distinguishable",
+      "errorbar_capsize": "OBSERVED:modal error-bar style 'none'; short caps kept for legibility",
+      "legend_loc": "OBSERVED:legends are most often absent or inside the axes (mode 'none')",
+      "legend_outside": "OBSERVED:legends outside the axes are the minority; users move them per figure",
+      "legend_ncol": "SHARED:one column",
+      "column_width": "OFFICIAL:184.0 mm stated full width",
+      "width_mm": "OFFICIAL:same as column_width",
+      "dpi": "OFFICIAL:300 dpi (minimum)",
+      "formats": "OFFICIAL:vector (PDF/EPS/AI) preferred by every publisher; PNG for review copies",
+      "legend_location": "OBSERVED:see legend_loc"
+    },
+    "notes": [
+      "Science: absolute text sizes taken from the publisher's stated range, not measured"
+    ],
+    "width_exempt_plot_types": [
+      "sankey_plot",
+      "upset_plot",
+      "hierarchical_clustering",
+      "heatmap_clustered_matrix",
+      "network_graph",
+      "confusion_matrix",
+      "swimmer_plot"
+    ],
+    "recommended_for": [
+      "barplot_with_error_bar",
+      "beeswarm_plot",
+      "bland_altman_plot",
+      "boxplot_or_violin_with_points",
+      "calibration_plot",
+      "confusion_matrix",
+      "dot_strip_plot",
+      "enrichment_dotplot",
+      "forest_plot",
+      "heatmap_clustered_matrix",
+      "hierarchical_dendrogram",
+      "histogram_distribution",
+      "kaplan_meier_survival_curve",
+      "lineplot_timecourse_with_error_band",
+      "manhattan_plot",
+      "paired_slopegraph",
+      "pca_scatter_from_matrix",
+      "precision_recall_curve",
+      "qq_plot",
+      "raincloud_plot",
+      "ridge_or_density_plot",
+      "roc_curve"
+    ],
+    "qc": {
+      "date": "2026-09-22",
+      "cells": 39,
+      "pass": 22,
+      "warn": 13,
+      "fail": 4,
+      "not_pass": [
+        {
+          "plot_type": "chord_diagram",
+          "status": "FAIL",
+          "issues": "1 overlapping text pair(s)"
+        },
+        {
+          "plot_type": "dose_response_curve",
+          "status": "FAIL",
+          "issues": "1 overlapping text pair(s); exported width 125.2 mm deviates -32% from target 184.0 mm"
+        },
+        {
+          "plot_type": "ma_plot",
+          "status": "FAIL",
+          "issues": "1 overlapping text pair(s); exported width 151.8 mm deviates -18% from target 184.0 mm"
+        },
+        {
+          "plot_type": "network_graph",
+          "status": "FAIL",
+          "issues": "1 overlapping text pair(s); exported width 115.0 mm deviates -38% from target 184.0 mm"
+        },
+        {
+          "plot_type": "embedding_scatter",
+          "status": "WARN",
+          "issues": "exported width 124.4 mm deviates -32% from target 184.0 mm"
+        },
+        {
+          "plot_type": "grouped_barplot_with_error_bar",
+          "status": "WARN",
+          "issues": "exported width 125.9 mm deviates -32% from target 184.0 mm"
+        },
+        {
+          "plot_type": "hierarchical_clustering",
+          "status": "WARN",
+          "issues": "legend covers data (100% of legend box)"
+        },
+        {
+          "plot_type": "lollipop_mutation_plot",
+          "status": "WARN",
+          "issues": "exported width 134.1 mm deviates -27% from target 184.0 mm"
+        },
+        {
+          "plot_type": "oncoprint_mutation_heatmap",
+          "status": "WARN",
+          "issues": "legend covers data (98% of legend box); exported width 154.7 mm deviates -16% from target 184.0 mm"
+        },
+        {
+          "plot_type": "sankey_plot",
+          "status": "WARN",
+          "issues": "exported width 139.5 mm deviates -24% from target 184.0 mm"
+        },
+        {
+          "plot_type": "scatterplot_with_regression",
+          "status": "WARN",
+          "issues": "exported width 123.8 mm deviates -33% from target 184.0 mm"
+        },
+        {
+          "plot_type": "spider_plot",
+          "status": "WARN",
+          "issues": "exported width 125.6 mm deviates -32% from target 184.0 mm"
+        },
+        {
+          "plot_type": "stacked_bar_composition",
+          "status": "WARN",
+          "issues": "legend covers data (44% of legend box)"
+        },
+        {
+          "plot_type": "swimmer_plot",
+          "status": "WARN",
+          "issues": "exported width 152.8 mm deviates -17% from target 184.0 mm"
+        },
+        {
+          "plot_type": "upset_plot",
+          "status": "WARN",
+          "issues": "exported width 152.5 mm deviates -17% from target 184.0 mm"
+        },
+        {
+          "plot_type": "volcano_plot",
+          "status": "WARN",
+          "issues": "exported width 126.6 mm deviates -31% from target 184.0 mm"
+        },
+        {
+          "plot_type": "waterfall_plot",
+          "status": "WARN",
+          "issues": "exported width 148.0 mm deviates -20% from target 184.0 mm"
+        }
+      ],
+      "rule": "PASS = no overlapping text, no clipped annotation, smallest text >= 5 pt at the target width; WARN = legend over data or width off target by > 15 %; FAIL cells are reported, never fixed by shrinking text"
+    }
+  }
+}

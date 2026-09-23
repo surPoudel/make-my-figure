@@ -1,0 +1,44 @@
+# Full non-GUI suite on matplotlib 3.8.4 / numpy 2.0.2 / pandas 2.3.3 (WSL2, Python 3.11, 2026-09-17)
+# python -m pytest tests -q -x -p no:pytest-qt --ignore=tests/test_qt_gui.py -k "not qt and not Qt and not streamlit and not desktop" --deselect tests/test_release_guardrails.py
+
+tests/test_box_violin_publication_options.py::test_every_declared_option_is_read_by_the_renderer
+  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/make_my_figure_core/plots/box_violin.py:350: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.8))
+
+tests/test_differential.py::test_raw_count_matrix_warns
+  /tmp/mpl38/lib/python3.11/site-packages/scipy/stats/_axis_nan_policy.py:635: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+    res = hypotest_fun_out(*samples, axis=axis, **kwds)
+
+tests/test_experimental_presets.py: 42 warnings
+tests/test_figure_presets.py: 7 warnings
+tests/test_layout_and_annotations.py: 1 warning
+  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/make_my_figure_core/plots/registry.py:372: MatplotlibDeprecationWarning: The legendHandles attribute was deprecated in Matplotlib 3.7 and will be removed two minor releases later. Use legend_handles instead.
+    getattr(_existing, "legendHandles", [])))
+
+tests/test_figure_package.py::test_unicode_missing_values_and_extreme_floats
+  /tmp/mpl38/lib/python3.11/site-packages/numpy/_core/fromnumeric.py:57: RuntimeWarning: overflow encountered in multiply
+    return bound(*args, **kwds)
+
+tests/test_figure_package_controller.py::test_every_plot_type_packages_and_reopens
+  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/make_my_figure_core/plots/survival.py:289: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.8))
+
+tests/test_layout_and_annotations.py::test_lollipop_per_label_offset_renders
+  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/make_my_figure_core/plots/lollipop.py:64: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.42))
+
+tests/test_matrix_plot_builder.py::test_differential_plots_build_and_render
+  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/make_my_figure_core/plots/volcano.py:177: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.85))
+
+tests/test_reproducibility_export_qc.py::test_plotspec_roundtrip_reproduces_key_metadata[barplot_with_error_bar]
+  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/make_my_figure_core/plots/barplot.py:83: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.8))
+
+tests/test_style_capabilities_network.py::test_figure_builder_preserves_network_colors
+  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_journal_presets/make_my_figure_core/plots/network_graph.py:320: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=(max(w_in, 5.2), max(h_in, 4.6)))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2281 passed, 13 skipped, 65 deselected, 3771 warnings in 1138.74s (0:18:58)
+done

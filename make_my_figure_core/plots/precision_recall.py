@@ -101,7 +101,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         else:
             work[recall_col] = coerce_numeric(work, recall_col, context=PLOT_TYPE)
             work[precision_col] = coerce_numeric(work, precision_col, context=PLOT_TYPE)
-            sub = work[[recall_col, precision_col]].dropna().sort_values(recall_col)
+            sub = work[[recall_col, precision_col]].dropna().sort_values(recall_col, kind="stable")
             rec = sub[recall_col].to_numpy(float)
             prec = sub[precision_col].to_numpy(float)
             ax.step(rec, prec, where="post", color=style.color_for(0), lw=style.line_width_pt,

@@ -18,7 +18,7 @@ import numpy as np
 import pandas as pd
 from matplotlib.figure import Figure
 
-from make_my_figure_core.styles.engine import StyleProfile
+from make_my_figure_core.styles.engine import StyleProfile, resolve_width_mm
 
 
 class RenderError(Exception):
@@ -133,7 +133,7 @@ def figure_size(spec: Dict[str, Any], style: StyleProfile, *, aspect: float) -> 
     """
     layout = spec.get("layout", {}) or {}
     width = str(layout.get("column_width", "default")).lower()
-    if width not in _WIDTH_ALIASES:
+    if width not in _WIDTH_ALIASES and resolve_width_mm(width) is None:
         width = "default"
     try:
         aspect = float(layout.get("aspect", aspect))

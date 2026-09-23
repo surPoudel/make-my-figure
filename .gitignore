@@ -99,3 +99,5 @@ tutorial/videos/raw/
 tutorial/videos/final/
 tutorial/slides/_render/
 tutorial/slides/_crops/
+# publisher figures used only as research references (never distributed)
+PRIVATE_REFERENCE_ONLY/

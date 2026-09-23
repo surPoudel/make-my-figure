@@ -4,7 +4,7 @@
 
 Iterations: 2
 
-- export .png non-empty (392616 bytes) ✓
-- export .svg non-empty (48616 bytes) ✓
-- export .pdf non-empty (20503 bytes) ✓
+- export .png non-empty (408482 bytes) ✓
+- export .svg non-empty (121253 bytes) ✓
+- export .pdf non-empty (35471 bytes) ✓
 - publication-readiness check: passed ✓

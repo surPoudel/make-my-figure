@@ -1,0 +1,43 @@
+# Full non-GUI suite on matplotlib 3.8.4 / numpy 2.0.2 / pandas 2.2.3 (WSL2, Python 3.11, 2026-09-22, after merging main v1.1.1 and the stable-sort fix)
+# /tmp/mpl38/bin/python -m pytest tests -q -p no:pytest-qt --ignore=tests/test_desktop_gui.py -k "not qt and not Qt and not streamlit and not desktop" --deselect tests/test_release_guardrails.py
+
+tests/test_matrix_handoff.py: 9 warnings
+tests/test_matrix_plot_builder.py: 24 warnings
+tests/test_matrix_workflow_rendering.py: 24 warnings
+tests/test_pick_identify.py: 9 warnings
+tests/test_preset_preview_and_layout_qc.py: 24 warnings
+tests/test_processed_matrix_differential_summary.py: 12 warnings
+tests/test_publication_qc.py: 3 warnings
+tests/test_publication_qc_gallery.py: 30 warnings
+tests/test_publication_style.py: 9 warnings
+tests/test_recommendations.py: 3 warnings
+tests/test_renderers.py: 33 warnings
+tests/test_reproducibility_export_qc.py: 48 warnings
+tests/test_style_capabilities_audit.py: 6 warnings
+tests/test_style_migration.py: 15 warnings
+tests/test_v04_plots.py: 60 warnings
+tests/test_v05_features.py: 12 warnings
+tests/test_v1_1_renderer_options.py: 9 warnings
+    ParserElement.resetCache()
+tests/test_box_violin_publication_options.py::test_every_declared_option_is_read_by_the_renderer
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.8))
+tests/test_chord_diagram.py: 1 warning
+tests/test_experimental_presets.py: 48 warnings
+tests/test_figure_presets.py: 8 warnings
+tests/test_layout_and_annotations.py: 1 warning
+tests/test_differential.py::test_raw_count_matrix_warns
+    res = hypotest_fun_out(*samples, axis=axis, **kwds)
+tests/test_figure_package.py::test_unicode_missing_values_and_extreme_floats
+tests/test_figure_package_controller.py::test_every_plot_type_packages_and_reopens
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.8))
+tests/test_layout_and_annotations.py::test_lollipop_per_label_offset_renders
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.42))
+tests/test_matrix_plot_builder.py::test_differential_plots_build_and_render
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.85))
+tests/test_reproducibility_export_qc.py::test_plotspec_roundtrip_reproduces_key_metadata[barplot_with_error_bar]
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.8))
+tests/test_style_capabilities_network.py::test_figure_builder_preserves_network_colors
+    fig, ax = plt.subplots(figsize=(max(w_in, 5.2), max(h_in, 4.6)))
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2371 passed, 9 skipped, 73 deselected, 4427 warnings in 1366.80s (0:22:46)
+exit=0

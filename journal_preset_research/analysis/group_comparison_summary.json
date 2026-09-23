@@ -1,0 +1,1363 @@
+{
+ "n_rows": 1398,
+ "papers_per_family": {
+  "Cell": 35,
+  "Nature": 37,
+  "Science": 44
+ },
+ "fields": {
+  "raw_points_visible": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "yes": 0.782,
+     "no": 0.218
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "yes": 0.787,
+     "no": 0.213
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "yes": 0.71,
+     "no": 0.29
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "yes": 0.834,
+     "no": 0.166
+    }
+   }
+  },
+  "representation": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "bar+points": 0.49,
+     "dot_strip+summary": 0.139,
+     "bar": 0.127,
+     "box+points": 0.089,
+     "box": 0.043,
+     "dot_strip": 0.031,
+     "violin+points": 0.031,
+     "violin": 0.029,
+     "other": 0.02,
+     "box+violin+points": 0.002
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "bar+points": 0.537,
+     "dot_strip+summary": 0.163,
+     "bar": 0.12,
+     "box": 0.076,
+     "box+points": 0.074,
+     "violin": 0.016,
+     "violin+points": 0.014
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "bar+points": 0.375,
+     "bar": 0.16,
+     "box+points": 0.129,
+     "dot_strip+summary": 0.115,
+     "box": 0.071,
+     "violin": 0.051,
+     "violin+points": 0.047,
+     "dot_strip": 0.044,
+     "other": 0.009
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "bar+points": 0.55,
+     "dot_strip+summary": 0.141,
+     "bar": 0.105,
+     "box+points": 0.067,
+     "other": 0.041,
+     "dot_strip": 0.041,
+     "violin+points": 0.029,
+     "violin": 0.019,
+     "box+violin+points": 0.005
+    }
+   }
+  },
+  "bars_with_points": {
+   "all": {
+    "n": 862,
+    "shares": {
+     "bar+points": 0.795,
+     "bar": 0.205
+    }
+   },
+   "Cell": {
+    "n": 241,
+    "shares": {
+     "bar+points": 0.817,
+     "bar": 0.183
+    }
+   },
+   "Nature": {
+    "n": 241,
+    "shares": {
+     "bar+points": 0.701,
+     "bar": 0.299
+    }
+   },
+   "Science": {
+    "n": 380,
+    "shares": {
+     "bar+points": 0.839,
+     "bar": 0.161
+    }
+   }
+  },
+  "summary": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "mean": 0.692,
+     "median": 0.172,
+     "none": 0.099,
+     "unknown": 0.037
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "mean": 0.779,
+     "median": 0.183,
+     "unknown": 0.038
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "mean": 0.499,
+     "median": 0.288,
+     "none": 0.162,
+     "unknown": 0.051
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "mean": 0.786,
+     "none": 0.114,
+     "median": 0.074,
+     "unknown": 0.026
+    }
+   }
+  },
+  "summary_source": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "caption": 0.53,
+     "inferred": 0.342,
+     "none": 0.128
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "caption": 0.496,
+     "inferred": 0.466,
+     "none": 0.038
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "caption": 0.568,
+     "inferred": 0.235,
+     "none": 0.197
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "caption": 0.522,
+     "inferred": 0.347,
+     "none": 0.131
+    }
+   }
+  },
+  "error": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "SEM": 0.335,
+     "none": 0.201,
+     "SD": 0.175,
+     "IQR_whiskers": 0.145,
+     "unknown": 0.131,
+     "CI": 0.014
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "SEM": 0.444,
+     "SD": 0.262,
+     "IQR_whiskers": 0.169,
+     "none": 0.117,
+     "unknown": 0.008
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "IQR_whiskers": 0.255,
+     "none": 0.246,
+     "SD": 0.2,
+     "SEM": 0.18,
+     "unknown": 0.082,
+     "CI": 0.038
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "SEM": 0.386,
+     "unknown": 0.247,
+     "none": 0.219,
+     "SD": 0.1,
+     "IQR_whiskers": 0.045,
+     "CI": 0.003
+    }
+   }
+  },
+  "error_source": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "caption": 0.503,
+     "none": 0.321,
+     "inferred": 0.176
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "caption": 0.49,
+     "inferred": 0.39,
+     "none": 0.12
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "caption": 0.543,
+     "none": 0.306,
+     "inferred": 0.151
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "caption": 0.479,
+     "none": 0.46,
+     "inferred": 0.06
+    }
+   }
+  },
+  "marker_size_relative": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "medium": 0.446,
+     "small": 0.354,
+     "na": 0.196,
+     "large": 0.004
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "medium": 0.42,
+     "small": 0.387,
+     "na": 0.183,
+     "large": 0.011
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "small": 0.552,
+     "na": 0.246,
+     "medium": 0.202
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "medium": 0.653,
+     "small": 0.179,
+     "na": 0.166,
+     "large": 0.002
+    }
+   }
+  },
+  "marker_edge": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "none": 0.373,
+     "dark": 0.307,
+     "na": 0.196,
+     "same_colour": 0.124
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "none": 0.46,
+     "dark": 0.357,
+     "na": 0.183
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "none": 0.424,
+     "na": 0.246,
+     "dark": 0.195,
+     "same_colour": 0.135
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "dark": 0.362,
+     "none": 0.279,
+     "same_colour": 0.193,
+     "na": 0.166
+    }
+   }
+  },
+  "marker_fill": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "filled": 0.531,
+     "na": 0.196,
+     "open": 0.186,
+     "mixed": 0.085,
+     "same_colour": 0.001
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "filled": 0.54,
+     "open": 0.221,
+     "na": 0.183,
+     "mixed": 0.057
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "filled": 0.605,
+     "na": 0.246,
+     "open": 0.129,
+     "mixed": 0.016,
+     "same_colour": 0.004
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "filled": 0.469,
+     "open": 0.209,
+     "na": 0.166,
+     "mixed": 0.157
+    }
+   }
+  },
+  "jitter_style": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "jitter": 0.561,
+     "centered": 0.205,
+     "na": 0.188,
+     "beeswarm": 0.026,
+     "none": 0.019
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "jitter": 0.564,
+     "centered": 0.223,
+     "na": 0.213
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "jitter": 0.594,
+     "na": 0.253,
+     "centered": 0.149,
+     "none": 0.004
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "jitter": 0.533,
+     "centered": 0.238,
+     "na": 0.122,
+     "beeswarm": 0.064,
+     "none": 0.043
+    }
+   }
+  },
+  "bar_width": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "medium": 0.569,
+     "na": 0.367,
+     "wide": 0.034,
+     "narrow": 0.029
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "medium": 0.583,
+     "na": 0.343,
+     "wide": 0.044,
+     "narrow": 0.03
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "na": 0.466,
+     "medium": 0.466,
+     "narrow": 0.035,
+     "wide": 0.033
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "medium": 0.641,
+     "na": 0.305,
+     "wide": 0.029,
+     "narrow": 0.024
+    }
+   }
+  },
+  "box_width": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "na": 0.843,
+     "medium": 0.121,
+     "narrow": 0.036,
+     "wide": 0.001
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "na": 0.82,
+     "medium": 0.153,
+     "narrow": 0.027
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "na": 0.765,
+     "medium": 0.16,
+     "narrow": 0.075
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "na": 0.917,
+     "medium": 0.071,
+     "narrow": 0.01,
+     "wide": 0.002
+    }
+   }
+  },
+  "palette_type": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "multi_categorical": 0.675,
+     "single_accent": 0.159,
+     "greys": 0.096,
+     "outline_only": 0.041,
+     "monochrome_black": 0.029,
+     "unknown": 0.001
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "multi_categorical": 0.599,
+     "single_accent": 0.21,
+     "greys": 0.12,
+     "monochrome_black": 0.052,
+     "outline_only": 0.019
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "multi_categorical": 0.645,
+     "single_accent": 0.177,
+     "greys": 0.12,
+     "outline_only": 0.051,
+     "monochrome_black": 0.007
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "multi_categorical": 0.745,
+     "single_accent": 0.112,
+     "greys": 0.062,
+     "outline_only": 0.047,
+     "monochrome_black": 0.033,
+     "unknown": 0.002
+    }
+   }
+  },
+  "control_color_behavior": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "coloured": 0.382,
+     "grey": 0.242,
+     "white_or_open": 0.175,
+     "na": 0.132,
+     "black": 0.069
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "coloured": 0.349,
+     "grey": 0.305,
+     "na": 0.163,
+     "white_or_open": 0.128,
+     "black": 0.054
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "coloured": 0.466,
+     "na": 0.217,
+     "grey": 0.193,
+     "white_or_open": 0.064,
+     "black": 0.06
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "coloured": 0.338,
+     "white_or_open": 0.291,
+     "grey": 0.24,
+     "black": 0.086,
+     "na": 0.045
+    }
+   }
+  },
+  "statistical_annotation": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "none": 0.265,
+     "bracket+p_value": 0.206,
+     "bracket+stars": 0.205,
+     "line+stars": 0.107,
+     "stars_only": 0.101,
+     "p_value_only": 0.074,
+     "line+p_value": 0.041
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "bracket+stars": 0.221,
+     "stars_only": 0.218,
+     "none": 0.188,
+     "bracket+p_value": 0.147,
+     "p_value_only": 0.087,
+     "line+p_value": 0.084,
+     "line+stars": 0.054
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "none": 0.419,
+     "bracket+p_value": 0.251,
+     "bracket+stars": 0.175,
+     "p_value_only": 0.113,
+     "line+p_value": 0.02,
+     "line+stars": 0.011,
+     "stars_only": 0.011
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "bracket+stars": 0.219,
+     "line+stars": 0.216,
+     "bracket+p_value": 0.209,
+     "none": 0.193,
+     "stars_only": 0.097,
+     "p_value_only": 0.036,
+     "line+p_value": 0.031
+    }
+   }
+  },
+  "p_display": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "stars": 0.305,
+     "exact": 0.279,
+     "none": 0.264,
+     "mixed": 0.123,
+     "ns_text": 0.024,
+     "threshold": 0.005
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "stars": 0.381,
+     "exact": 0.294,
+     "none": 0.188,
+     "mixed": 0.106,
+     "ns_text": 0.03
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "none": 0.419,
+     "exact": 0.348,
+     "stars": 0.133,
+     "mixed": 0.064,
+     "ns_text": 0.024,
+     "threshold": 0.011
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "stars": 0.391,
+     "exact": 0.216,
+     "none": 0.191,
+     "mixed": 0.179,
+     "ns_text": 0.019,
+     "threshold": 0.003
+    }
+   }
+  },
+  "axis_style": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "LB": 0.926,
+     "box": 0.058,
+     "L": 0.016
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "LB": 0.951,
+     "box": 0.03,
+     "L": 0.019
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "LB": 0.867,
+     "box": 0.113,
+     "L": 0.02
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "LB": 0.957,
+     "box": 0.033,
+     "L": 0.01
+    }
+   }
+  },
+  "legend_style": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "none": 0.617,
+     "outside": 0.175,
+     "above": 0.116,
+     "inside": 0.09,
+     "in_caption": 0.003
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "none": 0.512,
+     "outside": 0.218,
+     "above": 0.202,
+     "inside": 0.068
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "none": 0.687,
+     "outside": 0.137,
+     "inside": 0.111,
+     "above": 0.055,
+     "in_caption": 0.009
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "none": 0.628,
+     "outside": 0.176,
+     "above": 0.109,
+     "inside": 0.088
+    }
+   }
+  },
+  "n_label": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "in_caption": 0.564,
+     "none": 0.369,
+     "below_category": 0.034,
+     "above_category": 0.033
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "in_caption": 0.698,
+     "none": 0.226,
+     "below_category": 0.071,
+     "above_category": 0.005
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "none": 0.455,
+     "in_caption": 0.426,
+     "above_category": 0.084,
+     "below_category": 0.035
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "in_caption": 0.588,
+     "none": 0.393,
+     "above_category": 0.01,
+     "below_category": 0.009
+    }
+   }
+  },
+  "zero_baseline": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "yes": 0.838,
+     "no": 0.161,
+     "na": 0.001
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "yes": 0.899,
+     "no": 0.101
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "yes": 0.763,
+     "no": 0.237
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "yes": 0.859,
+     "no": 0.14,
+     "na": 0.002
+    }
+   }
+  },
+  "physical_panel_size": {
+   "all": {
+    "n": 1398,
+    "shares": {
+     "small": 0.824,
+     "medium": 0.162,
+     "large": 0.014
+    }
+   },
+   "Cell": {
+    "n": 367,
+    "shares": {
+     "small": 0.924,
+     "medium": 0.068,
+     "large": 0.008
+    }
+   },
+   "Nature": {
+    "n": 451,
+    "shares": {
+     "small": 0.783,
+     "medium": 0.186,
+     "large": 0.031
+    }
+   },
+   "Science": {
+    "n": 580,
+    "shares": {
+     "small": 0.793,
+     "medium": 0.202,
+     "large": 0.005
+    }
+   }
+  },
+  "small_n::representation": {
+   "all": {
+    "n": 844,
+    "shares": {
+     "bar+points": 0.685,
+     "dot_strip+summary": 0.116,
+     "box+points": 0.095,
+     "bar": 0.059,
+     "dot_strip": 0.018,
+     "box": 0.015,
+     "violin+points": 0.005,
+     "other": 0.005,
+     "violin": 0.002
+    }
+   },
+   "Cell": {
+    "n": 245,
+    "shares": {
+     "bar+points": 0.727,
+     "dot_strip+summary": 0.11,
+     "bar": 0.106,
+     "box+points": 0.024,
+     "box": 0.024,
+     "violin+points": 0.008
+    }
+   },
+   "Nature": {
+    "n": 227,
+    "shares": {
+     "bar+points": 0.612,
+     "box+points": 0.189,
+     "dot_strip+summary": 0.057,
+     "bar": 0.053,
+     "dot_strip": 0.035,
+     "box": 0.031,
+     "other": 0.013,
+     "violin": 0.009
+    }
+   },
+   "Science": {
+    "n": 372,
+    "shares": {
+     "bar+points": 0.702,
+     "dot_strip+summary": 0.156,
+     "box+points": 0.083,
+     "bar": 0.032,
+     "dot_strip": 0.019,
+     "violin+points": 0.005,
+     "other": 0.003
+    }
+   }
+  },
+  "small_n::marker_size_relative": {
+   "all": {
+    "n": 844,
+    "shares": {
+     "medium": 0.607,
+     "small": 0.321,
+     "na": 0.071,
+     "large": 0.001
+    }
+   },
+   "Cell": {
+    "n": 245,
+    "shares": {
+     "medium": 0.559,
+     "small": 0.327,
+     "na": 0.114
+    }
+   },
+   "Nature": {
+    "n": 227,
+    "shares": {
+     "small": 0.634,
+     "medium": 0.282,
+     "na": 0.084
+    }
+   },
+   "Science": {
+    "n": 372,
+    "shares": {
+     "medium": 0.836,
+     "small": 0.126,
+     "na": 0.035,
+     "large": 0.003
+    }
+   }
+  },
+  "small_n::marker_fill": {
+   "all": {
+    "n": 844,
+    "shares": {
+     "filled": 0.553,
+     "open": 0.249,
+     "mixed": 0.124,
+     "na": 0.071,
+     "same_colour": 0.002
+    }
+   },
+   "Cell": {
+    "n": 245,
+    "shares": {
+     "filled": 0.539,
+     "open": 0.302,
+     "na": 0.114,
+     "mixed": 0.045
+    }
+   },
+   "Nature": {
+    "n": 227,
+    "shares": {
+     "filled": 0.736,
+     "open": 0.145,
+     "na": 0.084,
+     "mixed": 0.026,
+     "same_colour": 0.009
+    }
+   },
+   "Science": {
+    "n": 372,
+    "shares": {
+     "filled": 0.452,
+     "open": 0.277,
+     "mixed": 0.237,
+     "na": 0.035
+    }
+   }
+  },
+  "small_n::jitter_style": {
+   "all": {
+    "n": 844,
+    "shares": {
+     "jitter": 0.614,
+     "centered": 0.277,
+     "na": 0.063,
+     "beeswarm": 0.028,
+     "none": 0.018
+    }
+   },
+   "Cell": {
+    "n": 245,
+    "shares": {
+     "jitter": 0.547,
+     "centered": 0.322,
+     "na": 0.131
+    }
+   },
+   "Nature": {
+    "n": 227,
+    "shares": {
+     "jitter": 0.714,
+     "centered": 0.185,
+     "na": 0.093,
+     "none": 0.009
+    }
+   },
+   "Science": {
+    "n": 372,
+    "shares": {
+     "jitter": 0.597,
+     "centered": 0.304,
+     "beeswarm": 0.065,
+     "none": 0.035
+    }
+   }
+  },
+  "small_n::statistical_annotation": {
+   "all": {
+    "n": 844,
+    "shares": {
+     "bracket+p_value": 0.273,
+     "bracket+stars": 0.206,
+     "none": 0.193,
+     "line+stars": 0.109,
+     "stars_only": 0.09,
+     "p_value_only": 0.076,
+     "line+p_value": 0.053
+    }
+   },
+   "Cell": {
+    "n": 245,
+    "shares": {
+     "none": 0.196,
+     "bracket+stars": 0.196,
+     "bracket+p_value": 0.184,
+     "stars_only": 0.176,
+     "line+p_value": 0.102,
+     "p_value_only": 0.102,
+     "line+stars": 0.045
+    }
+   },
+   "Nature": {
+    "n": 227,
+    "shares": {
+     "bracket+p_value": 0.352,
+     "none": 0.304,
+     "bracket+stars": 0.207,
+     "p_value_only": 0.11,
+     "line+p_value": 0.022,
+     "line+stars": 0.004
+    }
+   },
+   "Science": {
+    "n": 372,
+    "shares": {
+     "bracket+p_value": 0.282,
+     "line+stars": 0.215,
+     "bracket+stars": 0.212,
+     "none": 0.124,
+     "stars_only": 0.089,
+     "line+p_value": 0.04,
+     "p_value_only": 0.038
+    }
+   }
+  },
+  "small_n::n_label": {
+   "all": {
+    "n": 844,
+    "shares": {
+     "in_caption": 0.712,
+     "none": 0.242,
+     "above_category": 0.041,
+     "below_category": 0.005
+    }
+   },
+   "Cell": {
+    "n": 245,
+    "shares": {
+     "in_caption": 0.894,
+     "none": 0.094,
+     "below_category": 0.012
+    }
+   },
+   "Nature": {
+    "n": 227,
+    "shares": {
+     "in_caption": 0.59,
+     "none": 0.264,
+     "above_category": 0.141,
+     "below_category": 0.004
+    }
+   },
+   "Science": {
+    "n": 372,
+    "shares": {
+     "in_caption": 0.667,
+     "none": 0.325,
+     "above_category": 0.008
+    }
+   }
+  },
+  "large_n::representation": {
+   "all": {
+    "n": 141,
+    "shares": {
+     "dot_strip+summary": 0.305,
+     "box+points": 0.227,
+     "violin+points": 0.121,
+     "bar+points": 0.085,
+     "box": 0.078,
+     "dot_strip": 0.05,
+     "violin": 0.05,
+     "bar": 0.035,
+     "other": 0.028,
+     "box+violin+points": 0.021
+    }
+   },
+   "Cell": {
+    "n": 48,
+    "shares": {
+     "dot_strip+summary": 0.417,
+     "box+points": 0.396,
+     "bar+points": 0.083,
+     "violin+points": 0.042,
+     "bar": 0.042,
+     "box": 0.021
+    }
+   },
+   "Nature": {
+    "n": 54,
+    "shares": {
+     "box+points": 0.241,
+     "violin+points": 0.204,
+     "dot_strip+summary": 0.185,
+     "box": 0.185,
+     "violin": 0.111,
+     "bar+points": 0.056,
+     "dot_strip": 0.019
+    }
+   },
+   "Science": {
+    "n": 39,
+    "shares": {
+     "dot_strip+summary": 0.333,
+     "dot_strip": 0.154,
+     "bar+points": 0.128,
+     "other": 0.103,
+     "violin+points": 0.103,
+     "box+violin+points": 0.077,
+     "bar": 0.077,
+     "violin": 0.026
+    }
+   }
+  },
+  "large_n::marker_size_relative": {
+   "all": {
+    "n": 141,
+    "shares": {
+     "small": 0.773,
+     "medium": 0.113,
+     "na": 0.113
+    }
+   },
+   "Cell": {
+    "n": 48,
+    "shares": {
+     "small": 0.854,
+     "medium": 0.104,
+     "na": 0.042
+    }
+   },
+   "Nature": {
+    "n": 54,
+    "shares": {
+     "small": 0.852,
+     "na": 0.111,
+     "medium": 0.037
+    }
+   },
+   "Science": {
+    "n": 39,
+    "shares": {
+     "small": 0.564,
+     "medium": 0.231,
+     "na": 0.205
+    }
+   }
+  },
+  "large_n::marker_fill": {
+   "all": {
+    "n": 141,
+    "shares": {
+     "filled": 0.773,
+     "na": 0.113,
+     "mixed": 0.057,
+     "open": 0.057
+    }
+   },
+   "Cell": {
+    "n": 48,
+    "shares": {
+     "filled": 0.771,
+     "mixed": 0.146,
+     "open": 0.042,
+     "na": 0.042
+    }
+   },
+   "Nature": {
+    "n": 54,
+    "shares": {
+     "filled": 0.796,
+     "na": 0.111,
+     "open": 0.074,
+     "mixed": 0.019
+    }
+   },
+   "Science": {
+    "n": 39,
+    "shares": {
+     "filled": 0.744,
+     "na": 0.205,
+     "open": 0.051
+    }
+   }
+  },
+  "large_n::jitter_style": {
+   "all": {
+    "n": 141,
+    "shares": {
+     "jitter": 0.716,
+     "centered": 0.113,
+     "na": 0.099,
+     "beeswarm": 0.05,
+     "none": 0.021
+    }
+   },
+   "Cell": {
+    "n": 48,
+    "shares": {
+     "jitter": 0.917,
+     "na": 0.062,
+     "centered": 0.021
+    }
+   },
+   "Nature": {
+    "n": 54,
+    "shares": {
+     "jitter": 0.704,
+     "centered": 0.185,
+     "na": 0.111
+    }
+   },
+   "Science": {
+    "n": 39,
+    "shares": {
+     "jitter": 0.487,
+     "beeswarm": 0.179,
+     "na": 0.128,
+     "centered": 0.128,
+     "none": 0.077
+    }
+   }
+  },
+  "large_n::statistical_annotation": {
+   "all": {
+    "n": 141,
+    "shares": {
+     "bracket+stars": 0.255,
+     "none": 0.191,
+     "line+stars": 0.135,
+     "bracket+p_value": 0.128,
+     "stars_only": 0.121,
+     "p_value_only": 0.113,
+     "line+p_value": 0.057
+    }
+   },
+   "Cell": {
+    "n": 48,
+    "shares": {
+     "stars_only": 0.271,
+     "bracket+stars": 0.188,
+     "line+stars": 0.167,
+     "none": 0.146,
+     "line+p_value": 0.125,
+     "bracket+p_value": 0.083,
+     "p_value_only": 0.021
+    }
+   },
+   "Nature": {
+    "n": 54,
+    "shares": {
+     "bracket+stars": 0.315,
+     "p_value_only": 0.259,
+     "none": 0.204,
+     "bracket+p_value": 0.111,
+     "stars_only": 0.037,
+     "line+stars": 0.037,
+     "line+p_value": 0.037
+    }
+   },
+   "Science": {
+    "n": 39,
+    "shares": {
+     "bracket+stars": 0.256,
+     "none": 0.231,
+     "line+stars": 0.231,
+     "bracket+p_value": 0.205,
+     "stars_only": 0.051,
+     "p_value_only": 0.026
+    }
+   }
+  },
+  "large_n::n_label": {
+   "all": {
+    "n": 141,
+    "shares": {
+     "in_caption": 0.39,
+     "none": 0.369,
+     "below_category": 0.177,
+     "above_category": 0.064
+    }
+   },
+   "Cell": {
+    "n": 48,
+    "shares": {
+     "none": 0.438,
+     "in_caption": 0.271,
+     "below_category": 0.25,
+     "above_category": 0.042
+    }
+   },
+   "Nature": {
+    "n": 54,
+    "shares": {
+     "in_caption": 0.426,
+     "none": 0.278,
+     "below_category": 0.204,
+     "above_category": 0.093
+    }
+   },
+   "Science": {
+    "n": 39,
+    "shares": {
+     "in_caption": 0.487,
+     "none": 0.41,
+     "below_category": 0.051,
+     "above_category": 0.051
+    }
+   }
+  }
+ }
+}

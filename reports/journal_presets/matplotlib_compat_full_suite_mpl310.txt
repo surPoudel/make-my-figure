@@ -1,0 +1,3 @@
+# Full non-GUI suite, development stack (matplotlib 3.10.8 / numpy 2.1.2 / pandas 2.2.3 / adjustText 1.3.0; WSL2 Python 3.11; 2026-09-17, after all fixes)
+# python -m pytest tests -q --no-header -p no:pytest-qt -p no:cacheprovider --ignore=tests/test_qt_gui.py -k "not qt and not Qt and not streamlit and not desktop" --deselect tests/test_release_guardrails.py -W ignore
+2306 passed, 5 skipped, 73 deselected in 1272.53s (0:21:12)

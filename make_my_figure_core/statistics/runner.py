@@ -52,6 +52,10 @@ def resolve_columns(plot_type: Optional[str], mapping: Dict[str, Any],
     if plot_type == "grouped_barplot_with_error_bar":
         out["group_column"] = spec.get("group_column") or mapping.get("x")
         out["subgroup_column"] = spec.get("subgroup_column") or mapping.get("group")
+    if plot_type == "boxplot_or_violin_with_points":
+        # An optional "hue" column dodges boxes within each x category; comparisons then run
+        # within x (subgroup) exactly as for the grouped bar plot.
+        out["subgroup_column"] = spec.get("subgroup_column") or mapping.get("hue") or None
     if plot_type == "kaplan_meier_survival_curve":
         out["group_column"] = spec.get("group_column") or mapping.get("group")
     if plot_type == "scatterplot_with_regression":
