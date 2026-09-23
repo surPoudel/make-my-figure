@@ -12,6 +12,7 @@
     "figure_package": "VIDEO_URL_FIGURE_PACKAGE",
     "figure_builder": "VIDEO_URL_FIGURE_BUILDER",
     "matrix_workflow": "VIDEO_URL_MATRIX_WORKFLOW",
-    "statistics": "VIDEO_URL_STATISTICS"
+    "statistics": "VIDEO_URL_STATISTICS",
+    "master_capabilities": "VIDEO_URL_MASTER"
   }
 }

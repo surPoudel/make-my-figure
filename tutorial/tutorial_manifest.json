@@ -1,7 +1,7 @@
 {
   "software": "Make My Figure",
   "software_version": "1.1.1",
-  "commit": "0619045",
+  "commit": "a758520",
   "branch": "feature/desktop-tutorial",
   "plot_registry_count": 39,
   "plot_tutorials_written": 5,
@@ -81,10 +81,11 @@
     "heatmap_clustered": "PASS",
     "kaplan_meier": "PASS",
     "mapping_ambiguous": "PASS",
+    "master_capabilities": "PASS",
     "observations_jitter": "PASS",
     "publication_presets": "PASS",
     "scatter_regression": "PASS",
     "volcano_manual_mapping": "PASS"
   },
-  "generation_date": "2026-09-22"
+  "generation_date": "2026-09-23"
 }

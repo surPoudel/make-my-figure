@@ -1,6 +1,6 @@
 # Tutorial validation report
 
-Generated 2026-09-22 20:51 by `tutorial/automation/validate_tutorials.py`. Each row is one action script run against the real desktop application (offscreen). Checks are recorded by the driver as the script performs the tutorial's own steps.
+Generated 2026-09-23 14:18 by `tutorial/automation/validate_tutorials.py`. Each row is one action script run against the real desktop application (offscreen). Checks are recorded by the driver as the script performs the tutorial's own steps.
 
 | tutorial | status | checks | failed | captures | seconds | datasets | detail |
 |---|---|---|---|---|---|---|---|
@@ -12,6 +12,7 @@ Generated 2026-09-22 20:51 by `tutorial/automation/validate_tutorials.py`. Each 
 | `heatmap_clustered` | **PASS** | 5 | 0 | 6 | 22.1 | feature_sample_matrix.csv |  |
 | `kaplan_meier` | **PASS** | 6 | 0 | 7 | 26.7 | survival.csv |  |
 | `mapping_ambiguous` | **PASS** | 7 | 0 | 11 | 34.7 | ambiguous_columns.csv |  |
+| `master_capabilities` | **PASS** | 48 | 0 | 27 | 208.3 | ambiguous_columns.csv, showcase_group_comparison.csv, rnaseq_results.csv, rnaseq_results_renamed.csv, feature_sample_matrix.csv, survival.csv, relationship_data.csv |  |
 | `observations_jitter` | **PASS** | 20 | 0 | 17 | 74.1 | showcase_group_comparison.csv |  |
 | `publication_presets` | **PASS** | 13 | 0 | 9 | 50.6 | showcase_group_comparison.csv |  |
 | `scatter_regression` | **PASS** | 6 | 0 | 8 | 30.3 | relationship_data.csv |  |
@@ -93,6 +94,57 @@ Generated 2026-09-22 20:51 by `tutorial/automation/validate_tutorials.py`. Each 
 - PASS: figure rendered
 - PASS: export png - /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/mapping_ambiguous/ambiguous_scatter.png
 - PASS: export svg - /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/mapping_ambiguous/ambiguous_scatter.svg
+
+### `master_capabilities` - Master replay: from an ordinary table to a reproducible multi-panel figure (PASS)
+
+- PASS: data loaded - ambiguous_columns.csv
+- PASS: figure rendered
+- PASS: figure rendered
+- PASS: data loaded - showcase_group_comparison.csv
+- PASS: figure rendered
+- PASS: figure rendered
+- PASS: figure rendered
+- PASS: figure rendered
+- PASS: figure rendered
+- PASS: figure rendered
+- PASS: figure rendered
+- PASS: figure rendered
+- PASS: figure rendered
+- PASS: figure rendered
+- PASS: statistics ran - 6 comparison row(s)
+- PASS: stats table exported - /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_stats_table.csv
+- PASS: method report exported - /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_methods.md
+- PASS: experimental presets listed - 11 entries
+- PASS: preset preview opened - Preview preset: Box + observations (outline)
+- PASS: preset applied from preview - Applied preset “Box + observations (outline)” after preview: 12 setting(s).
+- PASS: figure rendered
+- PASS: figure rendered
+- PASS: export pdf - /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_box.pdf
+- PASS: export svg - /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_box.svg
+- PASS: export png - /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_box.png
+- PASS: export json - /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_box.plot_spec.json
+- PASS: figure package saved - /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_box.mmfpackage
+- PASS: returned to start screen
+- PASS: package opened and rendered
+- PASS: data loaded - rnaseq_results.csv
+- PASS: data loaded - rnaseq_results_renamed.csv
+- PASS: figure rendered
+- PASS: export pdf - /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_volcano.pdf
+- PASS: data loaded - feature_sample_matrix.csv
+- PASS: figure rendered
+- PASS: figure rendered
+- PASS: data loaded - survival.csv
+- PASS: figure rendered
+- PASS: statistics ran - 1 comparison row(s)
+- PASS: panel saved - 1 panel(s)
+- PASS: data loaded - showcase_group_comparison.csv
+- PASS: statistics ran - 6 comparison row(s)
+- PASS: panel saved - 2 panel(s)
+- PASS: data loaded - relationship_data.csv
+- PASS: figure rendered
+- PASS: panel saved - 3 panel(s)
+- PASS: composite figure saved - master_composite.png, master_composite.pdf, master_composite.svg
+- PASS: composite package saved - /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_composite.mmfpackage
 
 ### `observations_jitter` - Showing individual observations and controlling jitter (PASS)
 

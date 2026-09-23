@@ -4,7 +4,8 @@ TITLE: Make My Figure desktop - from data to publication figure
 TARGET LENGTH: 10:00 (8-12 min)
 DATASETS: tutorial/datasets/ambiguous_columns.csv, tutorial/datasets/showcase_group_comparison.csv, tutorial/datasets/relationship_data.csv
 START STATE: application open on the start screen; datasets in a neutral folder (`~/tutorial_data`); no presets saved.
-ACTION SCRIPT: the master run chains four scripts with a pause: `run_tutorial.py mapping_ambiguous observations_jitter figure_package figure_builder --onscreen --pause 1.5` (record in one take or in five and cut).
+ACTION SCRIPT: one continuous replay in a single window: `python tutorial/automation/run_tutorial.py master_capabilities --onscreen --pause 1.5` (about 6-7 minutes at that pace; validated offscreen: 48 checks PASS, 27 checkpoint captures in `screenshots/master_capabilities/`). Record in one take with `record_screen.py`, speed up in the edit if wanted; the checkpoint captures mark where each narration line belongs.
+SEQUENCE COVERED: start screen and Help; bad-header table with detected types and recommendation cards; the app's proposal, one role corrected, a scatter from the same table; showcase dataset: observations off/on, jitter, size, open/filled/edged points, beeswarm, n labels; Welch pairs with Holm and exact P, stats table and methods export; experimental presets listed, Preview & apply, adjust afterwards; PDF/SVG/PNG, PlotSpec, Figure Package, Home, reopen from the package; volcano with detected roles then renamed columns mapped by hand; clustered heatmap with value columns and row z-score; Kaplan-Meier with log-rank; three panels saved, Figure Builder, composite figure and package.
 RECORDING: tutorial/videos/RECORDING.md
 
 | time | screen | action | narration |

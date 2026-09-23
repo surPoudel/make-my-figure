@@ -1,0 +1,1040 @@
+{
+  "tutorial_id": "master_capabilities",
+  "title": "Master replay: from an ordinary table to a reproducible multi-panel figure",
+  "datasets": [
+    "ambiguous_columns.csv",
+    "showcase_group_comparison.csv",
+    "rnaseq_results.csv",
+    "rnaseq_results_renamed.csv",
+    "feature_sample_matrix.csv",
+    "survival.csv",
+    "relationship_data.csv"
+  ],
+  "mode": "offscreen",
+  "status": "PASS",
+  "error": "",
+  "seconds": 208.3,
+  "checks": [
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "ambiguous_columns.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "showcase_group_comparison.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "statistics ran",
+      "ok": true,
+      "detail": "6 comparison row(s)"
+    },
+    {
+      "check": "stats table exported",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_stats_table.csv"
+    },
+    {
+      "check": "method report exported",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_methods.md"
+    },
+    {
+      "check": "experimental presets listed",
+      "ok": true,
+      "detail": "11 entries"
+    },
+    {
+      "check": "preset preview opened",
+      "ok": true,
+      "detail": "Preview preset: Box + observations (outline)"
+    },
+    {
+      "check": "preset applied from preview",
+      "ok": true,
+      "detail": "Applied preset \u201cBox + observations (outline)\u201d after preview: 12 setting(s)."
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "export pdf",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_box.pdf"
+    },
+    {
+      "check": "export svg",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_box.svg"
+    },
+    {
+      "check": "export png",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_box.png"
+    },
+    {
+      "check": "export json",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_box.plot_spec.json"
+    },
+    {
+      "check": "figure package saved",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_box.mmfpackage"
+    },
+    {
+      "check": "returned to start screen",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "package opened and rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "rnaseq_results.csv"
+    },
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "rnaseq_results_renamed.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "export pdf",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_volcano.pdf"
+    },
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "feature_sample_matrix.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "survival.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "statistics ran",
+      "ok": true,
+      "detail": "1 comparison row(s)"
+    },
+    {
+      "check": "panel saved",
+      "ok": true,
+      "detail": "1 panel(s)"
+    },
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "showcase_group_comparison.csv"
+    },
+    {
+      "check": "statistics ran",
+      "ok": true,
+      "detail": "6 comparison row(s)"
+    },
+    {
+      "check": "panel saved",
+      "ok": true,
+      "detail": "2 panel(s)"
+    },
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "relationship_data.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "panel saved",
+      "ok": true,
+      "detail": "3 panel(s)"
+    },
+    {
+      "check": "composite figure saved",
+      "ok": true,
+      "detail": "master_composite.png, master_composite.pdf, master_composite.svg"
+    },
+    {
+      "check": "composite package saved",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_composite.mmfpackage"
+    }
+  ],
+  "failed_checks": [],
+  "captures": [
+    {
+      "name": "01_start_screen",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/01_start_screen.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "start screen"
+    },
+    {
+      "name": "01b_help",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/01b_help.png",
+      "widget": "HelpDialog",
+      "size": "640x560",
+      "note": "Help dialog"
+    },
+    {
+      "name": "02_ambiguous_table",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/02_ambiguous_table.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "table with unhelpful headers, recommendations"
+    },
+    {
+      "name": "03_proposed_roles",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/03_proposed_roles.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "the app's proposal"
+    },
+    {
+      "name": "04_role_corrected",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/04_role_corrected.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "y changed by the researcher"
+    },
+    {
+      "name": "05_scatter_same_table",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/05_scatter_same_table.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "a scatter from the same table"
+    },
+    {
+      "name": "06_default_box",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/06_default_box.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "default box with adaptive points"
+    },
+    {
+      "name": "07_open_circles",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/07_open_circles.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "open circles"
+    },
+    {
+      "name": "08_observations_styled",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/08_observations_styled.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "styled observations, n labels"
+    },
+    {
+      "name": "09_statistics",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/09_statistics.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "brackets with exact P; table; methods sentence"
+    },
+    {
+      "name": "10_experimental_presets",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/10_experimental_presets.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "experimental presets listed"
+    },
+    {
+      "name": "11_preview_dialog",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/11_preview_dialog.png",
+      "widget": "QDialog",
+      "size": "908x638",
+      "note": "Preview preset: Box + observations (outline)"
+    },
+    {
+      "name": "12_after_preset",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/12_after_preset.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "after the preset"
+    },
+    {
+      "name": "13_adjusted_after_preset",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/13_adjusted_after_preset.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "still adjustable after the preset"
+    },
+    {
+      "name": "14_package_confirmation",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/14_package_confirmation.png",
+      "widget": "QMessageBox",
+      "size": "400x308",
+      "note": "Save Reproducible Figure Package (confirmation)"
+    },
+    {
+      "name": "15_home_question",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/15_home_question.png",
+      "widget": "QMessageBox",
+      "size": "400x126",
+      "note": "Return to upload page? (question)"
+    },
+    {
+      "name": "16_start_screen_again",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/16_start_screen_again.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "cleared"
+    },
+    {
+      "name": "17_reopened_from_package",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/17_reopened_from_package.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "restored from the package alone"
+    },
+    {
+      "name": "18_volcano_detected",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/18_volcano_detected.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "DESeq2 names detected"
+    },
+    {
+      "name": "19_volcano_none",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/19_volcano_none.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "renamed columns: every role (none), Messages names the missing roles"
+    },
+    {
+      "name": "20_volcano_manual",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/20_volcano_manual.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "roles assigned by hand"
+    },
+    {
+      "name": "21_heatmap_values",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/21_heatmap_values.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "row id + Value columns list"
+    },
+    {
+      "name": "22_heatmap_zscore",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/22_heatmap_zscore.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "row z-score, columns in file order"
+    },
+    {
+      "name": "23_kaplan_meier_logrank",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/23_kaplan_meier_logrank.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "log-rank P on the figure"
+    },
+    {
+      "name": "24_three_panels_saved",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/24_three_panels_saved.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "three panels saved"
+    },
+    {
+      "name": "25_figure_builder",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/25_figure_builder.png",
+      "widget": "FigureBuilderDialog",
+      "size": "1500x902",
+      "note": "Multi-panel Figure Builder"
+    },
+    {
+      "name": "26_end",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/26_end.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "end state"
+    }
+  ],
+  "steps": [
+    {
+      "step": "Open data file: ambiguous_columns.csv"
+    },
+    {
+      "step": "Plot type: Box / violin plot with points"
+    },
+    {
+      "step": "Map columns: y <- score_final"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Plot type: Scatter plot"
+    },
+    {
+      "step": "Map columns: x <- measurement_2"
+    },
+    {
+      "step": "Map columns: y <- score_final"
+    },
+    {
+      "step": "Map columns: color <- condition_code"
+    },
+    {
+      "step": "Map columns: label <- thing"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Open data file: showcase_group_comparison.csv"
+    },
+    {
+      "step": "Plot type: Box / violin plot with points"
+    },
+    {
+      "step": "Map columns: x <- group"
+    },
+    {
+      "step": "Map columns: y <- cytokine_pg_ml"
+    },
+    {
+      "step": "Labels & size: x='', y='Cytokine (pg/ml)'"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: points = False"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: points = True"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_jitter_width = 0.1"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_jitter_width = 0.35"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_size = 60"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_fill = open"
+    },
+    {
+      "step": "Options: point_edge = same"
+    },
+    {
+      "step": "Options: point_edge_width = 1.2"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_fill = filled"
+    },
+    {
+      "step": "Options: point_edge = dark"
+    },
+    {
+      "step": "Options: point_edge_width = 1.0"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_arrangement = beeswarm"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_arrangement = jitter"
+    },
+    {
+      "step": "Options: box_fill = outline"
+    },
+    {
+      "step": "Options: show_n = below"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Statistics: test=welch_t, comparison=all_pairs, group=group, correction=holm, annotation=p"
+    },
+    {
+      "step": "Run statistics"
+    },
+    {
+      "step": "Statistics: Export stats table -> master_stats_table.csv"
+    },
+    {
+      "dialog": "file",
+      "title": "Export statistics table",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_stats_table.csv"
+    },
+    {
+      "step": "Statistics: Export method report -> master_methods.md"
+    },
+    {
+      "dialog": "file",
+      "title": "Export method report",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_methods.md"
+    },
+    {
+      "step": "Figure preset: Show experimental presets = True"
+    },
+    {
+      "step": "Figure preset: Preview & apply... for 'Box + observations (outline)' -> Apply"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: point_size = 40"
+    },
+    {
+      "step": "Options: point_jitter_width = 0.25"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Export PDF -> master_box.pdf"
+    },
+    {
+      "dialog": "file",
+      "title": "Export PDF",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_box.pdf"
+    },
+    {
+      "step": "Export SVG -> master_box.svg"
+    },
+    {
+      "dialog": "file",
+      "title": "Export SVG",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_box.svg"
+    },
+    {
+      "step": "Export PNG -> master_box.png"
+    },
+    {
+      "dialog": "file",
+      "title": "Export PNG",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_box.png"
+    },
+    {
+      "step": "Export JSON -> master_box.plot_spec.json"
+    },
+    {
+      "dialog": "file",
+      "title": "Export PlotSpec JSON",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_box.plot_spec.json"
+    },
+    {
+      "step": "Save Figure Package -> master_box.mmfpackage"
+    },
+    {
+      "messagebox": "question",
+      "title": "Save Reproducible Figure Package",
+      "text": "<b>Figure packages include the data required to reproduce the figure.</b><br>This figure package contains the data required to reproduce the figure: a frozen copy of every table the plot was drawn from (and, when available, the original source file), the plot specification, statistics, preprocessing records and preview images. Share it only with people who may see these data.<br><br><b>This packag"
+    },
+    {
+      "dialog": "file",
+      "title": "Save Reproducible Figure Package",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_box.mmfpackage"
+    },
+    {
+      "messagebox": "information",
+      "title": "Figure package saved",
+      "text": "Saved /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_box.mmfpackage\n(0.15 MB). Copy this one file to another folder or computer and use Open Figure Package to reproduce the figure."
+    },
+    {
+      "step": "Home / Upload New Data"
+    },
+    {
+      "messagebox": "instance",
+      "title": "Return to upload page?",
+      "text": "Return to the upload page and clear the current data?",
+      "buttons": [
+        "Clear and continue",
+        "Cancel",
+        "Save PlotSpec first\u2026"
+      ]
+    },
+    {
+      "step": "File > Open Figure Package... -> master_box.mmfpackage"
+    },
+    {
+      "step": "Open data file: rnaseq_results.csv"
+    },
+    {
+      "step": "Plot type: Volcano plot"
+    },
+    {
+      "step": "Open data file: rnaseq_results_renamed.csv"
+    },
+    {
+      "step": "Plot type: Volcano plot"
+    },
+    {
+      "step": "Map columns: x <- effect_measure"
+    },
+    {
+      "step": "Map columns: p <- p_adjusted"
+    },
+    {
+      "step": "Map columns: label <- name"
+    },
+    {
+      "step": "Map columns: id_col <- feature"
+    },
+    {
+      "step": "Options: use_fdr = True"
+    },
+    {
+      "step": "Options: top_n = 8"
+    },
+    {
+      "step": "Labels & size: x='log2 fold change', y='-log10 adjusted P'"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Export PDF -> master_volcano.pdf"
+    },
+    {
+      "dialog": "file",
+      "title": "Export PDF",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_volcano.pdf"
+    },
+    {
+      "step": "Open data file: feature_sample_matrix.csv"
+    },
+    {
+      "step": "Plot type: Clustered heatmap"
+    },
+    {
+      "step": "Map columns: row_id <- gene_symbol"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: scale = row_zscore"
+    },
+    {
+      "step": "Options: cluster_columns = False"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Open data file: survival.csv"
+    },
+    {
+      "step": "Plot type: Kaplan-Meier survival curve"
+    },
+    {
+      "step": "Map columns: time <- time_months"
+    },
+    {
+      "step": "Map columns: event <- event"
+    },
+    {
+      "step": "Map columns: group <- arm"
+    },
+    {
+      "step": "Options: y_scale = percent"
+    },
+    {
+      "step": "Labels & size: x='Time (months)', y='Survival (%)'"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Statistics: test=logrank, group=arm, annotation=p"
+    },
+    {
+      "step": "Run statistics"
+    },
+    {
+      "step": "6. Multi-panel figure: Save current plot as panel"
+    },
+    {
+      "step": "Open data file: showcase_group_comparison.csv"
+    },
+    {
+      "step": "Plot type: Box / violin plot with points"
+    },
+    {
+      "step": "Map columns: x <- group"
+    },
+    {
+      "step": "Map columns: y <- cytokine_pg_ml"
+    },
+    {
+      "step": "Options: box_fill = outline"
+    },
+    {
+      "step": "Options: point_size = 40"
+    },
+    {
+      "step": "Labels & size: x='', y='Cytokine (pg/ml)'"
+    },
+    {
+      "step": "Statistics: test=welch_t, comparison=all_pairs, group=group, correction=holm, annotation=p"
+    },
+    {
+      "step": "Run statistics"
+    },
+    {
+      "step": "6. Multi-panel figure: Save current plot as panel"
+    },
+    {
+      "step": "Open data file: relationship_data.csv"
+    },
+    {
+      "step": "Plot type: Scatter plot"
+    },
+    {
+      "step": "Map columns: x <- expression_a"
+    },
+    {
+      "step": "Map columns: y <- expression_b"
+    },
+    {
+      "step": "Map columns: color <- cell_line"
+    },
+    {
+      "step": "Labels & size: x='Expression A (log2)', y='Expression B (log2)'"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "6. Multi-panel figure: Save current plot as panel"
+    },
+    {
+      "step": "Open Figure Builder..."
+    },
+    {
+      "step": "Figure Builder: Save figure... -> master_composite.png"
+    },
+    {
+      "dialog": "file",
+      "title": "Save multi-panel figure",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_composite.png"
+    },
+    {
+      "messagebox": "information",
+      "title": "Saved",
+      "text": "Wrote Figure 1 and sidecar next to:\n/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_composite.png"
+    },
+    {
+      "step": "Figure Builder: Save Figure Package... -> master_composite.mmfpackage"
+    },
+    {
+      "messagebox": "question",
+      "title": "Save Reproducible Figure Package",
+      "text": "<b>Figure packages include the data required to reproduce the figure.</b><br>This figure package contains the data required to reproduce the figure: a frozen copy of every table the plot was drawn from (and, when available, the original source file), the plot specification, statistics, preprocessing records and preview images. Share it only with people who may see these data.<br><br>This package w"
+    },
+    {
+      "dialog": "file",
+      "title": "Save Reproducible Figure Package",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_composite.mmfpackage"
+    },
+    {
+      "messagebox": "information",
+      "title": "Figure package saved",
+      "text": "Saved /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_composite.mmfpackage (0.41 MB)."
+    }
+  ],
+  "facts": {
+    "detected_types": "27 rows \u00d7 6 columns. Edit cells to update the figure live.\nDetected types: col_A (text), measurement_2 (num), condition_code (text), thing (text), score_final (num), id_value (text)\nWarnings: none",
+    "recommendation_header": "Detected data type: <b>generic_long</b>. 6 suggested figure(s) \u2014 all use the Publication style.",
+    "box_proposal": {
+      "x": "condition_code",
+      "y": "measurement_2",
+      "hue": "(none)"
+    },
+    "group_n": {
+      "Control": 7,
+      "Treatment A": 9,
+      "Treatment B": 11,
+      "Treatment C": 13
+    },
+    "stats_rows": [
+      {
+        "Comparison": "Control vs Treatment A",
+        "Test": "Welch's t-test",
+        "p": "0.0215",
+        "adj p": "0.043",
+        "effect": "Hedges' g=-1.39",
+        "n": "16"
+      },
+      {
+        "Comparison": "Control vs Treatment B",
+        "Test": "Welch's t-test",
+        "p": "6.076e-05",
+        "adj p": "0.0003038",
+        "effect": "Hedges' g=-3.06",
+        "n": "18"
+      },
+      {
+        "Comparison": "Control vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "0.9681",
+        "adj p": "0.9681",
+        "effect": "Hedges' g=-0.0172",
+        "n": "20"
+      },
+      {
+        "Comparison": "Treatment A vs Treatment B",
+        "Test": "Welch's t-test",
+        "p": "6.612e-05",
+        "adj p": "0.0003038",
+        "effect": "Hedges' g=-2.16",
+        "n": "20"
+      },
+      {
+        "Comparison": "Treatment A vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "0.008637",
+        "adj p": "0.02591",
+        "effect": "Hedges' g=1.09",
+        "n": "22"
+      },
+      {
+        "Comparison": "Treatment B vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "1.1e-06",
+        "adj p": "6.6e-06",
+        "effect": "Hedges' g=2.59",
+        "n": "24"
+      }
+    ],
+    "preview_safety": "Checked: no data, column role, statistical test, threshold or transformation changes.",
+    "preview_status": "Applied preset \u201cBox + observations (outline)\u201d after preview: 12 setting(s).",
+    "stats_rows_after_preset": [
+      {
+        "Comparison": "Control vs Treatment A",
+        "Test": "Welch's t-test",
+        "p": "0.0215",
+        "adj p": "0.043",
+        "effect": "Hedges' g=-1.39",
+        "n": "16"
+      },
+      {
+        "Comparison": "Control vs Treatment B",
+        "Test": "Welch's t-test",
+        "p": "6.076e-05",
+        "adj p": "0.0003038",
+        "effect": "Hedges' g=-3.06",
+        "n": "18"
+      },
+      {
+        "Comparison": "Control vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "0.9681",
+        "adj p": "0.9681",
+        "effect": "Hedges' g=-0.0172",
+        "n": "20"
+      },
+      {
+        "Comparison": "Treatment A vs Treatment B",
+        "Test": "Welch's t-test",
+        "p": "6.612e-05",
+        "adj p": "0.0003038",
+        "effect": "Hedges' g=-2.16",
+        "n": "20"
+      },
+      {
+        "Comparison": "Treatment A vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "0.008637",
+        "adj p": "0.02591",
+        "effect": "Hedges' g=1.09",
+        "n": "22"
+      },
+      {
+        "Comparison": "Treatment B vs Treatment C",
+        "Test": "Welch's t-test",
+        "p": "1.1e-06",
+        "adj p": "6.6e-06",
+        "effect": "Hedges' g=2.59",
+        "n": "24"
+      }
+    ],
+    "reopened_mapping": {
+      "x": "group",
+      "y": "cytokine_pg_ml",
+      "hue": null,
+      "kind": "box",
+      "points": true,
+      "point_arrangement": "jitter",
+      "point_jitter_width": 0.25,
+      "point_size": 40.0,
+      "point_marker": "o",
+      "point_fill": "filled",
+      "point_edge": "dark",
+      "point_edge_width": 0.4,
+      "point_alpha": 0.0,
+      "box_width": 0.5,
+      "box_fill": "outline",
+      "box_line_width": 0.0,
+      "median_line_width": 0.0,
+      "whisker_cap_width": 0.5,
+      "show_outliers": false,
+      "violin_alpha": 0.45,
+      "orientation": "vertical",
+      "group_spacing": 1.0,
+      "category_order": "data",
+      "show_n": "below",
+      "x_tick_rotation": "auto"
+    },
+    "reopened_status": "Publication check: passed",
+    "volcano_detected": {
+      "x": "log2FoldChange",
+      "p": "pvalue",
+      "label": "gene_symbol",
+      "id_col": "(none)"
+    },
+    "volcano_renamed_proposal": {
+      "x": "(none)",
+      "p": "(none)",
+      "label": "(none)",
+      "id_col": "(none)"
+    },
+    "km_stats": [
+      {
+        "Comparison": "arm",
+        "Test": "Log-rank test",
+        "p": "0.3061",
+        "adj p": "",
+        "effect": "",
+        "n": "80"
+      }
+    ],
+    "panels_saved": 3,
+    "composite_files": [
+      "master_composite.png",
+      "master_composite.pdf",
+      "master_composite.svg"
+    ]
+  },
+  "notes": [],
+  "generated": "2026-09-23T14:18:11"
+}
