@@ -1,0 +1,184 @@
+{
+  "captures": [
+    {
+      "name": "01_open_data",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/01_open_data.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "DE table with standard names"
+    },
+    {
+      "name": "02_mapping_detected",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/02_mapping_detected.png",
+      "widget": "mapping",
+      "size": "566x147",
+      "note": "roles detected from DESeq2-style names"
+    },
+    {
+      "name": "02b_messages",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/02b_messages.png",
+      "widget": "messages",
+      "size": "622x14",
+      "note": "the Messages text about detected columns"
+    },
+    {
+      "name": "03_initial_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/03_initial_plot.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "volcano from detected roles"
+    },
+    {
+      "name": "04_mapping_renamed_before",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/04_mapping_renamed_before.png",
+      "widget": "mapping",
+      "size": "566x147",
+      "note": "what the app proposes for renamed columns"
+    },
+    {
+      "name": "04b_window_before",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/04b_window_before.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": ""
+    },
+    {
+      "name": "05_mapping_renamed_after",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/05_mapping_renamed_after.png",
+      "widget": "mapping",
+      "size": "566x147",
+      "note": "roles assigned by hand"
+    },
+    {
+      "name": "05b_plot_after_mapping",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/05b_plot_after_mapping.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "the volcano renders"
+    },
+    {
+      "name": "06_customization",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/06_customization.png",
+      "widget": "options",
+      "size": "566x502",
+      "note": "thresholds"
+    },
+    {
+      "name": "06b_final_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/06b_final_plot.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "final volcano"
+    }
+  ],
+  "checks": [
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "rnaseq_results.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "rnaseq_results_renamed.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "export png",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/volcano_manual_mapping/volcano.png"
+    },
+    {
+      "check": "export pdf",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/volcano_manual_mapping/volcano.pdf"
+    },
+    {
+      "check": "export json",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/volcano_manual_mapping/volcano.plot_spec.json"
+    }
+  ],
+  "steps": [
+    {
+      "step": "Open data file: rnaseq_results.csv"
+    },
+    {
+      "step": "Plot type: Volcano plot"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Open data file: rnaseq_results_renamed.csv"
+    },
+    {
+      "step": "Plot type: Volcano plot"
+    },
+    {
+      "step": "Map columns: x <- effect_measure"
+    },
+    {
+      "step": "Map columns: p <- p_raw"
+    },
+    {
+      "step": "Map columns: label <- name"
+    },
+    {
+      "step": "Map columns: id_col <- feature"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Map columns: p <- p_adjusted"
+    },
+    {
+      "step": "Options: lfc_cutoff = 1.0"
+    },
+    {
+      "step": "Options: p_cutoff = 0.05"
+    },
+    {
+      "step": "Labels & size: x='log2 fold change', y='-log10 adjusted P'"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Export PNG -> volcano.png"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/volcano_manual_mapping/volcano.png"
+    },
+    {
+      "step": "Export PDF -> volcano.pdf"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/volcano_manual_mapping/volcano.pdf"
+    },
+    {
+      "step": "Export JSON -> volcano.plot_spec.json"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/volcano_manual_mapping/volcano.plot_spec.json"
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "captures": [
+    {
+      "name": "01_open_data",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/scatter_regression/01_open_data.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "table loaded"
+    },
+    {
+      "name": "02_mapping",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/scatter_regression/02_mapping.png",
+      "widget": "mapping",
+      "size": "566x147",
+      "note": "x, y, color roles"
+    },
+    {
+      "name": "03_initial_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/scatter_regression/03_initial_plot.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "scatter with per-group regression lines"
+    },
+    {
+      "name": "04_customization",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/scatter_regression/04_customization.png",
+      "widget": "options",
+      "size": "566x252",
+      "note": "regression options"
+    },
+    {
+      "name": "04b_customized_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/scatter_regression/04b_customized_plot.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "after customisation"
+    },
+    {
+      "name": "05_statistics",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/scatter_regression/05_statistics.png",
+      "widget": "stats",
+      "size": "566x847",
+      "note": "6. Statistics panel after Run statistics"
+    },
+    {
+      "name": "05b_plot_with_stats",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/scatter_regression/05b_plot_with_stats.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "figure after statistics"
+    },
+    {
+      "name": "06_final_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/scatter_regression/06_final_plot.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "final"
+    }
+  ],
+  "checks": [
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "relationship_data.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "statistics ran",
+      "ok": true,
+      "detail": "2 comparison row(s)"
+    },
+    {
+      "check": "export pdf",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/scatter_regression/scatter.pdf"
+    },
+    {
+      "check": "export png",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/scatter_regression/scatter.png"
+    }
+  ],
+  "steps": [
+    {
+      "step": "Open data file: relationship_data.csv"
+    },
+    {
+      "step": "Plot type: Scatter plot"
+    },
+    {
+      "step": "Map columns: x <- expression_a"
+    },
+    {
+      "step": "Map columns: y <- expression_b"
+    },
+    {
+      "step": "Map columns: color <- cell_line"
+    },
+    {
+      "step": "Map columns: label <- (none)"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: show_r = True"
+    },
+    {
+      "step": "Options: show_n = True"
+    },
+    {
+      "step": "Options: fit_stats_loc = upper left"
+    },
+    {
+      "step": "Labels & size: title='', x='Expression A (log2)', y='Expression B (log2)'"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Statistics: test=spearman, annotation=p"
+    },
+    {
+      "step": "Run statistics"
+    },
+    {
+      "step": "Export PDF -> scatter.pdf"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/scatter_regression/scatter.pdf"
+    },
+    {
+      "step": "Export PNG -> scatter.png"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/scatter_regression/scatter.png"
+    }
+  ]
+}

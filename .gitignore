@@ -90,3 +90,12 @@ CLAUDE.md
 
 # Private diagnostic notes about a collaborator's workbooks stay local
 reports/collaborator_concerns/
+
+# tutorial: generated / machine-local artefacts
+tutorial/automation/_outputs/
+tutorial/automation/_onscreen_test/
+tutorial/html/
+tutorial/videos/raw/
+tutorial/videos/final/
+tutorial/slides/_render/
+tutorial/slides/_crops/

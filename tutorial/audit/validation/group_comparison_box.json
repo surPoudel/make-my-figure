@@ -1,0 +1,286 @@
+{
+  "tutorial_id": "group_comparison_box",
+  "title": "Box / violin plot with points and statistics",
+  "datasets": [
+    "group_comparison.csv"
+  ],
+  "mode": "offscreen",
+  "status": "PASS",
+  "error": "",
+  "seconds": 36.3,
+  "checks": [
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "group_comparison.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "statistics ran",
+      "ok": true,
+      "detail": "3 comparison row(s)"
+    },
+    {
+      "check": "export png",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/group_comparison_box/box_stats.png"
+    },
+    {
+      "check": "export svg",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/group_comparison_box/box_stats.svg"
+    },
+    {
+      "check": "stats table exported",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/group_comparison_box/box_stats_table.csv"
+    },
+    {
+      "check": "method report exported",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/group_comparison_box/box_methods.md"
+    }
+  ],
+  "failed_checks": [],
+  "captures": [
+    {
+      "name": "01_open_data",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/group_comparison_box/01_open_data.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": ""
+    },
+    {
+      "name": "02_mapping",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/group_comparison_box/02_mapping.png",
+      "widget": "mapping",
+      "size": "566x91",
+      "note": ""
+    },
+    {
+      "name": "03_initial_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/group_comparison_box/03_initial_plot.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "box plot with points"
+    },
+    {
+      "name": "04_customization",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/group_comparison_box/04_customization.png",
+      "widget": "options",
+      "size": "566x141",
+      "note": ""
+    },
+    {
+      "name": "04b_violin",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/group_comparison_box/04b_violin.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "violin variant"
+    },
+    {
+      "name": "05_statistics",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/group_comparison_box/05_statistics.png",
+      "widget": "stats",
+      "size": "566x847",
+      "note": "statistics panel"
+    },
+    {
+      "name": "05b_plot_with_brackets",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/group_comparison_box/05b_plot_with_brackets.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "significance brackets"
+    },
+    {
+      "name": "06_final_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/group_comparison_box/06_final_plot.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "final"
+    }
+  ],
+  "steps": [
+    {
+      "step": "Open data file: group_comparison.csv"
+    },
+    {
+      "step": "Plot type: Box / violin plot with points"
+    },
+    {
+      "step": "Map columns: x <- group"
+    },
+    {
+      "step": "Map columns: y <- response"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: kind = violin"
+    },
+    {
+      "step": "Options: point_size = 12"
+    },
+    {
+      "step": "Labels & size: x='', y='Response (a.u.)'"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: kind = box"
+    },
+    {
+      "step": "Statistics: test=welch_t, comparison=all_pairs, group=group, correction=holm, annotation=p"
+    },
+    {
+      "step": "Run statistics"
+    },
+    {
+      "step": "Export PNG -> box_stats.png"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/group_comparison_box/box_stats.png"
+    },
+    {
+      "step": "Export SVG -> box_stats.svg"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/group_comparison_box/box_stats.svg"
+    },
+    {
+      "step": "Statistics: Export stats table -> box_stats_table.csv"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/group_comparison_box/box_stats_table.csv"
+    },
+    {
+      "step": "Statistics: Export method report -> box_methods.md"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/group_comparison_box/box_methods.md"
+    }
+  ],
+  "facts": {
+    "columns": [
+      "subject_id",
+      "group",
+      "sex",
+      "response",
+      "baseline"
+    ],
+    "recommendation_header": "Detected data type: <b>generic_long</b>. 6 suggested figure(s) \u2014 all use the Publication style.",
+    "recommendation_cards": [
+      "<b>Box / violin plot with points</b>  <span style='color:#666'>(72% match)</span>",
+      "<b>Ridge / density plot</b>  <span style='color:#666'>(62% match)</span>",
+      "<b>Bar plot with error bars</b>  <span style='color:#666'>(60% match)</span>",
+      "<b>Grouped bar plot with error bars</b>  <span style='color:#666'>(55% match)</span>",
+      "<b>Scatter plot</b>  <span style='color:#666'>(50% match)</span>",
+      "<b>Frequency bar of 'group' (count categories)</b>  <span style='color:#666'>(45% match)</span>"
+    ],
+    "proposed_mapping": {
+      "x": "group",
+      "y": "response"
+    },
+    "kind_choices": [
+      "box",
+      "violin"
+    ],
+    "test_choices": [
+      "Auto-suggest",
+      "Student's t-test",
+      "Welch's t-test",
+      "Mann-Whitney U test",
+      "Paired t-test",
+      "Wilcoxon signed-rank test",
+      "One-way ANOVA",
+      "Two-way ANOVA",
+      "Repeated-measures ANOVA",
+      "Kruskal-Wallis test",
+      "Dunn's test (post-hoc)",
+      "Chi-square test",
+      "Fisher's exact test",
+      "Log-rank test",
+      "Cox proportional-hazards (HR)",
+      "Pearson correlation",
+      "Spearman correlation",
+      "Linear regression",
+      "GLM regression (multi-predictor)"
+    ],
+    "comparison_choices": [
+      "Automatic",
+      "Compare all groups (pairwise)",
+      "Compare to control",
+      "Compare within each x category",
+      "Selected pairs",
+      "Omnibus only"
+    ],
+    "correction_choices": [
+      "Benjamini-Hochberg FDR",
+      "Bonferroni",
+      "Holm-Bonferroni",
+      "None"
+    ],
+    "annotation_choices": [
+      "Stars only",
+      "P-value only",
+      "Adjusted p-value only",
+      "P-value + stars",
+      "Statistic only",
+      "Effect size only",
+      "P-value + statistic",
+      "P-value + effect size",
+      "Full compact",
+      "Custom (checkboxes)",
+      "Custom template"
+    ],
+    "suggested_test_note": "",
+    "stats_metadata_keys": [
+      "statistics",
+      "statistics_report"
+    ],
+    "stats_method_sentence": "Statistical analyses were performed with Python (scipy 1.17.1, statsmodels 0.14.6, numpy 2.1.2). Tests used: Welch's t-test. P-values were adjusted across 3 comparisons using Holm-Bonferroni correction. Exact p-values are reported unless otherwise noted. Non-finite values were removed listwise before testing. Users are responsible for confirming that each test is appropriate for their experimental design.",
+    "stats_table_rows": [
+      {
+        "Comparison": "Vehicle vs Low dose",
+        "Test": "Welch's t-test",
+        "p": "0.8374",
+        "adj p": "0.8374",
+        "effect": "Hedges' g=-0.0859",
+        "n": "18"
+      },
+      {
+        "Comparison": "Vehicle vs High dose",
+        "Test": "Welch's t-test",
+        "p": "0.0001078",
+        "adj p": "0.0003235",
+        "effect": "Hedges' g=-1.94",
+        "n": "20"
+      },
+      {
+        "Comparison": "Low dose vs High dose",
+        "Test": "Welch's t-test",
+        "p": "0.007535",
+        "adj p": "0.01507",
+        "effect": "Hedges' g=-1.29",
+        "n": "22"
+      }
+    ]
+  },
+  "notes": [],
+  "generated": "2026-09-22T19:59:48"
+}

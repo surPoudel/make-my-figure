@@ -1,0 +1,52 @@
+{
+  "captures": [
+    {
+      "name": "01_start_screen",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/getting_started/01_start_screen.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "start screen"
+    },
+    {
+      "name": "02_file_menu",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/getting_started/02_file_menu.png",
+      "widget": "QMenu",
+      "size": "533x224",
+      "note": "File menu"
+    },
+    {
+      "name": "03_help_dialog",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/getting_started/03_help_dialog.png",
+      "widget": "HelpDialog",
+      "size": "640x560",
+      "note": "Help dialog"
+    },
+    {
+      "name": "04_workspace",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/getting_started/04_workspace.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "main layout with example data"
+    },
+    {
+      "name": "05_controls_full",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/getting_started/05_controls_full.png",
+      "widget": "controls_full",
+      "size": "584x3357",
+      "note": "the whole control column, top to bottom"
+    },
+    {
+      "name": "06_messages_tab",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/getting_started/06_messages_tab.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "Messages tab"
+    }
+  ],
+  "checks": [],
+  "steps": [
+    {
+      "step": "File > Open example > Box / violin plot with points"
+    }
+  ]
+}

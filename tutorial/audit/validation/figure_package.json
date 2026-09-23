@@ -1,0 +1,258 @@
+{
+  "tutorial_id": "figure_package",
+  "title": "Reproducibility: PlotSpec and Figure Package",
+  "datasets": [
+    "group_comparison.csv"
+  ],
+  "mode": "offscreen",
+  "status": "PASS",
+  "error": "",
+  "seconds": 41.6,
+  "checks": [
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "group_comparison.csv"
+    },
+    {
+      "check": "statistics ran",
+      "ok": true,
+      "detail": "3 comparison row(s)"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "export json",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_package/box.plot_spec.json"
+    },
+    {
+      "check": "figure package saved",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_package/box.mmfpackage"
+    },
+    {
+      "check": "returned to start screen",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "package opened and rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "returned to start screen",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "plotspec opened and rendered",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "failed_checks": [],
+  "captures": [
+    {
+      "name": "01_plot_with_stats",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/figure_package/01_plot_with_stats.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "figure to preserve"
+    },
+    {
+      "name": "02_export_group",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/figure_package/02_export_group.png",
+      "widget": "export",
+      "size": "566x231",
+      "note": "5. Export group"
+    },
+    {
+      "name": "03_package_confirmation",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/figure_package/03_package_confirmation.png",
+      "widget": "QMessageBox",
+      "size": "400x308",
+      "note": "Save Reproducible Figure Package (confirmation)"
+    },
+    {
+      "name": "04_home_question",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/figure_package/04_home_question.png",
+      "widget": "QMessageBox",
+      "size": "400x126",
+      "note": "Return to upload page? (question)"
+    },
+    {
+      "name": "04_home_again",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/figure_package/04_home_again.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "back at the start screen"
+    },
+    {
+      "name": "05_reopened_from_package",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/figure_package/05_reopened_from_package.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "figure restored from the package alone"
+    },
+    {
+      "name": "06_open_plotspec",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/figure_package/06_open_plotspec.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "PlotSpec reopened together with its data file"
+    }
+  ],
+  "steps": [
+    {
+      "step": "Open data file: group_comparison.csv"
+    },
+    {
+      "step": "Plot type: Box / violin plot with points"
+    },
+    {
+      "step": "Map columns: x <- group"
+    },
+    {
+      "step": "Map columns: y <- response"
+    },
+    {
+      "step": "Statistics: test=welch_t, comparison=all_pairs, group=group, correction=holm, annotation=p"
+    },
+    {
+      "step": "Run statistics"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Export JSON -> box.plot_spec.json"
+    },
+    {
+      "dialog": "file",
+      "title": "Export PlotSpec JSON",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_package/box.plot_spec.json"
+    },
+    {
+      "step": "Save Figure Package -> box.mmfpackage"
+    },
+    {
+      "messagebox": "question",
+      "title": "Save Reproducible Figure Package",
+      "text": "<b>Figure packages include the data required to reproduce the figure.</b><br>This figure package contains the data required to reproduce the figure: a frozen copy of every table the plot was drawn from (and, when available, the original source file), the plot specification, statistics, preprocessing records and preview images. Share it only with people who may see these data.<br><br><b>This packag"
+    },
+    {
+      "dialog": "file",
+      "title": "Save Reproducible Figure Package",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_package/box.mmfpackage"
+    },
+    {
+      "messagebox": "information",
+      "title": "Figure package saved",
+      "text": "Saved /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_package/box.mmfpackage\n(0.09 MB). Copy this one file to another folder or computer and use Open Figure Package to reproduce the figure."
+    },
+    {
+      "step": "Home / Upload New Data"
+    },
+    {
+      "messagebox": "instance",
+      "title": "Return to upload page?",
+      "text": "Return to the upload page and clear the current data?",
+      "buttons": [
+        "Clear and continue",
+        "Cancel",
+        "Save PlotSpec first\u2026"
+      ]
+    },
+    {
+      "step": "File > Open Figure Package... -> box_copy.mmfpackage"
+    },
+    {
+      "step": "Home / Upload New Data"
+    },
+    {
+      "messagebox": "instance",
+      "title": "Return to upload page?",
+      "text": "Return to the upload page and clear the current data?",
+      "buttons": [
+        "Clear and continue",
+        "Cancel",
+        "Save PlotSpec first\u2026"
+      ]
+    },
+    {
+      "step": "File > Open PlotSpec... -> box.plot_spec.json + data group_comparison.csv"
+    },
+    {
+      "dialog": "file",
+      "title": "Open PlotSpec",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_package/box.plot_spec.json"
+    },
+    {
+      "dialog": "file",
+      "title": "Select the data file for this PlotSpec",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/datasets/group_comparison.csv"
+    }
+  ],
+  "facts": {
+    "export_buttons": [
+      "Export SVG",
+      "Export PNG",
+      "Export PDF",
+      "Export PlotSpec JSON (specification only)",
+      "Save Figure Package (.mmfpackage)",
+      "Export all as ZIP",
+      "Save template (example table)"
+    ],
+    "plotspec_top_level_keys": [
+      "plot_spec",
+      "render_metadata"
+    ],
+    "plotspec_has_source_digest": true,
+    "package_members": [
+      "data/source.mmftable.json",
+      "data/source.csv",
+      "data/original/source/group_comparison.csv",
+      "plot_spec.json",
+      "stats_spec.json",
+      "render_metadata.json",
+      "preview/figure.png",
+      "preview/figure.svg",
+      "preview/figure.pdf",
+      "environment/environment.json",
+      "README.txt",
+      "manifest.json"
+    ],
+    "package_size_kb": 93.6,
+    "reopened_mapping": {
+      "x": "group",
+      "y": "response",
+      "point_size": 8.0,
+      "kind": "box",
+      "points": true,
+      "x_tick_rotation": "auto"
+    },
+    "reopened_status": "Opened figure package box_copy.mmfpackage \u2014 integrity verified; frozen data from 2026-09-23T01:01:51Z. Editing and re-exporting work as usual.",
+    "reopened_stats_enabled": true,
+    "plotspec_file_dialogs": [
+      {
+        "dialog": "file",
+        "title": "Open PlotSpec",
+        "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_package/box.plot_spec.json"
+      },
+      {
+        "dialog": "file",
+        "title": "Select the data file for this PlotSpec",
+        "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/datasets/group_comparison.csv"
+      }
+    ],
+    "plotspec_reopened_status": "Opened PlotSpec box.plot_spec.json \u2014 runs locally.",
+    "plotspec_reopened_message": "Publication check: passed"
+  },
+  "notes": [],
+  "generated": "2026-09-22T20:02:03"
+}

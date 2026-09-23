@@ -1,0 +1,204 @@
+{
+  "tutorial_id": "kaplan_meier",
+  "title": "Kaplan-Meier survival curve",
+  "datasets": [
+    "survival.csv"
+  ],
+  "mode": "offscreen",
+  "status": "PASS",
+  "error": "",
+  "seconds": 33.6,
+  "checks": [
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "survival.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "statistics ran",
+      "ok": true,
+      "detail": "1 comparison row(s)"
+    },
+    {
+      "check": "export pdf",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/kaplan_meier/km.pdf"
+    },
+    {
+      "check": "export png",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/kaplan_meier/km.png"
+    }
+  ],
+  "failed_checks": [],
+  "captures": [
+    {
+      "name": "01_open_data",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/kaplan_meier/01_open_data.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": ""
+    },
+    {
+      "name": "02_mapping",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/kaplan_meier/02_mapping.png",
+      "widget": "mapping",
+      "size": "566x245",
+      "note": ""
+    },
+    {
+      "name": "03_initial_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/kaplan_meier/03_initial_plot.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "two survival curves"
+    },
+    {
+      "name": "04_customization",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/kaplan_meier/04_customization.png",
+      "widget": "options",
+      "size": "566x234",
+      "note": ""
+    },
+    {
+      "name": "05_statistics",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/kaplan_meier/05_statistics.png",
+      "widget": "stats",
+      "size": "566x847",
+      "note": ""
+    },
+    {
+      "name": "05b_plot_with_logrank",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/kaplan_meier/05b_plot_with_logrank.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "log-rank P on the figure"
+    },
+    {
+      "name": "06_final_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/kaplan_meier/06_final_plot.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "final"
+    }
+  ],
+  "steps": [
+    {
+      "step": "Open data file: survival.csv"
+    },
+    {
+      "step": "Plot type: Kaplan-Meier survival curve"
+    },
+    {
+      "step": "Map columns: time <- time_months"
+    },
+    {
+      "step": "Map columns: event <- event"
+    },
+    {
+      "step": "Map columns: group <- arm"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Labels & size: x='Time (months)', y='Survival probability'"
+    },
+    {
+      "step": "Options: reference_line = True"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Statistics: test=logrank, group=arm, annotation=p"
+    },
+    {
+      "step": "Run statistics"
+    },
+    {
+      "step": "Export PDF -> km.pdf"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/kaplan_meier/km.pdf"
+    },
+    {
+      "step": "Export PNG -> km.png"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/kaplan_meier/km.png"
+    }
+  ],
+  "facts": {
+    "columns": [
+      "patient_id",
+      "arm",
+      "time_months",
+      "event",
+      "age_group"
+    ],
+    "recommendation_header": "Detected data type: <b>survival</b>. 2 suggested figure(s) \u2014 all use the Publication style.",
+    "cards": [
+      "<b>Kaplan-Meier survival curve</b>  <span style='color:#666'>(88% match)</span>",
+      "<b>Frequency bar of 'arm' (count categories)</b>  <span style='color:#666'>(45% match)</span>"
+    ],
+    "proposed_mapping": {
+      "time": "time_months",
+      "event": "event",
+      "group": "(none)"
+    },
+    "multi_column_roles": [
+      "survival_columns"
+    ],
+    "options": {
+      "input_form": [
+        "subject_level",
+        "precomputed"
+      ],
+      "y_scale": [
+        "fraction",
+        "percent"
+      ],
+      "reference_line": "QDoubleSpinBox",
+      "curve_style": [
+        "step",
+        "line"
+      ],
+      "y_ticks": [
+        "auto",
+        "ends_and_midpoint"
+      ],
+      "x_min": "QDoubleSpinBox",
+      "x_max": "QDoubleSpinBox"
+    },
+    "stats_method_sentence": "Statistical analyses were performed with Python (scipy 1.17.1, statsmodels 0.14.6, numpy 2.1.2). Tests used: Log-rank test. Exact p-values are reported unless otherwise noted. Non-finite values were removed listwise before testing. Users are responsible for confirming that each test is appropriate for their experimental design.",
+    "stats_table_rows": [
+      {
+        "Comparison": "arm",
+        "Test": "Log-rank test",
+        "p": "0.3061",
+        "adj p": "",
+        "effect": "",
+        "n": "80"
+      }
+    ],
+    "stats_metadata_keys": [
+      "statistics",
+      "statistics_report"
+    ]
+  },
+  "notes": [],
+  "generated": "2026-09-22T19:59:46"
+}

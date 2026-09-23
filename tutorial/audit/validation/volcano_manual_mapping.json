@@ -1,0 +1,256 @@
+{
+  "tutorial_id": "volcano_manual_mapping",
+  "title": "Volcano plot: automatic detection and manual role mapping",
+  "datasets": [
+    "rnaseq_results.csv",
+    "rnaseq_results_renamed.csv"
+  ],
+  "mode": "offscreen",
+  "status": "PASS",
+  "error": "",
+  "seconds": 41.3,
+  "checks": [
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "rnaseq_results.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "rnaseq_results_renamed.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "export png",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/volcano_manual_mapping/volcano.png"
+    },
+    {
+      "check": "export pdf",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/volcano_manual_mapping/volcano.pdf"
+    },
+    {
+      "check": "export json",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/volcano_manual_mapping/volcano.plot_spec.json"
+    }
+  ],
+  "failed_checks": [],
+  "captures": [
+    {
+      "name": "01_open_data",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/01_open_data.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "DE table with standard names"
+    },
+    {
+      "name": "02_mapping_detected",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/02_mapping_detected.png",
+      "widget": "mapping",
+      "size": "566x147",
+      "note": "roles detected from DESeq2-style names"
+    },
+    {
+      "name": "02b_messages",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/02b_messages.png",
+      "widget": "messages",
+      "size": "622x14",
+      "note": "the Messages text about detected columns"
+    },
+    {
+      "name": "03_initial_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/03_initial_plot.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "volcano from detected roles"
+    },
+    {
+      "name": "04_mapping_renamed_before",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/04_mapping_renamed_before.png",
+      "widget": "mapping",
+      "size": "566x147",
+      "note": "what the app proposes for renamed columns"
+    },
+    {
+      "name": "04b_window_before",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/04b_window_before.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": ""
+    },
+    {
+      "name": "05_mapping_renamed_after",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/05_mapping_renamed_after.png",
+      "widget": "mapping",
+      "size": "566x147",
+      "note": "roles assigned by hand"
+    },
+    {
+      "name": "05b_plot_after_mapping",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/05b_plot_after_mapping.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "the volcano renders"
+    },
+    {
+      "name": "06_customization",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/06_customization.png",
+      "widget": "options",
+      "size": "566x502",
+      "note": "thresholds"
+    },
+    {
+      "name": "06b_final_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/06b_final_plot.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "final volcano"
+    }
+  ],
+  "steps": [
+    {
+      "step": "Open data file: rnaseq_results.csv"
+    },
+    {
+      "step": "Plot type: Volcano plot"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Open data file: rnaseq_results_renamed.csv"
+    },
+    {
+      "step": "Plot type: Volcano plot"
+    },
+    {
+      "step": "Map columns: x <- effect_measure"
+    },
+    {
+      "step": "Map columns: p <- p_raw"
+    },
+    {
+      "step": "Map columns: label <- name"
+    },
+    {
+      "step": "Map columns: id_col <- feature"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Map columns: p <- p_adjusted"
+    },
+    {
+      "step": "Options: lfc_cutoff = 1.0"
+    },
+    {
+      "step": "Options: p_cutoff = 0.05"
+    },
+    {
+      "step": "Labels & size: x='log2 fold change', y='-log10 adjusted P'"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Export PNG -> volcano.png"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/volcano_manual_mapping/volcano.png"
+    },
+    {
+      "step": "Export PDF -> volcano.pdf"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/volcano_manual_mapping/volcano.pdf"
+    },
+    {
+      "step": "Export JSON -> volcano.plot_spec.json"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/volcano_manual_mapping/volcano.plot_spec.json"
+    }
+  ],
+  "facts": {
+    "columns_standard": [
+      "gene_id",
+      "gene_symbol",
+      "baseMean",
+      "log2FoldChange",
+      "lfcSE",
+      "pvalue",
+      "padj",
+      "significance",
+      "annotation"
+    ],
+    "recommendation_header_standard": "Detected data type: <b>precomputed_differential</b>. 8 suggested figure(s) \u2014 all use the Publication style.",
+    "cards_standard": [
+      "<b>Volcano plot</b>  <span style='color:#666'>(92% match)</span>",
+      "<b>MA plot (differential expression)</b>  <span style='color:#666'>(70% match)</span>",
+      "<b>Ridge of per-column distributions (reshape \u2192 long)</b>  <span style='color:#666'>(50% match)</span>",
+      "<b>Box/violin of per-column distributions (reshape \u2192 long)</b>  <span style='color:#666'>(48% match)</span>",
+      "<b>Correlation heatmap (compute correlation matrix)</b>  <span style='color:#666'>(55% match)</span>",
+      "<b>Frequency bar of 'annotation' (count categories)</b>  <span style='color:#666'>(45% match)</span>",
+      "<b>Volcano plot \u2014 needs a differential results table</b>  <span style='color:#666'>(40% match)</span>",
+      "<b>MA plot \u2014 needs a differential results table</b>  <span style='color:#666'>(38% match)</span>"
+    ],
+    "proposed_mapping_standard": {
+      "x": "log2FoldChange",
+      "p": "pvalue",
+      "label": "gene_symbol",
+      "id_col": "(none)"
+    },
+    "message_after_detection": "Publication check: passed",
+    "columns_renamed": [
+      "feature",
+      "name",
+      "mean_expr",
+      "effect_measure",
+      "lfcSE",
+      "p_raw",
+      "p_adjusted",
+      "call",
+      "annotation"
+    ],
+    "proposed_mapping_renamed": {
+      "x": "(none)",
+      "p": "(none)",
+      "label": "(none)",
+      "id_col": "(none)"
+    },
+    "message_renamed": "\u26a0 Your uploaded data does not have the columns required for \u201cVolcano plot\u201d.\nvolcano_plot: missing required column(s) ['log2_fold_change', 'p_value']. Available columns: ['feature', 'name', 'mean_expr', 'effect_measure', 'lfcSE', 'p_raw', 'p_adjusted', 'call', 'annotation']",
+    "rendered_before_manual_mapping": false,
+    "rendered_after_manual_mapping": true,
+    "volcano_metadata_counts": {
+      "n_rows": 1200,
+      "n_up": 102,
+      "n_down": 81,
+      "n_ns": 1017,
+      "n_labeled": 10,
+      "duplicate_label_show_count": false
+    }
+  },
+  "notes": [],
+  "generated": "2026-09-22T19:55:54"
+}

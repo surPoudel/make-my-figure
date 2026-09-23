@@ -1,0 +1,392 @@
+[
+  {
+    "plot_id": "barplot_with_error_bar",
+    "display": "Bar plot with error bars",
+    "family": "03_Group_Comparisons",
+    "purpose": "Compare a mean readout across experimental conditions with replicate error bars",
+    "required": "x, y, color",
+    "thumb": "screenshots/gallery/barplot_with_error_bar.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "grouped_barplot_with_error_bar",
+    "display": "Grouped bar plot with error bars",
+    "family": "03_Group_Comparisons",
+    "purpose": "Two-factor comparison (e.g",
+    "required": "x, group, y",
+    "thumb": "screenshots/gallery/grouped_barplot_with_error_bar.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "heatmap_clustered_matrix",
+    "display": "Clustered heatmap",
+    "family": "05_Matrix_and_Omics",
+    "purpose": "Gene-by-sample expression matrix with optional row/column clustering",
+    "required": "row_id",
+    "thumb": "screenshots/gallery/heatmap_clustered_matrix.png",
+    "tutorial": "plots/heatmap_clustered_matrix.md",
+    "video": ""
+  },
+  {
+    "plot_id": "volcano_plot",
+    "display": "Volcano plot",
+    "family": "05_Matrix_and_Omics",
+    "purpose": "Differential expression: log2 fold change vs significance, highlighting hits",
+    "required": "x, p, label, id_col",
+    "thumb": "screenshots/gallery/volcano_plot.png",
+    "tutorial": "plots/volcano_plot.md",
+    "video": ""
+  },
+  {
+    "plot_id": "scatterplot_with_regression",
+    "display": "Scatter plot",
+    "family": "04_Relationships_and_Regression",
+    "purpose": "Relationship between two continuous variables, colored by group, optional fit line",
+    "required": "x, y, color, label",
+    "thumb": "screenshots/gallery/scatterplot_with_regression.png",
+    "tutorial": "plots/scatterplot_with_regression.md",
+    "video": ""
+  },
+  {
+    "plot_id": "boxplot_or_violin_with_points",
+    "display": "Box / violin plot with points",
+    "family": "03_Group_Comparisons",
+    "purpose": "Show full distributions per group as box or violin plots with overlaid points",
+    "required": "x, y",
+    "thumb": "screenshots/gallery/boxplot_or_violin_with_points.png",
+    "tutorial": "plots/boxplot_or_violin_with_points.md",
+    "video": ""
+  },
+  {
+    "plot_id": "lineplot_timecourse_with_error_band",
+    "display": "Line / time-course with error band",
+    "family": "02_Basic_Plots",
+    "purpose": "Mean response over time per treatment, with a shaded SEM/CI error band",
+    "required": "x, y, color, style_by",
+    "thumb": "screenshots/gallery/lineplot_timecourse_with_error_band.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "ridge_or_density_plot",
+    "display": "Ridge / density plot",
+    "family": "02_Basic_Plots",
+    "purpose": "Stacked density (ridgeline) distributions of a value per condition",
+    "required": "x, group",
+    "thumb": "screenshots/gallery/ridge_or_density_plot.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "histogram_distribution",
+    "display": "Histogram (binned distribution)",
+    "family": "02_Basic_Plots",
+    "purpose": "Binned counts of one measurement, as separate panels per group or overlaid - shows the distribution's actual shape (modes, gaps, tails) rather than a smoothed curve",
+    "required": "x, group, value_columns",
+    "thumb": "screenshots/gallery/histogram_distribution.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "enrichment_dotplot",
+    "display": "Enrichment dot plot",
+    "family": "05_Matrix_and_Omics",
+    "purpose": "Pathway/term enrichment: dot size = gene count, color = significance",
+    "required": "y, x, size, color",
+    "thumb": "screenshots/gallery/enrichment_dotplot.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "kaplan_meier_survival_curve",
+    "display": "Kaplan-Meier survival curve",
+    "family": "07_Survival_and_Effect_Plots",
+    "purpose": "Survival probability over time by group, with censoring marks",
+    "required": "time, event, group, survival_columns",
+    "thumb": "screenshots/gallery/kaplan_meier_survival_curve.png",
+    "tutorial": "plots/kaplan_meier_survival_curve.md",
+    "video": ""
+  },
+  {
+    "plot_id": "stacked_bar_composition",
+    "display": "Stacked composition bar plot",
+    "family": "02_Basic_Plots",
+    "purpose": "Cell-type (or category) composition per sample as stacked fractions",
+    "required": "x, stack, y, facet_or_sort_by",
+    "thumb": "screenshots/gallery/stacked_bar_composition.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "waterfall_plot",
+    "display": "Waterfall plot",
+    "family": "02_Basic_Plots",
+    "purpose": "Best percent change per patient (oncology response), sorted into a waterfall",
+    "required": "x, y, color",
+    "thumb": "screenshots/gallery/waterfall_plot.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "pca_scatter_from_matrix",
+    "display": "PCA scatter (matrix + metadata)",
+    "family": "05_Matrix_and_Omics",
+    "purpose": "PCA of an expression matrix; samples colored by group and shaped by batch",
+    "required": "matrix_row_id",
+    "thumb": "screenshots/gallery/pca_scatter_from_matrix.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "oncoprint_mutation_heatmap",
+    "display": "Oncoprint mutation heatmap",
+    "family": "08_Advanced_Plots",
+    "purpose": "Gene-by-sample alteration grid (oncoprint) colored by alteration type",
+    "required": "sample, row, fill",
+    "thumb": "screenshots/gallery/oncoprint_mutation_heatmap.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "lollipop_mutation_plot",
+    "display": "Lollipop mutation plot",
+    "family": "08_Advanced_Plots",
+    "purpose": "Mutation counts along a protein, as lollipops colored by mutation type",
+    "required": "x, y, color, label",
+    "thumb": "screenshots/gallery/lollipop_mutation_plot.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "roc_curve",
+    "display": "ROC curve",
+    "family": "04_Relationships_and_Regression",
+    "purpose": "ROC curves with AUC comparing one or two classifier scores",
+    "required": "label, score, score2",
+    "thumb": "screenshots/gallery/roc_curve.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "forest_plot",
+    "display": "Forest plot",
+    "family": "07_Survival_and_Effect_Plots",
+    "purpose": "Subgroup effect sizes (hazard/odds ratios) with confidence intervals",
+    "required": "label, estimate, lower, upper",
+    "thumb": "screenshots/gallery/forest_plot.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "dot_strip_plot",
+    "display": "Dot / strip plot",
+    "family": "03_Group_Comparisons",
+    "purpose": "Show every observation per group with an optional mean/median summary \u2014 a readable alternative to a bar plot",
+    "required": "x, y, color",
+    "thumb": "screenshots/gallery/dot_strip_plot.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "beeswarm_plot",
+    "display": "Beeswarm plot",
+    "family": "03_Group_Comparisons",
+    "purpose": "Show every observation per group with a collision-avoiding layout \u2014 a readable alternative to a bar plot",
+    "required": "x, y, color",
+    "thumb": "screenshots/gallery/beeswarm_plot.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "paired_slopegraph",
+    "display": "Paired dot plot / slopegraph",
+    "family": "03_Group_Comparisons",
+    "purpose": "Connect matched observations across conditions/timepoints (before/after, repeated measures)",
+    "required": "subject, condition, value, color",
+    "thumb": "screenshots/gallery/paired_slopegraph.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "raincloud_plot",
+    "display": "Raincloud plot",
+    "family": "03_Group_Comparisons",
+    "purpose": "Full distribution per group as a half-violin cloud + box summary + raw points",
+    "required": "x, y",
+    "thumb": "screenshots/gallery/raincloud_plot.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "hierarchical_dendrogram",
+    "display": "Hierarchical clustering dendrogram",
+    "family": "05_Matrix_and_Omics",
+    "purpose": "Hierarchical clustering of a feature-by-sample matrix as a standalone dendrogram",
+    "required": "row_id",
+    "thumb": "screenshots/gallery/hierarchical_dendrogram.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "ma_plot",
+    "display": "MA plot (differential expression)",
+    "family": "05_Matrix_and_Omics",
+    "purpose": "Differential expression: average abundance (A) vs log fold change (M), colored by significance",
+    "required": "x, y, p, label, id_col",
+    "thumb": "screenshots/gallery/ma_plot.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "manhattan_plot",
+    "display": "Manhattan plot (GWAS)",
+    "family": "05_Matrix_and_Omics",
+    "purpose": "Genome-wide association -log10(p) across chromosomes with significance thresholds",
+    "required": "chrom, pos, p, snp",
+    "thumb": "screenshots/gallery/manhattan_plot.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "qq_plot",
+    "display": "Q-Q plot (p-value / quantile)",
+    "family": "05_Matrix_and_Omics",
+    "purpose": "Observed vs expected -log10(p) Q-Q plot with genomic inflation (lambda)",
+    "required": "p",
+    "thumb": "screenshots/gallery/qq_plot.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "bland_altman_plot",
+    "display": "Bland-Altman (method agreement)",
+    "family": "04_Relationships_and_Regression",
+    "purpose": "Agreement between two measurement methods (bias and limits of agreement)",
+    "required": "method_a, method_b, label",
+    "thumb": "screenshots/gallery/bland_altman_plot.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "precision_recall_curve",
+    "display": "Precision-recall curve",
+    "family": "04_Relationships_and_Regression",
+    "purpose": "Precision vs recall for one or two classifiers on an imbalanced outcome, with average precision (AUPRC)",
+    "required": "label, score, score2",
+    "thumb": "screenshots/gallery/precision_recall_curve.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "confusion_matrix",
+    "display": "Confusion matrix",
+    "family": "04_Relationships_and_Regression",
+    "purpose": "Classification confusion matrix (binary or multiclass) with optional row/column/total normalization",
+    "required": "true, predicted",
+    "thumb": "screenshots/gallery/confusion_matrix.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "calibration_plot",
+    "display": "Calibration plot",
+    "family": "04_Relationships_and_Regression",
+    "purpose": "Reliability of a clinical risk model: predicted vs observed probability, binned, with a perfect-calibration diagonal",
+    "required": "label, prob",
+    "thumb": "screenshots/gallery/calibration_plot.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "dose_response_curve",
+    "display": "Dose-response curve",
+    "family": "04_Relationships_and_Regression",
+    "purpose": "Drug dose-response with a 4-parameter logistic fit and EC50/IC50 per group",
+    "required": "dose, response, group",
+    "thumb": "screenshots/gallery/dose_response_curve.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "upset_plot",
+    "display": "UpSet plot (set intersections)",
+    "family": "08_Advanced_Plots",
+    "purpose": "Intersections among many sets (a scalable alternative to Venn diagrams)",
+    "required": "chosen in Map columns",
+    "thumb": "screenshots/gallery/upset_plot.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "swimmer_plot",
+    "display": "Swimmer plot",
+    "family": "07_Survival_and_Effect_Plots",
+    "purpose": "Per-patient treatment/follow-up timelines (oncology), colored by response with event markers",
+    "required": "subject, start, end, duration, event, group",
+    "thumb": "screenshots/gallery/swimmer_plot.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "spider_plot",
+    "display": "Spider plot (longitudinal change)",
+    "family": "07_Survival_and_Effect_Plots",
+    "purpose": "Longitudinal per-patient change over time (e.g",
+    "required": "subject, time, value, group",
+    "thumb": "screenshots/gallery/spider_plot.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "sankey_plot",
+    "display": "Sankey / alluvial flow (two-stage)",
+    "family": "08_Advanced_Plots",
+    "purpose": "Flow between two sets of categories (e.g",
+    "required": "source, target, value",
+    "thumb": "screenshots/gallery/sankey_plot.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "embedding_scatter",
+    "display": "UMAP / t-SNE embedding scatter",
+    "family": "05_Matrix_and_Omics",
+    "purpose": "Single-cell / sample embedding (UMAP or t-SNE) colored by cluster or metadata",
+    "required": "x, y, color, shape, label",
+    "thumb": "screenshots/gallery/embedding_scatter.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "hierarchical_clustering",
+    "display": "Hierarchical clustering (heatmap + clusters)",
+    "family": "05_Matrix_and_Omics",
+    "purpose": "Cluster a feature-by-sample matrix into k groups and export the cluster assignment table",
+    "required": "row_id",
+    "thumb": "screenshots/gallery/hierarchical_clustering.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "network_graph",
+    "display": "Network graph",
+    "family": "08_Advanced_Plots",
+    "purpose": "Interaction / co-expression network: nodes are genes/features, edges are interactions or correlations, colored by module and sized by degree",
+    "required": "source, target, weight, interaction_type",
+    "thumb": "screenshots/gallery/network_graph.png",
+    "tutorial": "",
+    "video": ""
+  },
+  {
+    "plot_id": "chord_diagram",
+    "display": "Circos-style chord diagram",
+    "family": "08_Advanced_Plots",
+    "purpose": "Ligand-receptor interaction counts between cell types drawn as a Circos-style chord diagram: one segment per cell type sized by its total interactions, ribbons sized by the count of each pair, and a compartment band on the outside",
+    "required": "source, target, value, group",
+    "thumb": "screenshots/gallery/chord_diagram.png",
+    "tutorial": "",
+    "video": ""
+  }
+]

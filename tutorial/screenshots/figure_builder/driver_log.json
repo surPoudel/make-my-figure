@@ -1,0 +1,146 @@
+{
+  "captures": [
+    {
+      "name": "01_multipanel_group",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/figure_builder/01_multipanel_group.png",
+      "widget": "multipanel",
+      "size": "566x111",
+      "note": "6. Multi-panel figure group"
+    },
+    {
+      "name": "02_two_panels_saved",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/figure_builder/02_two_panels_saved.png",
+      "widget": "multipanel",
+      "size": "566x111",
+      "note": ""
+    },
+    {
+      "name": "03_figure_builder",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/figure_builder/03_figure_builder.png",
+      "widget": "FigureBuilderDialog",
+      "size": "1500x902",
+      "note": "Multi-panel Figure Builder"
+    }
+  ],
+  "checks": [
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "group_comparison.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "panel saved",
+      "ok": true,
+      "detail": "1 panel(s)"
+    },
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "relationship_data.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "panel saved",
+      "ok": true,
+      "detail": "2 panel(s)"
+    },
+    {
+      "check": "composite figure saved",
+      "ok": true,
+      "detail": "composite.png, composite.pdf, composite.svg"
+    },
+    {
+      "check": "composite package saved",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_builder/composite.mmfpackage"
+    }
+  ],
+  "steps": [
+    {
+      "step": "Open data file: group_comparison.csv"
+    },
+    {
+      "step": "Plot type: Box / violin plot with points"
+    },
+    {
+      "step": "Map columns: x <- group"
+    },
+    {
+      "step": "Map columns: y <- response"
+    },
+    {
+      "step": "Labels & size: title='Response by group', y='Response (a.u.)'"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "6. Multi-panel figure: Save current plot as panel"
+    },
+    {
+      "step": "Open data file: relationship_data.csv"
+    },
+    {
+      "step": "Plot type: Scatter plot"
+    },
+    {
+      "step": "Map columns: x <- expression_a"
+    },
+    {
+      "step": "Map columns: y <- expression_b"
+    },
+    {
+      "step": "Map columns: color <- cell_line"
+    },
+    {
+      "step": "Labels & size: title='Expression A vs B'"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "6. Multi-panel figure: Save current plot as panel"
+    },
+    {
+      "step": "Open Figure Builder..."
+    },
+    {
+      "step": "Figure Builder: Save figure... -> composite.png"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_builder/composite.png"
+    },
+    {
+      "messagebox": "information",
+      "title": "Saved",
+      "text": "Wrote Figure 1 and sidecar next to:\n/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_builder/composite.png"
+    },
+    {
+      "step": "Figure Builder: Save Figure Package... -> composite.mmfpackage"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_builder/composite.mmfpackage"
+    },
+    {
+      "messagebox": "question",
+      "title": "Save Reproducible Figure Package",
+      "text": "<b>Figure packages include the data required to reproduce the figure.</b><br>This figure package contains the data required to reproduce the figure: a frozen copy of every table the plot was drawn from (and, when available, the original source file), the plot specification, statistics, preprocessing records and preview images. Share it only with people who may see these data.<br><br>This package w"
+    },
+    {
+      "messagebox": "information",
+      "title": "Figure package saved",
+      "text": "Saved /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_builder/composite.mmfpackage (0.23 MB)."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "_comment": "Map each tutorial id to a hosted video URL. Values that start with VIDEO_URL_ are placeholders; the author fills them in once a platform is chosen. Nothing else in the tutorial has to change.",
+  "videos": {
+    "master_from_data_to_figure": "VIDEO_URL_MASTER",
+    "mapping_ambiguous": "VIDEO_URL_MAPPING",
+    "scatter_regression": "VIDEO_URL_SCATTER",
+    "group_comparison_box": "VIDEO_URL_BOX_VIOLIN",
+    "volcano_manual_mapping": "VIDEO_URL_VOLCANO",
+    "heatmap_clustered": "VIDEO_URL_HEATMAP",
+    "kaplan_meier": "VIDEO_URL_KAPLAN_MEIER",
+    "figure_preset": "VIDEO_URL_FIGURE_PRESET",
+    "figure_package": "VIDEO_URL_FIGURE_PACKAGE",
+    "figure_builder": "VIDEO_URL_FIGURE_BUILDER",
+    "matrix_workflow": "VIDEO_URL_MATRIX_WORKFLOW",
+    "statistics": "VIDEO_URL_STATISTICS"
+  }
+}

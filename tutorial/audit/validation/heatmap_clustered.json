@@ -1,0 +1,216 @@
+{
+  "tutorial_id": "heatmap_clustered",
+  "title": "Clustered heatmap from a feature-by-sample matrix",
+  "datasets": [
+    "feature_sample_matrix.csv"
+  ],
+  "mode": "offscreen",
+  "status": "PASS",
+  "error": "",
+  "seconds": 30.0,
+  "checks": [
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "feature_sample_matrix.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "export png",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/heatmap_clustered/heatmap.png"
+    },
+    {
+      "check": "export pdf",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/heatmap_clustered/heatmap.pdf"
+    }
+  ],
+  "failed_checks": [],
+  "captures": [
+    {
+      "name": "01_open_data",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/heatmap_clustered/01_open_data.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "matrix loaded"
+    },
+    {
+      "name": "02_mapping",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/heatmap_clustered/02_mapping.png",
+      "widget": "mapping",
+      "size": "566x219",
+      "note": "row id and the Value columns list"
+    },
+    {
+      "name": "03_initial_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/heatmap_clustered/03_initial_plot.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "clustered heatmap"
+    },
+    {
+      "name": "04_customization",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/heatmap_clustered/04_customization.png",
+      "widget": "options",
+      "size": "566x661",
+      "note": "heatmap options"
+    },
+    {
+      "name": "04b_customized",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/heatmap_clustered/04b_customized.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": ""
+    },
+    {
+      "name": "06_final_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/heatmap_clustered/06_final_plot.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "final"
+    }
+  ],
+  "steps": [
+    {
+      "step": "Open data file: feature_sample_matrix.csv"
+    },
+    {
+      "step": "Plot type: Clustered heatmap"
+    },
+    {
+      "step": "Map columns: row_id <- gene_symbol"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: scale = row_zscore"
+    },
+    {
+      "step": "Options: cluster_columns = False"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Export PNG -> heatmap.png"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/heatmap_clustered/heatmap.png"
+    },
+    {
+      "step": "Export PDF -> heatmap.pdf"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/heatmap_clustered/heatmap.pdf"
+    }
+  ],
+  "facts": {
+    "columns": [
+      "gene_id",
+      "gene_symbol",
+      "S01",
+      "S02",
+      "S03",
+      "S04",
+      "S05",
+      "S06",
+      "S07",
+      "S08",
+      "S09",
+      "S10",
+      "S11",
+      "S12"
+    ],
+    "recommendation_header": "Detected data type: <b>expression_like_matrix</b>. 7 suggested figure(s) \u2014 all use the Publication style.",
+    "cards": [
+      "<b>Clustered heatmap</b>  <span style='color:#666'>(85% match)</span>",
+      "<b>PCA scatter (matrix + metadata)</b>  <span style='color:#666'>(70% match)</span>",
+      "<b>Ridge of per-column distributions (reshape \u2192 long)</b>  <span style='color:#666'>(50% match)</span>",
+      "<b>Box/violin of per-column distributions (reshape \u2192 long)</b>  <span style='color:#666'>(48% match)</span>",
+      "<b>Correlation heatmap (compute correlation matrix)</b>  <span style='color:#666'>(55% match)</span>",
+      "<b>Volcano plot \u2014 needs a differential results table</b>  <span style='color:#666'>(40% match)</span>",
+      "<b>MA plot \u2014 needs a differential results table</b>  <span style='color:#666'>(38% match)</span>"
+    ],
+    "proposed_mapping": {
+      "row_id": "(none)"
+    },
+    "value_columns_offered": [
+      "gene_id",
+      "gene_symbol",
+      "S01",
+      "S02",
+      "S03",
+      "S04",
+      "S05",
+      "S06",
+      "S07",
+      "S08",
+      "S09",
+      "S10",
+      "S11",
+      "S12"
+    ],
+    "value_columns_preselected": [
+      "S01",
+      "S02",
+      "S03",
+      "S04",
+      "S05",
+      "S06",
+      "S07",
+      "S08",
+      "S09",
+      "S10",
+      "S11",
+      "S12"
+    ],
+    "options": [
+      "cluster_rows",
+      "cluster_columns",
+      "color_scale",
+      "colormap",
+      "y_label_rotation",
+      "scale",
+      "distance_metric",
+      "linkage_method",
+      "cluster_k_rows",
+      "cluster_k_columns",
+      "sort_by_cluster",
+      "group_separators",
+      "cell_border_color",
+      "cell_border_width",
+      "group_separator_color",
+      "group_separator_width",
+      "max_features",
+      "colorbar_location",
+      "colorbar_pad",
+      "colorbar_shrink",
+      "row_label_fontsize",
+      "col_label_fontsize",
+      "y_label_pad"
+    ],
+    "scale_choices": [
+      "none",
+      "row_zscore",
+      "column_zscore",
+      "center_rows",
+      "log",
+      "log_zscore"
+    ]
+  },
+  "notes": [],
+  "generated": "2026-09-22T19:55:42"
+}

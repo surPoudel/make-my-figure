@@ -1,0 +1,272 @@
+{
+  "tutorial_id": "mapping_ambiguous",
+  "title": "Column mapping with ambiguous column names",
+  "datasets": [
+    "ambiguous_columns.csv"
+  ],
+  "mode": "onscreen",
+  "status": "PASS",
+  "error": "",
+  "seconds": 45.0,
+  "checks": [
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "ambiguous_columns.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "export png",
+      "ok": true,
+      "detail": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_outputs\\mapping_ambiguous\\ambiguous_scatter.png"
+    },
+    {
+      "check": "export svg",
+      "ok": true,
+      "detail": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_outputs\\mapping_ambiguous\\ambiguous_scatter.svg"
+    }
+  ],
+  "failed_checks": [],
+  "captures": [
+    {
+      "name": "00_start_screen",
+      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\00_start_screen.png",
+      "widget": "window",
+      "size": "1516x963",
+      "note": "start screen before any data"
+    },
+    {
+      "name": "01_open_data",
+      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\01_open_data.png",
+      "widget": "window",
+      "size": "1516x963",
+      "note": "table loaded, no plot type chosen yet"
+    },
+    {
+      "name": "01b_data_preview",
+      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\01b_data_preview.png",
+      "widget": "data",
+      "size": "882x118",
+      "note": "the Data preview tab"
+    },
+    {
+      "name": "02_mapping_proposed",
+      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\02_mapping_proposed.png",
+      "widget": "mapping",
+      "size": "566x96",
+      "note": "the roles the app proposed"
+    },
+    {
+      "name": "02b_first_plot",
+      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\02b_first_plot.png",
+      "widget": "window",
+      "size": "1516x963",
+      "note": "figure drawn from the proposal"
+    },
+    {
+      "name": "03_mapping_corrected",
+      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\03_mapping_corrected.png",
+      "widget": "mapping",
+      "size": "566x96",
+      "note": "y changed to score_final"
+    },
+    {
+      "name": "03b_plot_after_correction",
+      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\03b_plot_after_correction.png",
+      "widget": "figure",
+      "size": "906x679",
+      "note": "figure follows the new mapping"
+    },
+    {
+      "name": "04_scatter_mapping",
+      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\04_scatter_mapping.png",
+      "widget": "mapping",
+      "size": "566x160",
+      "note": "same table, different roles"
+    },
+    {
+      "name": "04b_scatter_plot",
+      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\04b_scatter_plot.png",
+      "widget": "window",
+      "size": "1516x963",
+      "note": "scatter with regression from the same file"
+    },
+    {
+      "name": "05_bar_plot",
+      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\05_bar_plot.png",
+      "widget": "window",
+      "size": "1516x963",
+      "note": "bar plot with error bars from the same file"
+    },
+    {
+      "name": "06_final",
+      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_onscreen_test\\mapping_ambiguous\\06_final.png",
+      "widget": "figure",
+      "size": "906x679",
+      "note": "final scatter"
+    }
+  ],
+  "steps": [
+    {
+      "step": "Open data file: ambiguous_columns.csv"
+    },
+    {
+      "step": "Plot type: Box / violin plot with points"
+    },
+    {
+      "step": "Map columns: y <- score_final"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Plot type: Scatter plot"
+    },
+    {
+      "step": "Map columns: x <- measurement_2"
+    },
+    {
+      "step": "Map columns: y <- score_final"
+    },
+    {
+      "step": "Map columns: color <- condition_code"
+    },
+    {
+      "step": "Map columns: label <- thing"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Plot type: Bar plot with error bars"
+    },
+    {
+      "step": "Map columns: x <- condition_code"
+    },
+    {
+      "step": "Map columns: y <- measurement_2"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Plot type: Scatter plot"
+    },
+    {
+      "step": "Map columns: x <- measurement_2"
+    },
+    {
+      "step": "Map columns: y <- score_final"
+    },
+    {
+      "step": "Map columns: color <- condition_code"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Export PNG -> ambiguous_scatter.png"
+    },
+    {
+      "dialog": "file",
+      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_outputs\\mapping_ambiguous\\ambiguous_scatter.png"
+    },
+    {
+      "step": "Export SVG -> ambiguous_scatter.svg"
+    },
+    {
+      "dialog": "file",
+      "path": "C:\\Users\\spoudel1\\OneDrive - St. Jude Children's Research Hospital\\make_my_plot_tutorial\\tutorial\\automation\\_outputs\\mapping_ambiguous\\ambiguous_scatter.svg"
+    }
+  ],
+  "facts": {
+    "columns": [
+      "col_A",
+      "measurement_2",
+      "condition_code",
+      "thing",
+      "score_final",
+      "id_value"
+    ],
+    "detected_types": "27 rows \u00d7 6 columns. Edit cells to update the figure live.\nDetected types: col_A (text), measurement_2 (num), condition_code (text), thing (text), score_final (num), id_value (text)\nWarnings: none",
+    "recommendation_header": "Detected data type: <b>generic_long</b>. 6 suggested figure(s) \u2014 all use the Publication style.",
+    "recommendation_cards": [
+      {
+        "title": "<b>Box / violin plot with points</b>  <span style='color:#666'>(72% match)</span>",
+        "text": "A grouping column and a numeric value \u2014 a box/violin plot with points compares the distribution across groups, with an appropriate statistical test."
+      },
+      {
+        "title": "<b>Ridge / density plot</b>  <span style='color:#666'>(62% match)</span>",
+        "text": "A grouping column and a numeric value \u2014 a ridge / density plot shows and compares each group's full distribution."
+      },
+      {
+        "title": "<b>Bar plot with error bars</b>  <span style='color:#666'>(60% match)</span>",
+        "text": "Compare group means with error bars."
+      },
+      {
+        "title": "<b>Grouped bar plot with error bars</b>  <span style='color:#666'>(55% match)</span>",
+        "text": "Two categorical factors and a value \u2014 a grouped bar plot shows the interaction."
+      },
+      {
+        "title": "<b>Scatter plot</b>  <span style='color:#666'>(50% match)</span>",
+        "text": "Two numeric columns \u2014 a scatter with regression shows their relationship."
+      },
+      {
+        "title": "<b>Frequency bar of 'condition_code' (count categories)</b>  <span style='color:#666'>(45% match)</span>",
+        "text": "Count how many rows fall in each 'condition_code' category and show a frequency bar."
+      }
+    ],
+    "box_proposed_mapping": {
+      "x": "condition_code",
+      "y": "measurement_2"
+    },
+    "box_mapping_after_change": {
+      "x": "condition_code",
+      "y": "score_final",
+      "point_size": 8.0,
+      "kind": "box",
+      "points": true,
+      "x_tick_rotation": "auto"
+    },
+    "scatter_proposed_mapping": {
+      "x": "measurement_2",
+      "y": "score_final",
+      "color": "(none)",
+      "label": "(none)"
+    },
+    "scatter_options": [
+      "fit_line",
+      "show_fit_stats",
+      "show_slope",
+      "show_r2",
+      "show_p",
+      "show_r",
+      "show_intercept",
+      "show_n",
+      "show_equation",
+      "fit_stats_loc"
+    ],
+    "bar_proposed_error_option": "sem"
+  },
+  "notes": [],
+  "generated": "2026-09-22T19:55:10"
+}

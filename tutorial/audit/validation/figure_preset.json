@@ -1,0 +1,200 @@
+{
+  "tutorial_id": "figure_preset",
+  "title": "Figure presets: style travels, data stays",
+  "datasets": [
+    "group_comparison.csv",
+    "one_table_many_plots.csv"
+  ],
+  "mode": "offscreen",
+  "status": "PASS",
+  "error": "",
+  "seconds": 34.6,
+  "checks": [
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "group_comparison.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "preset saved",
+      "ok": true,
+      "detail": "Tutorial_violin_style.mmfpreset.json"
+    },
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "one_table_many_plots.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "preset applied",
+      "ok": true,
+      "detail": "Applied preset \u201cTutorial violin style\u201d: 9 setting(s)."
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "export png",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_preset/preset_applied.png"
+    }
+  ],
+  "failed_checks": [],
+  "captures": [
+    {
+      "name": "01_refined_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/figure_preset/01_refined_plot.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "refined violin on dataset 1"
+    },
+    {
+      "name": "02_preset_panel",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/figure_preset/02_preset_panel.png",
+      "widget": "preset",
+      "size": "566x139",
+      "note": "the Figure preset panel"
+    },
+    {
+      "name": "03_save_preset_dialog",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/figure_preset/03_save_preset_dialog.png",
+      "widget": "QDialog",
+      "size": "744x142",
+      "note": "Save Figure Preset dialog"
+    },
+    {
+      "name": "04_second_dataset_default",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/figure_preset/04_second_dataset_default.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "dataset 2 with default appearance"
+    },
+    {
+      "name": "05_second_dataset_preset",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/figure_preset/05_second_dataset_preset.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "dataset 2 after applying the preset"
+    },
+    {
+      "name": "06_final_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/figure_preset/06_final_plot.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": ""
+    }
+  ],
+  "steps": [
+    {
+      "step": "Open data file: group_comparison.csv"
+    },
+    {
+      "step": "Plot type: Box / violin plot with points"
+    },
+    {
+      "step": "Map columns: x <- group"
+    },
+    {
+      "step": "Map columns: y <- response"
+    },
+    {
+      "step": "Options: kind = violin"
+    },
+    {
+      "step": "Options: point_size = 14"
+    },
+    {
+      "step": "Labels & size: y='Response (a.u.)', width=single"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Figure preset: Save current as 'Tutorial violin style' (style)"
+    },
+    {
+      "step": "Open data file: one_table_many_plots.csv"
+    },
+    {
+      "step": "Plot type: Box / violin plot with points"
+    },
+    {
+      "step": "Map columns: x <- treatment"
+    },
+    {
+      "step": "Map columns: y <- response"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Figure preset: Apply 'Tutorial violin style'"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Export PNG -> preset_applied.png"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_preset/preset_applied.png"
+    }
+  ],
+  "facts": {
+    "preset_buttons": [
+      "Apply",
+      "Save preset\u2026",
+      "Delete",
+      "Import\u2026",
+      "Export\u2026",
+      "Reset to Publication defaults"
+    ],
+    "preset_file": "/tmp/mmf_tutorial_jn2o0xyu/presets/Tutorial_violin_style.mmfpreset.json",
+    "preset_top_level_keys": [
+      "app_version",
+      "created",
+      "description",
+      "format",
+      "format_version",
+      "journal_style",
+      "layout",
+      "mode",
+      "name",
+      "options",
+      "output",
+      "plot_type",
+      "statistics_display",
+      "style"
+    ],
+    "preset_contains_data": false,
+    "apply_status": "Applied preset \u201cTutorial violin style\u201d: 9 setting(s).",
+    "mapping_after_apply": {
+      "x": "treatment",
+      "y": "response",
+      "point_size": 14.0,
+      "kind": "violin",
+      "points": true,
+      "x_tick_rotation": "auto"
+    },
+    "n_after_apply": {
+      "Vehicle": 20,
+      "Compound X": 20,
+      "Compound Y": 20
+    }
+  },
+  "notes": [],
+  "generated": "2026-09-22T19:55:48"
+}

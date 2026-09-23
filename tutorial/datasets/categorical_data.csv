@@ -1,0 +1,49 @@
+sample_id,group,cell_type,fraction
+S01,Control,T cell,0.3117
+S01,Control,B cell,0.5559
+S01,Control,Myeloid,0.065
+S01,Control,Other,0.0674
+S02,Control,T cell,0.6192
+S02,Control,B cell,0.3219
+S02,Control,Myeloid,0.0136
+S02,Control,Other,0.0453
+S03,Control,T cell,0.2525
+S03,Control,B cell,0.3835
+S03,Control,Myeloid,0.1501
+S03,Control,Other,0.2139
+S04,Control,T cell,0.5326
+S04,Control,B cell,0.3355
+S04,Control,Myeloid,0.0848
+S04,Control,Other,0.0471
+S05,Control,T cell,0.1576
+S05,Control,B cell,0.3014
+S05,Control,Myeloid,0.2124
+S05,Control,Other,0.3286
+S06,Control,T cell,0.582
+S06,Control,B cell,0.1966
+S06,Control,Myeloid,0.1091
+S06,Control,Other,0.1123
+S07,Treated,T cell,0.446
+S07,Treated,B cell,0.3823
+S07,Treated,Myeloid,0.1128
+S07,Treated,Other,0.0589
+S08,Treated,T cell,0.335
+S08,Treated,B cell,0.4718
+S08,Treated,Myeloid,0.0703
+S08,Treated,Other,0.1229
+S09,Treated,T cell,0.4392
+S09,Treated,B cell,0.3948
+S09,Treated,Myeloid,0.1402
+S09,Treated,Other,0.0257
+S10,Treated,T cell,0.0367
+S10,Treated,B cell,0.7284
+S10,Treated,Myeloid,0.1161
+S10,Treated,Other,0.1188
+S11,Treated,T cell,0.5414
+S11,Treated,B cell,0.1643
+S11,Treated,Myeloid,0.0343
+S11,Treated,Other,0.26
+S12,Treated,T cell,0.2486
+S12,Treated,B cell,0.5986
+S12,Treated,Myeloid,0.0432
+S12,Treated,Other,0.1096

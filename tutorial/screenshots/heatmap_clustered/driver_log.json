@@ -1,0 +1,110 @@
+{
+  "captures": [
+    {
+      "name": "01_open_data",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/heatmap_clustered/01_open_data.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "matrix loaded"
+    },
+    {
+      "name": "02_mapping",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/heatmap_clustered/02_mapping.png",
+      "widget": "mapping",
+      "size": "566x219",
+      "note": "row id and the Value columns list"
+    },
+    {
+      "name": "03_initial_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/heatmap_clustered/03_initial_plot.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "clustered heatmap"
+    },
+    {
+      "name": "04_customization",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/heatmap_clustered/04_customization.png",
+      "widget": "options",
+      "size": "566x661",
+      "note": "heatmap options"
+    },
+    {
+      "name": "04b_customized",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/heatmap_clustered/04b_customized.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": ""
+    },
+    {
+      "name": "06_final_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/heatmap_clustered/06_final_plot.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "final"
+    }
+  ],
+  "checks": [
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "feature_sample_matrix.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "export png",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/heatmap_clustered/heatmap.png"
+    },
+    {
+      "check": "export pdf",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/heatmap_clustered/heatmap.pdf"
+    }
+  ],
+  "steps": [
+    {
+      "step": "Open data file: feature_sample_matrix.csv"
+    },
+    {
+      "step": "Plot type: Clustered heatmap"
+    },
+    {
+      "step": "Map columns: row_id <- gene_symbol"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Options: scale = row_zscore"
+    },
+    {
+      "step": "Options: cluster_columns = False"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Export PNG -> heatmap.png"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/heatmap_clustered/heatmap.png"
+    },
+    {
+      "step": "Export PDF -> heatmap.pdf"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/heatmap_clustered/heatmap.pdf"
+    }
+  ]
+}

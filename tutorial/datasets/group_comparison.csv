@@ -1,0 +1,31 @@
+subject_id,group,sex,response,baseline
+P001,Vehicle,F,4.33,3.5
+P002,Vehicle,F,4.35,3.24
+P003,Vehicle,F,3.96,3.14
+P004,Vehicle,M,4.47,2.76
+P005,Vehicle,M,3.53,3.52
+P006,Vehicle,F,5.26,3.49
+P007,Vehicle,M,3.89,3.58
+P008,Vehicle,M,4.56,3.87
+P009,Low dose,M,3.85,4.06
+P010,Low dose,F,4.87,3.01
+P011,Low dose,M,2.49,4.0
+P012,Low dose,F,3.51,3.81
+P013,Low dose,F,6.47,2.8
+P014,Low dose,M,2.56,4.08
+P015,Low dose,M,8.58,3.94
+P016,Low dose,F,3.94,1.48
+P017,Low dose,F,3.02,4.55
+P018,Low dose,M,4.97,4.4
+P019,High dose,M,8.77,5.11
+P020,High dose,M,6.49,3.75
+P021,High dose,M,7.56,3.62
+P022,High dose,F,6.09,3.04
+P023,High dose,F,6.6,2.71
+P024,High dose,M,5.12,3.46
+P025,High dose,F,4.96,4.23
+P026,High dose,F,4.6,4.76
+P027,High dose,F,9.03,5.17
+P028,High dose,M,6.74,2.47
+P029,High dose,F,6.01,3.42
+P030,High dose,F,7.77,3.41

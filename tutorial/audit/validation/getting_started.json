@@ -1,0 +1,141 @@
+{
+  "tutorial_id": "getting_started",
+  "title": "Getting started with the desktop application",
+  "datasets": [],
+  "mode": "offscreen",
+  "status": "PASS",
+  "error": "",
+  "seconds": 21.6,
+  "checks": [],
+  "failed_checks": [],
+  "captures": [
+    {
+      "name": "01_start_screen",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/getting_started/01_start_screen.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "start screen"
+    },
+    {
+      "name": "02_file_menu",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/getting_started/02_file_menu.png",
+      "widget": "QMenu",
+      "size": "533x224",
+      "note": "File menu"
+    },
+    {
+      "name": "03_help_dialog",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/getting_started/03_help_dialog.png",
+      "widget": "HelpDialog",
+      "size": "640x560",
+      "note": "Help dialog"
+    },
+    {
+      "name": "04_workspace",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/getting_started/04_workspace.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "main layout with example data"
+    },
+    {
+      "name": "05_controls_full",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/getting_started/05_controls_full.png",
+      "widget": "controls_full",
+      "size": "584x3357",
+      "note": "the whole control column, top to bottom"
+    },
+    {
+      "name": "06_messages_tab",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/getting_started/06_messages_tab.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "Messages tab"
+    }
+  ],
+  "steps": [
+    {
+      "step": "File > Open example > Box / violin plot with points"
+    }
+  ],
+  "facts": {
+    "window_title": "Make My Figure",
+    "start_buttons": [
+      "Open data file",
+      "Open Figure Package",
+      "Use example data",
+      "Recent files",
+      "Help"
+    ],
+    "menus": [
+      "&File",
+      "&View",
+      "&Help"
+    ],
+    "menu_File": [
+      "Home / Upload New Data",
+      "Open data file\u2026",
+      "Open Figure Package\u2026 (.mmfpackage: specification + frozen data)",
+      "Open PlotSpec\u2026 (specification only; needs the data file)",
+      "Save Reproducible Figure Package\u2026",
+      "Open example",
+      "Recent files",
+      "Save template\u2026",
+      "Figure preset",
+      "Quit"
+    ],
+    "menu_View": [
+      "Reset Layout",
+      "Maximize Figure Panel",
+      "Show Data Preview",
+      "Pop Out Figure",
+      "Pop Out Data Table",
+      "Pop Out Controls",
+      "Dock All Panels"
+    ],
+    "menu_Help": [
+      "Help\u2026",
+      "About Make My Figure",
+      "Copy debug info",
+      "Diagnose toolbar"
+    ],
+    "help_tabs": [
+      "Plot types",
+      "Files & reproducibility",
+      "Format your data",
+      "Privacy",
+      "Publication style disclaimer"
+    ],
+    "status_after_example": "Loaded boxplot_or_violin_with_points example data \u2014 runs locally.",
+    "example_columns": [
+      "sample_id",
+      "group",
+      "value",
+      "batch",
+      "sex"
+    ],
+    "group_boxes": [
+      "\ud83d\udcd1  Worksheet",
+      "1. Plot type & style",
+      "Recommended figures",
+      "2. Map columns",
+      "3. Options",
+      "4. Labels & size",
+      "Figure preset",
+      "5. Publication style",
+      "\u2461 Typography",
+      "\u2462 Axes & labels",
+      "\u2463 Legend",
+      "\u2464 Colorbar (heatmaps etc.)",
+      "\u2460 Figure margins",
+      "6. Statistics",
+      "5. Export",
+      "6. Multi-panel figure"
+    ],
+    "right_tabs": [
+      "Data preview",
+      "Messages"
+    ]
+  },
+  "notes": [],
+  "generated": "2026-09-22T20:12:37"
+}

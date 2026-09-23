@@ -1,0 +1,13 @@
+sample_id,group,batch,sex
+S01,Control,B1,F
+S02,Control,B2,F
+S03,Control,B1,M
+S04,Control,B2,M
+S05,Control,B1,M
+S06,Control,B2,M
+S07,Treated,B1,M
+S08,Treated,B2,F
+S09,Treated,B1,M
+S10,Treated,B2,F
+S11,Treated,B1,F
+S12,Treated,B2,M

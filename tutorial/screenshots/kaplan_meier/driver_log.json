@@ -1,0 +1,134 @@
+{
+  "captures": [
+    {
+      "name": "01_open_data",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/kaplan_meier/01_open_data.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": ""
+    },
+    {
+      "name": "02_mapping",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/kaplan_meier/02_mapping.png",
+      "widget": "mapping",
+      "size": "566x245",
+      "note": ""
+    },
+    {
+      "name": "03_initial_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/kaplan_meier/03_initial_plot.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "two survival curves"
+    },
+    {
+      "name": "04_customization",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/kaplan_meier/04_customization.png",
+      "widget": "options",
+      "size": "566x234",
+      "note": ""
+    },
+    {
+      "name": "05_statistics",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/kaplan_meier/05_statistics.png",
+      "widget": "stats",
+      "size": "566x847",
+      "note": ""
+    },
+    {
+      "name": "05b_plot_with_logrank",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/kaplan_meier/05b_plot_with_logrank.png",
+      "widget": "figure",
+      "size": "1070x729",
+      "note": "log-rank P on the figure"
+    },
+    {
+      "name": "06_final_plot",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/kaplan_meier/06_final_plot.png",
+      "widget": "window",
+      "size": "1680x1000",
+      "note": "final"
+    }
+  ],
+  "checks": [
+    {
+      "check": "data loaded",
+      "ok": true,
+      "detail": "survival.csv"
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "figure rendered",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "check": "statistics ran",
+      "ok": true,
+      "detail": "1 comparison row(s)"
+    },
+    {
+      "check": "export pdf",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/kaplan_meier/km.pdf"
+    },
+    {
+      "check": "export png",
+      "ok": true,
+      "detail": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/kaplan_meier/km.png"
+    }
+  ],
+  "steps": [
+    {
+      "step": "Open data file: survival.csv"
+    },
+    {
+      "step": "Plot type: Kaplan-Meier survival curve"
+    },
+    {
+      "step": "Map columns: time <- time_months"
+    },
+    {
+      "step": "Map columns: event <- event"
+    },
+    {
+      "step": "Map columns: group <- arm"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Labels & size: x='Time (months)', y='Survival probability'"
+    },
+    {
+      "step": "Options: reference_line = True"
+    },
+    {
+      "step": "Update preview"
+    },
+    {
+      "step": "Statistics: test=logrank, group=arm, annotation=p"
+    },
+    {
+      "step": "Run statistics"
+    },
+    {
+      "step": "Export PDF -> km.pdf"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/kaplan_meier/km.pdf"
+    },
+    {
+      "step": "Export PNG -> km.png"
+    },
+    {
+      "dialog": "file",
+      "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/kaplan_meier/km.png"
+    }
+  ]
+}
