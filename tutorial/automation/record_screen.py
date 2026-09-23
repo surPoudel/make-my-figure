@@ -18,6 +18,7 @@ import argparse
 import os
 import platform
 import shutil
+import signal
 import subprocess
 import sys
 import time
@@ -76,6 +77,27 @@ def capture_args(system: str, a: argparse.Namespace) -> list[str]:
     return args + ["-i", disp]
 
 
+def stop_recorder(rec: subprocess.Popen, system: str) -> None:
+    """Ask ffmpeg to finish the file (writes the MP4 index), escalating only if it does not react.
+    'q' on stdin is honoured on Windows; on macOS / Linux SIGINT is the reliable graceful stop."""
+    if rec.poll() is not None:
+        return
+    try:
+        if system == "Windows":
+            rec.stdin.write(b"q"); rec.stdin.flush()
+        else:
+            rec.send_signal(signal.SIGINT)
+        rec.wait(timeout=15)
+        return
+    except Exception:  # noqa: BLE001
+        pass
+    try:
+        rec.terminate(); rec.wait(timeout=10)
+        print("warning: ffmpeg had to be terminated; the file may lack its index - re-record if it does not play")
+    except Exception:  # noqa: BLE001
+        rec.kill()
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", required=True, help="output .mp4")
@@ -96,7 +118,7 @@ def main() -> int:
     system = platform.system()
     ff = [a.ffmpeg, "-y", "-loglevel", "error", *capture_args(system, a),
           "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p",
-          "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2", a.out]
+          "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2", "-movflags", "+faststart+frag_keyframe+empty_moov", a.out]
     print("recorder:", " ".join(ff))
     rec = subprocess.Popen(ff, stdin=subprocess.PIPE)
     try:
@@ -109,12 +131,7 @@ def main() -> int:
             input("Recording... press Enter to stop.")
         time.sleep(a.tail)
     finally:
-        try:
-            rec.stdin.write(b"q")
-            rec.stdin.flush()
-        except Exception:  # noqa: BLE001
-            rec.terminate()
-        rec.wait(timeout=30)
+        stop_recorder(rec, system)
     if os.path.exists(a.out):
         print(f"saved {a.out} ({os.path.getsize(a.out) / 1e6:.1f} MB)")
         if system == "Darwin":
