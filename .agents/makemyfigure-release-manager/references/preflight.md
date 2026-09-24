@@ -5,7 +5,7 @@ Output: `reports/release_preflight.json`, table on stdout, exit 1 on STOP.
 
 | Area | Check | Level when false | Rationale |
 |---|---|---|---|
-| git | working tree clean | STOP (WARN with `--allow-dirty`) | a manifest must describe a reproducible commit |
+| git | working tree clean | STOP for modified tracked files or untracked files inside shipped paths (`make_my_figure_core/`, `apps/`, `schemas/`, `style_profiles/`, `mock_data/`, `examples/`, `assets/`, `packaging/`, build scripts, packaging metadata); WARN for untracked files elsewhere; WARN with `--allow-dirty` | a manifest must describe a reproducible commit; untracked benchmark/doc/report files cannot enter an artefact |
 | git | branch is `main` | WARN (STOP `--for-release`) | tags are cut from main |
 | git | HEAD present on origin | WARN (STOP `--for-release`) | a tag must point at a commit that exists publicly |
 | version | version.py == requested, PEP 440 form | STOP | |

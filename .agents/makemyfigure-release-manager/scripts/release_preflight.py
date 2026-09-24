@@ -52,8 +52,24 @@ def main() -> int:
 
     # --- git
     dirty = C.git("status", "--porcelain")
-    add("git", "working tree clean", "PASS" if not dirty else ("WARN" if a.allow_dirty else "STOP"),
-        "" if not dirty else f"{len(dirty.splitlines())} modified/untracked path(s): " + "; ".join(l.strip() for l in dirty.splitlines()[:5]))
+    modified = [l for l in dirty.splitlines() if not l.startswith("??")]
+    untracked = [l[3:] for l in dirty.splitlines() if l.startswith("??")]
+    shipped = ("make_my_figure_core/", "apps/", "schemas/", "style_profiles/", "mock_data/", "examples/", "assets/", "packaging/",
+               "scripts/build_", "scripts/make_icons", "pyproject.toml", "setup.py", "MANIFEST.in", "LICENSE", "README.md", "CHANGELOG.md")
+    untracked_shipped = [u for u in untracked if u.startswith(shipped)]
+    # Modified tracked files, or untracked files inside a folder that the wheel / app bundles, make the
+    # build non-reproducible from the commit: STOP. Untracked files elsewhere (benchmarks, docs, reports,
+    # scratch scripts) cannot enter an artefact: WARN, so the author sees them but the build proceeds.
+    if modified or untracked_shipped:
+        level = "WARN" if a.allow_dirty else "STOP"
+        detail = (f"{len(modified)} modified tracked file(s): " + "; ".join(l.strip() for l in modified[:5])) if modified else ""
+        if untracked_shipped:
+            detail += (" | " if detail else "") + f"{len(untracked_shipped)} untracked file(s) inside shipped paths: " + "; ".join(untracked_shipped[:5])
+        add("git", "working tree clean", level, detail)
+    elif untracked:
+        add("git", "working tree clean", "WARN", f"tracked files clean; {len(untracked)} untracked path(s) outside shipped folders: " + "; ".join(untracked[:5]))
+    else:
+        add("git", "working tree clean", "PASS")
     branch = C.git("rev-parse", "--abbrev-ref", "HEAD")
     add("git", "branch", "PASS" if branch == "main" else ("STOP" if a.for_release else "WARN"), f"{branch} (releases are tagged from main)")
     head = C.git("rev-parse", "HEAD")
