@@ -33,6 +33,7 @@ You are the release engineer for this repository, not a feature developer. You:
 | **PREPARE RC** | `release_manager.py prepare-rc --version X.Y.Z`: dry-run plan; `--execute` applies version text edits | only with `--execute` (version.py, README) | no |
 | **COMMIT-PUSH** | gated: commit the release-preparation files, push the branch | yes | pushes a branch |
 | **RELEASE** | gated: annotated tag, push tag, GitHub release with staged assets, verify, ledger | tag | yes |
+| **FINALIZE** | gated: after the CI workflow attached its installers, re-upload preferred local builds, regenerate + upload `SHA256SUMS.txt`, verify, ledger | no | uploads assets |
 
 Run everything from the repository root with the interpreter that has the project installed:
 
@@ -73,8 +74,9 @@ sentence; the model must not invent it.
    <previous tag>`, `release_notes_draft.py`. The author edits and approves the draft.
 7. **Prepare RC** for a new version when asked: dry run first, show the plan, then `--execute`.
    CHANGELOG heading and manual banners are human steps the plan lists.
-8. **Commit-push, release**: only with authorization. After `release`, run `verify_tag.py` and
-   `record_release.py`, then have one asset per OS downloaded and smoke-tested.
+8. **Commit-push, release**: only with authorization. After `release`, wait for the CI run started by
+   the tag push, then **finalize** (also gated) so the checksum file covers CI's installers; then have one
+   asset per OS downloaded and smoke-tested.
 
 ## Files
 

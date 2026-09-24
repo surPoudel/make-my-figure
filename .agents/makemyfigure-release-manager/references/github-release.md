@@ -12,16 +12,24 @@ the author on the WSL host (`gh auth status`); the agent never stores a token.
 4. `verify_tag.py --tag v<v>` (tag exists, annotated, on origin, same commit, release present).
 5. `record_release.py --tag v<v>` (ledger).
 
-## CI interaction
-The workflow also uploads its own installer builds to a release created by the tag push (CI-built
-Windows/macOS/Linux assets). Decide *before* publishing which artefacts are authoritative:
-- **Option A (v1.1.0 precedent):** let CI build the three installers, download them, validate and
-  checksum them locally (`release_staging/<v>/<os>/` + hand-written manifest with the run's commit),
-  then upload wheel/sdist/manuals/SHA256SUMS.txt by hand.
-- **Option B:** upload locally built installers; if CI also attaches files with the same names it will
-  fail on the clash - re-run the release upload with `gh release upload --clobber` for the intended set.
-Either way `SHA256SUMS.txt` must describe the files that are finally attached; `generate_checksums.py
---verify` after downloading the attached assets is the final check (`gh release download v<v> -D <dir>`).
+## CI interaction (read the workflow's last step before every release)
+`build_desktop_releases.yml` ends with: `gh release create <tag> ... || true` (generic notes; fails
+harmlessly when the release already exists) and `gh release upload <tag> dist/*.{dmg,AppImage,exe,
+-windows.zip,-macos.zip,-linux-*.tar.gz} --clobber`. Consequences:
+
+- Create the release from WSL **before or right after** pushing the tag: then the notes are yours, not
+  "Automated build ...". RELEASE mode does tag -> push -> create in one go, so the create wins.
+- CI **replaces** same-named files. The WSL-built Linux tar.gz and AppImage (glibc 2.35, runs on more
+  distributions) are overwritten by the runner's glibc-2.39 builds. Decide which to keep; the FINALIZE
+  step re-uploads the local ones with `--prefer-local linux` (default) after CI finishes.
+- The macOS runner (`macos-latest`) is Apple silicon: the CI dmg is arm64 only (as for v1.1.0).
+- `SHA256SUMS.txt` published at release time cannot describe CI's files. FINALIZE downloads the final
+  asset set, regenerates the checksum file, uploads it with `--clobber`, downloads again and verifies.
+
+The WSL-driven release is therefore: `build-local` -> `release --platforms python,linux` -> wait for the
+CI run (`gh run watch <id>`; ~20 min) -> `finalize --prefer-local linux` -> download one installer per OS
+and launch it. This mirrors the v1.1.0 process (installers from CI, everything else attached by hand),
+with the checksum gap closed.
 
 ## Release text
 `docs/RELEASE_NOTES_v<v>.md` is the canonical body (v1.0.0, v1.1.0, v1.1.1 exist);
@@ -33,5 +41,5 @@ line and the live counts. The author approves the draft before RELEASE mode read
 `release_manager.py` when the version has an rc suffix - it currently prints the command for review).
 
 ## Post-release checklist
-Download one asset per OS and launch; `sha256sum -c`; README download table names; ledger notes;
+`finalize` (above); download one asset per OS and launch; `sha256sum -c`; README download table names; ledger notes;
 consider bumping `version.py` to the next development version on `main` (project checklist section 6).

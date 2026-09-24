@@ -64,7 +64,17 @@ tag pre-check, reconciliation, checksum verification and artefact validation; th
 annotated tag, pushes it, creates the GitHub release with every staged asset and `SHA256SUMS.txt`,
 verifies the tag and writes `release_history/v1.2.0.json`.
 
-## 5. After publishing
+## 5. After publishing (WSL-driven route)
+
+The tag push starts the CI workflow, which attaches Windows/macOS/Linux installers about 20 minutes later
+(`gh run watch $(gh run list --workflow build_desktop_releases.yml --limit 1 --json databaseId --jq '.[0].databaseId')`).
+Then close the checksum gap and keep the WSL Linux build:
+
+```
+python .agents/makemyfigure-release-manager/scripts/release_manager.py finalize --version 1.2.0 --dry-run
+MMF_RELEASE_AUTHORIZED=yes python .agents/makemyfigure-release-manager/scripts/release_manager.py finalize --version 1.2.0 --authorize "I authorize finalize for v1.2.0"
+```
+
 
 Download one installer per OS from the release page and launch it; `sha256sum -c SHA256SUMS.txt`;
 add free-text notes to the ledger record; update the README download table if names changed.

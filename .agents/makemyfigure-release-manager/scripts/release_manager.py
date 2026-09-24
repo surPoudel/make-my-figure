@@ -9,6 +9,8 @@ Modes (see AGENT.md):
   prepare-rc            dry-run plan for a target version (--execute applies version text edits only)
   commit-push           GATED. Commits the release-preparation files and pushes the branch.
   release               GATED. Annotated tag + push tag + GitHub release with staged artefacts, then verifies.
+  finalize              GATED. After the CI workflow attached its installers: re-upload preferred local builds,
+                        regenerate + upload SHA256SUMS.txt, verify, ledger (finalize_release.py).
 
 Gates for commit-push and release (all three are required, none is stored anywhere):
   1. --authorize "I authorize <mode> for vX.Y.Z"   (typed by the author, version must match)
@@ -60,7 +62,8 @@ def gate(mode: str, version: str, a) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("mode", choices=["audit", "build-local", "prepare-rc", "commit-push", "release"])
+    ap.add_argument("mode", choices=["audit", "build-local", "prepare-rc", "commit-push", "release", "finalize"])
+    ap.add_argument("--prefer-local", default="linux", help="finalize: platforms whose local builds replace CI's")
     ap.add_argument("--version", help="version (default version.py; required for prepare-rc)")
     ap.add_argument("--tests", choices=["quick", "full", "skip"], default="quick")
     ap.add_argument("--skip-platform", action="store_true", help="build-local: wheel/sdist only")
@@ -119,6 +122,11 @@ def main() -> int:
         for c in cmds:
             step(" ".join(c[:2]), c)
         print(f"\ncommit-push done: {C.git('rev-parse', '--short', 'HEAD')} pushed."); return 0
+
+    if a.mode == "finalize":
+        cmd = [PY, script("finalize_release.py"), "--tag", tag, "--prefer-local", a.prefer_local] + (["--dry-run"] if a.dry_run else []) \
+            + (["--authorize", a.authorize] if a.authorize else []) + (["--yes"] if a.yes else [])
+        return step("finalize release after CI", cmd, allow_fail=True)
 
     if a.mode == "release":
         base = os.path.join(C.STAGING_ROOT, v)
