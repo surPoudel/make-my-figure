@@ -145,7 +145,7 @@ def main() -> int:
             print("dry run - stopped."); return 0
         step("preflight (release strictness)", [PY, script("release_preflight.py"), "--version", v, "--tests", a.tests, "--for-release"])
         step("tag pre-check", [PY, script("verify_tag.py"), "--tag", tag, "--pre-check"])
-        step("reconciliation", [PY, script("reconcile_platforms.py"), "--version", v, "--require", a.platforms])
+        step("reconciliation", [PY, script("reconcile_platforms.py"), "--version", v, "--require", a.platforms, "--expect-commit", "HEAD"])
         step("checksums verify", [PY, script("generate_checksums.py"), "--version", v, "--verify"])
         step("artefact validation", [PY, script("validate_artifacts.py"), "--version", v] + (["--compare-release", a.compare_release or latest] if latest else []))
         if not os.path.exists(notes):

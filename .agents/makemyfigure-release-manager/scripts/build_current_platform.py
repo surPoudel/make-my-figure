@@ -139,10 +139,10 @@ def main() -> int:
 
     if C.version_py() != v:
         print(f"FAIL: version.py says {C.version_py()} but {v} requested"); return 1
-    dirty = C.git("status", "--porcelain")
+    ts = C.tree_state()
     manifest = {"generated": C.now_iso(), "version": v, "platform": PLAT, "architecture": platform.machine(), "host": C.host(),
                 "commit": C.git("rev-parse", "HEAD"), "commit_short": C.git("rev-parse", "--short", "HEAD"), "branch": C.git("rev-parse", "--abbrev-ref", "HEAD"),
-                "dirty": bool(dirty), "dirty_files": dirty.splitlines()[:30], "ok": False}
+                "dirty": ts["dirty"], "tree_state": ts, "ok": False}
     if a.system_python:
         py = sys.executable; manifest["interpreter"] = {"mode": "system-python (recorded: bundle may include unrelated packages)", "python": py}
     else:

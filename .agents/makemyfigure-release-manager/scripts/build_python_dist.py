@@ -69,7 +69,8 @@ def main() -> int:
                    "--json", os.path.join(C.REPORTS_DIR, f"private_file_check_{x['kind']}.json")])
         pf[x["kind"]] = {"returncode": r.returncode, "summary": (r.stdout or "").splitlines()[0] if r.stdout else ""}
         ok = ok and r.returncode == 0
-    rec = {"generated": C.now_iso(), "version": v, "commit": C.git("rev-parse", "HEAD"), "dirty": bool(C.git("status", "--porcelain")),
+    ts = C.tree_state()
+    rec = {"generated": C.now_iso(), "version": v, "commit": C.git("rev-parse", "HEAD"), "dirty": ts["dirty"], "tree_state": ts,
            "output_dir": os.path.relpath(out_dir, C.ROOT), "artifacts": rows, "twine_check": twine, "private_file_check": pf, "ok": ok}
     C.write_json(os.path.join(out_dir, "python_build_manifest.json"), rec)
     C.write_json(os.path.join(C.REPORTS_DIR, "python_dist.json"), rec)

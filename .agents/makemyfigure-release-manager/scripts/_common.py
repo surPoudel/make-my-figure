@@ -109,6 +109,23 @@ def host() -> Dict[str, str]:
     return info
 
 
+# ------------------------------------------------------------------ working-tree state (one definition for every script)
+SHIPPED_PATHS = ("make_my_figure_core/", "apps/", "schemas/", "style_profiles/", "mock_data/", "examples/", "assets/", "packaging/",
+                 "scripts/build_", "scripts/make_icons", "pyproject.toml", "setup.py", "MANIFEST.in", "LICENSE", "README.md", "CHANGELOG.md")
+
+
+def tree_state() -> Dict[str, Any]:
+    """Modified tracked files, or untracked files inside a path that the wheel / app bundles, make a
+    build non-reproducible from its commit -> dirty. Untracked files elsewhere (benchmarks, docs,
+    reports, scratch scripts) cannot enter an artefact -> recorded, not dirty."""
+    lines = git("status", "--porcelain", "-uall").splitlines()
+    modified = [l.strip() for l in lines if not l.startswith("??")]
+    untracked = [l[3:] for l in lines if l.startswith("??")]
+    untracked_shipped = [u for u in untracked if u.startswith(SHIPPED_PATHS)]
+    return {"modified": modified, "untracked_shipped": untracked_shipped, "untracked_other": [u for u in untracked if u not in untracked_shipped],
+            "dirty": bool(modified or untracked_shipped)}
+
+
 # ------------------------------------------------------------------ version discovery
 def version_py() -> str:
     text = open(VERSION_FILE, encoding="utf-8").read()

@@ -22,6 +22,7 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--version", default=C.version_py())
     ap.add_argument("--require", default="python", help="comma list of platforms that must be present")
+    ap.add_argument("--expect-commit", help="every build must come from this commit (release mode passes HEAD)")
     a = ap.parse_args()
     v = a.version.lstrip("v")
     base = os.path.join(C.STAGING_ROOT, v)
@@ -36,6 +37,11 @@ def main() -> int:
         if p not in found:
             problems.append(f"required platform missing: {p}")
     commits = {p: m.get("commit") for p, m in found.items()}
+    if a.expect_commit:
+        exp = C.git("rev-parse", a.expect_commit)
+        for p, c in commits.items():
+            if c != exp:
+                problems.append(f"{p}: built from {str(c)[:10]} but the commit to be tagged is {exp[:10]} - rebuild")
     if len(set(commits.values())) > 1:
         problems.append("builds come from different commits: " + ", ".join(f"{p}={c[:10]}" for p, c in commits.items()))
     for p, m in found.items():

@@ -51,23 +51,14 @@ def main() -> int:
         rows.append({"area": area, "check": check, "level": level, "detail": detail})
 
     # --- git
-    dirty = C.git("status", "--porcelain")
-    modified = [l for l in dirty.splitlines() if not l.startswith("??")]
-    untracked = [l[3:] for l in dirty.splitlines() if l.startswith("??")]
-    shipped = ("make_my_figure_core/", "apps/", "schemas/", "style_profiles/", "mock_data/", "examples/", "assets/", "packaging/",
-               "scripts/build_", "scripts/make_icons", "pyproject.toml", "setup.py", "MANIFEST.in", "LICENSE", "README.md", "CHANGELOG.md")
-    untracked_shipped = [u for u in untracked if u.startswith(shipped)]
-    # Modified tracked files, or untracked files inside a folder that the wheel / app bundles, make the
-    # build non-reproducible from the commit: STOP. Untracked files elsewhere (benchmarks, docs, reports,
-    # scratch scripts) cannot enter an artefact: WARN, so the author sees them but the build proceeds.
-    if modified or untracked_shipped:
-        level = "WARN" if a.allow_dirty else "STOP"
-        detail = (f"{len(modified)} modified tracked file(s): " + "; ".join(l.strip() for l in modified[:5])) if modified else ""
-        if untracked_shipped:
-            detail += (" | " if detail else "") + f"{len(untracked_shipped)} untracked file(s) inside shipped paths: " + "; ".join(untracked_shipped[:5])
-        add("git", "working tree clean", level, detail)
-    elif untracked:
-        add("git", "working tree clean", "WARN", f"tracked files clean; {len(untracked)} untracked path(s) outside shipped folders: " + "; ".join(untracked[:5]))
+    ts = C.tree_state()
+    if ts["dirty"]:
+        detail = (f"{len(ts['modified'])} modified tracked file(s): " + "; ".join(ts["modified"][:5])) if ts["modified"] else ""
+        if ts["untracked_shipped"]:
+            detail += (" | " if detail else "") + f"{len(ts['untracked_shipped'])} untracked file(s) inside shipped paths: " + "; ".join(ts["untracked_shipped"][:5])
+        add("git", "working tree clean", "WARN" if a.allow_dirty else "STOP", detail)
+    elif ts["untracked_other"]:
+        add("git", "working tree clean", "WARN", f"tracked files clean; {len(ts['untracked_other'])} untracked path(s) outside shipped folders: " + "; ".join(ts["untracked_other"][:5]))
     else:
         add("git", "working tree clean", "PASS")
     branch = C.git("rev-parse", "--abbrev-ref", "HEAD")

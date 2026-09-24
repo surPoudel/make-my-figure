@@ -33,3 +33,10 @@ outside `docs/manuals/`, assistant session folders (`claude_code/`, `.claude/`),
 WARN: scratch folders, videos, screenshots outside the manuals/tutorial, PDFs outside
 manuals/benchmarks, OneDrive / home paths in text, files > 25 MB. The same rules run on the sdist,
 wheel and app folder (`--sdist`, `--wheel`, `--app`).
+
+## One definition of "dirty" (`_common.tree_state()`)
+Used by preflight, the wheel/sdist manifest, the platform manifests and reconciliation: modified tracked
+files, or untracked files inside shipped paths, make the tree dirty; untracked files elsewhere are recorded
+(`tree_state.untracked_other`) but do not block. RELEASE mode additionally requires every staged build's
+commit to equal HEAD (`reconcile_platforms.py --expect-commit HEAD`), so a build made before a later commit
+must be redone.
