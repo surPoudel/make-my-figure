@@ -90,3 +90,7 @@ CLAUDE.md
 
 # Private diagnostic notes about a collaborator's workbooks stay local
 reports/collaborator_concerns/
+
+# Build and Release Manager agent: local build staging and per-run reports (never committed)
+release_staging/
+.agents/makemyfigure-release-manager/reports/

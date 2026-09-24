@@ -12,7 +12,11 @@ $Root = Split-Path -Parent $PSScriptRoot
 Write-Host "==> Building app folder with PyInstaller"
 python "$Root\scripts\build_desktop.py" --clean
 
-$Ver = (python -c "import sys; sys.path.insert(0, r'$Root'); from make_my_figure_core.version import __version__; print(__version__)").Trim()
+# Read the version from the repo root (no path embedded in the Python one-liner, so paths with
+# quotes/apostrophes such as OneDrive "... Children's ..." folders work).
+Push-Location $Root
+try { $Ver = (python -c "from make_my_figure_core.version import __version__; print(__version__)").Trim() }
+finally { Pop-Location }
 $AppDir = Join-Path $Root "dist\MakeMyFigure"
 if (-Not (Test-Path $AppDir)) { throw "Build failed: $AppDir not found" }
 

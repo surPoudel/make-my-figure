@@ -22,7 +22,9 @@ python3 "$ROOT/scripts/build_desktop.py" --clean
 
 APP="$ROOT/dist/MakeMyFigure.app"
 [ -d "$APP" ] || { echo "Build failed: $APP not found"; exit 1; }
-VER="$(python3 -c "import sys; sys.path.insert(0, '$ROOT'); from make_my_figure_core.version import __version__; print(__version__)")"
+# Read the version from the repo root (no path embedded in the Python one-liner, so paths with
+# quotes/apostrophes such as OneDrive "... Children's ..." folders work).
+VER="$(cd "$ROOT" && python3 -c "from make_my_figure_core.version import __version__; print(__version__)")"
 
 # Optional codesign/notarization only if Apple secrets are present.
 if [ -n "${APPLE_DEVELOPER_ID:-}" ]; then
