@@ -2,7 +2,12 @@
 
 ## Unreleased
 
-(nothing yet)
+### Fixed
+- **Desktop Help → Plot types** now lists the required/optional columns, description, example file
+  and replacement note for every registered plot type. It read only the legacy 18-dataset manifest,
+  so the 21 plot types added since v0.3 showed "Required columns: —" and "Example file: None"; it now
+  reads `examples/example_data_manifest.json` (complete for all 39 types) with the legacy manifest as
+  fallback. Regression test `tests/test_help_content.py`.
 
 All notable changes to Make My Figure are recorded here. This project uses a
 single, evolving `Publication` style — it does not target or claim compliance
