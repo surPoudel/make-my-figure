@@ -52,16 +52,40 @@ jobs:
       - name: Install Linux AppImage tooling
         if: runner.os == 'Linux'
         run: |
+          set -euxo pipefail
           sudo apt-get update
-          sudo apt-get install -y libegl1 libgl1 libxkbcommon0 fuse || true
-          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O /usr/local/bin/appimagetool || true
-          chmod +x /usr/local/bin/appimagetool || true
+          # Qt's xcb platform plugin links against these at runtime. PyInstaller can
+          # only bundle libraries that exist on the build machine, so they must be
+          # present BEFORE the app is built — otherwise the AppImage is not
+          # self-contained and dies on a bare desktop with
+          # "Could not load the Qt platform plugin xcb".
+          # Deliberately no `|| true`: if a library is missing we want a red build,
+          # not a broken release. That masking is how v1.1.1 shipped without them.
+          sudo apt-get install -y --no-install-recommends \
+            libegl1 libgl1 xvfb \
+            libxkbcommon0 libxkbcommon-x11-0 \
+            libxcb1 libx11-xcb1 libxcb-cursor0 libxcb-icccm4 libxcb-image0 \
+            libxcb-keysyms1 libxcb-randr0 libxcb-render0 libxcb-render-util0 \
+            libxcb-shape0 libxcb-shm0 libxcb-sync1 libxcb-util1 libxcb-xfixes0 \
+            libxcb-xkb1
+          # appimagetool from AppImage/appimagetool embeds the current type2-runtime.
+          # The retired AppImageKit build embedded an old runtime that needs the
+          # host's libfuse2, which the AppImage catalog test flags.
+          wget -q https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage \
+            -O /usr/local/bin/appimagetool
+          chmod +x /usr/local/bin/appimagetool
       - name: Build Linux app
         if: runner.os == 'Linux'
         run: |
+          set -euxo pipefail
           chmod +x scripts/build_linux.sh
-          ./scripts/build_linux.sh || true
-          python -m PyInstaller packaging/make_my_figure.spec --noconfirm
+          # No `|| true` here: build_linux.sh now fails when the Qt xcb plugin's
+          # libraries are missing from the bundle, and that has to stop the release
+          # rather than be swallowed. A redundant second PyInstaller run used to
+          # follow this line; it rebuilt dist/MakeMyFigure from the very same spec
+          # (scripts/build_desktop.py already uses packaging/make_my_figure.spec),
+          # discarding the libraries build_linux.sh had just bundled in.
+          ./scripts/build_linux.sh
 
       # ---- macOS ----
       - name: Build macOS app
@@ -97,6 +121,16 @@ jobs:
           QT_QPA_PLATFORM: offscreen
         run: |
           ./dist/MakeMyFigure/MakeMyFigure --selftest
+
+      # The selftest above runs offscreen, which loads libqoffscreen.so and never
+      # touches libqxcb.so. Every real Linux desktop loads xcb, so exercise that
+      # plugin explicitly under a virtual display — this is the check that would
+      # have caught the v1.1.1 AppImage failing to start.
+      - name: Smoke-test the xcb platform plugin (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          set -euxo pipefail
+          xvfb-run -a env QT_QPA_PLATFORM=xcb ./dist/MakeMyFigure/MakeMyFigure --selftest
 
       - name: Smoke-test built app (Windows)
         if: runner.os == 'Windows'

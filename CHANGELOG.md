@@ -3,6 +3,28 @@
 ## Unreleased
 
 ### Fixed
+- **The Linux app now starts on a desktop that does not already have Qt's X11 libraries.**
+  The v1.1.1 AppImage and Linux tarball bundled Qt's `xcb` platform plugin but not the nine
+  libraries it links against (`libxkbcommon-x11.so.0`, `libxcb-cursor.so.0`, `libxcb-icccm.so.4`,
+  `libxcb-util.so.1`, `libxcb-image.so.0`, `libxcb-keysyms.so.1`, `libxcb-render-util.so.0`,
+  `libxcb-shape.so.0`, `libxcb-xkb.so.1`). On a machine without them the app exited before
+  drawing a window with "Could not load the Qt platform plugin xcb ... even though it was
+  found." `scripts/build_linux.sh` now copies the plugin's libraries into the bundle — before
+  the tarball is packed, so both artifacts get them — sets `LD_LIBRARY_PATH` in `AppRun`, and
+  **fails the build** if any is still absent. The GL stack, core X11/XCB and glibc are still
+  taken from the host, as AppImage convention requires. Reported by the AppImage catalog test
+  (AppImage/appimage.github.io#6693).
+- **CI now exercises the `xcb` plugin.** The build smoke test ran only with
+  `QT_QPA_PLATFORM=offscreen`, which loads `libqoffscreen.so` and never touches `libqxcb.so`, so
+  a build that could not start on any real Linux desktop passed cleanly. A second smoke test now
+  runs under `xvfb` with `QT_QPA_PLATFORM=xcb`. The Linux build step no longer swallows failures
+  with `|| true`, and a redundant second PyInstaller run that discarded the bundled libraries has
+  been removed.
+
+### Changed
+- Linux AppImages are built with `appimagetool` from `AppImage/appimagetool`, which embeds the
+  current `type2-runtime`, instead of the retired AppImageKit build whose older runtime required
+  the host's `libfuse2`.
 - **Desktop Help → Plot types** now lists the required/optional columns, description, example file
   and replacement note for every registered plot type. It read only the legacy 18-dataset manifest,
   so the 21 plot types added since v0.3 showed "Required columns: —" and "Example file: None"; it now
