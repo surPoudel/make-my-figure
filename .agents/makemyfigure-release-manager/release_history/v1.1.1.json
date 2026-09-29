@@ -7,8 +7,8 @@
   "tag_date": "2026-09-24 08:27:34 -0500",
   "tag_message": "MakeMyFigure v1.1.1",
   "version_py_at_tag": "1.1.1",
-  "recorded": "2026-09-24T08:36:19-0500",
-  "notes": "Re-released 2026-09-24 13:27 UTC at 8105769 (adds the desktop Help-page fix 15b3874 and the ledger record); the first publication at b2295c4 (02:38 UTC) was deleted together with its tag after confirming zero external downloads. Installers: CI run 36005816311 (Windows Setup.exe/zip, macOS dmg); Linux tar.gz/AppImage built on WSL (glibc 2.35) and restored by finalize; SHA256SUMS.txt covers 9 assets, verified 0 mismatches.",
+  "recorded": "2026-09-28T23:28:19-0500",
+  "notes": "[2026-09-24, original record] Re-released 2026-09-24 13:27 UTC at 8105769 (adds the desktop Help-page fix 15b3874 and the ledger record); the first publication at b2295c4 (02:38 UTC) was deleted together with its tag after confirming zero external downloads. Installers: CI run 36005816311 (Windows Setup.exe/zip, macOS dmg); Linux tar.gz/AppImage built on WSL (glibc 2.35) and restored by finalize; SHA256SUMS.txt covers 9 assets, verified 0 mismatches. [2026-09-29, assets rebuilt] Assets rebuilt twice on 2026-09-29 from main, after the AppImage catalog test (AppImage/appimage.github.io#6693) failed on the 2026-09-24 build. The TAG STILL POINTS AT 8105769; the published binaries do not correspond to it. Rebuild 1 (d773028, CI 36516436811): Qt's xcb platform plugin was bundled without the nine libraries it links against (libxkbcommon-x11, libxcb-cursor/icccm/util/image/keysyms/render-util/shape/xkb), so the app could not start on a host lacking them; the build now installs and bundles them, AppRun exports LD_LIBRARY_PATH, the build fails if one is missing, and a CI smoke test runs under xvfb with QT_QPA_PLATFORM=xcb (the previous one used offscreen, which never loads libqxcb.so). Packaging moved to appimagetool from AppImage/appimagetool (current type2-runtime, no host libfuse2). Rebuild 2 (05c4fc1, CI 36520494712): rebuild 1 regressed the glibc floor from 2.35 to 2.38 because GitHub's ubuntu-latest label moved from 22.04 to 24.04, breaking Ubuntu 22.04; Linux is now pinned to ubuntu-22.04 and the build logs the bundled CPython's highest required GLIBC symbol. Verified on the published artifacts: libpython3.11.so.1.0 requires at most GLIBC_2.35; AppImage --selftest passes with QT_QPA_PLATFORM=xcb on a host with none of the nine libraries and no libfuse2. SHA256SUMS.txt regenerated after each rebuild (the workflow does not refresh it) and verified 9/9. Catalog test passed 2026-09-29T04:24:48Z; labels error-app-exits and error-glibc-too-new cleared, screenshot-ok added.",
   "github_release": {
     "url": "https://github.com/surPoudel/make-my-figure/releases/tag/v1.1.1",
     "published_at": "2026-09-24T13:27:57Z",
@@ -17,23 +17,23 @@
     "assets": [
       {
         "name": "MakeMyFigure-1.1.1-linux-x86_64.tar.gz",
-        "size": 181028093
+        "size": 188818192
       },
       {
         "name": "MakeMyFigure-1.1.1-Setup.exe",
-        "size": 104138998
+        "size": 104148075
       },
       {
         "name": "MakeMyFigure-1.1.1-windows.zip",
-        "size": 152416851
+        "size": 152423107
       },
       {
         "name": "MakeMyFigure-1.1.1.AppImage",
-        "size": 181114048
+        "size": 173439480
       },
       {
         "name": "MakeMyFigure-1.1.1.dmg",
-        "size": 137302815
+        "size": 132694412
       },
       {
         "name": "MakeMyFigure_v1.1.1_Quick_Start.pdf",
