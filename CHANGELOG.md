@@ -2,7 +2,19 @@
 
 ## Unreleased
 
+### Added
+- **The test suite runs in CI.** It had no automation at all: it ran only when someone
+  remembered to run it locally, so nothing would have caught a regression before a release.
+  `.github/workflows/tests.yml` runs the full suite headless (`QT_QPA_PLATFORM=offscreen`,
+  `MPLBACKEND=Agg`) on every pull request and on pushes to `main`, on `ubuntu-22.04` — the same
+  image the released Linux app is built on.
+
 ### Fixed
+- **`scikit-learn` is declared.** The publication-recreation benchmarks load the iris/wine/diabetes
+  built-ins from scikit-learn, but it appeared in no requirements file, so a clean environment
+  built from `requirements-lock.txt` failed `test_curation_is_deterministic` with
+  `ModuleNotFoundError: No module named 'sklearn'`. It is now a `benchmarks` extra, pinned in the
+  lock file, and the test skips cleanly when it is genuinely absent rather than erroring.
 - **The Linux app runs on Ubuntu 22.04 again.** The bundled CPython links against the build
   machine's glibc, and glibc is forward- but not backward-compatible, so the builder sets the
   oldest system the app can run on. GitHub's `ubuntu-latest` label moved from 22.04 to 24.04,
