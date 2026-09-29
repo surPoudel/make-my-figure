@@ -30,7 +30,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+        # Linux is pinned to the oldest still-supported Ubuntu LTS on purpose.
+        # The bundled CPython links against the builder's glibc, and glibc is
+        # forward- but not backward-compatible, so the build machine sets the
+        # OLDEST system the Linux app can run on. `ubuntu-latest` silently moved
+        # from 22.04 to 24.04, which raised the floor from glibc 2.35 to 2.38 and
+        # broke the app on Ubuntu 22.04 (supported to 2027) without any code
+        # change. Bump this only when 22.04 goes out of support.
+        os: [windows-latest, macos-latest, ubuntu-22.04]
 
     steps:
       - uses: actions/checkout@v4
@@ -126,6 +133,18 @@ jobs:
       # touches libqxcb.so. Every real Linux desktop loads xcb, so exercise that
       # plugin explicitly under a virtual display — this is the check that would
       # have caught the v1.1.1 AppImage failing to start.
+      # Make the glibc floor visible in the log. The bundled CPython links
+      # against the builder's glibc, so this number is the oldest system the
+      # Linux app can run on — if the runner image moves, this is where it shows.
+      - name: Report the glibc floor of the Linux build (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          set -uo pipefail
+          floor=$(objdump -T dist/MakeMyFigure/_internal/libpython3.11.so.1.0 2>/dev/null \
+            | sed -n 's/.*GLIBC_\([0-9.]*\).*/\1/p' | sort -V | tail -1)
+          echo "Bundled CPython requires at most GLIBC_${floor:-unknown}"
+          echo "Builder glibc: $(ldd --version | head -1)"
+
       - name: Smoke-test the xcb platform plugin (Linux)
         if: runner.os == 'Linux'
         run: |

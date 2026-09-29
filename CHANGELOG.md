@@ -3,6 +3,14 @@
 ## Unreleased
 
 ### Fixed
+- **The Linux app runs on Ubuntu 22.04 again.** The bundled CPython links against the build
+  machine's glibc, and glibc is forward- but not backward-compatible, so the builder sets the
+  oldest system the app can run on. GitHub's `ubuntu-latest` label moved from 22.04 to 24.04,
+  which raised the floor from glibc 2.35 to 2.38 with no code change and made the rebuilt
+  v1.1.1 Linux assets fail to start on 22.04 (supported to 2027) with
+  `libpython3.11.so.1.0: version 'GLIBC_2.38' not found`. The Linux build is now pinned to
+  `ubuntu-22.04`, and the build log reports the bundled CPython's glibc requirement so a future
+  runner-image migration is visible instead of silent.
 - **The Linux app now starts on a desktop that does not already have Qt's X11 libraries.**
   The v1.1.1 AppImage and Linux tarball bundled Qt's `xcb` platform plugin but not the nine
   libraries it links against (`libxkbcommon-x11.so.0`, `libxcb-cursor.so.0`, `libxcb-icccm.so.4`,
