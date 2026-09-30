@@ -1,23 +1,29 @@
 """Generate the bundled example datasets for the spatial plot types.
 
-Five of the six are synthetic, matching the project's existing example-data
-policy (CC0, generated from a fixed seed, never copied from a publication).
-They are shaped to look like the real platforms — Visium-style spots, Xenium-
-style cells and transcripts — so the columns a user meets here are the columns
-they will meet in their own export.
+Four of the six are built from **real published data**: one CODEX tissue image
+from the colorectal-cancer dataset of Schürch et al. (Cell 2020), deposited on
+Mendeley Data under CC BY 4.0 and therefore redistributable with attribution.
+Using a real section matters here - the columns, the coordinate ranges, the cell
+type names and the class imbalance are all things a user will meet in their own
+export, and a simulation quietly smooths every one of them.
 
-The sixth, the neighbourhood enrichment matrix, uses the *real published
-values* from CNTools S1 Data (Tao et al. 2024, PLOS Comput Biol, CC BY 4.0),
-which is redistributable with attribution. A user rendering that example is
-reproducing a published figure panel, not a simulation of one.
+Two examples stay synthetic because the CRC dataset has no counterpart:
 
-    python scripts/generate_spatial_example_data.py
+* the transcript map - CODEX is a protein imaging assay and has no transcript
+  coordinates, so a "real" transcript example would have to be faked anyway;
+* the ROI map - the deposited table carries no polygon geometry.
+
+Each is labelled for what it is in the manifest, so nothing claims to be
+published data that is not.
+
+    python scripts/generate_spatial_example_data.py --crc PATH_TO_CRC_CSV
 """
 from __future__ import annotations
 
+import argparse
+import hashlib
 import json
 import os
-import shutil
 
 import numpy as np
 import pandas as pd
@@ -25,57 +31,43 @@ import pandas as pd
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 BY_TYPE = os.path.join(ROOT, "examples", "by_plot_type")
 MANIFEST = os.path.join(ROOT, "examples", "example_data_manifest.json")
+DEFAULT_CRC = os.path.join(ROOT, "benchmarks", "spatial_validation", "cntools_2024",
+                           "raw", "CRC_clusters_neighborhoods_markers.csv")
+CNTOOLS_DERIVED = os.path.join(ROOT, "benchmarks", "spatial_validation", "cntools_2024",
+                               "derived", "neighborhood_enrichment_cntools.csv")
 SEED = 42
+IMAGE = "reg052_B"          # one representative section: 2,192 cells, 16 cell types
 
-CELL_TYPES = ["Tumor", "Stroma", "Macrophage", "CD8 T cell", "CD4 T cell",
-              "B cell", "Endothelial", "Fibroblast"]
+CRC_CITATION = ("Schürch CM, et al. Coordinated cellular neighborhood orchestrates "
+                "antitumoral immunity at the colorectal cancer invasive front. "
+                "Cell 2020. doi:10.1016/j.cell.2020.07.005. Dataset: "
+                "doi:10.17632/mpjzbtfgfr.1 (Mendeley Data, CC BY 4.0).")
+CNTOOLS_CITATION = ("Tao Y, et al. CNTools: a computational toolbox for cellular "
+                    "neighborhood analysis from multiplexed images. PLOS Comput Biol "
+                    "2024;20(8):e1012344. doi:10.1371/journal.pcbi.1012344 "
+                    "(S1 Data, CC BY 4.0).")
 
-
-def _tissue(rng, n, cx, cy, radius):
-    ang = rng.uniform(0, 2 * np.pi, n)
-    rad = np.sqrt(rng.uniform(0, 1, n)) * radius
-    return cx + rad * np.cos(ang), cy + rad * np.sin(ang)
-
-
-def _cells(rng, n=2400):
-    """Xenium-style cells: a tumour core, an immune rim and scattered stroma."""
-    x, y = _tissue(rng, n, 1500.0, 1200.0, 900.0)
-    d = np.sqrt((x - 1250) ** 2 + (y - 1050) ** 2)
-    p = np.zeros((n, len(CELL_TYPES)))
-    core = np.clip(1.0 - d / 700.0, 0, 1)
-    p[:, 0] = 0.10 + 0.75 * core                      # Tumor
-    p[:, 1] = 0.20 * (1 - core) + 0.05                # Stroma
-    p[:, 2] = 0.22 * np.exp(-((d - 620) ** 2) / 32000) + 0.04
-    p[:, 3] = 0.20 * np.exp(-((d - 680) ** 2) / 26000) + 0.03
-    p[:, 4] = 0.14 * np.exp(-((d - 700) ** 2) / 30000) + 0.03
-    p[:, 5] = 0.10 * np.exp(-((d - 780) ** 2) / 18000) + 0.02
-    p[:, 6] = 0.05 + 0.04 * (1 - core)
-    p[:, 7] = 0.16 * (1 - core) + 0.04
-    p /= p.sum(axis=1, keepdims=True)
-    ct = [CELL_TYPES[i] for i in (p.cumsum(1) > rng.uniform(size=(n, 1))).argmax(1)]
-
-    # A marker that tracks the tumour core, and one that tracks the immune rim.
-    epcam = np.clip(rng.gamma(2.0, 1.1, n) + 9.0 * core, 0, None)
-    cd8 = np.clip(rng.gamma(1.4, 0.8, n) + 6.0 * np.exp(-((d - 680) ** 2) / 26000), 0, None)
-    return pd.DataFrame({
-        "cell_id": [f"cell_{i:05d}" for i in range(n)],
-        "x": np.round(x, 2), "y": np.round(y, 2),
-        "cell_type": ct, "sample": "Section_1",
-        "EPCAM": np.round(epcam, 3), "CD8A": np.round(cd8, 3),
-    })
+MARKERS = {"CD8": "CD8 - cytotoxic T cells:Cyc_3_ch_2",
+           "CD68": "CD68 - macrophages:Cyc_18_ch_4",
+           "Ki67": "Ki67 - proliferation:Cyc_5_ch_4",
+           "CD4": "CD4 - T helper cells:Cyc_6_ch_3"}
 
 
-def _write(slug, df, entry, aux=None, readme=""):
+def _sha256(path: str) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _write(slug, df, entry, readme=""):
     d = os.path.join(BY_TYPE, slug)
     os.makedirs(d, exist_ok=True)
     df.to_csv(os.path.join(d, "data.csv"), index=False)
     df.to_csv(os.path.join(d, "data.tsv"), sep="\t", index=False)
     with pd.ExcelWriter(os.path.join(d, "data.xlsx")) as xw:
         df.to_excel(xw, sheet_name="data", index=False)
-        for name, adf in (aux or {}).items():
-            adf.to_excel(xw, sheet_name=name[:31], index=False)
-    for name, adf in (aux or {}).items():
-        adf.to_csv(os.path.join(d, f"{name}.csv"), index=False)
     with open(os.path.join(d, "plotspec.json"), "w", encoding="utf-8") as fh:
         json.dump(entry.pop("_plotspec"), fh, indent=2)
     with open(os.path.join(d, "README.md"), "w", encoding="utf-8") as fh:
@@ -83,298 +75,362 @@ def _write(slug, df, entry, aux=None, readme=""):
     return entry
 
 
+def _files(slug):
+    f = {k: f"examples/by_plot_type/{slug}/data.{k}" for k in ("csv", "tsv", "xlsx")}
+    f["plotspec"] = f"examples/by_plot_type/{slug}/plotspec.json"
+    f["readme"] = f"examples/by_plot_type/{slug}/README.md"
+    return f
+
+
+def _spec(plot_type, mapping, spatial, title):
+    return {"plot_type": plot_type, "input_table": "data.csv", "mapping": mapping,
+            "journal_style": "publication", "layout": {"title": title},
+            "spatial": spatial,
+            "output": {"formats": ["png", "pdf", "svg"], "dpi": 300,
+                       "width_mm": 180, "height_mm": 150}}
+
+
 def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--crc", default=DEFAULT_CRC)
+    a = ap.parse_args()
     rng = np.random.default_rng(SEED)
-    cells = _cells(rng)
     entries = []
 
-    def spec(plot_type, mapping, spatial, title):
-        return {"plot_type": plot_type, "input_table": "data.csv", "mapping": mapping,
-                "journal_style": "publication", "layout": {"title": title},
-                "spatial": spatial,
-                "output": {"formats": ["png", "pdf", "svg"], "dpi": 300,
-                           "width_mm": 180, "height_mm": 150}}
+    published = dict(
+        data_type="published", license="CC BY 4.0",
+        recommended_style_profiles=["publication"],
+        expected_export_formats=["svg", "png", "pdf", "plot_spec.json"])
+    synthetic = dict(
+        data_type="synthetic", license="CC0-1.0",
+        recommended_style_profiles=["publication"],
+        expected_export_formats=["svg", "png", "pdf", "plot_spec.json"],
+        source="generated by scripts/generate_spatial_example_data.py",
+        provenance="Synthetic; not derived from any published dataset.")
 
-    def files(slug, aux=()):
-        f = {k: f"examples/by_plot_type/{slug}/data.{k}" for k in ("csv", "tsv", "xlsx")}
-        f["plotspec"] = f"examples/by_plot_type/{slug}/plotspec.json"
-        f["readme"] = f"examples/by_plot_type/{slug}/README.md"
-        return f
+    if not os.path.exists(a.crc):
+        print(f"CRC source not found: {a.crc}\n"
+              f"Run benchmarks/spatial_validation/cntools_2024/scripts/download.sh first.")
+        return 2
+    crc_sha = _sha256(a.crc)
+    prov = (f"Derived from image {IMAGE} of the CRC CODEX dataset "
+            f"(source SHA-256 {crc_sha[:16]}...). {CRC_CITATION} "
+            "Changes made: one image selected; columns subset and renamed; "
+            "no measured value altered.")
 
-    common = dict(recommended_style_profiles=["publication"],
-                  expected_export_formats=["svg", "png", "pdf", "plot_spec.json"],
-                  data_type="synthetic", license="CC0-1.0",
-                  source="generated by scripts/generate_spatial_example_data.py",
-                  provenance="Synthetic; not derived from any published dataset.")
+    cols = ["File Name", "ClusterName", "neighborhood10", "X:X", "Y:Y",
+            "patients", "groups"] + list(MARKERS.values())
+    raw = pd.read_csv(a.crc, usecols=cols, low_memory=False)
+    img = raw[raw["File Name"] == IMAGE].copy()
+    if img.empty:
+        print(f"image {IMAGE} not present in {a.crc}")
+        return 2
 
-    # ---------------- 1. categorical map ----------------------------------
+    cells = pd.DataFrame({
+        "cell_id": [f"{IMAGE}_{i:05d}" for i in range(len(img))],
+        "x": img["X:X"].to_numpy(), "y": img["Y:Y"].to_numpy(),
+        "cell_type": img["ClusterName"].to_numpy(),
+        "neighborhood": [f"CN{int(v) + 1}" for v in img["neighborhood10"]],
+        "image": IMAGE, "patient": img["patients"].to_numpy(),
+    })
+    for short, col in MARKERS.items():
+        cells[short] = np.round(img[col].to_numpy(dtype=float), 2)
+
+    # ---------------- 1. categorical map (real) ----------------------------
     slug = "spatial_categorical"
     e = dict(plot_type="spatial_categorical_map", name="Spatial map (categories)", slug=slug,
-             description="Cells positioned in tissue coordinates and coloured by cell type.",
+             description=("Cells of a real CODEX tissue section positioned in image "
+                          "coordinates and coloured by annotated cell type."),
              use_case="Show where each cell type sits in a tissue section.",
              required_columns=["x", "y", "cell_type"],
-             optional_columns=["cell_id", "sample", "EPCAM", "CD8A"],
-             files=files(slug), aux_tables={}, excel_sheet="Spatial_categorical",
+             optional_columns=["cell_id", "neighborhood", "image", "patient",
+                               "CD8", "CD68", "Ki67", "CD4"],
+             files=_files(slug), aux_tables={}, excel_sheet="Spatial_categorical",
              compatible_renderers=["spatial_categorical_map"], n_rows=int(len(cells)),
-             user_replacement_note=("One row per cell or spot. Replace x/y with your "
-                                    "coordinates and cell_type with your labels. Declare the "
-                                    "coordinate units — a scale bar is only drawn when they "
-                                    "are physical."),
-             common_mistakes=["Do not mix sections in one table without a sample column — "
-                              "neighbours are never computed across samples.",
-                              "Image coordinates run y-downward: set orientation='y_down' "
+             source=CRC_CITATION, provenance=prov,
+             user_replacement_note=("One row per cell. Replace x/y with your coordinates and "
+                                    "cell_type with your labels. These coordinates are image "
+                                    "pixels, which is why the example declares "
+                                    "coordinate_units='pixel' and draws no physical scale bar."),
+             common_mistakes=["Do not mix sections in one table without an image/sample column "
+                              "— neighbours are never computed across images.",
+                              "Imaging coordinates run y-downward; set orientation='y_down' "
                               "rather than flipping y by hand."],
-             **common)
-    e["_plotspec"] = spec("spatial_categorical_map",
-                          {"x": "x", "y": "y", "category": "cell_type"},
-                          {"coordinate_units": "micrometre", "orientation": "y_up",
-                           "scale_bar": True, "marker_size": 5, "alpha": 0.9},
-                          "Cell types in tissue")
+             **published)
+    e["_plotspec"] = _spec("spatial_categorical_map",
+                           {"x": "x", "y": "y", "category": "cell_type"},
+                           {"coordinate_units": "pixel", "orientation": "y_down",
+                            "marker_size": 7, "alpha": 0.9, "legend_columns": 1},
+                           f"Annotated cell types, CRC section {IMAGE}")
     entries.append(_write(slug, cells, e, readme=(
-        "# Spatial map (categories)\n\nOne row per cell. `x`/`y` are tissue coordinates in "
-        "micrometres, `cell_type` is the label drawn in colour.\n\nSynthetic data (CC0), "
-        "generated with seed 42 to resemble a tumour core with an immune rim.\n\n"
-        "Declare `coordinate_units`; with `arbitrary` units no scale bar is drawn, because a "
-        "bar would assert a physical length the data does not carry.\n")))
+        f"# Spatial map (categories)\n\n**Real published data.** One CODEX image ({IMAGE}, "
+        f"{len(cells):,} cells, {cells['cell_type'].nunique()} annotated cell types) from the "
+        "colorectal-cancer dataset of Schürch et al., *Cell* 2020.\n\n"
+        f"{CRC_CITATION}\n\nRedistributed under CC BY 4.0. Changes made: one image selected, "
+        "columns subset and renamed; no measured value was altered.\n\n"
+        "Coordinates are **image pixels**, so the example declares `coordinate_units='pixel'` "
+        "and `orientation='y_down'` — imaging y runs downward, and the renderer flips only "
+        "when told to. No physical scale bar is drawn, because pixels carry no stated "
+        "physical length.\n\n"
+        "`neighborhood` holds the published cellular-neighbourhood assignment, so the same "
+        "table also renders as a neighbourhood map by pointing `category` at it.\n")))
 
-    # ---------------- 2. feature map --------------------------------------
+    # ---------------- 2. feature map (real) --------------------------------
     slug = "spatial_feature"
     e = dict(plot_type="spatial_feature_map", name="Spatial map (continuous value)", slug=slug,
-             description="Cells coloured by a continuous value such as marker expression.",
-             use_case="Show where a gene or marker is expressed across a section.",
-             required_columns=["x", "y", "EPCAM"],
-             optional_columns=["cell_id", "cell_type", "sample", "CD8A"],
-             files=files(slug), aux_tables={}, excel_sheet="Spatial_feature",
+             description="Cells coloured by a measured marker intensity from a real CODEX image.",
+             use_case="Show where a protein marker is expressed across a section.",
+             required_columns=["x", "y", "CD8"],
+             optional_columns=["cell_id", "cell_type", "neighborhood", "CD68", "Ki67", "CD4"],
+             files=_files(slug), aux_tables={}, excel_sheet="Spatial_feature",
              compatible_renderers=["spatial_feature_map"], n_rows=int(len(cells)),
-             user_replacement_note=("Replace EPCAM with your own measurement column. Nothing "
-                                    "is transformed unless you ask: set spatial.transform "
-                                    "explicitly and the colourbar label follows it."),
-             common_mistakes=["Do not pre-log the values and leave the label saying "
-                              "'expression' — set spatial.transform so the colourbar is "
-                              "labelled correctly.",
-                              "log2/log10 need strictly positive values; use log1p/log2p1 "
-                              "when zeros are expected."],
-             **common)
-    e["_plotspec"] = spec("spatial_feature_map", {"x": "x", "y": "y", "value": "EPCAM"},
-                          {"coordinate_units": "micrometre", "scale_bar": True,
-                           "marker_size": 6, "transform": "none"},
-                          "EPCAM expression")
+             source=CRC_CITATION, provenance=prov,
+             user_replacement_note=("Replace CD8 with your own measurement column. These are "
+                                    "raw CODEX intensities, deliberately untransformed: set "
+                                    "spatial.transform yourself and the colourbar label follows."),
+             common_mistakes=["Do not pre-log the values and leave the label saying the raw "
+                              "marker name — set spatial.transform so the colourbar is honest.",
+                              "These intensities contain exact zeros, so log2/log10 are refused; "
+                              "use log1p or log2p1."],
+             **published)
+    e["_plotspec"] = _spec("spatial_feature_map", {"x": "x", "y": "y", "value": "CD8"},
+                           {"coordinate_units": "pixel", "orientation": "y_down",
+                            "marker_size": 8, "transform": "log1p",
+                            "colorbar_label": "log(1 + CD8 intensity)"},
+                           f"CD8 intensity, CRC section {IMAGE}")
     entries.append(_write(slug, cells, e, readme=(
-        "# Spatial map (continuous value)\n\nSame cell table as the categorical example; "
-        "`EPCAM` tracks the tumour core and `CD8A` the immune rim.\n\n"
-        "No transform, normalisation or clipping is applied unless the spec names it, and "
-        "whatever is applied is written into the colourbar label.\n")))
+        f"# Spatial map (continuous value)\n\n**Real published data** — same CODEX image as the "
+        "categorical example, coloured by measured marker intensity (CD8, CD68, Ki67, CD4 "
+        "columns available).\n\n"
+        f"{CRC_CITATION}\n\nRedistributed under CC BY 4.0.\n\n"
+        "The bundled spec uses `transform='log1p'` because raw CODEX intensities are strongly "
+        "right-skewed **and contain exact zeros** — `log2`/`log10` are refused outright rather "
+        "than nudged. The colourbar is labelled `log(1 + CD8 intensity)` so the transform is "
+        "visible in the figure, not buried in a spec file.\n")))
 
-    # ---------------- 3. transcript map -----------------------------------
+    # ---------------- 3. transcript map (synthetic, and says so) -----------
     genes = ["EPCAM", "CD8A", "COL1A1", "MS4A1", "PECAM1"]
+    cx, cy = float(cells["x"].mean()), float(cells["y"].mean())
     rows = []
     for gi, g in enumerate(genes):
-        # Kept deliberately modest: bundled examples ship inside every installer,
-        # and this still reads as a dense transcript map.
         n = [2200, 1100, 1500, 600, 700][gi]
         if g == "EPCAM":
-            tx, ty = _tissue(rng, n, 1250.0, 1050.0, 560.0)
-        elif g == "CD8A":
-            a = rng.uniform(0, 2 * np.pi, n); r = 680 + rng.normal(0, 70, n)
-            tx, ty = 1250 + r * np.cos(a), 1050 + r * np.sin(a)
-        elif g == "MS4A1":
-            a = rng.uniform(0, 2 * np.pi, n); r = 790 + rng.normal(0, 60, n)
-            tx, ty = 1250 + r * np.cos(a), 1050 + r * np.sin(a)
+            ang = rng.uniform(0, 2 * np.pi, n); rad = np.sqrt(rng.uniform(0, 1, n)) * 380
+        elif g in ("CD8A", "MS4A1"):
+            ang = rng.uniform(0, 2 * np.pi, n)
+            rad = (520 if g == "CD8A" else 620) + rng.normal(0, 60, n)
         else:
-            tx, ty = _tissue(rng, n, 1500.0, 1200.0, 900.0)
-        rows.append(pd.DataFrame({"transcript_id": [f"t_{g}_{i:06d}" for i in range(n)],
-                                  "x": np.round(tx, 2), "y": np.round(ty, 2), "gene": g,
-                                  "qv": np.round(rng.uniform(20, 40, n), 2)}))
-    tx_df = pd.concat(rows, ignore_index=True).sample(frac=1.0, random_state=SEED).reset_index(drop=True)
+            ang = rng.uniform(0, 2 * np.pi, n); rad = np.sqrt(rng.uniform(0, 1, n)) * 700
+        rows.append(pd.DataFrame({
+            "transcript_id": [f"t_{g}_{i:06d}" for i in range(n)],
+            "x": np.round(cx + rad * np.cos(ang), 2),
+            "y": np.round(cy + rad * np.sin(ang), 2),
+            "gene": g, "qv": np.round(rng.uniform(20, 40, n), 2)}))
+    tx = pd.concat(rows, ignore_index=True).sample(frac=1.0, random_state=SEED).reset_index(drop=True)
     slug = "spatial_transcript"
     e = dict(plot_type="spatial_transcript_map", name="Spatial transcript map", slug=slug,
              description="Individual transcript detections coloured by gene.",
              use_case="Show where transcripts of selected genes were detected in a section.",
              required_columns=["x", "y", "gene"], optional_columns=["transcript_id", "qv"],
-             files=files(slug), aux_tables={}, excel_sheet="Spatial_transcript",
-             compatible_renderers=["spatial_transcript_map"], n_rows=int(len(tx_df)),
-             user_replacement_note=("One row per detected transcript. Use spatial.genes to "
-                                    "choose which to draw and spatial.min_quality to filter "
-                                    "on a score column; both are recorded in the figure "
-                                    "metadata."),
-             common_mistakes=["Transcript tables are not cell tables — one row is one "
+             files=_files(slug), aux_tables={}, excel_sheet="Spatial_transcript",
+             compatible_renderers=["spatial_transcript_map"], n_rows=int(len(tx)),
+             user_replacement_note=("One row per detected transcript. spatial.genes selects "
+                                    "which to draw and spatial.min_quality filters on a score "
+                                    "column; both are recorded in the figure metadata."),
+             common_mistakes=["A transcript table is not a cell table — one row is one "
                               "detection, not one cell.",
-                              "Nothing is subsampled automatically; set spatial.max_points "
-                              "if you want a recorded subsample."],
-             **common)
-    e["_plotspec"] = spec("spatial_transcript_map", {"x": "x", "y": "y", "gene": "gene",
-                                                     "quality": "qv"},
-                          {"coordinate_units": "micrometre", "scale_bar": True,
-                           "marker_size": 1.2, "alpha": 0.55}, "Transcripts by gene")
-    entries.append(_write(slug, tx_df, e, readme=(
-        "# Spatial transcript map\n\nOne row per transcript detection (Xenium-style): "
-        f"{len(tx_df):,} rows across {len(genes)} genes, with a `qv` quality score.\n\n"
-        "Dense marks are rasterised inside PDF/SVG while text and axes stay vector, so the "
-        "file stays openable. Subsampling never happens on its own.\n")))
+                              "Nothing is subsampled automatically; set spatial.max_points for "
+                              "an explicit, recorded subsample."],
+             **synthetic)
+    e["_plotspec"] = _spec("spatial_transcript_map",
+                           {"x": "x", "y": "y", "gene": "gene", "quality": "qv"},
+                           {"coordinate_units": "pixel", "orientation": "y_down",
+                            "marker_size": 1.4, "alpha": 0.55},
+                           "Transcripts by gene (synthetic)")
+    entries.append(_write(slug, tx, e, readme=(
+        "# Spatial transcript map\n\n**Synthetic (CC0), and deliberately so.** The CRC dataset "
+        "used by the other spatial examples is CODEX — a protein imaging assay with no "
+        "transcript coordinates — so a 'real' transcript example would have to be fabricated "
+        "anyway. This one is honestly labelled instead.\n\n"
+        f"{len(tx):,} detections across {len(genes)} genes, with a `qv` quality score, laid out "
+        "over the same coordinate range as the real section so the scale feels right.\n\n"
+        "Dense marks are rasterised inside PDF/SVG while text and axes stay vector. "
+        "Subsampling never happens on its own.\n")))
 
-    # ---------------- 4. ROI polygons -------------------------------------
+    # ---------------- 4. ROI map (synthetic, derived geometry) -------------
     roi_rows = []
-    for name, (cx, cy, rr, cat) in {
-        "ROI_1": (1250, 1050, 520, "Tumor core"),
-        "ROI_2": (1980, 1500, 330, "Invasive front"),
-        "ROI_3": (900, 1750, 300, "Immune aggregate"),
-    }.items():
-        k = 22
-        a = np.linspace(0, 2 * np.pi, k, endpoint=False)
-        r = rr * (1 + 0.10 * np.sin(3 * a) + rng.normal(0, 0.015, k))
+    for name, cat, (ox, oy, rr) in [
+            ("ROI_1", "Tumour region", (cx - 250, cy - 120, 330)),
+            ("ROI_2", "Immune-rich region", (cx + 330, cy + 180, 260)),
+            ("ROI_3", "Stromal region", (cx - 120, cy + 420, 220))]:
+        k = 24
+        ang = np.linspace(0, 2 * np.pi, k, endpoint=False)
+        r = rr * (1 + 0.10 * np.sin(3 * ang) + rng.normal(0, 0.015, k))
         for i in range(k):
             roi_rows.append({"roi_id": name, "vertex_order": i,
-                             "x": round(float(cx + r[i] * np.cos(a[i])), 2),
-                             "y": round(float(cy + r[i] * np.sin(a[i])), 2),
+                             "x": round(float(ox + r[i] * np.cos(ang[i])), 2),
+                             "y": round(float(oy + r[i] * np.sin(ang[i])), 2),
                              "roi_label": name, "roi_category": cat})
-    roi_df = pd.DataFrame(roi_rows)
+    roi = pd.DataFrame(roi_rows)
     slug = "spatial_roi"
     e = dict(plot_type="spatial_roi_map", name="Spatial ROI / region outlines", slug=slug,
              description="Regions of interest drawn as labelled polygon outlines.",
              use_case="Outline and label anatomical or analytical regions on a section.",
              required_columns=["roi_id", "x", "y"],
              optional_columns=["vertex_order", "roi_label", "roi_category"],
-             files=files(slug), aux_tables={}, excel_sheet="Spatial_roi",
-             compatible_renderers=["spatial_roi_map"], n_rows=int(len(roi_df)),
+             files=_files(slug), aux_tables={}, excel_sheet="Spatial_roi",
+             compatible_renderers=["spatial_roi_map"], n_rows=int(len(roi)),
              user_replacement_note=("One row per polygon vertex. Keep vertex_order so the "
-                                    "outline is traced in the right sequence; a repeated "
-                                    "closing vertex is fine."),
+                                    "outline is traced in sequence; a repeated closing vertex "
+                                    "is fine."),
              common_mistakes=["Unordered vertices produce a self-crossing outline — keep "
                               "vertex_order.",
                               "An ROI with fewer than three vertices is reported and skipped, "
                               "not silently dropped."],
-             **common)
-    e["_plotspec"] = spec("spatial_roi_map",
-                          {"roi": "roi_id", "x": "x", "y": "y", "vertex_order": "vertex_order",
-                           "roi_label": "roi_label", "roi_category": "roi_category"},
-                          {"coordinate_units": "micrometre", "scale_bar": True,
-                           "roi_fill_alpha": 0.12, "roi_linewidth": 1.6},
-                          "Regions of interest")
-    entries.append(_write(slug, roi_df, e, readme=(
-        "# Spatial ROI / region outlines\n\nOne row per polygon vertex, ordered by "
-        "`vertex_order`. Three ROIs with category labels.\n\nImporting geometry someone else "
-        "defined is the supported path; there is no freehand drawing tool, because a "
-        "reproducible ROI is one that came from a recorded definition.\n")))
+             **synthetic)
+    e["_plotspec"] = _spec("spatial_roi_map",
+                           {"roi": "roi_id", "x": "x", "y": "y", "vertex_order": "vertex_order",
+                            "roi_label": "roi_label", "roi_category": "roi_category"},
+                           {"coordinate_units": "pixel", "orientation": "y_down",
+                            "roi_fill_alpha": 0.12, "roi_linewidth": 1.6},
+                           "Regions of interest (synthetic geometry)")
+    entries.append(_write(slug, roi, e, readme=(
+        "# Spatial ROI / region outlines\n\n**Synthetic (CC0).** The deposited CRC table carries "
+        "no polygon geometry, so these outlines are drawn over the same coordinate range as the "
+        "real section rather than taken from it. The region names are descriptive, not "
+        "annotations from the source study.\n\n"
+        "One row per vertex, ordered by `vertex_order`. Importing geometry someone else defined "
+        "is the supported path; there is no freehand drawing tool, because a reproducible ROI "
+        "is one that came from a recorded definition.\n")))
 
-    # ---------------- 5. composition glyphs -------------------------------
-    gx, gy = np.meshgrid(np.linspace(700, 2300, 9), np.linspace(500, 1900, 8))
-    gx, gy = gx.ravel(), gy.ravel()
+    # ---------------- 5. composition glyphs (real, aggregated) -------------
+    gx = np.linspace(cells["x"].min(), cells["x"].max(), 9)
+    gy = np.linspace(cells["y"].min(), cells["y"].max(), 7)
+    step_x = float(gx[1] - gx[0]); step_y = float(gy[1] - gy[0])
+    top = list(cells["cell_type"].value_counts().head(7).index)
     comp = []
-    for i, (sx, sy) in enumerate(zip(gx, gy)):
-        d = np.sqrt((sx - 1250) ** 2 + (sy - 1050) ** 2)
-        core = float(np.clip(1 - d / 750.0, 0, 1))
-        w = np.array([0.08 + 0.72 * core, 0.22 * (1 - core) + 0.05,
-                      0.18 * np.exp(-((d - 620) ** 2) / 40000) + 0.05,
-                      0.16 * np.exp(-((d - 680) ** 2) / 30000) + 0.04,
-                      0.06 + 0.10 * (1 - core), 0.05 + 0.05 * (1 - core),
-                      0.04 + 0.03 * (1 - core), 0.14 * (1 - core) + 0.04])
-        w = w / w.sum()
-        for ct, f in zip(CELL_TYPES, w):
-            comp.append({"spot_id": f"spot_{i:03d}", "x": round(float(sx), 1),
-                         "y": round(float(sy), 1), "cell_type": ct,
-                         "fraction": round(float(f), 5)})
+    for i, sx in enumerate(gx):
+        for j, sy in enumerate(gy):
+            m = ((cells["x"] - sx).abs() <= step_x / 2) & ((cells["y"] - sy).abs() <= step_y / 2)
+            grp = cells[m]
+            if len(grp) < 12:
+                continue
+            counts = grp["cell_type"].value_counts()
+            binned = {t: int(counts.get(t, 0)) for t in top}
+            binned["other"] = int(len(grp) - sum(binned.values()))
+            for ct, c in binned.items():
+                if c:
+                    comp.append({"spot_id": f"bin_{i:02d}_{j:02d}",
+                                 "x": round(float(sx), 1), "y": round(float(sy), 1),
+                                 "cell_type": ct, "cell_count": c})
     comp_df = pd.DataFrame(comp)
     slug = "spatial_composition"
     e = dict(plot_type="spatial_composition_map", name="Spatial composition glyphs", slug=slug,
-             description="Cell-type composition per spot drawn as pie glyphs in tissue space.",
-             use_case="Show deconvolved cell-type mixtures at Visium-style spots.",
-             required_columns=["spot_id", "x", "y", "cell_type", "fraction"],
-             optional_columns=[], files=files(slug), aux_tables={},
+             description=("Cell-type composition of real tissue, aggregated into square bins "
+                          "and drawn as pie glyphs."),
+             use_case="Show cell-type mixtures across a section, Visium-spot style.",
+             required_columns=["spot_id", "x", "y", "cell_type", "cell_count"],
+             optional_columns=[], files=_files(slug), aux_tables={},
              excel_sheet="Spatial_composition",
              compatible_renderers=["spatial_composition_map"], n_rows=int(len(comp_df)),
-             user_replacement_note=("Long form: one row per spot and category. Counts work "
-                                    "too — set spatial.normalize='fraction' to convert them."),
+             source=CRC_CITATION,
+             provenance=(prov + " Cells were aggregated into a 9x7 grid of square bins; "
+                         "bins with fewer than 12 cells were dropped and cell types outside "
+                         "the seven most common were pooled as 'other'."),
+             user_replacement_note=("Long form: one row per spot and category. These are raw "
+                                    "counts, so the spec sets normalize='fraction' to convert "
+                                    "them."),
              common_mistakes=["Fractions that do not sum to 1 are reported, not rescaled — a "
                               "short sum usually means a missing category.",
-                              "Use top_k or min_fraction to merge rare categories into "
-                              "'Other' rather than drawing unreadable slivers."],
-             **common)
-    e["_plotspec"] = spec("spatial_composition_map",
-                          {"spot": "spot_id", "x": "x", "y": "y",
-                           "category": "cell_type", "value": "fraction"},
-                          {"coordinate_units": "micrometre", "normalize": "fraction",
-                           "scale_bar": True, "donut_hole": 0.0},
-                          "Cell-type composition per spot")
+                              "Use top_k or min_fraction to merge rare categories rather than "
+                              "drawing unreadable slivers."],
+             **published)
+    e["_plotspec"] = _spec("spatial_composition_map",
+                           {"spot": "spot_id", "x": "x", "y": "y",
+                            "category": "cell_type", "value": "cell_count"},
+                           {"coordinate_units": "pixel", "orientation": "y_down",
+                            "normalize": "fraction"},
+                           f"Cell-type composition by bin, CRC section {IMAGE}")
     entries.append(_write(slug, comp_df, e, readme=(
-        "# Spatial composition glyphs\n\nOne row per (spot, cell type) with a fraction; "
-        "72 spots on a grid. Each spot is drawn as a pie of its mixture.\n\n"
-        "Normalisation is explicit: with `normalize='as_given'` the fractions are drawn "
-        "exactly as supplied and a short sum is reported rather than rescaled away.\n")))
+        "# Spatial composition glyphs\n\n**Real published data, aggregated.** The same CODEX "
+        f"image ({IMAGE}) binned into a 9x7 grid; each bin is drawn as a pie of its cell-type "
+        "mixture.\n\n"
+        f"{CRC_CITATION}\n\nRedistributed under CC BY 4.0. Changes made: cells aggregated into "
+        "square bins, bins with fewer than 12 cells dropped, and cell types outside the seven "
+        "most common pooled as `other`. Counts are exact — nothing was rescaled.\n\n"
+        "The spec sets `normalize='fraction'` because the table holds raw counts. With "
+        "`normalize='as_given'` the values are drawn exactly as supplied and a short sum is "
+        "reported rather than silently rescaled.\n")))
 
-    # ---------------- 6. enrichment matrix --------------------------------
-    # Synthetic, like the other bundled examples: tests/test_examples.py requires
-    # every shipped example to be synthetic CC0, and that policy is deliberate.
-    # The REAL published Fig 3A values live in
-    # benchmarks/spatial_validation/cntools_2024/derived/ and can be opened
-    # directly by anyone who wants to render the published panel.
+    # ---------------- 6. enrichment matrix (real published values) --------
     slug = "neighborhood_enrichment"
-    cn_names = [f"CN{i}" for i in range(1, 10)]
-    enr_rows = []
-    for i, cn in enumerate(cn_names):
-        # Each neighbourhood is enriched for one or two related cell types, which
-        # is the structure real CN analyses show.
-        dom = i % len(CELL_TYPES)
-        second = (dom + 1) % len(CELL_TYPES)
-        w = np.full(len(CELL_TYPES), 0.04)
-        w[dom] = 0.45 + 0.2 * rng.random()
-        w[second] = 0.15 + 0.1 * rng.random()
-        w = w / w.sum()
-        overall = np.full(len(CELL_TYPES), 1.0 / len(CELL_TYPES))
-        for j, ct in enumerate(CELL_TYPES):
-            enr_rows.append({
-                "neighborhood": cn, "cell_type": ct,
-                "enrichment_score": round(float(np.log2(w[j] / overall[j])), 6),
-                "cell_type_frequency_in_neighborhood": round(float(w[j]), 6)})
-    enr = pd.DataFrame(enr_rows)
-    e = dict(plot_type="neighborhood_enrichment_matrix",
-             name="Cellular-neighbourhood enrichment matrix", slug=slug,
-             description=("Cell-type enrichment across cellular neighbourhoods; colour is "
-                          "the enrichment score, point area the frequency within the "
-                          "neighbourhood."),
-             use_case="Show which cell types are enriched in which neighbourhoods.",
-             required_columns=["neighborhood", "cell_type", "enrichment_score"],
-             optional_columns=["cell_type_frequency_in_neighborhood"],
-             files=files(slug), aux_tables={}, excel_sheet="Neighborhood_enrichment",
-             compatible_renderers=["neighborhood_enrichment_matrix"], n_rows=int(len(enr)),
-             user_replacement_note=("Produced by make_my_figure_core.spatial."
-                                    "ct_cn_enrichment from your own cells; the renderer "
-                                    "plots these values and never recomputes them."),
-             common_mistakes=["Enrichment is a log ratio: zero means 'as expected', so the "
-                              "colour scale is centred on zero by default.",
-                              "A dot matrix is unreadable without a size key - keep "
-                              "size_legend on."],
-             **common)
-    e["_plotspec"] = spec("neighborhood_enrichment_matrix",
-                          {"neighborhood": "neighborhood", "cell_type": "cell_type",
-                           "enrichment": "enrichment_score",
-                           "frequency": "cell_type_frequency_in_neighborhood"},
-                          {"cmap": "RdBu_r", "center": 0.0,
-                           "colorbar_label": "Enrichment score"},
-                          "Cell-type enrichment across neighbourhoods")
-    entries.append(_write(slug, enr, e, readme=(
-        "# Cellular-neighbourhood enrichment matrix\n\nSynthetic (CC0), nine neighbourhoods "
-        "x eight cell types, each neighbourhood enriched for one or two related types.\n\n"
-        "Colour is the enrichment score, point area the cell type's frequency within that "
-        "neighbourhood.\n\n**Real published values are also available.** "
-        "`benchmarks/spatial_validation/cntools_2024/derived/"
-        "neighborhood_enrichment_cntools.csv` holds the Fig 3A (CRC, CC*) values from "
-        "Tao et al. 2024, *PLOS Computational Biology* 20(8):e1012344 (CC BY 4.0), which "
-        "this codebase reproduces from the deposited data to 7.8e-14. Open that file with "
-        "this plot type to render the published panel.\n")))
+    if os.path.exists(CNTOOLS_DERIVED):
+        enr = pd.read_csv(CNTOOLS_DERIVED)
+        enr["cell_type"] = ["CT_%02d" % c for c in enr["cell_type_index"]]
+        enr = enr[["neighborhood", "cell_type", "enrichment_score",
+                   "cell_type_frequency_in_neighborhood"]]
+        e = dict(plot_type="neighborhood_enrichment_matrix",
+                 name="Cellular-neighbourhood enrichment matrix", slug=slug,
+                 description=("Published cell-type enrichment across cellular neighbourhoods; "
+                              "colour is the enrichment score, point area the frequency "
+                              "within the neighbourhood."),
+                 use_case="Show which cell types are enriched in which neighbourhoods.",
+                 required_columns=["neighborhood", "cell_type", "enrichment_score"],
+                 optional_columns=["cell_type_frequency_in_neighborhood"],
+                 files=_files(slug), aux_tables={}, excel_sheet="Neighborhood_enrichment",
+                 compatible_renderers=["neighborhood_enrichment_matrix"], n_rows=int(len(enr)),
+                 source=CNTOOLS_CITATION,
+                 provenance=("Published Fig 3A (CRC, CC*) values from CNTools S1 Data, tidied "
+                             "by benchmarks/spatial_validation/cntools_2024. Reproduced from "
+                             "the deposited CRC data to 7.8e-14 maximum absolute difference. "
+                             "doi:10.1371/journal.pcbi.1012344"),
+                 user_replacement_note=("Produced by make_my_figure_core.spatial."
+                                        "ct_cn_enrichment from your own cells; the renderer "
+                                        "plots these values and never recomputes them."),
+                 common_mistakes=["Enrichment is a log ratio: zero means 'as expected', so the "
+                                  "colour scale is centred on zero by default.",
+                                  "A dot matrix is unreadable without a size key — keep "
+                                  "size_legend on."],
+                 **published)
+        e["_plotspec"] = _spec("neighborhood_enrichment_matrix",
+                               {"neighborhood": "neighborhood", "cell_type": "cell_type",
+                                "enrichment": "enrichment_score",
+                                "frequency": "cell_type_frequency_in_neighborhood"},
+                               {"cmap": "RdBu_r", "center": 0.0, "vmin": -6.0, "vmax": 6.0,
+                                "colorbar_label": "Enrichment score"},
+                               "Cell-type enrichment across neighbourhoods (CNTools Fig 3A)")
+        entries.append(_write(slug, enr, e, readme=(
+            "# Cellular-neighbourhood enrichment matrix\n\n**Real published data.** The Fig 3A "
+            "(CRC, CC*) values from CNTools — 9 neighbourhoods x 28 cell types.\n\n"
+            f"{CNTOOLS_CITATION}\n\nRedistributed under CC BY 4.0.\n\n"
+            "Colour is the enrichment score, point area the cell type's frequency within that "
+            "neighbourhood. Cell types appear as `CT_00`..`CT_27` because the published "
+            "spreadsheet does not label its columns.\n\n"
+            "`benchmarks/spatial_validation/cntools_2024` reproduces these values from the "
+            "deposited CRC data to a maximum absolute difference of 7.8e-14.\n\n"
+            "The spec pins `vmin`/`vmax` to +/-6: zero-count cells sit at a pseudocount floor "
+            "near -15, and letting them set the range washes every real signal to white. "
+            "Values outside the range are drawn at the end colours and the colourbar says so.\n")))
+    else:
+        print(f"warning: {CNTOOLS_DERIVED} not found; skipping the enrichment example")
 
-    # ---------------- manifest -------------------------------------------
     with open(MANIFEST, encoding="utf-8") as fh:
         manifest = json.load(fh)
-    existing = {e["plot_type"] for e in manifest["plot_types"]}
-    added = [e for e in entries if e["plot_type"] not in existing]
+    new_types = {x["plot_type"] for x in entries}
     manifest["plot_types"] = [e for e in manifest["plot_types"]
-                              if e["plot_type"] not in {x["plot_type"] for x in entries}]
-    manifest["plot_types"].extend(entries)
+                              if e["plot_type"] not in new_types] + entries
+    manifest["note"] = (
+        "Example datasets are synthetic unless the entry says data_type='published'. Published "
+        "entries carry real data under a redistributable licence, with the source, DOI and the "
+        "changes made recorded in the entry and its README. Do not cite the synthetic examples "
+        "as real findings.")
     with open(MANIFEST, "w", encoding="utf-8") as fh:
         json.dump(manifest, fh, indent=2)
         fh.write("\n")
-    print(f"wrote {len(entries)} spatial example datasets "
-          f"({len(added)} new); manifest now has {len(manifest['plot_types'])} entries")
+
+    real = sum(1 for x in entries if x["data_type"] == "published")
+    print(f"wrote {len(entries)} spatial examples ({real} from real published data, "
+          f"{len(entries) - real} synthetic); manifest has {len(manifest['plot_types'])} entries")
     return 0
 
 

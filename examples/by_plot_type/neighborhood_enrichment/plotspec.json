@@ -9,11 +9,13 @@
   },
   "journal_style": "publication",
   "layout": {
-    "title": "Cell-type enrichment across neighbourhoods"
+    "title": "Cell-type enrichment across neighbourhoods (CNTools Fig 3A)"
   },
   "spatial": {
     "cmap": "RdBu_r",
     "center": 0.0,
+    "vmin": -6.0,
+    "vmax": 6.0,
     "colorbar_label": "Enrichment score"
   },
   "output": {

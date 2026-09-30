@@ -14,9 +14,9 @@ import pandas as pd
 from matplotlib.lines import Line2D
 
 from make_my_figure_core.plots._spatial_shared import (
-    add_scale_bar, apply_crop, coordinate_record, draw_background_image, facet_grid,
-    finish_spatial_axes, numeric_coordinates, ordered_levels, share_facet_limits,
-    should_rasterize, spatial_block,
+    add_scale_bar, apply_crop, categorical_styles, coordinate_record,
+    draw_background_image, facet_grid, finish_spatial_axes, numeric_coordinates,
+    ordered_levels, share_facet_limits, should_rasterize, spatial_block,
 )
 from make_my_figure_core.plots.base import (
     RenderResult, base_metadata, figure_size, get_mapping, require_columns,
@@ -56,14 +56,12 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
         levels = [lv for lv in levels if lv != missing_label] + [missing_label]
 
     override = block.get("palette")
-    colours: Dict[str, Any] = {}
-    for i, lv in enumerate(levels):
-        if lv == missing_label and n_missing:
-            colours[lv] = missing_colour
-        elif override:
-            colours[lv] = override[i % len(override)]
-        else:
-            colours[lv] = style.color_for(i)
+    colours, markers, palette_warning = categorical_styles(
+        levels, style, palette=override, base_marker=str(block.get("marker", "o")))
+    if n_missing and missing_label in colours:
+        colours[missing_label] = missing_colour
+    if palette_warning:
+        warnings.append(palette_warning)
 
     facet_levels = ordered_levels(data[facet].astype(str), block.get("facet_order")) \
         if facet else [None]
@@ -88,7 +86,7 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
                 if part.empty:
                     continue
                 ax.scatter(part[x], part[y], s=size, c=[colours[lv]],
-                           alpha=alpha, marker=str(block.get("marker", "o")),
+                           alpha=alpha, marker=markers[lv],
                            linewidths=(style.marker_edge_width * 0.6) if edge else 0.0,
                            edgecolors=edge if edge else "none",
                            rasterized=raster, zorder=2)
@@ -118,7 +116,7 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
         bar = bars[0] if bars else None
 
         if block.get("legend", True):
-            handles = [Line2D([0], [0], marker="o", linestyle="none", markersize=7,
+            handles = [Line2D([0], [0], marker=markers[lv], linestyle="none", markersize=7,
                               markerfacecolor=colours[lv], markeredgecolor="white", label=lv)
                        for lv in levels]
             # Always outside the tissue. A legend placed "best" lands on the

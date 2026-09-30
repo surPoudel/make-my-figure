@@ -6,17 +6,16 @@
     "x": "x",
     "y": "y",
     "category": "cell_type",
-    "value": "fraction"
+    "value": "cell_count"
   },
   "journal_style": "publication",
   "layout": {
-    "title": "Cell-type composition per spot"
+    "title": "Cell-type composition by bin, CRC section reg052_B"
   },
   "spatial": {
-    "coordinate_units": "micrometre",
-    "normalize": "fraction",
-    "scale_bar": true,
-    "donut_hole": 0.0
+    "coordinate_units": "pixel",
+    "orientation": "y_down",
+    "normalize": "fraction"
   },
   "output": {
     "formats": [

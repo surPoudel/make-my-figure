@@ -11,11 +11,11 @@
   },
   "journal_style": "publication",
   "layout": {
-    "title": "Regions of interest"
+    "title": "Regions of interest (synthetic geometry)"
   },
   "spatial": {
-    "coordinate_units": "micrometre",
-    "scale_bar": true,
+    "coordinate_units": "pixel",
+    "orientation": "y_down",
     "roi_fill_alpha": 0.12,
     "roi_linewidth": 1.6
   },

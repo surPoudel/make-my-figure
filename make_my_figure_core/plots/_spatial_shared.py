@@ -222,3 +222,37 @@ def share_facet_limits(axes_used, block: Dict[str, Any]) -> bool:
         ax.set_xlim(xlo, xhi)
         ax.set_ylim((yhi, ylo) if inverted else (ylo, yhi))
     return True
+
+
+# Marker shapes used to disambiguate categories once the colour palette wraps.
+CATEGORY_MARKERS = ("o", "s", "^", "D", "v", "P", "X", "*")
+
+
+def categorical_styles(levels, style, palette=None, base_marker="o"):
+    """(colour, marker) per level, unique even when the palette runs out.
+
+    The publication palette is colourblind-safe but finite - eight colours. A
+    real annotated tissue section can carry sixteen or more cell types, and
+    cycling the palette silently gives two different populations the same
+    colour. In a tumour section that can mean Tregs and tumour cells rendered
+    identically, which is a misreading rather than a cosmetic flaw.
+
+    So once the palette wraps, the marker shape advances with it: every category
+    keeps a distinct (colour, shape) pair, and the caller is told it happened.
+
+    Returns ``(colour_by_level, marker_by_level, warning_or_None)``.
+    """
+    n_colours = len(palette) if palette else 8
+    colours, markers = {}, {}
+    for i, lv in enumerate(levels):
+        colours[lv] = palette[i % len(palette)] if palette else style.color_for(i)
+        wrap = i // n_colours
+        markers[lv] = (base_marker if wrap == 0
+                       else CATEGORY_MARKERS[wrap % len(CATEGORY_MARKERS)])
+    warning = None
+    if len(levels) > n_colours:
+        warning = (
+            f"{len(levels)} categories exceed the {n_colours}-colour palette, so marker "
+            "shape varies alongside colour to keep every category distinguishable. "
+            "Consider grouping rare categories, or set an explicit palette.")
+    return colours, markers, warning

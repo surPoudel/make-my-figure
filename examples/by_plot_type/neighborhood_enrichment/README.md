@@ -1,7 +1,13 @@
 # Cellular-neighbourhood enrichment matrix
 
-Synthetic (CC0), nine neighbourhoods x eight cell types, each neighbourhood enriched for one or two related types.
+**Real published data.** The Fig 3A (CRC, CC*) values from CNTools — 9 neighbourhoods x 28 cell types.
 
-Colour is the enrichment score, point area the cell type's frequency within that neighbourhood.
+Tao Y, et al. CNTools: a computational toolbox for cellular neighborhood analysis from multiplexed images. PLOS Comput Biol 2024;20(8):e1012344. doi:10.1371/journal.pcbi.1012344 (S1 Data, CC BY 4.0).
 
-**Real published values are also available.** `benchmarks/spatial_validation/cntools_2024/derived/neighborhood_enrichment_cntools.csv` holds the Fig 3A (CRC, CC*) values from Tao et al. 2024, *PLOS Computational Biology* 20(8):e1012344 (CC BY 4.0), which this codebase reproduces from the deposited data to 7.8e-14. Open that file with this plot type to render the published panel.
+Redistributed under CC BY 4.0.
+
+Colour is the enrichment score, point area the cell type's frequency within that neighbourhood. Cell types appear as `CT_00`..`CT_27` because the published spreadsheet does not label its columns.
+
+`benchmarks/spatial_validation/cntools_2024` reproduces these values from the deposited CRC data to a maximum absolute difference of 7.8e-14.
+
+The spec pins `vmin`/`vmax` to +/-6: zero-count cells sit at a pseudocount floor near -15, and letting them set the range washes every real signal to white. Values outside the range are drawn at the end colours and the colourbar says so.

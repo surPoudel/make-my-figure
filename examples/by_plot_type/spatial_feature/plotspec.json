@@ -4,17 +4,18 @@
   "mapping": {
     "x": "x",
     "y": "y",
-    "value": "EPCAM"
+    "value": "CD8"
   },
   "journal_style": "publication",
   "layout": {
-    "title": "EPCAM expression"
+    "title": "CD8 intensity, CRC section reg052_B"
   },
   "spatial": {
-    "coordinate_units": "micrometre",
-    "scale_bar": true,
-    "marker_size": 6,
-    "transform": "none"
+    "coordinate_units": "pixel",
+    "orientation": "y_down",
+    "marker_size": 8,
+    "transform": "log1p",
+    "colorbar_label": "log(1 + CD8 intensity)"
   },
   "output": {
     "formats": [

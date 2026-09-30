@@ -8,14 +8,14 @@
   },
   "journal_style": "publication",
   "layout": {
-    "title": "Cell types in tissue"
+    "title": "Annotated cell types, CRC section reg052_B"
   },
   "spatial": {
-    "coordinate_units": "micrometre",
-    "orientation": "y_up",
-    "scale_bar": true,
-    "marker_size": 5,
-    "alpha": 0.9
+    "coordinate_units": "pixel",
+    "orientation": "y_down",
+    "marker_size": 7,
+    "alpha": 0.9,
+    "legend_columns": 1
   },
   "output": {
     "formats": [

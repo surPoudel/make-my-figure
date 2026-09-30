@@ -9,12 +9,12 @@
   },
   "journal_style": "publication",
   "layout": {
-    "title": "Transcripts by gene"
+    "title": "Transcripts by gene (synthetic)"
   },
   "spatial": {
-    "coordinate_units": "micrometre",
-    "scale_bar": true,
-    "marker_size": 1.2,
+    "coordinate_units": "pixel",
+    "orientation": "y_down",
+    "marker_size": 1.4,
     "alpha": 0.55
   },
   "output": {
