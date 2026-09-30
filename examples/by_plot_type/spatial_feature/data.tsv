@@ -1,0 +1,2401 @@
+cell_id	x	y	cell_type	sample	EPCAM	CD8A
+cell_00000	1604.23	512.79	Macrophage	Section_1	3.88	5.78
+cell_00001	757.27	1500.14	Stroma	Section_1	5.291	6.956
+cell_00002	1992.52	593.85	Tumor	Section_1	2.128	2.924
+cell_00003	1223.92	395.8	Macrophage	Section_1	3.233	7.876
+cell_00004	2170.52	1650.64	Fibroblast	Section_1	5.405	1.081
+cell_00005	1942.29	1131.72	B cell	Section_1	1.353	7.227
+cell_00006	1546.93	530.63	Macrophage	Section_1	1.902	7.707
+cell_00007	1610.27	721.73	Macrophage	Section_1	3.631	3.239
+cell_00008	1858.24	1572.54	CD8 T cell	Section_1	0.542	4.003
+cell_00009	673.04	1466.48	CD8 T cell	Section_1	4.0	6.474
+cell_00010	988.54	1739.21	CD8 T cell	Section_1	6.452	7.494
+cell_00011	2296.08	805.44	Endothelial	Section_1	2.041	1.069
+cell_00012	1140.56	743.38	Tumor	Section_1	7.884	0.963
+cell_00013	1791.24	607.97	Fibroblast	Section_1	3.661	6.513
+cell_00014	911.14	1418.65	Stroma	Section_1	8.205	3.877
+cell_00015	1542.02	1491.78	Tumor	Section_1	8.469	2.84
+cell_00016	1087.63	1052.75	Tumor	Section_1	7.191	0.502
+cell_00017	2101.89	1455.17	CD8 T cell	Section_1	1.133	2.545
+cell_00018	1609.48	993.63	Stroma	Section_1	6.193	2.236
+cell_00019	912.05	560.63	CD8 T cell	Section_1	2.373	9.116
+cell_00020	1516.09	883.69	Macrophage	Section_1	6.462	0.81
+cell_00021	1255.5	1517.15	Tumor	Section_1	5.523	1.655
+cell_00022	2274.04	1055.86	Endothelial	Section_1	2.48	0.733
+cell_00023	1719.37	1025.66	CD8 T cell	Section_1	6.522	1.198
+cell_00024	1651.49	359.6	CD8 T cell	Section_1	1.903	3.523
+cell_00025	1761.34	1920.78	Stroma	Section_1	0.128	1.162
+cell_00026	1269.37	1248.94	Tumor	Section_1	7.829	0.558
+cell_00027	2220.42	1403.44	Stroma	Section_1	2.354	0.406
+cell_00028	1904.68	1789.79	Fibroblast	Section_1	3.74	1.059
+cell_00029	1180.15	485.05	Fibroblast	Section_1	5.06	4.838
+cell_00030	1473.05	381.4	CD4 T cell	Section_1	1.712	6.583
+cell_00031	2246.96	1045.36	Stroma	Section_1	1.071	0.868
+cell_00032	1183.99	1812.33	B cell	Section_1	1.774	5.089
+cell_00033	1149.07	1571.54	CD4 T cell	Section_1	2.501	4.116
+cell_00034	762.18	1342.88	Stroma	Section_1	2.846	4.2
+cell_00035	1826.82	2017.52	Fibroblast	Section_1	4.217	0.274
+cell_00036	1972.48	1702.65	Tumor	Section_1	1.77	0.743
+cell_00037	774.96	1311.54	Tumor	Section_1	4.455	3.919
+cell_00038	1586.03	1788.79	Stroma	Section_1	0.519	4.718
+cell_00039	1122.18	514.65	Tumor	Section_1	5.646	6.69
+cell_00040	670.23	1545.83	Fibroblast	Section_1	1.645	5.514
+cell_00041	1678.93	887.11	Stroma	Section_1	5.469	3.784
+cell_00042	1375.52	814.7	Tumor	Section_1	8.323	0.43
+cell_00043	1247.55	1810.91	CD8 T cell	Section_1	3.63	5.005
+cell_00044	1808.56	657.13	Macrophage	Section_1	2.331	7.241
+cell_00045	1729.54	559.47	Macrophage	Section_1	1.855	7.403
+cell_00046	1348.41	1329.5	Tumor	Section_1	5.831	1.016
+cell_00047	1363.52	1755.73	CD4 T cell	Section_1	0.472	11.803
+cell_00048	1217.2	573.71	Tumor	Section_1	4.941	1.687
+cell_00049	1939.68	1729.8	Fibroblast	Section_1	2.379	2.695
+cell_00050	1725.89	1893.84	Stroma	Section_1	2.669	0.595
+cell_00051	2262.97	1235.32	Endothelial	Section_1	0.914	1.565
+cell_00052	1665.75	498.44	Endothelial	Section_1	1.29	6.843
+cell_00053	1092.09	511.74	Tumor	Section_1	3.839	4.538
+cell_00054	1302.24	516.66	Tumor	Section_1	3.405	3.954
+cell_00055	1626.61	552.43	Fibroblast	Section_1	9.175	6.22
+cell_00056	822.49	1378.88	Macrophage	Section_1	3.215	3.544
+cell_00057	1239.99	1080.15	Tumor	Section_1	11.09	0.065
+cell_00058	1800.29	1562.05	Tumor	Section_1	3.309	6.783
+cell_00059	1991.55	1630.78	Stroma	Section_1	3.451	0.606
+cell_00060	1087.52	467.21	Macrophage	Section_1	2.498	5.397
+cell_00061	770.56	1333.95	Fibroblast	Section_1	4.597	4.492
+cell_00062	1251.8	1092.16	Tumor	Section_1	10.98	0.226
+cell_00063	1565.18	510.44	B cell	Section_1	3.812	6.077
+cell_00064	1219.17	882.6	Stroma	Section_1	8.843	1.686
+cell_00065	772.21	945.29	Tumor	Section_1	6.037	2.028
+cell_00066	737.32	902.42	Stroma	Section_1	4.355	3.379
+cell_00067	1269.45	1853.87	Stroma	Section_1	0.569	3.609
+cell_00068	2179.17	1333.18	Macrophage	Section_1	2.166	0.851
+cell_00069	1017.16	1402.79	Macrophage	Section_1	5.921	0.654
+cell_00070	1632.68	1786.39	CD8 T cell	Section_1	3.166	3.541
+cell_00071	797.8	1654.79	Stroma	Section_1	2.081	4.956
+cell_00072	1963.05	590.51	B cell	Section_1	5.733	2.45
+cell_00073	1565.36	1845.54	CD4 T cell	Section_1	1.721	2.706
+cell_00074	2009.9	1395.62	CD8 T cell	Section_1	1.224	3.077
+cell_00075	1460.42	1398.09	Stroma	Section_1	8.36	1.529
+cell_00076	1407.94	1527.66	Tumor	Section_1	4.217	2.554
+cell_00077	1292.16	863.62	Stroma	Section_1	8.483	0.222
+cell_00078	984.99	1007.12	Tumor	Section_1	7.905	0.846
+cell_00079	1684.85	345.26	Macrophage	Section_1	2.215	4.654
+cell_00080	1172.01	650.82	Tumor	Section_1	6.6	2.119
+cell_00081	1137.15	1442.0	Macrophage	Section_1	6.793	6.305
+cell_00082	1614.58	930.69	Stroma	Section_1	5.202	0.692
+cell_00083	1760.87	1653.85	Macrophage	Section_1	0.693	5.375
+cell_00084	2304.6	1315.61	Fibroblast	Section_1	0.773	1.552
+cell_00085	1970.4	1498.72	Fibroblast	Section_1	4.256	4.963
+cell_00086	1363.31	420.87	Tumor	Section_1	2.36	7.981
+cell_00087	716.68	1391.3	CD4 T cell	Section_1	4.148	6.598
+cell_00088	1658.51	1454.24	Macrophage	Section_1	4.707	5.336
+cell_00089	797.87	1195.39	Fibroblast	Section_1	4.834	2.383
+cell_00090	2007.66	1920.52	Stroma	Section_1	0.902	0.808
+cell_00091	1311.13	661.43	Tumor	Section_1	7.091	1.586
+cell_00092	1308.38	1267.42	Tumor	Section_1	7.996	0.986
+cell_00093	865.8	1787.94	Stroma	Section_1	0.653	3.414
+cell_00094	1230.93	2002.1	Endothelial	Section_1	1.304	3.41
+cell_00095	1055.66	725.14	Stroma	Section_1	4.566	1.285
+cell_00096	1067.83	1710.45	Stroma	Section_1	1.546	6.901
+cell_00097	1852.91	1416.72	CD8 T cell	Section_1	2.016	6.561
+cell_00098	2100.84	1750.22	Fibroblast	Section_1	1.742	0.658
+cell_00099	2117.38	1049.31	Endothelial	Section_1	1.586	1.767
+cell_00100	1639.07	1109.99	Stroma	Section_1	5.939	1.064
+cell_00101	1268.85	493.03	Stroma	Section_1	4.546	5.523
+cell_00102	1412.65	2073.08	Stroma	Section_1	3.471	0.518
+cell_00103	2304.2	1042.27	Fibroblast	Section_1	3.794	0.052
+cell_00104	1585.13	733.86	CD8 T cell	Section_1	4.106	2.232
+cell_00105	1457.08	996.65	Tumor	Section_1	10.299	1.02
+cell_00106	671.06	1473.02	Fibroblast	Section_1	1.893	8.713
+cell_00107	1378.65	2062.72	Tumor	Section_1	1.452	0.486
+cell_00108	2039.9	1573.85	Endothelial	Section_1	0.794	0.561
+cell_00109	2090.4	785.63	Stroma	Section_1	2.579	1.943
+cell_00110	911.35	1367.91	Tumor	Section_1	5.537	1.577
+cell_00111	1671.93	1757.18	CD8 T cell	Section_1	1.21	2.814
+cell_00112	1392.88	1492.02	Stroma	Section_1	4.266	1.921
+cell_00113	1254.02	1066.34	Endothelial	Section_1	10.477	0.522
+cell_00114	1692.79	1589.03	Macrophage	Section_1	1.463	8.524
+cell_00115	2011.12	554.69	Fibroblast	Section_1	0.99	1.74
+cell_00116	1518.39	856.8	CD8 T cell	Section_1	5.465	0.414
+cell_00117	1418.28	779.35	Stroma	Section_1	8.981	0.862
+cell_00118	893.15	1475.87	Fibroblast	Section_1	3.155	4.31
+cell_00119	1209.14	900.57	Tumor	Section_1	9.507	1.399
+cell_00120	1186.0	1016.69	Tumor	Section_1	10.927	0.862
+cell_00121	1102.43	653.9	Tumor	Section_1	6.153	4.448
+cell_00122	1970.96	1476.31	Stroma	Section_1	2.963	2.512
+cell_00123	885.17	1559.41	Fibroblast	Section_1	3.512	5.889
+cell_00124	2330.37	1422.2	Macrophage	Section_1	1.117	0.363
+cell_00125	1150.53	1213.2	Tumor	Section_1	8.039	0.6
+cell_00126	1086.27	1954.13	Stroma	Section_1	4.006	1.783
+cell_00127	2026.05	1874.01	Macrophage	Section_1	1.269	1.047
+cell_00128	2152.53	1695.75	Endothelial	Section_1	1.895	1.375
+cell_00129	890.63	825.82	Tumor	Section_1	6.274	1.402
+cell_00130	1839.12	1822.35	Fibroblast	Section_1	5.005	1.205
+cell_00131	2141.38	873.81	B cell	Section_1	3.768	1.745
+cell_00132	847.06	835.35	Endothelial	Section_1	4.001	1.421
+cell_00133	1433.94	1294.8	Tumor	Section_1	7.506	0.528
+cell_00134	758.93	723.7	CD8 T cell	Section_1	3.664	4.734
+cell_00135	2181.67	1298.34	Stroma	Section_1	1.507	1.701
+cell_00136	2268.79	995.17	Stroma	Section_1	1.936	0.107
+cell_00137	950.6	1261.34	CD8 T cell	Section_1	5.396	1.093
+cell_00138	1520.47	1101.9	Stroma	Section_1	7.129	1.676
+cell_00139	2057.69	1519.17	Stroma	Section_1	1.278	2.542
+cell_00140	861.3	1253.67	Endothelial	Section_1	5.404	0.657
+cell_00141	906.07	1234.72	Tumor	Section_1	5.444	0.798
+cell_00142	1985.05	1000.25	CD4 T cell	Section_1	5.257	5.679
+cell_00143	1095.07	1004.06	Fibroblast	Section_1	9.018	0.512
+cell_00144	855.36	1308.38	Macrophage	Section_1	4.746	3.526
+cell_00145	1441.3	1748.21	Endothelial	Section_1	1.603	5.951
+cell_00146	1065.35	1972.48	CD4 T cell	Section_1	1.467	2.1
+cell_00147	1128.89	1151.52	Macrophage	Section_1	7.621	0.969
+cell_00148	1028.17	1390.55	Macrophage	Section_1	7.058	0.826
+cell_00149	1983.47	1266.06	B cell	Section_1	4.594	4.992
+cell_00150	1805.96	611.38	Stroma	Section_1	1.262	6.883
+cell_00151	2005.32	813.9	B cell	Section_1	3.992	4.504
+cell_00152	1959.41	1757.11	Stroma	Section_1	8.145	0.197
+cell_00153	672.86	907.86	Fibroblast	Section_1	7.662	4.81
+cell_00154	1873.08	1503.05	Stroma	Section_1	4.46	5.47
+cell_00155	1148.39	538.55	Tumor	Section_1	3.026	2.473
+cell_00156	1472.23	1339.68	Endothelial	Section_1	5.029	1.994
+cell_00157	1251.57	811.65	Tumor	Section_1	8.889	0.126
+cell_00158	1411.72	593.52	Stroma	Section_1	4.682	2.014
+cell_00159	1518.52	1042.64	Macrophage	Section_1	5.805	1.48
+cell_00160	2051.35	1643.09	Stroma	Section_1	1.381	0.383
+cell_00161	2140.4	826.74	Stroma	Section_1	2.864	0.853
+cell_00162	1596.44	1971.72	Macrophage	Section_1	1.688	1.421
+cell_00163	2129.07	1350.66	Stroma	Section_1	1.916	2.258
+cell_00164	841.71	963.69	Tumor	Section_1	4.356	1.108
+cell_00165	1109.88	1610.64	Tumor	Section_1	2.937	4.561
+cell_00166	1587.85	1039.7	Tumor	Section_1	7.616	0.182
+cell_00167	1601.83	934.31	Tumor	Section_1	5.553	1.04
+cell_00168	1201.77	1864.53	Tumor	Section_1	4.207	3.011
+cell_00169	2358.96	938.11	Endothelial	Section_1	1.948	2.426
+cell_00170	1471.23	1309.42	Stroma	Section_1	7.189	0.792
+cell_00171	830.96	1136.51	Tumor	Section_1	6.415	0.812
+cell_00172	1470.77	1979.4	Stroma	Section_1	2.836	0.757
+cell_00173	2253.15	879.93	Fibroblast	Section_1	0.849	1.03
+cell_00174	1839.69	1771.16	CD4 T cell	Section_1	0.984	1.041
+cell_00175	2180.59	1397.31	Stroma	Section_1	0.253	0.952
+cell_00176	810.37	1497.93	Macrophage	Section_1	2.423	5.642
+cell_00177	2333.17	1160.06	Stroma	Section_1	0.922	2.084
+cell_00178	1744.6	1001.95	Endothelial	Section_1	3.895	2.095
+cell_00179	1492.42	333.89	Fibroblast	Section_1	1.613	4.837
+cell_00180	1612.31	1108.02	Fibroblast	Section_1	6.42	0.702
+cell_00181	2145.34	689.26	Stroma	Section_1	1.708	0.633
+cell_00182	1252.43	1170.53	Tumor	Section_1	9.134	1.964
+cell_00183	1340.19	1563.47	Tumor	Section_1	4.728	2.572
+cell_00184	1507.74	1144.37	Tumor	Section_1	7.325	0.518
+cell_00185	1183.52	689.61	Tumor	Section_1	7.736	1.116
+cell_00186	1135.13	1571.08	CD8 T cell	Section_1	3.998	4.008
+cell_00187	1803.96	1405.09	Stroma	Section_1	5.565	8.438
+cell_00188	1487.81	595.65	Fibroblast	Section_1	3.227	2.371
+cell_00189	1455.35	1769.15	Stroma	Section_1	1.472	7.355
+cell_00190	2227.21	895.1	Tumor	Section_1	1.124	2.054
+cell_00191	1548.23	2049.18	Fibroblast	Section_1	2.197	0.402
+cell_00192	2021.28	1706.8	Endothelial	Section_1	0.82	0.4
+cell_00193	1654.87	922.9	Tumor	Section_1	4.068	1.664
+cell_00194	1779.29	1601.58	CD4 T cell	Section_1	0.959	5.356
+cell_00195	1869.79	1976.56	Stroma	Section_1	0.561	1.18
+cell_00196	1282.5	1043.26	Tumor	Section_1	10.203	0.582
+cell_00197	1904.81	792.96	CD8 T cell	Section_1	2.133	6.748
+cell_00198	1788.55	2024.72	Stroma	Section_1	0.451	0.728
+cell_00199	1175.31	2015.24	B cell	Section_1	1.402	1.408
+cell_00200	1598.88	631.41	Tumor	Section_1	5.755	3.277
+cell_00201	2223.76	1070.53	Endothelial	Section_1	4.499	1.154
+cell_00202	891.76	1197.17	CD4 T cell	Section_1	7.144	2.731
+cell_00203	1983.08	1813.95	Stroma	Section_1	0.151	2.42
+cell_00204	1659.33	1213.99	Tumor	Section_1	5.327	1.707
+cell_00205	1543.56	1538.92	Macrophage	Section_1	5.724	4.072
+cell_00206	1976.92	1719.66	Fibroblast	Section_1	1.295	3.644
+cell_00207	1309.45	810.05	Stroma	Section_1	6.485	1.166
+cell_00208	2029.61	1708.94	Endothelial	Section_1	3.856	3.299
+cell_00209	967.05	1178.79	Tumor	Section_1	9.239	1.236
+cell_00210	1209.24	403.98	Stroma	Section_1	2.522	5.77
+cell_00211	788.92	802.56	Macrophage	Section_1	2.941	5.805
+cell_00212	1696.09	1800.62	Stroma	Section_1	0.395	3.116
+cell_00213	1763.92	454.08	B cell	Section_1	2.357	4.709
+cell_00214	1398.94	742.39	Tumor	Section_1	5.738	0.149
+cell_00215	1456.24	568.78	Stroma	Section_1	4.028	4.184
+cell_00216	1771.84	1493.36	CD8 T cell	Section_1	1.819	7.189
+cell_00217	2095.08	1785.83	Macrophage	Section_1	0.917	4.251
+cell_00218	2233.39	841.07	B cell	Section_1	0.374	3.088
+cell_00219	816.15	1712.92	CD8 T cell	Section_1	1.322	4.71
+cell_00220	1234.7	2000.23	Fibroblast	Section_1	2.053	1.335
+cell_00221	620.64	1263.18	Endothelial	Section_1	2.58	7.151
+cell_00222	1276.13	832.8	Endothelial	Section_1	7.261	0.412
+cell_00223	2335.23	960.89	Endothelial	Section_1	4.18	0.876
+cell_00224	1345.59	1862.45	B cell	Section_1	0.731	3.591
+cell_00225	2020.92	933.79	CD4 T cell	Section_1	3.565	6.372
+cell_00226	2165.52	1304.81	Macrophage	Section_1	2.006	3.018
+cell_00227	1004.58	1020.94	Tumor	Section_1	7.153	1.513
+cell_00228	1177.96	839.42	Tumor	Section_1	8.715	0.339
+cell_00229	1847.8	1472.94	Tumor	Section_1	1.551	9.045
+cell_00230	1664.28	1399.45	Tumor	Section_1	2.549	4.719
+cell_00231	945.95	1508.62	Endothelial	Section_1	2.609	4.273
+cell_00232	2328.97	1021.43	Tumor	Section_1	1.475	1.403
+cell_00233	911.74	794.56	Stroma	Section_1	4.747	0.634
+cell_00234	2092.93	934.62	CD4 T cell	Section_1	3.51	2.664
+cell_00235	1697.36	644.83	Stroma	Section_1	2.393	7.227
+cell_00236	899.51	1324.82	Fibroblast	Section_1	4.37	0.858
+cell_00237	1589.22	798.06	Tumor	Section_1	4.55	2.314
+cell_00238	2311.32	1291.31	Fibroblast	Section_1	0.915	1.316
+cell_00239	1810.24	1453.85	B cell	Section_1	1.061	6.118
+cell_00240	1864.64	531.04	Stroma	Section_1	0.594	3.956
+cell_00241	1727.48	449.11	Stroma	Section_1	2.067	5.602
+cell_00242	1574.28	1878.33	Stroma	Section_1	1.651	2.124
+cell_00243	679.53	1039.37	Macrophage	Section_1	3.264	5.0
+cell_00244	1118.25	899.97	Tumor	Section_1	6.853	0.6
+cell_00245	2069.67	575.83	Fibroblast	Section_1	2.423	1.451
+cell_00246	887.09	736.15	Tumor	Section_1	5.426	2.791
+cell_00247	813.99	1619.97	Endothelial	Section_1	4.867	7.092
+cell_00248	983.87	1721.45	Stroma	Section_1	2.498	6.22
+cell_00249	760.2	1571.8	Fibroblast	Section_1	5.517	7.342
+cell_00250	981.66	468.06	Stroma	Section_1	1.814	5.949
+cell_00251	1892.6	768.49	Macrophage	Section_1	5.04	6.326
+cell_00252	721.87	1431.93	CD8 T cell	Section_1	3.175	7.662
+cell_00253	1510.54	1976.53	Tumor	Section_1	2.335	1.879
+cell_00254	1550.7	1803.54	Endothelial	Section_1	1.569	3.767
+cell_00255	1478.3	333.77	Macrophage	Section_1	1.327	5.345
+cell_00256	1729.58	683.5	CD8 T cell	Section_1	2.359	5.281
+cell_00257	2034.03	1615.74	CD4 T cell	Section_1	5.152	1.705
+cell_00258	1767.69	1318.97	CD8 T cell	Section_1	3.031	5.417
+cell_00259	1145.45	960.89	Tumor	Section_1	9.821	0.393
+cell_00260	2000.95	1855.75	Stroma	Section_1	2.988	1.597
+cell_00261	1756.23	694.48	Stroma	Section_1	4.006	5.837
+cell_00262	1290.91	1724.87	Macrophage	Section_1	2.381	6.302
+cell_00263	1776.08	1550.75	Stroma	Section_1	4.979	6.068
+cell_00264	2054.82	899.37	Fibroblast	Section_1	2.447	3.79
+cell_00265	1908.93	1896.77	CD8 T cell	Section_1	1.097	1.56
+cell_00266	1315.71	2031.34	B cell	Section_1	1.375	1.634
+cell_00267	1635.66	1395.93	Stroma	Section_1	2.783	2.964
+cell_00268	2010.45	1652.82	Stroma	Section_1	2.238	1.268
+cell_00269	2109.79	1281.51	CD8 T cell	Section_1	2.739	1.804
+cell_00270	2163.09	1440.59	Stroma	Section_1	2.903	0.532
+cell_00271	1774.47	1735.69	Stroma	Section_1	2.555	2.452
+cell_00272	2036.58	1387.04	CD8 T cell	Section_1	1.573	1.904
+cell_00273	980.4	864.99	Tumor	Section_1	6.598	2.747
+cell_00274	1210.45	577.44	Fibroblast	Section_1	4.709	2.187
+cell_00275	1000.03	1594.75	Stroma	Section_1	4.812	5.941
+cell_00276	1243.78	1762.84	CD8 T cell	Section_1	0.287	6.169
+cell_00277	686.42	1176.86	Tumor	Section_1	2.83	5.013
+cell_00278	2049.55	650.48	Stroma	Section_1	0.77	2.192
+cell_00279	1812.1	776.79	CD4 T cell	Section_1	7.28	6.019
+cell_00280	2275.42	1417.24	Stroma	Section_1	3.99	0.724
+cell_00281	1846.95	1955.7	CD4 T cell	Section_1	1.299	0.199
+cell_00282	1529.33	1551.38	Macrophage	Section_1	2.158	7.285
+cell_00283	1502.64	1887.0	Tumor	Section_1	0.686	1.811
+cell_00284	1066.62	991.95	Fibroblast	Section_1	10.013	0.467
+cell_00285	830.87	1588.59	Macrophage	Section_1	0.657	8.83
+cell_00286	1918.9	1333.94	Endothelial	Section_1	1.823	6.838
+cell_00287	983.1	1725.98	CD8 T cell	Section_1	3.111	7.07
+cell_00288	1050.46	1132.41	Fibroblast	Section_1	6.851	0.174
+cell_00289	2016.56	1583.66	Stroma	Section_1	1.809	1.492
+cell_00290	1938.89	441.2	Macrophage	Section_1	1.316	0.837
+cell_00291	2026.39	1378.24	Endothelial	Section_1	1.184	2.505
+cell_00292	2250.05	816.89	Stroma	Section_1	1.029	3.827
+cell_00293	2226.26	1721.5	Stroma	Section_1	3.287	0.274
+cell_00294	1966.91	499.55	Fibroblast	Section_1	4.557	2.367
+cell_00295	1800.09	989.53	Macrophage	Section_1	3.365	3.546
+cell_00296	2308.11	1095.7	Endothelial	Section_1	2.342	0.376
+cell_00297	1551.82	1047.17	Stroma	Section_1	6.959	5.572
+cell_00298	1603.94	645.23	Endothelial	Section_1	2.416	3.532
+cell_00299	974.84	544.64	Endothelial	Section_1	3.038	4.095
+cell_00300	1635.33	465.44	CD8 T cell	Section_1	0.263	7.454
+cell_00301	1935.8	1691.52	Stroma	Section_1	1.231	2.754
+cell_00302	953.82	1074.06	Tumor	Section_1	6.952	1.688
+cell_00303	692.09	1127.61	CD8 T cell	Section_1	4.701	4.268
+cell_00304	1974.28	608.56	Fibroblast	Section_1	2.195	2.76
+cell_00305	900.79	1342.67	Stroma	Section_1	6.486	1.364
+cell_00306	861.91	1761.92	Stroma	Section_1	0.895	3.341
+cell_00307	1223.99	868.22	Tumor	Section_1	10.822	1.139
+cell_00308	1461.64	1569.52	Macrophage	Section_1	6.347	4.161
+cell_00309	1960.76	1755.31	Fibroblast	Section_1	0.248	0.292
+cell_00310	621.25	1322.94	Stroma	Section_1	0.593	6.79
+cell_00311	1112.12	1423.22	Macrophage	Section_1	5.626	0.69
+cell_00312	1549.15	1647.01	B cell	Section_1	1.573	7.052
+cell_00313	1273.75	1448.61	Fibroblast	Section_1	5.173	1.283
+cell_00314	942.41	1821.41	Stroma	Section_1	2.181	3.102
+cell_00315	1299.63	1578.46	Fibroblast	Section_1	5.61	3.382
+cell_00316	1036.09	1638.59	CD8 T cell	Section_1	1.803	6.271
+cell_00317	1148.05	376.15	B cell	Section_1	4.06	7.842
+cell_00318	1471.21	1294.9	Tumor	Section_1	5.77	0.859
+cell_00319	2137.02	987.96	CD8 T cell	Section_1	6.87	1.626
+cell_00320	2057.22	876.8	CD4 T cell	Section_1	4.203	3.306
+cell_00321	697.09	1296.77	Stroma	Section_1	2.316	8.046
+cell_00322	1246.42	1672.73	Macrophage	Section_1	1.542	5.609
+cell_00323	937.71	1072.7	Stroma	Section_1	6.054	0.728
+cell_00324	1714.08	899.67	Macrophage	Section_1	3.689	2.133
+cell_00325	1054.93	565.99	Tumor	Section_1	4.988	3.005
+cell_00326	1767.19	448.85	CD8 T cell	Section_1	0.256	3.896
+cell_00327	1174.3	1132.08	Tumor	Section_1	7.976	0.648
+cell_00328	1121.16	781.46	Fibroblast	Section_1	7.815	0.506
+cell_00329	1298.06	2026.12	Fibroblast	Section_1	0.927	1.283
+cell_00330	1495.56	1153.38	Tumor	Section_1	6.818	2.069
+cell_00331	1644.93	1670.1	Stroma	Section_1	3.102	6.495
+cell_00332	1272.07	569.42	Tumor	Section_1	6.353	2.242
+cell_00333	1833.4	800.68	Macrophage	Section_1	4.913	6.799
+cell_00334	1816.79	1546.41	Fibroblast	Section_1	2.927	5.888
+cell_00335	1040.54	798.1	Tumor	Section_1	6.321	0.878
+cell_00336	1817.01	1415.72	Tumor	Section_1	1.762	7.78
+cell_00337	1400.45	552.63	Tumor	Section_1	3.63	2.861
+cell_00338	2152.45	1583.06	Stroma	Section_1	0.628	0.253
+cell_00339	2128.08	932.6	Fibroblast	Section_1	0.825	1.643
+cell_00340	1678.48	1408.72	CD8 T cell	Section_1	5.538	3.815
+cell_00341	2299.58	988.7	CD4 T cell	Section_1	1.007	3.9
+cell_00342	1618.32	842.6	Tumor	Section_1	4.197	2.628
+cell_00343	845.38	763.0	Fibroblast	Section_1	6.552	2.576
+cell_00344	1610.0	670.89	Stroma	Section_1	4.365	2.736
+cell_00345	1722.7	435.51	Endothelial	Section_1	5.225	6.004
+cell_00346	1885.48	1064.02	Fibroblast	Section_1	5.694	6.473
+cell_00347	1491.73	1588.75	Macrophage	Section_1	2.092	5.041
+cell_00348	964.44	859.76	Fibroblast	Section_1	6.245	0.993
+cell_00349	1635.06	1291.85	Tumor	Section_1	3.926	1.501
+cell_00350	1181.64	915.16	Tumor	Section_1	7.822	1.246
+cell_00351	1863.47	1874.05	Tumor	Section_1	1.281	0.254
+cell_00352	744.06	873.15	Macrophage	Section_1	4.862	3.94
+cell_00353	1270.23	1087.56	Tumor	Section_1	11.215	0.648
+cell_00354	673.96	1379.28	Tumor	Section_1	3.0	7.742
+cell_00355	704.38	1086.09	Tumor	Section_1	3.499	5.23
+cell_00356	1573.33	363.9	Macrophage	Section_1	2.867	7.312
+cell_00357	1729.03	483.57	CD4 T cell	Section_1	0.623	9.266
+cell_00358	761.94	1236.42	Macrophage	Section_1	4.393	4.819
+cell_00359	971.41	818.01	Tumor	Section_1	6.153	1.883
+cell_00360	2160.34	895.51	Fibroblast	Section_1	1.46	0.848
+cell_00361	2129.97	1789.6	Fibroblast	Section_1	2.17	0.026
+cell_00362	1711.53	1391.52	Tumor	Section_1	2.404	5.855
+cell_00363	1930.86	1464.81	CD8 T cell	Section_1	2.601	3.876
+cell_00364	1367.46	997.22	Tumor	Section_1	9.124	6.265
+cell_00365	737.11	1628.13	B cell	Section_1	0.452	4.438
+cell_00366	1591.42	606.44	Stroma	Section_1	3.553	5.138
+cell_00367	1148.71	549.13	CD4 T cell	Section_1	3.598	3.01
+cell_00368	1085.93	1914.04	Stroma	Section_1	3.785	1.453
+cell_00369	2219.39	665.97	Stroma	Section_1	0.666	1.042
+cell_00370	1528.48	839.12	CD8 T cell	Section_1	5.197	0.481
+cell_00371	1396.46	1998.05	B cell	Section_1	2.371	1.08
+cell_00372	942.56	1838.8	Fibroblast	Section_1	1.577	2.855
+cell_00373	1421.62	1382.88	Tumor	Section_1	5.704	0.564
+cell_00374	1928.63	1853.52	Stroma	Section_1	6.896	0.622
+cell_00375	1821.08	1629.23	Tumor	Section_1	2.818	3.383
+cell_00376	2167.23	916.86	Stroma	Section_1	1.374	0.656
+cell_00377	903.22	1445.42	Tumor	Section_1	2.634	3.338
+cell_00378	1159.16	1506.95	Stroma	Section_1	4.324	3.528
+cell_00379	1457.87	871.74	Tumor	Section_1	6.084	0.392
+cell_00380	1209.13	1099.4	Tumor	Section_1	9.006	3.513
+cell_00381	1766.32	1087.01	Stroma	Section_1	3.2	6.25
+cell_00382	1636.02	494.23	Tumor	Section_1	3.885	6.541
+cell_00383	970.96	1268.96	Macrophage	Section_1	4.93	0.784
+cell_00384	1201.28	1493.66	Tumor	Section_1	6.607	1.289
+cell_00385	2245.98	1137.19	Fibroblast	Section_1	2.448	0.355
+cell_00386	1349.94	469.36	Tumor	Section_1	3.848	5.054
+cell_00387	2130.02	1000.51	CD4 T cell	Section_1	0.801	1.872
+cell_00388	2140.04	1789.63	Fibroblast	Section_1	3.048	0.916
+cell_00389	1829.93	749.08	CD8 T cell	Section_1	1.32	6.8
+cell_00390	963.94	575.75	CD8 T cell	Section_1	6.487	3.469
+cell_00391	1677.79	1371.04	CD8 T cell	Section_1	5.765	4.095
+cell_00392	841.89	792.38	Tumor	Section_1	7.933	2.018
+cell_00393	1150.3	376.38	CD4 T cell	Section_1	2.066	6.273
+cell_00394	2325.62	1263.95	Fibroblast	Section_1	1.576	0.67
+cell_00395	842.81	1393.99	Fibroblast	Section_1	3.432	3.61
+cell_00396	1825.07	565.96	CD8 T cell	Section_1	6.8	7.795
+cell_00397	1349.6	1713.36	Macrophage	Section_1	3.111	8.503
+cell_00398	783.14	1391.05	CD4 T cell	Section_1	2.178	4.523
+cell_00399	761.37	1480.09	CD8 T cell	Section_1	4.89	6.531
+cell_00400	1211.8	2051.76	Stroma	Section_1	1.53	0.455
+cell_00401	2050.45	890.33	Stroma	Section_1	0.104	4.083
+cell_00402	1543.53	981.46	Tumor	Section_1	6.083	0.55
+cell_00403	2033.66	1644.81	Macrophage	Section_1	3.64	0.872
+cell_00404	1810.44	1194.22	Tumor	Section_1	4.014	6.056
+cell_00405	1823.05	893.57	Tumor	Section_1	4.169	4.729
+cell_00406	1390.88	1704.39	Tumor	Section_1	4.625	8.501
+cell_00407	1899.57	542.37	Fibroblast	Section_1	0.327	3.936
+cell_00408	1802.76	1439.2	Tumor	Section_1	1.276	8.431
+cell_00409	1866.41	1197.94	Tumor	Section_1	2.702	7.147
+cell_00410	1403.56	1035.32	Tumor	Section_1	10.731	1.868
+cell_00411	1006.19	519.21	Stroma	Section_1	2.207	5.086
+cell_00412	2131.7	1603.35	Fibroblast	Section_1	1.368	0.304
+cell_00413	1643.53	1091.58	Fibroblast	Section_1	5.677	0.726
+cell_00414	1648.88	1227.43	Stroma	Section_1	4.315	0.982
+cell_00415	1538.75	1871.58	CD8 T cell	Section_1	1.75	1.529
+cell_00416	1797.88	1574.33	Macrophage	Section_1	1.57	6.747
+cell_00417	1616.38	514.58	Tumor	Section_1	1.803	6.563
+cell_00418	1689.7	1762.18	Stroma	Section_1	3.042	2.661
+cell_00419	2232.03	739.55	Tumor	Section_1	2.672	4.01
+cell_00420	1231.8	798.51	Tumor	Section_1	8.894	5.288
+cell_00421	2222.63	1367.08	CD4 T cell	Section_1	3.328	0.246
+cell_00422	1709.12	1207.14	Tumor	Section_1	3.195	2.08
+cell_00423	2333.97	1480.61	Tumor	Section_1	0.486	0.642
+cell_00424	798.92	649.63	Macrophage	Section_1	4.111	5.086
+cell_00425	1745.93	466.4	CD8 T cell	Section_1	1.233	6.49
+cell_00426	1544.11	1812.27	Stroma	Section_1	1.109	2.966
+cell_00427	1746.85	857.57	Tumor	Section_1	3.124	5.82
+cell_00428	2259.37	1485.48	Stroma	Section_1	3.212	0.916
+cell_00429	1743.1	466.96	Stroma	Section_1	6.52	8.295
+cell_00430	1881.12	1014.17	Endothelial	Section_1	4.189	6.333
+cell_00431	1583.71	601.27	Fibroblast	Section_1	2.998	4.063
+cell_00432	1303.94	619.98	Stroma	Section_1	6.528	2.678
+cell_00433	1929.59	503.69	Macrophage	Section_1	0.471	5.146
+cell_00434	2220.7	1385.77	Endothelial	Section_1	1.486	3.302
+cell_00435	1715.34	1888.91	B cell	Section_1	0.328	0.402
+cell_00436	2013.26	1712.76	Stroma	Section_1	1.235	2.704
+cell_00437	1032.13	1186.68	Tumor	Section_1	7.699	0.614
+cell_00438	1483.41	651.54	Stroma	Section_1	10.377	1.719
+cell_00439	1368.36	1059.8	Tumor	Section_1	11.39	0.595
+cell_00440	1973.86	557.44	Stroma	Section_1	0.335	1.836
+cell_00441	1832.22	1690.26	Stroma	Section_1	0.372	2.292
+cell_00442	1442.52	606.98	Tumor	Section_1	3.723	1.642
+cell_00443	1656.16	1617.56	Macrophage	Section_1	5.596	8.553
+cell_00444	1446.43	1608.37	Macrophage	Section_1	1.742	6.05
+cell_00445	1328.0	531.76	CD8 T cell	Section_1	3.243	3.427
+cell_00446	1930.66	1146.16	CD8 T cell	Section_1	1.138	6.582
+cell_00447	1325.7	1052.93	Tumor	Section_1	10.394	0.491
+cell_00448	2242.69	1464.75	Tumor	Section_1	3.156	1.304
+cell_00449	1088.8	831.42	B cell	Section_1	8.199	1.114
+cell_00450	2035.44	1345.94	CD8 T cell	Section_1	2.133	4.48
+cell_00451	1941.27	806.74	Tumor	Section_1	0.452	5.89
+cell_00452	1295.85	413.55	Stroma	Section_1	2.69	6.059
+cell_00453	1736.76	1651.47	Endothelial	Section_1	4.312	5.821
+cell_00454	2157.03	1627.0	Fibroblast	Section_1	5.299	1.842
+cell_00455	1853.82	1997.4	Fibroblast	Section_1	2.322	0.098
+cell_00456	2225.89	1108.42	B cell	Section_1	0.339	2.941
+cell_00457	928.61	1352.23	Stroma	Section_1	5.679	1.661
+cell_00458	1665.39	439.5	CD8 T cell	Section_1	1.566	5.793
+cell_00459	1101.31	739.63	Tumor	Section_1	4.975	1.383
+cell_00460	979.56	945.39	Stroma	Section_1	5.95	1.283
+cell_00461	1899.37	1715.74	CD4 T cell	Section_1	0.801	1.09
+cell_00462	1978.41	1031.23	Stroma	Section_1	2.872	5.585
+cell_00463	1407.87	1475.6	Fibroblast	Section_1	8.315	3.59
+cell_00464	988.58	927.09	Tumor	Section_1	7.855	0.425
+cell_00465	1401.7	898.9	Tumor	Section_1	9.184	0.343
+cell_00466	1158.84	735.17	Tumor	Section_1	6.439	0.504
+cell_00467	2125.41	955.08	Fibroblast	Section_1	1.095	3.031
+cell_00468	2017.22	1897.4	Fibroblast	Section_1	2.619	0.62
+cell_00469	1328.95	1191.01	Tumor	Section_1	9.076	0.463
+cell_00470	915.62	1602.35	Fibroblast	Section_1	1.567	6.964
+cell_00471	899.1	1298.39	Fibroblast	Section_1	5.521	1.622
+cell_00472	1593.82	1287.24	Endothelial	Section_1	5.367	0.9
+cell_00473	1799.23	1535.55	Fibroblast	Section_1	1.359	5.488
+cell_00474	1445.63	1504.99	Stroma	Section_1	3.695	3.336
+cell_00475	1358.78	1594.54	CD4 T cell	Section_1	4.181	4.398
+cell_00476	1075.97	1406.4	Stroma	Section_1	5.023	0.331
+cell_00477	1062.96	833.86	Macrophage	Section_1	11.851	3.079
+cell_00478	1065.95	709.98	Tumor	Section_1	6.536	0.272
+cell_00479	1475.92	1214.9	Macrophage	Section_1	7.753	0.385
+cell_00480	1195.76	1396.35	Fibroblast	Section_1	6.011	0.493
+cell_00481	1555.61	1469.62	Stroma	Section_1	3.59	2.699
+cell_00482	932.84	848.48	Fibroblast	Section_1	4.425	0.636
+cell_00483	1288.9	1671.16	Macrophage	Section_1	1.919	5.484
+cell_00484	2149.45	1349.72	Stroma	Section_1	0.33	1.385
+cell_00485	1130.62	1407.93	Tumor	Section_1	4.474	2.142
+cell_00486	1361.75	1222.67	CD8 T cell	Section_1	6.941	0.995
+cell_00487	1633.39	2062.97	CD4 T cell	Section_1	4.011	1.166
+cell_00488	1233.98	1069.76	Tumor	Section_1	12.67	0.633
+cell_00489	1206.43	1071.27	Tumor	Section_1	9.317	0.959
+cell_00490	1397.66	871.02	Tumor	Section_1	6.457	1.235
+cell_00491	966.72	485.55	Macrophage	Section_1	2.098	7.081
+cell_00492	1093.04	621.48	Fibroblast	Section_1	5.984	1.302
+cell_00493	1215.86	1843.11	B cell	Section_1	3.464	4.011
+cell_00494	1708.33	330.62	Endothelial	Section_1	2.027	1.924
+cell_00495	1245.01	1118.66	Tumor	Section_1	10.414	3.769
+cell_00496	692.77	1571.11	Fibroblast	Section_1	2.139	8.196
+cell_00497	1214.39	910.73	Tumor	Section_1	7.509	0.813
+cell_00498	1044.91	1745.51	Stroma	Section_1	0.487	6.405
+cell_00499	918.54	1153.36	Tumor	Section_1	9.829	2.98
+cell_00500	1453.47	644.27	Macrophage	Section_1	5.184	1.052
+cell_00501	2156.52	631.41	B cell	Section_1	0.186	0.446
+cell_00502	1805.77	1034.54	CD4 T cell	Section_1	4.253	6.357
+cell_00503	601.55	1179.49	Macrophage	Section_1	1.265	6.546
+cell_00504	950.33	1129.6	Tumor	Section_1	8.672	0.304
+cell_00505	1723.45	510.38	CD4 T cell	Section_1	3.393	6.974
+cell_00506	1151.16	2013.83	Fibroblast	Section_1	2.741	0.671
+cell_00507	1612.72	1015.74	Tumor	Section_1	6.318	2.771
+cell_00508	635.99	1231.82	Stroma	Section_1	5.043	6.6
+cell_00509	2006.29	1651.22	Stroma	Section_1	4.574	0.705
+cell_00510	2179.25	1530.43	Stroma	Section_1	0.785	0.509
+cell_00511	1689.92	908.85	Tumor	Section_1	5.779	2.207
+cell_00512	2117.64	1424.86	Stroma	Section_1	1.073	1.108
+cell_00513	1358.81	1924.99	B cell	Section_1	0.684	1.871
+cell_00514	1193.41	1724.94	Macrophage	Section_1	4.863	7.649
+cell_00515	1664.82	1513.64	Macrophage	Section_1	4.036	8.202
+cell_00516	1326.24	1609.32	Tumor	Section_1	3.87	5.055
+cell_00517	1461.82	368.98	Fibroblast	Section_1	0.856	6.143
+cell_00518	1666.39	1215.39	Stroma	Section_1	7.902	1.01
+cell_00519	1853.2	529.6	Macrophage	Section_1	0.756	5.126
+cell_00520	2058.34	494.47	Tumor	Section_1	0.605	1.645
+cell_00521	1445.9	1255.99	Stroma	Section_1	7.087	0.587
+cell_00522	1705.61	1496.94	Fibroblast	Section_1	3.646	6.33
+cell_00523	904.47	762.5	Tumor	Section_1	4.54	1.195
+cell_00524	1661.0	1350.57	Tumor	Section_1	4.432	2.214
+cell_00525	1043.18	1718.69	Stroma	Section_1	1.07	6.366
+cell_00526	2219.09	1007.78	B cell	Section_1	1.174	0.249
+cell_00527	2189.94	1180.33	Fibroblast	Section_1	5.695	2.634
+cell_00528	1575.3	661.36	Stroma	Section_1	4.101	2.06
+cell_00529	1219.13	1897.07	Stroma	Section_1	4.464	2.865
+cell_00530	1235.15	558.72	CD4 T cell	Section_1	2.993	1.567
+cell_00531	1386.59	805.89	Macrophage	Section_1	9.113	1.432
+cell_00532	985.5	1637.52	Stroma	Section_1	1.61	7.513
+cell_00533	964.9	545.77	Tumor	Section_1	4.639	4.963
+cell_00534	2233.27	1249.5	Stroma	Section_1	0.887	0.891
+cell_00535	1657.28	1797.84	Endothelial	Section_1	1.245	2.35
+cell_00536	995.95	1119.88	Stroma	Section_1	6.277	2.226
+cell_00537	1636.04	1425.97	CD8 T cell	Section_1	5.2	2.91
+cell_00538	1724.41	1584.43	Endothelial	Section_1	3.48	6.264
+cell_00539	1549.13	1118.47	Tumor	Section_1	5.975	0.391
+cell_00540	2391.88	1139.01	Stroma	Section_1	0.41	0.35
+cell_00541	1101.47	1053.77	Tumor	Section_1	11.51	2.172
+cell_00542	1931.31	511.51	Fibroblast	Section_1	1.02	2.269
+cell_00543	1868.91	1177.54	CD8 T cell	Section_1	2.426	5.902
+cell_00544	1801.79	1572.34	Macrophage	Section_1	0.779	5.828
+cell_00545	948.44	1385.96	Tumor	Section_1	6.114	1.854
+cell_00546	1099.8	1520.32	CD4 T cell	Section_1	5.623	3.353
+cell_00547	2204.57	1587.62	Fibroblast	Section_1	4.922	1.252
+cell_00548	1529.49	319.74	B cell	Section_1	3.785	4.795
+cell_00549	729.83	1540.32	Stroma	Section_1	3.607	6.55
+cell_00550	1153.83	1267.55	Fibroblast	Section_1	7.608	1.199
+cell_00551	1963.5	1843.65	Fibroblast	Section_1	1.509	0.32
+cell_00552	1645.57	1514.08	CD8 T cell	Section_1	4.05	5.993
+cell_00553	2217.73	725.98	Endothelial	Section_1	1.593	2.945
+cell_00554	2122.35	1379.32	Fibroblast	Section_1	3.875	1.42
+cell_00555	1556.13	1718.96	Fibroblast	Section_1	0.734	5.914
+cell_00556	1406.85	1544.26	Macrophage	Section_1	2.638	2.782
+cell_00557	1402.38	1206.02	Tumor	Section_1	8.848	1.155
+cell_00558	1116.35	968.38	Tumor	Section_1	8.119	0.979
+cell_00559	640.33	1236.27	Endothelial	Section_1	1.436	7.074
+cell_00560	2193.96	1605.22	Endothelial	Section_1	7.022	0.45
+cell_00561	1535.26	2085.6	Tumor	Section_1	1.789	0.712
+cell_00562	1658.48	962.3	Tumor	Section_1	4.128	2.116
+cell_00563	1050.5	673.11	Fibroblast	Section_1	4.538	2.308
+cell_00564	1229.77	832.21	Endothelial	Section_1	7.596	1.815
+cell_00565	1181.26	618.46	Fibroblast	Section_1	5.994	2.163
+cell_00566	1541.26	692.19	Stroma	Section_1	4.093	2.543
+cell_00567	1947.59	1371.09	Endothelial	Section_1	1.57	5.484
+cell_00568	1043.99	1706.82	Endothelial	Section_1	2.333	6.143
+cell_00569	1126.48	1105.28	Tumor	Section_1	9.754	0.182
+cell_00570	1174.76	1723.66	Stroma	Section_1	1.946	6.886
+cell_00571	1906.14	598.16	Fibroblast	Section_1	5.635	4.478
+cell_00572	1179.71	1235.21	Tumor	Section_1	9.394	0.34
+cell_00573	1601.38	337.73	CD4 T cell	Section_1	2.826	3.997
+cell_00574	1882.73	687.01	CD4 T cell	Section_1	2.752	6.227
+cell_00575	685.62	1175.48	CD4 T cell	Section_1	5.462	8.223
+cell_00576	2113.39	808.31	Stroma	Section_1	2.076	1.259
+cell_00577	852.46	805.29	CD4 T cell	Section_1	3.721	1.603
+cell_00578	1948.73	584.61	Stroma	Section_1	2.407	4.025
+cell_00579	1046.24	1909.18	Fibroblast	Section_1	2.634	2.745
+cell_00580	795.02	1205.24	Tumor	Section_1	7.136	2.404
+cell_00581	1034.5	1106.92	Stroma	Section_1	6.79	0.076
+cell_00582	1724.35	1373.98	B cell	Section_1	2.43	4.567
+cell_00583	936.84	1617.03	Stroma	Section_1	2.506	9.133
+cell_00584	1701.26	1084.93	Tumor	Section_1	5.989	1.172
+cell_00585	1199.05	876.15	Macrophage	Section_1	7.215	0.336
+cell_00586	1597.55	1399.14	Tumor	Section_1	3.339	4.331
+cell_00587	1146.78	1765.54	Stroma	Section_1	3.297	6.354
+cell_00588	1629.28	1536.39	Macrophage	Section_1	1.637	5.23
+cell_00589	2194.62	1309.23	Fibroblast	Section_1	0.826	0.42
+cell_00590	2218.67	847.7	CD4 T cell	Section_1	3.444	0.605
+cell_00591	726.9	1460.86	Macrophage	Section_1	3.227	7.003
+cell_00592	1322.9	1668.37	Fibroblast	Section_1	2.029	5.971
+cell_00593	956.8	813.23	Stroma	Section_1	6.708	0.493
+cell_00594	2174.59	1231.02	Macrophage	Section_1	2.209	1.121
+cell_00595	1391.59	1809.33	CD8 T cell	Section_1	1.611	4.671
+cell_00596	1288.14	503.04	Stroma	Section_1	3.243	6.599
+cell_00597	1224.81	892.68	Tumor	Section_1	9.432	0.214
+cell_00598	2384.8	1098.41	Endothelial	Section_1	0.617	0.522
+cell_00599	1294.97	1006.59	Tumor	Section_1	10.657	0.444
+cell_00600	688.62	1315.45	CD4 T cell	Section_1	3.074	5.7
+cell_00601	1549.79	508.09	Stroma	Section_1	3.208	5.454
+cell_00602	1865.69	945.82	Macrophage	Section_1	1.765	7.94
+cell_00603	1357.71	435.96	Stroma	Section_1	5.376	9.747
+cell_00604	1754.63	1140.07	Macrophage	Section_1	3.447	3.215
+cell_00605	1658.2	423.95	B cell	Section_1	1.182	6.123
+cell_00606	1963.0	686.66	Macrophage	Section_1	1.561	3.555
+cell_00607	1725.78	1396.8	Tumor	Section_1	4.205	6.917
+cell_00608	1472.02	947.78	Tumor	Section_1	7.98	0.354
+cell_00609	774.75	1486.68	Endothelial	Section_1	1.095	5.825
+cell_00610	1039.75	1040.47	Tumor	Section_1	8.063	1.368
+cell_00611	1018.99	500.74	B cell	Section_1	3.223	6.611
+cell_00612	2271.58	1051.88	Stroma	Section_1	4.464	2.608
+cell_00613	2248.49	1127.24	Stroma	Section_1	1.389	0.64
+cell_00614	1386.99	1661.41	CD4 T cell	Section_1	3.549	5.84
+cell_00615	1422.78	446.16	Macrophage	Section_1	10.107	6.415
+cell_00616	1499.91	323.64	Tumor	Section_1	3.954	5.135
+cell_00617	1344.82	1423.79	Fibroblast	Section_1	4.796	1.605
+cell_00618	1866.02	1560.86	Stroma	Section_1	3.042	4.455
+cell_00619	1921.64	1310.94	Macrophage	Section_1	2.468	5.95
+cell_00620	1596.49	643.92	Stroma	Section_1	3.489	5.244
+cell_00621	726.19	1250.15	Macrophage	Section_1	4.857	4.87
+cell_00622	2117.23	1143.77	Endothelial	Section_1	0.743	3.45
+cell_00623	836.48	1348.43	Tumor	Section_1	3.499	2.298
+cell_00624	1999.6	1130.23	Fibroblast	Section_1	1.574	6.227
+cell_00625	1212.59	1378.43	Stroma	Section_1	6.051	1.755
+cell_00626	1626.03	752.41	Fibroblast	Section_1	5.671	2.259
+cell_00627	2218.75	1623.96	Fibroblast	Section_1	1.732	0.246
+cell_00628	843.45	961.47	Fibroblast	Section_1	4.847	1.309
+cell_00629	1677.78	676.01	CD8 T cell	Section_1	5.604	5.278
+cell_00630	2212.03	835.52	Stroma	Section_1	2.761	2.28
+cell_00631	1600.63	994.86	Tumor	Section_1	4.915	0.233
+cell_00632	1941.31	1304.4	CD4 T cell	Section_1	0.469	6.266
+cell_00633	1199.17	1509.65	Stroma	Section_1	4.257	1.149
+cell_00634	2351.89	1469.12	Endothelial	Section_1	0.541	1.586
+cell_00635	2084.88	1679.43	Tumor	Section_1	3.49	1.982
+cell_00636	1180.06	569.09	Endothelial	Section_1	3.851	1.701
+cell_00637	1485.46	1138.14	Tumor	Section_1	8.37	0.233
+cell_00638	1557.37	817.9	Fibroblast	Section_1	7.06	0.652
+cell_00639	1976.02	663.17	Stroma	Section_1	0.259	3.453
+cell_00640	1463.2	646.63	Tumor	Section_1	4.276	1.254
+cell_00641	1771.88	378.57	Fibroblast	Section_1	1.518	3.67
+cell_00642	2250.08	1438.33	Fibroblast	Section_1	2.193	2.14
+cell_00643	1558.4	1799.14	B cell	Section_1	3.355	4.053
+cell_00644	938.41	659.89	Fibroblast	Section_1	9.809	2.102
+cell_00645	2058.48	508.49	Stroma	Section_1	5.267	0.905
+cell_00646	2110.82	1217.28	Fibroblast	Section_1	1.716	2.275
+cell_00647	781.63	1133.78	Stroma	Section_1	4.583	1.863
+cell_00648	1119.46	425.85	CD8 T cell	Section_1	5.705	6.371
+cell_00649	1941.06	1283.01	CD8 T cell	Section_1	1.789	7.454
+cell_00650	810.21	1692.24	Tumor	Section_1	1.121	4.5
+cell_00651	1722.79	1028.61	Macrophage	Section_1	6.445	4.903
+cell_00652	1157.31	561.4	CD4 T cell	Section_1	4.878	2.613
+cell_00653	1561.69	1993.91	Stroma	Section_1	0.462	0.756
+cell_00654	1924.64	636.51	Fibroblast	Section_1	1.399	4.082
+cell_00655	1133.98	1717.12	CD8 T cell	Section_1	0.852	6.389
+cell_00656	1927.58	636.77	Stroma	Section_1	0.103	4.497
+cell_00657	1393.91	1534.05	CD8 T cell	Section_1	8.263	2.792
+cell_00658	1147.64	975.39	Tumor	Section_1	9.34	0.599
+cell_00659	1127.08	1482.05	Tumor	Section_1	4.666	0.948
+cell_00660	1391.9	1887.4	B cell	Section_1	1.196	2.837
+cell_00661	1952.63	808.76	Stroma	Section_1	1.815	5.553
+cell_00662	1670.05	1611.23	Stroma	Section_1	1.183	5.983
+cell_00663	2228.37	1629.59	Fibroblast	Section_1	0.767	1.439
+cell_00664	1199.51	1661.07	Tumor	Section_1	2.359	5.159
+cell_00665	1378.63	611.31	Endothelial	Section_1	7.707	1.462
+cell_00666	1703.4	661.03	B cell	Section_1	4.794	5.366
+cell_00667	1883.88	1196.97	Stroma	Section_1	1.877	8.163
+cell_00668	1278.91	1937.39	CD8 T cell	Section_1	6.146	1.231
+cell_00669	995.34	1529.5	Tumor	Section_1	3.72	4.483
+cell_00670	1574.9	1286.94	Macrophage	Section_1	4.759	2.088
+cell_00671	712.33	799.46	Tumor	Section_1	3.719	7.426
+cell_00672	2312.78	1187.64	Fibroblast	Section_1	5.077	2.081
+cell_00673	1267.46	470.61	Stroma	Section_1	5.987	4.849
+cell_00674	806.69	727.47	CD8 T cell	Section_1	2.921	4.706
+cell_00675	831.58	1736.41	Stroma	Section_1	0.631	5.774
+cell_00676	1950.53	934.7	Stroma	Section_1	1.338	5.854
+cell_00677	796.66	1213.63	Stroma	Section_1	5.44	1.501
+cell_00678	1966.49	1724.9	CD4 T cell	Section_1	3.16	1.206
+cell_00679	1191.46	1548.3	Fibroblast	Section_1	6.57	3.531
+cell_00680	1886.81	1373.67	Tumor	Section_1	2.05	7.127
+cell_00681	1590.26	1490.03	Tumor	Section_1	3.949	4.449
+cell_00682	2226.28	1280.96	Stroma	Section_1	1.994	3.012
+cell_00683	738.7	1430.13	Macrophage	Section_1	4.48	6.188
+cell_00684	979.11	612.59	Fibroblast	Section_1	5.584	2.473
+cell_00685	1220.01	1621.65	Fibroblast	Section_1	2.58	4.332
+cell_00686	1142.22	1395.58	Fibroblast	Section_1	7.276	1.178
+cell_00687	2086.36	1046.34	Stroma	Section_1	3.511	3.09
+cell_00688	1508.21	534.53	Macrophage	Section_1	5.292	5.821
+cell_00689	665.45	980.93	CD4 T cell	Section_1	3.706	4.757
+cell_00690	1318.74	2022.04	Stroma	Section_1	2.184	1.394
+cell_00691	2187.21	680.62	Endothelial	Section_1	1.757	1.731
+cell_00692	1577.6	2026.25	Stroma	Section_1	1.9	2.502
+cell_00693	1097.01	1986.71	Stroma	Section_1	5.531	0.588
+cell_00694	2016.52	867.94	Fibroblast	Section_1	1.948	4.313
+cell_00695	1307.27	1163.81	Tumor	Section_1	8.368	0.696
+cell_00696	1487.45	940.14	Fibroblast	Section_1	7.945	0.149
+cell_00697	1026.69	896.51	Tumor	Section_1	8.633	1.122
+cell_00698	1239.51	824.67	Tumor	Section_1	9.7	1.099
+cell_00699	1386.72	1553.3	Tumor	Section_1	3.053	3.299
+cell_00700	1547.61	2077.4	Stroma	Section_1	4.795	0.672
+cell_00701	1324.98	1557.29	Macrophage	Section_1	5.442	4.286
+cell_00702	1993.47	1930.47	Tumor	Section_1	4.616	0.491
+cell_00703	2052.71	642.51	B cell	Section_1	0.52	3.005
+cell_00704	1350.58	1904.87	Fibroblast	Section_1	3.801	2.186
+cell_00705	814.56	921.17	Stroma	Section_1	3.887	1.053
+cell_00706	1635.08	699.75	Tumor	Section_1	3.773	3.038
+cell_00707	1652.63	492.67	Macrophage	Section_1	3.265	6.914
+cell_00708	1139.91	1346.81	CD4 T cell	Section_1	5.591	1.234
+cell_00709	638.16	1329.53	CD8 T cell	Section_1	1.527	6.574
+cell_00710	1994.15	1183.54	Stroma	Section_1	0.511	8.345
+cell_00711	1292.57	795.43	Tumor	Section_1	8.729	0.448
+cell_00712	1799.84	502.76	CD8 T cell	Section_1	0.926	6.001
+cell_00713	2096.73	780.91	Stroma	Section_1	1.856	7.502
+cell_00714	1641.48	612.18	Tumor	Section_1	3.92	8.354
+cell_00715	1783.51	1857.19	Fibroblast	Section_1	2.29	0.504
+cell_00716	1167.65	1063.14	Tumor	Section_1	10.068	1.663
+cell_00717	2092.26	1641.16	Stroma	Section_1	2.137	1.805
+cell_00718	1231.81	816.24	Tumor	Section_1	6.531	1.45
+cell_00719	1951.72	1069.84	CD8 T cell	Section_1	1.53	6.093
+cell_00720	1138.72	1171.04	Tumor	Section_1	9.009	1.007
+cell_00721	1026.47	1412.12	Tumor	Section_1	5.485	1.498
+cell_00722	2004.91	1315.67	CD8 T cell	Section_1	1.671	3.607
+cell_00723	2087.27	1048.33	B cell	Section_1	1.038	2.938
+cell_00724	1813.32	1436.8	Macrophage	Section_1	2.468	7.046
+cell_00725	1882.3	1300.92	Fibroblast	Section_1	2.818	6.76
+cell_00726	1516.37	1862.22	Stroma	Section_1	1.307	3.391
+cell_00727	1796.09	1329.3	Stroma	Section_1	4.731	5.663
+cell_00728	782.51	1407.87	Fibroblast	Section_1	6.293	5.271
+cell_00729	630.05	1111.76	Endothelial	Section_1	2.873	7.175
+cell_00730	1274.76	1743.11	Macrophage	Section_1	1.041	9.183
+cell_00731	2310.92	1468.9	Fibroblast	Section_1	0.654	0.2
+cell_00732	1715.62	1382.06	Macrophage	Section_1	3.096	5.317
+cell_00733	1360.46	1323.79	Tumor	Section_1	6.985	0.53
+cell_00734	2209.78	1483.75	Fibroblast	Section_1	0.621	1.238
+cell_00735	1248.9	456.11	CD4 T cell	Section_1	2.778	4.69
+cell_00736	1720.46	1996.41	Stroma	Section_1	3.489	2.302
+cell_00737	1431.06	1403.15	Macrophage	Section_1	4.11	0.627
+cell_00738	875.87	1689.64	Macrophage	Section_1	1.973	7.107
+cell_00739	1021.82	1476.3	Tumor	Section_1	3.953	1.573
+cell_00740	1995.66	1205.17	Fibroblast	Section_1	1.823	4.775
+cell_00741	1785.32	1442.36	CD8 T cell	Section_1	5.502	6.61
+cell_00742	2084.47	517.97	B cell	Section_1	1.759	1.166
+cell_00743	1727.08	1201.76	Macrophage	Section_1	4.134	6.061
+cell_00744	682.62	1158.02	Macrophage	Section_1	4.487	5.002
+cell_00745	781.85	1247.44	Stroma	Section_1	4.743	2.179
+cell_00746	1115.19	1868.83	Fibroblast	Section_1	1.98	4.19
+cell_00747	810.32	1517.54	CD8 T cell	Section_1	3.084	8.257
+cell_00748	1659.24	381.48	B cell	Section_1	4.146	4.293
+cell_00749	1709.2	875.8	Stroma	Section_1	6.022	3.372
+cell_00750	1498.32	1225.79	Tumor	Section_1	6.576	2.358
+cell_00751	1193.72	1825.3	Tumor	Section_1	4.86	5.862
+cell_00752	1525.28	1734.78	Macrophage	Section_1	1.229	5.688
+cell_00753	1185.88	1239.96	Tumor	Section_1	8.396	1.027
+cell_00754	1341.9	845.35	Stroma	Section_1	8.259	1.211
+cell_00755	1570.61	1713.55	Fibroblast	Section_1	1.433	7.52
+cell_00756	1384.13	1408.48	Tumor	Section_1	8.595	0.649
+cell_00757	1694.49	1109.05	Tumor	Section_1	4.612	2.651
+cell_00758	2321.58	1458.81	Endothelial	Section_1	1.655	0.735
+cell_00759	1012.4	1322.68	Tumor	Section_1	8.023	0.708
+cell_00760	1286.64	333.92	Fibroblast	Section_1	1.266	6.576
+cell_00761	2017.45	1916.5	Stroma	Section_1	0.597	0.02
+cell_00762	1824.88	1299.67	Tumor	Section_1	2.957	5.419
+cell_00763	1991.65	1780.84	Stroma	Section_1	0.775	0.107
+cell_00764	2108.81	859.42	Fibroblast	Section_1	0.699	2.55
+cell_00765	2246.68	1243.49	Stroma	Section_1	0.218	0.737
+cell_00766	1605.49	1458.43	CD8 T cell	Section_1	2.295	3.286
+cell_00767	1883.29	1276.32	Stroma	Section_1	0.633	6.798
+cell_00768	1691.35	1359.57	Tumor	Section_1	7.355	4.721
+cell_00769	990.51	720.66	Fibroblast	Section_1	3.888	1.214
+cell_00770	1546.94	2092.71	Stroma	Section_1	0.757	0.256
+cell_00771	830.9	889.18	Tumor	Section_1	4.905	5.617
+cell_00772	859.86	792.65	Stroma	Section_1	5.814	1.905
+cell_00773	2022.35	475.66	Fibroblast	Section_1	3.028	2.627
+cell_00774	2240.74	1222.07	Stroma	Section_1	0.958	1.809
+cell_00775	1609.11	1056.32	Tumor	Section_1	6.329	0.661
+cell_00776	885.95	629.73	Fibroblast	Section_1	3.491	6.511
+cell_00777	1783.27	1663.84	B cell	Section_1	1.865	3.492
+cell_00778	1508.54	1141.16	Endothelial	Section_1	7.529	1.248
+cell_00779	1894.43	694.74	B cell	Section_1	2.465	6.417
+cell_00780	1476.66	2070.88	Endothelial	Section_1	1.152	1.225
+cell_00781	1898.4	977.03	Macrophage	Section_1	1.996	8.61
+cell_00782	894.69	1378.1	Stroma	Section_1	9.808	2.234
+cell_00783	1201.29	973.0	Stroma	Section_1	9.039	1.035
+cell_00784	1715.17	1179.18	CD4 T cell	Section_1	4.765	2.427
+cell_00785	1335.29	1395.23	Fibroblast	Section_1	6.079	4.288
+cell_00786	1796.6	492.25	CD4 T cell	Section_1	1.916	6.262
+cell_00787	1151.42	1960.52	Stroma	Section_1	3.739	0.828
+cell_00788	1603.68	875.46	Stroma	Section_1	5.509	0.737
+cell_00789	1110.35	914.15	Tumor	Section_1	7.167	0.932
+cell_00790	1583.4	1588.61	Macrophage	Section_1	1.99	8.257
+cell_00791	1373.51	1275.85	CD4 T cell	Section_1	7.273	2.955
+cell_00792	1223.96	1809.98	CD4 T cell	Section_1	2.103	5.503
+cell_00793	2164.08	1554.87	Tumor	Section_1	0.962	0.496
+cell_00794	2211.73	1335.0	CD4 T cell	Section_1	1.054	0.825
+cell_00795	1180.58	1660.75	CD8 T cell	Section_1	3.255	6.055
+cell_00796	2165.7	1280.0	Fibroblast	Section_1	2.213	1.078
+cell_00797	1639.81	1438.06	Macrophage	Section_1	5.317	5.529
+cell_00798	1445.1	850.76	Stroma	Section_1	6.538	0.617
+cell_00799	1273.87	361.18	CD8 T cell	Section_1	2.776	6.315
+cell_00800	1443.7	416.64	CD8 T cell	Section_1	2.138	6.629
+cell_00801	1145.95	1988.71	Tumor	Section_1	1.259	1.554
+cell_00802	2164.01	650.82	Fibroblast	Section_1	1.695	2.556
+cell_00803	897.17	796.76	Fibroblast	Section_1	5.292	0.893
+cell_00804	2109.17	1817.08	CD8 T cell	Section_1	0.605	1.154
+cell_00805	1859.77	1656.18	CD4 T cell	Section_1	0.652	2.915
+cell_00806	1481.06	1149.3	Tumor	Section_1	8.659	1.393
+cell_00807	1604.79	1399.25	Macrophage	Section_1	3.958	2.279
+cell_00808	1202.51	1186.36	Tumor	Section_1	9.257	1.367
+cell_00809	1777.54	1185.64	CD4 T cell	Section_1	4.83	4.638
+cell_00810	2033.57	1213.44	Tumor	Section_1	1.702	4.032
+cell_00811	2249.59	1278.37	Endothelial	Section_1	2.672	1.095
+cell_00812	2299.51	1165.24	Stroma	Section_1	1.885	0.77
+cell_00813	904.06	849.39	Macrophage	Section_1	5.809	0.683
+cell_00814	1740.59	1446.43	CD8 T cell	Section_1	4.835	5.65
+cell_00815	2121.84	731.9	Stroma	Section_1	1.566	1.02
+cell_00816	1891.67	833.96	Macrophage	Section_1	3.21	6.492
+cell_00817	1400.05	1176.87	CD4 T cell	Section_1	6.978	0.182
+cell_00818	1156.17	869.76	Tumor	Section_1	8.447	1.291
+cell_00819	1424.87	1712.0	Tumor	Section_1	4.815	7.766
+cell_00820	1947.77	1347.11	CD8 T cell	Section_1	7.353	5.462
+cell_00821	828.06	746.01	Stroma	Section_1	2.845	3.076
+cell_00822	1282.27	1953.75	B cell	Section_1	1.353	1.395
+cell_00823	1112.33	557.26	Macrophage	Section_1	3.213	2.805
+cell_00824	1673.06	912.52	Tumor	Section_1	4.895	2.091
+cell_00825	2303.66	1292.1	B cell	Section_1	3.244	1.167
+cell_00826	889.32	780.97	CD4 T cell	Section_1	7.254	1.568
+cell_00827	1546.62	1594.52	B cell	Section_1	5.154	5.719
+cell_00828	2008.74	684.11	Tumor	Section_1	0.484	3.827
+cell_00829	1485.59	1825.65	Stroma	Section_1	1.846	3.661
+cell_00830	1042.19	817.52	Tumor	Section_1	6.095	0.234
+cell_00831	1215.53	1100.52	Tumor	Section_1	9.757	0.979
+cell_00832	985.13	1593.36	Macrophage	Section_1	2.463	4.908
+cell_00833	1375.03	944.41	Tumor	Section_1	7.406	1.114
+cell_00834	1444.68	839.47	Tumor	Section_1	9.379	1.203
+cell_00835	1200.89	1066.22	Tumor	Section_1	9.306	0.452
+cell_00836	1546.5	322.12	Stroma	Section_1	1.122	4.421
+cell_00837	1977.75	1150.04	B cell	Section_1	4.636	7.2
+cell_00838	1031.14	1460.55	Tumor	Section_1	3.441	4.902
+cell_00839	991.37	1153.26	Tumor	Section_1	7.86	0.89
+cell_00840	2350.37	1266.76	Stroma	Section_1	3.554	0.465
+cell_00841	1692.58	552.76	Endothelial	Section_1	4.838	7.15
+cell_00842	644.11	1090.62	B cell	Section_1	3.516	5.65
+cell_00843	1087.26	1469.41	Stroma	Section_1	6.168	1.91
+cell_00844	1753.24	1369.95	CD8 T cell	Section_1	4.885	5.565
+cell_00845	2016.26	771.03	Stroma	Section_1	1.633	3.967
+cell_00846	1081.96	1524.23	Macrophage	Section_1	3.387	1.85
+cell_00847	1168.72	465.29	Tumor	Section_1	6.277	4.927
+cell_00848	1998.77	1880.85	Stroma	Section_1	2.737	0.475
+cell_00849	2100.73	1051.98	Stroma	Section_1	1.845	2.42
+cell_00850	1885.51	1998.86	Fibroblast	Section_1	0.537	1.468
+cell_00851	1708.65	1835.93	Macrophage	Section_1	0.165	1.011
+cell_00852	1796.29	837.15	CD8 T cell	Section_1	3.869	4.329
+cell_00853	2036.77	871.45	Macrophage	Section_1	0.15	3.687
+cell_00854	1540.96	1368.95	Tumor	Section_1	5.279	0.919
+cell_00855	707.49	1352.21	Stroma	Section_1	2.025	6.132
+cell_00856	1470.33	914.9	Fibroblast	Section_1	6.91	0.659
+cell_00857	1861.01	853.94	Endothelial	Section_1	4.905	6.233
+cell_00858	1009.48	1666.15	Stroma	Section_1	1.513	8.255
+cell_00859	1314.49	1180.09	Stroma	Section_1	9.032	0.366
+cell_00860	1486.81	946.87	Tumor	Section_1	6.701	1.399
+cell_00861	1411.21	454.37	Tumor	Section_1	3.316	5.932
+cell_00862	1549.58	964.03	Tumor	Section_1	7.02	1.916
+cell_00863	937.41	935.55	Tumor	Section_1	6.551	2.969
+cell_00864	1914.64	1520.03	Stroma	Section_1	3.561	3.774
+cell_00865	1853.93	956.12	CD4 T cell	Section_1	1.565	5.095
+cell_00866	1759.65	907.61	Stroma	Section_1	2.508	2.73
+cell_00867	1734.04	449.28	Fibroblast	Section_1	0.636	4.513
+cell_00868	2210.7	1715.42	Endothelial	Section_1	2.034	0.526
+cell_00869	1595.23	1523.23	Endothelial	Section_1	3.998	4.707
+cell_00870	1464.56	319.04	CD4 T cell	Section_1	0.05	5.664
+cell_00871	2186.76	1300.56	Fibroblast	Section_1	2.506	2.004
+cell_00872	2214.8	1106.16	Stroma	Section_1	1.38	0.335
+cell_00873	956.61	1728.93	CD8 T cell	Section_1	4.95	6.07
+cell_00874	1355.29	458.79	Macrophage	Section_1	3.657	5.083
+cell_00875	2119.88	671.05	Fibroblast	Section_1	4.576	1.237
+cell_00876	1006.42	1584.7	Tumor	Section_1	5.464	4.847
+cell_00877	1223.39	1796.24	CD4 T cell	Section_1	1.381	6.584
+cell_00878	1102.81	876.67	Macrophage	Section_1	9.33	0.252
+cell_00879	1245.01	1057.74	Tumor	Section_1	10.26	0.405
+cell_00880	882.63	1596.49	Fibroblast	Section_1	5.891	6.612
+cell_00881	1367.6	1101.53	Tumor	Section_1	8.833	0.587
+cell_00882	1934.1	1013.38	Stroma	Section_1	2.807	6.707
+cell_00883	1229.42	1255.79	Tumor	Section_1	12.361	0.115
+cell_00884	1629.09	1571.25	Macrophage	Section_1	3.41	8.293
+cell_00885	984.39	1701.51	Tumor	Section_1	1.267	6.36
+cell_00886	938.7	1640.46	Tumor	Section_1	0.985	6.235
+cell_00887	1896.8	1628.49	Stroma	Section_1	0.428	2.28
+cell_00888	1640.67	1430.76	CD4 T cell	Section_1	4.483	3.837
+cell_00889	1263.2	656.9	Fibroblast	Section_1	5.637	3.739
+cell_00890	1215.07	1652.26	CD8 T cell	Section_1	1.891	6.787
+cell_00891	2233.45	986.41	Tumor	Section_1	3.017	0.74
+cell_00892	1527.55	1884.29	CD4 T cell	Section_1	2.988	4.329
+cell_00893	2012.99	1567.44	Fibroblast	Section_1	1.671	3.214
+cell_00894	1513.83	572.1	CD4 T cell	Section_1	6.691	3.279
+cell_00895	2148.85	598.59	Stroma	Section_1	0.347	4.208
+cell_00896	1362.46	1970.51	Stroma	Section_1	1.306	1.066
+cell_00897	1688.13	1805.94	Fibroblast	Section_1	2.686	2.355
+cell_00898	1744.68	1772.98	Fibroblast	Section_1	0.72	3.647
+cell_00899	1354.95	1179.81	Tumor	Section_1	10.079	0.08
+cell_00900	643.4	1372.25	Endothelial	Section_1	4.056	6.703
+cell_00901	1469.86	1707.57	Stroma	Section_1	0.181	7.035
+cell_00902	1937.1	1327.5	Tumor	Section_1	4.815	7.142
+cell_00903	606.34	1304.4	B cell	Section_1	2.674	6.772
+cell_00904	2238.21	1007.16	CD8 T cell	Section_1	1.184	0.234
+cell_00905	1387.39	1039.74	Tumor	Section_1	7.696	3.465
+cell_00906	1276.2	1206.32	Endothelial	Section_1	10.486	0.834
+cell_00907	1610.34	1292.09	Endothelial	Section_1	4.034	1.7
+cell_00908	1489.33	1896.83	Tumor	Section_1	2.569	1.423
+cell_00909	1433.16	1431.3	Macrophage	Section_1	4.201	2.966
+cell_00910	1580.76	334.25	Endothelial	Section_1	1.799	4.319
+cell_00911	2122.58	590.66	CD4 T cell	Section_1	3.418	0.542
+cell_00912	2042.05	814.66	Fibroblast	Section_1	1.197	4.704
+cell_00913	2203.42	1131.58	Endothelial	Section_1	4.793	0.473
+cell_00914	1983.26	1146.24	Stroma	Section_1	2.73	6.363
+cell_00915	1717.78	1133.75	Tumor	Section_1	3.613	1.562
+cell_00916	2195.51	1537.06	Fibroblast	Section_1	0.507	1.27
+cell_00917	1686.08	1418.68	Fibroblast	Section_1	2.575	5.348
+cell_00918	1411.66	1447.99	Tumor	Section_1	5.211	1.023
+cell_00919	1025.39	1036.18	Tumor	Section_1	11.204	2.381
+cell_00920	1582.4	1257.51	CD4 T cell	Section_1	9.707	1.081
+cell_00921	1835.73	711.27	Tumor	Section_1	1.46	9.501
+cell_00922	937.64	693.08	Tumor	Section_1	4.031	3.268
+cell_00923	722.71	988.07	Fibroblast	Section_1	5.232	3.478
+cell_00924	1854.96	1802.9	Fibroblast	Section_1	3.04	1.179
+cell_00925	1483.06	2028.06	Fibroblast	Section_1	4.291	0.284
+cell_00926	1806.52	1685.09	B cell	Section_1	4.368	4.187
+cell_00927	1995.48	535.17	Stroma	Section_1	0.861	1.278
+cell_00928	947.12	876.64	Fibroblast	Section_1	4.921	1.109
+cell_00929	1460.34	776.81	Tumor	Section_1	7.326	3.56
+cell_00930	1250.58	2038.18	Stroma	Section_1	2.116	2.499
+cell_00931	1174.24	1541.48	Fibroblast	Section_1	2.815	1.958
+cell_00932	1379.58	1282.0	Stroma	Section_1	5.98	0.848
+cell_00933	1527.88	757.52	Fibroblast	Section_1	6.477	1.433
+cell_00934	1576.29	660.37	Tumor	Section_1	4.083	4.504
+cell_00935	1642.99	1713.95	Fibroblast	Section_1	2.708	6.628
+cell_00936	2108.42	965.89	B cell	Section_1	0.677	3.048
+cell_00937	2114.15	1781.51	Endothelial	Section_1	2.849	1.273
+cell_00938	1886.59	904.47	Fibroblast	Section_1	2.917	6.659
+cell_00939	2024.49	1583.06	Stroma	Section_1	2.999	1.531
+cell_00940	1452.11	1722.7	B cell	Section_1	1.23	6.536
+cell_00941	1964.83	529.5	B cell	Section_1	1.017	2.878
+cell_00942	1653.16	1522.8	B cell	Section_1	1.478	6.586
+cell_00943	1252.1	1349.63	Fibroblast	Section_1	6.552	2.029
+cell_00944	893.12	1397.78	CD8 T cell	Section_1	6.368	3.647
+cell_00945	1521.97	1937.39	Tumor	Section_1	4.5	0.996
+cell_00946	1301.57	422.18	Stroma	Section_1	1.521	5.477
+cell_00947	1910.88	644.33	Fibroblast	Section_1	1.733	4.624
+cell_00948	2058.33	638.68	Fibroblast	Section_1	5.149	1.907
+cell_00949	1199.83	1677.48	Fibroblast	Section_1	6.523	6.091
+cell_00950	1339.89	1168.57	Tumor	Section_1	8.446	0.625
+cell_00951	1503.07	1506.64	Stroma	Section_1	6.292	2.67
+cell_00952	1505.79	1377.01	CD4 T cell	Section_1	7.212	1.623
+cell_00953	1773.14	1637.99	B cell	Section_1	3.351	5.235
+cell_00954	2089.06	966.86	Tumor	Section_1	0.337	3.549
+cell_00955	1909.58	852.35	CD4 T cell	Section_1	1.248	7.954
+cell_00956	1615.27	536.07	Stroma	Section_1	2.483	12.295
+cell_00957	879.9	1130.9	Stroma	Section_1	5.683	0.204
+cell_00958	760.25	1243.7	Tumor	Section_1	3.947	3.77
+cell_00959	777.79	1063.43	Tumor	Section_1	8.952	2.72
+cell_00960	1005.76	1084.4	Tumor	Section_1	7.226	0.403
+cell_00961	1014.57	1411.65	Fibroblast	Section_1	5.845	1.257
+cell_00962	1965.72	1707.03	Endothelial	Section_1	2.331	0.739
+cell_00963	1989.43	1693.53	Fibroblast	Section_1	1.735	1.604
+cell_00964	1982.33	1050.79	CD8 T cell	Section_1	0.66	7.549
+cell_00965	986.03	1258.28	Tumor	Section_1	6.596	0.28
+cell_00966	2217.61	982.71	Stroma	Section_1	0.204	1.469
+cell_00967	1874.18	1819.99	B cell	Section_1	2.569	2.659
+cell_00968	1188.4	1089.11	Tumor	Section_1	8.222	0.433
+cell_00969	1656.93	1776.73	Endothelial	Section_1	2.405	2.764
+cell_00970	1482.99	2050.18	Fibroblast	Section_1	1.051	0.339
+cell_00971	1668.44	1232.19	Fibroblast	Section_1	3.883	1.221
+cell_00972	2110.44	1765.73	Stroma	Section_1	3.091	3.438
+cell_00973	1815.06	1018.58	Macrophage	Section_1	2.991	7.692
+cell_00974	1221.5	1777.33	Stroma	Section_1	1.844	8.268
+cell_00975	1043.91	831.63	Tumor	Section_1	5.49	0.661
+cell_00976	1411.6	1219.75	Stroma	Section_1	10.712	2.862
+cell_00977	801.93	1704.16	CD4 T cell	Section_1	1.984	3.935
+cell_00978	905.11	1079.2	CD8 T cell	Section_1	6.53	1.789
+cell_00979	1837.78	2011.7	Tumor	Section_1	2.61	0.478
+cell_00980	1980.7	1165.52	Fibroblast	Section_1	0.076	5.449
+cell_00981	1848.58	438.31	Fibroblast	Section_1	5.046	3.026
+cell_00982	1454.48	336.83	CD8 T cell	Section_1	1.356	6.404
+cell_00983	841.31	1330.98	Fibroblast	Section_1	7.47	2.965
+cell_00984	1732.19	1532.05	Stroma	Section_1	1.55	7.468
+cell_00985	2154.36	843.82	Endothelial	Section_1	1.079	1.715
+cell_00986	1137.8	1759.89	Fibroblast	Section_1	2.483	6.43
+cell_00987	2331.69	1470.85	Fibroblast	Section_1	6.832	0.909
+cell_00988	1172.81	1698.76	Endothelial	Section_1	4.602	7.564
+cell_00989	1628.58	751.71	Stroma	Section_1	5.488	2.437
+cell_00990	1259.96	966.78	CD8 T cell	Section_1	10.377	0.534
+cell_00991	1503.96	447.75	CD4 T cell	Section_1	2.502	6.233
+cell_00992	1740.5	344.9	Stroma	Section_1	4.701	2.653
+cell_00993	1535.88	1347.21	Tumor	Section_1	6.845	2.887
+cell_00994	2187.33	843.15	Fibroblast	Section_1	0.456	1.783
+cell_00995	698.45	1529.13	CD4 T cell	Section_1	0.755	8.049
+cell_00996	1341.95	1011.34	Tumor	Section_1	10.469	0.627
+cell_00997	1798.7	1204.33	Fibroblast	Section_1	2.306	4.803
+cell_00998	2248.01	1168.81	Endothelial	Section_1	1.975	1.284
+cell_00999	1360.24	1910.86	Macrophage	Section_1	3.333	3.336
+cell_01000	1718.39	1289.76	Stroma	Section_1	4.73	3.043
+cell_01001	705.99	1413.14	CD8 T cell	Section_1	1.13	7.331
+cell_01002	1948.62	1671.93	Endothelial	Section_1	0.796	2.882
+cell_01003	1993.67	1900.8	CD4 T cell	Section_1	2.553	0.809
+cell_01004	931.59	577.04	Macrophage	Section_1	8.013	4.109
+cell_01005	865.51	1705.53	B cell	Section_1	1.669	7.15
+cell_01006	2070.06	895.19	B cell	Section_1	3.414	3.996
+cell_01007	1309.91	1609.58	Endothelial	Section_1	4.276	3.694
+cell_01008	1404.54	566.97	Tumor	Section_1	3.521	2.727
+cell_01009	1222.74	1269.15	Macrophage	Section_1	9.602	3.596
+cell_01010	1108.38	583.32	Macrophage	Section_1	3.068	2.831
+cell_01011	1233.12	1006.88	Tumor	Section_1	11.673	0.9
+cell_01012	865.92	1309.5	CD8 T cell	Section_1	5.665	1.278
+cell_01013	1699.63	1135.22	CD8 T cell	Section_1	4.247	1.183
+cell_01014	1229.03	1611.31	Macrophage	Section_1	2.47	5.205
+cell_01015	1691.39	1589.04	Endothelial	Section_1	1.261	6.256
+cell_01016	1190.6	562.43	Stroma	Section_1	3.657	2.711
+cell_01017	1952.89	542.59	Stroma	Section_1	1.46	2.37
+cell_01018	1708.59	1253.91	Stroma	Section_1	3.876	2.897
+cell_01019	711.31	1458.27	Macrophage	Section_1	1.44	6.736
+cell_01020	2151.62	677.87	Endothelial	Section_1	0.322	1.539
+cell_01021	1498.74	673.47	Endothelial	Section_1	3.796	2.763
+cell_01022	2229.64	1162.41	Endothelial	Section_1	3.826	0.915
+cell_01023	940.02	1088.01	Tumor	Section_1	6.144	1.856
+cell_01024	1310.63	901.62	Tumor	Section_1	8.422	2.702
+cell_01025	1288.11	1819.13	Stroma	Section_1	1.269	5.572
+cell_01026	1750.24	1114.39	CD8 T cell	Section_1	7.289	3.499
+cell_01027	936.87	1828.05	Stroma	Section_1	0.952	2.497
+cell_01028	1437.59	336.99	CD8 T cell	Section_1	0.891	6.056
+cell_01029	830.68	1666.39	Endothelial	Section_1	2.667	5.219
+cell_01030	875.27	944.35	Macrophage	Section_1	6.088	0.754
+cell_01031	1373.17	540.02	Stroma	Section_1	4.975	3.148
+cell_01032	608.36	1149.9	Macrophage	Section_1	3.249	9.618
+cell_01033	1873.89	953.01	CD4 T cell	Section_1	4.386	5.876
+cell_01034	1283.18	1320.44	Tumor	Section_1	6.022	0.871
+cell_01035	1093.47	661.57	Tumor	Section_1	6.101	0.756
+cell_01036	1217.05	1631.57	Fibroblast	Section_1	2.407	4.877
+cell_01037	1071.77	1478.77	Stroma	Section_1	3.247	2.352
+cell_01038	1429.55	1227.87	Tumor	Section_1	8.336	1.546
+cell_01039	1988.91	1693.89	Stroma	Section_1	2.478	0.812
+cell_01040	1887.76	1452.01	Macrophage	Section_1	1.787	5.327
+cell_01041	1306.71	861.17	Tumor	Section_1	10.012	2.98
+cell_01042	1398.77	1049.99	Tumor	Section_1	7.991	0.579
+cell_01043	1217.34	736.06	Stroma	Section_1	7.837	0.079
+cell_01044	2337.28	1304.53	Macrophage	Section_1	1.592	2.408
+cell_01045	1258.41	1662.97	Fibroblast	Section_1	2.809	5.116
+cell_01046	1738.87	1902.13	Fibroblast	Section_1	0.261	2.585
+cell_01047	1637.74	429.4	Stroma	Section_1	3.572	5.548
+cell_01048	1830.18	804.09	Tumor	Section_1	3.307	5.633
+cell_01049	1517.01	2015.62	Fibroblast	Section_1	2.816	0.363
+cell_01050	1130.52	548.92	Fibroblast	Section_1	3.17	2.641
+cell_01051	1962.69	1688.78	Fibroblast	Section_1	2.208	2.739
+cell_01052	1495.54	1228.0	Tumor	Section_1	6.69	0.287
+cell_01053	1608.56	1328.99	Tumor	Section_1	5.66	2.192
+cell_01054	1312.7	2076.08	Tumor	Section_1	2.134	1.159
+cell_01055	1137.44	491.34	Endothelial	Section_1	7.074	4.701
+cell_01056	2236.75	734.57	CD4 T cell	Section_1	4.322	2.124
+cell_01057	1751.26	2017.15	CD8 T cell	Section_1	1.448	1.02
+cell_01058	1375.79	1166.37	Tumor	Section_1	9.38	1.083
+cell_01059	1259.18	436.19	Stroma	Section_1	2.459	6.726
+cell_01060	2078.25	1023.79	CD4 T cell	Section_1	3.481	3.115
+cell_01061	884.0	690.01	Tumor	Section_1	4.042	2.931
+cell_01062	1497.63	1273.72	Stroma	Section_1	5.912	1.238
+cell_01063	1159.38	857.33	Macrophage	Section_1	8.448	1.92
+cell_01064	1165.67	1904.84	B cell	Section_1	4.098	2.516
+cell_01065	2292.47	1080.24	Stroma	Section_1	3.668	0.893
+cell_01066	927.66	1617.61	Endothelial	Section_1	1.869	7.15
+cell_01067	1305.04	746.12	Macrophage	Section_1	10.119	0.81
+cell_01068	1996.06	1272.92	Stroma	Section_1	0.838	4.535
+cell_01069	783.89	1719.86	Stroma	Section_1	1.083	4.595
+cell_01070	1922.04	778.53	CD4 T cell	Section_1	3.381	6.57
+cell_01071	1036.85	815.73	Tumor	Section_1	5.147	0.633
+cell_01072	872.19	1430.75	Tumor	Section_1	3.951	2.965
+cell_01073	2029.9	974.39	Stroma	Section_1	1.443	4.042
+cell_01074	1906.7	668.72	Stroma	Section_1	5.287	6.087
+cell_01075	1240.61	1731.89	CD8 T cell	Section_1	0.936	6.397
+cell_01076	713.53	973.93	CD8 T cell	Section_1	2.813	3.003
+cell_01077	643.66	1254.83	Stroma	Section_1	6.543	5.987
+cell_01078	914.01	558.42	CD4 T cell	Section_1	2.801	5.73
+cell_01079	1159.1	1783.84	Macrophage	Section_1	3.99	5.631
+cell_01080	1521.79	1798.05	Macrophage	Section_1	1.274	4.774
+cell_01081	2144.86	805.79	Stroma	Section_1	1.046	1.061
+cell_01082	2231.56	820.71	Fibroblast	Section_1	4.125	0.96
+cell_01083	1873.66	637.51	Fibroblast	Section_1	6.703	5.966
+cell_01084	2245.93	1097.2	Macrophage	Section_1	4.34	1.704
+cell_01085	1475.48	421.1	Tumor	Section_1	1.617	7.588
+cell_01086	1568.12	462.95	Stroma	Section_1	2.201	6.856
+cell_01087	1561.43	425.02	Stroma	Section_1	0.835	6.229
+cell_01088	1091.95	1249.97	Endothelial	Section_1	6.665	2.268
+cell_01089	888.28	1371.69	Tumor	Section_1	3.677	1.954
+cell_01090	1542.36	1888.99	Fibroblast	Section_1	1.299	2.262
+cell_01091	1472.5	1164.63	Tumor	Section_1	7.792	1.181
+cell_01092	1296.37	2007.38	CD8 T cell	Section_1	1.842	0.912
+cell_01093	1465.53	1902.09	Fibroblast	Section_1	3.051	1.447
+cell_01094	1222.62	1033.69	Tumor	Section_1	10.68	0.097
+cell_01095	813.46	1635.8	B cell	Section_1	2.85	6.094
+cell_01096	1648.18	1947.57	Tumor	Section_1	3.173	0.45
+cell_01097	1816.02	482.82	Fibroblast	Section_1	1.225	5.32
+cell_01098	1860.75	767.09	CD8 T cell	Section_1	1.962	6.619
+cell_01099	1911.22	1923.05	Tumor	Section_1	11.326	0.561
+cell_01100	2078.46	1227.31	Fibroblast	Section_1	1.142	5.579
+cell_01101	1149.81	1782.65	Tumor	Section_1	2.965	6.094
+cell_01102	1506.71	1178.2	Tumor	Section_1	5.873	0.09
+cell_01103	1884.09	587.77	Endothelial	Section_1	3.236	6.389
+cell_01104	1992.31	1782.54	Macrophage	Section_1	0.988	0.158
+cell_01105	1603.23	530.15	Fibroblast	Section_1	2.812	6.637
+cell_01106	1973.86	1621.51	B cell	Section_1	0.471	1.697
+cell_01107	875.71	1716.05	CD4 T cell	Section_1	1.751	4.645
+cell_01108	2242.88	1193.51	Stroma	Section_1	1.779	1.334
+cell_01109	1667.5	1644.05	Stroma	Section_1	1.569	6.02
+cell_01110	2000.15	1925.74	Fibroblast	Section_1	2.519	1.442
+cell_01111	830.42	1552.91	Tumor	Section_1	4.469	6.313
+cell_01112	846.62	588.99	CD8 T cell	Section_1	1.9	6.268
+cell_01113	2309.31	837.03	Stroma	Section_1	1.6	0.789
+cell_01114	2356.48	1096.29	Stroma	Section_1	0.29	1.233
+cell_01115	2208.51	1531.45	B cell	Section_1	2.07	1.434
+cell_01116	1954.63	1735.68	Fibroblast	Section_1	0.722	0.871
+cell_01117	1594.55	838.73	B cell	Section_1	5.633	0.907
+cell_01118	1414.24	1857.84	Fibroblast	Section_1	2.132	4.078
+cell_01119	2090.12	678.74	Stroma	Section_1	0.354	1.172
+cell_01120	1163.94	644.16	Stroma	Section_1	6.042	1.113
+cell_01121	2139.92	1742.01	Tumor	Section_1	3.763	2.838
+cell_01122	1647.71	941.15	CD4 T cell	Section_1	6.475	1.247
+cell_01123	1747.96	1697.07	Stroma	Section_1	0.794	4.552
+cell_01124	932.37	1496.02	Macrophage	Section_1	3.701	3.476
+cell_01125	939.76	1009.43	Tumor	Section_1	6.871	1.249
+cell_01126	1203.43	1198.57	CD8 T cell	Section_1	8.622	0.73
+cell_01127	1362.32	875.34	CD4 T cell	Section_1	6.865	0.604
+cell_01128	1027.16	525.54	Fibroblast	Section_1	2.587	3.824
+cell_01129	2125.6	1168.69	Tumor	Section_1	1.512	1.493
+cell_01130	1698.66	1199.28	Fibroblast	Section_1	5.03	1.481
+cell_01131	1385.04	1188.07	Tumor	Section_1	7.653	0.669
+cell_01132	2011.76	1548.73	Stroma	Section_1	0.252	1.464
+cell_01133	1449.37	838.64	Tumor	Section_1	6.46	1.769
+cell_01134	2247.64	1089.59	Stroma	Section_1	5.396	0.809
+cell_01135	1165.91	1929.79	CD4 T cell	Section_1	2.388	2.52
+cell_01136	1082.69	1303.78	Tumor	Section_1	7.157	0.77
+cell_01137	883.35	1515.29	Macrophage	Section_1	2.285	6.324
+cell_01138	1835.4	1312.29	CD4 T cell	Section_1	1.995	6.2
+cell_01139	1267.31	762.1	Endothelial	Section_1	5.521	0.264
+cell_01140	986.99	1875.83	B cell	Section_1	0.847	2.876
+cell_01141	1654.83	554.44	CD8 T cell	Section_1	3.074	6.987
+cell_01142	1917.94	463.19	Stroma	Section_1	2.077	1.998
+cell_01143	1684.85	814.93	Endothelial	Section_1	3.691	2.341
+cell_01144	1052.24	1458.52	Tumor	Section_1	4.787	2.197
+cell_01145	1231.61	1756.27	Macrophage	Section_1	1.843	6.08
+cell_01146	1495.38	576.43	Tumor	Section_1	3.237	3.794
+cell_01147	1785.24	347.51	B cell	Section_1	2.488	4.186
+cell_01148	1195.99	1216.72	Tumor	Section_1	8.795	0.434
+cell_01149	2150.05	682.77	Endothelial	Section_1	1.28	0.904
+cell_01150	2017.16	1857.36	Stroma	Section_1	0.572	2.373
+cell_01151	1985.28	738.92	CD8 T cell	Section_1	1.205	4.383
+cell_01152	1934.56	1499.72	CD8 T cell	Section_1	1.138	4.582
+cell_01153	1869.47	1732.98	Tumor	Section_1	1.044	1.861
+cell_01154	1024.24	1097.29	Tumor	Section_1	6.405	1.325
+cell_01155	2233.22	1531.16	Endothelial	Section_1	4.461	0.415
+cell_01156	2100.65	1406.94	CD4 T cell	Section_1	4.315	1.017
+cell_01157	2365.98	1202.82	Tumor	Section_1	1.577	1.545
+cell_01158	845.9	1476.65	CD8 T cell	Section_1	3.547	4.478
+cell_01159	1599.46	562.27	Stroma	Section_1	3.743	5.401
+cell_01160	2240.81	1364.8	Tumor	Section_1	1.597	1.4
+cell_01161	1131.84	677.85	Tumor	Section_1	6.194	0.914
+cell_01162	1879.59	432.82	CD8 T cell	Section_1	2.712	2.011
+cell_01163	1690.45	1536.35	Macrophage	Section_1	2.556	7.672
+cell_01164	2035.96	1907.92	Endothelial	Section_1	3.055	2.601
+cell_01165	2020.15	577.65	Stroma	Section_1	1.014	5.743
+cell_01166	1870.28	451.61	Endothelial	Section_1	1.74	4.107
+cell_01167	893.2	1048.49	Tumor	Section_1	13.288	0.649
+cell_01168	1846.87	453.13	B cell	Section_1	3.559	2.461
+cell_01169	1916.2	1474.35	Endothelial	Section_1	2.026	4.321
+cell_01170	880.82	1683.52	Macrophage	Section_1	0.778	6.759
+cell_01171	1474.17	863.7	Tumor	Section_1	7.061	0.627
+cell_01172	1476.66	1698.16	CD8 T cell	Section_1	3.569	6.415
+cell_01173	1508.79	599.2	Fibroblast	Section_1	5.245	5.09
+cell_01174	989.22	1186.59	Fibroblast	Section_1	5.493	0.609
+cell_01175	1500.94	640.1	Tumor	Section_1	3.207	2.587
+cell_01176	704.95	1379.4	CD4 T cell	Section_1	1.218	6.843
+cell_01177	1192.27	1536.47	Stroma	Section_1	5.187	1.559
+cell_01178	1649.48	1962.45	Stroma	Section_1	0.412	2.847
+cell_01179	1563.17	1436.04	CD8 T cell	Section_1	3.356	1.878
+cell_01180	1507.38	412.48	CD8 T cell	Section_1	1.713	6.121
+cell_01181	2087.62	1744.29	CD8 T cell	Section_1	3.79	0.532
+cell_01182	1989.18	1493.39	Fibroblast	Section_1	2.571	2.016
+cell_01183	1841.76	1884.4	Stroma	Section_1	1.408	2.452
+cell_01184	1889.2	1967.98	Endothelial	Section_1	3.116	1.102
+cell_01185	1857.06	478.14	Macrophage	Section_1	6.452	2.881
+cell_01186	1048.15	1534.81	Tumor	Section_1	4.069	2.512
+cell_01187	2125.13	1162.2	Macrophage	Section_1	0.539	2.46
+cell_01188	2017.1	1803.23	Fibroblast	Section_1	0.772	0.661
+cell_01189	1222.68	799.88	Tumor	Section_1	6.53	1.372
+cell_01190	734.57	1455.48	Stroma	Section_1	1.499	6.971
+cell_01191	1096.84	1521.25	CD8 T cell	Section_1	3.959	1.971
+cell_01192	2071.64	628.97	Fibroblast	Section_1	2.156	2.138
+cell_01193	1762.05	1159.5	Fibroblast	Section_1	2.726	2.531
+cell_01194	1632.28	1064.12	Stroma	Section_1	4.633	0.818
+cell_01195	1818.81	2040.52	Stroma	Section_1	2.695	0.709
+cell_01196	1653.12	2025.12	CD4 T cell	Section_1	1.143	0.833
+cell_01197	1029.41	497.4	Endothelial	Section_1	2.191	4.717
+cell_01198	1286.6	2051.47	Fibroblast	Section_1	1.455	2.403
+cell_01199	1442.9	606.89	Endothelial	Section_1	7.03	1.704
+cell_01200	1059.36	1004.63	Tumor	Section_1	9.442	1.137
+cell_01201	1191.93	1097.95	Tumor	Section_1	10.852	3.669
+cell_01202	1801.85	638.87	CD8 T cell	Section_1	5.412	6.049
+cell_01203	1396.38	790.73	Tumor	Section_1	7.404	1.843
+cell_01204	2358.41	1344.7	Tumor	Section_1	5.581	0.863
+cell_01205	1554.22	1217.41	Stroma	Section_1	10.415	0.267
+cell_01206	1226.44	997.13	Tumor	Section_1	8.73	0.701
+cell_01207	1054.86	1238.72	Endothelial	Section_1	5.856	3.02
+cell_01208	1474.33	1600.62	B cell	Section_1	2.074	7.024
+cell_01209	1127.0	1409.18	Endothelial	Section_1	8.081	5.745
+cell_01210	1536.22	471.93	B cell	Section_1	2.185	7.306
+cell_01211	1738.47	743.47	CD4 T cell	Section_1	2.921	4.484
+cell_01212	845.77	935.14	Tumor	Section_1	6.772	2.242
+cell_01213	861.72	1760.09	CD4 T cell	Section_1	1.095	3.549
+cell_01214	1409.41	1892.72	Stroma	Section_1	2.024	2.543
+cell_01215	757.05	1097.03	Tumor	Section_1	5.327	2.012
+cell_01216	1284.69	1699.7	Stroma	Section_1	1.416	7.38
+cell_01217	1169.07	1059.02	CD8 T cell	Section_1	8.577	1.458
+cell_01218	1273.38	743.58	CD8 T cell	Section_1	6.862	0.468
+cell_01219	2308.7	1556.48	Fibroblast	Section_1	1.993	2.147
+cell_01220	2209.68	1204.76	Fibroblast	Section_1	3.005	2.94
+cell_01221	1611.33	1660.86	Fibroblast	Section_1	0.702	6.31
+cell_01222	1976.39	828.12	Stroma	Section_1	0.956	5.942
+cell_01223	1001.08	545.91	Fibroblast	Section_1	7.612	6.366
+cell_01224	1846.52	1849.13	Fibroblast	Section_1	3.504	1.267
+cell_01225	2019.95	771.31	Fibroblast	Section_1	1.59	3.478
+cell_01226	668.29	1358.89	Stroma	Section_1	4.428	6.688
+cell_01227	770.29	1310.45	Tumor	Section_1	2.686	3.506
+cell_01228	2163.16	915.7	Fibroblast	Section_1	1.448	2.82
+cell_01229	1864.99	1343.15	Stroma	Section_1	2.221	7.986
+cell_01230	1563.72	1486.56	Stroma	Section_1	3.407	3.134
+cell_01231	741.14	746.24	Macrophage	Section_1	2.737	4.944
+cell_01232	1733.92	1856.02	Stroma	Section_1	2.899	0.582
+cell_01233	1251.38	675.7	Tumor	Section_1	7.726	1.552
+cell_01234	1654.52	1873.22	Fibroblast	Section_1	1.206	0.918
+cell_01235	1681.72	1330.56	Fibroblast	Section_1	2.881	6.16
+cell_01236	1717.88	1986.42	Fibroblast	Section_1	0.4	0.371
+cell_01237	1129.5	1395.47	Tumor	Section_1	4.497	0.191
+cell_01238	1861.34	1921.88	Stroma	Section_1	5.201	0.238
+cell_01239	1936.04	1692.66	Macrophage	Section_1	2.908	1.556
+cell_01240	1802.35	835.84	Macrophage	Section_1	3.852	5.248
+cell_01241	1433.04	1341.37	Tumor	Section_1	5.655	0.407
+cell_01242	978.85	1823.88	Endothelial	Section_1	1.073	3.566
+cell_01243	1855.5	1328.67	Fibroblast	Section_1	4.049	6.408
+cell_01244	1372.05	1359.97	Stroma	Section_1	5.065	1.417
+cell_01245	1427.31	1979.09	Stroma	Section_1	1.25	0.637
+cell_01246	1090.75	859.34	Tumor	Section_1	9.789	0.976
+cell_01247	1655.35	1739.65	Stroma	Section_1	1.248	4.459
+cell_01248	1841.74	911.32	Stroma	Section_1	3.988	5.714
+cell_01249	2254.09	843.22	Macrophage	Section_1	1.64	1.281
+cell_01250	1897.33	1488.03	CD8 T cell	Section_1	0.062	4.769
+cell_01251	1822.18	1457.79	CD8 T cell	Section_1	1.586	7.444
+cell_01252	1874.74	1531.75	Fibroblast	Section_1	1.841	4.606
+cell_01253	1203.54	923.12	Tumor	Section_1	8.753	2.279
+cell_01254	1865.44	1551.78	Tumor	Section_1	0.595	4.604
+cell_01255	1655.47	992.62	Tumor	Section_1	5.239	2.525
+cell_01256	1509.62	841.79	Tumor	Section_1	4.94	0.518
+cell_01257	1746.84	673.8	CD8 T cell	Section_1	2.225	5.578
+cell_01258	667.27	1062.41	Endothelial	Section_1	4.47	5.725
+cell_01259	1715.37	1195.5	Fibroblast	Section_1	7.74	2.263
+cell_01260	1899.16	1313.73	CD4 T cell	Section_1	4.458	5.928
+cell_01261	802.07	1698.65	Macrophage	Section_1	0.687	4.197
+cell_01262	1119.6	1959.08	Stroma	Section_1	0.419	1.79
+cell_01263	2203.57	964.76	Stroma	Section_1	1.981	1.063
+cell_01264	1109.13	995.05	Tumor	Section_1	8.806	0.356
+cell_01265	1701.63	652.83	Fibroblast	Section_1	3.923	5.544
+cell_01266	1698.49	1562.89	CD8 T cell	Section_1	1.242	6.943
+cell_01267	1819.83	1156.8	Stroma	Section_1	3.338	4.163
+cell_01268	945.22	1204.74	Tumor	Section_1	6.324	2.191
+cell_01269	817.59	1227.15	Tumor	Section_1	4.265	3.566
+cell_01270	2030.94	1101.77	Fibroblast	Section_1	0.32	4.373
+cell_01271	985.04	1679.14	Tumor	Section_1	3.156	9.572
+cell_01272	1108.22	1494.06	Tumor	Section_1	4.998	1.792
+cell_01273	1044.01	931.28	Tumor	Section_1	9.023	0.426
+cell_01274	2054.93	1776.63	Fibroblast	Section_1	3.616	0.42
+cell_01275	1135.67	1960.72	CD8 T cell	Section_1	1.603	4.074
+cell_01276	1678.4	1678.56	CD4 T cell	Section_1	2.947	4.919
+cell_01277	2042.08	1611.19	Stroma	Section_1	5.089	1.195
+cell_01278	1816.46	846.21	Tumor	Section_1	7.476	5.822
+cell_01279	1324.04	1089.37	CD4 T cell	Section_1	10.1	1.56
+cell_01280	1012.2	1799.76	Stroma	Section_1	2.307	4.769
+cell_01281	1187.44	1402.04	Tumor	Section_1	6.553	3.316
+cell_01282	966.31	1444.94	Macrophage	Section_1	5.336	5.098
+cell_01283	1079.18	733.72	Tumor	Section_1	7.886	2.771
+cell_01284	1846.35	1028.35	Tumor	Section_1	3.444	5.768
+cell_01285	1752.43	1086.56	Endothelial	Section_1	8.501	3.658
+cell_01286	1087.75	1534.58	Macrophage	Section_1	7.848	2.611
+cell_01287	1080.46	1971.58	Stroma	Section_1	1.837	2.653
+cell_01288	827.25	1413.71	Stroma	Section_1	3.659	3.826
+cell_01289	994.04	969.89	Macrophage	Section_1	6.746	0.312
+cell_01290	1327.55	1242.18	Tumor	Section_1	9.026	0.294
+cell_01291	1121.77	614.2	Tumor	Section_1	4.527	2.234
+cell_01292	1242.45	1108.37	Tumor	Section_1	9.391	2.907
+cell_01293	1215.05	1798.55	CD4 T cell	Section_1	2.648	8.076
+cell_01294	1058.37	1843.46	Fibroblast	Section_1	0.651	4.872
+cell_01295	1076.57	1604.73	Macrophage	Section_1	5.078	4.401
+cell_01296	1907.94	1475.88	Tumor	Section_1	2.726	8.775
+cell_01297	1598.6	1369.29	Macrophage	Section_1	8.15	1.327
+cell_01298	1476.18	1060.35	Stroma	Section_1	8.296	0.092
+cell_01299	1047.4	1578.77	Tumor	Section_1	4.755	5.616
+cell_01300	1686.91	2024.97	CD4 T cell	Section_1	3.322	0.59
+cell_01301	1089.41	1029.4	Tumor	Section_1	11.136	0.538
+cell_01302	1523.73	518.51	Endothelial	Section_1	3.34	4.994
+cell_01303	1465.29	1943.7	Fibroblast	Section_1	1.187	1.105
+cell_01304	1602.99	1003.37	Tumor	Section_1	6.668	2.145
+cell_01305	1816.25	1045.08	Fibroblast	Section_1	5.267	3.94
+cell_01306	1075.99	902.42	Fibroblast	Section_1	9.946	0.732
+cell_01307	1140.82	556.76	Tumor	Section_1	2.829	2.107
+cell_01308	2064.09	1393.43	Stroma	Section_1	9.8	2.148
+cell_01309	2226.43	941.15	B cell	Section_1	1.153	0.706
+cell_01310	845.81	1724.21	Stroma	Section_1	3.073	5.179
+cell_01311	2195.86	839.36	Stroma	Section_1	4.547	1.68
+cell_01312	711.63	773.16	Stroma	Section_1	2.924	7.789
+cell_01313	2281.36	1222.68	Fibroblast	Section_1	3.986	4.611
+cell_01314	2306.58	1399.24	Stroma	Section_1	0.321	0.416
+cell_01315	1152.35	456.12	CD4 T cell	Section_1	5.35	6.329
+cell_01316	789.76	904.93	Stroma	Section_1	6.543	1.858
+cell_01317	2294.72	1333.73	Stroma	Section_1	2.459	1.414
+cell_01318	1464.26	330.62	Fibroblast	Section_1	3.555	6.304
+cell_01319	1871.4	703.03	Tumor	Section_1	5.518	7.086
+cell_01320	781.15	1216.18	Tumor	Section_1	7.25	3.356
+cell_01321	869.06	1337.88	Stroma	Section_1	4.648	2.224
+cell_01322	2329.77	1228.55	Endothelial	Section_1	2.23	0.583
+cell_01323	1634.92	624.5	Stroma	Section_1	3.178	4.826
+cell_01324	1104.23	1912.28	Tumor	Section_1	1.397	5.72
+cell_01325	2082.27	644.63	Stroma	Section_1	3.308	1.053
+cell_01326	883.5	1831.71	Stroma	Section_1	1.541	2.27
+cell_01327	1087.99	1021.47	Tumor	Section_1	10.187	0.376
+cell_01328	1403.36	1951.97	CD4 T cell	Section_1	1.706	0.781
+cell_01329	1917.11	1862.66	Tumor	Section_1	1.908	0.826
+cell_01330	1635.73	339.79	Stroma	Section_1	0.896	4.675
+cell_01331	643.11	1218.36	CD8 T cell	Section_1	4.144	5.754
+cell_01332	836.25	1045.11	CD8 T cell	Section_1	3.978	2.989
+cell_01333	2168.81	1052.34	Stroma	Section_1	4.195	1.921
+cell_01334	1858.52	1116.5	Macrophage	Section_1	8.683	7.081
+cell_01335	2047.5	500.02	Stroma	Section_1	1.96	1.392
+cell_01336	1673.64	1620.02	Fibroblast	Section_1	1.893	6.519
+cell_01337	864.34	772.24	Tumor	Section_1	3.317	1.786
+cell_01338	2078.83	643.63	Stroma	Section_1	1.216	1.724
+cell_01339	1078.71	1624.14	Macrophage	Section_1	4.879	5.864
+cell_01340	1832.91	1445.43	Stroma	Section_1	3.943	6.367
+cell_01341	1646.22	837.13	Tumor	Section_1	5.371	1.49
+cell_01342	672.54	1295.23	Tumor	Section_1	4.369	9.096
+cell_01343	908.73	946.81	Stroma	Section_1	5.329	1.063
+cell_01344	1768.51	1169.75	CD8 T cell	Section_1	4.699	3.637
+cell_01345	904.38	724.59	CD8 T cell	Section_1	7.844	4.22
+cell_01346	1098.94	1404.42	B cell	Section_1	6.956	1.424
+cell_01347	923.3	1814.24	Stroma	Section_1	5.46	3.338
+cell_01348	1064.84	1447.78	Fibroblast	Section_1	8.932	2.647
+cell_01349	1796.36	1472.74	B cell	Section_1	2.78	7.623
+cell_01350	1572.75	948.12	B cell	Section_1	4.664	1.14
+cell_01351	1837.08	651.62	B cell	Section_1	3.886	6.961
+cell_01352	1370.43	1790.18	Macrophage	Section_1	0.589	5.615
+cell_01353	1241.31	1935.96	Stroma	Section_1	0.075	1.405
+cell_01354	1931.96	764.41	CD8 T cell	Section_1	0.249	6.693
+cell_01355	2021.75	1279.18	Stroma	Section_1	4.078	3.416
+cell_01356	1043.43	1140.99	Tumor	Section_1	8.776	0.247
+cell_01357	1037.65	1307.39	Tumor	Section_1	6.909	0.758
+cell_01358	1181.51	393.7	Tumor	Section_1	3.383	6.537
+cell_01359	1689.31	1512.85	Fibroblast	Section_1	1.064	7.199
+cell_01360	1060.79	420.56	CD4 T cell	Section_1	2.099	7.833
+cell_01361	1132.19	1559.89	Macrophage	Section_1	3.329	6.441
+cell_01362	1303.47	1018.41	Tumor	Section_1	10.272	0.099
+cell_01363	1934.65	1311.88	CD4 T cell	Section_1	2.128	6.693
+cell_01364	1288.74	1251.81	Endothelial	Section_1	9.137	1.263
+cell_01365	707.85	1088.53	CD8 T cell	Section_1	5.102	4.057
+cell_01366	1643.22	1828.22	CD4 T cell	Section_1	0.287	2.908
+cell_01367	1833.98	1601.77	CD8 T cell	Section_1	1.567	5.063
+cell_01368	1776.09	1878.26	Stroma	Section_1	1.862	2.844
+cell_01369	1101.46	1793.29	B cell	Section_1	0.572	5.905
+cell_01370	2216.02	1698.61	Fibroblast	Section_1	0.512	3.316
+cell_01371	2334.5	913.23	Stroma	Section_1	0.438	1.173
+cell_01372	885.88	1617.39	Macrophage	Section_1	3.753	6.537
+cell_01373	1794.71	441.33	CD8 T cell	Section_1	0.349	3.992
+cell_01374	2290.84	1071.77	Stroma	Section_1	0.421	0.381
+cell_01375	2051.4	1506.46	Fibroblast	Section_1	2.006	0.99
+cell_01376	1062.43	584.25	CD4 T cell	Section_1	5.077	2.535
+cell_01377	1673.97	1018.0	Tumor	Section_1	5.35	1.15
+cell_01378	978.99	614.73	Stroma	Section_1	3.1	4.649
+cell_01379	703.66	1580.7	CD8 T cell	Section_1	0.524	5.392
+cell_01380	1261.87	1310.1	Tumor	Section_1	7.615	0.293
+cell_01381	2302.11	1384.06	CD8 T cell	Section_1	1.661	0.903
+cell_01382	651.14	1012.49	Endothelial	Section_1	2.621	5.845
+cell_01383	1927.68	1182.64	CD4 T cell	Section_1	3.436	6.964
+cell_01384	2130.17	1032.73	Stroma	Section_1	1.575	1.55
+cell_01385	2339.15	1417.7	Endothelial	Section_1	0.477	2.83
+cell_01386	1258.2	351.88	CD4 T cell	Section_1	1.366	6.006
+cell_01387	1397.16	1504.97	Tumor	Section_1	5.599	2.228
+cell_01388	1935.94	895.61	CD4 T cell	Section_1	1.498	6.136
+cell_01389	2221.99	1410.32	B cell	Section_1	2.712	2.148
+cell_01390	1889.71	1033.89	Endothelial	Section_1	3.885	6.953
+cell_01391	1767.92	762.64	Tumor	Section_1	2.964	5.617
+cell_01392	1601.59	1292.44	Tumor	Section_1	5.319	1.207
+cell_01393	1828.02	1329.45	CD8 T cell	Section_1	2.166	8.313
+cell_01394	1842.48	618.46	Tumor	Section_1	2.756	6.078
+cell_01395	1905.95	1803.5	Stroma	Section_1	1.384	3.664
+cell_01396	792.36	1042.3	Endothelial	Section_1	5.676	1.247
+cell_01397	2185.33	799.01	Stroma	Section_1	2.155	1.147
+cell_01398	971.33	961.5	Tumor	Section_1	5.487	1.703
+cell_01399	1124.09	1483.23	Fibroblast	Section_1	5.865	2.194
+cell_01400	1394.3	1238.04	Tumor	Section_1	7.958	0.84
+cell_01401	1877.36	1358.02	CD8 T cell	Section_1	4.325	6.02
+cell_01402	1993.36	1101.87	CD8 T cell	Section_1	0.6	6.133
+cell_01403	1358.69	1552.67	Tumor	Section_1	4.569	2.698
+cell_01404	1547.5	1318.58	Tumor	Section_1	5.071	0.769
+cell_01405	1419.81	1548.0	CD8 T cell	Section_1	2.519	4.183
+cell_01406	2216.21	1036.94	Stroma	Section_1	0.187	0.327
+cell_01407	2092.43	1598.74	Stroma	Section_1	4.917	0.969
+cell_01408	2085.11	555.37	Tumor	Section_1	2.187	1.636
+cell_01409	1289.51	423.98	Endothelial	Section_1	2.471	7.176
+cell_01410	1826.77	605.78	Tumor	Section_1	0.389	6.515
+cell_01411	1829.98	1149.64	CD4 T cell	Section_1	6.153	4.9
+cell_01412	1869.88	634.24	Macrophage	Section_1	0.962	7.67
+cell_01413	1709.38	1122.21	Macrophage	Section_1	5.287	3.761
+cell_01414	1912.63	1622.79	Stroma	Section_1	1.945	2.58
+cell_01415	1659.53	660.87	Tumor	Section_1	8.004	6.682
+cell_01416	935.41	1033.37	Stroma	Section_1	6.725	0.385
+cell_01417	1041.58	1071.5	Stroma	Section_1	7.465	0.788
+cell_01418	2100.01	757.83	Stroma	Section_1	2.212	0.975
+cell_01419	2312.41	1054.55	Stroma	Section_1	2.395	0.256
+cell_01420	1279.11	442.57	Macrophage	Section_1	10.422	5.127
+cell_01421	791.02	1276.3	Tumor	Section_1	4.172	3.414
+cell_01422	864.27	1378.63	Macrophage	Section_1	3.065	2.148
+cell_01423	1380.09	1303.93	Tumor	Section_1	6.668	0.446
+cell_01424	1006.33	1784.69	CD8 T cell	Section_1	2.208	4.764
+cell_01425	984.08	1618.64	Tumor	Section_1	3.448	5.58
+cell_01426	1895.78	1450.31	CD8 T cell	Section_1	0.349	5.65
+cell_01427	1955.52	1440.95	Macrophage	Section_1	1.205	4.361
+cell_01428	1662.42	344.75	CD8 T cell	Section_1	6.023	3.037
+cell_01429	829.28	1436.38	Macrophage	Section_1	2.452	5.392
+cell_01430	2062.92	938.06	Fibroblast	Section_1	3.369	3.127
+cell_01431	959.92	740.37	Stroma	Section_1	4.92	0.971
+cell_01432	2064.82	1326.91	Fibroblast	Section_1	1.834	3.034
+cell_01433	1838.74	1715.85	Stroma	Section_1	0.402	1.612
+cell_01434	1632.89	1666.36	Macrophage	Section_1	1.488	5.778
+cell_01435	2089.97	1109.35	Tumor	Section_1	2.188	3.086
+cell_01436	1645.59	1930.84	Stroma	Section_1	1.769	2.383
+cell_01437	1321.01	1182.22	Stroma	Section_1	8.635	1.916
+cell_01438	2238.82	886.75	Fibroblast	Section_1	2.766	0.552
+cell_01439	1973.85	1131.63	CD8 T cell	Section_1	0.522	5.776
+cell_01440	1563.64	1940.83	B cell	Section_1	2.266	0.78
+cell_01441	2187.44	1419.16	Stroma	Section_1	0.166	2.03
+cell_01442	1913.94	1797.73	Tumor	Section_1	4.045	0.482
+cell_01443	2147.01	1471.96	Fibroblast	Section_1	1.608	3.103
+cell_01444	1797.92	2029.53	Stroma	Section_1	3.211	1.311
+cell_01445	916.95	932.01	Tumor	Section_1	4.499	0.905
+cell_01446	2156.56	797.37	Fibroblast	Section_1	2.894	0.869
+cell_01447	764.66	1024.83	Fibroblast	Section_1	3.683	2.324
+cell_01448	1192.59	888.75	Tumor	Section_1	8.643	0.238
+cell_01449	1642.68	1657.3	Macrophage	Section_1	2.927	5.713
+cell_01450	1683.14	643.3	Endothelial	Section_1	3.073	5.838
+cell_01451	1149.79	880.17	Tumor	Section_1	9.145	0.803
+cell_01452	1858.21	789.22	Macrophage	Section_1	1.883	7.559
+cell_01453	2033.92	1022.22	Macrophage	Section_1	4.267	5.033
+cell_01454	1096.41	1771.18	Fibroblast	Section_1	1.605	5.712
+cell_01455	1855.51	1427.43	Fibroblast	Section_1	1.631	7.66
+cell_01456	1621.61	1997.93	Endothelial	Section_1	1.655	0.557
+cell_01457	949.51	1426.64	Tumor	Section_1	4.609	3.697
+cell_01458	2212.74	946.9	Macrophage	Section_1	0.55	0.712
+cell_01459	1314.65	1377.8	Tumor	Section_1	5.477	0.222
+cell_01460	1580.3	588.26	Fibroblast	Section_1	5.251	6.416
+cell_01461	1353.68	1161.96	Tumor	Section_1	10.248	0.45
+cell_01462	1803.18	1874.96	Tumor	Section_1	3.066	0.623
+cell_01463	1273.14	1676.38	CD4 T cell	Section_1	3.447	5.554
+cell_01464	998.92	480.41	Macrophage	Section_1	2.177	6.022
+cell_01465	1261.24	746.64	Endothelial	Section_1	6.176	0.23
+cell_01466	880.2	1469.32	Tumor	Section_1	3.557	6.016
+cell_01467	1561.08	1652.5	Endothelial	Section_1	4.221	6.566
+cell_01468	1375.55	502.29	Tumor	Section_1	3.871	3.81
+cell_01469	1800.12	1736.87	Tumor	Section_1	0.736	2.159
+cell_01470	2005.11	987.68	CD8 T cell	Section_1	0.437	9.255
+cell_01471	1654.49	1575.66	Stroma	Section_1	3.753	6.844
+cell_01472	1734.78	1387.64	CD8 T cell	Section_1	6.211	5.069
+cell_01473	1188.42	1204.61	Tumor	Section_1	7.189	0.851
+cell_01474	607.21	1089.78	Tumor	Section_1	4.078	7.415
+cell_01475	922.86	1170.26	CD8 T cell	Section_1	6.981	1.665
+cell_01476	1463.55	1215.32	Tumor	Section_1	6.431	1.068
+cell_01477	2378.1	1171.38	Endothelial	Section_1	2.116	1.982
+cell_01478	1373.26	1210.95	Macrophage	Section_1	7.02	0.898
+cell_01479	923.3	1280.43	Tumor	Section_1	5.368	1.0
+cell_01480	827.93	1559.82	B cell	Section_1	2.311	6.803
+cell_01481	2285.95	1550.87	Stroma	Section_1	4.239	0.471
+cell_01482	866.08	780.98	Stroma	Section_1	4.422	2.816
+cell_01483	1584.56	1806.95	Tumor	Section_1	0.995	3.041
+cell_01484	923.48	524.04	Endothelial	Section_1	3.368	6.36
+cell_01485	1669.44	1256.04	Macrophage	Section_1	5.724	1.421
+cell_01486	2387.97	1095.68	Macrophage	Section_1	0.963	1.611
+cell_01487	686.22	1360.52	Fibroblast	Section_1	1.434	6.512
+cell_01488	2191.23	675.94	Stroma	Section_1	0.769	1.811
+cell_01489	1051.07	1269.48	Fibroblast	Section_1	9.441	0.079
+cell_01490	1815.58	1325.71	CD4 T cell	Section_1	3.557	5.875
+cell_01491	1821.29	541.17	Fibroblast	Section_1	1.372	4.832
+cell_01492	1114.11	681.41	Fibroblast	Section_1	7.722	5.425
+cell_01493	1629.03	561.94	Fibroblast	Section_1	2.011	5.701
+cell_01494	721.24	1577.46	Stroma	Section_1	1.692	5.176
+cell_01495	1041.21	659.83	Endothelial	Section_1	3.926	1.824
+cell_01496	1810.71	805.76	Endothelial	Section_1	4.797	5.271
+cell_01497	1113.1	782.43	Stroma	Section_1	6.025	1.902
+cell_01498	1310.63	1468.83	Tumor	Section_1	4.466	2.618
+cell_01499	1293.84	863.44	Fibroblast	Section_1	8.902	0.293
+cell_01500	1339.33	899.5	Tumor	Section_1	6.895	0.381
+cell_01501	2285.43	1001.42	Macrophage	Section_1	0.488	1.09
+cell_01502	979.6	1747.84	CD8 T cell	Section_1	2.996	6.936
+cell_01503	915.86	1497.26	Tumor	Section_1	2.58	4.551
+cell_01504	1709.53	690.75	CD4 T cell	Section_1	9.134	4.715
+cell_01505	764.63	1173.36	Tumor	Section_1	4.595	1.908
+cell_01506	1431.62	391.43	CD4 T cell	Section_1	0.518	9.168
+cell_01507	682.06	1411.6	Endothelial	Section_1	5.314	7.172
+cell_01508	1643.18	1850.06	Stroma	Section_1	2.032	4.778
+cell_01509	1475.45	385.44	CD4 T cell	Section_1	1.539	7.229
+cell_01510	1937.12	1672.31	Stroma	Section_1	2.026	3.91
+cell_01511	1696.82	1787.9	Fibroblast	Section_1	0.299	2.004
+cell_01512	914.8	601.22	Fibroblast	Section_1	3.534	3.825
+cell_01513	1490.4	640.65	Tumor	Section_1	3.706	1.867
+cell_01514	1946.78	852.04	CD4 T cell	Section_1	1.653	5.872
+cell_01515	1429.71	1691.97	CD8 T cell	Section_1	1.636	6.055
+cell_01516	1997.55	1615.44	CD8 T cell	Section_1	1.948	0.888
+cell_01517	2139.15	1018.86	Endothelial	Section_1	1.371	2.427
+cell_01518	1913.31	1803.45	Macrophage	Section_1	1.143	0.299
+cell_01519	1690.69	1758.88	CD4 T cell	Section_1	0.728	2.614
+cell_01520	1392.14	1605.97	Stroma	Section_1	1.937	4.339
+cell_01521	676.31	1046.13	Macrophage	Section_1	1.864	4.154
+cell_01522	1892.29	844.51	Fibroblast	Section_1	0.836	6.47
+cell_01523	1557.25	337.27	Stroma	Section_1	2.833	4.937
+cell_01524	1393.49	804.26	Stroma	Section_1	6.03	0.226
+cell_01525	1805.1	1800.47	Stroma	Section_1	0.986	0.968
+cell_01526	1087.2	1714.05	Endothelial	Section_1	1.203	6.796
+cell_01527	688.26	1310.82	CD8 T cell	Section_1	2.261	5.533
+cell_01528	1701.48	1468.09	Macrophage	Section_1	3.578	5.272
+cell_01529	1374.07	2049.23	Stroma	Section_1	1.36	0.453
+cell_01530	1264.88	1812.51	CD8 T cell	Section_1	3.22	5.174
+cell_01531	1980.19	1694.13	Fibroblast	Section_1	0.512	0.305
+cell_01532	888.93	1000.43	Stroma	Section_1	7.298	1.469
+cell_01533	1452.37	1035.95	Tumor	Section_1	10.968	0.593
+cell_01534	2074.27	1469.93	Endothelial	Section_1	1.718	0.952
+cell_01535	1041.21	1254.67	Tumor	Section_1	5.882	0.131
+cell_01536	1605.9	683.9	Stroma	Section_1	4.961	3.182
+cell_01537	1490.84	474.96	Macrophage	Section_1	2.726	7.466
+cell_01538	1752.43	617.41	Stroma	Section_1	2.684	6.372
+cell_01539	1239.62	1287.8	Stroma	Section_1	9.227	3.46
+cell_01540	1604.33	980.28	Fibroblast	Section_1	5.631	0.883
+cell_01541	1522.52	1587.14	Fibroblast	Section_1	2.366	5.548
+cell_01542	1247.82	1501.7	Fibroblast	Section_1	11.824	2.482
+cell_01543	1813.34	1828.13	Macrophage	Section_1	2.55	1.539
+cell_01544	1128.38	1277.0	Tumor	Section_1	9.386	0.197
+cell_01545	841.92	1730.21	CD4 T cell	Section_1	3.153	4.084
+cell_01546	1523.49	1611.53	Fibroblast	Section_1	4.699	7.251
+cell_01547	1503.04	928.33	Macrophage	Section_1	7.656	1.284
+cell_01548	1171.12	1975.37	CD8 T cell	Section_1	3.42	4.037
+cell_01549	1430.16	1684.08	CD4 T cell	Section_1	1.516	7.005
+cell_01550	1899.44	1630.16	Endothelial	Section_1	0.306	2.788
+cell_01551	682.95	1530.51	Fibroblast	Section_1	0.778	5.497
+cell_01552	1214.28	2026.62	Fibroblast	Section_1	1.547	2.334
+cell_01553	981.62	1757.1	CD8 T cell	Section_1	1.387	4.819
+cell_01554	1520.76	1435.39	Tumor	Section_1	4.694	2.045
+cell_01555	1557.24	509.11	Macrophage	Section_1	1.942	6.617
+cell_01556	2309.89	818.91	Stroma	Section_1	0.175	1.05
+cell_01557	624.29	1211.38	Fibroblast	Section_1	1.937	6.511
+cell_01558	1317.51	970.74	Tumor	Section_1	8.108	0.687
+cell_01559	1880.29	780.34	CD8 T cell	Section_1	1.878	6.793
+cell_01560	2005.54	1196.28	Macrophage	Section_1	2.347	4.641
+cell_01561	1254.86	987.9	Tumor	Section_1	9.424	1.034
+cell_01562	2077.37	721.01	CD8 T cell	Section_1	0.602	1.451
+cell_01563	1895.44	944.17	Stroma	Section_1	2.411	6.285
+cell_01564	1636.1	689.3	Fibroblast	Section_1	11.151	2.679
+cell_01565	1237.57	1265.75	Tumor	Section_1	8.771	6.036
+cell_01566	2054.31	1509.99	Macrophage	Section_1	2.69	1.548
+cell_01567	1856.17	1235.49	Stroma	Section_1	1.968	5.678
+cell_01568	914.46	1284.46	Stroma	Section_1	4.57	1.236
+cell_01569	1159.47	1212.17	Stroma	Section_1	10.347	2.115
+cell_01570	765.75	1683.22	Fibroblast	Section_1	0.098	4.562
+cell_01571	1188.27	1057.67	Tumor	Section_1	9.114	0.749
+cell_01572	884.43	990.7	Fibroblast	Section_1	9.529	0.474
+cell_01573	1706.81	858.26	CD8 T cell	Section_1	4.241	2.643
+cell_01574	1692.96	1356.91	Stroma	Section_1	2.425	4.32
+cell_01575	1562.88	1599.9	Stroma	Section_1	3.264	7.049
+cell_01576	1556.23	997.01	Tumor	Section_1	6.236	0.97
+cell_01577	1693.8	925.49	Fibroblast	Section_1	3.34	1.883
+cell_01578	2131.9	1179.44	Stroma	Section_1	2.072	3.48
+cell_01579	2007.01	679.51	CD8 T cell	Section_1	1.844	4.369
+cell_01580	1704.83	1030.33	CD8 T cell	Section_1	4.909	1.509
+cell_01581	1264.88	1749.49	Fibroblast	Section_1	2.527	9.164
+cell_01582	940.71	1597.49	CD4 T cell	Section_1	1.478	5.577
+cell_01583	1450.61	1632.76	CD4 T cell	Section_1	3.308	6.111
+cell_01584	1068.98	859.99	Tumor	Section_1	7.574	1.078
+cell_01585	1723.61	1109.52	Fibroblast	Section_1	6.543	1.538
+cell_01586	1263.44	1549.78	Tumor	Section_1	3.475	1.834
+cell_01587	924.14	984.46	Tumor	Section_1	8.864	0.368
+cell_01588	1243.1	2058.05	Fibroblast	Section_1	3.114	1.893
+cell_01589	1933.76	1986.66	Stroma	Section_1	1.561	1.842
+cell_01590	1800.76	2038.47	Stroma	Section_1	1.761	1.462
+cell_01591	2047.03	1408.46	B cell	Section_1	0.112	1.777
+cell_01592	1742.77	1119.92	Stroma	Section_1	4.324	3.532
+cell_01593	1080.45	1493.38	Tumor	Section_1	5.859	1.581
+cell_01594	1721.28	821.08	Macrophage	Section_1	3.635	3.385
+cell_01595	1455.26	1102.83	Macrophage	Section_1	9.949	0.797
+cell_01596	1599.12	1459.45	Endothelial	Section_1	4.511	3.302
+cell_01597	1773.49	1740.64	Stroma	Section_1	6.391	2.97
+cell_01598	1699.17	714.76	Macrophage	Section_1	2.755	5.109
+cell_01599	1464.72	1580.58	Endothelial	Section_1	4.403	4.183
+cell_01600	2151.33	805.27	Stroma	Section_1	0.461	1.344
+cell_01601	1842.68	1614.53	Stroma	Section_1	1.477	4.442
+cell_01602	1135.53	453.56	Tumor	Section_1	3.726	6.059
+cell_01603	1674.12	793.95	Macrophage	Section_1	5.517	3.22
+cell_01604	1561.09	1857.55	Stroma	Section_1	1.285	2.808
+cell_01605	1436.69	1580.98	CD4 T cell	Section_1	5.718	4.8
+cell_01606	2117.72	1059.96	Fibroblast	Section_1	4.555	2.286
+cell_01607	1467.81	1549.95	Tumor	Section_1	2.96	4.497
+cell_01608	1172.7	1354.12	Stroma	Section_1	6.481	0.218
+cell_01609	858.16	1489.73	Stroma	Section_1	2.817	4.675
+cell_01610	1491.19	1662.16	Tumor	Section_1	1.658	7.13
+cell_01611	1560.29	831.24	CD4 T cell	Section_1	8.48	1.701
+cell_01612	1618.76	340.34	CD8 T cell	Section_1	4.327	5.582
+cell_01613	1365.31	1329.19	Fibroblast	Section_1	6.545	2.911
+cell_01614	1844.87	617.91	CD8 T cell	Section_1	2.752	5.706
+cell_01615	1653.23	1848.55	Stroma	Section_1	3.644	1.249
+cell_01616	1950.38	1212.19	CD8 T cell	Section_1	2.094	7.424
+cell_01617	953.95	938.14	Tumor	Section_1	6.271	0.549
+cell_01618	1766.4	1190.08	Fibroblast	Section_1	3.031	3.445
+cell_01619	2241.93	1383.77	Endothelial	Section_1	2.944	1.651
+cell_01620	1610.54	1609.09	Macrophage	Section_1	0.95	6.926
+cell_01621	1107.01	1153.07	Tumor	Section_1	8.104	1.47
+cell_01622	1685.74	730.37	CD8 T cell	Section_1	3.233	3.167
+cell_01623	2224.59	1653.75	Fibroblast	Section_1	0.47	1.084
+cell_01624	864.62	1691.35	Stroma	Section_1	1.614	6.078
+cell_01625	1483.91	324.37	Tumor	Section_1	1.489	6.717
+cell_01626	997.43	1724.89	Stroma	Section_1	0.745	8.114
+cell_01627	1774.73	1879.33	Stroma	Section_1	4.249	0.682
+cell_01628	1709.39	1787.35	CD8 T cell	Section_1	2.958	1.789
+cell_01629	776.89	1658.59	Stroma	Section_1	1.784	5.912
+cell_01630	862.09	1282.96	Stroma	Section_1	6.468	0.913
+cell_01631	1846.53	790.71	Macrophage	Section_1	4.481	7.439
+cell_01632	1048.82	638.63	Tumor	Section_1	7.493	2.645
+cell_01633	1256.72	580.98	Fibroblast	Section_1	3.926	1.542
+cell_01634	1815.14	1166.18	CD8 T cell	Section_1	4.867	3.999
+cell_01635	1020.32	1496.68	Stroma	Section_1	4.036	3.681
+cell_01636	1086.28	1487.46	Stroma	Section_1	5.034	3.672
+cell_01637	2234.0	816.36	Stroma	Section_1	1.0	2.57
+cell_01638	1514.35	1753.77	Fibroblast	Section_1	1.719	7.468
+cell_01639	1396.82	390.79	CD8 T cell	Section_1	3.636	6.16
+cell_01640	1517.2	601.64	Macrophage	Section_1	7.44	3.161
+cell_01641	2138.36	1650.37	Fibroblast	Section_1	1.588	1.072
+cell_01642	1175.55	1265.64	B cell	Section_1	6.835	0.918
+cell_01643	1764.52	2024.01	Fibroblast	Section_1	5.672	1.489
+cell_01644	1746.43	1773.17	Stroma	Section_1	0.923	1.589
+cell_01645	1053.06	1303.36	Tumor	Section_1	5.188	0.131
+cell_01646	1391.55	1628.77	CD4 T cell	Section_1	2.412	4.617
+cell_01647	1632.24	755.9	Stroma	Section_1	6.514	3.269
+cell_01648	1955.73	901.07	CD4 T cell	Section_1	0.868	5.782
+cell_01649	1747.94	479.09	B cell	Section_1	0.589	5.671
+cell_01650	1411.81	2072.58	Stroma	Section_1	1.896	0.481
+cell_01651	1388.8	1927.7	Stroma	Section_1	5.153	1.582
+cell_01652	1480.22	1865.44	CD8 T cell	Section_1	2.463	2.714
+cell_01653	1898.53	1652.26	Stroma	Section_1	0.495	1.67
+cell_01654	2268.51	916.75	Endothelial	Section_1	7.023	0.147
+cell_01655	822.63	1678.95	B cell	Section_1	2.251	5.35
+cell_01656	1577.15	1681.05	CD8 T cell	Section_1	3.456	6.125
+cell_01657	2001.56	478.4	Endothelial	Section_1	0.387	0.729
+cell_01658	1044.01	1534.83	Macrophage	Section_1	8.472	5.66
+cell_01659	2285.51	1376.19	Endothelial	Section_1	1.264	0.138
+cell_01660	1965.03	1952.91	Stroma	Section_1	0.351	0.64
+cell_01661	1016.04	620.57	CD4 T cell	Section_1	4.786	2.461
+cell_01662	1574.26	845.96	CD8 T cell	Section_1	7.529	3.433
+cell_01663	1667.44	1868.38	Stroma	Section_1	2.742	0.882
+cell_01664	1769.33	1046.14	Macrophage	Section_1	5.029	4.603
+cell_01665	1973.98	556.15	Fibroblast	Section_1	2.566	2.027
+cell_01666	1776.64	810.98	Stroma	Section_1	3.497	4.723
+cell_01667	1604.98	1943.04	Endothelial	Section_1	0.385	1.697
+cell_01668	2315.67	1468.07	Fibroblast	Section_1	1.476	2.685
+cell_01669	1757.57	916.67	Fibroblast	Section_1	3.567	2.851
+cell_01670	1306.25	1729.79	Macrophage	Section_1	4.623	7.053
+cell_01671	968.87	708.0	Macrophage	Section_1	7.026	1.614
+cell_01672	1536.49	618.11	Fibroblast	Section_1	3.51	3.078
+cell_01673	1760.52	1471.53	CD8 T cell	Section_1	3.564	7.549
+cell_01674	1529.55	1049.42	Tumor	Section_1	7.058	0.381
+cell_01675	2031.59	983.76	Tumor	Section_1	0.316	4.495
+cell_01676	1401.77	481.52	B cell	Section_1	1.549	4.438
+cell_01677	864.12	1446.13	Macrophage	Section_1	4.708	4.541
+cell_01678	1754.19	951.12	Tumor	Section_1	3.06	2.92
+cell_01679	904.77	1096.28	Tumor	Section_1	5.185	2.718
+cell_01680	1482.03	653.24	CD4 T cell	Section_1	4.037	1.132
+cell_01681	1702.02	774.21	Macrophage	Section_1	5.056	6.058
+cell_01682	1496.87	431.43	Fibroblast	Section_1	4.191	7.466
+cell_01683	1382.0	1686.72	CD4 T cell	Section_1	4.338	7.255
+cell_01684	1988.27	1646.22	Fibroblast	Section_1	0.273	0.794
+cell_01685	1563.31	2062.44	Fibroblast	Section_1	0.91	0.633
+cell_01686	839.19	1188.06	Tumor	Section_1	4.208	1.087
+cell_01687	793.43	1176.56	CD8 T cell	Section_1	5.771	3.433
+cell_01688	1288.53	1079.13	Tumor	Section_1	9.302	0.07
+cell_01689	1199.71	1432.62	Fibroblast	Section_1	5.596	0.92
+cell_01690	1565.69	921.69	Tumor	Section_1	7.67	0.836
+cell_01691	2172.78	791.51	Endothelial	Section_1	1.807	0.795
+cell_01692	1516.93	2022.68	Fibroblast	Section_1	2.245	0.374
+cell_01693	1467.13	812.77	Tumor	Section_1	6.377	0.759
+cell_01694	1315.72	820.99	Endothelial	Section_1	9.422	1.314
+cell_01695	993.71	1126.03	Tumor	Section_1	9.295	0.856
+cell_01696	1760.65	1840.96	Macrophage	Section_1	2.565	0.713
+cell_01697	1698.99	518.78	CD8 T cell	Section_1	3.8	6.717
+cell_01698	2223.13	1017.36	Stroma	Section_1	8.572	2.874
+cell_01699	1349.27	357.1	CD8 T cell	Section_1	3.014	6.296
+cell_01700	1925.18	958.75	Fibroblast	Section_1	1.936	6.968
+cell_01701	2226.87	1127.53	Stroma	Section_1	2.284	1.287
+cell_01702	1097.24	1739.59	CD8 T cell	Section_1	4.01	5.985
+cell_01703	1178.48	820.06	Endothelial	Section_1	7.155	0.584
+cell_01704	654.15	1339.79	B cell	Section_1	1.648	6.518
+cell_01705	1777.12	1176.66	Tumor	Section_1	4.285	3.703
+cell_01706	2131.28	1622.14	Fibroblast	Section_1	1.672	2.233
+cell_01707	845.62	1601.71	Tumor	Section_1	0.978	6.191
+cell_01708	2110.92	593.21	CD4 T cell	Section_1	2.0	2.528
+cell_01709	1362.39	1833.34	CD4 T cell	Section_1	4.587	5.122
+cell_01710	1620.06	703.92	B cell	Section_1	4.988	5.513
+cell_01711	893.39	1750.0	Stroma	Section_1	0.632	9.101
+cell_01712	2283.92	1100.86	Stroma	Section_1	2.801	0.181
+cell_01713	1973.61	774.62	B cell	Section_1	1.41	4.57
+cell_01714	1250.08	1948.0	Stroma	Section_1	6.764	1.274
+cell_01715	1558.94	737.93	Stroma	Section_1	5.996	1.985
+cell_01716	1141.33	1790.64	B cell	Section_1	1.066	5.641
+cell_01717	842.95	681.27	CD8 T cell	Section_1	4.892	3.475
+cell_01718	1223.98	774.11	Tumor	Section_1	7.547	0.038
+cell_01719	1800.11	650.81	Macrophage	Section_1	4.551	7.872
+cell_01720	2367.36	1334.31	Fibroblast	Section_1	1.162	0.748
+cell_01721	1649.89	1989.99	Stroma	Section_1	2.638	0.426
+cell_01722	1299.11	376.51	Tumor	Section_1	0.704	6.407
+cell_01723	985.29	982.91	Tumor	Section_1	7.423	0.58
+cell_01724	601.92	1224.81	Macrophage	Section_1	0.985	6.297
+cell_01725	1830.6	1319.52	Fibroblast	Section_1	2.828	7.276
+cell_01726	1124.68	1728.53	Macrophage	Section_1	2.54	6.497
+cell_01727	1912.34	732.89	Tumor	Section_1	2.564	6.795
+cell_01728	2289.09	1355.12	CD8 T cell	Section_1	1.16	0.431
+cell_01729	817.41	1719.67	Tumor	Section_1	1.979	4.489
+cell_01730	2224.31	940.0	Stroma	Section_1	3.93	1.138
+cell_01731	2176.44	1423.94	Fibroblast	Section_1	5.535	0.927
+cell_01732	1498.91	611.6	CD8 T cell	Section_1	4.55	4.2
+cell_01733	1469.26	1842.2	Tumor	Section_1	4.005	5.331
+cell_01734	1929.6	722.53	CD8 T cell	Section_1	0.837	6.41
+cell_01735	1496.83	1071.59	Tumor	Section_1	7.133	2.007
+cell_01736	1980.69	779.99	Stroma	Section_1	2.203	5.605
+cell_01737	1676.92	2013.66	CD4 T cell	Section_1	1.68	0.508
+cell_01738	756.64	1051.93	Macrophage	Section_1	4.201	2.26
+cell_01739	1646.81	410.72	B cell	Section_1	3.72	4.943
+cell_01740	1515.19	1762.19	Fibroblast	Section_1	0.717	4.947
+cell_01741	1578.99	1849.79	Stroma	Section_1	0.787	1.748
+cell_01742	1662.29	1227.99	Fibroblast	Section_1	3.748	1.127
+cell_01743	2038.17	1056.46	CD8 T cell	Section_1	2.253	4.849
+cell_01744	1345.9	599.56	Tumor	Section_1	4.487	1.403
+cell_01745	1200.53	857.9	B cell	Section_1	9.922	1.7
+cell_01746	1494.0	1041.04	Tumor	Section_1	7.972	0.272
+cell_01747	766.89	1052.44	Macrophage	Section_1	3.926	2.732
+cell_01748	913.01	1288.69	CD8 T cell	Section_1	4.683	0.625
+cell_01749	948.67	1380.93	Tumor	Section_1	4.846	2.991
+cell_01750	1214.12	852.49	Endothelial	Section_1	7.043	0.269
+cell_01751	1697.9	1829.67	Stroma	Section_1	3.781	2.154
+cell_01752	1954.29	814.75	Endothelial	Section_1	1.352	5.529
+cell_01753	1734.43	626.44	Tumor	Section_1	1.158	8.58
+cell_01754	1098.34	1756.04	Stroma	Section_1	4.308	8.39
+cell_01755	1436.98	1166.07	Tumor	Section_1	7.79	1.174
+cell_01756	2042.29	1864.2	Fibroblast	Section_1	2.788	1.153
+cell_01757	1736.35	1158.52	Tumor	Section_1	3.744	3.28
+cell_01758	1995.31	853.71	Fibroblast	Section_1	4.41	5.732
+cell_01759	1861.48	1006.85	Stroma	Section_1	1.996	6.829
+cell_01760	1178.48	1766.47	CD8 T cell	Section_1	1.408	5.901
+cell_01761	1731.79	1616.25	Macrophage	Section_1	0.294	5.946
+cell_01762	1698.55	2010.67	Tumor	Section_1	4.337	0.423
+cell_01763	1978.41	1503.61	Fibroblast	Section_1	1.031	4.524
+cell_01764	2024.0	1692.76	Stroma	Section_1	2.293	0.271
+cell_01765	1904.68	1394.49	CD4 T cell	Section_1	2.537	8.373
+cell_01766	1625.12	1191.99	Stroma	Section_1	7.705	1.123
+cell_01767	2011.33	1456.73	CD8 T cell	Section_1	2.166	3.455
+cell_01768	1943.53	1687.69	B cell	Section_1	1.697	0.884
+cell_01769	1784.66	660.37	Fibroblast	Section_1	4.086	6.073
+cell_01770	727.09	773.57	CD4 T cell	Section_1	3.902	7.105
+cell_01771	1615.63	452.22	CD8 T cell	Section_1	1.497	7.17
+cell_01772	889.0	541.84	CD8 T cell	Section_1	5.456	5.497
+cell_01773	1860.91	870.24	CD8 T cell	Section_1	3.462	6.304
+cell_01774	984.5	588.94	Macrophage	Section_1	2.732	3.251
+cell_01775	835.65	1107.05	Macrophage	Section_1	8.647	1.66
+cell_01776	1336.74	515.26	Macrophage	Section_1	3.161	3.135
+cell_01777	654.76	1490.03	B cell	Section_1	3.849	5.406
+cell_01778	1086.89	1799.22	Fibroblast	Section_1	0.44	5.408
+cell_01779	664.31	1372.23	Fibroblast	Section_1	3.981	6.248
+cell_01780	1870.58	1871.22	Fibroblast	Section_1	0.608	2.788
+cell_01781	1592.66	892.43	Stroma	Section_1	6.274	1.838
+cell_01782	1449.42	1950.98	Endothelial	Section_1	2.597	2.242
+cell_01783	1856.82	1714.76	Stroma	Section_1	1.523	0.969
+cell_01784	1519.77	2062.46	Macrophage	Section_1	1.857	0.511
+cell_01785	1942.01	523.12	Stroma	Section_1	0.742	2.094
+cell_01786	1359.76	1454.33	Tumor	Section_1	6.933	0.662
+cell_01787	1371.2	896.88	Fibroblast	Section_1	8.698	1.366
+cell_01788	1647.19	1013.67	Endothelial	Section_1	4.745	1.495
+cell_01789	2058.16	1496.63	CD8 T cell	Section_1	2.272	2.179
+cell_01790	1524.11	945.36	Tumor	Section_1	7.552	1.989
+cell_01791	1228.63	1915.92	B cell	Section_1	1.926	3.47
+cell_01792	1639.25	1854.23	Macrophage	Section_1	0.118	6.565
+cell_01793	1191.82	437.05	Endothelial	Section_1	2.435	5.9
+cell_01794	1901.63	944.4	Fibroblast	Section_1	3.797	6.565
+cell_01795	1319.01	1822.69	Macrophage	Section_1	2.702	5.566
+cell_01796	1219.93	1070.71	Tumor	Section_1	11.174	2.266
+cell_01797	1290.34	2020.11	Stroma	Section_1	2.196	0.322
+cell_01798	1145.19	1074.06	Tumor	Section_1	11.171	0.329
+cell_01799	1292.42	1000.44	Tumor	Section_1	9.282	0.428
+cell_01800	1186.53	939.56	Tumor	Section_1	8.287	0.862
+cell_01801	923.38	633.82	Tumor	Section_1	8.08	2.978
+cell_01802	1693.5	1419.7	Stroma	Section_1	2.598	5.997
+cell_01803	1254.95	538.46	Tumor	Section_1	2.975	2.996
+cell_01804	1145.97	507.85	CD4 T cell	Section_1	3.403	3.907
+cell_01805	1179.42	488.94	Tumor	Section_1	3.71	4.841
+cell_01806	1850.63	1376.08	Fibroblast	Section_1	3.782	6.048
+cell_01807	1288.93	1273.25	Tumor	Section_1	7.44	1.168
+cell_01808	992.89	1526.15	Tumor	Section_1	3.387	3.147
+cell_01809	1846.35	1409.89	Tumor	Section_1	1.887	7.645
+cell_01810	1630.01	1941.29	Endothelial	Section_1	1.169	0.312
+cell_01811	999.04	1394.85	Tumor	Section_1	3.962	1.798
+cell_01812	1473.12	597.29	Macrophage	Section_1	3.108	2.139
+cell_01813	1524.62	1502.19	Tumor	Section_1	6.442	4.801
+cell_01814	1825.71	605.33	Fibroblast	Section_1	3.054	5.606
+cell_01815	1128.29	1089.98	Tumor	Section_1	9.147	0.832
+cell_01816	1548.53	459.98	Macrophage	Section_1	3.194	7.422
+cell_01817	1263.46	1241.2	B cell	Section_1	9.654	1.106
+cell_01818	610.92	1204.5	Stroma	Section_1	1.616	6.983
+cell_01819	956.29	691.23	Tumor	Section_1	3.773	1.16
+cell_01820	1845.04	1032.23	Endothelial	Section_1	5.296	4.707
+cell_01821	1393.29	1205.49	Tumor	Section_1	6.447	1.061
+cell_01822	987.92	1106.78	Tumor	Section_1	8.279	0.924
+cell_01823	1217.99	989.65	Tumor	Section_1	10.223	0.24
+cell_01824	1467.04	780.68	Tumor	Section_1	8.236	0.304
+cell_01825	2256.56	1566.81	Fibroblast	Section_1	2.799	0.724
+cell_01826	804.4	1131.21	Macrophage	Section_1	5.86	1.363
+cell_01827	1124.46	1243.63	Tumor	Section_1	6.839	3.528
+cell_01828	2091.82	882.76	Stroma	Section_1	3.203	4.183
+cell_01829	1045.21	1218.57	Stroma	Section_1	8.08	1.663
+cell_01830	628.33	1375.83	CD4 T cell	Section_1	0.906	8.549
+cell_01831	1658.32	1161.68	Tumor	Section_1	5.673	0.869
+cell_01832	766.66	1435.34	Fibroblast	Section_1	1.708	5.643
+cell_01833	1832.93	1917.83	CD4 T cell	Section_1	1.604	2.174
+cell_01834	1548.14	1428.22	Endothelial	Section_1	10.304	2.149
+cell_01835	1808.35	1410.08	Stroma	Section_1	1.223	6.823
+cell_01836	2057.93	1201.99	Stroma	Section_1	0.441	2.962
+cell_01837	736.93	1547.74	CD4 T cell	Section_1	0.604	7.785
+cell_01838	1579.55	545.29	B cell	Section_1	2.836	6.117
+cell_01839	1424.45	475.37	Macrophage	Section_1	4.225	5.311
+cell_01840	2280.2	1359.78	Tumor	Section_1	1.885	0.482
+cell_01841	758.9	851.36	Endothelial	Section_1	2.699	4.854
+cell_01842	1851.43	1712.14	Stroma	Section_1	2.919	1.421
+cell_01843	2098.47	967.72	Stroma	Section_1	0.253	2.036
+cell_01844	1878.41	1862.11	Endothelial	Section_1	0.57	2.502
+cell_01845	1176.8	870.08	Tumor	Section_1	7.631	2.484
+cell_01846	1116.55	1938.31	Tumor	Section_1	3.855	1.357
+cell_01847	1418.27	1099.21	Tumor	Section_1	8.689	4.063
+cell_01848	1160.78	1408.58	Fibroblast	Section_1	6.251	0.887
+cell_01849	1548.75	396.39	Macrophage	Section_1	0.519	6.067
+cell_01850	1563.57	1721.12	CD4 T cell	Section_1	1.226	6.514
+cell_01851	1789.1	1005.62	Fibroblast	Section_1	5.52	3.014
+cell_01852	1111.06	1199.49	Stroma	Section_1	8.751	0.277
+cell_01853	1525.1	544.8	Macrophage	Section_1	4.599	5.0
+cell_01854	1985.49	529.4	CD8 T cell	Section_1	1.785	1.814
+cell_01855	1739.22	1198.24	Stroma	Section_1	5.929	3.803
+cell_01856	1525.61	1355.03	Macrophage	Section_1	4.23	0.571
+cell_01857	1358.98	1797.41	Fibroblast	Section_1	1.556	8.369
+cell_01858	1497.61	2080.06	Fibroblast	Section_1	2.64	0.549
+cell_01859	1461.6	1673.84	Macrophage	Section_1	0.887	6.764
+cell_01860	734.21	763.55	Stroma	Section_1	1.49	4.894
+cell_01861	2347.25	1165.5	Fibroblast	Section_1	5.886	0.167
+cell_01862	1978.0	1170.77	Stroma	Section_1	1.964	6.053
+cell_01863	698.02	1063.8	Endothelial	Section_1	2.217	4.685
+cell_01864	1021.39	628.61	Tumor	Section_1	4.762	1.945
+cell_01865	1910.33	703.81	B cell	Section_1	0.579	5.401
+cell_01866	2034.09	960.6	Endothelial	Section_1	0.806	5.642
+cell_01867	1732.33	1978.83	Macrophage	Section_1	3.946	1.941
+cell_01868	711.36	1057.03	Tumor	Section_1	3.226	3.417
+cell_01869	1889.39	520.67	Fibroblast	Section_1	1.144	3.651
+cell_01870	1204.98	2049.44	Stroma	Section_1	0.56	1.952
+cell_01871	921.42	1429.88	Stroma	Section_1	3.911	3.251
+cell_01872	2305.16	1127.06	Macrophage	Section_1	2.062	1.124
+cell_01873	2332.14	1121.59	Stroma	Section_1	1.151	1.43
+cell_01874	1844.02	969.68	CD4 T cell	Section_1	8.218	5.873
+cell_01875	1555.33	1023.9	Tumor	Section_1	5.767	0.852
+cell_01876	1431.34	1768.45	CD8 T cell	Section_1	0.703	5.394
+cell_01877	1141.29	1951.85	Fibroblast	Section_1	1.324	1.069
+cell_01878	1037.28	1058.34	Tumor	Section_1	12.646	1.247
+cell_01879	801.24	919.39	Stroma	Section_1	6.021	1.549
+cell_01880	1422.9	1197.33	Stroma	Section_1	7.198	1.208
+cell_01881	1149.44	793.86	Endothelial	Section_1	6.581	0.198
+cell_01882	907.84	1584.6	CD8 T cell	Section_1	1.521	5.897
+cell_01883	1498.32	875.81	Endothelial	Section_1	6.392	0.694
+cell_01884	1072.89	1937.45	Stroma	Section_1	1.522	0.88
+cell_01885	1327.28	1511.04	Stroma	Section_1	5.921	1.356
+cell_01886	2098.47	1815.44	Fibroblast	Section_1	2.502	0.409
+cell_01887	1657.26	1588.0	Fibroblast	Section_1	1.581	6.954
+cell_01888	2029.86	475.7	CD4 T cell	Section_1	4.857	0.872
+cell_01889	839.6	1431.77	Macrophage	Section_1	2.783	4.473
+cell_01890	1536.23	1458.86	Stroma	Section_1	3.014	2.556
+cell_01891	1513.49	970.45	Tumor	Section_1	7.598	0.613
+cell_01892	1267.69	1118.04	B cell	Section_1	11.842	0.411
+cell_01893	2185.14	1291.61	Fibroblast	Section_1	1.73	1.139
+cell_01894	1172.05	1940.41	CD8 T cell	Section_1	0.537	3.303
+cell_01895	1752.95	1712.27	Stroma	Section_1	2.007	2.887
+cell_01896	1165.33	701.69	Tumor	Section_1	6.595	3.547
+cell_01897	1391.79	1882.36	Stroma	Section_1	2.379	3.019
+cell_01898	2103.13	1460.76	Endothelial	Section_1	2.038	2.11
+cell_01899	2202.51	1452.6	CD4 T cell	Section_1	4.094	1.187
+cell_01900	961.55	896.33	Tumor	Section_1	5.463	1.342
+cell_01901	2253.34	1303.47	Endothelial	Section_1	0.031	0.345
+cell_01902	2022.76	468.88	Fibroblast	Section_1	0.254	0.743
+cell_01903	1798.31	1641.31	Stroma	Section_1	0.529	3.899
+cell_01904	1422.01	1138.26	Tumor	Section_1	9.815	1.4
+cell_01905	1200.08	1308.64	Tumor	Section_1	6.982	0.666
+cell_01906	873.12	1435.3	Tumor	Section_1	7.19	4.595
+cell_01907	1975.23	1430.22	CD4 T cell	Section_1	0.618	3.401
+cell_01908	1783.95	374.92	CD4 T cell	Section_1	5.05	2.088
+cell_01909	2057.92	756.2	Stroma	Section_1	0.814	2.201
+cell_01910	2147.67	1244.9	Stroma	Section_1	1.519	2.19
+cell_01911	1848.69	1924.45	Fibroblast	Section_1	0.319	2.899
+cell_01912	1876.75	940.15	Macrophage	Section_1	5.417	9.28
+cell_01913	724.23	950.66	CD8 T cell	Section_1	3.811	4.06
+cell_01914	1529.26	1240.29	Stroma	Section_1	11.787	1.801
+cell_01915	1707.08	1877.54	Fibroblast	Section_1	3.867	0.524
+cell_01916	1033.69	465.35	CD4 T cell	Section_1	2.474	5.485
+cell_01917	1374.12	411.13	Endothelial	Section_1	1.571	6.12
+cell_01918	825.52	713.66	CD8 T cell	Section_1	5.443	5.251
+cell_01919	2042.65	1035.48	CD8 T cell	Section_1	1.833	6.032
+cell_01920	683.48	1230.47	Macrophage	Section_1	2.25	8.882
+cell_01921	1292.5	1834.92	Macrophage	Section_1	1.939	4.197
+cell_01922	799.4	1300.91	Stroma	Section_1	2.574	2.859
+cell_01923	1361.11	1368.61	Tumor	Section_1	7.075	0.152
+cell_01924	1564.67	1598.84	Macrophage	Section_1	3.63	5.648
+cell_01925	2140.38	1390.26	Stroma	Section_1	0.597	0.94
+cell_01926	1369.28	1374.76	Tumor	Section_1	8.723	0.403
+cell_01927	1313.93	447.7	Stroma	Section_1	4.787	5.177
+cell_01928	2319.36	1295.35	Fibroblast	Section_1	2.252	0.437
+cell_01929	698.86	1521.99	CD4 T cell	Section_1	0.759	8.137
+cell_01930	1322.62	974.24	Macrophage	Section_1	10.536	2.013
+cell_01931	829.18	642.17	CD8 T cell	Section_1	2.773	4.53
+cell_01932	1539.0	969.24	Endothelial	Section_1	7.219	1.991
+cell_01933	1729.99	624.6	B cell	Section_1	3.84	6.018
+cell_01934	1303.41	398.78	Tumor	Section_1	1.039	5.96
+cell_01935	1690.57	1343.64	Fibroblast	Section_1	2.496	2.922
+cell_01936	1379.97	1218.99	Tumor	Section_1	7.46	1.049
+cell_01937	1386.81	1114.0	Tumor	Section_1	13.394	0.296
+cell_01938	1517.93	1843.28	Endothelial	Section_1	7.33	3.68
+cell_01939	2281.99	1414.2	Stroma	Section_1	2.373	0.454
+cell_01940	1553.07	1516.86	CD8 T cell	Section_1	5.488	4.457
+cell_01941	1194.97	1288.84	Tumor	Section_1	7.596	0.258
+cell_01942	918.22	1549.36	Tumor	Section_1	3.232	5.483
+cell_01943	1693.7	1590.21	Tumor	Section_1	1.53	6.224
+cell_01944	1846.63	513.47	Stroma	Section_1	3.959	3.99
+cell_01945	2283.16	805.21	Tumor	Section_1	5.16	3.496
+cell_01946	1737.06	1951.19	B cell	Section_1	1.905	0.575
+cell_01947	2261.73	839.06	CD8 T cell	Section_1	1.934	0.225
+cell_01948	2144.66	1272.65	Macrophage	Section_1	1.582	1.486
+cell_01949	2231.5	827.06	Endothelial	Section_1	5.248	0.968
+cell_01950	1867.48	1085.5	Tumor	Section_1	4.377	6.051
+cell_01951	1734.62	1217.8	Stroma	Section_1	3.148	3.344
+cell_01952	1559.56	473.52	B cell	Section_1	6.794	6.337
+cell_01953	1701.55	1161.82	Fibroblast	Section_1	3.129	2.426
+cell_01954	2205.92	726.09	Stroma	Section_1	4.896	0.867
+cell_01955	2235.8	1063.04	Tumor	Section_1	3.739	0.326
+cell_01956	665.31	926.92	B cell	Section_1	3.227	6.2
+cell_01957	1944.64	1437.78	Fibroblast	Section_1	1.873	4.523
+cell_01958	1868.18	691.83	Macrophage	Section_1	1.648	7.078
+cell_01959	914.84	691.72	Tumor	Section_1	3.469	1.7
+cell_01960	1166.88	907.29	Tumor	Section_1	12.755	1.661
+cell_01961	925.05	1529.13	CD8 T cell	Section_1	3.386	8.238
+cell_01962	842.34	881.18	Fibroblast	Section_1	4.09	0.841
+cell_01963	2007.04	1931.95	Endothelial	Section_1	5.639	1.86
+cell_01964	1450.11	424.94	Macrophage	Section_1	3.136	6.809
+cell_01965	1775.6	1340.46	CD8 T cell	Section_1	3.968	5.488
+cell_01966	1421.38	584.5	Endothelial	Section_1	9.133	3.31
+cell_01967	1902.32	638.71	CD8 T cell	Section_1	2.965	5.886
+cell_01968	1160.52	1259.32	CD4 T cell	Section_1	7.147	2.251
+cell_01969	909.61	1163.49	Tumor	Section_1	7.349	0.314
+cell_01970	1317.25	1643.45	Macrophage	Section_1	2.166	6.93
+cell_01971	1804.55	1140.83	CD8 T cell	Section_1	3.034	4.617
+cell_01972	1431.84	559.6	Macrophage	Section_1	4.591	2.416
+cell_01973	1250.96	1468.6	Fibroblast	Section_1	7.224	0.951
+cell_01974	1814.73	1815.86	CD8 T cell	Section_1	1.129	1.309
+cell_01975	1570.43	1564.0	Macrophage	Section_1	2.822	5.357
+cell_01976	754.01	1372.06	Macrophage	Section_1	2.992	5.127
+cell_01977	1872.06	1059.59	CD8 T cell	Section_1	5.053	5.707
+cell_01978	1415.27	352.17	Macrophage	Section_1	1.871	11.579
+cell_01979	1531.57	1342.24	CD8 T cell	Section_1	9.934	1.761
+cell_01980	1913.1	697.84	Macrophage	Section_1	1.258	5.798
+cell_01981	1132.77	1552.75	Stroma	Section_1	3.536	2.386
+cell_01982	1754.7	857.3	CD8 T cell	Section_1	6.89	5.084
+cell_01983	1532.22	1817.22	Tumor	Section_1	2.79	4.172
+cell_01984	893.24	639.75	CD8 T cell	Section_1	6.723	3.216
+cell_01985	2271.24	817.17	Macrophage	Section_1	0.575	0.316
+cell_01986	1475.43	1695.0	CD8 T cell	Section_1	2.052	6.706
+cell_01987	1375.95	869.02	Stroma	Section_1	8.478	0.86
+cell_01988	2261.32	1139.18	Fibroblast	Section_1	2.193	1.479
+cell_01989	1901.48	1756.98	Fibroblast	Section_1	1.63	1.041
+cell_01990	1842.85	1412.78	Macrophage	Section_1	2.223	7.451
+cell_01991	1140.2	502.59	Stroma	Section_1	4.069	3.901
+cell_01992	1153.52	1747.98	CD4 T cell	Section_1	1.145	6.619
+cell_01993	2155.82	1514.89	CD4 T cell	Section_1	3.938	2.395
+cell_01994	966.98	1283.37	Stroma	Section_1	9.968	1.699
+cell_01995	1514.13	603.79	Macrophage	Section_1	5.478	3.003
+cell_01996	1416.34	1572.93	CD4 T cell	Section_1	4.459	4.165
+cell_01997	1101.32	1873.67	Stroma	Section_1	1.746	3.086
+cell_01998	1701.75	905.93	Macrophage	Section_1	5.203	1.322
+cell_01999	712.31	1100.13	Tumor	Section_1	4.532	5.798
+cell_02000	1942.38	528.67	Macrophage	Section_1	0.779	1.873
+cell_02001	766.05	1457.02	CD4 T cell	Section_1	4.674	6.046
+cell_02002	1619.99	1163.48	Stroma	Section_1	5.356	5.376
+cell_02003	1225.43	818.1	Tumor	Section_1	11.014	0.238
+cell_02004	1959.7	1609.92	Fibroblast	Section_1	2.106	1.589
+cell_02005	2021.25	740.99	Endothelial	Section_1	3.85	4.945
+cell_02006	639.08	1258.16	CD8 T cell	Section_1	3.814	9.217
+cell_02007	1847.2	1628.6	Fibroblast	Section_1	0.583	3.738
+cell_02008	1983.26	1889.37	Stroma	Section_1	4.71	2.275
+cell_02009	1360.84	863.83	CD8 T cell	Section_1	7.196	0.649
+cell_02010	2024.28	1360.83	Stroma	Section_1	1.258	4.51
+cell_02011	1453.1	1400.37	Tumor	Section_1	5.146	1.111
+cell_02012	1995.13	1796.88	Stroma	Section_1	0.384	0.601
+cell_02013	1174.34	1326.39	Tumor	Section_1	7.496	0.538
+cell_02014	1108.21	1433.86	Stroma	Section_1	7.757	1.835
+cell_02015	715.05	1091.42	Tumor	Section_1	7.031	4.182
+cell_02016	1378.16	1846.74	CD4 T cell	Section_1	1.63	4.033
+cell_02017	1604.24	1221.27	Tumor	Section_1	5.8	1.459
+cell_02018	1467.97	1171.98	Tumor	Section_1	9.054	0.234
+cell_02019	1048.91	1658.42	Fibroblast	Section_1	2.428	6.313
+cell_02020	1211.25	795.48	Stroma	Section_1	9.96	0.249
+cell_02021	1796.5	1441.13	Fibroblast	Section_1	2.148	6.218
+cell_02022	2202.35	1260.95	Macrophage	Section_1	0.865	1.312
+cell_02023	1504.61	1630.13	Tumor	Section_1	3.078	6.37
+cell_02024	833.06	1386.75	Macrophage	Section_1	2.578	3.208
+cell_02025	1064.04	1542.26	Macrophage	Section_1	4.435	3.041
+cell_02026	1643.86	838.66	Tumor	Section_1	5.774	1.931
+cell_02027	1259.32	1432.25	Endothelial	Section_1	5.07	1.703
+cell_02028	1069.97	1116.73	Tumor	Section_1	8.98	1.303
+cell_02029	1370.62	1113.83	Stroma	Section_1	8.755	0.084
+cell_02030	1994.89	1268.31	CD8 T cell	Section_1	0.95	4.222
+cell_02031	649.12	1118.85	CD8 T cell	Section_1	1.626	5.166
+cell_02032	1039.47	1879.2	Stroma	Section_1	0.526	4.542
+cell_02033	1016.86	1460.57	Fibroblast	Section_1	8.289	1.743
+cell_02034	2051.8	1602.43	Stroma	Section_1	1.461	0.378
+cell_02035	1638.81	536.45	Stroma	Section_1	3.194	6.307
+cell_02036	2266.25	909.93	Tumor	Section_1	1.619	0.114
+cell_02037	1933.21	1261.01	CD4 T cell	Section_1	5.45	5.889
+cell_02038	1106.1	908.59	Fibroblast	Section_1	7.36	0.552
+cell_02039	1542.95	707.45	Fibroblast	Section_1	5.189	1.254
+cell_02040	1460.52	1377.61	CD8 T cell	Section_1	5.244	0.78
+cell_02041	1618.03	709.12	Fibroblast	Section_1	6.371	2.987
+cell_02042	931.9	576.81	CD4 T cell	Section_1	4.126	5.604
+cell_02043	2275.75	829.96	Stroma	Section_1	1.928	0.933
+cell_02044	1795.88	1164.52	CD8 T cell	Section_1	2.429	5.29
+cell_02045	2087.69	1360.16	Tumor	Section_1	7.107	1.514
+cell_02046	977.15	1388.47	Tumor	Section_1	5.067	2.724
+cell_02047	897.65	1016.81	Tumor	Section_1	5.266	1.015
+cell_02048	1905.02	1734.12	Stroma	Section_1	0.405	2.087
+cell_02049	1433.9	1309.73	Fibroblast	Section_1	5.416	0.521
+cell_02050	2323.48	1135.96	Fibroblast	Section_1	1.914	0.89
+cell_02051	2383.46	1290.41	Stroma	Section_1	3.863	3.85
+cell_02052	804.65	1413.88	CD4 T cell	Section_1	3.944	4.799
+cell_02053	1902.16	589.07	CD8 T cell	Section_1	0.431	5.311
+cell_02054	1207.14	1784.72	Stroma	Section_1	1.911	7.327
+cell_02055	983.84	1265.87	Tumor	Section_1	9.277	1.467
+cell_02056	1844.08	1152.23	Stroma	Section_1	2.669	6.382
+cell_02057	820.74	1308.12	Stroma	Section_1	4.903	2.23
+cell_02058	1629.8	1339.84	Tumor	Section_1	4.328	1.57
+cell_02059	2274.44	1460.93	Tumor	Section_1	2.734	0.253
+cell_02060	2049.9	1003.65	Stroma	Section_1	0.941	4.581
+cell_02061	1442.52	1776.76	Fibroblast	Section_1	0.019	5.766
+cell_02062	985.38	1186.86	Tumor	Section_1	5.806	1.122
+cell_02063	2246.06	1678.09	Stroma	Section_1	1.276	0.197
+cell_02064	1166.07	1373.71	Stroma	Section_1	6.466	0.45
+cell_02065	1816.86	1051.15	Stroma	Section_1	3.031	5.444
+cell_02066	1133.87	1194.45	Tumor	Section_1	7.914	0.975
+cell_02067	2218.37	1068.27	Tumor	Section_1	3.885	1.165
+cell_02068	1450.26	2094.96	Endothelial	Section_1	0.74	0.673
+cell_02069	1063.45	1187.53	Tumor	Section_1	7.941	0.353
+cell_02070	2043.99	538.47	Endothelial	Section_1	0.461	2.595
+cell_02071	1049.83	1351.75	Stroma	Section_1	7.491	2.61
+cell_02072	1366.55	1912.03	Macrophage	Section_1	2.293	2.379
+cell_02073	1611.44	1057.22	Tumor	Section_1	11.368	0.843
+cell_02074	1012.06	1604.23	Stroma	Section_1	1.959	7.413
+cell_02075	785.38	1060.31	Stroma	Section_1	8.652	1.412
+cell_02076	2151.95	1103.14	Tumor	Section_1	0.809	1.395
+cell_02077	1670.55	1604.42	Macrophage	Section_1	1.464	7.65
+cell_02078	1240.01	1976.84	Endothelial	Section_1	0.546	1.083
+cell_02079	2369.62	1371.95	Tumor	Section_1	6.955	0.834
+cell_02080	1025.63	1583.3	Tumor	Section_1	4.118	4.074
+cell_02081	1720.99	1882.83	Endothelial	Section_1	2.578	2.85
+cell_02082	1159.47	475.93	Macrophage	Section_1	2.408	5.71
+cell_02083	1684.98	1601.73	Endothelial	Section_1	0.13	7.95
+cell_02084	1119.23	454.87	Fibroblast	Section_1	2.529	5.243
+cell_02085	1459.71	1674.7	Fibroblast	Section_1	1.684	8.877
+cell_02086	1013.27	1825.72	CD8 T cell	Section_1	0.272	3.861
+cell_02087	1324.63	1445.04	Tumor	Section_1	5.27	2.521
+cell_02088	1399.77	727.19	Stroma	Section_1	6.348	1.249
+cell_02089	857.06	1337.33	Macrophage	Section_1	5.428	3.079
+cell_02090	1080.27	1699.01	CD4 T cell	Section_1	0.534	7.204
+cell_02091	1998.84	536.67	Stroma	Section_1	0.581	1.317
+cell_02092	691.98	807.61	Tumor	Section_1	2.086	5.031
+cell_02093	1566.4	1487.11	Tumor	Section_1	6.067	5.164
+cell_02094	1879.47	924.63	Stroma	Section_1	4.7	7.48
+cell_02095	1204.09	1649.55	Tumor	Section_1	3.724	7.079
+cell_02096	2104.25	1351.02	Fibroblast	Section_1	1.418	0.997
+cell_02097	867.86	1221.46	Tumor	Section_1	7.793	0.97
+cell_02098	2092.78	1784.92	B cell	Section_1	2.236	0.131
+cell_02099	1557.2	1987.96	Fibroblast	Section_1	4.018	0.586
+cell_02100	1497.76	1076.45	Tumor	Section_1	8.336	2.044
+cell_02101	1913.49	1644.51	CD4 T cell	Section_1	0.322	2.72
+cell_02102	1747.79	537.25	CD4 T cell	Section_1	0.127	7.184
+cell_02103	2063.31	964.21	Stroma	Section_1	1.302	3.428
+cell_02104	1244.89	998.15	Tumor	Section_1	11.755	0.185
+cell_02105	1360.13	650.1	Endothelial	Section_1	4.811	1.054
+cell_02106	1369.04	637.6	CD4 T cell	Section_1	8.224	0.779
+cell_02107	1889.54	1182.39	Endothelial	Section_1	3.811	7.659
+cell_02108	1074.24	1856.77	Fibroblast	Section_1	4.459	5.704
+cell_02109	1765.62	1635.64	Macrophage	Section_1	1.332	5.211
+cell_02110	814.29	1117.02	CD4 T cell	Section_1	4.097	0.814
+cell_02111	867.72	1065.95	Stroma	Section_1	4.741	2.623
+cell_02112	1868.92	1958.03	Endothelial	Section_1	2.719	0.928
+cell_02113	1261.73	994.92	Stroma	Section_1	8.632	0.807
+cell_02114	1803.03	1226.96	CD4 T cell	Section_1	1.919	5.456
+cell_02115	1943.15	983.49	Fibroblast	Section_1	1.133	6.135
+cell_02116	1445.96	1788.53	Macrophage	Section_1	2.173	5.119
+cell_02117	1976.64	1320.98	CD4 T cell	Section_1	0.922	4.978
+cell_02118	2111.29	1694.48	Stroma	Section_1	3.958	1.063
+cell_02119	1527.29	1644.88	CD8 T cell	Section_1	5.064	7.02
+cell_02120	1460.79	1459.09	CD4 T cell	Section_1	3.142	2.285
+cell_02121	2066.69	1318.51	Endothelial	Section_1	2.576	2.172
+cell_02122	1354.84	1978.05	Macrophage	Section_1	1.149	0.577
+cell_02123	1791.24	1977.26	Macrophage	Section_1	3.535	0.661
+cell_02124	942.76	1732.44	Macrophage	Section_1	2.641	5.742
+cell_02125	995.29	1644.02	Stroma	Section_1	2.785	5.812
+cell_02126	1093.65	1849.21	Stroma	Section_1	1.655	3.409
+cell_02127	1150.62	1855.64	Fibroblast	Section_1	0.386	4.04
+cell_02128	1868.27	1432.84	Macrophage	Section_1	7.697	5.996
+cell_02129	2159.56	1305.33	Fibroblast	Section_1	0.574	1.331
+cell_02130	1734.14	1954.57	Stroma	Section_1	5.669	0.525
+cell_02131	1521.17	693.62	CD4 T cell	Section_1	6.265	2.192
+cell_02132	2226.6	1158.0	CD4 T cell	Section_1	1.2	0.448
+cell_02133	2062.58	928.88	B cell	Section_1	1.048	3.593
+cell_02134	861.82	1183.08	Macrophage	Section_1	4.092	1.222
+cell_02135	1235.3	1146.35	Stroma	Section_1	9.637	1.765
+cell_02136	1210.03	1874.95	Fibroblast	Section_1	0.35	3.224
+cell_02137	1625.48	372.07	CD4 T cell	Section_1	4.117	7.259
+cell_02138	1531.34	862.99	Tumor	Section_1	6.914	2.995
+cell_02139	1804.03	748.21	Stroma	Section_1	2.681	5.762
+cell_02140	1657.27	1078.81	CD8 T cell	Section_1	5.729	1.145
+cell_02141	1358.07	1262.11	Tumor	Section_1	8.267	0.175
+cell_02142	1594.76	309.69	CD4 T cell	Section_1	1.389	4.185
+cell_02143	1719.38	607.05	CD8 T cell	Section_1	2.251	6.211
+cell_02144	1307.29	1700.83	Macrophage	Section_1	6.682	6.748
+cell_02145	1925.99	997.06	B cell	Section_1	4.118	6.628
+cell_02146	2238.96	1697.74	Endothelial	Section_1	2.929	5.728
+cell_02147	1951.73	1183.73	B cell	Section_1	1.2	6.439
+cell_02148	1596.53	439.4	CD4 T cell	Section_1	0.217	6.533
+cell_02149	1899.42	1465.15	Fibroblast	Section_1	2.687	6.233
+cell_02150	1367.22	1001.34	Tumor	Section_1	9.343	2.089
+cell_02151	2226.86	1358.54	Fibroblast	Section_1	1.521	1.1
+cell_02152	1504.6	1163.95	Tumor	Section_1	7.139	2.149
+cell_02153	1725.18	495.27	CD4 T cell	Section_1	0.609	10.47
+cell_02154	1139.72	929.81	Stroma	Section_1	7.704	0.595
+cell_02155	1983.62	591.35	CD8 T cell	Section_1	3.841	1.806
+cell_02156	2144.93	1655.59	Stroma	Section_1	0.147	1.186
+cell_02157	1375.81	1955.71	CD4 T cell	Section_1	3.463	2.7
+cell_02158	1379.16	1272.31	Tumor	Section_1	10.583	2.834
+cell_02159	2228.29	1399.03	Fibroblast	Section_1	2.645	1.412
+cell_02160	651.43	1486.27	Macrophage	Section_1	2.55	6.044
+cell_02161	1457.69	1641.29	Stroma	Section_1	1.737	5.728
+cell_02162	1131.74	1494.14	Macrophage	Section_1	4.002	3.287
+cell_02163	776.48	1568.07	Macrophage	Section_1	1.288	6.978
+cell_02164	1761.84	952.29	Tumor	Section_1	2.786	2.349
+cell_02165	1406.77	1925.52	CD4 T cell	Section_1	0.85	4.952
+cell_02166	2114.12	715.82	CD4 T cell	Section_1	1.969	0.799
+cell_02167	1344.94	1277.82	Tumor	Section_1	7.048	2.01
+cell_02168	1185.47	1791.28	CD4 T cell	Section_1	2.105	6.131
+cell_02169	817.11	1189.22	Macrophage	Section_1	6.984	0.941
+cell_02170	1068.98	1444.98	B cell	Section_1	5.507	1.336
+cell_02171	1460.99	2041.62	Stroma	Section_1	2.571	0.679
+cell_02172	1136.97	1193.89	Tumor	Section_1	6.99	0.128
+cell_02173	1814.25	1642.99	Fibroblast	Section_1	3.783	4.123
+cell_02174	1004.56	1864.8	CD4 T cell	Section_1	0.332	3.728
+cell_02175	1140.13	1042.15	Tumor	Section_1	8.732	0.797
+cell_02176	802.11	1622.21	Endothelial	Section_1	0.641	6.098
+cell_02177	1613.35	973.73	Tumor	Section_1	4.446	1.496
+cell_02178	1473.42	1828.94	Endothelial	Section_1	2.009	3.635
+cell_02179	1742.58	1153.37	CD8 T cell	Section_1	5.267	2.361
+cell_02180	1660.38	476.55	Fibroblast	Section_1	4.976	6.679
+cell_02181	2283.71	1038.18	Fibroblast	Section_1	2.237	0.164
+cell_02182	1936.34	494.31	Stroma	Section_1	0.845	1.273
+cell_02183	2059.15	1894.39	Fibroblast	Section_1	1.196	0.249
+cell_02184	772.38	1077.9	Tumor	Section_1	3.114	2.496
+cell_02185	1880.32	1891.59	Endothelial	Section_1	1.308	0.575
+cell_02186	1766.05	617.87	CD8 T cell	Section_1	2.118	6.235
+cell_02187	757.61	766.21	Tumor	Section_1	4.346	7.107
+cell_02188	1439.05	1919.53	Tumor	Section_1	3.195	1.683
+cell_02189	2264.55	837.87	Tumor	Section_1	2.588	0.873
+cell_02190	1827.24	1489.18	Stroma	Section_1	0.762	7.876
+cell_02191	916.07	952.25	Tumor	Section_1	5.092	1.034
+cell_02192	1360.87	443.83	Fibroblast	Section_1	4.108	6.462
+cell_02193	1877.83	1346.44	CD8 T cell	Section_1	0.282	6.282
+cell_02194	1162.03	961.34	Macrophage	Section_1	14.045	0.872
+cell_02195	1858.11	385.15	Fibroblast	Section_1	0.921	3.981
+cell_02196	2040.72	1444.25	Endothelial	Section_1	4.156	2.404
+cell_02197	1117.38	1170.51	Tumor	Section_1	7.776	1.036
+cell_02198	1472.15	1717.41	Fibroblast	Section_1	2.786	6.516
+cell_02199	1204.86	715.47	CD8 T cell	Section_1	5.247	0.234
+cell_02200	2021.9	1682.0	Endothelial	Section_1	1.857	2.257
+cell_02201	2297.91	866.86	Fibroblast	Section_1	0.288	0.786
+cell_02202	2205.42	650.89	B cell	Section_1	2.328	0.434
+cell_02203	1784.46	1868.55	CD8 T cell	Section_1	0.576	0.342
+cell_02204	1165.5	1874.57	Fibroblast	Section_1	0.673	3.644
+cell_02205	1064.89	932.86	Tumor	Section_1	7.435	0.211
+cell_02206	1333.91	383.47	Endothelial	Section_1	1.843	8.133
+cell_02207	1106.95	1348.08	Tumor	Section_1	7.405	0.469
+cell_02208	1663.02	1444.12	Tumor	Section_1	4.122	4.686
+cell_02209	2204.46	1740.44	CD8 T cell	Section_1	2.013	1.165
+cell_02210	2336.63	1198.77	Tumor	Section_1	3.455	1.054
+cell_02211	1023.45	1337.31	Fibroblast	Section_1	6.707	1.918
+cell_02212	2014.75	669.03	Tumor	Section_1	2.543	2.322
+cell_02213	888.72	1267.97	CD8 T cell	Section_1	4.242	1.297
+cell_02214	1951.92	960.2	Stroma	Section_1	3.646	7.221
+cell_02215	1910.53	1452.49	Fibroblast	Section_1	3.333	7.123
+cell_02216	1750.34	1417.98	Macrophage	Section_1	3.104	6.928
+cell_02217	2102.9	914.59	Tumor	Section_1	3.247	3.591
+cell_02218	2069.02	1005.15	Tumor	Section_1	1.745	3.411
+cell_02219	1245.24	1791.58	CD8 T cell	Section_1	5.149	6.37
+cell_02220	1243.67	1529.75	Fibroblast	Section_1	4.774	3.802
+cell_02221	666.69	1456.65	Fibroblast	Section_1	1.698	6.575
+cell_02222	878.29	1561.58	Macrophage	Section_1	3.294	6.689
+cell_02223	1814.02	1993.77	Macrophage	Section_1	5.891	0.105
+cell_02224	1738.89	1022.68	Tumor	Section_1	3.816	3.003
+cell_02225	1485.24	1910.13	CD8 T cell	Section_1	2.306	2.096
+cell_02226	1269.94	403.05	CD8 T cell	Section_1	1.863	7.187
+cell_02227	1972.32	1412.03	Stroma	Section_1	1.696	3.806
+cell_02228	1885.85	1295.85	CD4 T cell	Section_1	1.077	6.062
+cell_02229	1236.53	818.88	Endothelial	Section_1	8.517	1.579
+cell_02230	1250.52	1598.54	Tumor	Section_1	3.766	3.47
+cell_02231	1163.14	701.24	Tumor	Section_1	7.577	0.232
+cell_02232	1926.75	1486.2	Stroma	Section_1	3.846	4.247
+cell_02233	1945.68	1054.73	Stroma	Section_1	4.316	9.072
+cell_02234	1493.24	475.26	Stroma	Section_1	2.202	5.64
+cell_02235	1647.72	1054.62	Macrophage	Section_1	6.314	0.682
+cell_02236	1843.58	1597.05	Stroma	Section_1	4.453	4.864
+cell_02237	1181.06	1876.0	Endothelial	Section_1	0.836	3.229
+cell_02238	1244.52	1477.79	Fibroblast	Section_1	5.474	2.091
+cell_02239	1088.46	1102.09	Fibroblast	Section_1	7.707	0.635
+cell_02240	1382.98	1585.81	CD8 T cell	Section_1	7.74	3.731
+cell_02241	1525.43	1210.18	Tumor	Section_1	9.321	0.378
+cell_02242	1079.13	1654.56	Tumor	Section_1	3.666	6.523
+cell_02243	1494.92	1377.57	Tumor	Section_1	6.453	0.692
+cell_02244	1145.51	1508.9	Fibroblast	Section_1	3.918	1.612
+cell_02245	1793.65	2048.27	Fibroblast	Section_1	4.783	2.122
+cell_02246	1435.59	2060.09	Stroma	Section_1	1.424	4.262
+cell_02247	1208.51	901.27	Tumor	Section_1	8.072	1.241
+cell_02248	1117.63	1523.87	Macrophage	Section_1	6.668	3.729
+cell_02249	1154.3	1706.06	Macrophage	Section_1	1.789	6.501
+cell_02250	691.67	1025.14	Fibroblast	Section_1	2.911	4.063
+cell_02251	1610.4	401.28	Stroma	Section_1	3.331	6.177
+cell_02252	1268.46	1420.55	Tumor	Section_1	4.846	0.543
+cell_02253	1229.31	1034.08	Tumor	Section_1	11.432	0.526
+cell_02254	2067.94	1077.55	Stroma	Section_1	1.993	4.398
+cell_02255	668.48	1084.43	Macrophage	Section_1	4.646	5.016
+cell_02256	2213.11	746.17	Fibroblast	Section_1	2.55	0.813
+cell_02257	1579.91	916.13	Tumor	Section_1	12.8	0.793
+cell_02258	2136.15	1445.96	CD4 T cell	Section_1	2.138	0.484
+cell_02259	1179.56	1353.01	Tumor	Section_1	6.31	1.002
+cell_02260	1262.15	493.46	Tumor	Section_1	3.67	3.733
+cell_02261	2358.57	1128.15	Tumor	Section_1	2.529	0.101
+cell_02262	913.71	1356.93	Tumor	Section_1	8.765	1.067
+cell_02263	1716.57	1342.81	Tumor	Section_1	4.817	3.859
+cell_02264	866.36	939.82	Tumor	Section_1	4.791	1.71
+cell_02265	1902.74	1610.73	Fibroblast	Section_1	16.305	3.468
+cell_02266	1507.74	389.59	B cell	Section_1	3.735	5.956
+cell_02267	975.56	1174.68	Fibroblast	Section_1	5.998	1.325
+cell_02268	1360.12	369.88	Macrophage	Section_1	0.814	9.258
+cell_02269	1820.94	855.48	CD4 T cell	Section_1	1.799	6.61
+cell_02270	1253.77	941.24	Tumor	Section_1	9.354	0.935
+cell_02271	1121.01	876.56	Tumor	Section_1	8.032	1.01
+cell_02272	1504.83	1031.9	Tumor	Section_1	6.752	0.916
+cell_02273	1761.93	801.0	Macrophage	Section_1	2.155	4.231
+cell_02274	1997.38	663.99	Endothelial	Section_1	0.687	4.112
+cell_02275	1830.63	1277.03	Macrophage	Section_1	3.926	5.584
+cell_02276	1218.18	1096.15	Tumor	Section_1	9.723	0.982
+cell_02277	1568.88	1520.14	Fibroblast	Section_1	2.46	5.754
+cell_02278	1660.18	1007.23	Tumor	Section_1	5.685	1.328
+cell_02279	998.43	524.07	Fibroblast	Section_1	3.79	4.308
+cell_02280	733.09	1620.22	Endothelial	Section_1	2.476	7.031
+cell_02281	1573.64	1379.7	Endothelial	Section_1	4.99	1.719
+cell_02282	1083.64	1865.06	Endothelial	Section_1	1.706	2.65
+cell_02283	1278.73	459.64	Stroma	Section_1	5.627	7.931
+cell_02284	1754.17	2061.91	Endothelial	Section_1	0.714	0.639
+cell_02285	1941.67	1494.45	Endothelial	Section_1	1.532	3.103
+cell_02286	1866.71	888.9	CD4 T cell	Section_1	1.06	6.623
+cell_02287	1554.02	596.61	Stroma	Section_1	3.354	3.213
+cell_02288	1758.42	1991.86	Stroma	Section_1	2.096	0.503
+cell_02289	1298.17	1941.23	Stroma	Section_1	3.308	3.442
+cell_02290	2108.58	1092.09	CD8 T cell	Section_1	0.265	2.387
+cell_02291	1384.4	770.19	Stroma	Section_1	7.058	1.266
+cell_02292	910.33	708.91	Endothelial	Section_1	8.997	3.788
+cell_02293	1205.29	1978.02	Fibroblast	Section_1	2.614	1.183
+cell_02294	1327.09	1742.28	CD4 T cell	Section_1	0.636	6.265
+cell_02295	2213.33	1380.88	Stroma	Section_1	1.374	1.517
+cell_02296	1423.26	635.84	Stroma	Section_1	5.904	0.938
+cell_02297	2099.79	1366.82	Stroma	Section_1	1.079	1.114
+cell_02298	2151.75	1219.9	Stroma	Section_1	2.233	3.016
+cell_02299	1398.16	413.89	Tumor	Section_1	2.738	6.715
+cell_02300	2344.3	919.05	Stroma	Section_1	1.733	1.497
+cell_02301	1524.51	600.55	Stroma	Section_1	2.759	2.738
+cell_02302	981.77	1293.33	Stroma	Section_1	5.323	1.314
+cell_02303	952.01	1248.17	Tumor	Section_1	11.007	1.339
+cell_02304	1196.84	1328.63	Tumor	Section_1	6.653	3.505
+cell_02305	1278.33	1637.47	Tumor	Section_1	2.873	5.721
+cell_02306	1237.84	1164.01	Tumor	Section_1	8.955	1.751
+cell_02307	965.51	1446.81	Macrophage	Section_1	5.973	2.405
+cell_02308	1199.66	987.03	Tumor	Section_1	9.458	1.098
+cell_02309	1924.83	883.61	Stroma	Section_1	1.828	6.643
+cell_02310	2301.35	1174.86	Fibroblast	Section_1	2.05	0.686
+cell_02311	1892.8	1411.92	CD4 T cell	Section_1	3.511	5.79
+cell_02312	972.84	1666.62	CD4 T cell	Section_1	2.078	6.658
+cell_02313	1860.34	1974.67	CD8 T cell	Section_1	1.923	0.417
+cell_02314	1094.42	1742.88	Endothelial	Section_1	1.125	7.408
+cell_02315	1407.57	1585.27	Fibroblast	Section_1	4.098	3.639
+cell_02316	1741.28	1670.15	Macrophage	Section_1	2.771	6.872
+cell_02317	1561.08	511.18	CD4 T cell	Section_1	3.911	6.776
+cell_02318	859.58	1214.94	Tumor	Section_1	9.488	2.468
+cell_02319	1803.25	1031.41	CD8 T cell	Section_1	2.801	3.524
+cell_02320	2089.02	1322.34	Macrophage	Section_1	1.828	1.72
+cell_02321	2105.37	1470.95	Tumor	Section_1	1.502	1.251
+cell_02322	1117.99	1465.72	Fibroblast	Section_1	8.625	1.44
+cell_02323	2116.62	1540.39	Fibroblast	Section_1	2.991	1.633
+cell_02324	1480.95	1437.63	Tumor	Section_1	3.58	1.635
+cell_02325	2020.15	1154.22	Fibroblast	Section_1	1.044	7.447
+cell_02326	1705.83	1980.45	Stroma	Section_1	1.36	0.332
+cell_02327	1646.76	1634.15	CD8 T cell	Section_1	0.445	6.062
+cell_02328	873.48	887.48	Endothelial	Section_1	5.664	0.812
+cell_02329	923.74	1207.25	Tumor	Section_1	5.511	0.786
+cell_02330	1057.01	954.87	Tumor	Section_1	12.345	2.133
+cell_02331	884.27	1802.45	B cell	Section_1	2.258	3.498
+cell_02332	1744.58	732.85	Tumor	Section_1	2.762	5.045
+cell_02333	1782.09	1534.86	CD8 T cell	Section_1	0.759	6.176
+cell_02334	727.19	1573.23	Macrophage	Section_1	1.708	5.98
+cell_02335	1212.77	477.7	CD8 T cell	Section_1	6.558	4.542
+cell_02336	2002.68	652.67	Stroma	Section_1	1.516	4.855
+cell_02337	1363.27	1346.39	Tumor	Section_1	6.64	1.914
+cell_02338	1203.09	1065.39	Tumor	Section_1	12.218	0.475
+cell_02339	2152.27	1502.64	Stroma	Section_1	2.21	0.911
+cell_02340	1697.7	1561.33	Macrophage	Section_1	3.467	6.609
+cell_02341	1887.8	1379.93	B cell	Section_1	2.377	5.714
+cell_02342	1389.95	413.24	B cell	Section_1	2.898	6.321
+cell_02343	1386.01	1667.55	Tumor	Section_1	1.228	6.005
+cell_02344	1460.46	962.47	Endothelial	Section_1	6.732	0.395
+cell_02345	1657.05	1269.61	CD4 T cell	Section_1	5.09	1.456
+cell_02346	1889.25	744.52	Macrophage	Section_1	0.826	6.437
+cell_02347	1861.93	592.64	B cell	Section_1	1.71	5.824
+cell_02348	2211.34	1644.74	Endothelial	Section_1	0.605	0.432
+cell_02349	1796.25	1244.55	CD8 T cell	Section_1	5.419	6.474
+cell_02350	1874.43	1338.24	CD8 T cell	Section_1	1.076	6.269
+cell_02351	1897.04	678.94	B cell	Section_1	0.757	7.152
+cell_02352	1552.11	1740.57	Fibroblast	Section_1	0.478	5.945
+cell_02353	903.35	1013.27	Stroma	Section_1	7.406	0.281
+cell_02354	726.07	1586.75	Endothelial	Section_1	1.708	5.573
+cell_02355	1687.45	562.64	CD4 T cell	Section_1	4.357	8.853
+cell_02356	921.54	1240.42	Endothelial	Section_1	5.25	3.25
+cell_02357	604.77	1196.28	Fibroblast	Section_1	1.14	7.202
+cell_02358	1729.3	1184.26	Tumor	Section_1	4.248	2.767
+cell_02359	2010.16	1903.38	Stroma	Section_1	4.305	1.216
+cell_02360	1809.56	642.76	CD8 T cell	Section_1	0.45	6.556
+cell_02361	2105.31	1404.06	Macrophage	Section_1	2.173	1.186
+cell_02362	644.34	1320.96	CD8 T cell	Section_1	2.808	6.629
+cell_02363	1984.39	780.12	Endothelial	Section_1	4.794	7.314
+cell_02364	1197.35	686.67	Fibroblast	Section_1	5.138	1.299
+cell_02365	1314.0	768.58	Tumor	Section_1	5.612	1.812
+cell_02366	1438.95	1927.95	Endothelial	Section_1	1.23	2.072
+cell_02367	907.7	1532.56	Stroma	Section_1	4.566	7.399
+cell_02368	1221.36	1509.8	Macrophage	Section_1	4.872	1.342
+cell_02369	748.83	1098.18	Tumor	Section_1	5.05	1.94
+cell_02370	797.95	1369.82	Macrophage	Section_1	2.566	3.277
+cell_02371	1236.44	1702.37	CD8 T cell	Section_1	2.054	6.376
+cell_02372	1479.61	1256.11	CD8 T cell	Section_1	6.88	0.578
+cell_02373	1496.78	1801.43	CD4 T cell	Section_1	0.409	3.994
+cell_02374	1453.66	1252.53	Tumor	Section_1	7.145	0.671
+cell_02375	1644.95	1399.35	Tumor	Section_1	3.557	3.642
+cell_02376	1909.94	774.86	Stroma	Section_1	9.501	6.817
+cell_02377	1293.64	1045.83	Fibroblast	Section_1	10.175	0.306
+cell_02378	1815.19	1552.06	Fibroblast	Section_1	4.973	6.13
+cell_02379	1248.27	516.2	Stroma	Section_1	4.646	5.357
+cell_02380	1787.92	791.24	Stroma	Section_1	2.903	5.54
+cell_02381	1570.33	2096.19	Stroma	Section_1	4.479	0.387
+cell_02382	2003.75	1898.88	Endothelial	Section_1	0.593	0.159
+cell_02383	2187.54	1237.26	Stroma	Section_1	1.207	1.602
+cell_02384	2346.29	1458.9	Tumor	Section_1	3.307	1.098
+cell_02385	1564.48	363.98	Macrophage	Section_1	0.149	6.806
+cell_02386	2006.59	1159.13	Stroma	Section_1	1.694	5.785
+cell_02387	2248.44	1416.83	Stroma	Section_1	1.683	1.499
+cell_02388	1495.96	867.11	Tumor	Section_1	7.179	2.172
+cell_02389	2170.01	1524.91	Endothelial	Section_1	1.457	2.383
+cell_02390	972.06	854.95	Stroma	Section_1	7.847	2.645
+cell_02391	1504.46	1083.34	Tumor	Section_1	6.599	0.826
+cell_02392	1201.4	1564.64	Macrophage	Section_1	5.887	7.144
+cell_02393	2377.62	1260.39	Macrophage	Section_1	0.667	2.326
+cell_02394	1082.01	915.21	CD8 T cell	Section_1	8.478	1.925
+cell_02395	1882.8	1178.92	Fibroblast	Section_1	4.815	6.293
+cell_02396	1481.35	1589.3	Tumor	Section_1	2.284	5.592
+cell_02397	1731.2	1778.54	Fibroblast	Section_1	1.021	1.661
+cell_02398	2088.11	1780.23	Endothelial	Section_1	3.62	2.326
+cell_02399	763.18	933.39	CD8 T cell	Section_1	4.574	3.32

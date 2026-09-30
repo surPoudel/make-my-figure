@@ -1,0 +1,29 @@
+{
+  "plot_type": "neighborhood_enrichment_matrix",
+  "input_table": "data.csv",
+  "mapping": {
+    "neighborhood": "neighborhood",
+    "cell_type": "cell_type",
+    "enrichment": "enrichment_score",
+    "frequency": "cell_type_frequency_in_neighborhood"
+  },
+  "journal_style": "publication",
+  "layout": {
+    "title": "Cell-type enrichment across neighbourhoods"
+  },
+  "spatial": {
+    "cmap": "RdBu_r",
+    "center": 0.0,
+    "colorbar_label": "Enrichment score"
+  },
+  "output": {
+    "formats": [
+      "png",
+      "pdf",
+      "svg"
+    ],
+    "dpi": 300,
+    "width_mm": 180,
+    "height_mm": 150
+  }
+}

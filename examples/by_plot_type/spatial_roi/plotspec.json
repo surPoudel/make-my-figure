@@ -1,0 +1,32 @@
+{
+  "plot_type": "spatial_roi_map",
+  "input_table": "data.csv",
+  "mapping": {
+    "roi": "roi_id",
+    "x": "x",
+    "y": "y",
+    "vertex_order": "vertex_order",
+    "roi_label": "roi_label",
+    "roi_category": "roi_category"
+  },
+  "journal_style": "publication",
+  "layout": {
+    "title": "Regions of interest"
+  },
+  "spatial": {
+    "coordinate_units": "micrometre",
+    "scale_bar": true,
+    "roi_fill_alpha": 0.12,
+    "roi_linewidth": 1.6
+  },
+  "output": {
+    "formats": [
+      "png",
+      "pdf",
+      "svg"
+    ],
+    "dpi": 300,
+    "width_mm": 180,
+    "height_mm": 150
+  }
+}

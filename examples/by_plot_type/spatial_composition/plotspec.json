@@ -1,0 +1,31 @@
+{
+  "plot_type": "spatial_composition_map",
+  "input_table": "data.csv",
+  "mapping": {
+    "spot": "spot_id",
+    "x": "x",
+    "y": "y",
+    "category": "cell_type",
+    "value": "fraction"
+  },
+  "journal_style": "publication",
+  "layout": {
+    "title": "Cell-type composition per spot"
+  },
+  "spatial": {
+    "coordinate_units": "micrometre",
+    "normalize": "fraction",
+    "scale_bar": true,
+    "donut_hole": 0.0
+  },
+  "output": {
+    "formats": [
+      "png",
+      "pdf",
+      "svg"
+    ],
+    "dpi": 300,
+    "width_mm": 180,
+    "height_mm": 150
+  }
+}

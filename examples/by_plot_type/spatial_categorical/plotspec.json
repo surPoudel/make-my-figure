@@ -1,0 +1,30 @@
+{
+  "plot_type": "spatial_categorical_map",
+  "input_table": "data.csv",
+  "mapping": {
+    "x": "x",
+    "y": "y",
+    "category": "cell_type"
+  },
+  "journal_style": "publication",
+  "layout": {
+    "title": "Cell types in tissue"
+  },
+  "spatial": {
+    "coordinate_units": "micrometre",
+    "orientation": "y_up",
+    "scale_bar": true,
+    "marker_size": 5,
+    "alpha": 0.9
+  },
+  "output": {
+    "formats": [
+      "png",
+      "pdf",
+      "svg"
+    ],
+    "dpi": 300,
+    "width_mm": 180,
+    "height_mm": 150
+  }
+}

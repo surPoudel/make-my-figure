@@ -1,0 +1,29 @@
+{
+  "plot_type": "spatial_feature_map",
+  "input_table": "data.csv",
+  "mapping": {
+    "x": "x",
+    "y": "y",
+    "value": "EPCAM"
+  },
+  "journal_style": "publication",
+  "layout": {
+    "title": "EPCAM expression"
+  },
+  "spatial": {
+    "coordinate_units": "micrometre",
+    "scale_bar": true,
+    "marker_size": 6,
+    "transform": "none"
+  },
+  "output": {
+    "formats": [
+      "png",
+      "pdf",
+      "svg"
+    ],
+    "dpi": 300,
+    "width_mm": 180,
+    "height_mm": 150
+  }
+}

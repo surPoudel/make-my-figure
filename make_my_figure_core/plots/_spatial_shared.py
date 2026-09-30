@@ -97,10 +97,21 @@ def add_scale_bar(ax, block: Dict[str, Any], style) -> Optional[Dict[str, Any]]:
     length = block.get("scale_bar_length") or _nice_length(abs(x1 - x0))
     length = float(length)
 
+    # Open a clear band below the data and put the bar in it. Drawing inside the
+    # data area lets the bar land on top of cells or glyphs, which is both ugly
+    # and ambiguous about what the bar is measuring.
+    span_y = abs(y1 - y0) or 1.0
+    band = float(block.get("scale_bar_band", 0.12)) * span_y
+    if ax.yaxis_inverted():
+        ax.set_ylim(max(y0, y1) + band, min(y0, y1))
+    else:
+        ax.set_ylim(min(y0, y1) - band, max(y0, y1))
+    y0, y1 = ax.get_ylim()
+
     pad_x = 0.04 * abs(x1 - x0)
-    pad_y = 0.06 * abs(y1 - y0)
     xs = min(x0, x1) + pad_x
-    ys = (min(y0, y1) + pad_y) if not ax.yaxis_inverted() else (max(y0, y1) - pad_y)
+    ys = (min(y0, y1) + 0.35 * band) if not ax.yaxis_inverted() \
+        else (max(y0, y1) - 0.35 * band)
 
     colour = block.get("scale_bar_color", "black")
     ax.plot([xs, xs + length], [ys, ys], color=colour,

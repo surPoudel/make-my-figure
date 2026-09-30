@@ -115,15 +115,13 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
             handles = [Line2D([0], [0], marker="o", linestyle="none", markersize=7,
                               markerfacecolor=colours[lv], markeredgecolor="white", label=lv)
                        for lv in levels]
-            loc, anchor, side = resolve_legend_location(spec, style)
-            leg = axes[0][ncols - 1].legend(
-                handles=handles, title=str(category), loc=loc, bbox_to_anchor=anchor,
-                frameon=style.legend_frameon,
+            # Always outside the tissue. A legend placed "best" lands on the
+            # cells, which are the part of the figure the reader came for.
+            fig.tight_layout(rect=(0, 0, 0.76, 1))
+            axes[0][ncols - 1].legend(
+                handles=handles, title=str(category), loc="upper left",
+                bbox_to_anchor=(1.02, 1.0), frameon=style.legend_frameon,
                 ncol=max(1, int(block.get("legend_columns", 1))))
-            if side == "right":
-                fig.subplots_adjust(right=0.74)
-            elif leg is not None:
-                fig.tight_layout()
         else:
             fig.tight_layout()
 
