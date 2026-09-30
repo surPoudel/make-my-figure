@@ -19,8 +19,10 @@ def _load(name):
 
 def test_all_plot_types_registered():
     # 17 original + 18 v0.4 + 2 v0.5 (network graph, hierarchical clustering)
-    # + 1 histogram (binned distribution).
-    assert len(available_plot_types()) == 39
+    # + 1 histogram (binned distribution) + 1 chord diagram (v1.1.1)
+    # + 6 spatial types (v2: categorical/feature/transcript/ROI/composition maps
+    # and the neighbourhood enrichment matrix).
+    assert len(available_plot_types()) == 45
 
 
 def test_box_and_violin_kinds(mock_dir):

@@ -132,7 +132,7 @@ _DEFAULT_MAPPINGS: Dict[str, Dict[str, Any]] = {
                         "annotate": True, "label_mode": "top_fdr", "top_n": 10, "show_arrows": True},
     scatter.PLOT_TYPE: {"x": "x_marker", "y": "y_response", "color": "group", "fit_line": True},
     spatial_categorical_map.PLOT_TYPE: {"x": "x", "y": "y", "category": "cell_type"},
-    spatial_feature_map.PLOT_TYPE: {"x": "x", "y": "y", "value": "expression"},
+    spatial_feature_map.PLOT_TYPE: {"x": "x", "y": "y", "value": "EPCAM"},
     spatial_transcript_map.PLOT_TYPE: {"x": "x", "y": "y", "gene": "gene"},
     spatial_roi_map.PLOT_TYPE: {"roi": "roi_id", "x": "x", "y": "y",
                                 "vertex_order": "vertex_order", "roi_label": "roi_label"},

@@ -219,7 +219,11 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
 
         title = (spec.get("layout", {}) or {}).get("title")
         if title:
-            fig.suptitle(str(title))
+            # See the categorical map: suptitle needs the size stated explicitly.
+            if len(levels) > 1:
+                fig.suptitle(str(title), fontsize=style.title_font_pt)
+            else:
+                used_axes[0].set_title(str(title))
         fig.tight_layout()
 
         if block.get("colorbar", True) and mappable is not None:

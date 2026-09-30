@@ -301,61 +301,66 @@ def main() -> int:
         "Normalisation is explicit: with `normalize='as_given'` the fractions are drawn "
         "exactly as supplied and a short sum is reported rather than rescaled away.\n")))
 
-    # ---------------- 6. enrichment matrix (REAL published values) --------
-    src = os.path.join(ROOT, "benchmarks", "spatial_validation", "cntools_2024",
-                       "derived", "neighborhood_enrichment_cntools.csv")
+    # ---------------- 6. enrichment matrix --------------------------------
+    # Synthetic, like the other bundled examples: tests/test_examples.py requires
+    # every shipped example to be synthetic CC0, and that policy is deliberate.
+    # The REAL published Fig 3A values live in
+    # benchmarks/spatial_validation/cntools_2024/derived/ and can be opened
+    # directly by anyone who wants to render the published panel.
     slug = "neighborhood_enrichment"
-    if os.path.exists(src):
-        enr = pd.read_csv(src)
-        enr["cell_type"] = ["CT_%02d" % c for c in enr["cell_type_index"]]
-        enr = enr[["neighborhood", "cell_type", "enrichment_score",
-                   "cell_type_frequency_in_neighborhood"]]
-        lic = dict(data_type="published",
-                   license="CC BY 4.0",
-                   source=("CNTools S1 Data, Tao et al. 2024, PLOS Comput Biol 20(8):e1012344, "
-                           "doi:10.1371/journal.pcbi.1012344"),
-                   provenance=("Published Fig 3A (CRC, CC*) values, tidied by "
-                               "benchmarks/spatial_validation/cntools_2024. Reproduced from "
-                               "the deposited CRC data to 7.8e-14 max absolute difference."))
-        e = dict(plot_type="neighborhood_enrichment_matrix",
-                 name="Cellular-neighbourhood enrichment matrix", slug=slug,
-                 description=("Cell-type enrichment across cellular neighbourhoods; colour is "
-                              "the enrichment score, point area the frequency within the "
-                              "neighbourhood."),
-                 use_case="Show which cell types are enriched in which neighbourhoods.",
-                 required_columns=["neighborhood", "cell_type", "enrichment_score"],
-                 optional_columns=["cell_type_frequency_in_neighborhood"],
-                 files=files(slug), aux_tables={}, excel_sheet="Neighborhood_enrichment",
-                 recommended_style_profiles=["publication"],
-                 expected_export_formats=["svg", "png", "pdf", "plot_spec.json"],
-                 compatible_renderers=["neighborhood_enrichment_matrix"], n_rows=int(len(enr)),
-                 user_replacement_note=("Produced by make_my_figure_core.spatial."
-                                        "ct_cn_enrichment from your own cells; the renderer "
-                                        "plots these values and never recomputes them."),
-                 common_mistakes=["Enrichment is a log ratio: zero means 'as expected', so "
-                                  "the colour scale is centred on zero by default.",
-                                  "A dot matrix is unreadable without a size key — keep "
-                                  "size_legend on."],
-                 **lic)
-        e["_plotspec"] = spec("neighborhood_enrichment_matrix",
-                              {"neighborhood": "neighborhood", "cell_type": "cell_type",
-                               "enrichment": "enrichment_score",
-                               "frequency": "cell_type_frequency_in_neighborhood"},
-                              {"cmap": "RdBu_r", "center": 0.0,
-                               "colorbar_label": "Enrichment score"},
-                              "Cell-type enrichment across neighbourhoods")
-        entries.append(_write(slug, enr, e, readme=(
-            "# Cellular-neighbourhood enrichment matrix\n\n**Real published data.** These are "
-            "the Fig 3A (CRC, CC*) values from CNTools — Tao et al. 2024, *PLOS Computational "
-            "Biology* 20(8):e1012344, doi:10.1371/journal.pcbi.1012344 — redistributed under "
-            "CC BY 4.0.\n\n9 neighbourhoods x 28 cell types. Colour is the enrichment score, "
-            "point area the cell type's frequency within the neighbourhood.\n\n"
-            "Cell types are shown as `CT_00`..`CT_27` because the published spreadsheet does "
-            "not label its columns. `benchmarks/spatial_validation/cntools_2024` reproduces "
-            "these values from the deposited CRC data to a maximum absolute difference of "
-            "7.8e-14.\n")))
-    else:
-        print(f"warning: {src} not found; skipping the enrichment example")
+    cn_names = [f"CN{i}" for i in range(1, 10)]
+    enr_rows = []
+    for i, cn in enumerate(cn_names):
+        # Each neighbourhood is enriched for one or two related cell types, which
+        # is the structure real CN analyses show.
+        dom = i % len(CELL_TYPES)
+        second = (dom + 1) % len(CELL_TYPES)
+        w = np.full(len(CELL_TYPES), 0.04)
+        w[dom] = 0.45 + 0.2 * rng.random()
+        w[second] = 0.15 + 0.1 * rng.random()
+        w = w / w.sum()
+        overall = np.full(len(CELL_TYPES), 1.0 / len(CELL_TYPES))
+        for j, ct in enumerate(CELL_TYPES):
+            enr_rows.append({
+                "neighborhood": cn, "cell_type": ct,
+                "enrichment_score": round(float(np.log2(w[j] / overall[j])), 6),
+                "cell_type_frequency_in_neighborhood": round(float(w[j]), 6)})
+    enr = pd.DataFrame(enr_rows)
+    e = dict(plot_type="neighborhood_enrichment_matrix",
+             name="Cellular-neighbourhood enrichment matrix", slug=slug,
+             description=("Cell-type enrichment across cellular neighbourhoods; colour is "
+                          "the enrichment score, point area the frequency within the "
+                          "neighbourhood."),
+             use_case="Show which cell types are enriched in which neighbourhoods.",
+             required_columns=["neighborhood", "cell_type", "enrichment_score"],
+             optional_columns=["cell_type_frequency_in_neighborhood"],
+             files=files(slug), aux_tables={}, excel_sheet="Neighborhood_enrichment",
+             compatible_renderers=["neighborhood_enrichment_matrix"], n_rows=int(len(enr)),
+             user_replacement_note=("Produced by make_my_figure_core.spatial."
+                                    "ct_cn_enrichment from your own cells; the renderer "
+                                    "plots these values and never recomputes them."),
+             common_mistakes=["Enrichment is a log ratio: zero means 'as expected', so the "
+                              "colour scale is centred on zero by default.",
+                              "A dot matrix is unreadable without a size key - keep "
+                              "size_legend on."],
+             **common)
+    e["_plotspec"] = spec("neighborhood_enrichment_matrix",
+                          {"neighborhood": "neighborhood", "cell_type": "cell_type",
+                           "enrichment": "enrichment_score",
+                           "frequency": "cell_type_frequency_in_neighborhood"},
+                          {"cmap": "RdBu_r", "center": 0.0,
+                           "colorbar_label": "Enrichment score"},
+                          "Cell-type enrichment across neighbourhoods")
+    entries.append(_write(slug, enr, e, readme=(
+        "# Cellular-neighbourhood enrichment matrix\n\nSynthetic (CC0), nine neighbourhoods "
+        "x eight cell types, each neighbourhood enriched for one or two related types.\n\n"
+        "Colour is the enrichment score, point area the cell type's frequency within that "
+        "neighbourhood.\n\n**Real published values are also available.** "
+        "`benchmarks/spatial_validation/cntools_2024/derived/"
+        "neighborhood_enrichment_cntools.csv` holds the Fig 3A (CRC, CC*) values from "
+        "Tao et al. 2024, *PLOS Computational Biology* 20(8):e1012344 (CC BY 4.0), which "
+        "this codebase reproduces from the deposited data to 7.8e-14. Open that file with "
+        "this plot type to render the published panel.\n")))
 
     # ---------------- manifest -------------------------------------------
     with open(MANIFEST, encoding="utf-8") as fh:
@@ -365,13 +370,6 @@ def main() -> int:
     manifest["plot_types"] = [e for e in manifest["plot_types"]
                               if e["plot_type"] not in {x["plot_type"] for x in entries}]
     manifest["plot_types"].extend(entries)
-    manifest["note"] = (
-        "Example datasets are synthetic unless an entry says otherwise. Published "
-        "papers/figures are used as visual style references, never as a source of copied "
-        "data — with one deliberate exception: the neighbourhood enrichment example carries "
-        "real published values from CNTools S1 Data (CC BY 4.0, attributed in its entry and "
-        "README), so that a user can render an actual published panel. Do not cite the "
-        "synthetic examples as real findings.")
     with open(MANIFEST, "w", encoding="utf-8") as fh:
         json.dump(manifest, fh, indent=2)
         fh.write("\n")

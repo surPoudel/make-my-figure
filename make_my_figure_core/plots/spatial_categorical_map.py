@@ -103,7 +103,13 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
 
         title = (spec.get("layout", {}) or {}).get("title")
         if title:
-            fig.suptitle(str(title))
+            # suptitle follows rcParams["figure.titlesize"], not axes.titlesize,
+            # so the style's title size has to be passed explicitly or the figure
+            # silently ignores the typography preset.
+            if len(facet_levels) > 1:
+                fig.suptitle(str(title), fontsize=style.title_font_pt)
+            else:
+                axes[0][0].set_title(str(title))
 
         shared = share_facet_limits(used_axes, block)
         # One bar per facet: each panel auto-scales its own limits, so a single

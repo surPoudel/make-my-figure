@@ -54,6 +54,15 @@ COLUMN_FIELDS: Dict[str, List[str]] = {
     "hierarchical_clustering": ["row_id"],
     "network_graph": ["source", "target", "weight", "interaction_type"],
     "chord_diagram": ["source", "target", "value", "group"],
+    # --- spatial (v2) ---
+    # These drive the GUI column pickers as well as preset/role handling, so the
+    # list is exactly the mapping keys each spatial renderer reads.
+    "spatial_categorical_map": ["x", "y", "category", "facet"],
+    "spatial_feature_map": ["x", "y", "value", "feature", "facet"],
+    "spatial_transcript_map": ["x", "y", "gene", "quality"],
+    "spatial_roi_map": ["roi", "x", "y", "vertex_order", "roi_label", "roi_category"],
+    "spatial_composition_map": ["spot", "x", "y", "category", "value"],
+    "neighborhood_enrichment_matrix": ["neighborhood", "cell_type", "enrichment", "frequency"],
 }
 
 # Mapping keys that are columns of the PCA *metadata* table, not the matrix.

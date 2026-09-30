@@ -112,6 +112,11 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
         ax.set_yticklabels(rows, fontsize=style.tick_label_pt)
         ax.set_xlim(-0.6, len(cols) - 0.4)
         ax.set_ylim(len(rows) - 0.4, -0.6)     # first neighbourhood at the top
+        # Name the axes: the tick labels are identifiers, and a reader should not
+        # have to infer that 'CT_00' is a cell type or 'CN1' a neighbourhood.
+        ax.set_xlabel(str(block.get("x_label", "Cell type")), fontsize=style.axis_font_pt)
+        ax.set_ylabel(str(block.get("y_label", "Cellular neighbourhood")),
+                      fontsize=style.axis_font_pt)
         ax.set_axisbelow(True)
         if block.get("grid", True):
             ax.grid(True, which="major", color="#eeeeee", linewidth=0.6, zorder=0)
