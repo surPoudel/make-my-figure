@@ -48,6 +48,7 @@ from make_my_figure_core.plots import (
     roc,
     sankey,
     scatter,
+    spatial_categorical_map,
     spider,
     stacked,
     survival,
@@ -108,6 +109,7 @@ _RENDERERS: Dict[str, Callable[..., RenderResult]] = {
     network_graph.PLOT_TYPE: network_graph.render,
     # --- v1.2 ---
     chord_diagram.PLOT_TYPE: chord_diagram.render,
+    spatial_categorical_map.PLOT_TYPE: spatial_categorical_map.render,
 }
 
 # Default column mappings per plot type (mirrors the mock-data manifest).
@@ -119,6 +121,7 @@ _DEFAULT_MAPPINGS: Dict[str, Dict[str, Any]] = {
                         "lfc_cutoff": 1.0, "p_cutoff": 0.05,
                         "annotate": True, "label_mode": "top_fdr", "top_n": 10, "show_arrows": True},
     scatter.PLOT_TYPE: {"x": "x_marker", "y": "y_response", "color": "group", "fit_line": True},
+    spatial_categorical_map.PLOT_TYPE: {"x": "x", "y": "y", "category": "cell_type"},
     box_violin.PLOT_TYPE: {"x": "group", "y": "value", "kind": "box", "points": True},
     lineplot.PLOT_TYPE: {"x": "time_hours", "y": "signal", "color": "treatment", "error": "sem"},
     ridge.PLOT_TYPE: {"x": "pseudotime", "group": "condition", "overlap": 0.7},
@@ -184,6 +187,7 @@ _DISPLAY_NAMES: Dict[str, str] = {
     heatmap.PLOT_TYPE: "Clustered heatmap",
     volcano.PLOT_TYPE: "Volcano plot",
     scatter.PLOT_TYPE: "Scatter plot",
+    spatial_categorical_map.PLOT_TYPE: "Spatial map (categories)",
     box_violin.PLOT_TYPE: "Box / violin plot with points",
     lineplot.PLOT_TYPE: "Line / time-course with error band",
     ridge.PLOT_TYPE: "Ridge / density plot",
