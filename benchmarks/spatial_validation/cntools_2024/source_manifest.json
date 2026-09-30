@@ -1,0 +1,42 @@
+{
+  "publication": {
+    "title": "CNTools: A computational toolbox for cellular neighborhood analysis from multiplexed images",
+    "authors": "Tao Y, Feng F, Luo X, Reihsmann CV, Hopkirk AL, Cartailler J-P, Brissova M, Parker SCJ, Saunders DC, Liu J",
+    "journal": "PLOS Computational Biology",
+    "year": 2024,
+    "doi": "10.1371/journal.pcbi.1012344",
+    "license": "CC BY 4.0",
+    "license_note": "PLOS publishes under CC BY 4.0; S1 Data is redistributable with attribution."
+  },
+  "sources": [
+    {
+      "id": "cntools_s1_data",
+      "description": "S1 Data: underlying numerical values for Figs 2A-C, 3A-D, 4A-D, 5A-B",
+      "url": "https://journals.plos.org/ploscompbiol/article/file?id=10.1371/journal.pcbi.1012344.s001&type=supplementary",
+      "filename": "cntools_S1_Data.xlsx",
+      "sha256": "e35d3272762ac489fb47765e33212a295a4fcb61def51d0fc23bb091079ca343",
+      "bytes": 80689,
+      "downloaded": "2026-09-30",
+      "redistributable": true
+    },
+    {
+      "id": "crc_schurch_2020",
+      "description": "CRC CODEX dataset: annotated cells, 35 patients, coordinates, cell types, original CC neighbourhood assignments (neighborhood10)",
+      "publication_doi": "10.1016/j.cell.2020.07.005",
+      "landing_page": "https://data.mendeley.com/datasets/mpjzbtfgfr/1",
+      "url": "https://data.mendeley.com/public-api/datasets/mpjzbtfgfr/files?folder_id=root&version=1",
+      "filename": "CRC_clusters_neighborhoods_markers.csv",
+      "sha256": "416cc3926a7a900ce3b22a33be699535ca35ae85fca4585a8ba5dad6d7f3c677",
+      "bytes": 222999273,
+      "downloaded": "2026-09-30",
+      "redistributable": false,
+      "redistribution_note": "223 MB and licence terms not confirmed for redistribution; not committed. Fetch with scripts/download.sh."
+    }
+  ],
+  "reproduction_target": {
+    "figure": "Fig 3A (CRC)",
+    "panel_structure": "4 blocks (CN Enrichment Score, CN Frequency per CN) x (CC*, CNE), each 9 neighbourhoods x 28 cell types",
+    "cc_star_definition": "Per the Fig 3 legend, CC* is 'the original CC results' - the neighbourhood assignments from the original publication (deposited as neighborhood10), NOT a fresh CNTools CC run. Methods: ten original CNs with one dirt-enriched CN removed, leaving nine.",
+    "dirt_cn_identification": "neighborhood10 CN 1 is 70.4% dirt; every other CN is <= 3.75%."
+  }
+}

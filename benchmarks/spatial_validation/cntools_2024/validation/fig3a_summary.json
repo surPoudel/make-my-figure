@@ -1,0 +1,26 @@
+{
+  "target": "CNTools Fig 3A, CRC, CC*",
+  "cc_star_definition": "original CC results (deposited neighborhood10), dirt CN removed",
+  "n_cells": 249678,
+  "n_neighborhoods": 9,
+  "n_cell_types": 28,
+  "enrichment": {
+    "pearson_r": 1.0,
+    "max_abs_diff": 7.815970093361102e-14,
+    "median_abs_diff": 1.7763568394002505e-15
+  },
+  "frequency": {
+    "pearson_r": 1.0,
+    "max_abs_diff": 8.465450562766819e-16,
+    "median_abs_diff": 6.5052130349130266e-18
+  },
+  "n_comparisons": 504,
+  "n_pass": 504,
+  "classification": "exact numerical reproduction",
+  "validates": "the CT-CN enrichment calculation",
+  "does_not_validate": "our CC implementation - this uses the published CN labels, not labels produced by our clustering",
+  "inputs": {
+    "crc_sha256": "416cc3926a7a900ce3b22a33be699535ca35ae85fca4585a8ba5dad6d7f3c677",
+    "s1_sha256": "e35d3272762ac489fb47765e33212a295a4fcb61def51d0fc23bb091079ca343"
+  }
+}
