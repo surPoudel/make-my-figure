@@ -1,0 +1,16 @@
+{
+  "target": "Janesick et al. 2023, Fig. 3l \u2014 Xenium cell-type spatial map",
+  "doi": "10.1038/s41467-023-43458-x",
+  "classification": "exact reproduction of the published annotation",
+  "basis": "cell types are the authors' deposited supervised labels and coordinates are the deposited centroids; nothing is re-clustered, re-annotated or re-normalised",
+  "n_cells": 167780,
+  "n_cell_types": 20,
+  "coordinate_units": "micrometre",
+  "n_comparisons": 28,
+  "n_pass": 28,
+  "styling_note": "Colours, marker size and layout follow the MakeMyFigure Publication style and do not attempt to match the published artwork; the claim is about the data drawn, not the appearance.",
+  "inputs": {
+    "xenium_cells.csv.gz": "8fc6f2b4c000c42ca97a1bb904a8d7608b33fa69ff86b1be0291016acbc2649c",
+    "xen_sup.csv.gz": "1668413f78973816c8afee8003d073c9645d4f5eb9ec85f4e1bfc4cd62465c24"
+  }
+}

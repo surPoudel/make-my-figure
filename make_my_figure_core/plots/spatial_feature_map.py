@@ -178,6 +178,7 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     with style.apply():
         fig, axes = plt.subplots(nrows, ncols, figsize=(w * ncols, h * nrows), squeeze=False)
         used_axes, mappable, bg_record = [], None, None
+        panel_mappables = []
         for idx, lv in enumerate(levels):
             ax = axes[idx // ncols][idx % ncols]
             sub = data if lv is None else data[data[split_col].astype(str) == lv]
@@ -205,6 +206,7 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
                             marker=str(block.get("marker", "o")),
                             rasterized=raster, zorder=2)
             mappable = mappable or sc
+            panel_mappables.append((ax, sc))
             apply_crop(ax, block)
             finish_spatial_axes(ax, block, show_axes=bool(block.get("show_axes", False)))
             if lv is not None:
@@ -233,7 +235,16 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
                 cb.set_label(str(label), fontsize=style.axis_font_pt)
                 cb.ax.tick_params(labelsize=style.tick_label_pt)
             else:
-                warnings.append("No shared colourbar drawn: each panel has its own scale.")
+                # Independent scales need one bar PER panel. A single shared bar
+                # would be wrong, and drawing none at all - which this did before -
+                # leaves the reader no way to know what any colour means.
+                for ax_i, sc_i in panel_mappables:
+                    cb = fig.colorbar(sc_i, ax=ax_i, fraction=0.046, pad=0.02)
+                    cb.ax.tick_params(labelsize=max(style.tick_label_pt - 1, 5))
+                    cb.set_label(str(label), fontsize=max(style.axis_font_pt - 2, 6))
+                warnings.append(
+                    f"Each panel has its own colour scale, so {len(panel_mappables)} separate "
+                    "colourbars are drawn; panels are not comparable by colour.")
 
     meta = base_metadata(spec, style, data, used_columns=[x, y, value, feature, facet])
     _, norm_kind = _norm(block, g_lo, g_hi, arr_all)

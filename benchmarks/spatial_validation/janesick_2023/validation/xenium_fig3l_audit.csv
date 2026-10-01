@@ -1,0 +1,29 @@
+published_quantity,source_data_field,makemyfigure_quantity,published_value,absolute_difference,relative_difference,pass,notes
+cell count (Xenium Rep 1),cells.csv rows,167780,167780,0.0,0.0,True,every deposited cell is carried through
+annotated cell count,Fig1-5_supervised rows,167780,167780,0.0,0.0,True,
+cells joined on cell_id,cells.csv x supervised,167780,167780,0.0,0.0,True,a 100% join means no cell was dropped or duplicated
+cells of type 'Stromal',supervised Cluster,41422,41422,0.0,0.0,True,count preserved through the join
+cells of type 'Invasive_Tumor',supervised Cluster,34374,34374,0.0,0.0,True,count preserved through the join
+cells of type 'DCIS_2',supervised Cluster,12923,12923,0.0,0.0,True,count preserved through the join
+cells of type 'DCIS_1',supervised Cluster,11683,11683,0.0,0.0,True,count preserved through the join
+cells of type 'Macrophages_1',supervised Cluster,11174,11174,0.0,0.0,True,count preserved through the join
+cells of type 'Endothelial',supervised Cluster,8931,8931,0.0,0.0,True,count preserved through the join
+cells of type 'Unlabeled',supervised Cluster,8554,8554,0.0,0.0,True,count preserved through the join
+cells of type 'CD4+_T_Cells',supervised Cluster,8453,8453,0.0,0.0,True,count preserved through the join
+cells of type 'Myoepi_ACTA2+',supervised Cluster,7078,7078,0.0,0.0,True,count preserved through the join
+cells of type 'CD8+_T_Cells',supervised Cluster,6940,6940,0.0,0.0,True,count preserved through the join
+cells of type 'B_Cells',supervised Cluster,4987,4987,0.0,0.0,True,count preserved through the join
+cells of type 'Prolif_Invasive_Tumor',supervised Cluster,3775,3775,0.0,0.0,True,count preserved through the join
+cells of type 'Myoepi_KRT15+',supervised Cluster,2860,2860,0.0,0.0,True,count preserved through the join
+cells of type 'Macrophages_2',supervised Cluster,1624,1624,0.0,0.0,True,count preserved through the join
+cells of type 'Perivascular-Like',supervised Cluster,847,847,0.0,0.0,True,count preserved through the join
+cells of type 'Stromal_&_T_Cell_Hybrid',supervised Cluster,607,607,0.0,0.0,True,count preserved through the join
+cells of type 'T_Cell_&_Tumor_Hybrid',supervised Cluster,589,589,0.0,0.0,True,count preserved through the join
+cells of type 'IRF7+_DCs',supervised Cluster,494,494,0.0,0.0,True,count preserved through the join
+cells of type 'LAMP3+_DCs',supervised Cluster,298,298,0.0,0.0,True,count preserved through the join
+cells of type 'Mast_Cells',supervised Cluster,167,167,0.0,0.0,True,count preserved through the join
+x centroid sum (um),cells.csv x_centroid,553246954.574,553246954.574,0.0,0.0,True,coordinates are not transformed
+y centroid sum (um),cells.csv y_centroid,421892732.413,421892732.413,0.0,0.0,True,coordinates are not transformed
+cells drawn,renderer metadata n_cells,167780,167780,0.0,0.0,True,no silent subsampling
+cell types drawn,renderer metadata categories,20,20,0.0,0.0,True,every published population appears in the legend
+coordinate units declared,spec spatial.coordinate_units,micrometre,micrometre,0.0,0.0,True,"units are declared, never inferred"

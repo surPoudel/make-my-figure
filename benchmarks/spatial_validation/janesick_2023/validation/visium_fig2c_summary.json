@@ -1,0 +1,32 @@
+{
+  "target": "Janesick et al. 2023, Fig. 2c \u2014 Visium marker expression",
+  "doi": "10.1038/s41467-023-43458-x",
+  "classification": "expression values reproduced; normalisation verified against deposited per-gene values",
+  "normalisation": {
+    "recovered": "each spot scaled to the median total UMI count across spots",
+    "median_total_umi": 13532.0,
+    "verified_against": "spatial_enrichment.csv 'Median Normalized Average Counts'",
+    "genes_checked": 18056,
+    "worst_relative_difference": 8.566484076515533e-13
+  },
+  "documented_assumption": "the paper writes log2 and zero counts are present, so log2(1 + x) is used; log2(x) is undefined at zero. This affects the colour scale only.",
+  "not_reproduced": "the Fig. 2c cluster panel. Space Ranger's graph-based cluster assignments are deposited only inside the proprietary .cloupe file; no cluster table is published, so the labels cannot be recovered. Re-clustering would produce different labels and would not be a reproduction.",
+  "markers": [
+    "SCGB2A2",
+    "CPB1",
+    "KRT17",
+    "FABP4",
+    "IL2RG",
+    "SFRP2",
+    "CDH2",
+    "MT-ND1"
+  ],
+  "n_spots": 4992,
+  "n_comparisons": 12,
+  "n_pass": 12,
+  "inputs": {
+    "vis_matrix.h5": "6b00ec1f4abcafde2d2f140ea0456553dd47b8279c684a38eaa45adc09e72a4b",
+    "tissue_positions.csv": "fd8953276dad4f010ab1a876fb6eff78b7fca641e4ee1b268dd4d5e46fe33492",
+    "spatial_enrichment.csv": "44513fdbeda0187ed17a0e2a269f394170f2d5832e18c6e0fb0519064b0eb578"
+  }
+}
