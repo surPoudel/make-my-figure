@@ -92,7 +92,10 @@ def scan_renderer(plot_type: str) -> Dict[str, object]:
         # the palette control switches the colormaps too, so it has an effect on cmap plots
         "palette_control_has_effect": uses_palette or uses_cmap,
         "colorbar": ".colorbar(" in src,
-        "legend": ("legend(" in src) or ("place_legend(" in src),
+        # Match the CALL, not any identifier containing the word: a helper named
+        # widen_for_outside_legend() must not read as "this renderer draws a legend".
+        "legend": bool(re.search(r"(?:\b(?:ax|fig|axes\[[^\]]*\]\[[^\]]*\])\.legend|"
+                                 r"\bplace_legend)\s*\(", src)),
         "marker_size": "marker_size" in tokens,
         "line_width": bool({"line_width_pt", "regression_line_width"} & tokens),
         "mapping_color_keys": ";".join(mapping_colors),

@@ -1,6 +1,6 @@
 # Figure Preset QC — every registered plot type
 
-Generated 2026-09-30T22:25:07+00:00 by `scripts/build_figure_preset_qc.py` against the live plot registry (45 renderers, enumerated from code).
+Generated 2026-10-01T00:45:39+00:00 by `scripts/build_figure_preset_qc.py` against the live plot registry (45 renderers, enumerated from code).
 
 **45 / 45 plot types PASS.** 28 individual checks are N/A, each with its reason in the `notes` column (a plot that draws no legend has no legend to round-trip; a plot whose options are all analytical has no visual option to carry in a style preset).
 
