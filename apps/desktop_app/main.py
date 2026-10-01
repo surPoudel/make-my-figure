@@ -555,24 +555,39 @@ class MainWindow(QMainWindow):
         # Explicit size in millimetres. The width preset times a renderer's fixed
         # aspect cannot describe every figure - a wide, short dot matrix has no
         # preset - so 0 keeps the preset behaviour and any positive value wins.
-        self.fig_w_mm = QDoubleSpinBox()
-        self.fig_w_mm.setRange(0.0, 1000.0)
-        self.fig_w_mm.setDecimals(1)
-        self.fig_w_mm.setSingleStep(5.0)
-        self.fig_w_mm.setValue(0.0)
-        self.fig_w_mm.setSuffix(" mm")
-        self.fig_w_mm.setSpecialValueText("auto (use preset)")
-        self.fig_w_mm.setToolTip(
-            "Exact figure width in millimetres. 0 uses the Figure width preset above.")
-        self.fig_h_mm = QDoubleSpinBox()
-        self.fig_h_mm.setRange(0.0, 1000.0)
-        self.fig_h_mm.setDecimals(1)
-        self.fig_h_mm.setSingleStep(5.0)
-        self.fig_h_mm.setValue(0.0)
-        self.fig_h_mm.setSuffix(" mm")
-        self.fig_h_mm.setSpecialValueText("auto (from width)")
-        self.fig_h_mm.setToolTip(
-            "Exact figure height in millimetres. 0 derives the height from the width.")
+        from make_my_figure_core.plots.base import MIN_FIGURE_MM
+
+        def _size_spin(special: str, tip: str):
+            """A millimetre size box where 0 means auto and the next value is usable.
+
+            Whole millimetres only, and no value between 0 and the minimum: a
+            figure of half a millimetre is never what someone meant, and letting
+            it be dialled in produces a figure matplotlib cannot lay out.
+            """
+            box = QSpinBox()
+            box.setRange(0, 1000)
+            box.setSingleStep(5)
+            box.setValue(0)
+            box.setSuffix(" mm")
+            box.setSpecialValueText(special)
+            box.setToolTip(tip)
+
+            def _skip_dead_zone(v, _b=box):
+                if 0 < v < int(MIN_FIGURE_MM):
+                    _b.blockSignals(True)
+                    _b.setValue(int(MIN_FIGURE_MM))
+                    _b.blockSignals(False)
+            box.valueChanged.connect(_skip_dead_zone)
+            return box
+
+        self.fig_w_mm = _size_spin(
+            "auto (use preset)",
+            f"Exact figure width in millimetres (minimum {MIN_FIGURE_MM:g} mm). "
+            "0 uses the Figure width preset above.")
+        self.fig_h_mm = _size_spin(
+            "auto (from width)",
+            f"Exact figure height in millimetres (minimum {MIN_FIGURE_MM:g} mm). "
+            "0 derives the height from the width.")
         lb.addRow("Figure width", self.width_combo)
         lb.addRow("Exact width", self.fig_w_mm)
         lb.addRow("Exact height", self.fig_h_mm)

@@ -69,3 +69,44 @@ def test_presets_still_work_when_no_explicit_size_is_given():
     narrow = _render("scatterplot_with_regression", {"column_width": "single"})
     wide = _render("scatterplot_with_regression", {"column_width": "double"})
     assert wide.figure.get_size_inches()[0] > narrow.figure.get_size_inches()[0]
+
+
+# --- absurd sizes must never produce an unusable figure -----------------------
+
+from make_my_figure_core.plots.base import MIN_FIGURE_MM  # noqa: E402
+
+
+@pytest.mark.parametrize("plot_type", PLOT_TYPES)
+def test_a_sub_millimetre_request_is_raised_to_a_usable_size(plot_type):
+    """0.5 mm is never what anyone meant, and matplotlib cannot lay it out."""
+    res = _render(plot_type, {"width_mm": 0.5, "height_mm": 0.2})
+    w_mm, h_mm = (v * MM_PER_INCH for v in res.figure.get_size_inches())
+    assert w_mm >= MIN_FIGURE_MM - 0.5, f"{plot_type}: width came back {w_mm:.2f} mm"
+    assert h_mm >= MIN_FIGURE_MM - 0.5, f"{plot_type}: height came back {h_mm:.2f} mm"
+
+
+def test_the_correction_is_reported_not_silent():
+    """A figure must never come back a different size without saying so."""
+    res = _render("scatterplot_with_regression", {"width_mm": 0.5, "height_mm": 0.2})
+    notes = [w for w in res.warnings if "too small" in w]
+    assert len(notes) == 2, res.warnings
+    assert all("Set 0 for automatic sizing" in n for n in notes)
+
+
+def test_a_non_numeric_size_is_reported_and_ignored():
+    res = _render("scatterplot_with_regression", {"width_mm": "wide"})
+    assert any("not a number" in w for w in res.warnings), res.warnings
+    assert res.figure.get_size_inches()[0] > 1.0
+
+
+def test_zero_is_auto_and_is_not_reported_as_a_problem():
+    """0 is the documented way to say 'automatic', not a mistake."""
+    res = _render("scatterplot_with_regression", {"width_mm": 0, "height_mm": 0})
+    assert not any("too small" in w for w in res.warnings), res.warnings
+    assert res.figure.get_size_inches()[0] > 1.0
+
+
+def test_a_size_at_the_floor_is_accepted_without_complaint():
+    res = _render("scatterplot_with_regression",
+                  {"width_mm": MIN_FIGURE_MM, "height_mm": MIN_FIGURE_MM})
+    assert not any("too small" in w for w in res.warnings), res.warnings

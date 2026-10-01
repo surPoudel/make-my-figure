@@ -62,7 +62,9 @@ from make_my_figure_core.plots import (
     volcano,
     waterfall,
 )
-from make_my_figure_core.plots.base import RenderError, RenderResult
+from make_my_figure_core.plots.base import (
+    RenderError, RenderResult, figure_size_adjustments,
+)
 from make_my_figure_core.spec.validate import (
     SpecValidationError,
     default_output_block,
@@ -370,6 +372,12 @@ def render(
     else:
         result = renderer(spec, df, style)
     for _w in _cap_warnings:
+        if _w not in result.warnings:
+            result.warnings.append(_w)
+    # Report a size request that had to be corrected. Done centrally so every
+    # renderer behaves the same, and so a figure never comes back silently
+    # different from the size that was asked for.
+    for _w in figure_size_adjustments(spec):
         if _w not in result.warnings:
             result.warnings.append(_w)
 

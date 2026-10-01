@@ -21,6 +21,14 @@ from matplotlib.figure import Figure
 from make_my_figure_core.styles.engine import StyleProfile, mm_to_inches
 
 
+# Smallest figure dimension that can carry anything legible. Below this a
+# figure is not "small", it is broken: axis labels, ticks and a colourbar cannot
+# be laid out at all, and matplotlib starts emitting layout failures. Requests
+# below the floor are raised to it and reported, rather than honoured into
+# something unusable.
+MIN_FIGURE_MM = 20.0
+
+
 class RenderError(Exception):
     """Raised when a spec/data combination cannot be rendered."""
 
@@ -154,7 +162,9 @@ def figure_size(spec: Dict[str, Any], style: StyleProfile, *, aspect: float) -> 
             v = float(layout.get(key))
         except (TypeError, ValueError):
             return None
-        return v if v > 0 else None
+        if v <= 0:
+            return None
+        return max(v, MIN_FIGURE_MM)      # never return an unusable dimension
 
     w_mm, h_mm = _mm("width_mm"), _mm("height_mm")
     w_in, h_in = style.figure_size_inches(width, aspect=aspect)
@@ -166,6 +176,28 @@ def figure_size(spec: Dict[str, Any], style: StyleProfile, *, aspect: float) -> 
         h_in = mm_to_inches(h_mm)
     return (w_in, h_in)
 
+
+
+def figure_size_adjustments(spec: Dict[str, Any]) -> List[str]:
+    """Human-readable notes about size requests that had to be corrected."""
+    layout = (spec or {}).get("layout", {}) or {}
+    notes = []
+    for key, axis in (("width_mm", "width"), ("height_mm", "height")):
+        raw = layout.get(key)
+        if raw is None:
+            continue
+        try:
+            v = float(raw)
+        except (TypeError, ValueError):
+            notes.append(f"Figure {axis} {raw!r} is not a number and was ignored.")
+            continue
+        if v <= 0:
+            continue                      # 0 means "auto"; not an error
+        if v < MIN_FIGURE_MM:
+            notes.append(
+                f"Figure {axis} of {v:g} mm is too small to lay out - raised to "
+                f"{MIN_FIGURE_MM:g} mm. Set 0 for automatic sizing.")
+    return notes
 
 
 def explicit_figure_size(spec: Dict[str, Any]) -> "tuple[float, float] | None":
@@ -186,7 +218,7 @@ def explicit_figure_size(spec: Dict[str, Any]) -> "tuple[float, float] | None":
             return None
         if v <= 0:
             return None
-        out.append(mm_to_inches(v))
+        out.append(mm_to_inches(max(v, MIN_FIGURE_MM)))
     return (out[0], out[1])
 
 

@@ -65,3 +65,24 @@ def test_every_long_dropdown_is_scrollable(window):
         if isinstance(combo, QComboBox):
             assert "combobox-popup" in (combo.styleSheet() or ""), \
                 f"{name} can grow with use but has the default non-scrollable popup"
+
+
+def test_the_size_boxes_cannot_be_set_to_an_unusable_value(window):
+    """0 means auto; anything between 0 and the floor snaps out of the dead zone.
+
+    A figure of half a millimetre is never intended, and the control should not
+    let it be dialled in at all rather than relying on a later correction.
+    """
+    from make_my_figure_core.plots.base import MIN_FIGURE_MM
+    floor = int(MIN_FIGURE_MM)
+    for name in ("fig_w_mm", "fig_h_mm"):
+        box = getattr(window, name)
+        box.setValue(0)
+        assert box.value() == 0, f"{name}: 0 must stay 0 (auto)"
+        for attempt in (1, 5, floor - 1):
+            box.setValue(attempt)
+            assert box.value() == floor, \
+                f"{name}: {attempt} mm should snap to {floor}, got {box.value()}"
+        box.setValue(200)
+        assert box.value() == 200
+        box.setValue(0)
