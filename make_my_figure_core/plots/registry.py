@@ -357,6 +357,24 @@ def render(
     # Apply GUI/PlotSpec style refinements (fonts, widths, markers, palette, ...).
     style = style.with_overrides(spec.get("style"))
 
+    # One typography system for every plot type. The style defines its hierarchy in
+    # absolute points, which are correct for its reference canvas and wrong for a
+    # 2x1 inch panel - a 13 pt title there overflows the axes. When the canvas is
+    # pinned far enough from the reference that fixed points stop working, scale the
+    # whole hierarchy together so the style's ratios survive at any size. Applied
+    # here, once, so all renderers inherit it rather than each solving it its own
+    # way. Guarded - typography is a nicety and must never break a render.
+    _typo_scale = 1.0
+    try:
+        from make_my_figure_core.plots.base import explicit_figure_size
+        from make_my_figure_core.styles.typography import scaled_for_canvas
+
+        _canvas = explicit_figure_size(spec)
+        if _canvas is not None:
+            style, _typo_scale = scaled_for_canvas(style, _canvas[0], _canvas[1])
+    except Exception:  # noqa: BLE001
+        _typo_scale = 1.0
+
     # Honest style capabilities: a style control that does not apply to this plot type
     # is reported (never silently ignored). Guarded — never blocks a render.
     _cap_warnings: List[str] = []
@@ -380,6 +398,25 @@ def render(
     for _w in figure_size_adjustments(spec):
         if _w not in result.warnings:
             result.warnings.append(_w)
+    # A title longer than the figure is wide is wrapped rather than shrunk, for
+    # every plot type at once. Guarded - a title nicety must never break a render.
+    try:
+        from make_my_figure_core.styles.typography import wrap_overlong_titles
+
+        if getattr(result, "figure", None) is not None:
+            for _note in wrap_overlong_titles(result.figure):
+                if _note not in result.warnings:
+                    result.warnings.append(_note)
+    except Exception as _exc:  # noqa: BLE001
+        result.warnings.append(f"Title fitting skipped: {_exc}")
+
+    if _typo_scale != 1.0:
+        _msg = (
+            f"Text sizes were scaled to {_typo_scale:.0%} of the style's values to "
+            f"suit the figure size you set. The relative sizes of title, axis "
+            f"labels, ticks and legend are unchanged.")
+        if _msg not in result.warnings:
+            result.warnings.append(_msg)
 
     # Uniform PublicationLayoutSpec application (spec['layout']): tick rotation/pad,
     # axis-label pad, title pad, and explicit margins apply to the primary axes of
