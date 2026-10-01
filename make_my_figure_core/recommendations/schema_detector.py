@@ -12,6 +12,14 @@ import pandas as pd
 from make_my_figure_core.recommendations.recommendation_models import DataProfile
 
 SCHEMAS = (
+    # spatial (v2) - listed first because they are the most specific: they all
+    # require corroborated tissue coordinates, which no other schema uses.
+    "spatial_roi_polygons",
+    "spatial_transcripts",
+    "spatial_composition",
+    "spatial_long_expression",
+    "spatial_cells",
+    "neighborhood_enrichment",
     "precomputed_differential",
     "survival",
     "gwas",
@@ -32,6 +40,34 @@ SCHEMAS = (
 
 def detect_schema(profile: DataProfile, df: pd.DataFrame | None = None) -> str:
     r = profile.has_role
+
+    # --- spatial (v2) --------------------------------------------------------
+    # Checked first: every one of these needs corroborated tissue coordinates
+    # (see data_profiler._spatial_coordinate_columns), so an ordinary x/y
+    # scatter table never reaches them.
+    if r("spatial_x") and r("spatial_y"):
+        # ROI geometry: many rows per region, ordered vertices.
+        if r("roi_id") and r("vertex_order"):
+            return "spatial_roi_polygons"
+        # Transcript detections: one row per molecule, not per cell.
+        if r("transcript_gene") and (r("transcript_id") or r("quality_score")):
+            return "spatial_transcripts"
+        # Composition: one row per (spot, category) with a count or fraction.
+        if (r("spot_id") or r("roi_id")) and r("cell_type") and \
+                (r("fraction") or profile.numeric_columns):
+            if _looks_like_composition(profile, df):
+                return "spatial_composition"
+        # Long expression: id + coordinates + feature + value.
+        if r("transcript_gene") and _has_value_column(profile):
+            return "spatial_long_expression"
+        # Otherwise a cell/spot table.
+        return "spatial_cells"
+
+    # Enrichment matrix produced by the spatial workflow (no coordinates).
+    if r("neighborhood") and r("cell_type"):
+        lowered = {str(c).lower() for c in (df.columns if df is not None else [])}
+        if any("enrich" in c for c in lowered):
+            return "neighborhood_enrichment"
 
     # Precomputed differential/feature-level results: fold-change + a p or FDR.
     if r("logFC") and (r("p_value") or r("adj_p")):
@@ -83,3 +119,28 @@ def detect_schema(profile: DataProfile, df: pd.DataFrame | None = None) -> str:
         return "generic_long"
 
     return "unknown"
+
+def _has_value_column(profile: DataProfile) -> bool:
+    """A numeric column that is not one of the coordinates."""
+    coords = {profile.role_column("spatial_x"), profile.role_column("spatial_y")}
+    return any(c not in coords for c in profile.numeric_columns)
+
+
+def _looks_like_composition(profile: DataProfile, df) -> bool:
+    """Long composition: the same spot repeated once per category.
+
+    Checked on the data rather than the header, because "spot_id + cell_type"
+    also describes a per-cell table where each row is one cell.
+    """
+    if df is None:
+        return False
+    spot = profile.role_column("spot_id") or profile.role_column("roi_id")
+    ct = profile.role_column("cell_type")
+    if not spot or not ct or spot not in df.columns or ct not in df.columns:
+        return False
+    try:
+        per_spot = df.groupby(spot)[ct].nunique()
+        # several distinct categories per spot, and no category repeated within one
+        return bool(per_spot.median() > 1 and not df.duplicated([spot, ct]).any())
+    except Exception:  # noqa: BLE001 - detection must never raise
+        return False
