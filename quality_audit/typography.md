@@ -288,6 +288,21 @@ other 34 asserted clean.
    warning is surfaced rather than suppressed. Whether those two should refuse such a
    size outright belongs with the per-plot work in later phases.
 
+## Regression run
+
+Full suite on commit `7666e24`, branch `feature/spatial-v2`:
+
+```
+2382 passed, 4 skipped, 11 warnings in 1319.44s (0:21:59)
+```
+
+Recorded in `reports/phase2_typography/pytest_full_7666e24.txt`. The baseline in
+`quality_audit/baseline.md` was 2240 passing; the difference is this phase's tests.
+
+The 11 warnings are not suppressed failures. Two are `hierarchical_clustering` and
+`neighborhood_enrichment_matrix` reporting that `tight_layout` cannot fit their
+decorations on a 2 x 1 in canvas, which is a true statement about that canvas.
+
 ## Status
 
 Phase 2 is **NOT READY** as a shipping claim, and the plot system as a whole is not
