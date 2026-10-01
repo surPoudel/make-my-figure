@@ -74,6 +74,26 @@ def _same_frame(a: Optional[pd.DataFrame], b: Optional[pd.DataFrame]) -> bool:
         return False
 
 
+SPATIAL_BACKGROUND_ASSET_ID = "spatial_background"
+
+
+def _spatial_background_asset(spec):
+    """An AssetSource for a spatial background image, when the spec uses one.
+
+    A tissue map drawn over an H&E image is not reproducible without that image:
+    the figure would come back as bare points over white. The image therefore
+    travels inside the package with its own checksum, exactly like an imported
+    panel, and the reopened spec is pointed at the extracted copy rather than at
+    a path on the machine that made it.
+    """
+    block = (spec or {}).get("spatial") or {}
+    path = block.get("background_image")
+    if not path or not os.path.exists(str(path)):
+        return None
+    return AssetSource(SPATIAL_BACKGROUND_ASSET_ID, str(path),
+                       original_filename=os.path.basename(str(path)))
+
+
 def content_for_single_plot(
     spec: Dict[str, Any],
     df: pd.DataFrame,
@@ -90,6 +110,10 @@ def content_for_single_plot(
     record_original_paths: bool = False,
 ) -> PackageContent:
     """Everything needed to reproduce one plot exactly as rendered."""
+    assets: List[AssetSource] = []
+    bg = _spatial_background_asset(spec)
+    if bg is not None:
+        assets.append(bg)
     tables: List[TableSource] = []
     prov = dict(provenance or {})
     display = table_name or spec.get("input_table") or "table"
@@ -118,6 +142,7 @@ def content_for_single_plot(
                          title=(spec.get("layout") or {}).get("title", "") or "")
     content = PackageContent(
         kind="single_plot", name=name or _default_name(spec, display), components=[comp], tables=tables,
+        assets=assets,
         preview_figure=getattr(result, "figure", None), preview_dpi=preview_dpi,
         record_original_paths=record_original_paths,
     )
