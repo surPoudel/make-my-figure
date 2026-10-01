@@ -3,13 +3,29 @@
 Branch `feature/spatial-v2`. Audited and built 2026-10-01 against 45 registered plot
 types.
 
-## What was already right
+## What was already right, and a correction
 
-The audit found no typography debt of the kind this phase was meant to clean up:
+The audit found no typography debt **of the exact kind it asked about**:
 
 - **0** hard-coded numeric `fontsize=` / `labelsize=` literals in any of the renderers
   under `make_my_figure_core/plots/`.
-- **0** hard-coded text colours on any `.text()` / `.annotate()` call.
+- **0** hard-coded `black` / `k` / `#000000` text colours on any `.text()` /
+  `.annotate()` call.
+
+> **Correction (added while building the cluster-bar controls).** That was too narrow a
+> question, and reporting it as "zero typography debt" was wrong. The regex only looked
+> for a bare number after `fontsize=`. **16 call sites across 9 renderers** instead write
+> `fontsize=max(7.0, style.tick_label_pt - 1)`: the size does come from the style, but
+> the arbitrary offset breaks the documented hierarchy and **the hard floor defeats the
+> canvas scaling this phase added** — at a 2 × 1 in figure the style says 5.5 pt and
+> `max(7.0, 4.5)` pins the text at 7 pt, so it does not shrink. One renderer
+> (`volcano.py`) also sets a text colour directly, `color="0.4"` for its grey subtitle,
+> which the colour check missed because it only looked for black.
+>
+> Three of the original 19 were fixed in `heatmap.py` as part of the cluster-bar work.
+> The remaining 16 are recorded per file as `KNOWN_ADHOC_TYPE_SIZES` in
+> `tests/test_typography_system.py`, with tripwires in both directions: the count cannot
+> grow, and fixing one fails the test until the record is lowered.
 
 Every renderer already takes its text sizes and colour from the `StyleProfile`. Both
 facts are now tests (`test_no_renderer_hardcodes_a_font_size`,
@@ -325,3 +341,57 @@ Item 1 deserves a word of judgement rather than just a place in a list: eleven p
 types clip a legend in their default, out-of-the-box output. That is more likely to
 affect a reader's figure than anything else this phase touched, and it would be worth
 taking out of brief order and doing next.
+
+---
+
+## Addendum — cluster-bar controls (heatmap)
+
+Reported from the running app: the row and column cluster bars had no options, unlike
+the colourbar. Confirmed — the only things an author could change were `cluster_k_rows`
+/ `cluster_k_columns` (how many clusters) and `cluster_prefix`, which was not even
+offered in the UI. Colour, thickness, padding, the bar label and the key were all fixed
+in `_draw_cluster_strip`.
+
+Added, deliberately mirroring the colourbar's shape of control:
+
+| option | what it does |
+|---|---|
+| `cluster_palette` | `auto` / `style` / `publication` / `colorblind_safe` / `high_contrast` / `grayscale` |
+| `cluster_strip_width` | bar thickness, 1–20% of the plot |
+| `cluster_strip_pad` | gap between bar and heatmap |
+| `cluster_strip_labels` | label the bars, or not |
+| `cluster_legend` | `auto` / `rows` / `columns` / `both` / `off` |
+| `cluster_legend_location` | `right` / `right_lower` / `inside` |
+
+Three bugs found and fixed while doing it:
+
+1. **The bar label ignored `cluster_prefix`** — it was the literal string `"Cluster"`, so
+   setting the prefix to `Module` relabelled the key but not the bars.
+2. **Row and column bars were drawn from the same palette**, so "Cluster 1" of the rows
+   and "Cluster 1" of the columns were the same colour in the same figure, with only one
+   key to explain both. The column bars now start further along the palette, and each
+   key is titled `Rows` or `Columns`. One axis clustered on its own keeps the familiar
+   colours, since there is then nothing to disambiguate.
+3. **A lone key was drawn twice** — `ax.legend()` both returns the legend and sets
+   `ax.legend_`, so holding it with `add_artist` to survive a second `ax.legend()` call
+   duplicated it when no second call came.
+
+### What was tried and reverted
+
+- Pushing the key past the colourbar (x anchor 1.14 → 1.42) cleared the overlap and
+  then forced `tight_layout` to squeeze the heatmap to a sliver. Reverted.
+- Moving the row bar's label above the bar instead of below it (to clear the x tick
+  labels) placed it at the top of the figure, where it read as a figure title. Reverted;
+  `cluster_strip_labels` turns them off instead.
+- `left`, `top` and `bottom` key positions were measured drawing the key over the tick
+  labels or the colourbar in every configuration, so they are **not offered**. Adding
+  them needs the legend-placement work that reserves figure margin for an outside
+  legend — the same defect as the 11 plot types above.
+- By default only **one** key is drawn when both axes are clustered, as before, because
+  two on the right need width the figure does not have. A warning now says so and
+  points at the `both` setting, instead of leaving the second bar unexplained.
+
+34 tests in `tests/test_cluster_bar_controls.py`, including one asserting that **every**
+offered combination of key mode and position produces a figure with nothing clipped and
+no key drawn over the decorations — an option that makes a bad figure is not worth
+offering.

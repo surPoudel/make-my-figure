@@ -540,3 +540,86 @@ def test_the_list_of_plots_clipped_at_default_size_has_not_grown():
     assert not fixed, (
         f"these no longer clip at default size and should be removed from "
         f"KNOWN_DEFAULT_OVERFLOW: {sorted(fixed)}")
+
+
+# --------------------------------------------------------------------------
+# Type sizes derived ad hoc, with a floor of their own
+# --------------------------------------------------------------------------
+
+# The audit above only looks for a bare number after ``fontsize=``, and reported
+# zero. That was too narrow a question. These sites write
+# ``fontsize=max(7.0, style.tick_label_pt - 1)`` instead: the size does come from
+# the style, but an arbitrary offset breaks the documented hierarchy and the hard
+# floor defeats the canvas scaling - at a 2 x 1 in figure the style says 5.5 pt and
+# ``max(7.0, 4.5)`` pins the text at 7 pt, so it does not shrink with the figure.
+#
+# Recorded per file rather than per line so the count cannot creep up unnoticed
+# while line numbers move. Fixing one means lowering its number here.
+KNOWN_ADHOC_TYPE_SIZES = {
+    "calibration.py": 1,
+    "heatmap.py": 5,
+    "hierarchical_clustering.py": 2,
+    "manhattan.py": 1,
+    "precision_recall.py": 1,
+    "scatter.py": 1,
+    "spatial_feature_map.py": 2,
+    "upset.py": 1,
+    "volcano.py": 2,
+}
+
+# One renderer still sets a text colour directly rather than from the style: the
+# volcano's grey subtitle. Same reasoning - recorded, not quietly accepted.
+KNOWN_HARDCODED_TEXT_COLOURS = {"volcano.py": 1}
+
+
+def _adhoc_type_size_counts():
+    pattern = re.compile(r"(?:fontsize|labelsize|title_fontsize)\s*=\s*(?:max|min)\(")
+    counts = {}
+    for path in sorted(PLOTS_DIR.glob("*.py")):
+        n = sum(len(pattern.findall(line))
+                for line in path.read_text(encoding="utf-8").splitlines()
+                if not line.lstrip().startswith("#"))
+        if n:
+            counts[path.name] = n
+    return counts
+
+
+def test_ad_hoc_type_sizes_have_not_spread():
+    """A new renderer must take its sizes from the style, not invent a floor."""
+    actual = _adhoc_type_size_counts()
+    new = {f: n for f, n in actual.items() if f not in KNOWN_ADHOC_TYPE_SIZES}
+    assert not new, (
+        f"these renderers derive type sizes ad hoc with a floor of their own, which "
+        f"defeats the shared scaling: {new}")
+    grown = {f: (KNOWN_ADHOC_TYPE_SIZES[f], n) for f, n in actual.items()
+             if n > KNOWN_ADHOC_TYPE_SIZES[f]}
+    assert not grown, f"ad-hoc type sizes increased (was, now): {grown}"
+
+
+def test_fixing_an_ad_hoc_type_size_updates_the_record():
+    """Failing here is good news - lower the number and the tripwire stays honest."""
+    actual = _adhoc_type_size_counts()
+    stale = {f: (expected, actual.get(f, 0))
+             for f, expected in KNOWN_ADHOC_TYPE_SIZES.items()
+             if actual.get(f, 0) < expected}
+    assert not stale, (
+        f"fewer ad-hoc type sizes than recorded; update KNOWN_ADHOC_TYPE_SIZES "
+        f"(was, now): {stale}")
+
+
+def test_hardcoded_text_colours_have_not_spread():
+    pattern = re.compile(r"color\s*=\s*[\"'](?:0\.[0-9]+|gray|grey|#[0-9a-fA-F]{3,6})[\"']")
+    counts = {}
+    for path in sorted(PLOTS_DIR.glob("*.py")):
+        n = 0
+        for line in path.read_text(encoding="utf-8").splitlines():
+            stripped = line.lstrip()
+            if stripped.startswith("#"):
+                continue
+            if pattern.search(line) and any(
+                    k in line for k in (".text(", ".annotate(", "set_title", "set_label")):
+                n += 1
+        if n:
+            counts[path.name] = n
+    new = {f: n for f, n in counts.items() if n > KNOWN_HARDCODED_TEXT_COLOURS.get(f, 0)}
+    assert not new, f"text colour must come from the style, not a literal: {new}"

@@ -151,6 +151,23 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("cluster_k_rows", "Row clusters (k, 0=off)", "number", 0, minimum=0, maximum=20, step=1, decimals=0),
         Option("cluster_k_columns", "Column clusters (k, 0=off)", "number", 0, minimum=0, maximum=20, step=1, decimals=0),
         Option("sort_by_cluster", "Sort by cluster", "bool", False),
+        # Cluster-bar appearance. Deliberately the same shape of control as the
+        # colourbar below (thickness / pad / placement) plus a palette, because the
+        # row and column bars are annotation elements the author needs to tune just
+        # as often.
+        Option("cluster_palette", "Cluster bar colours", "choice", "auto",
+               ["auto", "style", "publication", "colorblind_safe", "high_contrast",
+                "grayscale"], scope="style"),
+        Option("cluster_strip_width", "Cluster bar thickness (% of plot)", "number", 4.0,
+               minimum=1.0, maximum=20.0, step=0.5, decimals=1, scope="style"),
+        Option("cluster_strip_pad", "Cluster bar pad", "number", 0.06,
+               minimum=0.0, maximum=0.5, step=0.02, decimals=2, scope="style"),
+        Option("cluster_strip_labels", "Label the cluster bars", "bool", True,
+               scope="style"),
+        Option("cluster_legend", "Cluster legend", "choice", "auto",
+               ["auto", "rows", "columns", "both", "off"], scope="style"),
+        Option("cluster_legend_location", "Cluster legend location", "choice", "right",
+               ["right", "right_lower", "inside"], scope="style"),
         Option("group_separators", "Group separator lines", "bool", True, scope="style"),
         # Catchy cell grid + group-separator styling (all user-controllable).
         Option("cell_border_color", "Cell grid color", "choice", "white",
