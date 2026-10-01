@@ -1,0 +1,8 @@
+{
+  "python": "3.11.9",
+  "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.43",
+  "numpy": "2.1.2",
+  "pandas": "2.2.3",
+  "cpu_count": 24,
+  "note": "Timings are wall-clock on one machine and are indicative, not a specification. Peak RSS is process-wide and cumulative, so it only ever rises; rss_growth_mb is the increase attributable to a stage."
+}

@@ -1,0 +1,50 @@
+stage,n,seconds,peak_rss_mb,rss_growth_mb,per_1k_rows_ms,notes
+write CSV,167780,0.524,185.5,0.0,3.1203,Xenium Rep 1 (real)
+load CSV,167780,0.1,204.1,18.7,0.597,Xenium Rep 1 (real)
+neighbour graph (kNN k=10),167780,0.844,252.7,48.5,5.0322,"cKDTree, per sample"
+local composition,167780,0.454,252.7,0.0,2.7067,vectorised bincount
+"CC neighbourhoods (k-means, 8 CNs)",167780,4.532,427.1,174.4,27.0135,scikit-learn
+CT-CN enrichment,167780,0.038,427.1,0.0,0.2275,crosstab + published formula
+render categorical map,167780,1.24,427.1,0.0,7.3913,rasterised marks
+export PNG,167780,0.805,427.1,0.0,4.7985,"rasterised marks, vector text"
+export PDF,167780,1.283,427.1,0.0,7.6441,"rasterised marks, vector text"
+export SVG,167780,1.387,427.1,0.0,8.2694,"rasterised marks, vector text"
+render feature map,167780,1.254,427.1,0.0,7.4734,continuous colour
+write CSV,10000,0.046,427.1,0.0,4.5957,"synthetic 10,000"
+load CSV,10000,0.006,427.1,0.0,0.6433,"synthetic 10,000"
+neighbour graph (kNN k=10),10000,0.035,427.1,0.0,3.4706,"cKDTree, per sample"
+local composition,10000,0.038,427.1,0.0,3.838,vectorised bincount
+"CC neighbourhoods (k-means, 8 CNs)",10000,0.315,427.1,0.0,31.4602,scikit-learn
+CT-CN enrichment,10000,0.01,427.1,0.0,0.9662,crosstab + published formula
+render categorical map,10000,0.118,427.1,0.0,11.7527,rasterised marks
+export PNG,10000,0.19,427.1,0.0,19.0377,"rasterised marks, vector text"
+export PDF,10000,0.201,427.1,0.0,20.0532,"rasterised marks, vector text"
+export SVG,10000,0.25,427.1,0.0,24.9973,"rasterised marks, vector text"
+render feature map,10000,0.124,427.1,0.0,12.414,continuous colour
+write CSV,100000,0.45,427.1,0.0,4.5028,"synthetic 100,000"
+load CSV,100000,0.052,427.1,0.0,0.5174,"synthetic 100,000"
+neighbour graph (kNN k=10),100000,0.383,427.1,0.0,3.8305,"cKDTree, per sample"
+local composition,100000,0.343,427.1,0.0,3.4299,vectorised bincount
+"CC neighbourhoods (k-means, 8 CNs)",100000,2.813,427.1,0.0,28.1271,scikit-learn
+CT-CN enrichment,100000,0.027,427.1,0.0,0.2706,crosstab + published formula
+render categorical map,100000,0.702,427.1,0.0,7.0241,rasterised marks
+export PNG,100000,0.682,427.1,0.0,6.8154,"rasterised marks, vector text"
+export PDF,100000,0.923,427.1,0.0,9.2295,"rasterised marks, vector text"
+export SVG,100000,0.971,427.1,0.0,9.7113,"rasterised marks, vector text"
+render feature map,100000,0.577,427.1,0.0,5.7708,continuous colour
+write CSV,500000,2.435,488.9,5.0,4.8702,"synthetic 500,000"
+load CSV,500000,0.247,488.9,0.0,0.4933,"synthetic 500,000"
+neighbour graph (kNN k=10),500000,2.461,613.9,125.0,4.9215,"cKDTree, per sample"
+local composition,500000,1.737,613.9,0.0,3.4746,vectorised bincount
+"CC neighbourhoods (k-means, 8 CNs)",500000,7.756,766.3,152.3,15.5113,scikit-learn
+CT-CN enrichment,500000,0.11,766.3,0.0,0.22,crosstab + published formula
+render categorical map,500000,2.929,766.3,0.0,5.8581,rasterised marks
+export PNG,500000,1.856,766.3,0.0,3.7113,"rasterised marks, vector text"
+export PDF,500000,3.201,766.3,0.0,6.4024,"rasterised marks, vector text"
+export SVG,500000,3.199,766.3,0.0,6.3981,"rasterised marks, vector text"
+render feature map,500000,2.72,766.3,0.0,5.4409,continuous colour
+write CSV,1000000,4.277,766.3,0.0,4.2767,transcripts
+load CSV,1000000,0.393,766.3,0.0,0.3931,transcripts
+render transcript map,1000000,5.327,766.3,0.0,5.327,no subsampling
+export PNG,1000000,3.144,766.3,0.0,3.1444,rasterised marks
+export PDF,1000000,6.108,766.3,0.0,6.1077,rasterised marks
