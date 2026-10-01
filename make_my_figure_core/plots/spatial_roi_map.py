@@ -21,6 +21,7 @@ from matplotlib.lines import Line2D
 from make_my_figure_core.plots._spatial_shared import (
     add_scale_bar, apply_crop, coordinate_record, draw_background_image,
     finish_spatial_axes, numeric_coordinates, ordered_levels, spatial_block,
+    widen_for_outside_legend,
 )
 from make_my_figure_core.plots.base import (
     RenderError, RenderResult, base_metadata, figure_size, get_mapping, require_columns,
@@ -100,8 +101,12 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     lw = float(block.get("roi_linewidth", 1.4))
     w, h = figure_size(spec, style, aspect=0.95)
 
+    show_legend = bool(cats and block.get("legend", True))
+    fig_w, legend_rect = (widen_for_outside_legend(w, cats, style, str(category))
+                          if show_legend else (w, None))
+
     with style.apply():
-        fig, ax = plt.subplots(figsize=(w, h))
+        fig, ax = plt.subplots(figsize=(fig_w, h))
         bg_record = draw_background_image(ax, block)
 
         pts = block.get("context_points")
@@ -129,10 +134,10 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
         if title:
             ax.set_title(str(title))
 
-        if cats and block.get("legend", True):
+        if show_legend:
             handles = [Line2D([0], [0], color=cat_colour[c], linewidth=lw, label=c)
                        for c in cats]
-            fig.tight_layout(rect=(0, 0, 0.78, 1))
+            fig.tight_layout(rect=legend_rect)
             ax.legend(handles=handles, title=str(category), loc="upper left",
                       bbox_to_anchor=(1.02, 1.0), frameon=style.legend_frameon)
         else:

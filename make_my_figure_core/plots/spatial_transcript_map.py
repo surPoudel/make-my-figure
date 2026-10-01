@@ -18,6 +18,7 @@ from matplotlib.lines import Line2D
 from make_my_figure_core.plots._spatial_shared import (
     add_scale_bar, apply_crop, coordinate_record, draw_background_image,
     finish_spatial_axes, numeric_coordinates, ordered_levels, spatial_block,
+    widen_for_outside_legend,
 )
 from make_my_figure_core.plots.base import (
     RenderError, RenderResult, base_metadata, figure_size, get_mapping, require_columns,
@@ -93,8 +94,12 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     raster = bool(block.get("rasterize", True))
     w, h = figure_size(spec, style, aspect=0.95)
 
+    show_legend = bool(block.get("legend", True) and levels)
+    fig_w, legend_rect = (widen_for_outside_legend(w, levels, style, str(gene))
+                          if show_legend else (w, None))
+
     with style.apply():
-        fig, ax = plt.subplots(figsize=(w, h))
+        fig, ax = plt.subplots(figsize=(fig_w, h))
         bg_record = draw_background_image(ax, block)
 
         ctx = block.get("context_points")     # optional cell/background layer
@@ -119,11 +124,11 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
         if title:
             ax.set_title(str(title))
 
-        if block.get("legend", True) and levels:
+        if show_legend:
             handles = [Line2D([0], [0], marker="o", linestyle="none", markersize=6,
                               markerfacecolor=colours[g], markeredgecolor="none", label=g)
                        for g in levels]
-            fig.tight_layout(rect=(0, 0, 0.78, 1))
+            fig.tight_layout(rect=legend_rect)
             ax.legend(handles=handles, title=str(gene), loc="upper left",
                       bbox_to_anchor=(1.02, 1.0), frameon=style.legend_frameon,
                       ncol=max(1, int(block.get("legend_columns", 1))))

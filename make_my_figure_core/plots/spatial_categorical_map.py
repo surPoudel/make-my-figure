@@ -17,6 +17,7 @@ from make_my_figure_core.plots._spatial_shared import (
     add_scale_bar, apply_crop, categorical_styles, coordinate_record,
     draw_background_image, facet_grid, finish_spatial_axes, numeric_coordinates,
     ordered_levels, share_facet_limits, should_rasterize, spatial_block,
+    widen_for_outside_legend,
 )
 from make_my_figure_core.plots.base import (
     RenderResult, base_metadata, figure_size, get_mapping, require_columns,
@@ -73,8 +74,14 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     edge = block.get("marker_edgecolor")
     raster = should_rasterize(len(data), block)
 
+    show_legend = bool(block.get("legend", True))
+    fig_w = w * ncols
+    legend_rect = None
+    if show_legend:
+        fig_w, legend_rect = widen_for_outside_legend(w * ncols, levels, style, str(category))
+
     with style.apply():
-        fig, axes = plt.subplots(nrows, ncols, figsize=(w * ncols, h * nrows), squeeze=False)
+        fig, axes = plt.subplots(nrows, ncols, figsize=(fig_w, h * nrows), squeeze=False)
         bg_record = None
         used_axes = []
         for idx, fv in enumerate(facet_levels):
@@ -115,13 +122,13 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
         bars = [add_scale_bar(ax, block, style) for ax in used_axes]
         bar = bars[0] if bars else None
 
-        if block.get("legend", True):
+        if show_legend:
             handles = [Line2D([0], [0], marker=markers[lv], linestyle="none", markersize=7,
                               markerfacecolor=colours[lv], markeredgecolor="white", label=lv)
                        for lv in levels]
             # Always outside the tissue. A legend placed "best" lands on the
             # cells, which are the part of the figure the reader came for.
-            fig.tight_layout(rect=(0, 0, 0.76, 1))
+            fig.tight_layout(rect=legend_rect)
             axes[0][ncols - 1].legend(
                 handles=handles, title=str(category), loc="upper left",
                 bbox_to_anchor=(1.02, 1.0), frameon=style.legend_frameon,

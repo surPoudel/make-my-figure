@@ -256,3 +256,26 @@ def categorical_styles(levels, style, palette=None, base_marker="o"):
             "shape varies alongside colour to keep every category distinguishable. "
             "Consider grouping rare categories, or set an explicit palette.")
     return colours, markers, warning
+
+
+def widen_for_outside_legend(base_w: float, labels, style, title: str = "") -> tuple:
+    """Figure width that actually contains an outside legend, and the layout rect.
+
+    Reserving a fixed fraction of a fixed-size figure does not work: the legend
+    is anchored to the axes, so a long label - "CD68+CD163+ macrophages" in a
+    real annotated section - runs off the canvas. Exports with a tight bounding
+    box still look right, which is exactly why this is easy to miss; the fixed
+    preview is where it shows.
+
+    So the figure grows by roughly the width the labels need, and the axes keep
+    their original size instead of being squeezed.
+
+    Returns ``(total_width_in, rect)`` for ``fig.tight_layout(rect=...)``.
+    """
+    longest = max([len(str(t)) for t in labels] + [len(str(title))], default=0)
+    pt = float(getattr(style, "legend_pt", None) or getattr(style, "tick_label_pt", 8.0))
+    # ~0.6 em per character, plus the marker, padding and a small margin.
+    legend_in = (longest * 0.6 * pt / 72.0) + 0.55
+    legend_in = max(1.1, min(legend_in, 4.0))
+    total = base_w + legend_in
+    return total, (0.0, 0.0, base_w / total, 1.0)

@@ -24,6 +24,7 @@ from matplotlib.patches import Wedge
 from make_my_figure_core.plots._spatial_shared import (
     add_scale_bar, apply_crop, coordinate_record, draw_background_image,
     finish_spatial_axes, numeric_coordinates, ordered_levels, spatial_block,
+    widen_for_outside_legend,
 )
 from make_my_figure_core.plots.base import (
     RenderError, RenderResult, base_metadata, figure_size, get_mapping, require_columns,
@@ -130,8 +131,12 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     w, h = figure_size(spec, style, aspect=0.95)
     drawn = 0
 
+    show_legend = bool(block.get("legend", True))
+    fig_w, legend_rect = (widen_for_outside_legend(w, levels, style, str(category))
+                          if show_legend else (w, None))
+
     with style.apply():
-        fig, ax = plt.subplots(figsize=(w, h))
+        fig, ax = plt.subplots(figsize=(fig_w, h))
         bg_record = draw_background_image(ax, block)
         for sid, grp in data.groupby(spot, sort=False):
             cx, cy = float(grp[x].iloc[0]), float(grp[y].iloc[0])
@@ -161,13 +166,13 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
         if title:
             ax.set_title(str(title))
 
-        if block.get("legend", True):
+        if show_legend:
             handles = [Line2D([0], [0], marker="o", linestyle="none", markersize=7,
                               markerfacecolor=colours[c], markeredgecolor="white", label=c)
                        for c in levels]
             # Always outside: a legend placed "best" lands on the tissue, which is
             # the part of the figure the reader came for.
-            fig.tight_layout(rect=(0, 0, 0.74, 1))
+            fig.tight_layout(rect=legend_rect)
             ax.legend(handles=handles, title=str(category), loc="upper left",
                       bbox_to_anchor=(1.02, 1.0), frameon=style.legend_frameon,
                       ncol=max(1, int(block.get("legend_columns", 1))))
