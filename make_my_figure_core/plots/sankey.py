@@ -18,6 +18,7 @@ import numpy as np
 
 from make_my_figure_core.plots._v04_shared import ordered_unique
 from make_my_figure_core.plots.base import (
+    explicit_figure_size,
     RenderError,
     RenderResult,
     base_metadata,
@@ -79,7 +80,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
     with style.apply():
         w_in, _ = style.figure_size_inches("double", aspect=0.7)
-        fig, ax = plt.subplots(figsize=(max(w_in, 6.0), max(w_in * 0.62, 4.0)))
+        _size = explicit_figure_size(spec) or (max(w_in, 6.0), max(w_in * 0.62, 4.0))
+        fig, ax = plt.subplots(figsize=_size)
 
         # Node bars.
         for i, n in enumerate(sources):

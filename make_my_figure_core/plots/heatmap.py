@@ -26,6 +26,7 @@ import numpy as np
 
 from make_my_figure_core import clustering as _clust
 from make_my_figure_core.plots.base import (
+    explicit_figure_size,
     RenderError,
     RenderResult,
     base_metadata,
@@ -385,6 +386,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     figsize = (w_in, min(target_h, 22.0))
 
     with style.apply():
+        figsize = explicit_figure_size(spec) or figsize
         fig, ax = plt.subplots(figsize=figsize)
         im = ax.imshow(ordered, aspect="auto", cmap=cmap, vmin=vmin, vmax=vmax,
                        interpolation="nearest")

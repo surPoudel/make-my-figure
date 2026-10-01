@@ -23,6 +23,7 @@ from matplotlib.colors import CenteredNorm, Normalize
 from matplotlib.lines import Line2D
 
 from make_my_figure_core.plots.base import (
+    explicit_figure_size,
     RenderError, RenderResult, base_metadata, figure_size, get_mapping, require_columns,
 )
 from make_my_figure_core.styles.engine import StyleProfile
@@ -98,9 +99,16 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
         ss.append(max_area * (float(r[freq]) / fmax if freq and fmax > 0 and pd.notna(r[freq])
                               else 0.55))
 
-    w, h = figure_size(spec, style, aspect=0.62)
-    w = max(w, 0.30 * len(cols) + 3.0)
-    h = max(h, 0.34 * len(rows) + 2.0)
+    # Grow with the matrix so labels stay legible - but an explicit request
+    # from the user wins, because a figure that ignores the size you asked for
+    # cannot be fitted to a column.
+    pinned = explicit_figure_size(spec)
+    if pinned is not None:
+        w, h = pinned
+    else:
+        w, h = figure_size(spec, style, aspect=0.62)
+        w = max(w, 0.30 * len(cols) + 3.0)
+        h = max(h, 0.34 * len(rows) + 2.0)
 
     with style.apply():
         fig, ax = plt.subplots(figsize=(w, h))

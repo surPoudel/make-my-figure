@@ -552,7 +552,30 @@ class MainWindow(QMainWindow):
         lb.addRow("Title", self.title_edit)
         lb.addRow("X label", self.xlabel_edit)
         lb.addRow("Y label", self.ylabel_edit)
+        # Explicit size in millimetres. The width preset times a renderer's fixed
+        # aspect cannot describe every figure - a wide, short dot matrix has no
+        # preset - so 0 keeps the preset behaviour and any positive value wins.
+        self.fig_w_mm = QDoubleSpinBox()
+        self.fig_w_mm.setRange(0.0, 1000.0)
+        self.fig_w_mm.setDecimals(1)
+        self.fig_w_mm.setSingleStep(5.0)
+        self.fig_w_mm.setValue(0.0)
+        self.fig_w_mm.setSuffix(" mm")
+        self.fig_w_mm.setSpecialValueText("auto (use preset)")
+        self.fig_w_mm.setToolTip(
+            "Exact figure width in millimetres. 0 uses the Figure width preset above.")
+        self.fig_h_mm = QDoubleSpinBox()
+        self.fig_h_mm.setRange(0.0, 1000.0)
+        self.fig_h_mm.setDecimals(1)
+        self.fig_h_mm.setSingleStep(5.0)
+        self.fig_h_mm.setValue(0.0)
+        self.fig_h_mm.setSuffix(" mm")
+        self.fig_h_mm.setSpecialValueText("auto (from width)")
+        self.fig_h_mm.setToolTip(
+            "Exact figure height in millimetres. 0 derives the height from the width.")
         lb.addRow("Figure width", self.width_combo)
+        lb.addRow("Exact width", self.fig_w_mm)
+        lb.addRow("Exact height", self.fig_h_mm)
         lb.addRow("Raster DPI", self.dpi_spin)
         # Click-to-identify / label (volcano & scatter): clicking a point shows
         # its name in the status bar and toggles a label on it (saved in PlotSpec).
@@ -2682,6 +2705,10 @@ class MainWindow(QMainWindow):
         pt = self.plot_combo.currentData()
         style = self.style_combo.currentData()
         layout = {}
+        if getattr(self, "fig_w_mm", None) is not None and self.fig_w_mm.value() > 0:
+            layout["width_mm"] = float(self.fig_w_mm.value())
+        if getattr(self, "fig_h_mm", None) is not None and self.fig_h_mm.value() > 0:
+            layout["height_mm"] = float(self.fig_h_mm.value())
         if self.title_edit.text().strip():
             layout["title"] = self.title_edit.text().strip()
         if self.xlabel_edit.text().strip():

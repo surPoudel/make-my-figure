@@ -31,6 +31,7 @@ from matplotlib.path import Path
 
 from make_my_figure_core.plots._v04_shared import ordered_unique
 from make_my_figure_core.plots.base import (
+    explicit_figure_size,
     RenderError,
     RenderResult,
     base_metadata,
@@ -401,7 +402,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         warnings.append(f"{n_cat} segments: labels may overlap; consider radial placement, "
                         f"'show_labels' off or fewer categories.")
     r_label_base = (_R_BAND_OUT if group else _R_OUT) + _R_LABEL_PAD
-    fig_w_in, fig_h_in = figure_size(spec, style, aspect=1.0)
+    _pinned = explicit_figure_size(spec)
+    fig_w_in, fig_h_in = _pinned or figure_size(spec, style, aspect=1.0)
     fig_pt = min(fig_w_in, fig_h_in) * 72.0
     if show_labels:
         longest = max(len(line) for l in labels.values() for line in l.split("\n"))
@@ -429,7 +431,10 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     legend_frac = 0.075 * legend_rows + (0.035 if legend_below else 0.0)
     title = layout_block.get("title")
     top_frac = 0.08 if title else 0.0
-    fig_h_in = fig_h_in * (1.0 + legend_frac + top_frac)
+    # Room for the legend and title is added to a derived size, but not to a
+    # size the user pinned - that height was the request, not a starting point.
+    if _pinned is None:
+        fig_h_in = fig_h_in * (1.0 + legend_frac + top_frac)
 
     # ---- 7. draw -------------------------------------------------------------------------
     with style.apply():

@@ -15,6 +15,7 @@ import numpy as np
 
 from make_my_figure_core.plots._v04_shared import numeric_matrix, ordered_unique
 from make_my_figure_core.plots.base import (
+    explicit_figure_size,
     RenderResult,
     base_metadata,
     figure_size,
@@ -89,7 +90,10 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         w_in, _ = style.figure_size_inches(
             str(spec.get("layout", {}).get("column_width", "default")).lower(), aspect=1.0)
         side = max(w_in, 0.5 * n_c + 1.6)
-        fig, ax = plt.subplots(figsize=(min(side, 12.0), min(side, 12.0)))
+        # A square matrix sizes itself from its own extent, unless the user
+        # has asked for specific dimensions.
+        _size = explicit_figure_size(spec) or (min(side, 12.0), min(side, 12.0))
+        fig, ax = plt.subplots(figsize=_size)
         im = ax.imshow(display, cmap=style.sequential_cmap, vmin=vmin, vmax=vmax,
                        interpolation="nearest", aspect="auto")
         for i in range(n_r):

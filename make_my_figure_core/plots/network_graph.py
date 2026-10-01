@@ -24,6 +24,7 @@ import pandas as pd
 from make_my_figure_core.clustering import CLUSTER_PALETTE
 from make_my_figure_core.plots._v04_shared import numeric_matrix, ordered_unique, pick_column
 from make_my_figure_core.plots.base import (
+    explicit_figure_size,
     RenderError,
     RenderResult,
     base_metadata,
@@ -317,7 +318,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile, aux=None) -> RenderRes
     # --- draw ---
     with style.apply():
         w_in, h_in = figure_size(spec, style, aspect=0.9)
-        fig, ax = plt.subplots(figsize=(max(w_in, 5.2), max(h_in, 4.6)))
+        _size = explicit_figure_size(spec) or (max(w_in, 5.2), max(h_in, 4.6))
+        fig, ax = plt.subplots(figsize=_size)
         nx.draw_networkx_edges(G, pos, ax=ax, width=list(ew), edge_color=edge_colors,
                                alpha=0.35, arrows=directed)
         nodes_art = nx.draw_networkx_nodes(

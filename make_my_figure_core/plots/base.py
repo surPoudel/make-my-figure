@@ -18,7 +18,7 @@ import numpy as np
 import pandas as pd
 from matplotlib.figure import Figure
 
-from make_my_figure_core.styles.engine import StyleProfile
+from make_my_figure_core.styles.engine import StyleProfile, mm_to_inches
 
 
 class RenderError(Exception):
@@ -125,11 +125,20 @@ _WIDTH_ALIASES = {"single", "onehalf", "double", "default"}
 
 
 def figure_size(spec: Dict[str, Any], style: StyleProfile, *, aspect: float) -> tuple[float, float]:
-    """Resolve figure size, honoring an optional layout['column_width'] preset.
+    """Resolve figure size from the spec.
 
-    Presets: ``default`` (comfortable medium — the out-of-box default),
-    ``single``, ``onehalf``, ``double``. An explicit numeric ``layout['aspect']``
-    overrides the renderer's aspect when provided.
+    Three levels, most specific first:
+
+    * ``layout['width_mm']`` / ``layout['height_mm']`` — explicit millimetres.
+      Either may be given alone: a width without a height keeps the renderer's
+      aspect, and a height without a width keeps the preset width. This exists
+      because a column preset times a fixed aspect cannot describe every figure —
+      a 9x28 dot matrix is wide and short, and no preset says that.
+    * ``layout['aspect']`` — a numeric height/width ratio.
+    * ``layout['column_width']`` — ``default``, ``single``, ``onehalf``, ``double``.
+
+    A non-positive or unparseable value is ignored rather than producing a
+    zero-sized figure.
     """
     layout = spec.get("layout", {}) or {}
     width = str(layout.get("column_width", "default")).lower()
@@ -139,7 +148,46 @@ def figure_size(spec: Dict[str, Any], style: StyleProfile, *, aspect: float) -> 
         aspect = float(layout.get("aspect", aspect))
     except (TypeError, ValueError):
         pass
-    return style.figure_size_inches(width, aspect=aspect)
+
+    def _mm(key):
+        try:
+            v = float(layout.get(key))
+        except (TypeError, ValueError):
+            return None
+        return v if v > 0 else None
+
+    w_mm, h_mm = _mm("width_mm"), _mm("height_mm")
+    w_in, h_in = style.figure_size_inches(width, aspect=aspect)
+    if w_mm is not None:
+        w_in = mm_to_inches(w_mm)
+        if h_mm is None:
+            h_in = w_in * float(aspect)
+    if h_mm is not None:
+        h_in = mm_to_inches(h_mm)
+    return (w_in, h_in)
+
+
+
+def explicit_figure_size(spec: Dict[str, Any]) -> "tuple[float, float] | None":
+    """``(width_in, height_in)`` when the user has pinned both, else ``None``.
+
+    Several renderers size themselves from the data - a heatmap grows with its
+    rows, a dendrogram with its leaves - which is the right default but leaves
+    the user unable to fit a figure to a column. They call this first and yield
+    to it when it returns a size, so an explicit request always wins over a
+    computed one, and the computed one still applies when nothing was asked for.
+    """
+    layout = (spec or {}).get("layout", {}) or {}
+    out = []
+    for key in ("width_mm", "height_mm"):
+        try:
+            v = float(layout.get(key))
+        except (TypeError, ValueError):
+            return None
+        if v <= 0:
+            return None
+        out.append(mm_to_inches(v))
+    return (out[0], out[1])
 
 
 def apply_axis_overrides(ax, spec: Dict[str, Any], *, axis_min: float = None,
