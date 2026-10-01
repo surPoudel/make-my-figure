@@ -395,3 +395,17 @@ Three bugs found and fixed while doing it:
 offered combination of key mode and position produces a figure with nothing clipped and
 no key drawn over the decorations — an option that makes a bad figure is not worth
 offering.
+
+### Regression run
+
+Full suite on commit `8b2d048`:
+
+```
+2451 passed, 4 skipped, 11 warnings in 1331.66s (0:22:11)
+```
+
+Recorded in `reports/phase2_typography/pytest_full_8b2d048.txt`. Up from 2382 on
+`7666e24`, the difference being the 34 cluster-bar tests and the typography-debt
+tripwires. No existing test regressed, despite the deliberate behaviour changes to the
+cluster strips (shifted column palette, `Rows`/`Columns` key titles, the label now
+following `cluster_prefix`).
