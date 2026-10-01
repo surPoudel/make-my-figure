@@ -198,6 +198,21 @@ def debug_info_text() -> str:
 # ---------------------------------------------------------------------------
 # Help dialog
 # ---------------------------------------------------------------------------
+def _make_scrollable(combo, max_visible: int = 14) -> None:
+    """Give a long QComboBox a scrollable popup.
+
+    Qt's default popup grows to fit every entry and can extend past the bottom of
+    the screen, leaving the items below it unreachable - there is no scrollbar
+    unless ``combobox-popup: 0`` is set, which is what makes Qt honour
+    ``maxVisibleItems``. Applied to the combos that can grow with the registry,
+    so adding plot types never makes some of them unreachable again.
+    """
+    combo.setMaxVisibleItems(max_visible)
+    existing = combo.styleSheet() or ""
+    if "combobox-popup" not in existing:
+        combo.setStyleSheet((existing + " QComboBox { combobox-popup: 0; }").strip())
+
+
 class HelpDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -481,6 +496,11 @@ class MainWindow(QMainWindow):
         self.plot_combo.addItem(PLOT_TYPE_PLACEHOLDER, None)
         for pt, label in self.controller.plot_types():
             self.plot_combo.addItem(label, pt)
+        # The list is long enough to run past the bottom of the screen. Qt only
+        # honours maxVisibleItems - and only gives the popup a scrollbar - when
+        # the combo is told not to use the native popup, so set both together.
+        # Without this the entries below the screen edge cannot be reached at all.
+        _make_scrollable(self.plot_combo)
         self.plot_combo.currentIndexChanged.connect(self._on_plot_type_changed)
 
         self.style_combo = QComboBox()
@@ -703,6 +723,8 @@ class MainWindow(QMainWindow):
                        "contain your data.")
         outer = QVBoxLayout(box)
         self.preset_combo = QComboBox()
+        # Presets accumulate as the user saves them, so this list grows too.
+        _make_scrollable(self.preset_combo)
         self.preset_combo.setToolTip("Presets saved for this plot type, plus universal ones.")
         outer.addWidget(self.preset_combo)
         row1 = QHBoxLayout()
