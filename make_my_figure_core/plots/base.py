@@ -504,6 +504,16 @@ def resolve_legend_location(spec: Dict[str, Any], style: "StyleProfile | None" =
     return LEGEND_LOCATIONS["best"]
 
 
+_LAYOUT_NOTES: List[str] = []
+
+
+def drain_layout_notes() -> List[str]:
+    """Messages from the last layout application, and clear them."""
+    notes = list(_LAYOUT_NOTES)
+    _LAYOUT_NOTES.clear()
+    return notes
+
+
 def apply_publication_layout(fig, ax, spec: Dict[str, Any],
                              style: "StyleProfile | None" = None) -> None:
     """Apply the shared PublicationLayoutSpec (spec['layout']) to a rendered axes.
@@ -515,6 +525,8 @@ def apply_publication_layout(fig, ax, spec: Dict[str, Any],
     layout = (spec or {}).get("layout", {}) or {}
     if not layout:
         return
+
+    _LAYOUT_NOTES.clear()
 
     def _num(key):
         try:
@@ -607,20 +619,41 @@ def apply_publication_layout(fig, ax, spec: Dict[str, Any],
         ax.set_title(ax.get_title(), pad=_num("title_pad"),
                      fontsize=getattr(style, "title_font_pt", None))
 
-    # Explicit figure margins (fractions). Applied last so they win over tight_layout.
-    margins = {k: _num(f"margin_{k}") for k in ("left", "right", "top", "bottom")}
-    sub = {"left": margins["left"], "right": margins["right"],
-           "top": margins["top"], "bottom": margins["bottom"]}
-    sub = {k: v for k, v in sub.items() if v is not None}
-    if _num("subplot_wspace") is not None:
-        sub["wspace"] = _num("subplot_wspace")
-    if _num("subplot_hspace") is not None:
-        sub["hspace"] = _num("subplot_hspace")
+    # Explicit figure margins, as matplotlib edge POSITIONS in figure fractions:
+    # left/bottom are measured from the left/bottom edge, right/top are the
+    # position of the far edge (so right=0.75 leaves a quarter of the width
+    # blank on the right). Applied last so they win over tight_layout.
+    #
+    # 0 means "leave this edge alone". The control is labelled that way, and
+    # passing a literal 0 through produced left >= right, which matplotlib
+    # rejects - and the rejection used to be swallowed, so NONE of the margins
+    # applied and the user was told nothing.
+    sub = {}
+    for key in ("left", "right", "top", "bottom"):
+        v = _num(f"margin_{key}")
+        if v is not None and v != 0:
+            sub[key] = v
+    for key, spec_key in (("wspace", "subplot_wspace"), ("hspace", "subplot_hspace")):
+        v = _num(spec_key)
+        if v is not None:
+            sub[key] = v
     if sub:
-        try:
-            fig.subplots_adjust(**sub)
-        except Exception:  # noqa: BLE001 - never break a render on a bad margin combo
-            pass
+        problems = []
+        if "left" in sub and "right" in sub and sub["left"] >= sub["right"]:
+            problems.append(f"left margin {sub['left']:g} must be less than right "
+                            f"{sub['right']:g} (both are positions from the left edge)")
+        if "bottom" in sub and "top" in sub and sub["bottom"] >= sub["top"]:
+            problems.append(f"bottom margin {sub['bottom']:g} must be less than top "
+                            f"{sub['top']:g} (both are positions from the bottom edge)")
+        if problems:
+            # Report rather than swallow: silently ignoring every margin because
+            # one pair is inverted is the behaviour that made this hard to use.
+            _LAYOUT_NOTES.extend(problems)
+        else:
+            try:
+                fig.subplots_adjust(**sub)
+            except Exception as exc:  # noqa: BLE001 - never break a render
+                _LAYOUT_NOTES.append(f"Figure margins were not applied: {exc}")
 
 
 def dedupe_labels_by_distance(points, *, min_dx, min_dy):

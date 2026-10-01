@@ -70,19 +70,43 @@ def test_every_long_dropdown_is_scrollable(window):
 def test_the_size_boxes_cannot_be_set_to_an_unusable_value(window):
     """0 means auto; anything between 0 and the floor snaps out of the dead zone.
 
-    A figure of half a millimetre is never intended, and the control should not
-    let it be dialled in at all rather than relying on a later correction.
+    A figure a fraction of an inch across is never intended, and the control
+    should not let it be dialled in at all rather than relying on a later
+    correction in the renderer.
     """
-    from make_my_figure_core.plots.base import MIN_FIGURE_MM
-    floor = int(MIN_FIGURE_MM)
+    window.size_units.setCurrentText("inches")
+    floor = window._size_floor_in_current_units()
     for name in ("fig_w_mm", "fig_h_mm"):
         box = getattr(window, name)
-        box.setValue(0)
-        assert box.value() == 0, f"{name}: 0 must stay 0 (auto)"
-        for attempt in (1, 5, floor - 1):
+        box.setValue(0.0)
+        assert box.value() == 0.0, f"{name}: 0 must stay 0 (auto)"
+        for attempt in (0.1, 0.5, round(floor - 0.05, 2)):
             box.setValue(attempt)
-            assert box.value() == floor, \
-                f"{name}: {attempt} mm should snap to {floor}, got {box.value()}"
-        box.setValue(200)
-        assert box.value() == 200
-        box.setValue(0)
+            assert box.value() == pytest.approx(floor, abs=0.02), \
+                f"{name}: {attempt} in should snap to {floor:.2f}, got {box.value()}"
+        box.setValue(4.0)
+        assert box.value() == pytest.approx(4.0)
+        box.setValue(0.0)
+
+
+def test_switching_units_keeps_the_same_physical_size(window):
+    """Changing the unit is a change of display, not of intent."""
+    window.size_units.setCurrentText("inches")
+    window.fig_w_mm.setValue(4.0)
+    window.fig_h_mm.setValue(2.0)
+    as_mm_w = window._size_value_to_mm(window.fig_w_mm.value())
+    window.size_units.setCurrentText("mm")
+    assert window.fig_w_mm.value() == pytest.approx(101.6, abs=1.0)
+    assert window._size_value_to_mm(window.fig_w_mm.value()) == pytest.approx(as_mm_w, abs=1.0)
+    window.size_units.setCurrentText("inches")
+    assert window.fig_w_mm.value() == pytest.approx(4.0, abs=0.05)
+    window.fig_w_mm.setValue(0.0)
+    window.fig_h_mm.setValue(0.0)
+
+
+def test_figure_size_lives_in_its_own_section_not_under_labels(window):
+    """Figure dimensions are not a label property."""
+    from PySide6.QtWidgets import QGroupBox
+    titles = [g.title() for g in window.findChildren(QGroupBox)]
+    assert any("Figure size" in t for t in titles), titles
+    assert not any("Labels & size" in t for t in titles), titles

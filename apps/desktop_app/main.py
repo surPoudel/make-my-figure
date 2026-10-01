@@ -539,7 +539,7 @@ class MainWindow(QMainWindow):
         self.options_form = QFormLayout(self.options_box)
         cv.addWidget(self.options_box)
 
-        labels_box = QGroupBox("4. Labels & size")
+        labels_box = QGroupBox("4. Labels")
         lb = QFormLayout(labels_box)
         self.title_edit = QLineEdit()
         self.xlabel_edit = QLineEdit()
@@ -558,40 +558,38 @@ class MainWindow(QMainWindow):
         from make_my_figure_core.plots.base import MIN_FIGURE_MM
 
         def _size_spin(special: str, tip: str):
-            """A millimetre size box where 0 means auto and the next value is usable.
+            """A size box in the currently selected unit, where 0 means automatic.
 
-            Whole millimetres only, and no value between 0 and the minimum: a
-            figure of half a millimetre is never what someone meant, and letting
-            it be dialled in produces a figure matplotlib cannot lay out.
+            Values below the usable floor snap up to it: a figure of half a
+            millimetre is never what someone meant, and matplotlib cannot lay one
+            out. The unit is display only - the spec always stores millimetres.
             """
-            box = QSpinBox()
-            box.setRange(0, 1000)
-            box.setSingleStep(5)
-            box.setValue(0)
-            box.setSuffix(" mm")
+            box = QDoubleSpinBox()
+            box.setRange(0.0, 400.0)
+            box.setDecimals(2)
+            box.setSingleStep(0.5)
+            box.setValue(0.0)
+            box.setSuffix(" in")
             box.setSpecialValueText(special)
             box.setToolTip(tip)
 
             def _skip_dead_zone(v, _b=box):
-                if 0 < v < int(MIN_FIGURE_MM):
+                floor = self._size_floor_in_current_units()
+                if 0 < v < floor:
                     _b.blockSignals(True)
-                    _b.setValue(int(MIN_FIGURE_MM))
+                    _b.setValue(floor)
                     _b.blockSignals(False)
             box.valueChanged.connect(_skip_dead_zone)
             return box
 
         self.fig_w_mm = _size_spin(
             "auto (use preset)",
-            f"Exact figure width in millimetres (minimum {MIN_FIGURE_MM:g} mm). "
-            "0 uses the Figure width preset above.")
+            "Exact figure width. 0 uses the Width preset. "
+            "Inches match matplotlib's figsize.")
         self.fig_h_mm = _size_spin(
             "auto (from width)",
-            f"Exact figure height in millimetres (minimum {MIN_FIGURE_MM:g} mm). "
-            "0 derives the height from the width.")
-        lb.addRow("Figure width", self.width_combo)
-        lb.addRow("Exact width", self.fig_w_mm)
-        lb.addRow("Exact height", self.fig_h_mm)
-        lb.addRow("Raster DPI", self.dpi_spin)
+            "Exact figure height. 0 derives the height from the width.")
+
         # Click-to-identify / label (volcano & scatter): clicking a point shows
         # its name in the status bar and toggles a label on it (saved in PlotSpec).
         self.chk_click_label = QCheckBox("Click a point to identify / label it")
@@ -600,6 +598,30 @@ class MainWindow(QMainWindow):
             "clicking toggles a label on that point (stored in the PlotSpec).")
         self.chk_click_label.toggled.connect(self._on_click_label_toggled)
         lb.addRow("Point picking", self.chk_click_label)
+        # --- figure size -----------------------------------------------------
+        # Its own section: figure dimensions are not a label property, and a
+        # user coming from matplotlib thinks in inches (figsize=(4, 2)), not in
+        # the millimetres a journal spec sheet uses. Both are offered, and the
+        # spec always stores millimetres so a saved figure is unambiguous.
+        size_box = QGroupBox("4. Figure size")
+        sb = QFormLayout(size_box)
+        self.size_units = QComboBox()
+        self.size_units.addItems(["inches", "mm"])
+        self.size_units.setToolTip(
+            "Units for the width and height below. Inches match matplotlib's "
+            "figsize; millimetres match journal figure specifications.")
+        self.size_units.currentTextChanged.connect(self._on_size_units_changed)
+        sb.addRow("Width preset", self.width_combo)
+        sb.addRow("Units", self.size_units)
+        sb.addRow("Width", self.fig_w_mm)
+        sb.addRow("Height", self.fig_h_mm)
+        sb.addRow("Raster DPI", self.dpi_spin)
+        _hint = QLabel("0 = automatic. A journal panel is typically 4x2 to 7x5 inches.")
+        _hint.setStyleSheet("color:#666; font-size:11px;")
+        _hint.setWordWrap(True)
+        sb.addRow("", _hint)
+        cv.addWidget(size_box)
+
         cv.addWidget(labels_box)
 
         cv.addWidget(self._build_preset_panel())
@@ -2672,6 +2694,45 @@ class MainWindow(QMainWindow):
                 mapping[key] = w.value()
         return mapping
 
+
+    MM_PER_INCH = 25.4
+
+    def _size_units_are_mm(self) -> bool:
+        return getattr(self, "size_units", None) is not None \
+            and self.size_units.currentText() == "mm"
+
+    def _size_floor_in_current_units(self) -> float:
+        from make_my_figure_core.plots.base import MIN_FIGURE_MM
+        return MIN_FIGURE_MM if self._size_units_are_mm() else MIN_FIGURE_MM / self.MM_PER_INCH
+
+    def _size_value_to_mm(self, value: float) -> float:
+        """Whatever the box shows -> millimetres, which is what the spec stores."""
+        if value <= 0:
+            return 0.0
+        return float(value) if self._size_units_are_mm() else float(value) * self.MM_PER_INCH
+
+    def _on_size_units_changed(self, _text: str) -> None:
+        """Convert the current numbers so the figure does not change size.
+
+        Switching the unit is a change of display, not of intent: a 4 inch figure
+        must stay 4 inches when the label flips to millimetres.
+        """
+        to_mm = self._size_units_are_mm()
+        factor = self.MM_PER_INCH if to_mm else 1.0 / self.MM_PER_INCH
+        for box, special in ((self.fig_w_mm, "auto (use preset)"),
+                             (self.fig_h_mm, "auto (from width)")):
+            box.blockSignals(True)
+            box.setSuffix(" mm" if to_mm else " in")
+            box.setRange(0.0, 1000.0 if to_mm else 400.0)
+            box.setDecimals(0 if to_mm else 2)
+            box.setSingleStep(5.0 if to_mm else 0.5)
+            box.setSpecialValueText(special)
+            if box.value() > 0:
+                box.setValue(round(box.value() * factor, 2))
+            box.blockSignals(False)
+        self.render_preview()
+
+
     def _on_plot_type_changed(self):
         """Keep plot type, dataset, mappings, PlotSpec and preview in sync.
 
@@ -2721,9 +2782,9 @@ class MainWindow(QMainWindow):
         style = self.style_combo.currentData()
         layout = {}
         if getattr(self, "fig_w_mm", None) is not None and self.fig_w_mm.value() > 0:
-            layout["width_mm"] = float(self.fig_w_mm.value())
+            layout["width_mm"] = self._size_value_to_mm(self.fig_w_mm.value())
         if getattr(self, "fig_h_mm", None) is not None and self.fig_h_mm.value() > 0:
-            layout["height_mm"] = float(self.fig_h_mm.value())
+            layout["height_mm"] = self._size_value_to_mm(self.fig_h_mm.value())
         if self.title_edit.text().strip():
             layout["title"] = self.title_edit.text().strip()
         if self.xlabel_edit.text().strip():

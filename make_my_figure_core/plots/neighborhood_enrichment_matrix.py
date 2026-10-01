@@ -164,11 +164,39 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
                               markerfacecolor="#999999", markeredgecolor="white",
                               markersize=np.sqrt(max_area * f) / 2.0,
                               label=f"{f * fmax:.2f}") for f in levels]
-            fig.legend(handles=handles,
-                       title=str(block.get("size_legend_title", "Frequency in CN")),
-                       loc="lower center", bbox_to_anchor=(0.5, 0.005), ncol=len(levels),
-                       frameon=style.legend_frameon, handletextpad=1.2,
-                       columnspacing=2.4, fontsize=style.tick_label_pt)
+            # Place the key below whatever the x axis actually occupies, measured
+            # rather than assumed. A fixed offset collides with the tick labels
+            # as soon as the figure is short or the user sets their own margins.
+            anchor_y = 0.005
+            lowest = 0.0
+            try:
+                fig.canvas.draw()
+                renderer = fig.canvas.get_renderer()
+                lowest = min(
+                    [t.get_window_extent(renderer).y0 for t in ax.get_xticklabels()
+                     if t.get_text()]
+                    + ([ax.xaxis.label.get_window_extent(renderer).y0]
+                       if ax.get_xlabel() else []))
+                anchor_y = max(0.005, (lowest / fig.bbox.height) - 0.03)
+            except Exception:  # noqa: BLE001 - placement must never break a render
+                pass
+            leg = fig.legend(handles=handles,
+                             title=str(block.get("size_legend_title", "Frequency in CN")),
+                             loc="upper center", bbox_to_anchor=(0.5, anchor_y),
+                             ncol=len(levels), frameon=style.legend_frameon,
+                             handletextpad=1.2, columnspacing=2.4,
+                             fontsize=style.tick_label_pt)
+            # If the layout leaves no room, say so instead of overlapping quietly.
+            try:
+                fig.canvas.draw()
+                r2 = fig.canvas.get_renderer()
+                if leg.get_window_extent(r2).y1 > lowest + 1:
+                    warnings.append(
+                        "The size key overlaps the x-axis labels: this layout leaves no "
+                        "room beneath them. Increase the figure height, raise the bottom "
+                        "margin, or set size_legend=false.")
+            except Exception:  # noqa: BLE001
+                pass
 
     meta = base_metadata(spec, style, data, used_columns=[row, col, score, freq])
     meta["spatial"] = {

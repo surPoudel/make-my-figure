@@ -393,6 +393,11 @@ def render(
         if (spec.get("layout") and getattr(result, "figure", None) is not None
                 and result.figure.axes):
             apply_publication_layout(result.figure, result.figure.axes[0], spec, style)
+            from make_my_figure_core.plots.base import drain_layout_notes
+
+            for _note in drain_layout_notes():
+                if _note not in result.warnings:
+                    result.warnings.append(_note)
     except Exception as _exc:  # noqa: BLE001
         result.warnings.append(f"Layout adjustment skipped: {_exc}")
 
