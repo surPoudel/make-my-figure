@@ -59,11 +59,28 @@ def _order_and_linkage(filled: np.ndarray, axis: str, method: str, metric: str,
     return order, linkage_z
 
 
-def _draw_column_annotations(fig, ax, annotations, ordered_cols, style, warnings) -> None:
-    """Draw thin categorical color strips above the heatmap (one per track)."""
+def _shared_divider(ax):
+    """The one divider for this axes, created once and reused.
+
+    ``make_axes_locatable`` builds a fresh divider each call, and two dividers
+    managing the same axes do not know about each other: the second one's space
+    reservation overwrites the first's. With both a row and a column cluster bar
+    the row bar ended up with no gap at all - its pad silently did nothing and it
+    sat hard against the heatmap - while the column bar, appended last, worked.
+    Each alone was fine, which is what made it look like a row-only bug.
+    """
     from mpl_toolkits.axes_grid1 import make_axes_locatable
 
-    divider = make_axes_locatable(ax)
+    divider = getattr(ax, "_mmf_divider", None)
+    if divider is None:
+        divider = make_axes_locatable(ax)
+        ax._mmf_divider = divider
+    return divider
+
+
+def _draw_column_annotations(fig, ax, annotations, ordered_cols, style, warnings) -> None:
+    """Draw thin categorical color strips above the heatmap (one per track)."""
+    divider = _shared_divider(ax)
     n = len(ordered_cols)
     for track in reversed(annotations):  # append from the top down
         label = str(track.get("label", "annotation"))
@@ -165,12 +182,23 @@ def _draw_cluster_strip(ax, side: str, cluster_ids_in_order: np.ndarray,
     colors = [color_map[lab] for lab in ordered_labels]
     cmap = ListedColormap(colors)
     codes = np.array([idx_of[f"{prefix} {int(c)}"] for c in cluster_ids_in_order])
-    divider = make_axes_locatable(ax)
+    divider = _shared_divider(ax)
     label_pt = style.tick_label_pt
     if side == "left":
         cax = divider.append_axes("left", size=f"{width_pct:g}%", pad=pad)
         cax.imshow(codes.reshape(-1, 1), aspect="auto", cmap=cmap, interpolation="nearest")
         cax.set_xticks([]); cax.set_yticks([])
+        # The divider reserves the space but knows nothing about the row labels,
+        # which live in the same margin - so the bar was drawn straight over the
+        # end of every gene name ("Gene_26" read as "Gene_ 6"). Push the labels
+        # out past the bar and its gap. Both are fractions of the axes width, so
+        # this is computed from the axes' own size in points.
+        # Mind the units: ``size`` is a percentage of the axes width but ``pad``
+        # is in INCHES. Treating both as fractions of the axes over-padded by
+        # about 2x and took 71px of heatmap with it, crushing the column labels.
+        _ax_w_pts = ax.get_window_extent().width * 72.0 / ax.figure.dpi
+        ax.tick_params(axis="y",
+                       pad=(width_pct / 100.0) * _ax_w_pts + pad * 72.0 + 3.0)
         if show_strip_label:
             cax.set_xlabel(prefix, fontsize=label_pt, color=style.text_color)
     else:  # top
@@ -230,7 +258,10 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     cluster_legend = str(get_mapping(spec, "cluster_legend", "auto")).lower()
     cluster_legend_location = str(
         get_mapping(spec, "cluster_legend_location", "right")).lower()
-    cluster_strip_labels = bool(get_mapping(spec, "cluster_strip_labels", True))
+    # Off by default. The key already says "Rows"/"Columns" above "Cluster 1,
+    # 2, 3", so writing "Cluster" beside each bar as well says it a third time -
+    # and it lands on top of the axis labels, which is where it was reported from.
+    cluster_strip_labels = bool(get_mapping(spec, "cluster_strip_labels", False))
     highlight_rows = {str(s).strip().lower() for s in (get_mapping(spec, "highlight_rows", None) or [])}
     highlight_cols = {str(s).strip().lower() for s in (get_mapping(spec, "highlight_columns", None) or [])}
     show_row_labels = get_mapping(spec, "show_row_labels", None)
@@ -463,6 +494,17 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         _explicit_aspect = None
     if _explicit_aspect and _explicit_aspect > 0:
         target_h = w_in * _explicit_aspect
+    # Cluster bars live in the margin, and the margin is taken out of the axes -
+    # so switching them on narrowed the heatmap until its column labels no longer
+    # fitted (measured: 268.6 -> 175.3 px wide, dropping vertical label spacing
+    # to 14.6 px where 10 pt text needs 15.3). Ask for the extra inches instead,
+    # so the bars cost canvas rather than data. The bar is a percentage of the
+    # axes; the pad and the label clearance are inches.
+    _bar_in = cluster_strip_width / 100.0 * w_in + cluster_strip_pad
+    if row_color_map is not None:
+        w_in += _bar_in + 0.08
+    if col_color_map is not None:
+        target_h += _bar_in + 0.08
     figsize = (w_in, min(target_h, 22.0))
 
     with style.apply():

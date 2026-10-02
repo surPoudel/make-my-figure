@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from make_my_figure_core.plots.base import (
+    repel_labels,
     RenderResult,
     base_metadata,
     coerce_numeric,
@@ -138,14 +139,19 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
         # Optional point labels (all labelled points, or only 'selected_labels').
         if label_col and label_col in work.columns:
+            # Collected and placed together, not annotated one at a time with a
+            # fixed offset: picking several nearby points that way stacked their
+            # names on top of each other, which is what click-to-label is for.
+            _pts = []
             for _, row in work.iterrows():
                 txt = str(row[label_col]).strip()
                 if not txt or txt.lower() == "nan":
                     continue
                 if _sel_set and txt.lower() not in _sel_set:
                     continue
-                ax.annotate(txt, (row[x], row[y]), fontsize=style.annotation_pt,
-                            xytext=(3, 3), textcoords="offset points")
+                _pts.append((row[x], row[y], txt))
+            if _pts:
+                repel_labels(ax, _pts, style, show_arrows=len(_pts) > 1)
 
         # Regression-stats annotation (each statistic individually toggleable).
         if fit_line and show_fit_stats and fits:

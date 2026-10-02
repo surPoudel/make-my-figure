@@ -52,35 +52,42 @@ def test_the_same_spec_renders_the_same_figure_every_time(plot_type):
         f"input, so it cannot be regenerated from a saved package")
 
 
-@pytest.mark.parametrize("plot_type", LABEL_SOLVER_PLOTS)
-def test_the_label_solver_is_bounded_by_iterations_not_by_a_clock(plot_type):
+def test_no_call_to_the_label_solver_is_bounded_by_a_clock():
     """A wall-clock budget is a non-deterministic budget.
 
-    Guards the actual mechanism rather than only its symptom: a renderer that
-    called adjust_text without an iteration limit would pass the digest test on a
-    quiet machine and fail it on a busy one.
+    Checks every call site in the plot package rather than one module per plot
+    type: the shared helper moved to plots.base when the scatter's click-to-label
+    needed it too, and a per-module check went looking in the wrong file. The
+    mechanism is what matters - a renderer that called adjust_text without
+    iter_lim would pass a digest test on a quiet machine and fail it on a busy
+    one.
     """
-    import inspect
+    from pathlib import Path
 
-    from make_my_figure_core.plots import registry
-
-    source = inspect.getsource(inspect.getmodule(registry._RENDERERS[plot_type]))
-    assert "adjust_text(" in source, (
-        f"{plot_type} no longer calls adjust_text; update this test")
-    for chunk in source.split("adjust_text(")[1:]:
-        # Match parentheses rather than stopping at the first ")" - these calls
-        # contain tuples like expand_text=(1.05, 1.3), and a naive split cuts the
-        # argument list in half.
-        depth, end = 1, len(chunk)
-        for i, ch in enumerate(chunk):
-            depth += (ch == "(") - (ch == ")")
-            if depth == 0:
-                end = i
-                break
-        call = chunk[:end]
-        assert "iter_lim" in call, (
-            f"{plot_type} calls adjust_text without iter_lim, so it falls back to "
-            f"the one-second wall-clock budget and stops being reproducible")
+    plots_dir = Path(__file__).resolve().parents[1] / "make_my_figure_core" / "plots"
+    call_sites = 0
+    offenders = []
+    for path in sorted(plots_dir.glob("*.py")):
+        text = path.read_text(encoding="utf-8")
+        for chunk in text.split("adjust_text(")[1:]:
+            # Match parentheses rather than stopping at the first ")" - these
+            # calls contain tuples like expand_text=(1.05, 1.3).
+            depth, stop = 1, len(chunk)
+            for i, ch in enumerate(chunk):
+                depth += (ch == "(") - (ch == ")")
+                if depth == 0:
+                    stop = i
+                    break
+            call = chunk[:stop]
+            if "import" in call or "def " in call:
+                continue
+            call_sites += 1
+            if "iter_lim" not in call:
+                offenders.append(f"{path.name}: adjust_text({call.strip()[:60]}…")
+    assert call_sites, "no adjust_text call sites found; has the solver been replaced?"
+    assert not offenders, (
+        "these fall back to adjust_text's one-second wall-clock budget and stop "
+        "being reproducible:\n" + "\n".join(offenders))
 
 
 def test_the_iteration_budget_is_past_convergence():

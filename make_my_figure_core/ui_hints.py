@@ -193,7 +193,7 @@ OPTIONS: Dict[str, List[Option]] = {
                minimum=1.0, maximum=20.0, step=0.5, decimals=1, scope="style"),
         Option("cluster_strip_pad", "Cluster bar pad", "number", 0.06,
                minimum=0.0, maximum=0.5, step=0.02, decimals=2, scope="style"),
-        Option("cluster_strip_labels", "Label the cluster bars", "bool", True,
+        Option("cluster_strip_labels", "Label the cluster bars", "bool", False,
                scope="style"),
         Option("cluster_legend", "Cluster legend", "choice", "auto",
                ["auto", "rows", "columns", "both", "off"], scope="style"),

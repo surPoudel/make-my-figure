@@ -186,7 +186,9 @@ def test_the_cluster_bar_pad_moves_the_bar_away_from_the_heatmap():
 
 def test_the_bar_label_follows_the_cluster_prefix():
     """It used to be the literal string "Cluster" regardless of the prefix set."""
-    result = _render(cluster_prefix="Module")
+    # Labels are off by default now - the key already names the axis - so turn
+    # them on to test what this is about: that the label follows the prefix.
+    result = _render(cluster_prefix="Module", cluster_strip_labels=True)
     labels = {ax.get_xlabel() for ax in _strip_axes(result.figure)}
     labels |= {ax.get_ylabel() for ax in _strip_axes(result.figure)}
     assert "Module" in labels, f"bar label ignored cluster_prefix; got {labels}"
@@ -264,3 +266,137 @@ def test_every_offered_combination_produces_a_clean_figure(location, mode):
         assert not any(lb.overlaps(ob) for ob in obstacles), \
             f"{location}/{mode}: the cluster key is drawn over the plot decorations"
     _close(figure)
+
+
+def test_the_bars_are_not_labelled_by_default():
+    """Reported from the running app: "there are 2 cluster text in plot, remove
+    them, that is not necessary".
+
+    The key above already reads "Rows"/"Columns" over "Cluster 1, 2, 3", so
+    writing "Cluster" beside each bar as well says it a third time - and it lands
+    on top of the axis labels, which is where it was noticed.
+    """
+    result = _render()
+    labels = {ax.get_xlabel() for ax in _strip_axes(result.figure)}
+    labels |= {ax.get_ylabel() for ax in _strip_axes(result.figure)}
+    assert not any(l.strip() for l in labels), f"the bars are still labelled: {labels}"
+    _close(result.figure)
+
+
+def test_both_cluster_bars_get_the_same_gap_from_the_heatmap():
+    """They did not. make_axes_locatable builds a fresh divider per call, and two
+    dividers on one axes overwrite each other's space reservation - so with both
+    bars the row bar's pad did nothing and it sat hard against the heatmap, while
+    the column bar (appended last) worked. Each alone was fine, which is what
+    made it look like a row-only bug.
+    """
+    for pad in (0.02, 0.18, 0.40):
+        result = _render(cluster_strip_pad=pad)
+        figure = result.figure
+        figure.canvas.draw()
+        main = figure.axes[0].get_window_extent()
+        gaps = {}
+        for ax in _strip_axes(figure):
+            box = ax.get_window_extent()
+            if box.height > box.width:
+                gaps["row"] = main.x0 - box.x1
+            else:
+                gaps["col"] = box.y0 - main.y1
+        _close(figure)
+        assert set(gaps) == {"row", "col"}, gaps
+        assert abs(gaps["row"] - gaps["col"]) < 2.0, (
+            f"pad={pad}: row gap {gaps['row']:.1f}px but column gap "
+            f"{gaps['col']:.1f}px - the two bars do not share a divider")
+        assert gaps["row"] > 0, (
+            f"pad={pad}: the row bar overlaps the heatmap ({gaps['row']:.1f}px)")
+
+
+def test_the_row_bar_does_not_cover_the_row_labels():
+    """The divider reserves the margin but knows nothing about the tick labels
+    that already live there, so the bar was drawn over the end of every name."""
+    result = _render(cluster_strip_pad=0.18)
+    figure = result.figure
+    figure.canvas.draw()
+    renderer = figure.canvas.get_renderer()
+    ax = figure.axes[0]
+    row_bar = next(a for a in _strip_axes(figure)
+                   if a.get_window_extent().height > a.get_window_extent().width)
+    bar_x0 = row_bar.get_window_extent().x0
+    worst = max((t.get_window_extent(renderer).x1 - bar_x0
+                 for t in ax.get_yticklabels() if t.get_text().strip()), default=0.0)
+    _close(figure)
+    assert worst <= 1.0, f"row labels reach {worst:.1f}px into the cluster bar"
+
+
+def test_turning_the_bars_on_does_not_cramp_the_column_labels():
+    """The bars live in the margin, and the margin comes out of the axes - so
+    switching them on used to narrow the heatmap until its column labels
+    collided. The figure asks for the extra inches instead."""
+    import matplotlib.pyplot as plt
+
+    def spacing_vs_need(**mapping):
+        result = _render(**mapping)
+        figure = result.figure
+        figure.canvas.draw()
+        renderer = figure.canvas.get_renderer()
+        labels = [t for t in figure.axes[0].get_xticklabels() if t.get_text().strip()]
+        xs = sorted(t.get_window_extent(renderer).x0 for t in labels)
+        step = min((b - a) for a, b in zip(xs, xs[1:])) if len(xs) > 1 else 0.0
+        need = labels[0].get_fontsize() * figure.dpi / 72.0 if labels else 0.0
+        plt.close(figure)
+        return step, need
+
+    step, need = spacing_vs_need(cluster_strip_pad=0.18)
+    assert step >= need, (
+        f"with cluster bars the columns are {step:.1f}px apart but vertical "
+        f"labels need {need:.1f}px - the bars were taken out of the heatmap")
+
+
+# --------------------------------------------------------------------------
+# Picked point labels are placed together, not one at a time
+# --------------------------------------------------------------------------
+
+def test_picked_scatter_labels_avoid_each_other():
+    """Reported from the app: picking several nearby points piled their names on
+    top of each other, while the volcano's labels do not.
+
+    The scatter annotated each point separately at a fixed (3, 3) offset, so two
+    close points always collided. The shared repeller in plots.base - the one the
+    volcano already used - is now applied here too.
+    """
+    from make_my_figure_core import examples
+    from make_my_figure_core.plots import registry
+    import matplotlib.pyplot as plt
+
+    table, _aux, spec = examples.load_example("scatterplot_with_regression")
+    frame = table.dataframe
+    picks = [str(v) for v in frame["sample_id"].head(14)]
+    spec = {**spec, "mapping": {**(spec.get("mapping") or {}),
+                                "label": "sample_id", "selected_labels": picks}}
+    result = registry.render(spec, frame, aux={})
+    figure = result.figure
+    figure.canvas.draw()
+    renderer = figure.canvas.get_renderer()
+    labels = [t for t in figure.axes[0].texts
+              if t.get_text().strip() in picks]
+    boxes = [t.get_window_extent(renderer) for t in labels]
+    overlaps = sum(1 for i in range(len(boxes)) for j in range(i + 1, len(boxes))
+                   if boxes[i].overlaps(boxes[j]))
+    plt.close(figure)
+    assert len(labels) == len(picks), f"{len(labels)} of {len(picks)} picks drawn"
+    # Not zero: 14 labels among ~60 points in a 4 x 3 in axes cannot always be
+    # fully separated, and the solver also avoids the points themselves. Before
+    # this it was 6; the guard is that it stays well under the un-repelled count.
+    assert overlaps <= 3, (
+        f"{overlaps} of the picked labels still overlap each other; the fixed "
+        f"offset gave 6, so placement has regressed")
+
+
+def test_the_label_repeller_is_shared_not_per_renderer():
+    """It lived in volcano.py while the scatter had none, which is how one plot
+    got overlap avoidance and the other did not."""
+    from make_my_figure_core.plots import base
+
+    assert callable(getattr(base, "repel_labels", None)), (
+        "the overlap-avoiding label placer is not in plots.base, so each "
+        "renderer will solve it again or not at all")
