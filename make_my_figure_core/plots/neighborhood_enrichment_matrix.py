@@ -23,7 +23,7 @@ from matplotlib.colors import CenteredNorm, Normalize
 from matplotlib.lines import Line2D
 
 from make_my_figure_core.plots.base import (
-    explicit_figure_size,
+    resolve_figure_size,
     RenderError, RenderResult, base_metadata, figure_size, get_mapping, require_columns,
 )
 from make_my_figure_core.styles.engine import StyleProfile
@@ -46,7 +46,11 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     freq = get_mapping(spec, "frequency")
     require_columns(df, [c for c in (row, col, score, freq) if c], context=PLOT_TYPE)
 
-    block = dict(spec.get("spatial") or {})
+    # Through the shared helper, so GUI settings reach this plot too - it used to
+    # read spec["spatial"] directly and so ignored everything the user chose.
+    from make_my_figure_core.plots._spatial_shared import spatial_block
+
+    block = spatial_block(spec)
     warnings: List[str] = []
 
     data = df[[c for c in (row, col, score, freq) if c]].copy()
@@ -85,7 +89,14 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     else:
         norm = Normalize(vmin=lo, vmax=hi)
         scale_kind = "linear"
-    cmap = plt.get_cmap(block.get("cmap", "RdBu_r"))
+    # Follow the active style unless the spec names a colormap. The fallback used
+    # to be a hard-coded "RdBu_r", which meant the Palette control did nothing at
+    # all to this plot - choosing grayscale still produced a red/blue figure.
+    # A diverging scale is centred on zero, so it takes the style's diverging
+    # colormap; an uncentred one takes the sequential.
+    _default_cmap = (style.diverging_cmap if centre is not None
+                     else style.sequential_cmap)
+    cmap = plt.get_cmap(block.get("cmap") or _default_cmap)
 
     max_area = float(block.get("max_point_area", 260.0))
     ridx = {r: i for i, r in enumerate(rows)}
@@ -101,14 +112,12 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
 
     # Grow with the matrix so labels stay legible - but an explicit request
     # from the user wins, because a figure that ignores the size you asked for
-    # cannot be fitted to a column.
-    pinned = explicit_figure_size(spec)
-    if pinned is not None:
-        w, h = pinned
-    else:
-        w, h = figure_size(spec, style, aspect=0.62)
-        w = max(w, 0.30 * len(cols) + 3.0)
-        h = max(h, 0.34 * len(rows) + 2.0)
+    # cannot be fitted to a column. Resolved last, and per dimension, so pinning
+    # only a width (the usual way to fit a journal column) is honoured too
+    # instead of being thrown away for want of a height.
+    w, h = figure_size(spec, style, aspect=0.62)
+    w, h = resolve_figure_size(spec, (max(w, 0.30 * len(cols) + 3.0),
+                                      max(h, 0.34 * len(rows) + 2.0)))
 
     with style.apply():
         fig, ax = plt.subplots(figsize=(w, h))
@@ -126,6 +135,16 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
         ax.set_ylabel(str(block.get("y_label", "Cellular neighbourhood")),
                       fontsize=style.axis_font_pt)
         ax.set_axisbelow(True)
+        # The guide grid follows the global Grid control unless the spec pins
+        # spatial.grid. It used to be drawn unconditionally, which meant turning
+        # the Grid checkbox off did nothing at all on this plot type - the one
+        # kind of broken control the user cannot diagnose from the figure.
+        # Default True, not style.grid. The publication profile sets grid=False,
+        # so deferring to it would drop the faint guide lines this matrix has
+        # always drawn - they are what lets the eye carry a dot back to its row
+        # and column across a 28-column figure. The control is still real: the
+        # per-plot Grid option lands in the block via spatial_block(), so an
+        # explicit choice wins while the published default is kept.
         if block.get("grid", True):
             ax.grid(True, which="major", color="#eeeeee", linewidth=0.6, zorder=0)
         for side in ("top", "right"):

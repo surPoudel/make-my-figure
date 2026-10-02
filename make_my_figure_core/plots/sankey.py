@@ -18,7 +18,7 @@ import numpy as np
 
 from make_my_figure_core.plots._v04_shared import ordered_unique
 from make_my_figure_core.plots.base import (
-    explicit_figure_size,
+    resolve_figure_size,
     RenderError,
     RenderResult,
     base_metadata,
@@ -79,8 +79,15 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     warnings: List[str] = []
 
     with style.apply():
-        w_in, _ = style.figure_size_inches("double", aspect=0.7)
-        _size = explicit_figure_size(spec) or (max(w_in, 6.0), max(w_in * 0.62, 4.0))
+        # The width preset was hard-coded to "double", so the column-width control
+        # did nothing at all here. "default" still means the wide preset - a Sankey
+        # hangs its node labels outside the flows and needs the room - so only an
+        # explicit single/onehalf/double narrows it.
+        _preset = str((spec.get("layout") or {}).get("column_width", "default")).lower()
+        if _preset not in ("single", "onehalf", "double"):
+            _preset = "double"
+        w_in, _ = style.figure_size_inches(_preset, aspect=0.7)
+        _size = resolve_figure_size(spec, (max(w_in, 6.0), max(w_in * 0.62, 4.0)))
         fig, ax = plt.subplots(figsize=_size)
 
         # Node bars.

@@ -425,9 +425,15 @@ def render(
     # (empty layout => no-op), so default output is unchanged. Guarded — never breaks
     # a render.
     try:
-        from make_my_figure_core.plots.base import apply_publication_layout
+        from make_my_figure_core.plots.base import (
+            apply_publication_layout, resolve_x_tick_rotation_option)
 
-        if (spec.get("layout") and getattr(result, "figure", None) is not None
+        # The per-plot x_tick_rotation option routes through the same central
+        # application, so a spec that sets only that option (empty layout block)
+        # must still reach it.
+        _have_layout = bool(spec.get("layout")) or (
+            resolve_x_tick_rotation_option(spec) is not None)
+        if (_have_layout and getattr(result, "figure", None) is not None
                 and result.figure.axes):
             apply_publication_layout(result.figure, result.figure.axes[0], spec, style)
             from make_my_figure_core.plots.base import drain_layout_notes

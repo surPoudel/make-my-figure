@@ -17,8 +17,8 @@ from matplotlib.lines import Line2D
 
 from make_my_figure_core.plots._spatial_shared import (
     add_scale_bar, apply_crop, coordinate_record, draw_background_image,
-    finish_spatial_axes, numeric_coordinates, ordered_levels, spatial_block,
-    widen_for_outside_legend,
+    finish_spatial_axes, numeric_coordinates, ordered_levels, resolve_marker_size,
+    spatial_block, widen_for_outside_legend,
 )
 from make_my_figure_core.plots.base import (
     RenderError, RenderResult, base_metadata, figure_size, get_mapping, require_columns,
@@ -88,7 +88,11 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     colours = {g: (override[i % len(override)] if override else style.color_for(i))
                for i, g in enumerate(levels)}
 
-    size = float(block.get("marker_size", max(1.0, style.marker_size * 0.25)))
+    # Transcripts are drawn far smaller than cells, so the automatic size is a
+    # fraction of the global point size; a size the spec pins is scaled by that
+    # same control rather than replaced - see resolve_marker_size.
+    size = resolve_marker_size(block, auto=max(1.0, style.marker_size * 0.25),
+                               style_size=style.marker_size)
     alpha = float(block.get("alpha", 0.75))
     # Transcript maps are dense by nature; rasterise unless told otherwise.
     raster = bool(block.get("rasterize", True))
@@ -118,7 +122,8 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
                        rasterized=raster, zorder=2)
 
         apply_crop(ax, block)
-        finish_spatial_axes(ax, block, show_axes=bool(block.get("show_axes", False)))
+        finish_spatial_axes(ax, block, show_axes=bool(block.get("show_axes", False)),
+                            x_label=x, y_label=y)
         bar = add_scale_bar(ax, block, style)
         title = (spec.get("layout", {}) or {}).get("title")
         if title:

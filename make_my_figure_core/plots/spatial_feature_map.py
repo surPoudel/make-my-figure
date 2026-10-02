@@ -26,8 +26,8 @@ from matplotlib.colors import CenteredNorm, LogNorm, Normalize, SymLogNorm
 
 from make_my_figure_core.plots._spatial_shared import (
     add_scale_bar, apply_crop, coordinate_record, draw_background_image, facet_grid,
-    finish_spatial_axes, numeric_coordinates, ordered_levels, share_facet_limits,
-    should_rasterize, spatial_block,
+    finish_spatial_axes, numeric_coordinates, ordered_levels, resolve_marker_size,
+    share_facet_limits, should_rasterize, spatial_block,
 )
 from make_my_figure_core.plots.base import (
     RenderError, RenderResult, base_metadata, figure_size, get_mapping, require_columns,
@@ -77,6 +77,19 @@ def _limits(values: np.ndarray, block: Dict[str, Any]) -> Tuple[float, float, Op
         raise RenderError(f"{PLOT_TYPE}: no finite values to colour by.")
     clip = block.get("percentile_clip")
     clipped = None
+    if isinstance(clip, (int, float)) and not isinstance(clip, bool):
+        # A single number means "clip this percentage off each tail", which is
+        # what a one-value control can express and what the phrase usually means.
+        # 0 is the control's resting position and means no clipping.
+        tail = float(clip)
+        if tail <= 0:
+            clip = None
+        elif tail >= 50:
+            raise RenderError(f"{PLOT_TYPE}: spatial.percentile_clip as a single "
+                              f"value is the percentage trimmed from each tail, so "
+                              f"it must be below 50, got {tail:g}.")
+        else:
+            clip = [tail, 100.0 - tail]
     if clip:
         if len(clip) != 2 or not (0 <= float(clip[0]) < float(clip[1]) <= 100):
             raise RenderError(f"{PLOT_TYPE}: spatial.percentile_clip must be "
@@ -170,7 +183,9 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     cmap = cmap.copy()
     cmap.set_bad(block.get("missing_color", "#e0e0e0"))
 
-    size = float(block.get("marker_size", style.marker_size))
+    # A pinned spatial.marker_size is scaled by the global point size rather than
+    # replaced by it, so both controls stay live - see resolve_marker_size.
+    size = resolve_marker_size(block, auto=style.marker_size, style_size=style.marker_size)
     alpha = float(block.get("alpha", style.marker_alpha))
     raster = should_rasterize(len(data), block)
     panel_limits: Dict[str, List[float]] = {}
@@ -208,7 +223,8 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
             mappable = mappable or sc
             panel_mappables.append((ax, sc))
             apply_crop(ax, block)
-            finish_spatial_axes(ax, block, show_axes=bool(block.get("show_axes", False)))
+            finish_spatial_axes(ax, block, show_axes=bool(block.get("show_axes", False)),
+                                x_label=x, y_label=y)
             if lv is not None:
                 ax.set_title(str(lv), fontsize=style.axis_font_pt)
             used_axes.append(ax)

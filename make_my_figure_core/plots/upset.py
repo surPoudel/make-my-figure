@@ -24,7 +24,7 @@ import numpy as np
 import pandas as pd
 
 from make_my_figure_core.plots.base import (
-    explicit_figure_size,
+    resolve_figure_size,
     RenderError,
     RenderResult,
     apply_publication_layout,
@@ -97,7 +97,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     h_in = max(4.0, 1.6 + 0.42 * n_sets + 2.2)
 
     with style.apply():
-        _size = explicit_figure_size(spec) or (w_in, h_in)
+        _size = resolve_figure_size(spec, (w_in, h_in))
         fig = plt.figure(figsize=_size)
         gs = fig.add_gridspec(2, 2, width_ratios=[1.0, 3.2], height_ratios=[2.2, 1.0],
                               wspace=0.05, hspace=0.08)

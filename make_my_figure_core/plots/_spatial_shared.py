@@ -19,6 +19,7 @@ import numpy as np
 import pandas as pd
 
 from make_my_figure_core.plots.base import RenderError
+from make_my_figure_core.styles.engine import StyleProfile
 
 ORIENTATIONS = ("y_up", "y_down")
 UNITS = ("pixel", "micrometre", "millimetre", "arbitrary")
@@ -30,9 +31,53 @@ UNIT_LABELS = {"pixel": "px", "micrometre": "µm", "millimetre": "mm", "arbitrar
 RASTER_THRESHOLD = 20_000
 
 
+# Appearance settings a spatial renderer reads from its ``spatial`` block that the
+# user may also set from the GUI. A GUI value is the more recent, more specific
+# intent, so it wins over whatever the saved spec or the bundled example carried -
+# without this a worked example that pins ``cmap`` makes the Palette and colormap
+# controls look broken, because nothing the user picks can ever take effect.
+GUI_SETTABLE_SPATIAL_KEYS = (
+    "cmap", "color_scale", "center", "vmin", "vmax", "percentile_clip", "transform",
+    "alpha", "marker", "marker_size", "marker_edgecolor", "missing_color",
+    "show_axes", "grid", "legend", "legend_columns", "colorbar", "colorbar_label",
+    "palette", "facet_columns", "max_point_area", "size_legend", "scale_bar",
+)
+
+
+# Numeric controls whose "nothing chosen" value is 0, not absence.
+AUTO_WHEN_ZERO_KEYS = frozenset({
+    "marker_size", "facet_columns", "max_point_area", "percentile_clip",
+    "legend_columns",
+})
+
+
+def _is_zero(value) -> bool:
+    try:
+        return float(value) == 0.0
+    except (TypeError, ValueError):
+        return False
+
+
 def spatial_block(spec: Dict[str, Any]) -> Dict[str, Any]:
-    """The PlotSpec ``spatial`` block, with the declared defaults filled in."""
+    """The PlotSpec ``spatial`` block, with the declared defaults filled in.
+
+    Appearance keys set from the GUI (which land in ``mapping``) are overlaid on
+    top of the saved ``spatial`` block, so a control the user just changed takes
+    effect rather than being silently outranked by the file it came from.
+    """
     block = dict(spec.get("spatial") or {})
+    mapping = (spec or {}).get("mapping") or {}
+    for key in GUI_SETTABLE_SPATIAL_KEYS:
+        value = mapping.get(key)
+        if value is None or value == "":
+            continue
+        # For the numeric controls labelled "0 = auto", zero is the spinner's
+        # resting position, not a choice. Overlaying it would wipe a size the
+        # example or the saved file had deliberately pinned, just because the
+        # user never touched that control.
+        if key in AUTO_WHEN_ZERO_KEYS and _is_zero(value):
+            continue
+        block[key] = value
     units = block.get("coordinate_units", "arbitrary")
     if units not in UNITS:
         raise RenderError(f"spatial.coordinate_units must be one of {UNITS}, got {units!r}")
@@ -46,8 +91,14 @@ def spatial_block(spec: Dict[str, Any]) -> Dict[str, Any]:
     return block
 
 
-def finish_spatial_axes(ax, block: Dict[str, Any], *, show_axes: bool = False) -> None:
-    """Apply aspect, orientation and axis visibility. Call once per axes."""
+def finish_spatial_axes(ax, block: Dict[str, Any], *, show_axes: bool = False,
+                        x_label: Optional[str] = None,
+                        y_label: Optional[str] = None) -> None:
+    """Apply aspect, orientation, axis visibility and - when shown - axis labels.
+
+    Call once per axes. ``x_label``/``y_label`` are the coordinate column names;
+    they are only used when the axes are visible.
+    """
     if block.get("equal_aspect", True):
         ax.set_aspect("equal", adjustable="datalim")
     if block["orientation"] == "y_down" and not ax.yaxis_inverted():
@@ -57,6 +108,24 @@ def finish_spatial_axes(ax, block: Dict[str, Any], *, show_axes: bool = False) -
         for side in ("top", "right", "bottom", "left"):
             ax.spines[side].set_visible(False)
         ax.set_xlabel(""); ax.set_ylabel("")
+        return
+
+    # Axes the reader can actually see have to say what they measure. Bare tick
+    # numbers leave it open whether 12000 is a pixel, a micrometre or an
+    # arbitrary coordinate - and with no axis label drawn, the axis-label
+    # typography control has nothing to size, so it reads as a dead control.
+    unit = UNIT_LABELS.get(block["coordinate_units"], "")
+    suffix = f" ({unit})" if unit else ""
+    if not ax.get_xlabel() and (block.get("x_label") or x_label):
+        ax.set_xlabel(str(block.get("x_label") or f"{x_label}{suffix}"))
+    if not ax.get_ylabel() and (block.get("y_label") or y_label):
+        ax.set_ylabel(str(block.get("y_label") or f"{y_label}{suffix}"))
+    # A grid on a spatial map only means anything once the ticks it hangs from
+    # are visible, so the per-plot setting is applied here rather than earlier.
+    # Left alone, the axes keep whatever the style profile's grid setting put on
+    # them when they were created.
+    if block.get("grid") is not None:
+        ax.grid(bool(block["grid"]))
 
 
 def apply_crop(ax, block: Dict[str, Any]) -> None:
@@ -170,6 +239,43 @@ def ordered_levels(series: pd.Series, declared: Optional[List[str]]) -> List[str
     if isinstance(series.dtype, pd.CategoricalDtype):
         return [str(c) for c in series.cat.categories if str(c) in present]
     return sorted(present)
+
+
+# The point size a style profile ships with, read from the profile itself so the
+# reference below cannot drift away from it.
+DEFAULT_STYLE_MARKER_SIZE = float(
+    StyleProfile.__dataclass_fields__["marker_size"].default)
+
+
+def resolve_marker_size(block: Dict[str, Any], *, auto: float, style_size: float) -> float:
+    """Point area for one spatial mark, honouring the spec *and* the global control.
+
+    Two intents have to coexist here. A spec - or a bundled example - pins
+    ``spatial.marker_size`` because that size suits that tissue: 1.4 pt for
+    transcripts, 7 pt for annotated cells. Replacing it with the Publication
+    panel's point size would wreck the figure. But a panel control that a plot
+    type silently swallows is worse than a missing one, and pinning the size is
+    exactly what made the global point size dead on every spatial map.
+
+    So a pinned size is *scaled* by the global control rather than replaced: at
+    the profile's own default point size the figure is byte-for-byte what it was,
+    and moving the control moves every mark proportionally. With nothing pinned,
+    ``auto`` is used as is. ``auto`` is passed separately from ``style_size``
+    because a renderer may derive it (a transcript map draws marks a quarter the
+    size of a cell map), and the scaling has to be measured against the profile
+    default either way.
+
+    A pinned size of zero means "auto" - that is what the GUI's point-size
+    spinner sends when the user has not chosen a size.
+    """
+    try:
+        requested = float(block["marker_size"]) if block.get("marker_size") is not None else 0.0
+    except (TypeError, ValueError):
+        requested = 0.0
+    if requested <= 0:
+        return float(auto)
+    scale = float(style_size) / DEFAULT_STYLE_MARKER_SIZE
+    return requested * scale if scale > 0 else requested
 
 
 def should_rasterize(n_marks: int, block: Dict[str, Any]) -> bool:

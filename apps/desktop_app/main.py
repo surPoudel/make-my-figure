@@ -611,6 +611,14 @@ class MainWindow(QMainWindow):
             "Units for the width and height below. Inches match matplotlib's "
             "figsize; millimetres match journal figure specifications.")
         self.size_units.currentTextChanged.connect(self._on_size_units_changed)
+        # Every size control has to redraw the preview. Without this the whole
+        # section is inert: the value is read the next time something else
+        # triggers a render, so changing the width preset or the figure
+        # dimensions appears to do nothing at all.
+        self.width_combo.currentTextChanged.connect(self.render_preview)
+        self.fig_w_mm.valueChanged.connect(self.render_preview)
+        self.fig_h_mm.valueChanged.connect(self.render_preview)
+        self.dpi_spin.valueChanged.connect(self.render_preview)
         sb.addRow("Width preset", self.width_combo)
         sb.addRow("Units", self.size_units)
         sb.addRow("Width", self.fig_w_mm)

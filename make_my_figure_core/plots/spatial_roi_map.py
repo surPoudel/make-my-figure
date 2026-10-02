@@ -128,7 +128,8 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
                             fontsize=style.annotation_pt, color=style.text_color, zorder=4)
 
         apply_crop(ax, block)
-        finish_spatial_axes(ax, block, show_axes=bool(block.get("show_axes", False)))
+        finish_spatial_axes(ax, block, show_axes=bool(block.get("show_axes", False)),
+                            x_label=x, y_label=y)
         bar = add_scale_bar(ax, block, style)
         title = (spec.get("layout", {}) or {}).get("title")
         if title:

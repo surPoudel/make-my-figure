@@ -200,6 +200,24 @@ def figure_size_adjustments(spec: Dict[str, Any]) -> List[str]:
     return notes
 
 
+def _pinned_dimension(spec: Dict[str, Any], key: str) -> "float | None":
+    """One pinned ``layout`` dimension in inches, or ``None`` if not asked for.
+
+    ``0`` is the documented way to say "automatic", and an unparseable value is
+    ignored rather than producing a zero-sized figure (it is reported separately
+    by :func:`figure_size_adjustments`). The ``MIN_FIGURE_MM`` floor is applied
+    here so every caller gets a dimension matplotlib can actually lay out.
+    """
+    layout = (spec or {}).get("layout", {}) or {}
+    try:
+        v = float(layout.get(key))
+    except (TypeError, ValueError):
+        return None
+    if v <= 0:
+        return None
+    return mm_to_inches(max(v, MIN_FIGURE_MM))
+
+
 def explicit_figure_size(spec: Dict[str, Any]) -> "tuple[float, float] | None":
     """``(width_in, height_in)`` when the user has pinned both, else ``None``.
 
@@ -208,18 +226,39 @@ def explicit_figure_size(spec: Dict[str, Any]) -> "tuple[float, float] | None":
     the user unable to fit a figure to a column. They call this first and yield
     to it when it returns a size, so an explicit request always wins over a
     computed one, and the computed one still applies when nothing was asked for.
+
+    Prefer :func:`resolve_figure_size` in a renderer: this function deliberately
+    answers only the all-or-nothing question (the registry asks it to decide
+    whether a canvas was pinned firmly enough to rescale the type hierarchy), so
+    a renderer using it alone silently drops a half-pinned size.
     """
-    layout = (spec or {}).get("layout", {}) or {}
-    out = []
-    for key in ("width_mm", "height_mm"):
-        try:
-            v = float(layout.get(key))
-        except (TypeError, ValueError):
-            return None
-        if v <= 0:
-            return None
-        out.append(mm_to_inches(max(v, MIN_FIGURE_MM)))
-    return (out[0], out[1])
+    w_in, h_in = _pinned_dimension(spec, "width_mm"), _pinned_dimension(spec, "height_mm")
+    if w_in is None or h_in is None:
+        return None
+    return (w_in, h_in)
+
+
+def resolve_figure_size(spec: Dict[str, Any],
+                        computed: "tuple[float, float]") -> tuple[float, float]:
+    """A renderer's data-driven ``computed`` size with any pinned dimension substituted.
+
+    The same contract as :func:`explicit_figure_size` - an explicit request wins,
+    the computed size applies when nothing was asked for - extended to the case
+    where only one dimension was pinned. Pinning a width alone is the common way
+    to fit a figure to a journal column, and all-or-nothing handling silently
+    threw it away.
+
+    The *unpinned* dimension keeps the renderer's computed value rather than being
+    rescaled to preserve an aspect ratio (which is what :func:`figure_size` does
+    for the preset-sized plot types). For these renderers the computed dimension
+    is an absolute legibility requirement - a height of so many inches per row -
+    not a ratio, so stretching it along with the width would turn a wide heatmap
+    into an unreadably tall one.
+    """
+    w_in, h_in = float(computed[0]), float(computed[1])
+    pinned_w, pinned_h = _pinned_dimension(spec, "width_mm"), _pinned_dimension(spec, "height_mm")
+    return (w_in if pinned_w is None else pinned_w,
+            h_in if pinned_h is None else pinned_h)
 
 
 def apply_axis_overrides(ax, spec: Dict[str, Any], *, axis_min: float = None,
@@ -514,6 +553,32 @@ def drain_layout_notes() -> List[str]:
     return notes
 
 
+def resolve_x_tick_rotation_option(spec: Dict[str, Any]) -> Any:
+    """The per-plot "X-axis label angle" option, wherever the spec carries it.
+
+    ``x_tick_rotation`` is offered twice: once as ``layout['x_tick_rotation']``
+    (every axis plot) and once on the option list of the categorical plot types.
+    They are the same control, so the option has to reach the same code path.
+
+    Which block holds the option value is not fixed: both frontends write option
+    values into ``spec['mapping']``, while the option declares ``scope="style"``
+    (that scope is a *preset portability* class, not a block address - see
+    ``presets.option_scopes``), so a spec written by anything that reads the scope
+    as a destination lands the value in ``spec['style']`` instead. A renderer that
+    looks in only one of those blocks silently ignores the control, which is the
+    worst outcome: the author changes the angle and nothing moves.
+
+    Returns ``None`` when unset or left on ``"auto"`` - "auto" means "let the
+    renderer choose", so there is nothing to force centrally.
+    """
+    for block in ("mapping", "style"):
+        value = ((spec or {}).get(block) or {}).get("x_tick_rotation")
+        if value is None or str(value).strip().lower() in ("", "auto"):
+            continue
+        return value
+    return None
+
+
 def apply_publication_layout(fig, ax, spec: Dict[str, Any],
                              style: "StyleProfile | None" = None) -> None:
     """Apply the shared PublicationLayoutSpec (spec['layout']) to a rendered axes.
@@ -523,6 +588,15 @@ def apply_publication_layout(fig, ax, spec: Dict[str, Any],
     margins. Called at the END of a renderer (after ticks/labels are set) so it can
     reserve room and prevent clipping. Never changes data — layout only."""
     layout = (spec or {}).get("layout", {}) or {}
+
+    # Fold the per-plot "X-axis label angle" option into the layout block it
+    # duplicates, so one implementation serves both controls. An explicit
+    # layout['x_tick_rotation'] wins: it is the more specific setting.
+    if layout.get("x_tick_rotation") is None:
+        _opt_rotation = resolve_x_tick_rotation_option(spec)
+        if _opt_rotation is not None:
+            layout = {**layout, "x_tick_rotation": _opt_rotation}
+
     if not layout:
         return
 

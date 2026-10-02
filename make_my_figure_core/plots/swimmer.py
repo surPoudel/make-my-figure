@@ -14,7 +14,7 @@ import numpy as np
 
 from make_my_figure_core.plots._v04_shared import ordered_unique
 from make_my_figure_core.plots.base import (
-    explicit_figure_size,
+    resolve_figure_size,
     RenderError,
     RenderResult,
     apply_publication_layout,
@@ -89,7 +89,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         event_levels = ordered_unique(work[event_col].tolist())
 
     with style.apply():
-        _size = explicit_figure_size(spec) or (w_in, h_in)
+        _size = resolve_figure_size(spec, (w_in, h_in))
         fig, ax = plt.subplots(figsize=_size)
         for row, i in enumerate(order_idx):
             g = groups[i] if groups is not None else None

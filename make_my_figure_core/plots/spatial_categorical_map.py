@@ -16,8 +16,8 @@ from matplotlib.lines import Line2D
 from make_my_figure_core.plots._spatial_shared import (
     add_scale_bar, apply_crop, categorical_styles, coordinate_record,
     draw_background_image, facet_grid, finish_spatial_axes, numeric_coordinates,
-    ordered_levels, share_facet_limits, should_rasterize, spatial_block,
-    widen_for_outside_legend,
+    ordered_levels, resolve_marker_size, share_facet_limits, should_rasterize,
+    spatial_block, widen_for_outside_legend,
 )
 from make_my_figure_core.plots.base import (
     RenderResult, base_metadata, figure_size, get_mapping, require_columns,
@@ -69,7 +69,9 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     nrows, ncols = facet_grid(len(facet_levels), block.get("facet_columns"))
     w, h = figure_size(spec, style, aspect=0.95)
 
-    size = float(block.get("marker_size", style.marker_size))
+    # A pinned spatial.marker_size is scaled by the global point size rather than
+    # replaced by it, so both controls stay live - see resolve_marker_size.
+    size = resolve_marker_size(block, auto=style.marker_size, style_size=style.marker_size)
     alpha = float(block.get("alpha", style.marker_alpha))
     edge = block.get("marker_edgecolor")
     raster = should_rasterize(len(data), block)
@@ -98,7 +100,8 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
                            edgecolors=edge if edge else "none",
                            rasterized=raster, zorder=2)
             apply_crop(ax, block)
-            finish_spatial_axes(ax, block, show_axes=bool(block.get("show_axes", False)))
+            finish_spatial_axes(ax, block, show_axes=bool(block.get("show_axes", False)),
+                                x_label=x, y_label=y)
             if fv is not None:
                 ax.set_title(str(fv), fontsize=style.axis_font_pt)
             used_axes.append(ax)

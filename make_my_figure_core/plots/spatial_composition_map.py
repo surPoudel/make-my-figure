@@ -160,7 +160,8 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
         ax.set_ylim(float(spots["_y"].min()) - 2 * radius, float(spots["_y"].max()) + 2 * radius)
 
         apply_crop(ax, block)
-        finish_spatial_axes(ax, block, show_axes=bool(block.get("show_axes", False)))
+        finish_spatial_axes(ax, block, show_axes=bool(block.get("show_axes", False)),
+                            x_label=x, y_label=y)
         bar = add_scale_bar(ax, block, style)
         title = (spec.get("layout", {}) or {}).get("title")
         if title:

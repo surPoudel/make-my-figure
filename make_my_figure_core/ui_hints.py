@@ -130,6 +130,33 @@ _Y_LABEL_ROTATION = Option("y_label_rotation", "Y-label angle", "choice", "verti
                            ["vertical", "horizontal"], scope="style")
 
 # Extra (non-column) options per plot type.
+# --- spatial (v2) ---
+# The spatial renderers read a rich set of appearance settings from the PlotSpec
+# "spatial" block, but none were declared here, so the GUI offered nothing at all
+# for six plot types and the global Palette appeared to do nothing on them. These
+# are scope="config": they land in mapping, and spatial_block() overlays them on
+# the saved spatial block so a control the user just changed wins over whatever a
+# bundled example pinned.
+_SPATIAL_CMAP = Option(
+    "cmap", "Colormap", "choice", "",
+    ["", "viridis", "magma", "cividis", "Blues", "YlOrRd", "Greys",
+     "RdBu_r", "coolwarm", "PuOr", "BrBG"], scope="config")
+_SPATIAL_ALPHA = Option("alpha", "Point opacity", "number", 1.0, minimum=0.05,
+                        maximum=1.0, step=0.05, decimals=2, scope="config")
+_SPATIAL_MARKER_SIZE = Option("marker_size", "Point size (0 = auto)", "number", 0,
+                              minimum=0, maximum=200, step=1, decimals=0,
+                              scope="config")
+_SPATIAL_MARKER = Option("marker", "Point shape", "choice", "",
+                         ["", "o", "s", "^", "D", "v", "P", "X"], scope="config")
+_SPATIAL_SHOW_AXES = Option("show_axes", "Show coordinate axes", "bool", False,
+                            scope="config")
+_SPATIAL_FACET_COLS = Option("facet_columns", "Facet columns (0 = auto)", "number", 0,
+                             minimum=0, maximum=8, step=1, decimals=0, scope="config")
+_SPATIAL_MISSING = Option("missing_color", "Colour for missing values", "choice",
+                          "", ["", "#DDDDDD", "#999999", "white", "none"],
+                          scope="config")
+
+
 OPTIONS: Dict[str, List[Option]] = {
     "barplot_with_error_bar": [Option("error", "Error bar", "choice", "sem", _ERROR_CHOICES, scope="style"),
                                _X_TICK_ROTATION],
@@ -185,6 +212,50 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("row_label_fontsize", "Row label font (0=auto)", "number", 0, minimum=0, maximum=20, step=1, decimals=0, scope="style"),
         Option("col_label_fontsize", "Column label font (0=auto)", "number", 0, minimum=0, maximum=20, step=1, decimals=0, scope="style"),
         Option("y_label_pad", "Y-axis label padding", "number", 6.0, minimum=0.0, maximum=40.0, step=1.0, decimals=1, scope="style"),
+    ],
+    # --- spatial (v2) ---
+    "spatial_categorical_map": [
+        _SPATIAL_MARKER_SIZE, _SPATIAL_MARKER, _SPATIAL_ALPHA, _SPATIAL_MISSING,
+        _SPATIAL_SHOW_AXES, _SPATIAL_FACET_COLS,
+        Option("legend", "Show category legend", "bool", True, scope="config"),
+        Option("legend_columns", "Legend columns (0 = auto)", "number", 0,
+               minimum=0, maximum=6, step=1, decimals=0, scope="config"),
+        Option("marker_edgecolor", "Point outline", "choice", "",
+               ["", "none", "black", "white", "#444444"], scope="config"),
+    ],
+    "spatial_feature_map": [
+        _SPATIAL_CMAP, _SPATIAL_MARKER_SIZE, _SPATIAL_MARKER, _SPATIAL_ALPHA,
+        _SPATIAL_MISSING, _SPATIAL_SHOW_AXES, _SPATIAL_FACET_COLS,
+        Option("color_scale", "Colour scale", "choice", "",
+               ["", "sequential", "diverging"], scope="config"),
+        Option("transform", "Value transform", "choice", "",
+               ["", "none", "log1p", "sqrt", "symlog"], scope="config"),
+        Option("percentile_clip", "Clip to percentile (0 = off)", "number", 0,
+               minimum=0, maximum=20, step=0.5, decimals=1, scope="config"),
+        Option("colorbar", "Show colourbar", "bool", True, scope="config"),
+        Option("shared_color_scale", "Share colour scale across facets", "bool",
+               True, scope="config"),
+    ],
+    "spatial_transcript_map": [
+        _SPATIAL_MARKER_SIZE, _SPATIAL_MARKER, _SPATIAL_ALPHA, _SPATIAL_SHOW_AXES,
+        Option("legend", "Show gene legend", "bool", True, scope="config"),
+    ],
+    "spatial_roi_map": [
+        _SPATIAL_ALPHA, _SPATIAL_SHOW_AXES,
+        Option("legend", "Show ROI legend", "bool", True, scope="config"),
+    ],
+    "spatial_composition_map": [
+        _SPATIAL_MARKER_SIZE, _SPATIAL_ALPHA, _SPATIAL_SHOW_AXES,
+        Option("legend", "Show category legend", "bool", True, scope="config"),
+        Option("max_point_area", "Largest pie size (0 = auto)", "number", 0,
+               minimum=0, maximum=2000, step=20, decimals=0, scope="config"),
+    ],
+    "neighborhood_enrichment_matrix": [
+        _SPATIAL_CMAP,
+        Option("max_point_area", "Largest dot area", "number", 260.0, minimum=20.0,
+               maximum=2000.0, step=20.0, decimals=0, scope="config"),
+        Option("size_legend", "Show the size key", "bool", True, scope="config"),
+        Option("grid", "Grid", "bool", True, scope="config"),
     ],
     "volcano_plot": [
         Option("show_legend", "Show Up / Down / n.s. legend", "bool", True, scope="style"),

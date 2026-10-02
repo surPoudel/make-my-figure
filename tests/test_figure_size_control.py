@@ -110,3 +110,85 @@ def test_a_size_at_the_floor_is_accepted_without_complaint():
     res = _render("scatterplot_with_regression",
                   {"width_mm": MIN_FIGURE_MM, "height_mm": MIN_FIGURE_MM})
     assert not any("too small" in w for w in res.warnings), res.warnings
+
+
+# --- data-driven plot types: ONE pinned dimension is still a pinned dimension --
+
+# These size themselves from their data rather than from a width preset. They
+# used to honour a pinned size only when BOTH dimensions were given, so pinning
+# just a width - the usual way to fit a figure to a journal column - was silently
+# thrown away and the figure came back whatever size the data made it.
+DATA_DRIVEN_PLOT_TYPES = [
+    "confusion_matrix",
+    "heatmap_clustered_matrix",
+    "hierarchical_clustering",
+    "sankey_plot",
+    "swimmer_plot",
+    "upset_plot",
+    "neighborhood_enrichment_matrix",
+]
+
+
+@pytest.mark.parametrize("plot_type", DATA_DRIVEN_PLOT_TYPES)
+def test_a_pinned_width_alone_is_honoured_and_leaves_the_data_driven_height(plot_type):
+    auto_w, auto_h = (float(v) for v in _render(plot_type, {}).figure.get_size_inches())
+    got_w, got_h = (float(v) for v in
+                    _render(plot_type, {"width_mm": 101.6}).figure.get_size_inches())
+    assert abs(got_w - 101.6 / MM_PER_INCH) <= TOLERANCE_IN, \
+        f"{plot_type}: pinned width 101.6 mm came back {got_w * MM_PER_INCH:.1f} mm"
+    # The dimension that was NOT pinned must keep the size the data asked for,
+    # rather than being stretched to preserve an aspect ratio.
+    assert abs(got_h - auto_h) <= TOLERANCE_IN, \
+        f"{plot_type}: pinning a width changed the data-driven height {auto_h:.2f} -> {got_h:.2f}"
+    assert auto_w > 0
+
+
+@pytest.mark.parametrize("plot_type", DATA_DRIVEN_PLOT_TYPES)
+def test_a_pinned_height_alone_is_honoured_and_leaves_the_data_driven_width(plot_type):
+    auto_w, auto_h = (float(v) for v in _render(plot_type, {}).figure.get_size_inches())
+    got_w, got_h = (float(v) for v in
+                    _render(plot_type, {"height_mm": 50.8}).figure.get_size_inches())
+    assert abs(got_h - 50.8 / MM_PER_INCH) <= TOLERANCE_IN, \
+        f"{plot_type}: pinned height 50.8 mm came back {got_h * MM_PER_INCH:.1f} mm"
+    assert abs(got_w - auto_w) <= TOLERANCE_IN, \
+        f"{plot_type}: pinning a height changed the data-driven width {auto_w:.2f} -> {got_w:.2f}"
+    assert auto_h > 0
+
+
+@pytest.mark.parametrize("plot_type", DATA_DRIVEN_PLOT_TYPES)
+def test_both_dimensions_pinned_give_exactly_that_figure(plot_type):
+    """The pinned size is exact - not a minimum, and not an aspect-corrected one."""
+    res = _render(plot_type, {"width_mm": 101.6, "height_mm": 50.8})
+    got_w, got_h = (float(v) for v in res.figure.get_size_inches())
+    assert abs(got_w - 101.6 / MM_PER_INCH) <= TOLERANCE_IN
+    assert abs(got_h - 50.8 / MM_PER_INCH) <= TOLERANCE_IN
+
+
+@pytest.mark.parametrize("plot_type", DATA_DRIVEN_PLOT_TYPES)
+def test_nothing_pinned_still_gets_the_data_driven_size(plot_type):
+    """With no request, the renderer's own sizing applies - not the pinned one."""
+    auto = _render(plot_type, {}).figure.get_size_inches()
+    pinned = _render(plot_type, {"width_mm": 101.6, "height_mm": 50.8}).figure.get_size_inches()
+    assert tuple(round(float(v), 3) for v in auto) != tuple(round(float(v), 3) for v in pinned), \
+        f"{plot_type}: the automatic size is indistinguishable from a pinned one"
+
+
+def test_more_rows_make_a_taller_heatmap_unless_the_height_is_pinned():
+    """The data-driven default is really driven by the data, and a pin overrides it."""
+    entry = examples.entry("heatmap_clustered_matrix")
+    small = pd.read_csv(entry["files"]["csv"])
+    big = pd.concat([small, small.assign(gene=small["gene"].astype(str) + "_b")],
+                    ignore_index=True)
+    spec = json.loads(json.dumps(json.load(open(entry["files"]["plotspec"]))))
+
+    def _height(df, layout_extra):
+        s = json.loads(json.dumps(spec))
+        s.setdefault("layout", {}).update(layout_extra)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            return float(registry.render(s, df).figure.get_size_inches()[1])
+
+    assert _height(big, {}) > _height(small, {}), \
+        "doubling the rows did not grow the automatically-sized heatmap"
+    assert abs(_height(big, {"height_mm": 50.8}) - _height(small, {"height_mm": 50.8})) <= TOLERANCE_IN, \
+        "a pinned height still grew with the row count"

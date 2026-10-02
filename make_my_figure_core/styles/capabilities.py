@@ -214,12 +214,16 @@ _CAPS: Dict[str, PlotStyleCapabilities] = {
             "glyph size follows spatial.glyph_radius, which is in data units so the "
             "pies stay aligned to the spots")),
     "neighborhood_enrichment_matrix": PlotStyleCapabilities(
-        plot_type="neighborhood_enrichment_matrix", supports_palette=False,
+        plot_type="neighborhood_enrichment_matrix",
+        # The palette now reaches this plot. It used to fall back to a hard-coded
+        # "RdBu_r", so declaring it unsupported was accurate; the colormap follows
+        # the style's diverging/sequential choice, which is what the palette sets.
+        supports_palette=True, supports_continuous_colormap=True,
         supports_group_colors=False, supports_colorbar=True,
         supports_marker_size=False, supports_line_width=False,
         unsupported_controls_reason=(
-            "colour carries the enrichment score and point area the frequency, so "
-            "both are set by the data rather than by style controls")),
+            "point area carries the frequency, so it is set by the data rather "
+            "than by the marker-size control")),
 }
 
 
