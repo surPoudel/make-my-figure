@@ -166,6 +166,7 @@ def _draw_cluster_strip(ax, side: str, cluster_ids_in_order: np.ndarray,
                         legend_anchor_shift: float = 0.0,
                         legend_x_extra: float = 0.0,
                         another_legend_follows: bool = False,
+                        labels_share_this_margin: bool = True,
                         show_strip_label: bool = True) -> None:
     """Draw a categorical cluster color strip beside the heatmap (left/top).
 
@@ -185,8 +186,8 @@ def _draw_cluster_strip(ax, side: str, cluster_ids_in_order: np.ndarray,
     codes = np.array([idx_of[f"{prefix} {int(c)}"] for c in cluster_ids_in_order])
     divider = _shared_divider(ax)
     label_pt = style.tick_label_pt
-    if side == "left":
-        cax = divider.append_axes("left", size=f"{width_pct:g}%", pad=pad)
+    if side in ("left", "right"):
+        cax = divider.append_axes(side, size=f"{width_pct:g}%", pad=pad)
         cax.imshow(codes.reshape(-1, 1), aspect="auto", cmap=cmap, interpolation="nearest")
         cax.set_xticks([]); cax.set_yticks([])
         # The divider reserves the space but knows nothing about the row labels,
@@ -197,13 +198,14 @@ def _draw_cluster_strip(ax, side: str, cluster_ids_in_order: np.ndarray,
         # Mind the units: ``size`` is a percentage of the axes width but ``pad``
         # is in INCHES. Treating both as fractions of the axes over-padded by
         # about 2x and took 71px of heatmap with it, crushing the column labels.
-        _ax_w_pts = ax.get_window_extent().width * 72.0 / ax.figure.dpi
-        ax.tick_params(axis="y",
-                       pad=(width_pct / 100.0) * _ax_w_pts + pad * 72.0 + 3.0)
+        if labels_share_this_margin:
+            _ax_w_pts = ax.get_window_extent().width * 72.0 / ax.figure.dpi
+            ax.tick_params(axis="y",
+                           pad=(width_pct / 100.0) * _ax_w_pts + pad * 72.0 + 3.0)
         if show_strip_label:
             cax.set_xlabel(prefix, fontsize=label_pt, color=style.text_color)
-    else:  # top
-        cax = divider.append_axes("top", size=f"{width_pct:g}%", pad=pad)
+    else:  # top or bottom
+        cax = divider.append_axes(side, size=f"{width_pct:g}%", pad=pad)
         cax.imshow(codes.reshape(1, -1), aspect="auto", cmap=cmap, interpolation="nearest")
         cax.set_xticks([]); cax.set_yticks([])
         if show_strip_label:
@@ -265,6 +267,15 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     # 2, 3", so writing "Cluster" beside each bar as well says it a third time -
     # and it lands on top of the axis labels, which is where it was reported from.
     cluster_strip_labels = bool(get_mapping(spec, "cluster_strip_labels", False))
+    # Which edge each cluster bar sits on. The row labels already move; the bar
+    # should too, so an author can put the bar and the names on opposite sides
+    # instead of stacking them in one margin.
+    row_bar_side = str(get_mapping(spec, "row_cluster_bar_side", "left")).lower()
+    col_bar_side = str(get_mapping(spec, "column_cluster_bar_side", "top")).lower()
+    if row_bar_side not in ("left", "right"):
+        row_bar_side = "left"
+    if col_bar_side not in ("top", "bottom"):
+        col_bar_side = "top"
     # Which edge the tick labels sit on. With a row cluster bar on the left, the
     # labels, the bar and the tick marks all compete for the same margin and the
     # marks end up orphaned between the bar and the heatmap. Putting the labels
@@ -401,8 +412,11 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         _ann = spec.get("column_annotations") or []
         if _ann and (_ann[0].get("values")):
             _group_map = {str(k): str(v) for k, v in (_ann[0]["values"] or {}).items()}
-    _want_sep = (group_separators is True) or (group_separators is None and _group_map is not None)
-    if _group_map and _want_sep:
+    # True = always, False = never, None/auto = whenever there is a grouping to
+    # show (an explicit map, an annotation track, or a cluster cut).
+    _want_sep = (False if group_separators is False
+                 else (True if group_separators is True else None))
+    if _group_map and _want_sep is not False:
         def _grp(j):
             return _group_map.get(col_labels[j], "")
         seen = list(dict.fromkeys(_grp(j) for j in range(len(col_labels))))
@@ -412,6 +426,22 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                            key=lambda j: (rank.get(_grp(j), 0), posc.get(j, j)))
         og = [_grp(j) for j in col_order]
         col_group_boundaries = [i for i in range(1, len(og)) if og[i] != og[i - 1]]
+
+    # Cutting into k clusters IS a grouping, so it should get the same separator
+    # lines an explicit column_groups mapping does. Without this the three
+    # separator controls were dead for the common case - clustering on, no
+    # annotation track - which is how they were reported: ticked, coloured,
+    # widened, and nothing drawn.
+    row_group_boundaries: List[int] = []
+    if _want_sep is not False:
+        if not col_group_boundaries and col_cluster_ids is not None:
+            _oc = [int(col_cluster_ids[j]) for j in col_order]
+            col_group_boundaries = [i for i in range(1, len(_oc))
+                                    if _oc[i] != _oc[i - 1]]
+        if row_cluster_ids is not None:
+            _orow = [int(row_cluster_ids[i]) for i in row_order]
+            row_group_boundaries = [i for i in range(1, len(_orow))
+                                    if _orow[i] != _orow[i - 1]]
 
     ordered = matrix[np.ix_(row_order, col_order)]
     ordered_rows = [row_labels[i] for i in row_order]
@@ -532,6 +562,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         # Bolder vertical separators between sample groups (controllable colour/width).
         for b in col_group_boundaries:
             ax.axvline(b - 0.5, color=group_sep_color, linewidth=group_sep_width)
+        for b in row_group_boundaries:
+            ax.axhline(b - 0.5, color=group_sep_color, linewidth=group_sep_width)
         # Cluster color strips (drawn first so their divider axes sit outside).
         # Which cluster legends to draw. 'auto' explains whichever axes are
         # clustered - with both, each gets its own named legend, because a single
@@ -571,7 +603,9 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         _stack = 0.0
         if row_color_map is not None:
             _draw_cluster_strip(
-                ax, "left", row_cluster_ids[row_order], row_color_map, prefix, style,
+                ax, row_bar_side, row_cluster_ids[row_order], row_color_map,
+                prefix, style,
+                labels_share_this_margin=(row_bar_side == row_label_side),
                 legend=_legend_rows, legend_title=_row_title,
                 width_pct=cluster_strip_width, pad=cluster_strip_pad,
                 legend_location=cluster_legend_location,
@@ -582,7 +616,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                 _stack = 0.1 + 0.075 * len(row_color_map)
         if col_color_map is not None:
             _draw_cluster_strip(
-                ax, "top", col_cluster_ids[col_order], col_color_map, prefix, style,
+                ax, col_bar_side, col_cluster_ids[col_order], col_color_map,
+                prefix, style,
                 legend=_legend_cols, legend_title=_col_title,
                 width_pct=cluster_strip_width, pad=cluster_strip_pad,
                 legend_location=cluster_legend_location,
@@ -601,7 +636,15 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             # perfectly well on the left - which is where every clustermap of this
             # shape puts it.
             ax.yaxis.tick_right()
-            ax.tick_params(axis="y", pad=2.0)
+            # Set the pad HERE, not in the strip helper: this block runs after
+            # the strips are drawn and would otherwise overwrite their clearance,
+            # which is what put the labels back on top of a right-hand bar.
+            _label_pad = 2.0
+            if row_color_map is not None and row_bar_side == "right":
+                _ax_w_pts = ax.get_window_extent().width * 72.0 / ax.figure.dpi
+                _label_pad = ((cluster_strip_width / 100.0) * _ax_w_pts
+                              + cluster_strip_pad * 72.0 + 3.0)
+            ax.tick_params(axis="y", pad=_label_pad)
         if col_label_side == "top":
             ax.xaxis.tick_top()
             ax.xaxis.set_label_position("top")

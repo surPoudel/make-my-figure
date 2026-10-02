@@ -532,3 +532,127 @@ def test_every_declared_option_is_reachable_through_the_public_accessor():
         reachable = {o.key for o in ui_hints.options(plot_type)}
         missing = {o.key for o in declared} - reachable
         assert not missing, f"{plot_type}: declared but unreachable: {sorted(missing)}"
+
+
+# --------------------------------------------------------------------------
+# Group separators, and which edge each cluster bar sits on
+# --------------------------------------------------------------------------
+
+def _separator_lines(figure):
+    """(vertical, horizontal) separator counts on the main axes."""
+    ax = figure.axes[0]
+    vertical = sum(1 for l in ax.lines if len(set(l.get_xdata())) == 1)
+    horizontal = sum(1 for l in ax.lines if len(set(l.get_ydata())) == 1)
+    return vertical, horizontal
+
+
+def test_cutting_into_clusters_draws_separators_between_them():
+    """Reported from the app: "I don't see the use of group separator".
+
+    They only drew when an explicit column_groups mapping or an annotation track
+    supplied the grouping. With clustering on - the common case - there was no
+    group map, so the tick box, the colour and the width all did nothing. A cut
+    into k clusters IS a grouping.
+    """
+    result = _render()
+    try:
+        vertical, horizontal = _separator_lines(result.figure)
+        assert vertical >= 2, "no separators between the column clusters"
+        assert horizontal >= 2, "no separators between the row clusters"
+    finally:
+        _close(result.figure)
+
+
+def test_the_separators_can_be_turned_off():
+    result = _render(group_separators=False)
+    try:
+        assert _separator_lines(result.figure) == (0, 0)
+    finally:
+        _close(result.figure)
+
+
+@pytest.mark.parametrize("width", [1.6, 6.0])
+def test_the_separator_width_reaches_the_lines(width):
+    result = _render(group_separator_width=width)
+    try:
+        widths = {l.get_linewidth() for l in result.figure.axes[0].lines}
+        assert widths == {width}, f"asked for {width}, drew {widths}"
+    finally:
+        _close(result.figure)
+
+
+def test_the_separator_colour_reaches_the_lines():
+    from matplotlib.colors import to_rgba
+
+    result = _render(group_separator_color="#B2182B")
+    try:
+        colours = {to_rgba(l.get_color()) for l in result.figure.axes[0].lines}
+        assert colours == {to_rgba("#B2182B")}, colours
+    finally:
+        _close(result.figure)
+
+
+@pytest.mark.parametrize("bar_side", ["left", "right"])
+@pytest.mark.parametrize("label_side", ["left", "right"])
+@pytest.mark.parametrize("col_side", ["top", "bottom"])
+def test_the_bars_and_labels_never_collide_whichever_sides_are_chosen(
+        bar_side, label_side, col_side):
+    """Every combination has to be usable, or the control is a trap.
+
+    bar=right with labels=right failed at first: the label-side block runs AFTER
+    the strips are drawn and reset the tick pad, wiping the clearance the strip
+    had set. The pad is now applied where it survives.
+    """
+    from make_my_figure_core.plots.base import content_overflow_inches
+
+    result = _render(row_cluster_bar_side=bar_side, row_label_side=label_side,
+                     column_cluster_bar_side=col_side, cluster_strip_pad=0.12)
+    figure = result.figure
+    try:
+        figure.canvas.draw()
+        renderer = figure.canvas.get_renderer()
+        ax = figure.axes[0]
+        strips = [a.get_window_extent() for a in _strip_axes(figure)]
+        labels = [t.get_window_extent(renderer) for t in ax.get_yticklabels()
+                  if t.get_text().strip()]
+        clashes = sum(1 for b in labels for sb in strips if b.overlaps(sb))
+        assert clashes == 0, (
+            f"bar={bar_side} labels={label_side}: {clashes} row labels sit on "
+            f"the cluster bar")
+        assert max(content_overflow_inches(figure)) * figure.dpi <= 4.0
+    finally:
+        _close(figure)
+
+
+@pytest.mark.parametrize("side", ["left", "right"])
+def test_the_row_cluster_bar_goes_where_it_is_asked(side):
+    result = _render(row_cluster_bar_side=side)
+    figure = result.figure
+    try:
+        figure.canvas.draw()
+        main = figure.axes[0].get_window_extent()
+        bar = next(a.get_window_extent() for a in _strip_axes(figure)
+                   if a.get_window_extent().height > a.get_window_extent().width)
+        if side == "right":
+            assert bar.x0 >= main.x1 - 1, "asked for the right, drawn on the left"
+        else:
+            assert bar.x1 <= main.x0 + 1
+    finally:
+        _close(figure)
+
+
+@pytest.mark.parametrize("side", ["top", "bottom"])
+def test_the_column_cluster_bar_goes_where_it_is_asked(side):
+    result = _render(column_cluster_bar_side=side)
+    figure = result.figure
+    try:
+        figure.canvas.draw()
+        main = figure.axes[0].get_window_extent()
+        bar = next(a.get_window_extent() for a in _strip_axes(figure)
+                   if a.get_window_extent().width > a.get_window_extent().height)
+        if side == "bottom":
+            assert bar.y1 <= main.y0 + 1, "asked for the bottom, drawn on top"
+        else:
+            assert bar.y0 >= main.y1 - 1
+    finally:
+        _close(figure)
