@@ -55,6 +55,9 @@ def test_download_skips_gracefully_offline(pipeline, monkeypatch):
 
 def test_curation_is_deterministic(pipeline):
     P = pipeline
+    # iris comes from scikit-learn's bundled datasets; the karate_network test
+    # above deliberately uses a NetworkX built-in so it always runs.
+    pytest.importorskip("sklearn", reason="the iris built-in needs scikit-learn")
     bench = next(b for b in P.BENCHMARKS if b.id == "iris_confusion")
     c1 = P.curate(bench, offline_ok=True)
     c2 = P.curate(bench, offline_ok=True)

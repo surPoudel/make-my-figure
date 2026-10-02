@@ -14,6 +14,8 @@ adjustText==1.4.0
 pillow==12.3.0
 streamlit==1.62.0
 pytest==9.1.1
+# publication-recreation benchmarks (optional)
+scikit-learn==1.9.1
 # desktop app (optional)
 PySide6==6.11.2
 pytest-qt==4.5.0
