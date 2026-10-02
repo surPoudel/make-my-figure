@@ -15,6 +15,7 @@ import numpy as np
 
 from make_my_figure_core.plots._v04_shared import ordered_unique
 from make_my_figure_core.plots.base import (
+    marker_edge_color,
     RenderResult,
     base_metadata,
     coerce_numeric,
@@ -85,7 +86,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                           or max(3.0, style.marker_size ** 0.5))
             ax.plot(xs, ys, color=line_col, lw=lw, alpha=lalpha, zorder=2, label=label,
                     marker="o", markersize=psize, markerfacecolor=point_col,
-                    markeredgecolor="white", markeredgewidth=style.marker_edge_width)
+                    markeredgecolor=marker_edge_color(spec, "white"),
+                    markeredgewidth=style.marker_edge_width)
 
         ax.set_xticks(range(len(conditions)))
         ax.set_xticklabels([str(c) for c in conditions])

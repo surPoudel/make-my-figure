@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from make_my_figure_core.plots.base import (
+    bar_thickness,
     autorotate_xticklabels,
     RenderResult,
     apply_publication_layout,
@@ -57,7 +58,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         bottom = np.zeros(len(samples))
         for ci, comp in enumerate(components):
             vals = pivot[comp].to_numpy(dtype=float)
-            ax.bar(positions, vals, bottom=bottom, width=0.8, label=str(comp),
+            ax.bar(positions, vals, bottom=bottom, label=str(comp),
+                   width=bar_thickness(spec, 0.8),
                    color=style.color_for(ci), edgecolor="white", linewidth=0.3)
             bottom += vals
 

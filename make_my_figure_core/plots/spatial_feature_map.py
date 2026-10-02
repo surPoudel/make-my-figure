@@ -30,6 +30,7 @@ from make_my_figure_core.plots._spatial_shared import (
     share_facet_limits, should_rasterize, spatial_block,
 )
 from make_my_figure_core.plots.base import (
+    colorbar_geometry,
     RenderError, RenderResult, base_metadata, figure_size, get_mapping, require_columns,
 )
 from make_my_figure_core.styles.engine import StyleProfile
@@ -255,7 +256,9 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
         if block.get("colorbar", True) and mappable is not None:
             label = block.get("colorbar_label") or colour_label
             if shared or len(levels) == 1:
-                cb = fig.colorbar(mappable, ax=[a for a in used_axes], fraction=0.035, pad=0.02)
+                cb = fig.colorbar(mappable, ax=[a for a in used_axes],
+                                      **colorbar_geometry(spec, default_fraction=0.035,
+                                                          default_pad=0.02))
                 cb.set_label(str(label), fontsize=style.axis_font_pt)
                 cb.ax.tick_params(labelsize=style.tick_label_pt)
             else:
@@ -263,7 +266,9 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
                 # would be wrong, and drawing none at all - which this did before -
                 # leaves the reader no way to know what any colour means.
                 for ax_i, sc_i in panel_mappables:
-                    cb = fig.colorbar(sc_i, ax=ax_i, fraction=0.046, pad=0.02)
+                    cb = fig.colorbar(sc_i, ax=ax_i,
+                                          **colorbar_geometry(spec, default_fraction=0.046,
+                                                              default_pad=0.02))
                     cb.ax.tick_params(labelsize=max(style.tick_label_pt - 1, 5))
                     cb.set_label(str(label), fontsize=max(style.axis_font_pt - 2, 6))
                 warnings.append(

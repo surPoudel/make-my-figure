@@ -400,3 +400,135 @@ def test_the_label_repeller_is_shared_not_per_renderer():
     assert callable(getattr(base, "repel_labels", None)), (
         "the overlap-avoiding label placer is not in plots.base, so each "
         "renderer will solve it again or not at all")
+
+
+# --------------------------------------------------------------------------
+# Which edge the tick labels sit on
+# --------------------------------------------------------------------------
+
+@pytest.mark.parametrize("key,choices", [("row_label_side", {"left", "right"}),
+                                         ("column_label_side", {"bottom", "top"})])
+def test_the_label_side_is_offered(key, choices):
+    from make_my_figure_core import ui_hints
+
+    option = next((o for o in ui_hints.options(PLOT_TYPE) if o.key == key), None)
+    assert option is not None, f"{key} is not offered"
+    assert set(option.choices) == choices
+
+
+def test_row_labels_can_move_to_the_right_of_the_heatmap():
+    """Reported from the app: with a row cluster bar the tick marks, the bar and
+    the gene names all compete for the left margin, leaving the marks orphaned
+    between the bar and the data. Moving the names to the right - the usual
+    clustermap arrangement - leaves that margin to the bar alone.
+    """
+    left = _render(row_label_side="left")
+    right = _render(row_label_side="right")
+    try:
+        for result, side in ((left, "left"), (right, "right")):
+            figure = result.figure
+            figure.canvas.draw()
+            renderer = figure.canvas.get_renderer()
+            ax = figure.axes[0]
+            main = ax.get_window_extent()
+            boxes = [t.get_window_extent(renderer) for t in ax.get_yticklabels()
+                     if t.get_text().strip()]
+            assert boxes, "no row labels drawn"
+            if side == "right":
+                assert all(b.x0 > main.x1 for b in boxes), \
+                    "row labels asked to sit right are still on the left"
+            else:
+                assert all(b.x1 < main.x0 + 1 for b in boxes)
+    finally:
+        _close(left.figure); _close(right.figure)
+
+
+def test_moving_the_row_labels_right_widens_the_heatmap():
+    """The point of the move: the left margin stops holding two things."""
+    left = _render(row_label_side="left", cluster_strip_pad=0.16)
+    right = _render(row_label_side="right", cluster_strip_pad=0.16)
+    try:
+        for r in (left, right):
+            r.figure.canvas.draw()
+        assert (right.figure.axes[0].get_window_extent().width
+                > left.figure.axes[0].get_window_extent().width)
+    finally:
+        _close(left.figure); _close(right.figure)
+
+
+@pytest.mark.parametrize("side", ["left", "right"])
+@pytest.mark.parametrize("col_k", [0, 3])
+def test_nothing_collides_whichever_edge_the_labels_are_on(side, col_k):
+    """Moving the labels put them under the colourbar and then under the cluster
+    key - each fixed in turn, and each a thing that only shows up on the render.
+    """
+    from make_my_figure_core.plots.base import content_overflow_inches
+
+    result = _render(row_label_side=side, cluster_k_columns=col_k,
+                     cluster_strip_pad=0.16)
+    figure = result.figure
+    try:
+        figure.canvas.draw()
+        renderer = figure.canvas.get_renderer()
+        ax = figure.axes[0]
+        obstacles = [t.get_window_extent(renderer) for t in ax.get_yticklabels()
+                     if t.get_text().strip()]
+        obstacles += [a.get_window_extent() for a in figure.axes
+                      if a.get_label() == "<colorbar>"]
+        for legend in (c for c in ax.get_children()
+                       if c.__class__.__name__ == "Legend"):
+            box = legend.get_window_extent(renderer)
+            assert not any(box.overlaps(ob) for ob in obstacles), \
+                f"side={side} col_k={col_k}: the cluster key sits on the labels"
+        label_box = ax.yaxis.label.get_window_extent(renderer)
+        assert not any(label_box.overlaps(ob) for ob in obstacles), \
+            f"side={side} col_k={col_k}: the axis label sits on the labels"
+        assert max(content_overflow_inches(figure)) * figure.dpi <= 4.0
+    finally:
+        _close(figure)
+
+
+# --------------------------------------------------------------------------
+# The option tables themselves
+# --------------------------------------------------------------------------
+
+def test_no_plot_type_is_declared_twice_in_the_option_table():
+    """A repeated key silently discards the earlier list.
+
+    OPTIONS had three empty placeholder entries shadowed by the real ones later
+    in the same literal. Harmless while they stayed empty - Python keeps the last
+    - and a trap the moment anyone adds an option to the first one, which is
+    exactly what happened while adding the point-outline control: the option was
+    declared, the UI never showed it, and nothing complained.
+    """
+    import ast
+    import collections
+    from pathlib import Path
+
+    source = (Path(__file__).resolve().parents[1] / "make_my_figure_core"
+              / "ui_hints.py").read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    duplicates = {}
+    for node in ast.walk(tree):
+        target = getattr(node, "target", None)
+        if target is None or getattr(target, "id", "") not in ("OPTIONS",
+                                                               "COLUMN_FIELDS"):
+            continue
+        if not isinstance(node.value, ast.Dict):
+            continue
+        keys = [k.value for k in node.value.keys]
+        repeated = {k: n for k, n in collections.Counter(keys).items() if n > 1}
+        if repeated:
+            duplicates[target.id] = repeated
+    assert not duplicates, f"a later entry silently discards an earlier one: {duplicates}"
+
+
+def test_every_declared_option_is_reachable_through_the_public_accessor():
+    """Declaring an option in the table is only half of it; ui_hints.options()
+    is what the app reads, and a shadowed entry never gets there."""
+    from make_my_figure_core import ui_hints
+
+    for plot_type, declared in ui_hints.OPTIONS.items():
+        reachable = {o.key for o in ui_hints.options(plot_type)}
+        missing = {o.key for o in declared} - reachable
+        assert not missing, f"{plot_type}: declared but unreachable: {sorted(missing)}"

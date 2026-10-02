@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from make_my_figure_core.plots.base import (
+    reference_line_kwargs,
     RenderError,
     RenderResult,
     base_metadata,
@@ -96,8 +97,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             meta_extra["n_neg"] = int(N)
             used = [label_col] + models
             if baseline is not None:
-                ax.axhline(baseline, ls=":", color="0.6", lw=style.spine_width_pt,
-                           label=f"baseline={baseline:.2f}")
+                # The baseline is dotted by default, not dashed - it marks
+                # prevalence rather than a target - so the dotted default stands
+                # unless the author picks a style.
+                _ref_kw = reference_line_kwargs(spec, style,
+                                                default_style="dotted",
+                                                default_color="0.6")
+                ax.axhline(baseline, label=f"baseline={baseline:.2f}", **_ref_kw)
         else:
             work[recall_col] = coerce_numeric(work, recall_col, context=PLOT_TYPE)
             work[precision_col] = coerce_numeric(work, precision_col, context=PLOT_TYPE)

@@ -437,6 +437,84 @@ def repel_labels(ax, points, style, *, show_arrows=True, box=False, color=None,
         return len(points)
 
 
+# Dash patterns a reference line may use, as the UI offers them.
+REFERENCE_LINE_STYLES = {
+    "dashed": "--", "dotted": ":", "dash-dot": "-.", "solid": "-",
+}
+
+
+def reference_line_kwargs(spec: Dict[str, Any], style, *, default_style="dashed",
+                          default_color="0.5") -> Dict[str, Any]:
+    """Styling for a threshold, identity or reference line.
+
+    Ten plot types draw one - a volcano's fold-change cutoffs, a ROC diagonal, a
+    Bland-Altman limit of agreement, a waterfall's response thresholds - and each
+    had the dash pattern and the grey hard-coded. They are the lines an author is
+    most likely to want to restyle or tone down for print, so they get one shared
+    control rather than ten different ones or none.
+    """
+    layout = (spec or {}).get("layout", {}) or {}
+    mapping = (spec or {}).get("mapping", {}) or {}
+    name = str(mapping.get("reference_line_style")
+               or layout.get("reference_line_style") or default_style).lower()
+    colour = (mapping.get("reference_line_color")
+              or layout.get("reference_line_color") or default_color)
+    dash = REFERENCE_LINE_STYLES.get(name, REFERENCE_LINE_STYLES[default_style])
+    return {"ls": dash, "color": str(colour), "lw": style.spine_width_pt}
+
+
+def marker_edge_color(spec: Dict[str, Any], default: str) -> str:
+    """The outline colour for point markers, or the plot's own default.
+
+    "auto" is not a colour, it is "whatever this plot was already doing" - white
+    to separate overlapping points, black to weight an estimate - so a plot keeps
+    its considered default until an author overrides it.
+    """
+    mapping = (spec or {}).get("mapping", {}) or {}
+    chosen = str(mapping.get("marker_edge_color", "auto") or "auto").lower()
+    return default if chosen in ("", "auto") else chosen
+
+
+def bar_thickness(spec: Dict[str, Any], default: float) -> float:
+    """How much of its slot a bar fills; ``0`` keeps the plot's own default.
+
+    Each bar-shaped plot picked its own number - 0.6 for an UpSet's matrix,
+    0.85 for a waterfall - and those are considered choices, not accidents, so
+    the control starts at "leave it alone" rather than imposing one value on all
+    of them.
+    """
+    mapping = (spec or {}).get("mapping", {}) or {}
+    try:
+        chosen = float(mapping.get("bar_width", 0) or 0)
+    except (TypeError, ValueError):
+        return default
+    return chosen if 0 < chosen <= 1.0 else default
+
+
+def colorbar_geometry(spec: Dict[str, Any], *, default_fraction: float,
+                      default_pad: float) -> Dict[str, float]:
+    """``fraction``/``pad`` for a colourbar, from the spec or the plot's default.
+
+    The clustered heatmap has had these controls for a while; four other plots
+    that draw a colourbar had the numbers baked in, so the bar's distance from
+    the axes - the first thing to adjust when it crowds the tick labels - was
+    unreachable. Same option names, so there is one vocabulary.
+    """
+    layout = (spec or {}).get("layout", {}) or {}
+    mapping = (spec or {}).get("mapping", {}) or {}
+
+    def _num(key, fallback):
+        value = mapping.get(key, layout.get(key))
+        try:
+            value = float(value)
+        except (TypeError, ValueError):
+            return fallback
+        return value if value > 0 else fallback
+
+    return {"fraction": _num("colorbar_fraction", default_fraction),
+            "pad": _num("colorbar_pad", default_pad)}
+
+
 def chosen_column_width(spec: Dict[str, Any]) -> "str | None":
     """The width preset the user actually picked, or ``None`` for automatic.
 

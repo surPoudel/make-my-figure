@@ -48,6 +48,8 @@ NOT_EXERCISED = "not-exercised"
 PRECONDITIONS = {
     "heatmap_clustered_matrix": {"cluster_k_rows": 3, "cluster_k_columns": 3},
     "hierarchical_clustering": {"cluster_k_rows": 3},
+    # The centroid labels - and so every control over them - need a label column.
+    "embedding_scatter": {"label": "cell_type"},
 }
 
 

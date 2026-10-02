@@ -24,6 +24,7 @@ import pandas as pd
 from make_my_figure_core.clustering import CLUSTER_PALETTE
 from make_my_figure_core.plots._v04_shared import numeric_matrix, ordered_unique, pick_column
 from make_my_figure_core.plots.base import (
+    colorbar_geometry,
     LABEL_ADJUST_ITERATIONS,
     explicit_figure_size,
     RenderError,
@@ -365,7 +366,9 @@ def render(spec: Dict[str, Any], df, style: StyleProfile, aux=None) -> RenderRes
         if cmap_obj is not None:
             sm = plt.cm.ScalarMappable(cmap=cmap_obj)
             sm.set_array(np.asarray(node_colors, dtype=float))
-            cb = fig.colorbar(sm, ax=ax, fraction=0.045, pad=0.02)
+            cb = fig.colorbar(sm, ax=ax,
+                              **colorbar_geometry(spec, default_fraction=0.045,
+                                                  default_pad=0.02))
             cb.set_label(str(get_mapping(spec, "color_label", "node value")),
                          fontsize=style.axis_font_pt)
 

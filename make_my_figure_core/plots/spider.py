@@ -15,6 +15,8 @@ import numpy as np
 
 from make_my_figure_core.plots._v04_shared import ordered_unique
 from make_my_figure_core.plots.base import (
+    marker_edge_color,
+    reference_line_kwargs,
     RenderResult,
     base_metadata,
     coerce_numeric,
@@ -68,14 +70,16 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                 label = str(subj) if len(subjects) <= _MAX_SUBJECT_LEGEND else None
             ax.plot(xs[mask], ys[mask], color=color, lw=style.line_width_pt,
                     marker="o", markersize=np.sqrt(style.marker_size) * 0.7,
-                    markeredgecolor="white", markeredgewidth=style.marker_edge_width,
+                    markeredgecolor=marker_edge_color(spec, "white"),
+                    markeredgewidth=style.marker_edge_width,
                     alpha=0.9, zorder=3, label=label)
 
         # Reference line (default 0% change).
         if reference is not None:
             try:
                 ref = float(reference)
-                ax.axhline(ref, ls="--", lw=style.spine_width_pt, color="0.5", zorder=1)
+                _ref_kw = reference_line_kwargs(spec, style)
+                ax.axhline(ref, zorder=1, **_ref_kw)
             except (TypeError, ValueError):
                 pass
 

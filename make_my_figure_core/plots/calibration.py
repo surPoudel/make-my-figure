@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from make_my_figure_core.plots.base import (
+    reference_line_kwargs,
     RenderError,
     RenderResult,
     base_metadata,
@@ -54,8 +55,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     with style.apply():
         fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=1.0))
         # Perfect-calibration reference.
-        ax.plot([0, 1], [0, 1], ls="--", color="0.6", lw=style.spine_width_pt,
-                label="perfect calibration")
+        _ref_kw = reference_line_kwargs(spec, style)
+        ax.plot([0, 1], [0, 1], label="perfect calibration", **_ref_kw)
 
         if from_labels:
             work[label_col] = coerce_numeric(work, label_col, context=PLOT_TYPE)

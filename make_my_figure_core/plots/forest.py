@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from make_my_figure_core.plots.base import (
+    marker_edge_color,
+    reference_line_kwargs,
     apply_axis_overrides,
     RenderResult,
     base_metadata,
@@ -50,9 +52,12 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     with style.apply():
         fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.7))
         ax.errorbar(est, y_pos, xerr=xerr, fmt="s", color=style.color_for(0),
-                    ecolor="black", elinewidth=style.line_width_pt, capsize=2.5,
-                    markersize=4, markeredgecolor="black", linestyle="none")
-        ax.axvline(reference, ls="--", color="0.5", lw=style.spine_width_pt)
+                    ecolor="black", elinewidth=style.line_width_pt,
+                    capsize=style.errorbar_capsize,
+                    markersize=4, linestyle="none",
+                    markeredgecolor=marker_edge_color(spec, "black"))
+        _ref_kw = reference_line_kwargs(spec, style)
+        ax.axvline(reference, **_ref_kw)
         if log_scale and np.all(est > 0) and np.all(lo > 0):
             ax.set_xscale("log")
             # Ratio axes rarely span a decade: label the ticks as plain numbers

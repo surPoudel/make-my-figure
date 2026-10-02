@@ -23,6 +23,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from make_my_figure_core.plots.base import (
+    reference_line_kwargs,
     LABEL_ADJUST_ITERATIONS,
     repel_labels,
     RenderResult,
@@ -160,9 +161,10 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                    linewidths=0.4, alpha=0.95, zorder=3)
 
         thr_lw = max(0.8, style.spine_width_pt * 0.8)
-        ax.axvline(lfc_cutoff, ls="--", lw=thr_lw, color="0.5", zorder=0)
-        ax.axvline(-lfc_cutoff, ls="--", lw=thr_lw, color="0.5", zorder=0)
-        ax.axhline(-np.log10(p_cutoff), ls="--", lw=thr_lw, color="0.5", zorder=0)
+        _ref_kw = reference_line_kwargs(spec, style)
+        ax.axvline(lfc_cutoff, zorder=0, **_ref_kw)
+        ax.axvline(-lfc_cutoff, zorder=0, **_ref_kw)
+        ax.axhline(-np.log10(p_cutoff), zorder=0, **_ref_kw)
 
         ymax = float(work["_neglog10p"].max()) if len(work) else 1.0
 

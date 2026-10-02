@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from make_my_figure_core.plots.base import (
+    bar_thickness,
+    reference_line_kwargs,
     RenderResult,
     base_metadata,
     coerce_numeric,
@@ -50,11 +52,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     with style.apply():
         fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.6))
         ax.bar(positions, work[y], color=colors, edgecolor="black",
-               linewidth=style.spine_width_pt, width=0.85)
+               linewidth=style.spine_width_pt,
+               width=bar_thickness(spec, 0.85))
         ax.axhline(0, color="black", lw=style.spine_width_pt)
         # Common RECIST reference lines (informational only, not clinical advice).
-        ax.axhline(20, ls="--", lw=style.spine_width_pt, color="0.6")
-        ax.axhline(-30, ls="--", lw=style.spine_width_pt, color="0.6")
+        _ref_kw = reference_line_kwargs(spec, style)
+        ax.axhline(20, **_ref_kw)
+        ax.axhline(-30, **_ref_kw)
 
         ax.set_xticks([])
         ax.set_xlabel(spec.get("layout", {}).get("x_label", "Patients (sorted)"))

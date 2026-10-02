@@ -164,6 +164,7 @@ def _draw_cluster_strip(ax, side: str, cluster_ids_in_order: np.ndarray,
                         width_pct: float = 4.0, pad: float = 0.06,
                         legend_location: str = "right",
                         legend_anchor_shift: float = 0.0,
+                        legend_x_extra: float = 0.0,
                         another_legend_follows: bool = False,
                         show_strip_label: bool = True) -> None:
     """Draw a categorical cluster color strip beside the heatmap (left/top).
@@ -217,8 +218,10 @@ def _draw_cluster_strip(ax, side: str, cluster_ids_in_order: np.ndarray,
         kwargs = {}
         if anchor is not None:
             # Two legends on the same side are stacked rather than drawn on top of
-            # each other.
-            kwargs["bbox_to_anchor"] = (anchor[0], anchor[1] - legend_anchor_shift)
+            # each other; legend_x_extra pushes past anything occupying the margin
+            # (row labels moved to the right, and the colourbar beyond them).
+            kwargs["bbox_to_anchor"] = (anchor[0] + legend_x_extra,
+                                        anchor[1] - legend_anchor_shift)
         handles = [Patch(facecolor=color_map[lab], label=lab) for lab in ordered_labels]
         leg = ax.legend(handles=handles, title=legend_title, loc=loc,
                         fontsize=style.legend_pt, title_fontsize=style.legend_title_pt,
@@ -262,6 +265,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     # 2, 3", so writing "Cluster" beside each bar as well says it a third time -
     # and it lands on top of the axis labels, which is where it was reported from.
     cluster_strip_labels = bool(get_mapping(spec, "cluster_strip_labels", False))
+    # Which edge the tick labels sit on. With a row cluster bar on the left, the
+    # labels, the bar and the tick marks all compete for the same margin and the
+    # marks end up orphaned between the bar and the heatmap. Putting the labels
+    # on the right - the usual clustermap arrangement - leaves the bar flush
+    # against the data where it belongs.
+    row_label_side = str(get_mapping(spec, "row_label_side", "left")).lower()
+    col_label_side = str(get_mapping(spec, "column_label_side", "bottom")).lower()
     highlight_rows = {str(s).strip().lower() for s in (get_mapping(spec, "highlight_rows", None) or [])}
     highlight_cols = {str(s).strip().lower() for s in (get_mapping(spec, "highlight_columns", None) or [])}
     show_row_labels = get_mapping(spec, "show_row_labels", None)
@@ -548,6 +558,16 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         # clipped at the default figure width.
         _row_title = "Rows" if _both else f"{prefix}s"
         _col_title = "Columns" if _both else f"{prefix}s"
+        # With the row labels on the right the key has to clear both them and the
+        # colourbar, or it lands on the names - which is what moving the labels
+        # was meant to stop.
+        _legend_x_extra = 0.0
+        if row_label_side == "right" and row_fs > 0:
+            _longest_row = max((len(str(r)) for r in ordered_rows), default=6)
+            # 0.14 covers the colourbar's own width plus its pad. Not read from
+            # cb_pad: that is computed further down, after the strips are drawn.
+            _legend_x_extra = min(1.2, _longest_row * 0.6 * row_fs / 72.0
+                                  / max(0.6 * w_in, 0.5) + 0.14)
         _stack = 0.0
         if row_color_map is not None:
             _draw_cluster_strip(
@@ -556,6 +576,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                 width_pct=cluster_strip_width, pad=cluster_strip_pad,
                 legend_location=cluster_legend_location,
                 another_legend_follows=_legend_rows and _legend_cols,
+                legend_x_extra=_legend_x_extra,
                 show_strip_label=cluster_strip_labels)
             if _legend_rows:
                 _stack = 0.1 + 0.075 * len(row_color_map)
@@ -565,12 +586,25 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                 legend=_legend_cols, legend_title=_col_title,
                 width_pct=cluster_strip_width, pad=cluster_strip_pad,
                 legend_location=cluster_legend_location,
+                legend_x_extra=_legend_x_extra,
                 legend_anchor_shift=_stack,
                 show_strip_label=cluster_strip_labels)
         if col_annotations:
             _draw_column_annotations(fig, ax, col_annotations, ordered_cols, style, warnings)
 
         # --- row tick labels (+ highlighting) ---
+        if row_label_side == "right":
+            # Labels and their marks move together; the left margin is then the
+            # cluster bar's alone, so the clearance added for it is not needed.
+            # Tick labels and their marks move; the AXIS label stays on the left.
+            # Sent right with them it ends up behind the colourbar, and it reads
+            # perfectly well on the left - which is where every clustermap of this
+            # shape puts it.
+            ax.yaxis.tick_right()
+            ax.tick_params(axis="y", pad=2.0)
+        if col_label_side == "top":
+            ax.xaxis.tick_top()
+            ax.xaxis.set_label_position("top")
         hl_row_pos = [i for i, lab in enumerate(ordered_rows) if lab.lower() in highlight_rows]
         if row_fs > 0:
             ax.set_yticks(range(len(ordered_rows)))
@@ -625,9 +659,26 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if cb_loc not in ("right", "left", "top", "bottom"):
             cb_loc = "right"
         cb_frac = float(get_mapping(spec, "colorbar_fraction", layout.get("colorbar_fraction", 0.045)) or 0.045)
-        # Top/bottom colorbars need a larger default pad to clear the column tick
-        # labels + axis label (otherwise the bar collides with them).
-        _default_pad = 0.18 if (cb_loc in ("bottom", "top") and col_fs > 0) else 0.03
+        # A colourbar needs a larger default pad whenever tick labels sit on the
+        # same edge, or it lands on top of them. Top/bottom bars have always had
+        # to clear the column labels; a right-hand bar has to clear the ROW labels
+        # once they are moved to the right, which is what that option does.
+        _labels_on_cb_edge = (
+            (cb_loc in ("bottom", "top") and col_fs > 0)
+            or (cb_loc == "right" and row_label_side == "right" and row_fs > 0)
+            or (cb_loc == "left" and row_label_side == "left" and row_fs > 0))
+        if cb_loc == "right" and row_label_side == "right" and row_fs > 0:
+            # Scaled to the longest name rather than a flat guess: "Gene_26" and
+            # a 40-character probe id need very different room.
+            _longest = max((len(str(r)) for r in ordered_rows), default=6)
+            _label_in = _longest * 0.6 * row_fs / 72.0
+            # ``pad`` is a fraction of the AXES width, not the figure's - dividing
+            # by the figure width left the bar ~40% short and still on the labels.
+            # The axes is roughly 60% of the canvas once margins and the colourbar
+            # are taken out; good enough for a default the user can override.
+            _default_pad = min(0.6, 0.04 + _label_in / max(0.6 * w_in, 0.5))
+        else:
+            _default_pad = 0.18 if _labels_on_cb_edge else 0.03
         cb_pad = float(get_mapping(spec, "colorbar_pad", layout.get("colorbar_pad", _default_pad)) or _default_pad)
         cb_shrink = float(get_mapping(spec, "colorbar_shrink", layout.get("colorbar_shrink", 1.0)) or 1.0)
         cbar = fig.colorbar(im, ax=ax, location=cb_loc, fraction=cb_frac, pad=cb_pad,

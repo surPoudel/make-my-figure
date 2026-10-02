@@ -23,6 +23,7 @@ from matplotlib.colors import CenteredNorm, Normalize
 from matplotlib.lines import Line2D
 
 from make_my_figure_core.plots.base import (
+    colorbar_geometry,
     chosen_column_width,
     width_floor_note,
     resolve_figure_size,
@@ -173,7 +174,9 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
         above = bool((finite > norm.vmax).any())
         extend = ("both" if below and above else
                   "min" if below else "max" if above else "neither")
-        cb = fig.colorbar(sc, ax=ax, fraction=0.03, pad=0.02, extend=extend)
+        cb = fig.colorbar(sc, ax=ax, extend=extend,
+                          **colorbar_geometry(spec, default_fraction=0.03,
+                                              default_pad=0.02))
         cb.set_label(str(block.get("colorbar_label", "Enrichment score")),
                      fontsize=style.axis_font_pt)
         cb.ax.tick_params(labelsize=style.tick_label_pt)

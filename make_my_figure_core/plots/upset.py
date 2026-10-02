@@ -24,6 +24,7 @@ import numpy as np
 import pandas as pd
 
 from make_my_figure_core.plots.base import (
+    bar_thickness,
     chosen_column_width,
     width_floor_note,
     resolve_figure_size,
@@ -114,7 +115,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
         xs = np.arange(n_inter)
         sizes = [c for _, c in inter]
-        ax_bars.bar(xs, sizes, color=style.color_for(0), width=0.6,
+        ax_bars.bar(xs, sizes, color=style.color_for(0),
+                    width=bar_thickness(spec, 0.6),
                     edgecolor=style.text_color, linewidth=style.bar_edge_width)
         for xi, s in zip(xs, sizes):
             ax_bars.annotate(str(s), (xi, s), ha="center", va="bottom",
@@ -148,7 +150,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         # Per-set size bars (horizontal), aligned to matrix rows, growing left.
         rows = [yidx[s] for s in set_order]
         ax_sets.barh(rows, [set_sizes[s] for s in set_order], color=style.color_for(1),
-                     height=0.6, edgecolor=style.text_color, linewidth=style.bar_edge_width)
+                     height=bar_thickness(spec, 0.6),
+                     edgecolor=style.text_color, linewidth=style.bar_edge_width)
         ax_sets.set_yticks(list(range(n_sets)))
         ax_sets.set_yticklabels([s for s in reversed(set_order)], fontsize=style.tick_label_pt)
         ax_sets.set_xlabel("Set size")

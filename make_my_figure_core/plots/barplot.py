@@ -7,6 +7,7 @@ from typing import Any, Dict, List
 import matplotlib.pyplot as plt
 
 from make_my_figure_core.plots.base import (
+    bar_thickness,
     autorotate_xticklabels,
     RenderResult,
     base_metadata,
@@ -57,7 +58,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             color=colors,
             edgecolor="#222222",
             linewidth=style.bar_edge_width,
-            width=0.68,
+            width=bar_thickness(spec, 0.68),
             capsize=style.errorbar_capsize,
             error_kw={"elinewidth": style.errorbar_line_width,
                       "capthick": style.errorbar_line_width},

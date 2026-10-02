@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from make_my_figure_core.plots.base import (
+    reference_line_kwargs,
     RenderResult,
     base_metadata,
     coerce_numeric,
@@ -60,9 +61,14 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             ax.axhspan(bias - ci, bias + ci, color=style.color_for(0), alpha=0.12, zorder=1)
 
         ax.axhline(bias, color=style.text_color, lw=style.line_width_pt, zorder=2)
+        # The limits of agreement are a related PAIR, so they keep the palette
+        # colour unless the author names one; the dash pattern is the control's.
+        _ref_kw = reference_line_kwargs(spec, style)
+        if not (spec.get("mapping") or {}).get("reference_line_color"):
+            _ref_kw["color"] = style.color_for(1)
+        _ref_kw["lw"] = style.line_width_pt
         for loa, name in ((loa_upper, "+1.96 SD"), (loa_lower, "-1.96 SD")):
-            ax.axhline(loa, color=style.color_for(1), lw=style.line_width_pt,
-                       ls="--", zorder=2)
+            ax.axhline(loa, zorder=2, **_ref_kw)
 
         # Right-edge annotations for the reference lines.
         xmax = float(np.nanmax(means)) if n else 1.0
