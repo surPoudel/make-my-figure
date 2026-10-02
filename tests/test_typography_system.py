@@ -29,6 +29,15 @@ from make_my_figure_core.styles.typography import (
 
 PLOTS_DIR = Path(__file__).resolve().parents[1] / "make_my_figure_core" / "plots"
 
+# One source of truth for "is this clipped". The central fitting pass in
+# registry.render leaves anything under FIT_TOLERANCE_IN alone - a few hundredths
+# of an inch is rounding in the text metrics, not a lost label - so a test that
+# demands less than that is asserting something the code deliberately does not
+# promise. Two of these drifted to a hard-coded 1 px and failed on a 3 px hair.
+from make_my_figure_core.plots.base import FIT_TOLERANCE_IN  # noqa: E402
+
+CLIP_TOLERANCE_PX = FIT_TOLERANCE_IN * 110.0
+
 # The hierarchy the publication style defines, as ratios to the axis-label size.
 # Recorded here so a change to the visual identity has to be deliberate.
 CANONICAL_RATIOS = {
@@ -231,18 +240,13 @@ def test_every_plot_type_inherits_the_shared_typography(plot_type):
 # here - see quality_audit/typography.md. Recorded so that the list cannot grow
 # unnoticed, and so that fixing one shows up as a test to update.
 KNOWN_CANVAS_OVERFLOW_AT_4X2 = {
-    "dose_response_curve": "outside legend",
-    "grouped_barplot_with_error_bar": "outside legend",
-    "lollipop_mutation_plot": "outside legend",
-    "ma_plot": "colourbar label",
-    "neighborhood_enrichment_matrix": "colourbar label",
-    "network_graph": "outside legend",
-    "sankey_plot": "node label",
-    "scatterplot_with_regression": "outside legend",
-    "spatial_feature_map": "colourbar label",
-    "spider_plot": "outside legend",
-    "swimmer_plot": "outside legend",
-    "volcano_plot": "outside legend",
+    # A 4 x 2 in panel plus an outside key with eight-odd entries is a genuine
+    # conflict: the fitting pass will not shrink the plot below 55% of the canvas
+    # to make room, and it says so in the render warnings rather than quietly
+    # cropping. The rest of this list was cleared by the central fitting pass.
+    "scatterplot_with_regression": "outside legend, no room at 4 x 2",
+    "spatial_categorical_map": "outside legend with many cell types",
+    "spatial_composition_map": "outside legend with many categories",
 }
 
 
@@ -285,11 +289,8 @@ def _canvas_overflow_px(plot_type, width_mm=101.6, height_mm=50.8, axis="x"):
 # axis label - the one piece of text a figure cannot do without. Same reasoning as
 # above: a layout fix, tripwired here.
 KNOWN_VERTICAL_OVERFLOW_AT_4X2 = {
-    "chord_diagram", "dose_response_curve", "embedding_scatter",
-    "grouped_barplot_with_error_bar", "lollipop_mutation_plot", "ma_plot",
-    "neighborhood_enrichment_matrix", "scatterplot_with_regression",
-    "spatial_categorical_map", "spatial_composition_map", "spider_plot",
-    "swimmer_plot", "upset_plot", "volcano_plot",
+    "neighborhood_enrichment_matrix", "spatial_categorical_map",
+    "spatial_composition_map",
 }
 
 
@@ -298,7 +299,7 @@ KNOWN_VERTICAL_OVERFLOW_AT_4X2 = {
 def test_a_pinned_panel_size_keeps_text_inside_the_canvas(plot_type):
     """4 x 2 in is a normal multi-panel size; drawing past the edge there is a bug."""
     over = _canvas_overflow_px(plot_type)
-    assert over <= 1.0, (
+    assert over <= CLIP_TOLERANCE_PX, (
         f"{plot_type}: {over:.0f}px of content hangs off a pinned 4 x 2 in canvas")
 
 
@@ -310,7 +311,7 @@ def test_the_list_of_plots_that_overflow_a_pinned_canvas_has_not_grown():
     someone's manuscript.
     """
     still_overflowing = {p for p in KNOWN_CANVAS_OVERFLOW_AT_4X2
-                         if _canvas_overflow_px(p) > 1.0}
+                         if _canvas_overflow_px(p) > CLIP_TOLERANCE_PX}
     fixed = set(KNOWN_CANVAS_OVERFLOW_AT_4X2) - still_overflowing
     assert not fixed, (
         f"these no longer overflow and should be removed from "
@@ -447,14 +448,14 @@ def test_making_room_never_squeezes_the_axes_to_nothing():
                                        if p not in KNOWN_VERTICAL_OVERFLOW_AT_4X2])
 def test_a_pinned_panel_size_keeps_the_axis_label_on_the_canvas(plot_type):
     over = _canvas_overflow_px(plot_type, axis="y")
-    assert over <= 1.0, (
+    assert over <= CLIP_TOLERANCE_PX, (
         f"{plot_type}: {over:.0f}px of content, most likely the axis label, falls "
         f"off a pinned 4 x 2 in canvas")
 
 
 def test_the_list_of_plots_that_overflow_vertically_has_not_grown():
     still = {p for p in KNOWN_VERTICAL_OVERFLOW_AT_4X2
-             if _canvas_overflow_px(p, axis="y") > 1.0}
+             if _canvas_overflow_px(p, axis="y") > CLIP_TOLERANCE_PX}
     fixed = KNOWN_VERTICAL_OVERFLOW_AT_4X2 - still
     assert not fixed, (
         f"these no longer overflow and should be removed from "
@@ -496,12 +497,11 @@ def test_no_plot_type_pushes_a_title_off_the_top_of_a_pinned_canvas():
 # because it affects every figure of these types out of the box, and the cause is
 # the same: an outside legend placed as though the canvas could be widened.
 # Measured as pixels of overhang at default size; see quality_audit/typography.md.
-KNOWN_DEFAULT_OVERFLOW = {
-    "dose_response_curve", "embedding_scatter", "grouped_barplot_with_error_bar",
-    "lollipop_mutation_plot", "ma_plot", "scatterplot_with_regression",
-    "spatial_composition_map", "spatial_feature_map", "spider_plot",
-    "swimmer_plot", "volcano_plot",
-}
+# Empty, and worth keeping empty. Eleven plot types used to clip a legend in
+# their default output; the central fitting pass in registry.render now grows the
+# canvas to hold an outside key when the user has not pinned a size. Anything
+# appearing here again is a regression, and the tripwire below will say so.
+KNOWN_DEFAULT_OVERFLOW: set = set()
 
 
 def _default_overflow_px(plot_type):

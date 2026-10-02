@@ -24,6 +24,7 @@ import pandas as pd
 from make_my_figure_core.clustering import CLUSTER_PALETTE
 from make_my_figure_core.plots._v04_shared import numeric_matrix, ordered_unique, pick_column
 from make_my_figure_core.plots.base import (
+    LABEL_ADJUST_ITERATIONS,
     explicit_figure_size,
     RenderError,
     RenderResult,
@@ -355,6 +356,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile, aux=None) -> RenderRes
 
                 adjust_text(texts, ax=ax, only_move={"text": "xy"},
                             expand_text=(1.1, 1.25), expand_points=(1.1, 1.25),
+                            iter_lim=LABEL_ADJUST_ITERATIONS,
                             arrowprops=dict(arrowstyle="-", color="0.6", lw=0.5),
                             force_text=(0.3, 0.5))
             except Exception:

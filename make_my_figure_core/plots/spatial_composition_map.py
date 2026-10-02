@@ -27,6 +27,7 @@ from make_my_figure_core.plots._spatial_shared import (
     widen_for_outside_legend,
 )
 from make_my_figure_core.plots.base import (
+    resolve_figure_size,
     RenderError, RenderResult, base_metadata, figure_size, get_mapping, require_columns,
     resolve_legend_location,
 )
@@ -136,7 +137,7 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
                           if show_legend else (w, None))
 
     with style.apply():
-        fig, ax = plt.subplots(figsize=(fig_w, h))
+        fig, ax = plt.subplots(figsize=resolve_figure_size(spec, (fig_w, h)))
         bg_record = draw_background_image(ax, block)
         for sid, grp in data.groupby(spot, sort=False):
             cx, cy = float(grp[x].iloc[0]), float(grp[y].iloc[0])

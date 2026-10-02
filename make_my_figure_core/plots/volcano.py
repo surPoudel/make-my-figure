@@ -23,6 +23,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from make_my_figure_core.plots.base import (
+    LABEL_ADJUST_ITERATIONS,
     RenderResult,
     base_metadata,
     coerce_numeric,
@@ -74,7 +75,8 @@ def _repel_labels(ax, points, style, *, show_arrows=True, box=False, color=None,
                 kw["force_text"] = (float(repel), float(repel))
             except (TypeError, ValueError):
                 pass
-        adjust_text(texts, ax=ax, arrowprops=arrowprops, **kw)
+        adjust_text(texts, ax=ax, arrowprops=arrowprops,
+                    iter_lim=LABEL_ADJUST_ITERATIONS, **kw)
         return len(texts)
     except Exception:
         for t in texts:

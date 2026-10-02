@@ -200,7 +200,7 @@ def figure_size_adjustments(spec: Dict[str, Any]) -> List[str]:
     return notes
 
 
-def _pinned_dimension(spec: Dict[str, Any], key: str) -> "float | None":
+def pinned_dimension(spec: Dict[str, Any], key: str) -> "float | None":
     """One pinned ``layout`` dimension in inches, or ``None`` if not asked for.
 
     ``0`` is the documented way to say "automatic", and an unparseable value is
@@ -221,6 +221,174 @@ def _pinned_dimension(spec: Dict[str, Any], key: str) -> "float | None":
 # The width presets a user can pick deliberately. "default" is the automatic
 # choice, so it is not in here.
 CHOSEN_WIDTH_PRESETS = ("single", "onehalf", "double")
+
+
+# How many passes the label-overlap solver gets.
+#
+# ``adjust_text`` defaults to a one-SECOND wall-clock budget when neither limit is
+# given, and iterates until the timer expires. The number of passes therefore
+# depends on how fast and how loaded the machine is, which made three plot types
+# - volcano, network graph and lollipop - render differently every single time,
+# from identical input. That is not a seeding problem and no seed fixes it: the
+# library's own RNG is already pinned at 42. An iteration budget replaces the
+# clock with something reproducible.
+#
+# 60 is well past convergence: on a 30-label scatter the solver reaches zero
+# overlapping pairs by 30 passes, and 400 is no better. It is also faster than
+# the second it used to spend.
+LABEL_ADJUST_ITERATIONS = 60
+
+# A figure will not be grown past this, however much its legend wants.
+MAX_FIT_GROWTH_IN = 4.0
+
+# Content hanging off by less than this is left alone. A few hundredths of an
+# inch is antialiasing and rounding in the text metrics, not a clipped label, and
+# resizing a figure to chase it only produces a warning about a change nobody can
+# see. Matches the tolerance the tests use for "is this clipped".
+FIT_TOLERANCE_IN = 0.035
+
+
+def content_overflow_inches(figure) -> tuple:
+    """``(left, right, bottom, top)`` inches of drawn content outside the canvas.
+
+    Uses matplotlib's own tight bounding box, which counts only what is actually
+    drawn - an axis keeps label objects for ticks outside the view limits, parked
+    off-canvas and never rendered, and counting those reports overflow on figures
+    that are clean.
+    """
+    try:
+        renderer = figure.canvas.get_renderer()
+    except AttributeError:
+        return (0.0, 0.0, 0.0, 0.0)
+    figure.canvas.draw()
+    dpi = figure.dpi
+    width_px, height_px = [v * dpi for v in figure.get_size_inches()]
+    box = figure.get_tightbbox(renderer)
+    return (max(0.0, -box.x0), max(0.0, box.x1 - width_px / dpi),
+            max(0.0, -box.y0), max(0.0, box.y1 - height_px / dpi))
+
+
+def fit_content_to_canvas(figure, *, may_grow_x: bool = True,
+                          may_grow_y: bool = True, rounds: int = 5) -> list:
+    """Bring anything drawn outside the canvas back inside it.
+
+    An outside legend is placed relative to the axes, so a long label - "Non
+    responder", "CD68+CD163+ macrophages" - hangs off the edge of a fixed canvas.
+    Exporting with a tight bounding box hides it, which is exactly why it survived
+    so long: the saved file looks right and the preview, and any export at a
+    declared size, is where it shows.
+
+    Two strategies, because the right one depends on whether the size is the
+    user's choice:
+
+    * free to grow - add canvas and hold the axes at their original inches, so the
+      plot area is not sacrificed to make room for a key.
+    * pinned - pull the subplot area in, because a figure fitted to a journal
+      column cannot be widened and a slightly smaller plot beats a clipped legend.
+
+    Decided per axis. Pinning only a width is the usual way to fit a journal
+    column, and growing the figure to hold a legend would hand back a width the
+    user did not ask for - while the height, which nobody pinned, is still free to
+    grow.
+
+    Returns a note when the figure had to change, so it never comes back
+    re-laid-out in silence.
+    """
+    notes = []
+    before = content_overflow_inches(figure)
+    if max(before) <= FIT_TOLERANCE_IN:
+        return notes
+    # A figure on constrained layout places its own axes and refuses
+    # subplots_adjust; it already measures its decorations, so leave it be.
+    # Specifically constrained layout: calling tight_layout() leaves a
+    # PlaceHolderLayoutEngine behind, which is not None, and testing for "any
+    # engine" silently skipped this pass on nearly every figure in the project.
+    try:
+        from matplotlib.layout_engine import ConstrainedLayoutEngine
+
+        if isinstance(figure.get_layout_engine(), ConstrainedLayoutEngine):
+            return notes
+    except (AttributeError, ImportError):
+        pass
+    start_w, start_h = (float(v) for v in figure.get_size_inches())
+
+    for _ in range(rounds):
+        left, right, bottom, top = content_overflow_inches(figure)
+        if max(left, right, bottom, top) <= FIT_TOLERANCE_IN:
+            break
+        pars = figure.subplotpars
+        width_in, height_in = (float(v) for v in figure.get_size_inches())
+        # An edge hanging over by less than the tolerance is not worth moving the
+        # figure for. Zeroed per edge, not just overall: the loop runs while ANY
+        # edge is over, and without this a real overhang on one axis dragged a
+        # hairline on the other along with it, resizing a dimension the user had
+        # deliberately left alone.
+        left = left if left > FIT_TOLERANCE_IN else 0.0
+        right = right if right > FIT_TOLERANCE_IN else 0.0
+        bottom = bottom if bottom > FIT_TOLERANCE_IN else 0.0
+        top = top if top > FIT_TOLERANCE_IN else 0.0
+        # Grow the axis that is free; squeeze the one that is pinned.
+        grow_l, grow_r = (left, right) if may_grow_x else (0.0, 0.0)
+        grow_b, grow_t = (bottom, top) if may_grow_y else (0.0, 0.0)
+        new_w = min(width_in + grow_l + grow_r, start_w + MAX_FIT_GROWTH_IN)
+        new_h = min(height_in + grow_b + grow_t, start_h + MAX_FIT_GROWTH_IN)
+        shift_x = grow_l if new_w > width_in else 0.0
+        shift_y = grow_b if new_h > height_in else 0.0
+        squeeze_l = 0.0 if may_grow_x else left
+        squeeze_r = 0.0 if may_grow_x else right
+        squeeze_b = 0.0 if may_grow_y else bottom
+        squeeze_t = 0.0 if may_grow_y else top
+        if (new_w <= width_in and new_h <= height_in
+                and not max(squeeze_l, squeeze_r, squeeze_b, squeeze_t)):
+            break
+        try:
+            if new_w > width_in or new_h > height_in:
+                # Keep the axes the same absolute size; the new canvas is what
+                # the overhanging artist moves into.
+                figure.set_size_inches(new_w, new_h)
+            figure.subplots_adjust(
+                left=min(0.45, (pars.left * width_in + shift_x) / new_w
+                         + squeeze_l / new_w + (0.004 if squeeze_l else 0.0)),
+                right=max(0.55, (pars.right * width_in + shift_x) / new_w
+                          - squeeze_r / new_w - (0.004 if squeeze_r else 0.0)),
+                bottom=min(0.45, (pars.bottom * height_in + shift_y) / new_h
+                           + squeeze_b / new_h + (0.004 if squeeze_b else 0.0)),
+                top=max(0.55, (pars.top * height_in + shift_y) / new_h
+                        - squeeze_t / new_h - (0.004 if squeeze_t else 0.0)))
+        except Exception:  # noqa: BLE001
+            break
+
+    remaining = content_overflow_inches(figure)
+    if max(remaining) > FIT_TOLERANCE_IN:
+        # Axes placed by a divider (a colourbar appended beside the plot) ignore
+        # subplotpars entirely, so the loop above cannot move them. tight_layout
+        # with a reserved rect can.
+        try:
+            _l, _r, _b, _t = remaining
+            width_in, height_in = (float(v) for v in figure.get_size_inches())
+            figure.tight_layout(rect=(_l / width_in, _b / height_in,
+                                      1.0 - _r / width_in, 1.0 - _t / height_in))
+        except Exception:  # noqa: BLE001
+            pass
+        remaining = content_overflow_inches(figure)
+
+    grew = (abs(figure.get_size_inches()[0] - start_w) > 0.01
+            or abs(figure.get_size_inches()[1] - start_h) > 0.01)
+    if grew:
+        notes.append(
+            f"The figure was widened to {figure.get_size_inches()[0]:.2f} x "
+            f"{figure.get_size_inches()[1]:.2f} in so the legend fits on the "
+            f"canvas. Set a figure size explicitly to keep it fixed.")
+    elif max(remaining) <= FIT_TOLERANCE_IN:
+        notes.append(
+            "The plot area was reduced slightly so the legend fits inside the "
+            "figure size you set.")
+    elif max(remaining) > FIT_TOLERANCE_IN:
+        notes.append(
+            f"About {max(remaining) * 72:.0f} pt of the legend or axis labels "
+            f"still falls outside the figure. Widen the figure, shorten the "
+            f"labels, or move the legend inside the axes.")
+    return notes
 
 
 def chosen_column_width(spec: Dict[str, Any]) -> "str | None":
@@ -261,7 +429,7 @@ def explicit_figure_size(spec: Dict[str, Any]) -> "tuple[float, float] | None":
     whether a canvas was pinned firmly enough to rescale the type hierarchy), so
     a renderer using it alone silently drops a half-pinned size.
     """
-    w_in, h_in = _pinned_dimension(spec, "width_mm"), _pinned_dimension(spec, "height_mm")
+    w_in, h_in = pinned_dimension(spec, "width_mm"), pinned_dimension(spec, "height_mm")
     if w_in is None or h_in is None:
         return None
     return (w_in, h_in)
@@ -285,7 +453,7 @@ def resolve_figure_size(spec: Dict[str, Any],
     into an unreadably tall one.
     """
     w_in, h_in = float(computed[0]), float(computed[1])
-    pinned_w, pinned_h = _pinned_dimension(spec, "width_mm"), _pinned_dimension(spec, "height_mm")
+    pinned_w, pinned_h = pinned_dimension(spec, "width_mm"), pinned_dimension(spec, "height_mm")
     return (w_in if pinned_w is None else pinned_w,
             h_in if pinned_h is None else pinned_h)
 

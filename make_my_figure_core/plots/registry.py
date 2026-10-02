@@ -410,6 +410,29 @@ def render(
     except Exception as _exc:  # noqa: BLE001
         result.warnings.append(f"Title fitting skipped: {_exc}")
 
+    # Last, after every other layout pass: bring anything drawn outside the
+    # canvas back inside. An outside legend is positioned relative to the axes,
+    # so a long label hangs off the edge - on 11 of the 45 plot types this was
+    # happening in their default output. Grows the canvas when the user has not
+    # pinned a size, and pulls the subplot area in when they have. Guarded; a
+    # fitting pass must never break a render.
+    try:
+        from make_my_figure_core.plots.base import (
+            fit_content_to_canvas, pinned_dimension)
+
+        if getattr(result, "figure", None) is not None:
+            # Per axis: pinning only a width is the usual journal-column case,
+            # and growing the figure to hold a legend would hand back a width
+            # nobody asked for.
+            for _note in fit_content_to_canvas(
+                    result.figure,
+                    may_grow_x=pinned_dimension(spec, "width_mm") is None,
+                    may_grow_y=pinned_dimension(spec, "height_mm") is None):
+                if _note not in result.warnings:
+                    result.warnings.append(_note)
+    except Exception as _exc:  # noqa: BLE001
+        result.warnings.append(f"Legend fitting skipped: {_exc}")
+
     if _typo_scale != 1.0:
         _msg = (
             f"Text sizes were scaled to {_typo_scale:.0%} of the style's values to "

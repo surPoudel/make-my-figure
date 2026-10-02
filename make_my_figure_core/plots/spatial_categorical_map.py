@@ -20,6 +20,7 @@ from make_my_figure_core.plots._spatial_shared import (
     spatial_block, widen_for_outside_legend,
 )
 from make_my_figure_core.plots.base import (
+    resolve_figure_size,
     RenderResult, base_metadata, figure_size, get_mapping, require_columns,
     resolve_legend_location,
 )
@@ -83,7 +84,9 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
         fig_w, legend_rect = widen_for_outside_legend(w * ncols, levels, style, str(category))
 
     with style.apply():
-        fig, axes = plt.subplots(nrows, ncols, figsize=(fig_w, h * nrows), squeeze=False)
+        fig, axes = plt.subplots(nrows, ncols,
+                                 figsize=resolve_figure_size(spec, (fig_w, h * nrows)),
+                                 squeeze=False)
         bg_record = None
         used_axes = []
         for idx, fv in enumerate(facet_levels):

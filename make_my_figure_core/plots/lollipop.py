@@ -16,6 +16,7 @@ import numpy as np
 from matplotlib.patches import Patch
 
 from make_my_figure_core.plots.base import (
+    LABEL_ADJUST_ITERATIONS,
     RenderResult,
     base_metadata,
     coerce_numeric,
@@ -116,6 +117,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
                 adjust_text(texts, ax=ax, only_move={"text": "xy"},
                             expand_text=(1.05, 1.3),
+                            iter_lim=LABEL_ADJUST_ITERATIONS,
                             arrowprops=dict(arrowstyle="-", color="0.65", lw=0.6))
             except Exception:
                 pass

@@ -191,7 +191,8 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     panel_limits: Dict[str, List[float]] = {}
 
     with style.apply():
-        fig, axes = plt.subplots(nrows, ncols, figsize=(w * ncols, h * nrows), squeeze=False)
+        fig, axes = plt.subplots(nrows, ncols, figsize=(w * ncols, h * nrows),
+                                 squeeze=False)
         used_axes, mappable, bg_record = [], None, None
         panel_mappables = []
         for idx, lv in enumerate(levels):
@@ -242,7 +243,14 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
                 fig.suptitle(str(title), fontsize=style.title_font_pt)
             else:
                 used_axes[0].set_title(str(title))
-        fig.tight_layout()
+        # Deliberately not tight_layout() here. It ran before the colourbar was
+        # added, so the bar's rotated label was never measured and hung off the
+        # canvas. Constrained layout would measure it, but on an equal-aspect map
+        # it makes the data limits depend on a float-sensitive layout solve, and
+        # the same package reopened in another process came back with a different
+        # ylim - a reproducibility break, which is a worse fault than the crop it
+        # cured. The central fitting pass in registry.render handles the overhang
+        # instead, after the colourbar exists.
 
         if block.get("colorbar", True) and mappable is not None:
             label = block.get("colorbar_label") or colour_label
