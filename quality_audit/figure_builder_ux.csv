@@ -1,0 +1,200 @@
+size,actual,widget,row_label,class,check,verdict,detail,x,y,w,h,enabled
+800x600,800x902,(the dialog itself),,FigureBuilderDialog,window-floor,WINDOW-TOO-TALL-TO-SHRINK,"asked for 800x600, minimumSize forced 800x902",0,0,800,902,True
+800x600,800x902,QLabel('Live preview'),,QLabel,-,ok,,512,11,277,14,True
+800x600,800x902,preview_label,,QLabel,-,ok,,513,32,275,858,True
+800x600,800x902,QLabel('Figure name'),,QLabel,-,ok,,11,11,75,17,True
+800x600,800x902,name_combo,Figure name,QComboBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 22 (22% short),119,11,322,17,True
+800x600,800x902,QLabel('Columns'),,QLabel,-,ok,,11,34,53,17,True
+800x600,800x902,cols_combo,Columns,QComboBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 22 (22% short),119,34,322,17,True
+800x600,800x902,QLabel('Rows'),,QLabel,-,ok,,11,57,32,17,True
+800x600,800x902,rows_combo,Rows,QComboBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 22 (22% short),119,57,322,17,True
+800x600,800x902,QLabel('Figure width'),,QLabel,-,ok,,11,80,74,18,True
+800x600,800x902,width_mm_spin,Figure width,QDoubleSpinBox,compression,BELOW-MINIMUM,height 18 < minimumSizeHint 23 (21% short),119,80,322,18,True
+800x600,800x902,QLabel('Horizontal gutter'),,QLabel,-,ok,,11,104,102,17,True
+800x600,800x902,wspace_spin,Horizontal gutter,QDoubleSpinBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 23 (26% short),119,104,322,17,True
+800x600,800x902,QLabel('Vertical gutter'),,QLabel,-,ok,,11,127,86,17,True
+800x600,800x902,hspace_spin,Vertical gutter,QDoubleSpinBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 23 (26% short),119,127,322,17,True
+800x600,800x902,QLabel('Panel labels'),,QLabel,-,ok,,11,150,72,17,True
+800x600,800x902,label_style_combo,Panel labels,QComboBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 22 (22% short),119,150,322,17,True
+800x600,800x902,QLabel('Export DPI'),,QLabel,-,ok,,11,173,64,18,True
+800x600,800x902,dpi_spin,Export DPI,QSpinBox,compression,BELOW-MINIMUM,height 18 < minimumSizeHint 23 (21% short),119,173,322,18,True
+800x600,800x902,layout_preset_combo,,QComboBox,-,ok,,23,226,406,22,True
+800x600,800x902,QPushButton('Apply'),,QPushButton,compression,BELOW-MINIMUM,width 77 < minimumSizeHint 80 (3% short),23,254,77,22,True
+800x600,800x902,QPushButton('Save…'),,QPushButton,compression,BELOW-MINIMUM,width 76 < minimumSizeHint 80 (5% short),106,254,76,22,True
+800x600,800x902,QPushButton('Import…'),,QPushButton,compression,BELOW-MINIMUM,width 77 < minimumSizeHint 80 (3% short),188,254,77,22,True
+800x600,800x902,QPushButton('Export…'),,QPushButton,compression,BELOW-MINIMUM,width 76 < minimumSizeHint 80 (5% short),271,254,76,22,True
+800x600,800x902,QPushButton('Delete'),,QPushButton,compression,BELOW-MINIMUM,width 76 < minimumSizeHint 80 (5% short),353,254,76,22,True
+800x600,800x902,"QLabel('Panels (order = A, B, C ...):')",,QLabel,-,ok,,11,294,430,14,True
+800x600,800x902,QPushButton('Import panel from file…'),,QPushButton,-,ok,,11,314,157,22,True
+800x600,800x902,list,,QListWidget,compression,below-sizeHint,height 70 < sizeHint 192,11,342,430,70,True
+800x600,800x902,QPushButton('Move up'),,QPushButton,-,ok,,11,418,103,22,True
+800x600,800x902,QPushButton('Move down'),,QPushButton,-,ok,,120,418,103,22,True
+800x600,800x902,QPushButton('Remove'),,QPushButton,-,ok,,229,418,103,22,True
+800x600,800x902,QPushButton('Duplicate'),,QPushButton,-,ok,,338,418,103,22,True
+800x600,800x902,QLabel('Approximate size in inches (1 in = 2.54 cm).'),,QLabel,-,ok,,23,475,406,56,True
+800x600,800x902,QLabel('Width'),,QLabel,-,ok,,23,537,35,23,True
+800x600,800x902,pw_spin,Width,QDoubleSpinBox,-,ok,,69,537,360,23,True
+800x600,800x902,QLabel('Height'),,QLabel,-,ok,,23,566,40,23,True
+800x600,800x902,ph_spin,Height,QDoubleSpinBox,-,ok,,69,566,360,23,True
+800x600,800x902,QLabel('Text (general)'),,QLabel,-,ok,,23,636,83,23,True
+800x600,800x902,text_spin,Text (general),QDoubleSpinBox,-,ok,,157,636,272,23,True
+800x600,800x902,QLabel('Axis labels'),,QLabel,-,ok,,23,665,64,23,True
+800x600,800x902,axis_spin,Axis labels,QDoubleSpinBox,-,ok,,157,665,272,23,True
+800x600,800x902,QLabel('Tick numbers'),,QLabel,-,ok,,23,694,81,23,True
+800x600,800x902,tick_spin,Tick numbers,QDoubleSpinBox,-,ok,,157,694,272,23,True
+800x600,800x902,QLabel('Legend'),,QLabel,-,ok,,23,723,45,23,True
+800x600,800x902,legend_spin,Legend,QDoubleSpinBox,-,ok,,157,723,272,23,True
+800x600,800x902,"QLabel('Panel letters (A, B ...)')",,QLabel,-,ok,,23,752,128,23,True
+800x600,800x902,label_spin,"Panel letters (A, B ...)",QDoubleSpinBox,-,ok,,157,752,272,23,True
+800x600,800x902,QPushButton('Save figure...'),,QPushButton,-,ok,,11,869,126,22,True
+800x600,800x902,QPushButton('Save Figure Package…'),,QPushButton,-,ok,,143,869,167,22,True
+800x600,800x902,QPushButton('Close'),,QPushButton,-,ok,,316,869,125,22,True
+980x640,980x902,(the dialog itself),,FigureBuilderDialog,window-floor,WINDOW-TOO-TALL-TO-SHRINK,"asked for 980x640, minimumSize forced 980x902",0,0,980,902,True
+980x640,980x902,QLabel('Live preview'),,QLabel,-,ok,,512,11,457,14,True
+980x640,980x902,preview_label,,QLabel,-,ok,,513,32,455,858,True
+980x640,980x902,QLabel('Figure name'),,QLabel,-,ok,,11,11,75,17,True
+980x640,980x902,name_combo,Figure name,QComboBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 22 (22% short),119,11,322,17,True
+980x640,980x902,QLabel('Columns'),,QLabel,-,ok,,11,34,53,17,True
+980x640,980x902,cols_combo,Columns,QComboBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 22 (22% short),119,34,322,17,True
+980x640,980x902,QLabel('Rows'),,QLabel,-,ok,,11,57,32,17,True
+980x640,980x902,rows_combo,Rows,QComboBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 22 (22% short),119,57,322,17,True
+980x640,980x902,QLabel('Figure width'),,QLabel,-,ok,,11,80,74,18,True
+980x640,980x902,width_mm_spin,Figure width,QDoubleSpinBox,compression,BELOW-MINIMUM,height 18 < minimumSizeHint 23 (21% short),119,80,322,18,True
+980x640,980x902,QLabel('Horizontal gutter'),,QLabel,-,ok,,11,104,102,17,True
+980x640,980x902,wspace_spin,Horizontal gutter,QDoubleSpinBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 23 (26% short),119,104,322,17,True
+980x640,980x902,QLabel('Vertical gutter'),,QLabel,-,ok,,11,127,86,17,True
+980x640,980x902,hspace_spin,Vertical gutter,QDoubleSpinBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 23 (26% short),119,127,322,17,True
+980x640,980x902,QLabel('Panel labels'),,QLabel,-,ok,,11,150,72,17,True
+980x640,980x902,label_style_combo,Panel labels,QComboBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 22 (22% short),119,150,322,17,True
+980x640,980x902,QLabel('Export DPI'),,QLabel,-,ok,,11,173,64,18,True
+980x640,980x902,dpi_spin,Export DPI,QSpinBox,compression,BELOW-MINIMUM,height 18 < minimumSizeHint 23 (21% short),119,173,322,18,True
+980x640,980x902,layout_preset_combo,,QComboBox,-,ok,,23,226,406,22,True
+980x640,980x902,QPushButton('Apply'),,QPushButton,compression,BELOW-MINIMUM,width 77 < minimumSizeHint 80 (3% short),23,254,77,22,True
+980x640,980x902,QPushButton('Save…'),,QPushButton,compression,BELOW-MINIMUM,width 76 < minimumSizeHint 80 (5% short),106,254,76,22,True
+980x640,980x902,QPushButton('Import…'),,QPushButton,compression,BELOW-MINIMUM,width 77 < minimumSizeHint 80 (3% short),188,254,77,22,True
+980x640,980x902,QPushButton('Export…'),,QPushButton,compression,BELOW-MINIMUM,width 76 < minimumSizeHint 80 (5% short),271,254,76,22,True
+980x640,980x902,QPushButton('Delete'),,QPushButton,compression,BELOW-MINIMUM,width 76 < minimumSizeHint 80 (5% short),353,254,76,22,True
+980x640,980x902,"QLabel('Panels (order = A, B, C ...):')",,QLabel,-,ok,,11,294,430,14,True
+980x640,980x902,QPushButton('Import panel from file…'),,QPushButton,-,ok,,11,314,157,22,True
+980x640,980x902,list,,QListWidget,compression,below-sizeHint,height 70 < sizeHint 192,11,342,430,70,True
+980x640,980x902,QPushButton('Move up'),,QPushButton,-,ok,,11,418,103,22,True
+980x640,980x902,QPushButton('Move down'),,QPushButton,-,ok,,120,418,103,22,True
+980x640,980x902,QPushButton('Remove'),,QPushButton,-,ok,,229,418,103,22,True
+980x640,980x902,QPushButton('Duplicate'),,QPushButton,-,ok,,338,418,103,22,True
+980x640,980x902,QLabel('Approximate size in inches (1 in = 2.54 cm).'),,QLabel,-,ok,,23,475,406,56,True
+980x640,980x902,QLabel('Width'),,QLabel,-,ok,,23,537,35,23,True
+980x640,980x902,pw_spin,Width,QDoubleSpinBox,-,ok,,69,537,360,23,True
+980x640,980x902,QLabel('Height'),,QLabel,-,ok,,23,566,40,23,True
+980x640,980x902,ph_spin,Height,QDoubleSpinBox,-,ok,,69,566,360,23,True
+980x640,980x902,QLabel('Text (general)'),,QLabel,-,ok,,23,636,83,23,True
+980x640,980x902,text_spin,Text (general),QDoubleSpinBox,-,ok,,157,636,272,23,True
+980x640,980x902,QLabel('Axis labels'),,QLabel,-,ok,,23,665,64,23,True
+980x640,980x902,axis_spin,Axis labels,QDoubleSpinBox,-,ok,,157,665,272,23,True
+980x640,980x902,QLabel('Tick numbers'),,QLabel,-,ok,,23,694,81,23,True
+980x640,980x902,tick_spin,Tick numbers,QDoubleSpinBox,-,ok,,157,694,272,23,True
+980x640,980x902,QLabel('Legend'),,QLabel,-,ok,,23,723,45,23,True
+980x640,980x902,legend_spin,Legend,QDoubleSpinBox,-,ok,,157,723,272,23,True
+980x640,980x902,"QLabel('Panel letters (A, B ...)')",,QLabel,-,ok,,23,752,128,23,True
+980x640,980x902,label_spin,"Panel letters (A, B ...)",QDoubleSpinBox,-,ok,,157,752,272,23,True
+980x640,980x902,QPushButton('Save figure...'),,QPushButton,-,ok,,11,869,126,22,True
+980x640,980x902,QPushButton('Save Figure Package…'),,QPushButton,-,ok,,143,869,167,22,True
+980x640,980x902,QPushButton('Close'),,QPushButton,-,ok,,316,869,125,22,True
+1200x800,1200x902,(the dialog itself),,FigureBuilderDialog,window-floor,WINDOW-TOO-TALL-TO-SHRINK,"asked for 1200x800, minimumSize forced 1200x902",0,0,1200,902,True
+1200x800,1200x902,QLabel('Live preview'),,QLabel,-,ok,,512,11,677,14,True
+1200x800,1200x902,preview_label,,QLabel,-,ok,,513,32,675,858,True
+1200x800,1200x902,QLabel('Figure name'),,QLabel,-,ok,,11,11,75,17,True
+1200x800,1200x902,name_combo,Figure name,QComboBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 22 (22% short),119,11,322,17,True
+1200x800,1200x902,QLabel('Columns'),,QLabel,-,ok,,11,34,53,17,True
+1200x800,1200x902,cols_combo,Columns,QComboBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 22 (22% short),119,34,322,17,True
+1200x800,1200x902,QLabel('Rows'),,QLabel,-,ok,,11,57,32,17,True
+1200x800,1200x902,rows_combo,Rows,QComboBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 22 (22% short),119,57,322,17,True
+1200x800,1200x902,QLabel('Figure width'),,QLabel,-,ok,,11,80,74,18,True
+1200x800,1200x902,width_mm_spin,Figure width,QDoubleSpinBox,compression,BELOW-MINIMUM,height 18 < minimumSizeHint 23 (21% short),119,80,322,18,True
+1200x800,1200x902,QLabel('Horizontal gutter'),,QLabel,-,ok,,11,104,102,17,True
+1200x800,1200x902,wspace_spin,Horizontal gutter,QDoubleSpinBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 23 (26% short),119,104,322,17,True
+1200x800,1200x902,QLabel('Vertical gutter'),,QLabel,-,ok,,11,127,86,17,True
+1200x800,1200x902,hspace_spin,Vertical gutter,QDoubleSpinBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 23 (26% short),119,127,322,17,True
+1200x800,1200x902,QLabel('Panel labels'),,QLabel,-,ok,,11,150,72,17,True
+1200x800,1200x902,label_style_combo,Panel labels,QComboBox,compression,BELOW-MINIMUM,height 17 < minimumSizeHint 22 (22% short),119,150,322,17,True
+1200x800,1200x902,QLabel('Export DPI'),,QLabel,-,ok,,11,173,64,18,True
+1200x800,1200x902,dpi_spin,Export DPI,QSpinBox,compression,BELOW-MINIMUM,height 18 < minimumSizeHint 23 (21% short),119,173,322,18,True
+1200x800,1200x902,layout_preset_combo,,QComboBox,-,ok,,23,226,406,22,True
+1200x800,1200x902,QPushButton('Apply'),,QPushButton,compression,BELOW-MINIMUM,width 77 < minimumSizeHint 80 (3% short),23,254,77,22,True
+1200x800,1200x902,QPushButton('Save…'),,QPushButton,compression,BELOW-MINIMUM,width 76 < minimumSizeHint 80 (5% short),106,254,76,22,True
+1200x800,1200x902,QPushButton('Import…'),,QPushButton,compression,BELOW-MINIMUM,width 77 < minimumSizeHint 80 (3% short),188,254,77,22,True
+1200x800,1200x902,QPushButton('Export…'),,QPushButton,compression,BELOW-MINIMUM,width 76 < minimumSizeHint 80 (5% short),271,254,76,22,True
+1200x800,1200x902,QPushButton('Delete'),,QPushButton,compression,BELOW-MINIMUM,width 76 < minimumSizeHint 80 (5% short),353,254,76,22,True
+1200x800,1200x902,"QLabel('Panels (order = A, B, C ...):')",,QLabel,-,ok,,11,294,430,14,True
+1200x800,1200x902,QPushButton('Import panel from file…'),,QPushButton,-,ok,,11,314,157,22,True
+1200x800,1200x902,list,,QListWidget,compression,below-sizeHint,height 70 < sizeHint 192,11,342,430,70,True
+1200x800,1200x902,QPushButton('Move up'),,QPushButton,-,ok,,11,418,103,22,True
+1200x800,1200x902,QPushButton('Move down'),,QPushButton,-,ok,,120,418,103,22,True
+1200x800,1200x902,QPushButton('Remove'),,QPushButton,-,ok,,229,418,103,22,True
+1200x800,1200x902,QPushButton('Duplicate'),,QPushButton,-,ok,,338,418,103,22,True
+1200x800,1200x902,QLabel('Approximate size in inches (1 in = 2.54 cm).'),,QLabel,-,ok,,23,475,406,56,True
+1200x800,1200x902,QLabel('Width'),,QLabel,-,ok,,23,537,35,23,True
+1200x800,1200x902,pw_spin,Width,QDoubleSpinBox,-,ok,,69,537,360,23,True
+1200x800,1200x902,QLabel('Height'),,QLabel,-,ok,,23,566,40,23,True
+1200x800,1200x902,ph_spin,Height,QDoubleSpinBox,-,ok,,69,566,360,23,True
+1200x800,1200x902,QLabel('Text (general)'),,QLabel,-,ok,,23,636,83,23,True
+1200x800,1200x902,text_spin,Text (general),QDoubleSpinBox,-,ok,,157,636,272,23,True
+1200x800,1200x902,QLabel('Axis labels'),,QLabel,-,ok,,23,665,64,23,True
+1200x800,1200x902,axis_spin,Axis labels,QDoubleSpinBox,-,ok,,157,665,272,23,True
+1200x800,1200x902,QLabel('Tick numbers'),,QLabel,-,ok,,23,694,81,23,True
+1200x800,1200x902,tick_spin,Tick numbers,QDoubleSpinBox,-,ok,,157,694,272,23,True
+1200x800,1200x902,QLabel('Legend'),,QLabel,-,ok,,23,723,45,23,True
+1200x800,1200x902,legend_spin,Legend,QDoubleSpinBox,-,ok,,157,723,272,23,True
+1200x800,1200x902,"QLabel('Panel letters (A, B ...)')",,QLabel,-,ok,,23,752,128,23,True
+1200x800,1200x902,label_spin,"Panel letters (A, B ...)",QDoubleSpinBox,-,ok,,157,752,272,23,True
+1200x800,1200x902,QPushButton('Save figure...'),,QPushButton,-,ok,,11,869,126,22,True
+1200x800,1200x902,QPushButton('Save Figure Package…'),,QPushButton,-,ok,,143,869,167,22,True
+1200x800,1200x902,QPushButton('Close'),,QPushButton,-,ok,,316,869,125,22,True
+1600x1000,1600x1000,QLabel('Live preview'),,QLabel,-,ok,,512,11,1077,14,True
+1600x1000,1600x1000,preview_label,,QLabel,-,ok,,513,32,1075,956,True
+1600x1000,1600x1000,QLabel('Figure name'),,QLabel,-,ok,,11,11,75,22,True
+1600x1000,1600x1000,name_combo,Figure name,QComboBox,-,ok,,119,11,322,22,True
+1600x1000,1600x1000,QLabel('Columns'),,QLabel,-,ok,,11,39,53,22,True
+1600x1000,1600x1000,cols_combo,Columns,QComboBox,-,ok,,119,39,322,22,True
+1600x1000,1600x1000,QLabel('Rows'),,QLabel,-,ok,,11,67,32,22,True
+1600x1000,1600x1000,rows_combo,Rows,QComboBox,-,ok,,119,67,322,22,True
+1600x1000,1600x1000,QLabel('Figure width'),,QLabel,-,ok,,11,95,74,23,True
+1600x1000,1600x1000,width_mm_spin,Figure width,QDoubleSpinBox,-,ok,,119,95,322,23,True
+1600x1000,1600x1000,QLabel('Horizontal gutter'),,QLabel,-,ok,,11,124,102,23,True
+1600x1000,1600x1000,wspace_spin,Horizontal gutter,QDoubleSpinBox,-,ok,,119,124,322,23,True
+1600x1000,1600x1000,QLabel('Vertical gutter'),,QLabel,-,ok,,11,153,86,23,True
+1600x1000,1600x1000,hspace_spin,Vertical gutter,QDoubleSpinBox,-,ok,,119,153,322,23,True
+1600x1000,1600x1000,QLabel('Panel labels'),,QLabel,-,ok,,11,182,72,22,True
+1600x1000,1600x1000,label_style_combo,Panel labels,QComboBox,-,ok,,119,182,322,22,True
+1600x1000,1600x1000,QLabel('Export DPI'),,QLabel,-,ok,,11,210,64,23,True
+1600x1000,1600x1000,dpi_spin,Export DPI,QSpinBox,-,ok,,119,210,322,23,True
+1600x1000,1600x1000,layout_preset_combo,,QComboBox,-,ok,,23,268,406,22,True
+1600x1000,1600x1000,QPushButton('Apply'),,QPushButton,compression,BELOW-MINIMUM,width 77 < minimumSizeHint 80 (3% short),23,296,77,22,True
+1600x1000,1600x1000,QPushButton('Save…'),,QPushButton,compression,BELOW-MINIMUM,width 76 < minimumSizeHint 80 (5% short),106,296,76,22,True
+1600x1000,1600x1000,QPushButton('Import…'),,QPushButton,compression,BELOW-MINIMUM,width 77 < minimumSizeHint 80 (3% short),188,296,77,22,True
+1600x1000,1600x1000,QPushButton('Export…'),,QPushButton,compression,BELOW-MINIMUM,width 76 < minimumSizeHint 80 (5% short),271,296,76,22,True
+1600x1000,1600x1000,QPushButton('Delete'),,QPushButton,compression,BELOW-MINIMUM,width 76 < minimumSizeHint 80 (5% short),353,296,76,22,True
+1600x1000,1600x1000,"QLabel('Panels (order = A, B, C ...):')",,QLabel,-,ok,,11,336,430,14,True
+1600x1000,1600x1000,QPushButton('Import panel from file…'),,QPushButton,-,ok,,11,356,157,22,True
+1600x1000,1600x1000,list,,QListWidget,compression,below-sizeHint,height 126 < sizeHint 192,11,384,430,126,True
+1600x1000,1600x1000,QPushButton('Move up'),,QPushButton,-,ok,,11,516,103,22,True
+1600x1000,1600x1000,QPushButton('Move down'),,QPushButton,-,ok,,120,516,103,22,True
+1600x1000,1600x1000,QPushButton('Remove'),,QPushButton,-,ok,,229,516,103,22,True
+1600x1000,1600x1000,QPushButton('Duplicate'),,QPushButton,-,ok,,338,516,103,22,True
+1600x1000,1600x1000,QLabel('Approximate size in inches (1 in = 2.54 cm).'),,QLabel,-,ok,,23,573,406,56,True
+1600x1000,1600x1000,QLabel('Width'),,QLabel,-,ok,,23,635,35,23,True
+1600x1000,1600x1000,pw_spin,Width,QDoubleSpinBox,-,ok,,69,635,360,23,True
+1600x1000,1600x1000,QLabel('Height'),,QLabel,-,ok,,23,664,40,23,True
+1600x1000,1600x1000,ph_spin,Height,QDoubleSpinBox,-,ok,,69,664,360,23,True
+1600x1000,1600x1000,QLabel('Text (general)'),,QLabel,-,ok,,23,734,83,23,True
+1600x1000,1600x1000,text_spin,Text (general),QDoubleSpinBox,-,ok,,157,734,272,23,True
+1600x1000,1600x1000,QLabel('Axis labels'),,QLabel,-,ok,,23,763,64,23,True
+1600x1000,1600x1000,axis_spin,Axis labels,QDoubleSpinBox,-,ok,,157,763,272,23,True
+1600x1000,1600x1000,QLabel('Tick numbers'),,QLabel,-,ok,,23,792,81,23,True
+1600x1000,1600x1000,tick_spin,Tick numbers,QDoubleSpinBox,-,ok,,157,792,272,23,True
+1600x1000,1600x1000,QLabel('Legend'),,QLabel,-,ok,,23,821,45,23,True
+1600x1000,1600x1000,legend_spin,Legend,QDoubleSpinBox,-,ok,,157,821,272,23,True
+1600x1000,1600x1000,"QLabel('Panel letters (A, B ...)')",,QLabel,-,ok,,23,850,128,23,True
+1600x1000,1600x1000,label_spin,"Panel letters (A, B ...)",QDoubleSpinBox,-,ok,,157,850,272,23,True
+1600x1000,1600x1000,QPushButton('Save figure...'),,QPushButton,-,ok,,11,967,126,22,True
+1600x1000,1600x1000,QPushButton('Save Figure Package…'),,QPushButton,-,ok,,143,967,167,22,True
+1600x1000,1600x1000,QPushButton('Close'),,QPushButton,-,ok,,316,967,125,22,True

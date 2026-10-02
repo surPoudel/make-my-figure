@@ -62,7 +62,13 @@ def test_save_then_apply_style_preset_on_new_data(tmp_path, monkeypatch):
     assert preset["style"]["palette_name"] == "grayscale"
     assert preset["layout"]["x_tick_rotation"] == 45
     assert preset["layout"]["legend_location"] == "outside right"
-    assert preset["options"]["error"] == "sd"
+    # The error-bar statistic must NOT travel in a style preset. It is analysis,
+    # not appearance: SEM, SD and CI95 bars are drawn identically and only the
+    # number differs, so a shared lab style that carried it could silently turn a
+    # colleague's SD bars into SEM with nothing on the figure to show it.
+    assert "error" not in (preset.get("options") or {}), (
+        "a style preset carries the error-bar statistic; applying it would "
+        "change what the bars mean")
     assert P.preset_contains_data(preset) == []
     text = json.dumps(preset)
     assert "condition" not in text and "measurement" not in text     # no column names in style
@@ -84,7 +90,9 @@ def test_save_then_apply_style_preset_on_new_data(tmp_path, monkeypatch):
     assert at2.session_state["sty_palette"] == "grayscale"
     assert at2.session_state["lay_xrot"] == "45"
     assert at2.session_state["lay_legloc"] == "outside right"
-    assert at2.session_state["opt_barplot_with_error_bar_error"] == "sd"
+    # ...and the new session keeps its OWN error statistic. This is the point of
+    # the change: the appearance travels, the statistic does not.
+    assert at2.session_state["opt_barplot_with_error_bar_error"] == "sem"
 
 
 def test_reset_returns_the_controls_to_publication_defaults(tmp_path, monkeypatch):

@@ -10,8 +10,8 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from PySide6.QtCore import Qt, QTimer, Signal
-from PySide6.QtGui import QPixmap
+from PySide6.QtCore import QEvent, Qt, QTimer, Signal
+from PySide6.QtGui import QGuiApplication, QPixmap
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (
     QDoubleSpinBox,
     QFileDialog,
     QFormLayout,
+    QFrame,
     QGroupBox,
     QHBoxLayout,
     QLabel,
@@ -30,6 +31,7 @@ from PySide6.QtWidgets import (
     QPlainTextEdit,
     QPushButton,
     QScrollArea,
+    QSizePolicy,
     QSpinBox,
     QSplitter,
     QTableWidget,
@@ -421,13 +423,18 @@ class FigureBuilderDialog(QDialog):
         for p in self.saved_panels:
             p.setdefault("width_in", 3.2)
             p.setdefault("height_in", None)
+            p.setdefault("fill_cell", False)
         self._composite = None
         self._syncing = False           # guard against feedback while loading fields
         # Managed assets folder for imported external panels (copied on import).
         import tempfile
 
         self._assets_dir = tempfile.mkdtemp(prefix="mmf_figure_builder_assets_")
-        self.resize(980, 640)
+        self._order_sync_queued = False
+        # 980x640 was smaller than the controls' own natural height, so the dialog opened already
+        # overflowing. Ask for room for the whole control column plus a usable preview, but never
+        # more than the screen actually offers.
+        self.resize(*self._preferred_size(1240, 900))
 
         # Debounce timer: coalesce rapid control changes into one re-render.
         self._preview_timer = QTimer(self)
@@ -440,6 +447,10 @@ class FigureBuilderDialog(QDialog):
         split.addWidget(self._build_preview())
         split.setStretchFactor(0, 0)
         split.setStretchFactor(1, 1)
+        # Open on the controls' full natural width so nothing starts out needing a sideways
+        # scroll; the user can still drag the handle either way afterwards.
+        ctrl_w = self._controls_natural_width
+        split.setSizes([ctrl_w, max(360, self.width() - ctrl_w)])
 
         outer = QVBoxLayout(self)
         outer.addWidget(split)
@@ -459,12 +470,34 @@ class FigureBuilderDialog(QDialog):
         self._schedule_preview()
 
     # --- construction -------------------------------------------------------
+    def _preferred_size(self, want_w: int, want_h: int) -> tuple:
+        """Clamp a wished-for dialog size to the screen, so it opens fully on small displays."""
+        screen = QGuiApplication.primaryScreen()
+        if screen is None:
+            return want_w, want_h
+        avail = screen.availableGeometry()
+        return min(want_w, max(640, avail.width() - 80)), min(want_h, max(480, avail.height() - 80))
+
     def _build_controls(self) -> QWidget:
+        # The control column is taller than any sane default window, so it gets its own scroll
+        # area. Without it a QVBoxLayout shares the shortfall out across every row, which is what
+        # crushed the top form rows and clipped the panel-size help text; now overflow scrolls and
+        # each row keeps its natural height.
+        column = QWidget()
+        column_v = QVBoxLayout(column)
+        column_v.setContentsMargins(0, 0, 0, 0)
+
+        self.controls_scroll = QScrollArea()
+        self.controls_scroll.setWidgetResizable(True)
+        self.controls_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.controls_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        self.controls_scroll.setFrameShape(QFrame.NoFrame)
+
         w = QWidget()
         v = QVBoxLayout(w)
         v.setContentsMargins(0, 0, 0, 0)
 
-        form = QFormLayout()
+        form = self._form()
         self.name_combo = QComboBox()
         self.name_combo.setEditable(True)
         self.name_combo.addItems(["Figure 1", "Figure 2", "Extended Data Figure 1",
@@ -536,12 +569,27 @@ class FigureBuilderDialog(QDialog):
         imp_row.addStretch(1)
         v.addLayout(imp_row)
         self.list = QListWidget()
+        # Drag-to-reorder: the panel order IS the A/B/C order, so dragging a row is the most
+        # direct way to express "this panel goes second". Move up/down stay for keyboard users.
+        self.list.setDragDropMode(QListWidget.InternalMove)
+        self.list.setDefaultDropAction(Qt.MoveAction)
+        self.list.setSelectionMode(QListWidget.SingleSelection)
+        self.list.setAlternatingRowColors(True)
+        self.list.setToolTip("Drag a panel to reorder it, or use Alt+Up / Alt+Down.")
+        # An internal move is a remove+insert, so the order can only be read once the drop has
+        # fully settled - hence the deferred resync rather than reacting to the raw row signals.
+        self.list.model().rowsMoved.connect(self._queue_order_sync)
+        self.list.model().rowsInserted.connect(self._queue_order_sync)
         self.list.currentRowChanged.connect(self._on_panel_selected)
+        self.list.installEventFilter(self)      # Alt+Up / Alt+Down reorder (see eventFilter)
+        self.list.setMinimumHeight(150)
         v.addWidget(self.list)
 
         row = QHBoxLayout()
         up = QPushButton("Move up"); up.clicked.connect(lambda: self._move(-1))
+        up.setToolTip("Move the selected panel one place earlier (Alt+Up in the list)")
         down = QPushButton("Move down"); down.clicked.connect(lambda: self._move(1))
+        down.setToolTip("Move the selected panel one place later (Alt+Down in the list)")
         rm = QPushButton("Remove"); rm.clicked.connect(self._remove)
         dup = QPushButton("Duplicate"); dup.clicked.connect(self._duplicate)
         for b in (up, down, rm, dup):
@@ -549,15 +597,23 @@ class FigureBuilderDialog(QDialog):
         v.addLayout(row)
 
         # --- per-panel size (inches) ---
+        # Title carries the selected panel's letter, so "which panel am I editing?" is answered
+        # where the edit happens instead of only by the list highlight.
         self.size_group = QGroupBox("Selected panel size")
-        sg = QFormLayout(self.size_group)
-        hint = QLabel("Approximate size in inches (1 in = 2.54 cm). Width × height, "
-                      "like Matplotlib's figsize — e.g. 4×4 is square, 4×6 is taller. "
-                      "The panel keeps its own proportions (never stretched), so a larger "
-                      "number just makes a larger version of the same figure.")
-        hint.setWordWrap(True)
-        hint.setStyleSheet("color: #666;")
-        sg.addRow(hint)
+        sg = self._form(self.size_group)
+        self.size_hint_label = QLabel(
+            "Approximate size in inches (1 in = 2.54 cm), like Matplotlib's "
+            "figsize — the panel comes out around 0.85× the number here once the "
+            "grid spacing is taken out. Height on \"auto\" keeps the panel's own "
+            "proportions; set a height and the panel is re-drawn that tall — the "
+            "axes grow, the plot is not stretched. \"Fill the cell\" is the quick "
+            "way to clear a band of white space beside a taller neighbour.")
+        self.size_hint_label.setWordWrap(True)
+        self.size_hint_label.setStyleSheet("color: #666;")
+        # Word-wrapped labels report a one-line sizeHint; MinimumExpanding makes the layout ask
+        # heightForWidth instead, which is what stopped this paragraph being cut mid-sentence.
+        self.size_hint_label.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.MinimumExpanding)
+        sg.addRow(self.size_hint_label)
         self.pw_spin = QDoubleSpinBox()
         self.pw_spin.setRange(1.0, 12.0); self.pw_spin.setSingleStep(0.5)
         self.pw_spin.setValue(3.2); self.pw_spin.setSuffix(" in")
@@ -569,12 +625,23 @@ class FigureBuilderDialog(QDialog):
         self.ph_spin.setSpecialValueText("auto (keep ratio)")
         self.ph_spin.valueChanged.connect(self._on_size_changed)
         sg.addRow("Height", self.ph_spin)
+        # A short panel beside a tall one leaves its cell part-empty, which is the
+        # white space people actually complain about. This fills it by re-drawing
+        # the panel at the cell's size, so it stays undistorted; a panel that
+        # cannot be re-drawn (an imported picture) is stretched and says so.
+        self.fill_cell_check = QCheckBox("Fill the cell (use the whole space)")
+        self.fill_cell_check.setToolTip(
+            "Re-draws this panel at the size of its grid cell, removing the empty "
+            "band left when a neighbouring panel is taller. Generated panels keep "
+            "square pixels; an imported image is stretched and warns.")
+        self.fill_cell_check.toggled.connect(self._on_size_changed)
+        sg.addRow("", self.fill_cell_check)
         self.size_group.setEnabled(False)
         v.addWidget(self.size_group)
 
         # --- figure-wide fonts ---
         font_group = QGroupBox("Fonts (points, applied to all panels)")
-        fg = QFormLayout(font_group)
+        fg = self._form(font_group)
         self.text_spin = self._font_spin(self._FONT_DEFAULTS["text"])
         self.axis_spin = self._font_spin(self._FONT_DEFAULTS["axis"])
         self.tick_spin = self._font_spin(self._FONT_DEFAULTS["tick"])
@@ -591,8 +658,14 @@ class FigureBuilderDialog(QDialog):
         self.legend_text.setReadOnly(True)
         self.legend_text.setPlaceholderText("Draft legend appears here.")
         self.legend_text.setMaximumHeight(80)
+        self.legend_text.setMinimumHeight(60)
         v.addWidget(self.legend_text)
 
+        v.addStretch(1)     # spare height goes here, never into the form rows
+        self.controls_scroll.setWidget(w)
+        column_v.addWidget(self.controls_scroll, 1)
+
+        # Pinned below the scroll area: the way out of the dialog must never scroll out of reach.
         act = QHBoxLayout()
         save = QPushButton("Save figure..."); save.clicked.connect(self._save)
         save.setToolTip("Write PNG/SVG/PDF plus a FigureSpec JSON next to them (the FigureSpec alone "
@@ -607,10 +680,28 @@ class FigureBuilderDialog(QDialog):
         act.addWidget(pkg_btn)
         close = QPushButton("Close"); close.clicked.connect(self.reject)
         act.addWidget(close)
-        v.addLayout(act)
+        self.action_bar = QWidget()
+        self.action_bar.setLayout(act)
+        column_v.addWidget(self.action_bar)
 
-        w.setMaximumWidth(430)
-        return w
+        # Reserve the scrollbar's width on top of the content's natural width, so turning the
+        # vertical scrollbar on never also forces a horizontal one.
+        gutter = self.controls_scroll.verticalScrollBar().sizeHint().width() + 6
+        natural = max(w.sizeHint().width(), self.action_bar.sizeHint().width()) + gutter
+        floor = max(w.minimumSizeHint().width(), self.action_bar.minimumSizeHint().width()) + gutter
+        self._controls_natural_width = natural   # the splitter opens on this (see __init__)
+        column.setMinimumWidth(floor)            # but the user may still narrow the column
+        column.setMaximumWidth(natural + 140)
+        return column
+
+    def _form(self, parent: Optional[QWidget] = None) -> QFormLayout:
+        """A form layout that never wraps or shrinks its rows (the scroll area absorbs overflow)."""
+        f = QFormLayout(parent) if parent is not None else QFormLayout()
+        f.setRowWrapPolicy(QFormLayout.DontWrapRows)
+        f.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+        f.setLabelAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        f.setSizeConstraint(QFormLayout.SetMinimumSize)
+        return f
 
     def _font_spin(self, default: float) -> QDoubleSpinBox:
         s = QDoubleSpinBox()
@@ -633,24 +724,85 @@ class FigureBuilderDialog(QDialog):
         return w
 
     # --- panel list ---------------------------------------------------------
-    def _refresh_list(self) -> None:
-        self.list.clear()
+    @staticmethod
+    def _panel_letter(i: int) -> str:
         import string
 
-        for i, p in enumerate(self.saved_panels):
-            label = string.ascii_uppercase[i] if i < 26 else f"P{i+1}"
-            title = p.get("title") or p.get("plot_type", "panel")
-            QListWidgetItem(f"{label}. {title}", self.list)
+        return string.ascii_uppercase[i] if i < 26 else f"P{i+1}"
+
+    def _refresh_list(self) -> None:
+        # Rebuilding fires the model signals a drop would, so suppress the reorder sync.
+        self._rebuilding_list = True
+        try:
+            self.list.clear()
+            for i, p in enumerate(self.saved_panels):
+                title = p.get("title") or p.get("plot_type", "panel")
+                item = QListWidgetItem(f"{self._panel_letter(i)}   {title}", self.list)
+                # The identity of the panel travels with the row, so an internal move (a
+                # remove+insert) can still be read back as a permutation of saved_panels.
+                item.setData(Qt.UserRole, id(p))
+                item.setToolTip(f"Panel {self._panel_letter(i)}: {title}")
+        finally:
+            self._rebuilding_list = False
+
+    def eventFilter(self, obj, event):
+        # Reorder with Alt+Up / Alt+Down while the panel list has focus. Filtered here rather
+        # than bound as a button shortcut so the bare arrow keys still move the selection.
+        if (obj is self.list and event.type() == QEvent.KeyPress
+                and event.modifiers() & Qt.AltModifier):
+            if event.key() == Qt.Key_Up:
+                self._move(-1)
+                return True
+            if event.key() == Qt.Key_Down:
+                self._move(1)
+                return True
+        return super().eventFilter(obj, event)
+
+    def _queue_order_sync(self, *args) -> None:
+        if getattr(self, "_rebuilding_list", False) or self._order_sync_queued:
+            return
+        self._order_sync_queued = True
+        QTimer.singleShot(0, self._sync_order_from_list)
+
+    def _sync_order_from_list(self) -> None:
+        """Adopt the list's row order after a drag-to-reorder."""
+        self._order_sync_queued = False
+        by_id = {id(p): p for p in self.saved_panels}
+        order = []
+        for row in range(self.list.count()):
+            panel = by_id.get(self.list.item(row).data(Qt.UserRole))
+            if panel is None:
+                return                      # mid-edit / unknown row: leave the model alone
+            order.append(panel)
+        # Compare by identity: panel dicts hold DataFrames, so `==` on them raises.
+        if len(order) != len(self.saved_panels) or all(
+                a is b for a, b in zip(order, self.saved_panels)):
+            return
+        moved = order[self.list.currentRow()] if 0 <= self.list.currentRow() < len(order) else None
+        # Mutate in place: MainWindow holds this same list object.
+        self.saved_panels[:] = order
+        self._refresh_list()
+        if moved is not None:
+            self.list.setCurrentRow(next(j for j, q in enumerate(self.saved_panels) if q is moved))
+        self._schedule_preview()
 
     def _on_panel_selected(self, i: int) -> None:
         if not (0 <= i < len(self.saved_panels)):
             self.size_group.setEnabled(False)
+            self.size_group.setTitle("Selected panel size")
             return
         self._syncing = True
         p = self.saved_panels[i]
         self.size_group.setEnabled(True)
+        # Clip the title: a group-box caption widens the whole control column, and some panel
+        # titles are a full sentence.
+        title = str(p.get("title") or p.get("plot_type", "panel"))
+        if len(title) > 28:
+            title = title[:27] + "…"
+        self.size_group.setTitle(f"Selected panel size — {self._panel_letter(i)}  {title}")
         self.pw_spin.setValue(float(p.get("width_in") or 3.2))
         self.ph_spin.setValue(float(p.get("height_in") or 0.0))
+        self.fill_cell_check.setChecked(bool(p.get("fill_cell", False)))
         self._syncing = False
 
     def _on_size_changed(self, _=None) -> None:
@@ -661,6 +813,7 @@ class FigureBuilderDialog(QDialog):
             self.saved_panels[i]["width_in"] = float(self.pw_spin.value())
             h = float(self.ph_spin.value())
             self.saved_panels[i]["height_in"] = h if h > 0 else None
+            self.saved_panels[i]["fill_cell"] = bool(self.fill_cell_check.isChecked())
         self._schedule_preview()
 
     def _move(self, delta: int) -> None:
@@ -770,6 +923,7 @@ class FigureBuilderDialog(QDialog):
         for p, panel in zip(self.saved_panels, mpf.panels):
             p["width_in"] = panel.width_in
             p["height_in"] = panel.height_in
+            p["fill_cell"] = bool(getattr(panel, "fill_cell", False))
         self._refresh_list()
         if self.list.currentRow() >= 0:
             self._on_panel_selected(self.list.currentRow())
@@ -855,7 +1009,9 @@ class FigureBuilderDialog(QDialog):
             if p.get("image_path"):   # imported external-figure panel
                 mpf.add_panel(Panel(
                     title=p.get("title", ""), width_in=p.get("width_in"),
-                    height_in=p.get("height_in"), image_path=p["image_path"],
+                    height_in=p.get("height_in"),
+                    fill_cell=bool(p.get("fill_cell", False)),
+                    image_path=p["image_path"],
                     image_meta=p.get("image_meta") or {}, fit_mode=p.get("fit_mode", "contain"),
                     border=bool(p.get("border", False)), auto_trim=bool(p.get("auto_trim", False)),
                     rotate=int(p.get("rotate", 0)), background=p.get("background", "white"),
@@ -864,6 +1020,7 @@ class FigureBuilderDialog(QDialog):
             else:
                 mpf.add_panel(Panel(
                     plot_spec=p.get("plot_spec"), table=p.get("table"),
+                    fill_cell=bool(p.get("fill_cell", False)),
                     aux=p.get("aux") or {}, title=p.get("title", ""),
                     stats_spec=(p.get("plot_spec") or {}).get("statistics"),
                     width_in=p.get("width_in"), height_in=p.get("height_in")))

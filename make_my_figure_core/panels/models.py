@@ -45,11 +45,20 @@ class Panel:
     # Approximate rendered size in inches (width x height). ``None`` means
     # "auto": the width falls back to an even share of the figure width and the
     # height follows the panel's own aspect ratio. The panel is always drawn
-    # WITHOUT distortion (scaled to fit its cell, letterboxed if needed), so a
-    # bigger/smaller number just yields a bigger/smaller version of the same
-    # figure rather than a stretched one.
+    # WITHOUT distortion, so a bigger/smaller number just yields a bigger/smaller
+    # version of the same figure rather than a stretched one. A panel that still
+    # has its PlotSpec honours a requested height by being RE-DRAWN that tall
+    # (taller axes, same type sizes); one that cannot be re-drawn (a pre-rendered
+    # figure, an imported image) has a fixed shape, so for those the height can
+    # only scale the whole picture down, never stretch it up.
     width_in: Optional[float] = None
     height_in: Optional[float] = None
+    # Let this panel use its WHOLE grid cell, instead of keeping its own
+    # proportions and leaving the leftover height empty. Off by default: the
+    # default must never reshape a figure behind the user's back. A panel with a
+    # PlotSpec is re-drawn at the cell size (undistorted); one without is scaled
+    # to fit the cell, which does distort it, and says so in a warning.
+    fill_cell: bool = False
     # --- imported external-figure panel (v0.5) -----------------------------
     # When ``image_path`` is set, this is an *imported* panel backed by an
     # external file (PNG/JPG/TIFF/SVG/PDF) copied into the assets folder, rather
@@ -91,6 +100,7 @@ class Panel:
             "source_sheet": self.source_sheet or (self.plot_spec or {}).get("source", {}).get("source_sheet_name", ""),
             "width_in": self.width_in,
             "height_in": self.height_in,
+            "fill_cell": self.fill_cell,
             "has_prerendered_figure": self.figure is not None,
             # imported-panel record (asset basename only — no private absolute paths)
             "image_path": os.path.basename(self.image_path) if self.image_path else None,

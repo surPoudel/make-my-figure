@@ -238,3 +238,42 @@ def test_audit_sends_plot_options_to_the_mapping_block(monkeypatch):
 
     assert "error" in seen["mapping"]
     assert "error" not in seen["style"]
+
+
+# --------------------------------------------------------------------------
+# The statistic must not travel in a shared style
+# --------------------------------------------------------------------------
+
+ERROR_BAR_PLOTS = ["barplot_with_error_bar", "grouped_barplot_with_error_bar",
+                   "lineplot_timecourse_with_error_band"]
+
+
+@pytest.mark.parametrize("plot_type", ERROR_BAR_PLOTS)
+def test_the_error_statistic_is_analysis_not_appearance(plot_type):
+    """It was declared scope="style", so a style preset carried it.
+
+    SEM, SD and CI95 bars are drawn identically - only the number differs - so a
+    lab's shared "Default Barplot" style could turn a colleague's SD bars into
+    SEM with nothing on the figure to show it had happened. Appearance travels
+    between figures; what the error bar measures does not.
+    """
+    from make_my_figure_core import ui_hints
+
+    option = next(o for o in ui_hints.options(plot_type) if o.key == "error")
+    assert option.scope == "config", (
+        f"{plot_type}: the error statistic is declared {option.scope!r}, so it "
+        f"would be carried by a shareable style preset")
+
+
+@pytest.mark.parametrize("plot_type", ERROR_BAR_PLOTS)
+def test_a_style_preset_does_not_carry_the_error_statistic(plot_type):
+    """The scope declaration is only worth anything if the splitter honours it."""
+    from make_my_figure_core import presets
+
+    split = presets.split_mapping(plot_type, {"error": "sd"})
+    style_options = dict(getattr(split, "style_options", {}) or {})
+    config_options = dict(getattr(split, "config_options", {}) or {})
+    assert "error" not in style_options, (
+        f"{plot_type}: a style preset would carry error={style_options['error']!r}")
+    assert config_options.get("error") == "sd", (
+        f"{plot_type}: the statistic must still travel in a full configuration")

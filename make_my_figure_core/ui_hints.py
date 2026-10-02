@@ -98,6 +98,10 @@ class Option:
                              f"got {self.scope!r}")
 
 
+# Which statistic the bars show is analysis, not appearance, so it stays out of
+# style presets: a lab's shared "Default Barplot" style must not be able to turn
+# a colleague's SD bars into SEM on the way past. (Both are drawn identically;
+# only the number changes, which is exactly what makes the swap dangerous.)
 _ERROR_CHOICES = ["sem", "sd", "ci95", "none"]
 # Line plot bands add median-centred order statistics for replicate measurements.
 _BAND_CHOICES = ["sem", "sd", "ci95", "iqr", "range", "none"]
@@ -158,9 +162,9 @@ _SPATIAL_MISSING = Option("missing_color", "Colour for missing values", "choice"
 
 
 OPTIONS: Dict[str, List[Option]] = {
-    "barplot_with_error_bar": [Option("error", "Error bar", "choice", "sem", _ERROR_CHOICES, scope="style"),
+    "barplot_with_error_bar": [Option("error", "Error bar", "choice", "sem", _ERROR_CHOICES),
                                _X_TICK_ROTATION],
-    "grouped_barplot_with_error_bar": [Option("error", "Error bar", "choice", "sem", _ERROR_CHOICES, scope="style"),
+    "grouped_barplot_with_error_bar": [Option("error", "Error bar", "choice", "sem", _ERROR_CHOICES),
                                        _X_TICK_ROTATION],
     "heatmap_clustered_matrix": [
         Option("cluster_rows", "Cluster rows", "bool", True),
@@ -301,7 +305,7 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("points", "Overlay points", "bool", True, scope="style"),
         _X_TICK_ROTATION,
     ],
-    "lineplot_timecourse_with_error_band": [Option("error", "Error band", "choice", "sem", _BAND_CHOICES, scope="style")],
+    "lineplot_timecourse_with_error_band": [Option("error", "Error band", "choice", "sem", _BAND_CHOICES)],
     "ridge_or_density_plot": [
         Option("density_mode", "Density mode", "choice", "ridge", ["ridge", "overlay"], scope="style"),
         Option("overlap", "Ridge overlap", "number", 0.7, minimum=0.0, maximum=0.95, step=0.05, decimals=2, scope="style"),
