@@ -218,6 +218,35 @@ def _pinned_dimension(spec: Dict[str, Any], key: str) -> "float | None":
     return mm_to_inches(max(v, MIN_FIGURE_MM))
 
 
+# The width presets a user can pick deliberately. "default" is the automatic
+# choice, so it is not in here.
+CHOSEN_WIDTH_PRESETS = ("single", "onehalf", "double")
+
+
+def chosen_column_width(spec: Dict[str, Any]) -> "str | None":
+    """The width preset the user actually picked, or ``None`` for automatic.
+
+    Several renderers apply a legibility floor to the width they compute - a dot
+    matrix needs about 0.3 inch per column before the labels collide. That floor
+    is right for the automatic size and wrong as an answer to a direct request:
+    on a 28-column matrix it came to 11.4 inches, which is wider than every
+    preset, so picking single, onehalf or double all produced the same figure and
+    the control looked broken. Asking for a width is an instruction; the renderer
+    should obey it and say the labels will be tight, not quietly refuse.
+    """
+    layout = (spec or {}).get("layout", {}) or {}
+    name = str(layout.get("column_width", "") or "").strip().lower()
+    return name if name in CHOSEN_WIDTH_PRESETS else None
+
+
+def width_floor_note(plot_type: str, requested_in: float, floor_in: float) -> str:
+    """The warning that goes with honouring a width below the legibility floor."""
+    return (f"The figure was set to {requested_in:.2f} in wide, which is narrower "
+            f"than the {floor_in:.2f} in this {plot_type.replace('_', ' ')} needs "
+            f"for its labels to stay clear. The width you asked for has been used; "
+            f"expect crowding, or choose a wider preset.")
+
+
 def explicit_figure_size(spec: Dict[str, Any]) -> "tuple[float, float] | None":
     """``(width_in, height_in)`` when the user has pinned both, else ``None``.
 

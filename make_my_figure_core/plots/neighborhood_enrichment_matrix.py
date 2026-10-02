@@ -23,6 +23,8 @@ from matplotlib.colors import CenteredNorm, Normalize
 from matplotlib.lines import Line2D
 
 from make_my_figure_core.plots.base import (
+    chosen_column_width,
+    width_floor_note,
     resolve_figure_size,
     RenderError, RenderResult, base_metadata, figure_size, get_mapping, require_columns,
 )
@@ -116,8 +118,16 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     # only a width (the usual way to fit a journal column) is honoured too
     # instead of being thrown away for want of a height.
     w, h = figure_size(spec, style, aspect=0.62)
-    w, h = resolve_figure_size(spec, (max(w, 0.30 * len(cols) + 3.0),
-                                      max(h, 0.34 * len(rows) + 2.0)))
+    w_floor, h_floor = 0.30 * len(cols) + 3.0, 0.34 * len(rows) + 2.0
+    if chosen_column_width(spec) is None:
+        # Automatic: grow with the matrix so the labels stay clear.
+        w, h = max(w, w_floor), max(h, h_floor)
+    elif w < w_floor:
+        # A width was asked for. Use it and say the labels will be tight; the
+        # floor used to win silently, which made every preset look identical on a
+        # wide matrix and the control look broken.
+        warnings.append(width_floor_note(PLOT_TYPE, w, w_floor))
+    w, h = resolve_figure_size(spec, (w, h))
 
     with style.apply():
         fig, ax = plt.subplots(figsize=(w, h))

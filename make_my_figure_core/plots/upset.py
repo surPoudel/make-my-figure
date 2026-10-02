@@ -24,6 +24,8 @@ import numpy as np
 import pandas as pd
 
 from make_my_figure_core.plots.base import (
+    chosen_column_width,
+    width_floor_note,
     resolve_figure_size,
     RenderError,
     RenderResult,
@@ -92,8 +94,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         warnings.append(f"Showing top {n_inter} of {len(combos)} intersections.")
 
     layout = spec.get("layout", {}) or {}
-    w_in, _ = style.figure_size_inches(str(layout.get("column_width", "double")).lower(), aspect=1.0)
-    w_in = max(w_in, 6.0)
+    _chosen = chosen_column_width(spec)
+    w_in, _ = style.figure_size_inches(_chosen or "double", aspect=1.0)
+    if _chosen is None:
+        # Automatic: an UpSet needs room for its set names and matrix dots.
+        w_in = max(w_in, 6.0)
+    elif w_in < 6.0:
+        warnings.append(width_floor_note(PLOT_TYPE, w_in, 6.0))
     h_in = max(4.0, 1.6 + 0.42 * n_sets + 2.2)
 
     with style.apply():

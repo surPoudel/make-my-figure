@@ -217,3 +217,92 @@ def test_clipping_actually_narrows_the_colour_range():
     base = _render("spatial_feature_map")
     clipped = _render("spatial_feature_map", mapping={"percentile_clip": 10})
     assert _differs(base, clipped)
+
+
+# --------------------------------------------------------------------------
+# The width preset works on every plot type
+# --------------------------------------------------------------------------
+
+def _width_in(plot_type, preset):
+    from make_my_figure_core import examples
+    from make_my_figure_core.plots import registry
+    import matplotlib.pyplot as plt
+
+    table, aux, spec = examples.load_example(plot_type)
+    spec = {**spec, "layout": {**(spec.get("layout") or {}),
+                               "column_width": preset}}
+    result = registry.render(spec, table.dataframe,
+                             aux={k: v.dataframe for k, v in (aux or {}).items()})
+    width = round(float(result.figure.get_size_inches()[0]), 2)
+    plt.close(result.figure)
+    return width, result.warnings
+
+
+def _all_plot_types():
+    from make_my_figure_core import examples
+
+    return sorted(examples.plot_types_with_examples())
+
+
+@pytest.mark.parametrize("plot_type", _all_plot_types())
+def test_every_plot_type_honours_every_width_preset(plot_type):
+    """Three presets, three widths. Three plot types used to clamp the narrow
+    ones to a legibility floor, so the control did nothing on them at all."""
+    widths = {p: _width_in(plot_type, p)[0]
+              for p in ("single", "onehalf", "double")}
+    assert len(set(widths.values())) == 3, \
+        f"{plot_type}: width presets do not give distinct widths: {widths}"
+    assert widths["single"] < widths["onehalf"] < widths["double"]
+
+
+@pytest.mark.parametrize("plot_type", ["neighborhood_enrichment_matrix",
+                                       "sankey_plot", "upset_plot"])
+def test_a_width_below_the_legibility_floor_is_honoured_and_reported(plot_type):
+    """These three need more width than a single column to keep their labels
+    clear. The request is obeyed - refusing it silently is what made the control
+    look broken - and the crowding is stated."""
+    _width, warnings = _width_in(plot_type, "single")
+    assert any("narrower" in w for w in warnings), \
+        f"{plot_type} quietly used a width below its legibility floor"
+
+
+@pytest.mark.parametrize("plot_type", ["neighborhood_enrichment_matrix",
+                                       "sankey_plot", "upset_plot"])
+def test_the_automatic_width_still_respects_the_legibility_floor(plot_type):
+    """The floor is right for the size nobody asked for."""
+    auto, warnings = _width_in(plot_type, "default")
+    assert auto >= 6.0, f"{plot_type}: automatic width {auto} ignores its floor"
+    assert not any("narrower" in w for w in warnings)
+
+
+@pytest.mark.parametrize("plot_type", ["sankey_plot", "upset_plot",
+                                       "neighborhood_enrichment_matrix"])
+def test_the_widened_examples_are_not_clipped_at_their_declared_width(plot_type):
+    """An example pinning a width its own content cannot fit is a bad example.
+
+    Sankey and UpSet both pinned "single" - harmless while the renderer clamped
+    it to a legibility floor, and a clipped figure the moment the control started
+    working. Both now declare the width they actually need.
+
+    Scoped to these three rather than every plot type: eleven others clip a
+    legend in their default output for an unrelated reason, tracked as
+    KNOWN_DEFAULT_OVERFLOW in tests/test_typography_system.py. Re-asserting that
+    here would just duplicate a known defect as a second failing test.
+    """
+    from make_my_figure_core import examples
+    from make_my_figure_core.plots import registry
+    import matplotlib.pyplot as plt
+
+    table, aux, spec = examples.load_example(plot_type)
+    result = registry.render(spec, table.dataframe,
+                             aux={k: v.dataframe for k, v in (aux or {}).items()})
+    figure = result.figure
+    figure.canvas.draw()
+    dpi = figure.dpi
+    width_px, height_px = [v * dpi for v in figure.get_size_inches()]
+    box = figure.get_tightbbox(figure.canvas.get_renderer())
+    over = (max(0.0, -box.x0 * dpi) + max(0.0, box.x1 * dpi - width_px)
+            + max(0.0, -box.y0 * dpi) + max(0.0, box.y1 * dpi - height_px))
+    plt.close(figure)
+    assert over <= 4.0, (
+        f"{plot_type}: {over:.0f}px clipped at the width its example asks for")

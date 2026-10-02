@@ -18,6 +18,8 @@ import numpy as np
 
 from make_my_figure_core.plots._v04_shared import ordered_unique
 from make_my_figure_core.plots.base import (
+    chosen_column_width,
+    width_floor_note,
     resolve_figure_size,
     RenderError,
     RenderResult,
@@ -83,11 +85,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         # did nothing at all here. "default" still means the wide preset - a Sankey
         # hangs its node labels outside the flows and needs the room - so only an
         # explicit single/onehalf/double narrows it.
-        _preset = str((spec.get("layout") or {}).get("column_width", "default")).lower()
-        if _preset not in ("single", "onehalf", "double"):
-            _preset = "double"
-        w_in, _ = style.figure_size_inches(_preset, aspect=0.7)
-        _size = resolve_figure_size(spec, (max(w_in, 6.0), max(w_in * 0.62, 4.0)))
+        _chosen = chosen_column_width(spec)
+        w_in, _ = style.figure_size_inches(_chosen or "double", aspect=0.7)
+        if _chosen is None:
+            w_in = max(w_in, 6.0)
+        elif w_in < 6.0:
+            warnings.append(width_floor_note(PLOT_TYPE, w_in, 6.0))
+        _size = resolve_figure_size(spec, (w_in, max(w_in * 0.62, 4.0)))
         fig, ax = plt.subplots(figsize=_size)
 
         # Node bars.
