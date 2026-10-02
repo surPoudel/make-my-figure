@@ -308,3 +308,111 @@ def test_fill_cell_survives_a_layout_preset():
     P.apply_layout_preset(preset, target)
     assert target.panels[1].fill_cell is True
     assert target.panels[1].height_in == 3.0
+
+
+# --------------------------------------------------------------------------
+# One font setting, one size on the page
+# --------------------------------------------------------------------------
+
+MIXED_PANELS = ["volcano_plot", "barplot_with_error_bar",
+                "heatmap_clustered_matrix", "lineplot_timecourse_with_error_band"]
+
+
+def _mixed_composite(**layout_kw):
+    from make_my_figure_core import examples
+    from make_my_figure_core.panels import FigureLayout, MultiPanelFigure, Panel
+
+    layout = FigureLayout(ncols=2, fig_width_mm=180.0, base_font_pt=7.0,
+                          axis_font_pt=7.5, tick_label_pt=6.5, legend_pt=6.5,
+                          **layout_kw)
+    mpf = MultiPanelFigure(name="F", layout=layout)
+    for plot_type in MIXED_PANELS:
+        table, aux, spec = examples.load_example(plot_type)
+        mpf.add_panel(Panel(plot_spec=spec, table=table.dataframe,
+                            aux={k: v.dataframe for k, v in (aux or {}).items()},
+                            width_in=3.2))
+    return mpf
+
+
+def _image_scales(figure):
+    """Source pixels per drawn inch, per panel, over the render dpi.
+
+    1.0 means the panel is drawn at the size it was rendered, so a point of type
+    in it is a point on the page.
+    """
+    figure.canvas.draw()
+    width_in = float(figure.get_size_inches()[0])
+    scales = []
+    for ax in figure.axes:
+        images = ax.get_images()
+        if not images:
+            continue
+        source_w = images[0].get_array().shape[1]
+        drawn_w = ax.get_position().width * width_in
+        scales.append((source_w / max(drawn_w, 1e-6)) / 150.0)
+    return scales
+
+
+def test_every_panel_is_drawn_at_the_size_it_was_rendered():
+    """Panels used to be rendered once and then scaled to their cell by a
+    DIFFERENT factor each, so the one font setting the user chose for the whole
+    figure arrived on the page at a different size in every panel - measured
+    1.18x spread untouched and 1.90x once a panel was resized.
+    """
+    from make_my_figure_core.panels.builder import build_figure
+    import matplotlib.pyplot as plt
+
+    figure = build_figure(_mixed_composite())
+    scales = _image_scales(figure)
+    plt.close(figure)
+    assert scales, "no panel images found"
+    spread = max(scales) / min(scales)
+    assert spread < 1.05, (
+        f"panels are drawn at {spread:.2f}x different scales, so one font size "
+        f"lands on the page at {spread:.2f}x different sizes: {scales}")
+
+
+def test_one_font_setting_gives_one_tick_size_in_every_panel():
+    """The composite's point sizes must be literal, not scaled per panel.
+
+    Each panel is a different size, so the canvas-responsive type scaling - right
+    for a standalone figure - scaled each panel's type by a different factor
+    (measured 69% / 71% / 98% / 66%), which is the same defect by another route.
+    """
+    from make_my_figure_core import examples
+    from make_my_figure_core.panels import Panel
+    from make_my_figure_core.panels.builder import _render_panel_figure
+    import matplotlib.pyplot as plt
+
+    overrides = {"base_font_pt": 7.0, "axis_font_pt": 7.5,
+                 "tick_label_pt": 6.5, "legend_pt": 6.5}
+    seen = {}
+    for plot_type in MIXED_PANELS[:3]:
+        table, aux, spec = examples.load_example(plot_type)
+        panel = Panel(plot_spec=spec, table=table.dataframe,
+                      aux={k: v.dataframe for k, v in (aux or {}).items()},
+                      width_in=3.2)
+        figure = _render_panel_figure(panel, overrides, size_in=(2.68, 1.86))
+        seen[plot_type] = round(figure.axes[0].yaxis.label.get_fontsize(), 2)
+        plt.close(figure)
+    assert len(set(seen.values())) == 1, (
+        f"one axis-label setting produced different sizes per panel: {seen}")
+    assert set(seen.values()) == {7.5}, (
+        f"the composite's point sizes are not literal: {seen}")
+
+
+def test_a_standalone_figure_still_scales_its_type_to_its_canvas():
+    """Opting out is for composites only. A single figure on a small canvas must
+    still shrink its type, which is what keeps a 2 x 1 in panel readable."""
+    from make_my_figure_core import examples
+    from make_my_figure_core.plots import registry
+    import matplotlib.pyplot as plt
+
+    table, aux, spec = examples.load_example("barplot_with_error_bar")
+    spec = {**spec, "layout": {**(spec.get("layout") or {}),
+                               "width_mm": 50.8, "height_mm": 25.4}}
+    result = registry.render(spec, table.dataframe,
+                             aux={k: v.dataframe for k, v in (aux or {}).items()})
+    scaled = any("Text sizes were scaled" in w for w in result.warnings)
+    plt.close(result.figure)
+    assert scaled, "a standalone small figure no longer scales its type"

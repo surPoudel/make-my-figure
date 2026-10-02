@@ -83,32 +83,50 @@ because the composite's figure size and the gridspec margins double-count. The
 ratio is exact - double the request, double the draw - and the help text now says
 so. Making inches literal would resize every existing composite by ~19%.
 
-## 3. Still open, and measured: type is not uniform across panels
+## 3. Type is now uniform across panels
 
-Each panel is rendered once and then scaled to fit its cell **by a different
-factor**, so the "Fonts (points, applied to all panels)" controls set the same
-point size in every render and the compositor then scales them apart.
+Each panel was rendered once and then scaled to fit its cell **by a different
+factor**, so the "Fonts (points, applied to all panels)" controls set one point
+size in every render and the compositor scaled them apart. A 10 pt label in one
+panel was drawn nearly twice the size of the same 10 pt label in another.
 
-Per-panel image scale on the reported 2x2 (higher = more downscaled = smaller
-drawn text):
+Per-panel image scale (higher = more downscaled = smaller drawn text):
 
 | | A, B, C, D | spread |
 |---|---|---|
-| auto | 1.84, 1.56, 1.56, 1.56 | 1.18x |
-| D height 5 in | 1.84, 1.56, 1.56, 1.19 | 1.54x |
-| D fill cell | 1.84, 1.56, 1.56, 0.97 | **1.90x** |
+| before, auto | 1.84, 1.56, 1.56, 1.56 | 1.18x |
+| before, D height 5 in | 1.84, 1.56, 1.56, 1.19 | 1.54x |
+| before, D fill cell | 1.84, 1.56, 1.56, 0.97 | 1.90x |
+| **after** | 1.00, 1.00, 1.00, 1.00 | **1.001x** |
 
-So a 10 pt label in panel D is drawn nearly twice the size of the same 10 pt
-label in panel A. It is visible in `reports/figure_builder/2x2_D_fill_cell.png`.
-This is **pre-existing** - the spread is already 1.18x with nothing set - but the
-new size controls widen it, because changing one panel's size changes only that
-panel's scale.
+Three steps were needed, and the middle one is the reason this is written down.
 
-The fix is a second render pass: once the grid is known, re-render every
-resizable panel at its final drawn size, so every scale is 1.0 and the font
-controls mean what they say. It costs one extra render per panel on a preview
-that redraws on every edit, and it changes the look of every existing composite,
-so it is written down here rather than slipped in.
+**A second render pass.** Once the grid is known, every panel that still carries
+its PlotSpec is re-drawn at the exact box it is about to occupy, so the image is
+placed 1:1 and a point of type in a panel is a point on the page.
+
+**That alone made the figure worse.** The first render after the change came back
+with panel A's title wrapped onto three lines, panel B's y-label clipped to
+"measurement (mean ± SE" and panel C's sample names overlapping. The build
+warnings said why: the canvas-responsive type scaling - correct for a standalone
+figure, and the right answer to a 2 x 1 in panel - is **per panel**, and it had
+scaled each panel's type by a different amount: **69% / 71% / 98% / 66%**. That
+is the same defect by another route, and it would have shipped as a fix. A
+composite sets one size for the whole figure, so composite panels now opt out
+(`layout["scale_typography"] = False`) and their points are literal. A standalone
+figure still scales to its canvas, pinned by a test.
+
+**The defaults had to come down.** 11/12/10/10 pt were the right numbers when
+every panel was silently shrunk ~1.56x - 10 pt arrived as about 6.4 pt. Now the
+number is the number on the page, and a three-inch journal panel wants 6-8 pt, so
+the defaults are text 7.0 / axis 7.5 / tick 6.5 / legend 6.5. The panel letter
+stays at 14 pt: it is drawn on the composite, so it was never scaled.
+
+**Migration, deliberately not automatic.** A composite saved before this recorded
+`base_font_pt=11` and will now render that as a literal 11 pt - visibly larger.
+Lowering the numbers to around 7 restores the old look. Old values are *not*
+silently multiplied by 0.64: a magic rescale buried in a loader is far harder to
+reason about later than a one-time adjustment the author makes on purpose.
 
 ## Instrument
 

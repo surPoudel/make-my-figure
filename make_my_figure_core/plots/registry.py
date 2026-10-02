@@ -369,7 +369,12 @@ def render(
         from make_my_figure_core.plots.base import explicit_figure_size
         from make_my_figure_core.styles.typography import scaled_for_canvas
 
-        _canvas = explicit_figure_size(spec)
+        # A multi-panel composite sets one type size for the whole figure, and
+        # every panel is a different size, so scaling each panel to its own
+        # canvas is exactly what makes the fonts come out different per panel.
+        # The composite opts out and its point sizes are taken literally.
+        _scale_typo = (spec.get("layout") or {}).get("scale_typography", True)
+        _canvas = explicit_figure_size(spec) if _scale_typo else None
         if _canvas is not None:
             style, _typo_scale = scaled_for_canvas(style, _canvas[0], _canvas[1])
     except Exception:  # noqa: BLE001

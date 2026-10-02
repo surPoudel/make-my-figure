@@ -407,8 +407,16 @@ class FigureBuilderDialog(QDialog):
     tuned before it's ever saved. Nothing is written until "Save figure...".
     """
 
-    # Publication-ready font defaults (points), matching the style profile.
-    _FONT_DEFAULTS = {"text": 11.0, "axis": 12.0, "tick": 10.0, "legend": 10.0, "label": 14.0}
+    # Font defaults in points, as they land on the page.
+    #
+    # These used to be 11/12/10/10, which were the right numbers when every panel
+    # was rendered at its natural size and then scaled down by ~1.56x to fit its
+    # cell - 10 pt arrived as about 6.4 pt. Panels are now rendered at the size
+    # they are drawn, so the number here IS the number on the page, and a
+    # three-inch journal panel wants 6-8 pt. "label" is the panel letter, drawn on
+    # the composite itself rather than inside a panel, so it was never scaled and
+    # does not change.
+    _FONT_DEFAULTS = {"text": 7.0, "axis": 7.5, "tick": 6.5, "legend": 6.5, "label": 14.0}
 
     def __init__(self, controller, saved_panels: List[Dict[str, Any]], parent=None, *,
                  initial_layout: Optional[Dict[str, Any]] = None, initial_name: Optional[str] = None,

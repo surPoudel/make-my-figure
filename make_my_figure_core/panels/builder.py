@@ -62,6 +62,12 @@ def _render_panel_figure(panel: Panel, font_overrides: Optional[Dict[str, Any]] 
         if w_in > 0 and h_in > 0:
             spec["layout"] = {**(spec.get("layout") or {}),
                               "width_mm": w_in * 25.4, "height_mm": h_in * 25.4}
+    if font_overrides:
+        # The figure-level font sizes are a choice about the whole composite, so
+        # they must land on the page as the same points in every panel. Letting
+        # each panel scale type to its own canvas is what produced a 1.42x spread
+        # between panels asked to share one setting.
+        spec["layout"] = {**(spec.get("layout") or {}), "scale_typography": False}
     aux = panel.aux or None
     result = render(spec, panel.table, aux=aux)
     fig = result.figure
@@ -294,6 +300,26 @@ def build_figure(mpf: MultiPanelFigure) -> Figure:
                                        if content_h[r] > 0 else 1.0)
                 draw_w = min(cell_w_in, avail_h / aspects[i] if aspects[i] else cell_w_in)
                 draw_h = draw_w * aspects[i]
+                # Second pass: re-draw the panel AT the size it is about to occupy.
+                #
+                # "Fonts (applied to all panels)" sets the same points in every
+                # panel's render, and the compositor then scaled each finished
+                # image to its cell by a DIFFERENT factor - so a 10 pt label came
+                # out nearly twice as large in one panel as in another (measured
+                # spread 1.18x untouched, 1.90x once a panel's size was changed).
+                # Rendering at the drawn size makes every scale exactly 1.0, so
+                # the point sizes the user asked for are the point sizes on the
+                # page. The box is unchanged: a canvas-sized raster of this box
+                # has precisely this aspect, so nothing moves.
+                if _can_resize(panel) and draw_w > 0 and draw_h > 0:
+                    f2 = _render_panel_figure(panel, font_overrides,
+                                              size_in=(draw_w, draw_h))
+                    own_figs.append(f2)
+                    images[i] = _figure_to_image(f2, layout.panel_dpi,
+                                                 keep_canvas=True)
+                    panel_warnings.extend(
+                        f"[{panel.label}] {w}"
+                        for w in getattr(f2, "_mmf_render_warnings", []))
                 ax.set_position([cell.x0 + (cell_w_in - draw_w) / 2.0 / fig_w_in,
                                  cell.y1 - draw_h / fig_h_in,
                                  draw_w / fig_w_in, draw_h / fig_h_in])
