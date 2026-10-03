@@ -18,7 +18,8 @@ import numpy as np
 import pandas as pd
 from matplotlib.figure import Figure
 
-from make_my_figure_core.styles.engine import StyleProfile, mm_to_inches
+from make_my_figure_core.styles.engine import (
+    StyleProfile, mm_to_inches, resolve_width_mm)
 
 
 # Smallest figure dimension that can carry anything legible. Below this a
@@ -150,7 +151,7 @@ def figure_size(spec: Dict[str, Any], style: StyleProfile, *, aspect: float) -> 
     """
     layout = spec.get("layout", {}) or {}
     width = str(layout.get("column_width", "default")).lower()
-    if width not in _WIDTH_ALIASES:
+    if width not in _WIDTH_ALIASES and resolve_width_mm(width) is None:
         width = "default"
     try:
         aspect = float(layout.get("aspect", aspect))
@@ -223,6 +224,29 @@ def pinned_dimension(spec: Dict[str, Any], key: str) -> "float | None":
 CHOSEN_WIDTH_PRESETS = ("single", "onehalf", "double")
 
 
+def requested_width(spec: Dict[str, Any]) -> "float | None":
+    """The width the user asked for, in inches, or ``None`` for automatic.
+
+    ``layout.width_mm`` is the explicit form, but the common one is
+    ``layout.column_width``: picking "single" is how you say "this goes in a
+    journal's single column", and an experimental preset pins a target width the
+    same way. Both are instructions about the finished figure, so both have to
+    stop the fitting pass from growing the canvas - otherwise asking for a 57 mm
+    column and getting 104 mm back because a legend did not fit defeats the point
+    of asking. The canvas is held and the plotting area gives up the room instead.
+
+    "default" is the automatic choice and is deliberately not a request.
+    """
+    pinned = pinned_dimension(spec, "width_mm")
+    if pinned is not None:
+        return pinned
+    name = chosen_column_width(spec)
+    if name is None:
+        return None
+    mm = resolve_width_mm(name)
+    return None if mm is None else mm_to_inches(max(float(mm), MIN_FIGURE_MM))
+
+
 # How many passes the label-overlap solver gets.
 #
 # ``adjust_text`` defaults to a one-SECOND wall-clock budget when neither limit is
@@ -266,6 +290,30 @@ def content_overflow_inches(figure) -> tuple:
     box = figure.get_tightbbox(renderer)
     return (max(0.0, -box.x0), max(0.0, box.x1 - width_px / dpi),
             max(0.0, -box.y0), max(0.0, box.y1 - height_px / dpi))
+
+
+def register_refit(figure, callback) -> None:
+    """Ask for ``callback`` to be re-run whenever the layout pass moves the axes.
+
+    Text sized or wrapped to fit its axes is only correct for the axes it was
+    measured against. The fitting pass then narrows those axes to bring a legend
+    back on canvas, and the text that fitted a moment ago no longer does - which
+    is how a regression-stats box ended up hanging off the left of a pinned 4 x 2
+    in figure after the pass that was supposed to tidy it up.
+    """
+    try:
+        figure._mmf_text_refit = list(getattr(figure, "_mmf_text_refit", ())) + [callback]
+    except Exception:  # noqa: BLE001
+        pass
+
+
+def _refit_text(figure) -> None:
+    """Run the registered re-fits; a failing one must never break a render."""
+    for callback in getattr(figure, "_mmf_text_refit", ()):
+        try:
+            callback()
+        except Exception:  # noqa: BLE001
+            continue
 
 
 def fit_content_to_canvas(figure, *, may_grow_x: bool = True,
@@ -318,6 +366,19 @@ def fit_content_to_canvas(figure, *, may_grow_x: bool = True,
             break
         pars = figure.subplotpars
         width_in, height_in = (float(v) for v in figure.get_size_inches())
+        # What this round has to beat, and enough state to put the figure back
+        # if it does not. Squeezing the plot area is the right move for a legend
+        # anchored outside the axes and the wrong one for a wide annotation
+        # centred *inside* them - a narrower axes carries that text further off
+        # the canvas, not nearer it. Measuring instead of assuming covers both.
+        # Judged on the total content outside, not the worst single edge: one
+        # round here cleared three edges and lifted the fourth by a fraction,
+        # which a worst-edge test calls a regression and throws away along with
+        # the three genuine fixes.
+        _before = left + right + bottom + top
+        _snap = dict(left=pars.left, right=pars.right,
+                     bottom=pars.bottom, top=pars.top)
+        _snap_size = (width_in, height_in)
         # An edge hanging over by less than the tolerance is not worth moving the
         # figure for. Zeroed per edge, not just overall: the loop runs while ANY
         # edge is over, and without this a real overhang on one axis dragged a
@@ -357,12 +418,22 @@ def fit_content_to_canvas(figure, *, may_grow_x: bool = True,
                         - squeeze_t / new_h - (0.004 if squeeze_t else 0.0)))
         except Exception:  # noqa: BLE001
             break
+        _refit_text(figure)
+        if sum(content_overflow_inches(figure)) > _before + 1e-6:
+            figure.set_size_inches(*_snap_size)
+            figure.subplots_adjust(**_snap)
+            _refit_text(figure)
+            break
 
     remaining = content_overflow_inches(figure)
     if max(remaining) > FIT_TOLERANCE_IN:
         # Axes placed by a divider (a colourbar appended beside the plot) ignore
         # subplotpars entirely, so the loop above cannot move them. tight_layout
         # with a reserved rect can.
+        _was = sum(remaining)
+        _pars = figure.subplotpars
+        _snap = dict(left=_pars.left, right=_pars.right,
+                     bottom=_pars.bottom, top=_pars.top)
         try:
             _l, _r, _b, _t = remaining
             width_in, height_in = (float(v) for v in figure.get_size_inches())
@@ -370,7 +441,14 @@ def fit_content_to_canvas(figure, *, may_grow_x: bool = True,
                                       1.0 - _r / width_in, 1.0 - _t / height_in))
         except Exception:  # noqa: BLE001
             pass
+        _refit_text(figure)
         remaining = content_overflow_inches(figure)
+        if sum(remaining) > _was + 1e-6:
+            # tight_layout reports that it could not honour the rect and lays the
+            # figure out anyway; the result can be worse than what it replaced.
+            figure.subplots_adjust(**_snap)
+            _refit_text(figure)
+            remaining = content_overflow_inches(figure)
 
     grew = (abs(figure.get_size_inches()[0] - start_w) > 0.01
             or abs(figure.get_size_inches()[1] - start_h) > 0.01)
@@ -389,6 +467,82 @@ def fit_content_to_canvas(figure, *, may_grow_x: bool = True,
             f"still falls outside the figure. Widen the figure, shorten the "
             f"labels, or move the legend inside the axes.")
     return notes
+
+
+# How many times a crowded set of labels may be redrawn a point smaller, and the
+# step it goes down by. Three steps off a 9.5 pt default reaches 6.5 pt, which is
+# still a readable label; past that the figure is too small for the number of
+# labels asked for and shrinking further only trades one unreadable result for
+# another.
+LABEL_SHRINK_STEPS = 3
+LABEL_SHRINK_PT = 1.0
+
+# Labels never shrink below this fraction of the size they were asked to be. A
+# label two thirds the size of its neighbours is already conspicuous; smaller
+# than that and the figure needs fewer labels or more room, which is a decision
+# for the person making it.
+LABEL_MIN_SHRINK_FRACTION = 0.65
+
+
+def _overlap_count(texts, renderer) -> int:
+    boxes = [t.get_window_extent(renderer) for t in texts]
+    return sum(1 for i in range(len(boxes)) for j in range(i + 1, len(boxes))
+               if boxes[i].overlaps(boxes[j]))
+
+
+def _shrink_until_separated(ax, texts, points, adjust_text, *, arrowprops, kw,
+                            floor_pt=None) -> None:
+    """Step the label type down until the repeller can separate them.
+
+    The solver can only move labels into room that exists. Fourteen picked points
+    at 9.5 pt fit a 180 mm figure and do not fit a 110 mm one, and since a
+    requested width is no longer negotiable the type is what has to give - the
+    same trade a person makes by hand. Labels are reset to their points and
+    re-solved at each size, because the solver's output is only meaningful for
+    the size it was run at.
+
+    Bounded, deterministic, and guarded: a failure here leaves the first
+    (overlapping but drawn) result exactly as it was.
+    """
+    from make_my_figure_core.styles.typography import ABSOLUTE_MIN_PT
+
+    floor = max(float(floor_pt or 0.0), ABSOLUTE_MIN_PT)
+    figure = ax.figure
+    try:
+        figure.canvas.draw()
+        renderer = figure.canvas.get_renderer()
+        if _overlap_count(texts, renderer) == 0:
+            return
+    except Exception:  # noqa: BLE001
+        return
+
+    kept_texts, kept_patches = list(ax.texts), list(ax.patches)
+    size = float(texts[0].get_fontsize())
+    if size <= floor:
+        return
+    for _ in range(LABEL_SHRINK_STEPS):
+        size = max(floor, size - LABEL_SHRINK_PT)
+        if size <= floor:
+            return
+        try:
+            # Drop the connectors the last pass drew, put every label back on its
+            # own point, and solve again at the smaller size.
+            for artist in list(ax.patches):
+                if artist not in kept_patches:
+                    artist.remove()
+            for artist in list(ax.texts):
+                if artist not in kept_texts:
+                    artist.remove()
+            for text, (lx, ly, _label) in zip(texts, points):
+                text.set_position((lx, ly))
+                text.set_fontsize(size)
+            adjust_text(texts, ax=ax, arrowprops=arrowprops,
+                        iter_lim=LABEL_ADJUST_ITERATIONS, **kw)
+            figure.canvas.draw()
+            if _overlap_count(texts, figure.canvas.get_renderer()) == 0:
+                return
+        except Exception:  # noqa: BLE001
+            return
 
 
 def repel_labels(ax, points, style, *, show_arrows=True, box=False, color=None,
@@ -425,6 +579,19 @@ def repel_labels(ax, points, style, *, show_arrows=True, box=False, color=None,
                 pass
         adjust_text(texts, ax=ax, arrowprops=arrowprops,
                     iter_lim=LABEL_ADJUST_ITERATIONS, **kw)
+        if font_size is None:
+            # A floor relative to where the labels started: shrinking is a last
+            # resort for a crowded figure, not a licence to reach 4.5 pt.
+            _floor = max(fs * LABEL_MIN_SHRINK_FRACTION, 0.0)
+            _shrink_until_separated(ax, texts, points, adjust_text,
+                                    arrowprops=arrowprops, kw=kw, floor_pt=_floor)
+            # The labels were separated for the axes they were drawn in. The
+            # layout pass narrows those axes to bring a legend back on canvas,
+            # which pushes the labels together again - so the separation has to
+            # be redone against whatever the axes end up as.
+            register_refit(ax.figure, lambda: _shrink_until_separated(
+                ax, texts, points, adjust_text, arrowprops=arrowprops, kw=kw,
+                floor_pt=_floor))
         return len(texts)
     except Exception:
         for t in texts:
@@ -528,7 +695,16 @@ def chosen_column_width(spec: Dict[str, Any]) -> "str | None":
     """
     layout = (spec or {}).get("layout", {}) or {}
     name = str(layout.get("column_width", "") or "").strip().lower()
-    return name if name in CHOSEN_WIDTH_PRESETS else None
+    if name in CHOSEN_WIDTH_PRESETS:
+        return name
+    # A measurement - "174mm", or the target an experimental preset pins - is as
+    # deliberate a request as picking "single", and is returned so the caller can
+    # pass it straight back to ``figure_size_inches``. Treating it as automatic
+    # instead let a renderer's legibility floor overrule it, which is how a 174 mm
+    # preset came back 50 mm wide of its target.
+    if name and name not in ("default", "auto") and resolve_width_mm(name) is not None:
+        return name
+    return None
 
 
 def width_floor_note(plot_type: str, requested_in: float, floor_in: float) -> str:

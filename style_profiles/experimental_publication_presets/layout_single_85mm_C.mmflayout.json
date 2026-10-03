@@ -1,0 +1,35 @@
+{
+  "format": "make_my_figure.figure_layout_preset",
+  "format_version": 1,
+  "name": "Single column 85 mm layout, upper-case letters (C)",
+  "description": "Figure Builder layout companion: figure width and panel-letter style from the publisher's stated requirements.",
+  "created": "2026-09-16T16:58:27+00:00",
+  "app_version": "1.1.0",
+  "n_panels": 0,
+  "layout": {
+    "fig_width_mm": 85.0,
+    "label_style": "A",
+    "label_size": 8.0,
+    "label_weight": "bold",
+    "wspace": 0.25,
+    "hspace": 0.3
+  },
+  "experimental": {
+    "preset_id": "layout_single_85mm_C",
+    "evidence_family": "evidence set C",
+    "evidence_summary": "51 open-access papers; visual review of panels plus typeset-PDF measurements where available; official requirements audited 2026-09-16",
+    "derived_from": {
+      "papers": 51,
+      "figures": "see journal_preset_research/analysis/style_measurements.csv",
+      "panels": "see style_measurements.csv",
+      "official_sources": "Cell Press figure guidelines (cell.com/figureguidelines, Wayback capture 2025-09-11): 85 / 114 / 174 mm widths, Arial only, about 6-8 pt text, 0.5-1.5 pt lines, capital panel letters, >= 300 dpi colour, RGB; accessed 2026-09-16"
+    },
+    "not_official": true,
+    "value_evidence": {
+      "fig_width_mm": "OFFICIAL:85.0 mm",
+      "label_style": "OFFICIAL:upper-case bold panel letters",
+      "label_size": "ESTIMATED:8 pt (size not stated)",
+      "wspace/hspace": "ESTIMATED:comfortable gutters; adjust per figure"
+    }
+  }
+}

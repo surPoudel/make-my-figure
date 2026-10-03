@@ -37,11 +37,17 @@ def run_and_annotate(
     tops: Optional[Dict[Any, float]] = None,
     mode: str = "bracket",
     corner_loc: str = "upper left",
+    orientation: str = "vertical",
 ):
     """Run stats for ``spec`` and (optionally) annotate ``ax``.
 
     ``positions``/``tops`` are keyed by ``str(category)`` for simple grouped
     plots, or by ``(str(x_level), str(group))`` for within-x grouped plots.
+    ``tops`` should be the highest *drawn* value per group (points, error bar,
+    whisker, ...): a bracket clears every group it spans, not just the two it
+    compares. ``orientation="horizontal"`` lays brackets along x for horizontal
+    bars/boxes (categories on y); ``above_bar`` placement stays vertical-only
+    and falls back to brackets in that case.
     Returns the :class:`StatsReport` (or ``None`` when statistics are disabled).
     """
     raw = spec.get("statistics")
@@ -86,8 +92,9 @@ def run_and_annotate(
                 f"annotation placement must be 'bracket' or 'above_bar', got {placement!r}."
             )
 
+        horizontal = str(orientation or "vertical").lower().startswith("h")
         info: Dict[str, Any]
-        if placement == "above_bar":
+        if placement == "above_bar" and not horizontal:
             # One label per compared bar, for comparisons that all share a reference group.
             flat_tops = {k: v for k, v in (tops or {}).items() if not isinstance(k, tuple)}
             info = stats_overlay.annotate_above(
@@ -100,10 +107,13 @@ def run_and_annotate(
                 # groups, so those fall back to brackets rather than being dropped silently.
                 info["bracket_fallback"] = stats_overlay.annotate_pairwise(
                     ax, leftover, pos_lookup, style=style, cfg=ann_cfg,
-                    top_lookup=top_lookup)
+                    top_lookup=top_lookup, positions=positions, tops=tops)
         else:
             info = stats_overlay.annotate_pairwise(
-                ax, items, pos_lookup, style=style, cfg=ann_cfg, top_lookup=top_lookup)
+                ax, items, pos_lookup, style=style, cfg=ann_cfg, top_lookup=top_lookup,
+                positions=positions, tops=tops, orientation=orientation)
+            if placement == "above_bar" and horizontal:
+                info["note"] = "above_bar placement is vertical-only; brackets were drawn instead."
         report.config = dict(report.config or {})
         report.config["_annotation_info"] = info
         # Omnibus (ANOVA / Kruskal) and other non-pairwise results have no bracket

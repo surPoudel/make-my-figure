@@ -27,6 +27,7 @@ from make_my_figure_core.plots.base import (
     resolve_figure_size,
     RenderError, RenderResult, base_metadata, figure_size, get_mapping, require_columns,
     resolve_legend_location,
+    requested_width
 )
 from make_my_figure_core.styles.engine import StyleProfile
 
@@ -54,7 +55,7 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
 
     polys, meta_rows, skipped = [], [], []
     for rid, grp in data.groupby(roi, sort=False):
-        g = grp.sort_values(order) if order else grp
+        g = grp.sort_values(order, kind="stable") if order else grp
         verts = g[[x, y]].to_numpy(dtype=float)
         # A closing vertex repeating the first is common and harmless.
         if len(verts) > 1 and np.allclose(verts[0], verts[-1]):
@@ -103,7 +104,8 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     w, h = figure_size(spec, style, aspect=0.95)
 
     show_legend = bool(cats and block.get("legend", True))
-    fig_w, legend_rect = (widen_for_outside_legend(w, cats, style, str(category))
+    fig_w, legend_rect = (widen_for_outside_legend(w, cats, style, str(category),
+                                                   limit=requested_width(spec))
                           if show_legend else (w, None))
 
     with style.apply():

@@ -75,9 +75,19 @@ def recommend_tests(plot_type: str, mapping: Dict[str, Any], *,
     notes: List[str] = []
 
     box_bar = {"barplot_with_error_bar", "boxplot_or_violin_with_points",
-               "grouped_barplot_with_error_bar"}
+               "grouped_barplot_with_error_bar",
+               # point-based group comparisons share the same one-factor design
+               "dot_strip_plot", "beeswarm_plot", "raincloud_plot"}
 
-    if plot_type in box_bar:
+    if plot_type == "paired_slopegraph":
+        # Matched observations: the paired tests come first; the renderer supplies the subject
+        # column from its mapping when the StatsSpec does not name one.
+        suggested += ["paired_t", "wilcoxon"]
+        if n_groups >= 3:
+            suggested += ["rm_anova"]
+        notes.append("Paired design (one line per subject): paired t-test or Wilcoxon signed-rank "
+                     "per pair of conditions; repeated-measures ANOVA for three or more conditions.")
+    elif plot_type in box_bar:
         two_factor = bool(subgroup and subgroup != group_col and plot_type == "grouped_barplot_with_error_bar")
         if two_factor:
             suggested += ["two_way_anova", "welch_t", "mann_whitney"]

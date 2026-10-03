@@ -364,7 +364,14 @@ def categorical_styles(levels, style, palette=None, base_marker="o"):
     return colours, markers, warning
 
 
-def widen_for_outside_legend(base_w: float, labels, style, title: str = "") -> tuple:
+# The least of a requested width that is still left for the plot itself once an
+# outside legend has taken its share. Past this the figure is a legend with a
+# sliver of data next to it, and moving the legend is the better answer.
+MIN_AXES_FRACTION = 0.45
+
+
+def widen_for_outside_legend(base_w: float, labels, style, title: str = "",
+                             limit: "float | None" = None) -> tuple:
     """Figure width that actually contains an outside legend, and the layout rect.
 
     Reserving a fixed fraction of a fixed-size figure does not work: the legend
@@ -374,7 +381,8 @@ def widen_for_outside_legend(base_w: float, labels, style, title: str = "") -> t
     preview is where it shows.
 
     So the figure grows by roughly the width the labels need, and the axes keep
-    their original size instead of being squeezed.
+    their original size instead of being squeezed - unless ``limit`` says a width
+    was requested, in which case that width is final and the axes are squeezed.
 
     Returns ``(total_width_in, rect)`` for ``fig.tight_layout(rect=...)``.
     """
@@ -383,5 +391,11 @@ def widen_for_outside_legend(base_w: float, labels, style, title: str = "") -> t
     # ~0.6 em per character, plus the marker, padding and a small margin.
     legend_in = (longest * 0.6 * pt / 72.0) + 0.55
     legend_in = max(1.1, min(legend_in, 4.0))
+    if limit and limit > 0:
+        # A width was asked for - a journal column, or a preset's target. Growing
+        # past it to fit the legend hands back a figure that is not the width
+        # that was requested, so the axes give up the room instead.
+        axes_w = max(limit - legend_in, limit * MIN_AXES_FRACTION)
+        return limit, (0.0, 0.0, axes_w / limit, 1.0)
     total = base_w + legend_in
     return total, (0.0, 0.0, base_w / total, 1.0)

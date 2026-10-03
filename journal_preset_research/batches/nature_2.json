@@ -1,0 +1,872 @@
+[
+ {
+  "paper_id": "PMC13461360",
+  "journal": "Nature Biotechnology",
+  "year": "2026",
+  "doi": "10.1038/s41587-025-02816-4",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13461360/figures/Fig1.gif",
+    "caption": "PiggyBac bioprospecting. a , PiggyBac identification and testing pipeline overview (detailed pipeline in Supplementary Fig. 1 and Methods ). Piggybac domains: N terminus, gray; double DNA-binding domain, yellow; catalytic domain, green; insertion domain, blue; CRD, pink (detailed domain depiction in Supplementary Fig. 7 ). Panel a created with BioRender . b , PiggyBac phylogenetic tree from the 2,"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13461360/figures/Fig2.jpg",
+    "caption": "Synthetic mega-active PiggyBac generation using protein language model fine-tuning. a , Overview of the fine-tuning and sequence generation pipeline. The Progen2-base model was fine-tuned on a set of over 10,000 PiggyBac orthologs identified through the bioprospecting pipeline. Over 100,000 sequences were generated with a sequence identity between 35% and 99% to the HyPB. Sequences were then filte"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13461361",
+  "journal": "Nature Biotechnology",
+  "year": "2026",
+  "doi": "10.1038/s41587-025-02830-6",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13461361/figures/Fig1.gif",
+    "caption": "A cellular and spatial atlas of the mouse colon across regions and ages. Study design overview. a , Sampling time points: birth/juvenile (0\u20134 weeks), adulthood (6\u201312 weeks) and aging (6 months\u20132 years). b , Sampling regions: proximal, middle and distal colon. c , Spatial atlas. The t -distributed stochastic neighbor embedding (t-SNE) embedding of 66,481 ST spot profiles colored by age group (left)"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13461361/figures/Fig2.gif",
+    "caption": "Deconvolutional modeling using histological and expression features. a , b , Agreement of morphology-informed deconvolution with manual cell type annotation. a , A total of 13 H&E patches from an example (8 weeks, distal) ST array (left; numbered boxes; scale bar, 200 \u03bcm) with their (from left) MROI annotation, H&E image patch, semantic segmentation of morphological superclasses (color code, botto"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13461361/figures/Fig3.gif",
+    "caption": "Regional differences in cell composition and function in the adult colon. a , The atlas spans structural variation in the mouse colon along the proximal\u2013distal axis. Illustrative H&E images of sections from proximal (left; blue), middle (middle; orange) and distal (right; green) regions. b , Variation in cellular composition of MROIs across the proximal\u2013distal axis. Proportion of cells of each typ"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13461361/figures/Fig4.jpg",
+    "caption": "Spatiotemporal changes in cell composition and function during colon aging. a , b , Analysis approach. cSplotch was used to characterize variability in cell-type-specific gene expression across age and region ( a ), followed by MCP analysis with DIALOGUE 108 ( b ) on inferred profiles for abundant cell types (for example, cell types A and B) in each MROI across ages and regions. MCPs are returned "
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13461362",
+  "journal": "Nature Biotechnology",
+  "year": "2026",
+  "doi": "10.1038/s41587-025-02809-3",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13461362/figures/Fig1.jpg",
+    "caption": "Circulatronics. Schematic diagram illustrating the concept of Circulatronics. Credit: Pablo Penso; human anatomy image from Shutterstock."
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13461362/figures/Fig2.gif",
+    "caption": "Characterization of subcellular-sized electronics with optical remote control. a , Schematic energy diagram illustrating the working principle of the photovoltaic devices (three-layered device based on organic polymers) and the final device structure developed. OSC, organic semiconductor. b , SEM images of the SWEDs fabricated at wafer scale. SWED structure, PEDOT:PSS|P3HT:PCBM|Ti. Scale bar, 10 \u00b5"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13461362/figures/Fig3.gif",
+    "caption": "Autonomous implantation of wireless bioelectronics in the brain. a , b , 3D reconstructed focused ion beam-SEM image ( a ) and confocal z-stack image ( b ) (with cross-sections from various viewing planes) showing a SWED (10 \u00b5m in diameter) attached to the immune cell (monocyte, wehi-265.1). Depth resolutions, 20 nm ( a ) and 500 nm ( b ). Scale bars, 5 \u00b5m. c , Histogram showing the population of "
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13461362/figures/Fig4.jpg",
+    "caption": "Nonsurgical targeted focal brain stimulation. a \u2013 e , Schematic diagram showing the timeline and the wireless stimulation scheme ( a ). Representative images showing the (i) cell nuclei, (ii) target region, (iii) c-Fos activity and (iv) overlay confocal images for mice with self-implanted cell\u2013electronics hybrids for the experimental group where optical actuation was applied ( n = 4 mice) ( b ); a"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13461362/figures/Fig5.jpg",
+    "caption": "Biocompatibility studies. a , Bar plots showing the motor activity of the animal during the OFT with minimal differences between the experimental (with cell\u2013electronics hybrids) and control (without hybrids) animals. Mean \u00b1 s.e.m. ( n = 8 mice, NS, two-way ANOVA test). b , Bar plots showing the discrimination scores for the novel object in the NORT with negligible differences between the experimen"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13518231",
+  "journal": "Nature",
+  "year": "2026",
+  "doi": "10.1038/s41586-026-10893-x",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13518231/figures/Fig1.webp",
+    "caption": "Sensitivity of the Martian seasonal gravity field to laterally heterogeneous structure. a , Bar chart showing the amplitude of seasonal temporal variations in selected Martian \u2113 = 3 gravity field coefficients (that is, \u0394 C 3 m A , B and \u0394 S 3 m A , B , in which A and B denote cosine and sine terms, respectively). Green, red and blue bars, respectively, denote the median total gravity field perturb"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13518231/figures/Fig2.webp",
+    "caption": "Tidal tomography of the Martian mantle. a \u2013 c , Histograms of inverted coefficient values that describe internal hemispheric (degree-1) variations in shear modulus (in per cent relative to the bulk value) for the Martian mantle (50\u20131,560 km depth). Meridional ( a ), north\u2013south ( b ) and east\u2013west ( c ) labels denote order-1, order-0 and order-1 variations, respectively. Dotted lines indicate 0.3r"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13518231/figures/Fig3.webp",
+    "caption": "Relationship between temperature, composition and inferred shear modulus variations in the Martian mantle. Shaded regions indicate the constrained ranges of the inferred Martian effective hemispheric shear modulus variation and the impact of mantle structure on the COM\u2013COF offset as a function of southern highlands mantle temperature anomaly and fayalite\u2013forsterite mole fraction contrast (Fa\u2013Fo) ("
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13518231/figures/Fig4.webp",
+    "caption": "Conceptual model of the interior structure of Mars as inferred in the present study. Measured temporal variations in degree-3 gravity indicate a thermal anomaly within the mantle beneath the southern highlands (light yellow to orange regions outside the core). This anomaly may promote partial melting below the lithosphere of Mars, which ascends and stalls in the crust before reaching the surface 1"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13518241",
+  "journal": "Nature",
+  "year": "2026",
+  "doi": "10.1038/s41586-026-10912-x",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13518241/figures/Fig1.webp",
+    "caption": "Antarctic mass change and associated precipitation anomalies in the past two decades. a , Deseasonalized Antarctic ice mass changes from GRACE/GRACE-FO, compared with cumulative SMB anomalies from RACMO2.4p1 and MARv3.14, ERA5 precipitation and CESM1 40-member ensemble-mean precipitation, relative to January 2003. The grey shading marks the mass reversal period (July 2021\u2013April 2023). Missing GRAC"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13518241/figures/Fig2.webp",
+    "caption": "Third MCA mode linking Antarctic precipitation and Southern Hemisphere Z300. MCA is applied to deseasonalized and detrended ERA5 monthly fields (south of 23\u00b0 N for Z300) for 1979\u20132024; the third mode explains 8% of the total squared covariance. a , b , Spatial patterns of MCA3 for Z300 ( a ) and Antarctic precipitation ( b ). Black vectors in a denote the associated WAF. c , d , Standardized time "
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13518241/figures/Fig3.webp",
+    "caption": "Simulated TWP\u2013EA teleconnection using ECHAM5. Simulated responses to positive TWP SST anomalies, shown as the difference between the 40-year mean of the sensitivity experiment and that of the control experiment. a \u2013 c , Responses of Z300 ( a ), surface temperature ( b ) and precipitation ( c ). Black arrows indicate WAF. Stippling indicates regions significant at the 95% level based on a Student\u2019s"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13518241/figures/Fig4.webp",
+    "caption": "Moisture sources of QW precipitation in the water-tagging run. a , Climatological contributions of 54 tagged moisture-source regions to QW precipitation for 1979\u20132023. b , Contributions from each source region to the monthly QW precipitation anomaly during the 2021\u20132023 event. The green filled dot marks the climatological mean moisture-source location for QW precipitation during 1979\u20132022, based o"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13518241/figures/Fig5.webp",
+    "caption": "Schematic of the TWP-warming-driven teleconnection regulating Antarctic mass gain. TWP warming (red oval) excites a poleward-propagating Rossby-wave train (red dashed arrows), inducing a dipole circulation characterized by a high-pressure anomaly over EA (solid black contour) and an upstream low-pressure anomaly (dashed black contour). The high-pressure anomaly is dynamically reinforced and mainta"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13518244",
+  "journal": "Nature",
+  "year": "2026",
+  "doi": "10.1038/s41586-026-10902-z",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13518244/figures/Fig1.webp",
+    "caption": "Nodal planes bisect g -wave-symmetric spin-split Fermi surface sheets in CrSb. a , The crystal structure of CrSb, with alternating magnetic moments on the Cr sites oriented along the c -axis. Red indicates spin-up and blue indictes spin-down. b , The trigonal arrangement of the antimony ions means that mapping a red chromium site to a blue one necessarily requires a screw rotation. c \u2013 e , The pri"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13518244/figures/Fig2.webp",
+    "caption": "Mapping the altermagnetically spin-split Fermi surface of CrSb. a , Heatmap of the spectral intensity of quantum oscillatory frequencies compared with rotation angle in the nodal c \u2212 a plane. Brighter heatmap intensities correspond to larger quantum oscillatory amplitudes; data have been symmetrized through 90\u00b0 for ease of presentation. b , Simulated frequency profile for the c \u2212 a plane from DFT "
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13518244/figures/Fig3.webp",
+    "caption": "Confirmation of g -wave altermagnetic spin texture in CrSb. a , Heatmap of quantum oscillation frequencies compared with rotation angle (data have been symmetrized for ease of presentation). b , Simulated spin-up (red) and spin-down (blue) angular frequency profile computed by DFT. Here, we rotate H through a plane of low symmetry at a tilt of 14\u00b0 from the a b plane, which is shown in Extended Dat"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13518244/figures/Fig4.webp",
+    "caption": "Spin-split effective mass study. a , Quantum oscillations at incremental temperatures for \u03b8 = 84.8\u00b0, \u03c6 = 21.4\u00b0. b , The corresponding frequency spectra, with temperatures indicated. \u0394 \u03c4 was high-pass filtered to focus on two frequency components, at f 1 = 3.41 kT and f 2 = 3.82 kT ( Methods ), which come from spin-split up and down sheets of the dogbone pocket. See Extended Data Fig. 9 for additio"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13538068",
+  "journal": "Nature",
+  "year": "2026",
+  "doi": "10.1038/s41586-026-10914-9",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13538068/figures/Fig1.webp",
+    "caption": "Concept of atomic-scale double-slit interferometry. a , Schematic of Young\u2019s classic double-slit experiment with light (slit separation approximately 1 mm, distances approximately 1 m). b , Schematic of atomic-scale double-slit interferometry using electron channelling through adjacent Si [110] atomic columns (separation 1.36 \u00c5, crystal thickness approximately 10 nm, detector distance approximatel"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13538068/figures/Fig2.gif",
+    "caption": "Atomic-scale double-slit interference and the role of vibrational correlations. a , CBED pattern from an electron probe positioned at the centre of a single Si [110] dumbbell. b , Averaged CBED pattern from 356 crystallographically equivalent dumbbells (3.3 \u00d7 10 7 electrons in total). c , Idealized double-slit simulation using Fraunhofer diffraction theory with two circular apertures separated by "
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13538068/figures/Fig3.webp",
+    "caption": "Directional structure correlation and its systematic effect on atomic-scale interference. a , b , Si dumbbell atomic structure showing nearest-neighbour geometry. Bonds (lines) project to 1.36 \u00c5 separation perpendicular to the electron beam. c , d , Nearest-neighbour displacement two-dimensional histograms for the Einstein model ( \u03c1 x = \u03c1 y = 0) ( c ) and the phonon-based correlation model from Fi"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13538068/figures/Fig4.gif",
+    "caption": "Quantitative extraction of directional correlation coefficients and phonon-mode-resolved relative-displacement analysis. a \u2013 c , MSE heat maps in the ( \u03c1 x , \u03c1 y ) parameter space obtained from the total averaged CBED patterns at 300 K ( a ), 500 K ( b ) and 900 K ( c ). Darker regions indicate lower MSE. The grey cross marks the minimum on the calculation grid and the red star marks the refined m"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13538145",
+  "journal": "Nature",
+  "year": "2026",
+  "doi": "10.1038/s41586-026-10904-x",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13538145/figures/Fig1.gif",
+    "caption": "Many-body spectroscopy and the Ising CFT spectrum. a , Phase diagram of the FSS Hamiltonian, reproduced from ref. 40 . The arrows represent the adiabatic sweep trajectory, ending at critical points probed in this work. b , Modulation spectroscopy protocol (top) and corresponding schematic spectral evolution (bottom). We adiabatically evolve an initial disordered state to Ising criticality and then"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13538145/figures/Fig2.webp",
+    "caption": "Scaling of the finite-size spectrum. a , Sketch of scaling modulation frequency with system size. When multiplying the frequency with the system size, the eigenvalues for different system sizes collapse and yield a universal ratio predicted by the CFT. b , Spectroscopy at the critical detuning \u0394 c at various system sizes. In the horizontal axis, the modulation frequency f is scaled by system size "
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13538145/figures/Fig3.webp",
+    "caption": "Parity-resolved Ising CFT spectrum with local control. a , The applied odd-parity local detuning modulation profile with a wavevector of k = \u03c0/18. b , Even- and odd-parity spectra of a 19-atom array tuned to Ising criticality. The measured spectra are consistent with the universal energy ratio, 2:3:4:5:6:7:8, predicted by the Ising CFT. The solid lines are Gaussian fits to the data and indicate fi"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13538145/figures/Fig4.gif",
+    "caption": "Approach to the TCI point. a , Boundary field \u03c3 edge as a function of interaction strength. The boundary \u03c3 edge diminishes towards the TCI point, showing the transition from the Ising CFT to the TCI CFT. The right inset (same as Fig. 1a ) shows three phase transition configurations and their positions on the phase boundary, and the left inset is a sketch of the site- and bond-labelling of the chai"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13538145/figures/Fig5.webp",
+    "caption": "Probing different fixed-point boundary conditions for TCI. a , Controlling the boundary condition with local detunings. We apply local detunings to each atom to mimic the effect of ancillary spins on the boundary. The overall detuning strength is rescaled by a dimensionless parameter \u03b7 . b , Boundary field \u03c3 edge as a function of the boundary detuning strength \u03b7 . A nontrivial \u03c3 edge emerges in th"
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13538145/figures/Fig6.gif",
+    "caption": "Linear response and universal scaling of the dynamical structure factor. a , Peak-resolved response \u03b4 n under a Gaussian-envelope modulation on an L = 19 array. Top, experimental sweep. The experiment consists of an adiabatic sweep from the disordered phase to the critical point, followed by a Gaussian envelope modulation. Bottom, the measured response. The solid line is a tensor network simulatio"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13541613",
+  "journal": "Nature Methods",
+  "year": "2026",
+  "doi": "10.1038/s41592-026-03177-9",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13541613/figures/Fig1.webp",
+    "caption": "Overview of GHT-SELEX. a , Schematic of GHT-SELEX, showing parallels with HT-SELEX. b , Example of read accumulation over a TF motif match for NFKB1. c , Genomic binding for four positive control TFs on a genomic region showing (top to bottom) PWM scanning scores (moving average of affinity scores, from MOODS 62 scan in linear domain, using a window of size 200 bp) for reference PWMs (CIS-BP ident"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13541613/figures/Fig2.webp",
+    "caption": "MAGIX method for interpretation of GHT-SELEX data. a , GHT-SELEX reproducibility. Scatterplots for four control TFs show MAGIX score values for all 200 bp genomic bins between replicate GHT-SELEX experiments. b , Base-level distribution of PWM hits for the top-ranked TF PWM (highest AUROC on GHT-peaks as determined in the accompanying study 50 ) within the MAGIX peaks (up to the 10,000 highest sco"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13541613/figures/Fig3.webp",
+    "caption": "Analysis of 331 Codebook proteins and 61 control TFs using GHT-SELEX. a , Venn diagram displaying the number of TFs with successful experiments in GHT-SELEX, HT-SELEX and ChIP\u2013seq for all Codebook (left) and control (right) TFs assayed with GHT- and HT-SELEX. b , Barchart showing the number of TFs with at least one successful GHT-SELEX experiment, categorized based on DBD type. C2H2-zf proteins an"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13541613/figures/Fig4.webp",
+    "caption": "Correspondence between GHT-SELEX, ChIP\u2013seq peaks and PWM predictions. a , Enrichment of ChIP\u2013seq peaks and PWM hits within MAGIX peaks, for two example control TFs. MAGIX peaks are sorted by their MAGIX score (purple, left y axis). Orange line: proportion of peaks (in a sliding window of 500 peaks over the ranked peaks, with a step size of 50) that overlap with a ChIP\u2013seq peak defined using MACS ("
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13541613/figures/Fig5.gif",
+    "caption": "Alternative engagement of individual C2H2-zf domains at genomic binding sites inferred from the recognition code. a , RCADEEM applied to CTCF. Middle: top 2,000 nonrepetitive GHT-SELEX peaks. White vertical bars: region expected to contact the DNA based on the assumption that each of the C2H2-zf domains defines three contiguous bases. Sequences are aligned against the closest match to the recognit"
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13541613/figures/Fig6.gif",
+    "caption": "Evolution of C2H2-zf protein DNA-binding specificities through internal duplication of DBDs and DBD arrays. a , RCADEEM results for the pool of top 500 peaks from full-length ZNF721 and two DBD constructs, after removing peaks that overlap repeats. The construct in which the peak was observed is indicated on the left. b , Similarity of C2H2-zf domains of ZNF721 (based on the number of mismatches i"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13541614",
+  "journal": "Nature Methods",
+  "year": "2026",
+  "doi": "10.1038/s41592-026-03137-3",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13541614/figures/Fig1.webp",
+    "caption": "Dataset curation and model training. a , DPO was developed to align the responses of language models to labeled human preferences given a text prompt. b , Analogously, we align a structure-conditioned language model to perform thermostable sequence design using protein backbone conditioning as a \u2018prompt\u2019, sequence generation as a \u2018response\u2019 and experimental fitness as \u2018preference\u2019 data. c , Overvi"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13541614/figures/Fig2.webp",
+    "caption": "ProteinDPO achieves competitive mutational stability prediction. a , We benchmarked models using experimental protein stability datasets FireProt 27 and S669 26 . These dataset are compiled from small-scale mutagenesis experiments across diverse monomeric proteins, in which certain residues are mutated, variants are expressed and their stability is measured experimentally. b , Performance of model"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13541614/figures/Fig3.webp",
+    "caption": "ProteinDPO generalizes beyond stability prediction to diverse tasks. a , We benchmarked models using binding affinity mutagenesis studies, which mutate one or more protein chains that form a bound complex and subsequently measure the resulting binding affinity of the complex. b , Zero-shot correlation and AUROC of model likelihoods with protein\u2013protein binding affinity from the SKEMPIv2 dataset 28"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13541614/figures/Fig4.webp",
+    "caption": "ProteinDPO enables rapid zero-shot stabilization of H5 influenza HA. a , Illustration of our prefusion stabilization campaign. Mutations are introduced by conditioning ProteinDPO with the prefusion structure of a fold-switching protein in order to stabilize this conformation and prevent a transition to the post-fusion state. b , Rank-ordered thermal stability of ProteinDPO variants applied to 2004"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13541614/figures/Fig5.webp",
+    "caption": "Variants generalize to recent variants of concern and retain native antigenicity. a , Structure of the Vietnam 2004 HA monomer (PDB: 6CFG , pale blue) along with mutation positions (bright blue) aligned and superimposed onto HA-bound structures of fragment antigen binding (Fab) domains of broadly neutralizing antibodies (bnAbs) CR6261 (PDB: 3GBN ) and 13D4 (PDB: 6A0Z ), which target the stem and h"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13545012",
+  "journal": "Nature Methods",
+  "year": "2026",
+  "doi": "10.1038/s41592-026-03211-w",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13545012/figures/Fig1.webp",
+    "caption": "Long-read spatial transcriptomics of two mouse brain slides. a , Schematic overview of the study design. Spatially barcoded cDNA was generated for two coronal sections (10 \u03bcm apart) of a P56 mouse brain using the Stereo-seq platform 22 . The pool of cDNA was sequenced using (1) short-read technologies, (2) PB and (3) ONT. All sequencing data were combined to detect (cell-type-specific) spatially v"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13545012/figures/Fig2.webp",
+    "caption": "Processing long reads obtained with Spl-ISO-Seq2. a , Spl-IsoQuant-2 pipeline overview. Purple and pink bars next to the reads indicate different barcodes. Blue bars between the reads and the barcodes indicate UMIs. Final diagram shows isoform count per barcode (purple/pink). b , Splitting reads into individual cDNAs by locating the TSOs. Elements are denoted as P, primer; B, barcode; L, linker; U"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13545012/figures/Fig3.webp",
+    "caption": "Detecting genes exhibiting differential isoform expression across predefined regions. a , Number and percentage of genes changing isoform expression across predefined brain regions using all cells in combined Sample 1 + 2 (AE). Barplot on the right shows the number of long reads used during the analysis per region. b , e , Single-cell long reads for Nptn ( b ) and Phactr1 ( e ) measured in the cor"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13545012/figures/Fig4.webp",
+    "caption": "Detecting spatially variable isoforms using spatial autocorrelation. a , Schematic example of a pattern (left) that can be detected using either predefined regions and spatial autocorrelation and a pattern (right) that can only be detected using spatial autocorrelation. b , c , Number ( b ) and percentage ( c ) of significant SVIs (FDR < 0.05) per dataset and cell type. Each bar represents a singl"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13545012/figures/Fig5.webp",
+    "caption": "Reproducibility across protocols and biological samples. a , Barcode calling precision and recall of Spl-IsoQuant-2 and Space Ranger on simulated Visium HD data using different while grouping the spots in different bin sizes. Different minimal alignment scores (min. score) were tested for Spl-IsoQuant-2. b , c , Average read length ( b ) and percentage of spliced reads ( c ) in the Stereo-seq and "
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13554239",
+  "journal": "Nature Communications",
+  "year": "2026",
+  "doi": "10.1038/s41467-026-77191-y",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13554239/figures/Fig1.webp",
+    "caption": "Indirect developing hemichordates as a model to study the transition between larval and adult body plans. A Phylogenetic distribution of bilaterians highlighting the prevalence of larval types. Light microscopy of the major life history stages of S. californicum : B early larva, C late larva, D during metamorphosis, E early juvenile, F late juvenile. Representative images from where a minimum of t"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13554239/figures/Fig2.webp",
+    "caption": "Single-cell sequencing reveals the broad diversity of hemichordate cell types. A UMAP embedding of the cell classes of S. californicum; 55 clusters were identified and 12 cell classes were described. B Selected markers of cell classes of S. californicum , percentage of gene maximum was calculated by taking the mean normalized expression of the gene of interest and dividing by the maximum for any c"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13554239/figures/Fig3.webp",
+    "caption": "Divergence of transcriptional states is consistent with morphological changes between life history stages. A UMAP embedding of S. californicum single-cell RNA-seq data with cells colored by life stage. Yellow: early larva, dark gold: late larva, gray: metamorphosis, light blue: early juvenile, dark blue: late juvenile. B Bar chart of life stage composition of clusters. C \u2013 F HCR signal in magenta,"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13554239/figures/Fig4.webp",
+    "caption": "Mesodermal tissues share transcriptional similarity while ectodermal and endoderm tissues reflect life stage divergence. A Schematic diagram of approach used to accurately quantify similarity or dissimilarity of clusters in 55-dimensional PC space. B Dendrogram shows a hierarchical clustering of scRNA-seq clusters using the centroid of each cluster in 55-dimensional PC space, with bars colored by "
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13554239/figures/Fig5.webp",
+    "caption": "Genetic makeup of cell type diversity across life history stages. A GO Term analysis of scRNA-seq differential expression data by life stage. B GO Term analysis of scRNA-seq differential expression data by cluster, ordered by cluster life stage composition per Fig. 3B . C Analysis of anterior-posterior patterning genes in scRNA-seq data by life stage. D Mean expression of anteroposterior patternin"
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13554239/figures/Fig6.webp",
+    "caption": "Life stage differences transcend gene type. A Volcano plots of differential gene expression between larval and juvenile cells for transcription factors, catabolic genes (GO:0009056), metabolic genes, and all other genes (log2 fold-change versus -log10 Bonferroni-adjusted p-value from Wilcoxon Rank Sum test; points colored by enrichment in larval or juvenile cells, or not significant). Bi \u2013 Eiv UMA"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13558045",
+  "journal": "Nature",
+  "year": "2026",
+  "doi": "10.1038/s41586-026-10941-6",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558045/figures/Fig1.webp",
+    "caption": "Corrosion induced by spontaneously charged water drops. a , Schematic of a water drop directly hitting a 60-nm-thick Teflon film on copper. Reflection mode confocal microscopy (LSM 880, Carl Zeiss) image of the surface morphology after 3,000 water drops. The image was recorded in reflection mode with an Ar-ion laser at 488 nm. The surface morphology of the impact area remains flat and smooth. b , "
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558045/figures/Fig2.webp",
+    "caption": "Charge measurement. Schematic of the charge measurement. Water drops fall from the syringe tip onto a tilted surface ( \u03b1 = 50\u00b0), here a PFOTS on quartz. Drops slide down a length L = 4 cm to reach the edge and then fall onto a Teflon-coated copper sample, which is slightly tilted to enable drop roll-off. A current amplifier (response time: 0.8 ms, FEMTO DDPCA-300), placed at three distinct positio"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558045/figures/Fig3.webp",
+    "caption": "Mechanism of water drop discharge. a , Schematic of a charged water drop over a metal substrate. b , Capacitance of a water drop C versus the distance h calculated for air ( \u03b5 = 1) and a typical polymer ( \u03b5 = 3). The true capacitance is described by \u03b5 = 1 for large distances (main medium is air) and \u03b5 = 3 for short distances (main medium is a polymer). c , Electric field strength between the charg"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558045/figures/Fig4.webp",
+    "caption": "Products created by charged-drop impacts. a , Reflection and fluorescence confocal microscopy images of a 200-nm-thick PS film after impact of 3,000 charged water drops generated on a PFOTS-on-quartz plate. Excitation: 488 nm; fluorescence detection: 517\u2013696 nm. b , AFM topography and nano-IR response of a region containing reaction products and normal PS. Nano-IR images were recorded by PiFM at 1"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558045/figures/Fig5.webp",
+    "caption": "Sliding charged water drops induce corrosion at a specific position. a , Schematic of the sliding water drops experiment. The substrate is composed of quartz and copper, which is coated with a 60-nm-thick Teflon film. b , Reflection mode confocal microscopy image of the quartz\u2013copper boundary area after sliding 3,000 water drops over it (copper appears bright and quartz dark). The corrosion patter"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13558073",
+  "journal": "Nature",
+  "year": "2026",
+  "doi": "10.1038/s41586-026-10940-7",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558073/figures/Fig1.webp",
+    "caption": "GLP-1R activation late in life extends lifespan and improves physiological function. a , 20-month-old female C57BL/6 mice were treated with vehicle (control, Ctrl) or semaglutide (sema) for the duration of the lifespan. Kaplan\u2013Meier survival curves. The dashed lines indicate the median lifespan. b \u2013 q , Comparison of 20-month-old female C57BL/6 mice treated with vehicle or semaglutide for 3 months"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558073/figures/Fig2.webp",
+    "caption": "GLP-1R activation late in life ameliorates stem cell ageing. Comparison of 20-month-old female C57BL/6 mice treated with vehicle or semaglutide for 3 months. a , The gating strategy of HSCs in the bone marrow. LSK, Lin \u2212 SCA1 + KIT + cells; HSC, Lin \u2212 SCA1 + KIT + CD48 \u2212 CD150 + cells. APC, allophycocyanin; Cy7, cyanine 7; FITC, fluorescein isothiocyanate; PB, pacific blue; PE, phycoerythrin. b , "
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558073/figures/Fig3.webp",
+    "caption": "GLP-1R activation late in life alleviates the hallmarks of ageing and mimics the calorie restriction response. RNA-seq analysis of the livers of 20-month-old female C57BL/6 mice treated with vehicle or semaglutide for 3 months. n = 5 mice per group. a , Summary of the DEGs (red, upregulated in semaglutide-treated mice; blue, downregulated in semaglutide-treated mice; adjusted P ( P adj ) < 0.1). W"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558073/figures/Fig4.webp",
+    "caption": "GLP-1R activation late in life modulates the genetic regulators of ageing. Comparison of 20-month-old female C57BL/6 mice treated with vehicle or semaglutide for 3 months. a \u2013 d , Relative NAD + levels ( a , c ) and the ratio of NAD + /NADH ( b , d ) in the liver ( a , b ) and the muscle ( c , d ). e , f , Quantitative PCR with reverse transcription (RT\u2013qPCR) analyses of Sirt1\u20137 in the liver ( e )"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558073/figures/Fig5.webp",
+    "caption": "Direct comparison of GLP-1R activation and calorie restriction late in life. Comparison of 20-month-old female C57BL/6 mice treated with vehicle, semaglutide or calorie restriction for 5 months. Mice were assessed at the baseline or after 2 or 4 months of treatment. a , b , Total movement ( a ) and centre cumulative duration ( b ) in the open-field test. c , d , Total movement ( c ) and time in th"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13558076",
+  "journal": "Nature",
+  "year": "2026",
+  "doi": "10.1038/s41586-026-10891-z",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558076/figures/Fig1.webp",
+    "caption": "Spatial modulation of the DOP and the SOP. Light with spatially controlled DOP is synthesized by engineering the polarization statistics of an ensemble of spatially distributed waves. a , A phase-only SLM divides the wavefront of a coherent beam into macromodes ( i = 1,\u2026, N ) composed of M micromodes with random phases. b , After a tunable WP, in the far field, the spatial phase modulation results"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558076/figures/Fig2.webp",
+    "caption": "Control of DOP and SOP through the phase probability distribution. a , DOP-only modulation. Measured \u03c1 (dots) with exponential fit (line) based on coherence theory, and Stokes parameters S 1 , S 2 and S 3 as a function of \u03b4 \u03d5 for \u03d5 \u00af = \u03c0 . b , SOP-only modulation. Polarimetric measurements while scanning \u03d5 \u00af at constant \u03b4 \u03d5 = 0.15\u03c0. Insets in a and b show phase masks ( M = 256) for representative "
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558076/figures/Fig3.webp",
+    "caption": "DOP-structured light. a , Programmed DOP and SOP for N = 4 macromodes. b , Azimuth image of the beam measured by the polarization camera (method 1). c , DOP image measured by full-Stokes imaging (method 2). d , DOP-only spatial modulation. The letter \u2018C\u2019 is written exclusively in the DOP profile. e , The pattern is invisible in both the linear polarization degree \u03bd and azimuth \u03b8 . f , Measured DOP"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558076/figures/Fig4.webp",
+    "caption": "Polarization encoding of colour images and high-dimensional PNN. a , Polarization colours defined by mapping the RGB colour cube into the volume of the Poincar\u00e9 sphere using a one-to-one correspondence with Stokes coordinates. b , Experimental demonstration of polarization-coloured images. A colour mosaic is generated by means of DOP and SOP modulation, with each of the 32 \u00d7 32 RGB pixels mapping "
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558076/figures/Fig5.webp",
+    "caption": "DOP-enabled multidimensional optical encryption. a , Speckle-based encryption and decryption system. The RGB image (plaintext) is polarization-encoded and encrypted into a speckle pattern (ciphertext) by a scattering medium. A DNN performs the decryption. b , Encryption and decryption of a 32 \u00d7 32 RGB image. Decryption fidelity is quantified by the PCC. c , d , Security against cloning attacks. c "
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13558077",
+  "journal": "Nature",
+  "year": "2026",
+  "doi": "10.1038/s41586-026-10886-w",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558077/figures/Fig1.webp",
+    "caption": "CDK4/6 inhibition drives genome-wide redistribution of native Rb to chromatin. Rb chromatin binding was profiled by CUT&RUN in MCF7 and ZR-75-1 cells treated with abemaciclib (abema) or DMSO, and by DynaTag in the breast cancer PDX model KCC-P-3837 treated with abemaciclib or vehicle. a , MA (minus-average) plots of differential Rb chromatin binding following abemaciclib treatment. Each dot repres"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558077/figures/Fig2.webp",
+    "caption": "Rb engages enhancer networks to enhance the oestrogen-responsive programme. a , b , Gene set enrichment analyses (GSEAs) of genes associated with non-promoter Rb up peaks following CDK4/6 inhibition ( a ) and of genes whose promoters reside in H3K27ac HiChIP transcriptional hubs containing at least one non-promoter Rb peak in MCF7 cells following abemaciclib treatment ( b ). In a , the grey circle"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558077/figures/Fig3.webp",
+    "caption": "Rb-mediated ER activation shapes endocrine responses. a , Schematic of the POP clinical trial. Patients with primary ER + breast cancer were assigned to no treatment control or palbociclib treatment, and tumour specimens were collected before treatment and after 2 weeks. Transcriptomic profiling was performed on paired tumour samples ( n = 18 pairs for control; n = 44 pairs for palbociclib). b , G"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558077/figures/Fig4.webp",
+    "caption": "Rb derepresses the oestrogen response programme through interaction with KDM5A. Unless otherwise indicated, experiments were performed in MCF7 cells. a , Volcano plot of proteins enriched in Rb immunoprecipitates relative to IgG controls in nuclear lysates following abemaciclib treatment, identified by immunoprecipitation (IP)\u2013mass spectrometry. Differential enrichment was assessed using limma\u2019s e"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13558581",
+  "journal": "Nature Communications",
+  "year": "2026",
+  "doi": "10.1038/s41467-026-72182-5",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558581/figures/Fig1.webp",
+    "caption": "Prostate cancer is characterised by frequent hemizygous loss of putative TSGs. a Chromosome ideogram representing frequently (>10%) deleted regions (hemizygous loss - light blue, homozygous loss - dark blue) in the cohort . b The distribution of the number of genes with hemizygous loss across samples. The plot shows a decrease in the number of genes with hemizygous loss as the percentage of sample"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558581/figures/Fig2.webp",
+    "caption": "Epi2Hit pipeline. a Schematic overview of the Epi2Hit workflow . b Flowchart describes the steps of the pipeline for identification of eCpGs and Epi2Hit candidates. eCpGs are identified as CpG sites intersecting ATAC peaks (Accessible CpGs), annotated with the presence of promoter-enhancer loops (Regulatory CpGs). These CpGs are used for linear regression on gene expression to identify eCpGs. SCNA"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558581/figures/Fig3.webp",
+    "caption": "Epi2Hit workflow identifies TSGs susceptible to biallelic inactivation through the combination of hemizygous loss and hypermethylation. a Bar plot indicates the number of patients harbouring different types of biallelic inactivation for the 2% most frequent TSGs. b Box plots showing the expression of TSGs for wt (white), hemizygous loss (grey), Epi2Hit (red) groups of samples. Number of samples is"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558581/figures/Fig4.webp",
+    "caption": "ZFHX3 inactivation drives MYC upregulation. a Oxford Nanopore-based phased methylation and somatic copy number, and chromatin context at the ZFHX3 locus. Top: three Epi2Hit prostate cancers show loss of Allele 1 (green dashed) and allele-2 hypermethylation at the eCpG cg16563255 (red arrow; \u03b2 = 0.82\u20130.9), with reduced ZFHX3 expression. Bottom: three Epi2Hit WT tumours show balanced allelic copy nu"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13558581/figures/Fig5.webp",
+    "caption": "Nearby essential genes surrounding never-homozygous deleted tumour suppressor genes. a Schematic representation of the relationship between tumour suppressor genes (TSGs) and nearby essential genes on chromosomes 13 and 16. The presence of essential genes (blue) adjacent to TSGs (pink) limits the likelihood of homozygous deletions in these regions, leading to an increased probability of hemizygous"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13561862",
+  "journal": "Nature Cell Biology",
+  "year": "2026",
+  "doi": "10.1038/s41556-026-02038-z",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13561862/figures/Fig1.gif",
+    "caption": "Comprehensive profiling of DNA and RNA modifications via mass spectrometry. a , Schematic overview of usually applied methodology for identifying and quantifying DNA/RNA modifications. Following isolation, digestion and processing of DNA/RNA into individual nucleosides, bound nucleic acid metabolites are detected using LC\u2013MS/MS. b , Diagram depicting intracellular metabolism of DNA/RNA, highlighti"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13561862/figures/Fig2.webp",
+    "caption": "MSI method DREAMS verifications and optimizations for the visualization of unbound free nucleic acid metabolites. a , Spatial distribution of metabolites can be detected through DREAMS in mouse brains. Spatial distribution of cholesterol sulfate, dopamine, glutamate and glutamine in WT mice is shown (top panel). Spatial distribution of metabolites visualized through DREAMS confirms previously repo"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13561862/figures/Fig3.gif",
+    "caption": "DREAMS detects free cytosine modifications changes mirroring DNA/RNA-bound alterations in Tet1 \u0394/\u0394 brains. a , Chemical structures of dC, m 5 dC, hm 5 dC and m 5 C. b , TET enzymes oxidize m 5 dC to hm 5 dC (DNA) and m 5 C to hm 5 C (RNA). c , Viral injection strategy for generating Tet1 \u0394/\u0394 and Tet1 fl/fl mice. d , Tet1 gene expression in Tet1 \u0394/\u0394 versus Tet1 fl/fl indicated brain regions, includ"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13561862/figures/Fig4.webp",
+    "caption": "DREAMS reveals region-specific and previously unknown nucleic acid modification alterations in TET1-depleted brains. a , Grid heatmap of free nucleic acid metabolites changes in Tet1 \u0394/\u0394 versus Tet1 fl/fl brains. Only data with * P < 0.05 is illustrated, irrespective of FC; red shows free nucleic acid metabolite is higher in Tet1 \u0394/\u0394 versus Tet1 fl/f ; blue: lower. b , Chemical structures of A, m "
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13561862/figures/Fig5.gif",
+    "caption": "Modification levels in >200-nt and <200-nt RNA fractions from whole brains of Tet1 fl/fl and Tet1 \u0394/\u0394 mice. a , Representative microfluidic electrophoresis gel images of total RNA, >200-nt RNA and <200-nt RNA fractions from Tet1 fl/fl and Tet1 \u0394/\u0394 mouse brains ( n = 3 biological replicates per genotype). b , Levels of m 5 U, N7-methylguanosine (m 7 G), and m 1 A in the <200-nt and >200-nt RNA frac"
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13561862/figures/Fig6.gif",
+    "caption": "TET1 modulates RNA modifications m 5 C and m 1 A. a , In vitro assay workflow: DNA/RNA from mouse brain incubated +/- TET1 and analysed by LC\u2013MS/MS. b , m 5 C levels in total RNA from WT mouse brain, quantified by LC\u2013MS/MS after in vitro TET1 enzyme assays under three conditions: control (no enzyme), TET1 alone and TET1 with the inhibitor IOX1 (ref. 67 ). c , m 1 A levels in total RNA, >200-nt RNA"
+   },
+   {
+    "figure_number": 7,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13561862/figures/Fig7.gif",
+    "caption": "TET1 modulates the m 1 A mRNA epitranscriptome in the CPu. a , Experimental strategy: m 1 A RIP-seq in Tet1 \u0394/\u0394 versus Tet1 fl/fl . b , Pearson correlation matrix of transcriptomes, three input and three m 1 A pulldown replicates per genotype. Colour scale shows correlation coefficients. n = 3. Rep, CPu from one mouse. c , Unique and overlapping m 1 A peaks. d , Genomic distribution of m 1 A peaks"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13561871",
+  "journal": "Nature Cell Biology",
+  "year": "2026",
+  "doi": "10.1038/s41556-026-02041-4",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13561871/figures/Fig1.webp",
+    "caption": "Characterization of the CLOCK/BMAL1 protein interaction landscape at the chromatin site along the circadian transcriptionally active phase in mouse liver. a , Graphical representation of the ChIP\u2013MS work\u00adflow used to characterize chromatin-bound CLOCK/BMAL1 protein complexes across the transcriptionally active phase in mouse liver. b , Volcano plots representing the results of a two-sided Student\u2019"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13561871/figures/Fig2.webp",
+    "caption": "Spatiotemporal protein interaction landscape of CLOCK/BMAL1 on chromatin in mouse tissues along the circadian transcriptionally active phase. a , Heat map showing the mean protein abundance differences resulting from Student\u2019s t -test comparing BMAL1 and CLOCK with IgG ChIP\u2013MS for statistically significant immunoprecipitated proteins in mouse liver, kidney and lung at ZT1, ZT4, ZT7 and ZT10. Prote"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13561871/figures/Fig3.webp",
+    "caption": "The homeodomain TFs, PROX1, HNF1B and HOXA5, as tissue-specific CLOCK/BMAL1 interactors on chromatin. a , Scatter plots, as shown in Extended Data Fig. 2a , highlight the bait proteins CLOCK and BMAL1 as well as the homeodomain TFs PROX1, HNF1B and HOXA5 in the liver, kidney and lung, respectively. b , Volcano plots representing two-sided Student\u2019s two-sample t -test results comparing protein inte"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13561871/figures/Fig4.webp",
+    "caption": "PROX1, HNF1B and HOXA5 colocalize with BMAL1 at genomic sites and repress CLOCK/BMAL1 transcriptional activity. a , The overlap between BMAL1 and PROX1 (left) and BMAL1 and HNF1B (right) ChIP\u2013seq peaks in the mouse liver and kidney, respectively. b , The overall overlap between co-occupied genomic sites of BMAL1-PROX1 in the liver and those co-occupied by BMAL1-HNF1B in the kidney. c , GOBP enrich"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13561871/figures/Fig5.webp",
+    "caption": "PROX1 and HNF1B are tissue-specific regulators of circadian gene expression. a , Steady-state RT\u2013qPCR mRNA levels in the control and CRISPR\u2013Cas9-mediated Bmal1 , Prox1 , Hnf1b and Hoxa5 -KO mouse hepatocytes dihXY. Bars display mean values (\u00b1 s.d., n = 4 biologically independent samples) normalized to control Rplp0 mRNA levels. Two-tailed t -test; numbers denote P adj values. b , As in a but for K"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13562520",
+  "journal": "Nature Communications",
+  "year": "2026",
+  "doi": "10.1038/s41467-026-77555-4",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562520/figures/Fig1.webp",
+    "caption": "A single molecule assay for detection of mGluR/\u03b2-arr complexes. Representative images based on at least 3 separate biological replicates showing surface localization and co-internalization of \u03b2-arr1 with mGluR3 ( A ) or mGluR8 ( B ), respectively. Schematic ( C , F ), representative images ( D , G ), and summary quantification ( E , H ) of SiMPull assay of mGluR/\u03b2-arr1 complexes. Yellow circles ( "
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562520/figures/Fig2.webp",
+    "caption": "Single molecule analysis of GPCR/\u03b2-arr1 coupling reveals a range of efficiencies and stoichiometries, including 2:2 mGluR/\u03b2-arr1 complexes. A Representative images showing variable \u03b2-arr1-\u0394CTD pulldown efficiencies for V2R, mGluR2, and mGluR5. B Summary graph of \u03b2-arr1 colocalization across GPCRs for both WT and \u03b2-arr1-\u0394CTD. Representative images and bleaching step traces ( C , D ) and photobleach"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562520/figures/Fig3.webp",
+    "caption": "Defining tail and core interactions that drive mGluR8//\u03b2-arr1 coupling. A Summary graph of SiMPull data for colocalization of all mGluR8 CTD point mutations either with wild type \u03b2-arr1-Halo (with GRK2 co-expression) or \u03b2-arr1-\u0394CTD (with GRK2-CaaX co-expression). 3xA = T896A/T898A/T899A. B Scatter plot showing correlation between effects of mutations on \u03b2-arr1 co-localization in SiMPull (y-axis) a"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562520/figures/Fig4.webp",
+    "caption": "\u03b2-arr coupling in cis and trans configurations to mGluR8. A Surface labeling assay internalization data showing evidence for trans (SNAP-F777D/11xA; SNAP-11xA/F777D) and cis (SNAP-F777D,11xA/WT) \u03b2-arr1 coupling driving mGluR8 internalization. B Representative images showing internalization and \u03b2-arr colocalization for a range of mGluR8 homodimer conditions based on at least 3 separate biological r"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562520/figures/Fig5.webp",
+    "caption": "\u03b2-arr coupling in cis and trans configurations to mGluR8/2 heterodimers. A Surface labeling assay internalization data showing evidence for mGluR2/8 heterodimer internalization via mGluR8 CTD coupling and core coupling to either subunit. B Representative images showing internalization and \u03b2-arr colocalization for a range of mGluR2/8 heterodimer conditions based on at least 3 separate biological re"
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562520/figures/Fig6.webp",
+    "caption": "Single molecule analysis of mGluR/\u03b2-arr2 complexes. A Representative images and line scans showing co-internalization of either mGluR8 with \u03b2-arr2 based on at least 3 separate biological replicates. Schematic ( B ) and representative image ( C ) showing colocalization and representative bleaching steps of mGluR8 and \u03b2-arr2. D Colocalization percentages of \u03b2-arr2 and \u03b2-arr2 variants across a panel "
+   },
+   {
+    "figure_number": 7,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562520/figures/Fig7.webp",
+    "caption": "Transcriptomic and single molecule analysis of formation of mGluR8/\u03b2-arr1/\u03b2-arr2 megacomplexes. A Violin plot showing Arrb1 (\u03b2-arr1) and Arrb2 (\u03b2-arr2) expression levels across neuronal classes. CPM=counts per million. B Pie chart showing proportion of neurons expressing 0, 1, or both \u03b2-arr genes determined from single cell RNA sequencing data using a cutoff of 5 counts per million. C 3-dimensiona"
+   },
+   {
+    "figure_number": 8,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562520/figures/Fig8.webp",
+    "caption": "Single molecule analysis of formation of mGluR8/b-arr/G protein megacomplexes. A Representative confocal image and line scan showing colocalization of intracellular mGluR8, \u03b2-arr1, and G\u03b1i1 based on at least 3 separate biological replicates. Scale bars are 5 \u03bcm and 1 \u03bcm for zoom-ins. Schematic ( B ) and representative image ( C ) showing co-localization of \u03b2-arr1 and G\u03b1i1 upon pulldown via mGluR8."
+   },
+   {
+    "figure_number": 9,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562520/figures/Fig9.webp",
+    "caption": "Molecular diversity of mGluR/arrestin complexes. Structural overlays of two \u201ccore\u201d \u03b2-arr1- ( A ) and \u03b2-arr1- and G\u03b1i1- ( B ) bound to mGluR8 showing a major clash, which would prevent simultaneous core coupling of either two \u03b2-arr1 molecules or G\u03b1i1 heterotrimer and \u03b2-arr1 in adjacent subunits. C \u2013 E Schematic of proposed modes of \u03b2-arr1 coupling for family A GPCRs (2 modes), mGluR8 (6 modes), and"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13562587",
+  "journal": "Nature Communications",
+  "year": "2026",
+  "doi": "10.1038/s41467-026-77465-5",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562587/figures/Fig1.webp",
+    "caption": "Identification of MPZL1 as a targetable amplified cell-surface protein. a Schematic of the in silico screening strategy. Copy number variation (CNV) status of 1492 cell-surface protein (CSP)-encoding genes was analyzed across a pan-cancer cohort ( n = 2703). CNVs were classified using GISTIC2.0 as shallow deletion (\u22121), diploid (0), gain (1), or amplification (2). Candidate hits were defined as ge"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562587/figures/Fig2.webp",
+    "caption": "MPZL1 is expressed and localized at the plasma membrane in human solid cancers. a Schematic of the subcellular fractionation workflow used to analyze MPZL1 expression. b Immunoblot analysis of MPZL1 in fractionated lysates from isogenic liver cancer cell lines. HLE cells (low endogenous MPZL1 expression) were transduced with MPZL1 (overexpression, OE) or empty vector (EV), and SNU387 cells (high e"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562587/figures/Fig3.webp",
+    "caption": "Generation and validation of a chimeric antibody targeting the extracellular domain of MPZL1. a Schematic of the antibody generation strategy. b Flow cytometry analysis showing binding of MPZL1-ChAb to three human cancer cell lines, including mock-transduced parental cell lines (EV, empty vector) and corresponding MPZL1 knockout (KO) cells generated using two independent CRISPR/Cas9 guides (sg1 an"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562587/figures/Fig4.webp",
+    "caption": "MPZL1 CAR-T cells mediate antigen-specific tumor cell killing in vitro. a Schematic of the MPZL1 CAR construct. b CAR-T cell characterization five days after transduction. Top, representative bright-field images of MPZL1 CAR-T, CD19 CAR-T, and untransduced T cells. Bottom: flow cytometry analysis of LNGFR\u207a CAR-T cells. Data are representative of at least three independent experiments with similar "
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562587/figures/Fig5.webp",
+    "caption": "MPZL1 CAR-T cells mediate potent antitumor activity in HCC mouse models. a \u2013 e Xenograft HCC model. a Experimental design. NSG mice bearing subcutaneous Hep3B EV (MPZL1 high ) or MPZL1 KO tumors (~360 mm\u00b3) received a single intravenous dose of MPZL1 CAR-T cells ( n = 6 per group). b Overall survival analysis. Statistical differences among groups ( n = 6 per group) were assessed using a two-sided L"
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562587/figures/Fig6.webp",
+    "caption": "MPZL1 CAR-T cells demonstrate tumor-selective activation in human tissue explants. a Schematic of the human tissue explant and T cell tracing model. b \u2013 e Tumor explants from patients across six tumor types (1xCRC: Colorectal Cancer, 21xHLM: Colorectal Cancer Liver Metastases, 1xPaCa: Pancreatic Ductal Adenocarcinoma, 2xOv: Ovarian Cancer, 1xGaCa: Gastric Cancer and 1xRCC: Renal Cancer) were analy"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13562589",
+  "journal": "Nature Communications",
+  "year": "2026",
+  "doi": "10.1038/s41467-026-77731-6",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562589/figures/Fig1.webp",
+    "caption": "Disulfide-bond formation reports on the dynamics of the MHCI binding groove. a Top-view of the upper interaction interface between MHCI (blue) and Tsn (purple). Residues that were mutated to cysteine are shown as sticks. (modified from PDB ID: 7QPD 4 ). b Complex formation kinetics for A2-\u03b1Y84C with Tsn-K16C. Annotated bands are: 1-Tsn/ERp57 multimer, 2-Tsn/ERp57-\u03b2 2 m, 3-Tsn/ERp57, 4- ERp57, 5-Ts"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562589/figures/Fig2.webp",
+    "caption": "Biochemical studies of pMHCI and ERp57-C60A/Tsn cysteine variants. a Melting temperatures of pMHCI and Tsn cysteine mutants. Melting curves are shown in Supplementary Fig. 4 . b Schematic of the FP-Assays to measure peptide exchange of MHCI cysteine mutants preloaded with photocleavable peptide (pKV9; KILGFVFJ*V). In our experiments we echange pKV9 against FITC-labeled KV9 (KILGK FITC VFTV) with o"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562589/figures/Fig3.webp",
+    "caption": "Structures of the disulfide-bridged variant pMHCI-Tsn/ERp57 complex. 3D classification of the cryoEM data revealed distinct structural states. The cryoEM reconstructions are shown in a \u2013 d with the corresponding models in e \u2013 h (state 1\u20134, respectively). ERp57 is depicted in white, MHCI heavy chain in light blue, Tsn in teal, \u03b2 2 m in dark gray and the peptide in purple. Specifically, in state 1 t"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562589/figures/Fig4.webp",
+    "caption": "Close-up of the peptide-binding groove of state 1 and 3 in comparison to peptide-bound structures of MHCI, as well as in complex with TAPBPR or as part of the PLC. a Close-up of state 3 with focus on the first three residues of the 7-mer peptide (KILGFVF, colored in teal), \u03b1Y7, \u03b1Y99, \u03b1Y159 and \u03b1Y171 of A*02:01, as well as the peptide, is shown as sticks. b State 1 (light cyan) and 3 (blue) aligned"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562589/figures/Fig5.webp",
+    "caption": "Predicted disorder and dynamics profiles for classical and non-classical HLA molecules and MHCI proteins derived from animals. Sequences were obtained from IPD-IMGT/HLA 56 , 57 , IPD-MHC 58 or UniProt 59 (CD1, MR1 and mouse sequences). For AIUPred and IUPred3, values over 0.5 indicate a disordered region. a Disorder probability values predicted with AIUPred for HLA-A,B,C,E,F and G. The sequence se"
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562589/figures/Fig6.webp",
+    "caption": "Mechanism of how peptide release and exchange might be coupled to the conformational changes in the MHCI binding groove. Schematic of the role of Tsn in facilitating peptide release and potentially peptide binding. a Tsn (violet) stabilizing a partially folded pMHCI complex, where only the first four N-terminal residues (light blue) are stably bound, and the \u03b11-helix (magenta) is only partially fo"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13562594",
+  "journal": "Nature Communications",
+  "year": "2026",
+  "doi": "10.1038/s41467-026-77485-1",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562594/figures/Fig1.webp",
+    "caption": "Generation of Lmx1b H77L and Lmx1b C118F knock-in mice. a The cartoon shows the exon structure of the human LMX1B gene and the corresponding domain organization of the protein. Below the cartoon the amino acids comprising the LIM-A and -B domains and the homeodomain are shown, zinc-coordinating residues are underlined (human and murine sequences are identical, numbering according to the human prot"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562594/figures/Fig2.webp",
+    "caption": "Renal phenotype of Lmx1b H77L and Lmx1b C118F knock-in mice. Mice were sacrificed on embryonic day 18.5, glomeruli shown are located at the cortico-medullary border. At least four mice were analyzed for each genotype. Already light microscopic pictures of whole kidneys (left column) and representative glomeruli (middle column) demonstrate changes in Lmx1b H77L/H77L ( e ) and Lmx1b C118F/C118F knoc"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562594/figures/Fig3.webp",
+    "caption": "Stability of wild-type LMX1B, LMX1B H77L and LMX1B C118F proteins. Stably transfected HeLa cells inducibly producing human wild-type LMX1B, LMX1B H77L and LMX1B C118F proteins were used in the experiments. a Cells were harvested at the indicated time points and 40 \u03bcg of total protein were subjected to Western blot analysis, the numbers on the right of each blot give the molecular mass in kDa. Glyc"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562594/figures/Fig4.webp",
+    "caption": "Bortezomib alleviates proteinuria in Lmx1b H77L/lox and Lmx1b C118F/lox mice. Mice between 7\u201310 weeks of age were entered into the experiment. In addition to the mutated Lmx1b alleles, the mice also contained expression cassettes for the doxycycline-inducible, podocyte-specific expression of Cre recombinase ( Lmx1b H77L/lox / NPHS2 ::rtTA / tetO::Cre mice, and Lmx1b C118F/lox / NPHS2 ::rtTA / tetO"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562594/figures/Fig5.webp",
+    "caption": "Bortezomib stabilizes the Lmx1b H77L and Lmx1b C118F proteins in vivo. Kidney sections of mice between 7\u201310 weeks of age are shown. In addition to the mutated Lmx1b alleles, the mice contained expression cassettes (i) for the doxycycline-inducible, podocyte-specific expression of Cre recombinase and (ii) for the Cre-mediated expression of membrane-targeted EGFP ( Lmx1b H77L/lox / NPHS2 ::rtTA / te"
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562594/figures/Fig6.webp",
+    "caption": "Treatment with bortezomib maintains the glomerular filtration barrier. Mice between 7\u201310 weeks of age were characterized. In addition to the mutated Lmx1b alleles, the mice also contained expression cassettes for the doxycycline-inducible, podocyte-specific expression of Cre recombinase ( Lmx1b H77L/lox / NPHS2 ::rtTA / tetO::Cre and Lmx1b C118F/lox / NPHS2 ::rtTA / tetO::Cre mice). Inactivation o"
+   },
+   {
+    "figure_number": 7,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562594/figures/Fig7.webp",
+    "caption": "Differential gene expression in podocytes of Lmx1b H77L/lox and Lmx1b C118F/lox knock-in mice. Lmx1b +/lox , Lmx1b H77L/lox and Lmx1b C118F/lox mice with a podocyte-specific, doxycycline-inducible expression cassette for Cre recombinase were used in the experiments, furthermore the mice contained an expression cassette for the Cre-mediated expression of membrane-targeted EGFP ( Lmx1b +/lox / NPHS2"
+   },
+   {
+    "figure_number": 8,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562594/figures/Fig8.webp",
+    "caption": "Treatment with bortezomib partially reverses the effect of mutations in the LIM domains. Lmx1b +/lox , Lmx1b H77L/lox and Lmx1b C118F/lox mice with a podocyte-specific, doxycycline-inducible expression cassette for Cre recombinase were used in the experiments, furthermore the mice contained an expression cassette for the Cre-mediated expression of membrane-targeted EGFP ( Lmx1b +/lox / NPHS2 ::rtT"
+   },
+   {
+    "figure_number": 9,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562594/figures/Fig9.webp",
+    "caption": "Protein expression pattern after treatment of Lmx1b H77L/lox and Lmx1b C118F/lox knock-in mice with DMSO and bortezomib. Lmx1b +/lox , Lmx1b H77L/lox and Lmx1b C118F/lox mice with a podocyte-specific, doxycycline-inducible expression cassette for Cre recombinase ( Lmx1b +/lox / NPHS2 ::rtTA / tetO::Cre mice; Lmx1b H77L/lox / NPHS2 ::rtTA / tetO::Cre mice; Lmx1b C118F/lox / NPHS2 ::rtTA / tetO::Cre"
+   },
+   {
+    "figure_number": 10,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13562594/figures/Fig10.webp",
+    "caption": "Protein expression pattern after treatment of Lmx1b H77L/lox and Lmx1b C118F/lox knock-in mice with DMSO and bortezomib. Lmx1b +/lox , Lmx1b H77L/lox and Lmx1b C118F/lox mice with a podocyte-specific, doxycycline-inducible expression cassette for Cre recombinase ( Lmx1b +/lox / NPHS2 ::rtTA / tetO::Cre mice; Lmx1b H77L/lox / NPHS2 ::rtTA / tetO::Cre mice; Lmx1b C118F/lox / NPHS2 ::rtTA / tetO::Cre"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13569489",
+  "journal": "Nature Communications",
+  "year": "2026",
+  "doi": "10.1038/s41467-026-77291-9",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13569489/figures/Fig1.webp",
+    "caption": "Structural characterization of the NMO catalyst. a Rietveld-refined XRD patterns of NMO-0.2 and \u03b3-MnO 2 catalysts. b HRTEM image of the NMO-0.2 sample (left) and magnified views showing different d-spacing in the R1 and R2 regions (right). c AC-HAADF-STEM and corresponding EDS elemental mapping of NMO-0.2. d Normalized Mn K-edge XANES spectra of NMO-0.2 and reference materials, with fitted oxidati"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13569489/figures/Fig2.webp",
+    "caption": "Electrochemical performance of the catalysts. All electrochemical measurements were performed in 0.5 M H 2 SO 4 (pH 0.25) using a three-electrode configuration at 25 \u00b0C. a Polarization curves of Mn-based catalysts recorded at 1 mV s \u20131 with 100% iR-compensation. b Overpotentials at 10, 100, and 200 mA cm \u20132 . Data are presented as means \u00b1 standard deviations from three independent measurements ( n"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13569489/figures/Fig3.webp",
+    "caption": "Investigation of the OER mechanism through in situ spectroscopic studies. In situ Raman measurements were performed in 0.5 M HClO 4 , and in situ XAS measurements in 0.5 M H 2 SO 4 , both at 25 \u00b0C. a , b In situ Raman spectra of \u03b3-MnO 2 and NMO-0.2 collected under applied potentials, with magnified views of the 550\u2013850 cm \u20131 region. c Schematic illustration of the proposed OER pathways on \u03b3-MnO 2 "
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13569489/figures/Fig4.webp",
+    "caption": "Nd-induced electronic reconstruction and phase-dependent OER mechanisms in Mn oxides. a \u2013 c PDOS of pristine and Nd-doped \u03b1-Mn 2 O 3 , \u03b2-MnO 2 , and R-MnO 2 , showing enhanced Mn 3 d \u2013O 2 p hybridization with Nd 4 f contribution after Nd doping. PDOS is presented in arbitrary units (arb. units). d \u2013 f Gibbs free energy diagrams of AEM and OPM pathways on pristine and Nd-doped Mn-oxide slabs, showi"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13569489/figures/Fig5.webp",
+    "caption": "Evaluation of PEMWE performance. PEMWE polarization measurements were conducted at 80 \u00b0C, while durability tests were performed at 60 \u00b0C, with 0.5 M H 2 SO 4 (pH = 0.25) fed at a flow rate of 1 mL min \u20131 . a Schematic illustration of the PEMWE system with an MEA prepared by the CCS method. b Polarization curves of PEMWE cells employing \u03b3-MnO 2 or NMO-0.2 as the anode catalysts. c \u2013 e Cell-voltage "
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13569845",
+  "journal": "Nature Communications",
+  "year": "2026",
+  "doi": "10.1038/s41467-026-77392-5",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13569845/figures/Fig1.webp",
+    "caption": "Chemical structures of cholesterol derivatives used in this study: n = 6, 12, or 18."
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13569845/figures/Fig2.webp",
+    "caption": "Phase transition of the cholesterol derivatives. a DSC curves of the cholesterol derivatives (10 \u00b0C/min). b , c Changes in the XRD profiles ( b ) and FT-IR spectra ( c ) of Chol-C 12 during a first cooling from 100 to \u221210 \u00b0C followed by a second heating to 100 \u00b0C. d Gibbs energy landscape of Chol-C 12 in which x axis qualitatively represents structural parameters associated with the degree of mole"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13569845/figures/Fig3.webp",
+    "caption": "Chol-C 12 solid. a Macroscopic appearance of a Chol-C 12 solid obtained by melt moulding. b , c Compression test ( b ) and three-point flexural test ( c ) conducted for the Chol-C 12 solid. Results of LDPE, candle wax, and soap are shown for comparison. Compression tests were conducted using a spherical jig with a diameter of 3 mm. Flexural tests were conducted with a bending span of 20 mm. d Chol"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13569845/figures/Fig4.webp",
+    "caption": "Processing of the supramolecular bulk material. a Metastable LC sample obtained by quenching an isotropic melt of Chol-C 12 in a silicone mould. b , c Macroscopic appearances of the materials immediately after pressing ( b ) and subsequent aging ( c ). d , e , i , j 2D XRD images of sheet-0 ( d , e ) and sheet-4 ( i , j ) obtained immediately after pressing ( t age = 1 min: d , i ) and after subse"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13569845/figures/Fig5.webp",
+    "caption": "Mechanical properties of supramolecular bulk materials. a \u2013 c Macroscopic appearances of sheet-0 ( a ) and sheet-4 ( b , c ). Sheet-4 is prone to radial fracture ( c , top), and the resulting wedge-shaped fragment showed elasticity in the radial direction ( c , bottom). See also Supplementary Movies 1 and 2 . d Stress\u2013strain curves of sheet-0 and sheet-4 (20 mm \u00d7 2 mm \u00d7 c.a. 170 \u00b5m). e \u2013 h Compari"
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13569845/figures/Fig6.webp",
+    "caption": "Supramolecular filament prepared by extrusion. a A filament of Chol-C 12 prepared by extrusion of a metastable smectic LC state at room temperature. b Appearance of the filament fractured longitudinally along its axis. c , d 2D XRD image observed upon exposure to an X-ray beam from the direction parallel ( c ) and perpendicular ( d ) to the long axis of the filament."
+   }
+  ]
+ }
+]

@@ -6,8 +6,14 @@ Renderers must not reinvent bracket placement. They:
 2. hand the list of :class:`AnnotationItem` objects + a position lookup here,
 
 and this module draws non-overlapping significance brackets (auto-stacked),
-places the p-value/star text, and expands the y-axis so nothing is clipped. It
-also renders corner text panels for correlation/survival/omnibus stats.
+places the p-value/star text, and expands the value axis so nothing is clipped.
+It also renders corner text panels for correlation/survival/omnibus stats.
+
+Bracket placement (:func:`annotate_pairwise`): every bracket starts above the
+highest drawn element among the groups it *spans* (using the renderer's
+per-group tops), stacks only over brackets it overlaps, and uses point-based
+geometry derived from the annotation font (legacy ``*_frac`` keys still honoured).
+Vertical (categories on x) and horizontal (categories on y) layouts are supported.
 
 Every label drawn here comes from an AnnotationItem, which is derived from a
 stored StatResult - so no p-value is ever a decorative, unbacked label.
@@ -22,18 +28,80 @@ import numpy as np
 from make_my_figure_core.statistics.annotations import AnnotationItem
 
 
-def _data_top(ax) -> float:
-    """Best estimate of the top of the drawn data in data coordinates."""
-    ymin, ymax = ax.get_ylim()
-    top = ymax
+def _data_top(ax, *, horizontal: bool = False) -> float:
+    """Best estimate of the top of the drawn data along the value axis, in data coordinates."""
+    lo, hi = ax.get_xlim() if horizontal else ax.get_ylim()
+    top = hi
     # Consider explicit artists (bars, lines, collections) if available.
     try:
         dl = ax.dataLim
-        if np.isfinite(dl.ymax):
-            top = max(top, dl.ymax)
+        dmax = dl.xmax if horizontal else dl.ymax
+        if np.isfinite(dmax):
+            top = max(top, dmax)
     except Exception:
         pass
     return top
+
+
+def _num(value) -> Optional[float]:
+    """A finite float, or ``None`` for unset / blank / non-numeric."""
+    if value is None or value == "":
+        return None
+    try:
+        out = float(value)
+    except (TypeError, ValueError):
+        return None
+    return out if np.isfinite(out) else None
+
+
+def _text_extent_px(fig, renderer, text: str, fontsize: float) -> Tuple[float, float]:
+    """``(width_px, height_px)`` of a (possibly multi-line) label, independent of axis limits."""
+    from matplotlib.text import Text
+
+    probe = Text(0.0, 0.0, text, fontsize=fontsize, figure=fig)
+    bb = probe.get_window_extent(renderer=renderer)
+    return float(bb.width), float(bb.height)
+
+
+def _data_per_pt(ax, *, value_range: float, horizontal: bool = False) -> float:
+    """Data units per typographic point along the value axis, for a given value range."""
+    fig = ax.figure
+    w_in, h_in = fig.get_size_inches()
+    pos = ax.get_position()
+    extent_in = (pos.width * w_in) if horizontal else (pos.height * h_in)
+    extent_pt = max(float(extent_in) * 72.0, 1.0)
+    return (float(value_range) or 1.0) / extent_pt
+
+
+def bracket_geometry(style, cfg: Dict[str, Any], *, value_range: float) -> Dict[str, Any]:
+    """Resolve the bracket geometry for ``cfg`` (a StatsSpec ``annotation`` block).
+
+    Tick height, gap, label offset and top margin are point-based by default, derived from the
+    annotation font size and the bracket line width, so a bracket looks the same at any y-range or
+    panel size. Explicit ``*_pt`` keys override the derived points. The legacy ``*_frac`` keys
+    (fractions of the value range) are honoured when a spec sets them, so older specs render as
+    they did; a ``None`` there means "use points".
+    """
+    cfg = cfg or {}
+    fs = _num(cfg.get("font_size")) or float(getattr(style, "annotation_pt", 9.5))
+    lw = _num(cfg.get("line_width")) or float(getattr(style, "spine_width_pt", 1.1))
+    vr = float(value_range) or 1.0
+
+    tick_frac, gap_frac, margin_frac = (_num(cfg.get("bracket_height_frac")), _num(cfg.get("gap_frac")),
+                                        _num(cfg.get("top_margin_frac")))
+    tick_pt = _num(cfg.get("bracket_height_pt")) or max(2.0, 0.40 * fs)
+    gap_pt = _num(cfg.get("gap_pt")) or (0.60 * fs + lw)
+    label_offset_pt = _num(cfg.get("label_offset_pt")) or (0.20 * fs + 0.5 * lw)
+    margin_pt = _num(cfg.get("top_margin_pt")) or 0.50 * fs
+    return {
+        "font_size": fs, "line_width": lw,
+        "tick_pt": tick_pt, "gap_pt": gap_pt, "label_offset_pt": label_offset_pt, "margin_pt": margin_pt,
+        # legacy fractions (data units) when a spec pins them; None -> use the point values
+        "tick_data": (tick_frac * vr) if tick_frac is not None else None,
+        "gap_data": (gap_frac * vr) if gap_frac is not None else None,
+        "margin_data": (margin_frac * vr) if margin_frac is not None else None,
+        "point_based": tick_frac is None and gap_frac is None,
+    }
 
 
 def annotate_pairwise(
@@ -44,159 +112,190 @@ def annotate_pairwise(
     style,
     cfg: Dict[str, Any],
     top_lookup: Optional[Callable[[AnnotationItem], Optional[float]]] = None,
+    positions: Optional[Dict[Any, float]] = None,
+    tops: Optional[Dict[Any, float]] = None,
+    orientation: str = "vertical",
 ) -> Dict[str, Any]:
     """Draw significance brackets for pairwise comparison items.
 
-    ``position_lookup`` maps an item to its ``(x_left, x_right)`` in data
-    coordinates (or ``None`` to skip). ``top_lookup`` optionally maps an item to
-    the y-value its bracket should clear (e.g. top of the two compared bars +
-    error bars); when absent a shared data top is used.
+    ``position_lookup`` maps an item to its ``(pos_a, pos_b)`` along the category axis (data
+    coordinates; ``None`` skips the item). ``top_lookup`` maps an item to the value its bracket must
+    clear for the two compared groups. ``positions``/``tops`` are the renderer's per-group maps (any
+    keys, matching each other): when given, every group whose position lies between the two compared
+    positions is checked too, so a bracket from A to C also clears B's points, error bars or whiskers.
 
-    Returns a small dict describing how many brackets were drawn and the final
-    top, for metadata.
+    Placement: each bracket starts a gap above the highest drawn element it spans - not above the
+    global maximum - and is stacked only over brackets whose extent (bracket span or label width)
+    it overlaps, narrowest span first. Geometry is point-based (see :func:`bracket_geometry`); the
+    value axis is expanded so the topmost label fits with a small margin and is never shrunk, so no
+    observation is cropped. Which comparisons are drawn and how their labels read is decided before
+    this call (the items); nothing here changes that.
+
+    ``orientation="horizontal"`` draws brackets along x for horizontal bars/boxes (categories on y):
+    the bracket opens to the right of the data and the label sits to its right.
+
+    Returns a JSON-safe dict (bracket count, stacking depth, final axis top, resolved geometry).
     """
     cfg = cfg or {}
-    ylim0, ylim1 = ax.get_ylim()
-    yr = (ylim1 - ylim0) or 1.0
-    tick_h = float(cfg.get("bracket_height_frac", 0.03)) * yr
-    gap = float(cfg.get("gap_frac", 0.06)) * yr
-    top_margin = float(cfg.get("top_margin_frac", 0.10))
-    fs = cfg.get("font_size") or getattr(style, "annotation_pt", 9.5)
-    lw = cfg.get("line_width") or getattr(style, "spine_width_pt", 1.1)
+    horizontal = str(orientation or "vertical").lower().startswith("h")
+    if horizontal:
+        v0, v1 = ax.get_xlim()
+    else:
+        v0, v1 = ax.get_ylim()
+    vr = (v1 - v0) or 1.0
+    geo = bracket_geometry(style, cfg, value_range=vr)
+    fs, lw = geo["font_size"], geo["line_width"]
     text_color = getattr(style, "text_color", "#1a1a1a")
 
-    # Resolve geometry for each drawable item.
+    # --- resolve the start (value the bracket must clear) for each drawable item -------------
+    base_top = _data_top(ax, horizontal=horizontal)
     specs: List[Dict[str, Any]] = []
-    base_top = _data_top(ax)
     for it in items:
-        xs = position_lookup(it)
-        if xs is None:
+        cs = position_lookup(it)
+        if cs is None:
             continue
-        x1, x2 = sorted(xs)
-        local_top = base_top
+        c1, c2 = sorted(float(c) for c in cs)
+        start = None
         if top_lookup is not None:
-            t = top_lookup(it)
-            if t is not None and np.isfinite(t):
-                local_top = t
-        specs.append({"x1": x1, "x2": x2, "text": it.text, "start": local_top})
+            t = _num(top_lookup(it))
+            if t is not None:
+                start = t
+        if positions and tops:
+            # every group between (and including) the two compared positions
+            for key, pos in positions.items():
+                if pos is None or key not in tops:
+                    continue
+                if c1 - 1e-9 <= float(pos) <= c2 + 1e-9:
+                    t = _num(tops[key])
+                    if t is not None:
+                        start = t if start is None else max(start, t)
+        if start is None:
+            start = base_top
+        specs.append({"c1": c1, "c2": c2, "mid": 0.5 * (c1 + c2), "text": it.text, "start": float(start),
+                      "groups": [str(it.group_a), str(it.group_b)]})
 
     if not specs:
-        return {"n_brackets": 0, "top": ylim1}
+        return {"n_brackets": 0, "levels": 0, "top": float(v1), "orientation": orientation,
+                "geometry": {k: geo[k] for k in ("tick_pt", "gap_pt", "label_offset_pt", "margin_pt", "point_based")}}
 
-    for s in specs:
-        s["mid"] = 0.5 * (s["x1"] + s["x2"])
-
-    # Set up a renderer so we can measure real label extents (width for
-    # horizontal leveling, height for vertical stacking).
+    # --- measure: label extents (px) and the axes box, independent of the value limits ----------
     fig = ax.figure
-    measure = True
+    dpi = float(fig.dpi)
+    px_per_pt = dpi / 72.0
     renderer = None
     try:
         fig.canvas.draw()
         renderer = fig.canvas.get_renderer()
-        inv = ax.transData.inverted()
+        bb_ax = ax.get_window_extent(renderer=renderer)
+        val_extent_px = float(bb_ax.width if horizontal else bb_ax.height)
+        cat_extent_px = float(bb_ax.height if horizontal else bb_ax.width)
     except Exception:
-        measure = False
+        renderer = None
+        # fall back to the figure size and axes fraction
+        w_in, h_in = fig.get_size_inches()
+        pos = ax.get_position()
+        val_extent_px = float((pos.width * w_in if horizontal else pos.height * h_in) * dpi)
+        cat_extent_px = float((pos.height * h_in if horizontal else pos.width * w_in) * dpi)
+    val_extent_px = val_extent_px or 1.0
+    cat_extent_px = cat_extent_px or 1.0
 
-    # Effective x-span of each bracket = max(bracket span, label width centered
-    # on the midpoint), so a label wider than its bracket still forces a stagger.
-    x0, x1lim = ax.get_xlim()
-    xr = abs(x1lim - x0) or 1.0
-    pad_x = 0.03 * xr
-    fp = None
-    if measure:
-        try:
-            from matplotlib.font_manager import FontProperties
+    if horizontal:
+        cat0, cat1 = ax.get_ylim()
+    else:
+        cat0, cat1 = ax.get_xlim()
+    cat_range = abs(cat1 - cat0) or 1.0
+    cat_per_px = cat_range / cat_extent_px
+    pad_cat = 0.03 * cat_range
 
-            fp = FontProperties(size=fs)
-
-            def _label_width_data(text):
-                w_px, _, _ = renderer.get_text_width_height_descent(text, fp, False)
-                xa = inv.transform((0.0, 0.0))[0]
-                xb = inv.transform((float(w_px), 0.0))[0]
-                return abs(xb - xa)
-        except Exception:
-            measure = False
+    n_lines_default = 1.2 * fs * px_per_pt   # px per text line when measuring is unavailable
     for s in specs:
-        half = 0.5 * (s["x2"] - s["x1"])
-        if measure:
+        w_px = h_px = None
+        if renderer is not None:
             try:
-                # multi-line: widest line. Inflate a little to absorb any minor
-                # axes-geometry change (e.g. tight_layout) after measurement.
-                lw_data = max(_label_width_data(ln) for ln in s["text"].split("\n"))
-                half = max(half, 0.5 * lw_data * 1.12)
+                w_px, h_px = _text_extent_px(fig, renderer, s["text"], fs)
             except Exception:
-                pass
-        s["eff_x1"] = s["mid"] - half - pad_x
-        s["eff_x2"] = s["mid"] + half + pad_x
+                w_px = h_px = None
+        if w_px is None:
+            lines = s["text"].split("\n")
+            w_px = 0.6 * fs * px_per_pt * max(len(ln) for ln in lines)
+            h_px = n_lines_default * len(lines)
+        # extent along the value axis (stacking) and along the category axis (collision), in pt
+        s["label_val_pt"] = (w_px if horizontal else h_px) / px_per_pt
+        s["label_cat_data"] = (h_px if horizontal else w_px) * cat_per_px * 1.12
+        half = max(0.5 * (s["c2"] - s["c1"]), 0.5 * s["label_cat_data"])
+        s["eff1"] = s["mid"] - half - pad_cat
+        s["eff2"] = s["mid"] + half + pad_cat
 
-    # Greedy leveling on the effective spans (narrowest first).
-    specs.sort(key=lambda s: (s["eff_x2"] - s["eff_x1"], s["mid"]))
-    levels: List[List[Tuple[float, float]]] = []
+    # --- stack: narrowest span first; a bracket only rises over brackets whose extent it overlaps
+    order = sorted(specs, key=lambda s: (s["c2"] - s["c1"], s["eff2"] - s["eff1"], s["start"], s["mid"]))
+
+    def _layout(k_data_per_pt: float) -> float:
+        """Place every bracket for the given data-per-point scale; return the required axis top."""
+        tick = geo["tick_data"] if geo["tick_data"] is not None else geo["tick_pt"] * k_data_per_pt
+        gap = geo["gap_data"] if geo["gap_data"] is not None else geo["gap_pt"] * k_data_per_pt
+        offset = geo["label_offset_pt"] * k_data_per_pt
+        margin = geo["margin_data"] if geo["margin_data"] is not None else geo["margin_pt"] * k_data_per_pt
+        placed: List[Dict[str, Any]] = []
+        highest = v0
+        for s in order:
+            base = s["start"] + gap
+            depth = 0
+            for p in placed:
+                if s["eff1"] < p["eff2"] - 1e-9 and s["eff2"] > p["eff1"] + 1e-9:
+                    base = max(base, p["label_top"] + gap)
+                    depth = max(depth, p["depth"] + 1)
+            s["base"] = base
+            s["tick_top"] = base + tick
+            s["label_bottom"] = s["tick_top"] + offset
+            s["label_top"] = s["label_bottom"] + s["label_val_pt"] * k_data_per_pt
+            s["depth"] = depth
+            placed.append(s)
+            highest = max(highest, s["label_top"])
+        return highest + margin
+
+    # The data-per-point scale depends on the final value range, which depends on the layout:
+    # iterate to the fixed point (a contraction as long as the stack is shorter than the axes).
+    new_v1 = float(v1)
+    for _ in range(8):
+        k = ((new_v1 - v0) or 1.0) / (val_extent_px / px_per_pt)
+        needed = _layout(k)
+        candidate = max(float(v1), needed)
+        if abs(candidate - new_v1) <= 1e-9 * max(1.0, abs(new_v1)):
+            new_v1 = candidate
+            break
+        new_v1 = candidate
+    k = ((new_v1 - v0) or 1.0) / (val_extent_px / px_per_pt)
+    _layout(k)
+    # Expand the value axis (never shrink it) before drawing so text is measured against the
+    # final transform. clip_on=False keeps every artist visible even if a later layout pass nudges it.
+    if horizontal:
+        ax.set_xlim(v0, new_v1)
+    else:
+        ax.set_ylim(v0, new_v1)
+
     for s in specs:
-        placed = False
-        for li, spans in enumerate(levels):
-            if all(s["eff_x2"] < a - 1e-9 or s["eff_x1"] > b + 1e-9 for a, b in spans):
-                spans.append((s["eff_x1"], s["eff_x2"]))
-                s["level"] = li
-                placed = True
-                break
-        if not placed:
-            s["level"] = len(levels)
-            levels.append([(s["eff_x1"], s["eff_x2"])])
-    n_levels = len(levels)
-
-    # Expand the y-axis FIRST (generously) so the drawing transform is fixed
-    # while we place and measure labels.
-    n_lines = max((1 + s["text"].count("\n")) for s in specs)
-    est_level = tick_h + gap + n_lines * 0.06 * yr
-    global_start = max(s["start"] for s in specs)
-    pre_top = max(ylim1, global_start + n_levels * est_level * 1.35 + top_margin * yr)
-    ax.set_ylim(ylim0, pre_top)
-
-    if measure:
-        try:
-            fig.canvas.draw()
-            renderer = fig.canvas.get_renderer()
-            inv = ax.transData.inverted()
-
-            def _disp_top_to_data(txt):
-                bb = txt.get_window_extent(renderer=renderer)
-                return inv.transform((bb.x0, bb.y1))[1]
-        except Exception:
-            measure = False
-
-    by_level: Dict[int, List[Dict[str, Any]]] = {}
-    for s in specs:
-        by_level.setdefault(s["level"], []).append(s)
-
-    current_base = global_start + gap
-    max_y = current_base
-    for lvl in sorted(by_level):
-        y = current_base
-        y_tick = y + tick_h
-        level_tops = []
-        for s in by_level[lvl]:
-            ax.plot([s["x1"], s["x1"], s["x2"], s["x2"]],
-                    [y, y_tick, y_tick, y], lw=lw, c=text_color,
+        if horizontal:
+            ax.plot([s["base"], s["tick_top"], s["tick_top"], s["base"]],
+                    [s["c1"], s["c1"], s["c2"], s["c2"]], lw=lw, c=text_color,
                     solid_capstyle="butt", clip_on=False, zorder=6)
-            txt = ax.text((s["x1"] + s["x2"]) / 2.0, y_tick + 0.006 * yr, s["text"],
-                          ha="center", va="bottom", fontsize=fs, color=text_color,
-                          zorder=7, clip_on=False)
-            if measure:
-                try:
-                    level_tops.append(_disp_top_to_data(txt))
-                except Exception:
-                    level_tops.append(y_tick + n_lines * 0.06 * yr)
-            else:
-                level_tops.append(y_tick + n_lines * 0.06 * yr)
-        # Next level starts a gap above the tallest label on this level.
-        current_base = max(level_tops) + gap
-        max_y = max(max_y, current_base)
+            ax.text(s["label_bottom"], s["mid"], s["text"], ha="left", va="center", fontsize=fs,
+                    color=text_color, zorder=7, clip_on=False)
+        else:
+            ax.plot([s["c1"], s["c1"], s["c2"], s["c2"]],
+                    [s["base"], s["tick_top"], s["tick_top"], s["base"]], lw=lw, c=text_color,
+                    solid_capstyle="butt", clip_on=False, zorder=6)
+            ax.text(s["mid"], s["label_bottom"], s["text"], ha="center", va="bottom", fontsize=fs,
+                    color=text_color, zorder=7, clip_on=False)
 
-    new_top = max(pre_top, max_y + top_margin * yr)
-    ax.set_ylim(ylim0, new_top)
-    return {"n_brackets": len(specs), "levels": n_levels, "top": new_top}
+    n_levels = 1 + max(s["depth"] for s in specs)
+    return {
+        "n_brackets": len(specs), "levels": int(n_levels), "top": float(new_v1),
+        "orientation": "horizontal" if horizontal else "vertical",
+        "geometry": {k: geo[k] for k in ("tick_pt", "gap_pt", "label_offset_pt", "margin_pt", "point_based")},
+        "brackets": [{"groups": s["groups"], "span": [s["c1"], s["c2"]], "start": s["start"],
+                      "base": float(s["base"]), "label_top": float(s["label_top"]), "level": int(s["depth"])}
+                     for s in specs],
+    }
 
 
 def infer_reference_group(items) -> Optional[str]:
@@ -247,11 +346,12 @@ def annotate_above(
         return {"n_labels": 0, "unplaced": list(items), "top": ax.get_ylim()[1]}
     ref = str(ref)
 
-    fs = cfg.get("font_size") or getattr(style, "annotation_pt", 9.5)
+    fs = _num(cfg.get("font_size")) or float(getattr(style, "annotation_pt", 9.5))
     text_color = getattr(style, "text_color", "#1a1a1a")
     y0, y1 = ax.get_ylim()
     yr = (y1 - y0) or 1.0
-    pad = float(cfg.get("above_bar_pad_frac", 0.02)) * yr
+    pad_frac = _num(cfg.get("above_bar_pad_frac"))
+    pad = (pad_frac if pad_frac is not None else 0.02) * yr
 
     placed, unplaced, highest = [], [], y0
     for item in items:
@@ -277,8 +377,18 @@ def annotate_above(
         highest = max(highest, y)
 
     if placed:
-        # one text line of headroom above the tallest label, so nothing is clipped
-        needed = highest + (float(cfg.get("top_margin_frac", 0.10)) * yr)
+        # headroom for the tallest label plus a small margin, so nothing is clipped
+        margin_frac = _num(cfg.get("top_margin_frac"))
+        if margin_frac is not None:
+            needed = highest + margin_frac * yr                      # legacy fraction of the y-range
+        else:
+            n_lines = max(1 + item.text.count("\n") for item in items)
+            geo = bracket_geometry(style, cfg, value_range=yr)
+            head_pt = 1.2 * fs * n_lines + geo["margin_pt"]
+            needed = y1
+            for _ in range(4):                                        # fixed point on the data-per-pt scale
+                k = _data_per_pt(ax, value_range=(max(needed, y1) - y0))
+                needed = highest + head_pt * k
         if needed > y1:
             ax.set_ylim(y0, needed)
 

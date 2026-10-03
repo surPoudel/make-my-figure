@@ -55,7 +55,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
     # Sort by x descending and keep the top N terms.
     work = work.assign(_sizes=sizes_raw)
-    work = work.sort_values(x, ascending=False).head(top_n)
+    work = work.sort_values(x, ascending=False, kind="stable").head(top_n)
     work = work.iloc[::-1]  # so largest plots at top
 
     terms = work[y].astype(str).tolist()

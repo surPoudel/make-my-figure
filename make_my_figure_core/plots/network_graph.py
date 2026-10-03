@@ -26,7 +26,10 @@ from make_my_figure_core.plots._v04_shared import numeric_matrix, ordered_unique
 from make_my_figure_core.plots.base import (
     colorbar_geometry,
     LABEL_ADJUST_ITERATIONS,
+    chosen_column_width,
     explicit_figure_size,
+    resolve_figure_size,
+    width_floor_note,
     RenderError,
     RenderResult,
     base_metadata,
@@ -114,7 +117,7 @@ def _filter_edges(spec: Dict[str, Any], edges: pd.DataFrame, mode: str,
         e = e[e["_p"] <= float(p_cut)]
     top_n = get_mapping(spec, "top_n_edges", None)
     if top_n:
-        e = e.reindex(e["weight"].abs().sort_values(ascending=False).index).head(int(top_n))
+        e = e.reindex(e["weight"].abs().sort_values(ascending=False, kind="stable").index).head(int(top_n))
     return e.reset_index(drop=True)
 
 
@@ -320,7 +323,15 @@ def render(spec: Dict[str, Any], df, style: StyleProfile, aux=None) -> RenderRes
     # --- draw ---
     with style.apply():
         w_in, h_in = figure_size(spec, style, aspect=0.9)
-        _size = explicit_figure_size(spec) or (max(w_in, 5.2), max(h_in, 4.6))
+        # The floors keep a graph's labels apart at the automatic size. They are
+        # not an answer to a direct request: asking for a single column used to
+        # return 132 mm whatever was picked, which made the width control look
+        # dead on this plot type.
+        if chosen_column_width(spec) is None:
+            w_in, h_in = max(w_in, 5.2), max(h_in, 4.6)
+        elif w_in < 5.2:
+            warnings.append(width_floor_note(PLOT_TYPE, w_in, 5.2))
+        _size = explicit_figure_size(spec) or resolve_figure_size(spec, (w_in, h_in))
         fig, ax = plt.subplots(figsize=_size)
         nx.draw_networkx_edges(G, pos, ax=ax, width=list(ew), edge_color=edge_colors,
                                alpha=0.35, arrows=directed)

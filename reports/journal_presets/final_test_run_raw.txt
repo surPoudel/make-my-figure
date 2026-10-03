@@ -1,0 +1,69 @@
+........................................................................ [  3%]
+........................................................................ [  6%]
+.............................s.......................................... [  9%]
+........................................................................ [ 12%]
+........................................................................ [ 15%]
+........................................................................ [ 18%]
+........................................................................ [ 21%]
+........................................................................ [ 24%]
+........................................................................ [ 27%]
+........................................................................ [ 30%]
+........................................................................ [ 33%]
+........................................................................ [ 36%]
+........................................................................ [ 39%]
+........................................................................ [ 42%]
+........................................................................ [ 45%]
+........................................................................ [ 48%]
+........................................................................ [ 51%]
+........................................................................ [ 54%]
+........................................................................ [ 57%]
+........................................................................ [ 60%]
+........................................................................ [ 63%]
+........................................................................ [ 67%]
+.......................ss............................................... [ 70%]
+........................................................................ [ 73%]
+........................................................................ [ 76%]
+........................................................................ [ 79%]
+........................................................................ [ 82%]
+........................................................................ [ 85%]
+........................................................................ [ 88%]
+........................................................................ [ 91%]
+........................................................................ [ 94%]
+........................................................................ [ 97%]
+...........................................................              [100%]
+=============================== warnings summary ===============================
+tests/test_box_violin_publication_options.py::test_every_declared_option_is_read_by_the_renderer
+  make_my_figure_core/plots/box_violin.py:332: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.8))
+
+tests/test_differential.py::test_raw_count_matrix_warns
+  <home>/miniconda3/lib/python3.11/site-packages/scipy/stats/_axis_nan_policy.py:635: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+    res = hypotest_fun_out(*samples, axis=axis, **kwds)
+
+tests/test_duplicate_labels.py::test_top_n_deterministic_and_unique_counts_labels
+tests/test_matrix_plot_builder.py::test_differential_plots_build_and_render
+  make_my_figure_core/plots/volcano.py:177: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.85))
+
+tests/test_figure_package.py::test_unicode_missing_values_and_extreme_floats
+  <home>/miniconda3/lib/python3.11/site-packages/numpy/_core/fromnumeric.py:57: RuntimeWarning: overflow encountered in multiply
+    return bound(*args, **kwds)
+
+tests/test_figure_package_controller.py::test_every_plot_type_packages_and_reopens
+  make_my_figure_core/plots/survival.py:289: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.8))
+
+tests/test_layout_and_annotations.py::test_lollipop_per_label_offset_renders
+  make_my_figure_core/plots/lollipop.py:64: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.42))
+
+tests/test_reproducibility_export_qc.py::test_plotspec_roundtrip_reproduces_key_metadata[barplot_with_error_bar]
+  make_my_figure_core/plots/barplot.py:83: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.8))
+
+tests/test_style_font_stack.py::test_font_stack_is_kept_outside_the_style_context
+  make_my_figure_core/plots/scatter.py:119: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.78))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2360 passed, 5 skipped, 9 warnings in 1579.83s (0:26:19)

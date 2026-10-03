@@ -96,6 +96,32 @@ _PALETTE_CMAPS: Dict[str, Dict[str, str]] = {
 # first plot reads well on screen and in slides without any tweaking.
 WIDTH_PRESETS_MM = {"single": 110.0, "onehalf": 140.0, "double": 180.0, "default": 130.0}
 
+# Physical widths a numeric ``column_width`` may take (mm). Narrower than 30 mm is not a figure
+# column anywhere; wider than 300 mm is a poster.
+MIN_WIDTH_MM = 30.0
+MAX_WIDTH_MM = 300.0
+
+
+def resolve_width_mm(width) -> Optional[float]:
+    """Width in mm for an alias or a numeric/``"NNmm"`` value; ``None`` when unrecognised."""
+    if width is None:
+        return None
+    if isinstance(width, (int, float)) and not isinstance(width, bool):
+        val = float(width)
+    else:
+        key = str(width).strip().lower()
+        if key in WIDTH_PRESETS_MM:
+            return WIDTH_PRESETS_MM[key]
+        if key.endswith("mm"):
+            key = key[:-2].strip()
+        try:
+            val = float(key)
+        except ValueError:
+            return None
+    if MIN_WIDTH_MM <= val <= MAX_WIDTH_MM:
+        return val
+    return None
+
 # Diverging / sequential colormaps used by heatmap-style renderers.
 _SEQUENTIAL_CMAP = {
     "nature_like": "viridis",
@@ -191,11 +217,17 @@ class StyleProfile:
     extra: Dict[str, Any] = field(default_factory=dict)
 
     def figure_size_inches(self, width: str = "default", aspect: float = 0.72) -> tuple[float, float]:
-        """Return ``(width_in, height_in)`` for a width preset and aspect."""
-        w_mm = WIDTH_PRESETS_MM.get(width)
+        """Return ``(width_in, height_in)`` for a width preset and aspect.
+
+        ``width`` is one of the aliases in ``WIDTH_PRESETS_MM`` or a physical width in
+        millimetres (``89``, ``"89"``, ``"89mm"``, ``"183 mm"``). A numeric width lets a preset
+        target a publisher's stated column width instead of the app's generic aliases; values
+        outside ``MIN_WIDTH_MM``..``MAX_WIDTH_MM`` fall back to the default alias.
+        """
+        w_mm = resolve_width_mm(width)
         if w_mm is None:
             w_mm = {"single": self.single_column_width_mm,
-                    "double": self.double_column_width_mm}.get(width, self.default_width_mm)
+                    "double": self.double_column_width_mm}.get(str(width), self.default_width_mm)
         w_in = mm_to_inches(w_mm)
         return (w_in, w_in * float(aspect))
 

@@ -1,0 +1,351 @@
+{
+ "notice": "SYNTHETIC test/preview data generated from code with a fixed seed; not measured, not from any publication; CC0-1.0",
+ "seed": 20260916,
+ "value_unit": "relative expression (a.u.)",
+ "datasets": [
+  {
+   "name": "two_groups_n6",
+   "file": "examples/group_comparison_test_data/two_groups_n6.csv",
+   "columns": [
+    "group",
+    "value"
+   ],
+   "n_total": 12,
+   "n_per_group": {
+    "Control": 6,
+    "Treatment": 6
+   },
+   "groups": [
+    "Control",
+    "Treatment"
+   ],
+   "subgroups": null,
+   "synthetic": true
+  },
+  {
+   "name": "three_groups_unequal",
+   "file": "examples/group_comparison_test_data/three_groups_unequal.csv",
+   "columns": [
+    "group",
+    "value"
+   ],
+   "n_total": 24,
+   "n_per_group": {
+    "Control": 5,
+    "High dose": 11,
+    "Low dose": 8
+   },
+   "groups": [
+    "Control",
+    "Low dose",
+    "High dose"
+   ],
+   "subgroups": null,
+   "synthetic": true
+  },
+  {
+   "name": "four_groups_n4",
+   "file": "examples/group_comparison_test_data/four_groups_n4.csv",
+   "columns": [
+    "group",
+    "value"
+   ],
+   "n_total": 16,
+   "n_per_group": {
+    "KO-1": 4,
+    "KO-2": 4,
+    "Rescue": 4,
+    "WT": 4
+   },
+   "groups": [
+    "WT",
+    "KO-1",
+    "KO-2",
+    "Rescue"
+   ],
+   "subgroups": null,
+   "synthetic": true
+  },
+  {
+   "name": "two_groups_n30",
+   "file": "examples/group_comparison_test_data/two_groups_n30.csv",
+   "columns": [
+    "group",
+    "value"
+   ],
+   "n_total": 60,
+   "n_per_group": {
+    "Drug": 30,
+    "Vehicle": 30
+   },
+   "groups": [
+    "Vehicle",
+    "Drug"
+   ],
+   "subgroups": null,
+   "synthetic": true
+  },
+  {
+   "name": "two_by_three",
+   "file": "examples/group_comparison_test_data/two_by_three.csv",
+   "columns": [
+    "group",
+    "subgroup",
+    "value"
+   ],
+   "n_total": 36,
+   "n_per_group": {
+    "Control|Adult": 6,
+    "Control|Old": 6,
+    "Control|Young": 6,
+    "Treatment|Adult": 6,
+    "Treatment|Old": 6,
+    "Treatment|Young": 6
+   },
+   "groups": [
+    "Control",
+    "Treatment"
+   ],
+   "subgroups": [
+    "Young",
+    "Adult",
+    "Old"
+   ],
+   "synthetic": true
+  },
+  {
+   "name": "one_extreme_observation",
+   "file": "examples/group_comparison_test_data/one_extreme_observation.csv",
+   "columns": [
+    "group",
+    "value"
+   ],
+   "n_total": 16,
+   "n_per_group": {
+    "Control": 8,
+    "Treatment": 8
+   },
+   "groups": [
+    "Control",
+    "Treatment"
+   ],
+   "subgroups": null,
+   "synthetic": true
+  },
+  {
+   "name": "overlapping_groups",
+   "file": "examples/group_comparison_test_data/overlapping_groups.csv",
+   "columns": [
+    "group",
+    "value"
+   ],
+   "n_total": 30,
+   "n_per_group": {
+    "A": 10,
+    "B": 10,
+    "C": 10
+   },
+   "groups": [
+    "A",
+    "B",
+    "C"
+   ],
+   "subgroups": null,
+   "synthetic": true
+  },
+  {
+   "name": "separated_groups",
+   "file": "examples/group_comparison_test_data/separated_groups.csv",
+   "columns": [
+    "group",
+    "value"
+   ],
+   "n_total": 30,
+   "n_per_group": {
+    "A": 10,
+    "B": 10,
+    "C": 10
+   },
+   "groups": [
+    "A",
+    "B",
+    "C"
+   ],
+   "subgroups": null,
+   "synthetic": true
+  },
+  {
+   "name": "unequal_5_vs_8",
+   "file": "examples/group_comparison_test_data/unequal_5_vs_8.csv",
+   "columns": [
+    "group",
+    "value"
+   ],
+   "n_total": 13,
+   "n_per_group": {
+    "Control": 5,
+    "Treatment": 8
+   },
+   "groups": [
+    "Control",
+    "Treatment"
+   ],
+   "subgroups": null,
+   "synthetic": true
+  },
+  {
+   "name": "unequal_6_vs_17",
+   "file": "examples/group_comparison_test_data/unequal_6_vs_17.csv",
+   "columns": [
+    "group",
+    "value"
+   ],
+   "n_total": 23,
+   "n_per_group": {
+    "Control": 6,
+    "Treatment": 17
+   },
+   "groups": [
+    "Control",
+    "Treatment"
+   ],
+   "subgroups": null,
+   "synthetic": true
+  },
+  {
+   "name": "unequal_4_9_13",
+   "file": "examples/group_comparison_test_data/unequal_4_9_13.csv",
+   "columns": [
+    "group",
+    "value"
+   ],
+   "n_total": 26,
+   "n_per_group": {
+    "Control": 4,
+    "High": 13,
+    "Low": 9
+   },
+   "groups": [
+    "Control",
+    "Low",
+    "High"
+   ],
+   "subgroups": null,
+   "synthetic": true
+  },
+  {
+   "name": "n3",
+   "file": "examples/group_comparison_test_data/n3.csv",
+   "columns": [
+    "group",
+    "value"
+   ],
+   "n_total": 6,
+   "n_per_group": {
+    "Control": 3,
+    "Treatment": 3
+   },
+   "groups": [
+    "Control",
+    "Treatment"
+   ],
+   "subgroups": null,
+   "synthetic": true
+  },
+  {
+   "name": "n4",
+   "file": "examples/group_comparison_test_data/n4.csv",
+   "columns": [
+    "group",
+    "value"
+   ],
+   "n_total": 8,
+   "n_per_group": {
+    "Control": 4,
+    "Treatment": 4
+   },
+   "groups": [
+    "Control",
+    "Treatment"
+   ],
+   "subgroups": null,
+   "synthetic": true
+  },
+  {
+   "name": "n6",
+   "file": "examples/group_comparison_test_data/n6.csv",
+   "columns": [
+    "group",
+    "value"
+   ],
+   "n_total": 12,
+   "n_per_group": {
+    "Control": 6,
+    "Treatment": 6
+   },
+   "groups": [
+    "Control",
+    "Treatment"
+   ],
+   "subgroups": null,
+   "synthetic": true
+  },
+  {
+   "name": "n10",
+   "file": "examples/group_comparison_test_data/n10.csv",
+   "columns": [
+    "group",
+    "value"
+   ],
+   "n_total": 20,
+   "n_per_group": {
+    "Control": 10,
+    "Treatment": 10
+   },
+   "groups": [
+    "Control",
+    "Treatment"
+   ],
+   "subgroups": null,
+   "synthetic": true
+  },
+  {
+   "name": "n20",
+   "file": "examples/group_comparison_test_data/n20.csv",
+   "columns": [
+    "group",
+    "value"
+   ],
+   "n_total": 40,
+   "n_per_group": {
+    "Control": 20,
+    "Treatment": 20
+   },
+   "groups": [
+    "Control",
+    "Treatment"
+   ],
+   "subgroups": null,
+   "synthetic": true
+  },
+  {
+   "name": "n50",
+   "file": "examples/group_comparison_test_data/n50.csv",
+   "columns": [
+    "group",
+    "value"
+   ],
+   "n_total": 100,
+   "n_per_group": {
+    "Control": 50,
+    "Treatment": 50
+   },
+   "groups": [
+    "Control",
+    "Treatment"
+   ],
+   "subgroups": null,
+   "synthetic": true
+  }
+ ]
+}

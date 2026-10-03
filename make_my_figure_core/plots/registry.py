@@ -423,15 +423,15 @@ def render(
     # fitting pass must never break a render.
     try:
         from make_my_figure_core.plots.base import (
-            fit_content_to_canvas, pinned_dimension)
+            fit_content_to_canvas, pinned_dimension, requested_width)
 
         if getattr(result, "figure", None) is not None:
             # Per axis: pinning only a width is the usual journal-column case,
             # and growing the figure to hold a legend would hand back a width
-            # nobody asked for.
+            # nobody asked for. A chosen column width counts as asking.
             for _note in fit_content_to_canvas(
                     result.figure,
-                    may_grow_x=pinned_dimension(spec, "width_mm") is None,
+                    may_grow_x=requested_width(spec) is None,
                     may_grow_y=pinned_dimension(spec, "height_mm") is None):
                 if _note not in result.warnings:
                     result.warnings.append(_note)

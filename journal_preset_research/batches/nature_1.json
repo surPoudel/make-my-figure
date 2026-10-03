@@ -1,0 +1,937 @@
+[
+ {
+  "paper_id": "PMC12764989",
+  "journal": "Scientific reports",
+  "year": 2025,
+  "doi": "10.1038/s41598-025-16474-8",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "../make_my_plot/figure_library/nature/2025_Hassan_analysis_of_proteins_and_peptides_to_inv/figures/fig01_Fig1.jpg",
+    "caption": "B. procumbens: Whole plant (A), Roots (B)."
+   },
+   {
+    "figure_number": 2,
+    "image": "../make_my_plot/figure_library/nature/2025_Hassan_analysis_of_proteins_and_peptides_to_inv/figures/fig02_Fig2.jpg",
+    "caption": "Flow sheet diagram for experimental procedures employed during study. (A) Graphical illustration of experimental methodology. (B) Schematic representation of experimental methology."
+   },
+   {
+    "figure_number": 3,
+    "image": "../make_my_plot/figure_library/nature/2025_Hassan_analysis_of_proteins_and_peptides_to_inv/figures/fig03_Fig3.jpg",
+    "caption": "Ammonium sulphate precipitation method used for precipitation of proteins from crude plant extracts."
+   },
+   {
+    "figure_number": 4,
+    "image": "../make_my_plot/figure_library/nature/2025_Hassan_analysis_of_proteins_and_peptides_to_inv/figures/fig04_Fig4.jpg",
+    "caption": "Standard curve for the estimation of proteins in crude extracts and ammonium sulphate precipitated proteins/peptides fractions of B. procumbens."
+   },
+   {
+    "figure_number": 5,
+    "image": "../make_my_plot/figure_library/nature/2025_Hassan_analysis_of_proteins_and_peptides_to_inv/figures/fig05_Fig5.jpg",
+    "caption": "Silver stained SDS PAGE gel image before (left) and after (right) analysis through gel analyzer."
+   },
+   {
+    "figure_number": 6,
+    "image": "../make_my_plot/figure_library/nature/2025_Hassan_analysis_of_proteins_and_peptides_to_inv/figures/fig06_Fig6.jpg",
+    "caption": "Yeast \u03b1-glucosidase inhibitory activity profiles of protein extracts."
+   },
+   {
+    "figure_number": 7,
+    "image": "../make_my_plot/figure_library/nature/2025_Hassan_analysis_of_proteins_and_peptides_to_inv/figures/fig07_Fig7.jpg",
+    "caption": "\u03b1-Amylase inhibition Assay results of crude plant extract and protein fractions, (A) .Amylase assay results of Boerhavia procumbens protein fraction root sample pH 6, crude, and ammonium sulphate precipitation 50%, 75%, 100% comparison with standard Metformin, Empagliflozin and Acarbose. (B) .Amylase assay results of Boerhavia procumbens protein fraction root sample pH 7, crude, and ammonium sulph"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC12775072",
+  "journal": "Nature communications",
+  "year": 2025,
+  "doi": "10.1038/s41467-025-67906-y",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "../make_my_plot/figure_library/nature/2025_Furtwngler_tracing_social_mechanisms_and_interregio/figures/fig01_Fig1.jpg",
+    "caption": "a Map of Austria showing the locations of sampled sites associated with the \u00dan\u011btice (orange) and Unterw\u00f6lbling (blue) cultures. Archaeological sites are indicated with coloured circles: dark red \u2013 Zwingendorf; bright red \u2013 Drasenhofen; orange \u2013 Ulrichskirchen; light orange \u2013 Schleinbach; dark blue \u2013 Franzhausen; light blue \u2013 Pottenbrunn; grey-blue \u2013 Unterhautzental. b Temporal range of the \u00dan\u011btice"
+   },
+   {
+    "figure_number": 2,
+    "image": "../make_my_plot/figure_library/nature/2025_Furtwngler_tracing_social_mechanisms_and_interregio/figures/fig02_Fig2.jpg",
+    "caption": "Modern West-Eurasian populations are shown as grey circles and ancient genomes, shown as coloured symbols, are projected onto the same PCA space. Source data are provided as a Source Data file."
+   },
+   {
+    "figure_number": 3,
+    "image": "../make_my_plot/figure_library/nature/2025_Furtwngler_tracing_social_mechanisms_and_interregio/figures/fig03_Fig3.jpg",
+    "caption": "a Mean values of PC2 separated by site and genetic sex, number in brackets indicate sample size. b Relative amounts of ancestry components estimated with qpAdm for each individual grouped by site, with mean values indicated by lines. Green shading indicates groups associated with the Unterw\u00f6lbling culture. Groups outside the shaded area belong to the \u00dan\u011btice culture."
+   },
+   {
+    "figure_number": 4,
+    "image": "../make_my_plot/figure_library/nature/2025_Furtwngler_tracing_social_mechanisms_and_interregio/figures/fig04_Fig4.jpg",
+    "caption": "a Heatmap illustrating the number of IBD connections of segment length 8\u2009cM, 12\u2009cM, 16\u2009cM and 20\u2009cM normalized by the number of possible connections between various groups. The number of possible genetic connections is calculated using the formula n\u2081 \u00d7 n\u2082 for connections between two different groups and (n \u00d7 (n\u2009\u2212\u20091)) / 2 for connections within a single group, where n\u2081 and n\u2082 represent the number o"
+   },
+   {
+    "figure_number": 5,
+    "image": "../make_my_plot/figure_library/nature/2025_Furtwngler_tracing_social_mechanisms_and_interregio/figures/fig05_Fig5.jpg",
+    "caption": "The colours represent the two cultures: blue shades correspond to Unterw\u00f6lbling, while orange shades correspond to \u00dan\u011btice. Different shades within each colour group indicate distinct sites within the respective culture. The thickness of the lines indicated values of max IBD in centimorgans (cM). Rectangles represent male individuals and ovals represent female individuals."
+   },
+   {
+    "figure_number": 6,
+    "image": "../make_my_plot/figure_library/nature/2025_Furtwngler_tracing_social_mechanisms_and_interregio/figures/fig06_Fig6.jpg",
+    "caption": "This figure illustrates genetic genealogies from the Early Bronze Age \u00dan\u011btice culture (above the line) and the Unterw\u00f6lbling culture (below the line). In each diagram, the left half of the circles and squares represent the Y chromosomal haplogroup, while the right half indicates the mtDNA haplogroup. Both cultures exhibit similar patrilocal residence patterns, with women primarily situated within "
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC12835169",
+  "journal": "Scientific reports",
+  "year": 2025,
+  "doi": "10.1038/s41598-025-33268-0",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "../make_my_plot/figure_library/nature/2025_Nguyen_unexpectedly_low_prevalence_of_hepatitis/figures/fig01_Fig1.jpg",
+    "caption": "Correlation of anti-HDV (signal/cut-off) and HDV-RNA levels (log(IU/mL))."
+   },
+   {
+    "figure_number": 2,
+    "image": "../make_my_plot/figure_library/nature/2025_Nguyen_unexpectedly_low_prevalence_of_hepatitis/figures/fig02_Fig2.jpg",
+    "caption": "Phylogenetic tree of HDV sequences (575\u00a0bp, positions 500\u20131055 to the reference HDV X04451.1) from participants in this study with the most similar HDV sequences from the literature (>\u200993% of identity). Sequences were annotated with the country and the year in which the study was conducted. HDV sequences derived from Vietnamese people were highlighted in blue, and those from this study were highli"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC12835182",
+  "journal": "Scientific reports",
+  "year": 2025,
+  "doi": "10.1038/s41598-025-33244-8",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "../make_my_plot/figure_library/nature/2025_Baghapour_a_rigorous_theoretical_model_of_fluoresc/figures/fig01_Fig1.jpg",
+    "caption": "Schematic configuration of a fluorescence-based multimode optical fiber sensor, shown in (a) unpolished and (b) polished forms. The segments are labeled as follows: 1-excitation, 2-sensing/D-shaped, and 3-collection. The table illustrates the excitation (Exc) and fluorescence (Flu) fields for each segment. (c) Cross-sectional view of the D-shaped segment, depicting the fluorophore distribution alo"
+   },
+   {
+    "figure_number": 2,
+    "image": "../make_my_plot/figure_library/nature/2025_Baghapour_a_rigorous_theoretical_model_of_fluoresc/figures/fig02_Fig2.jpg",
+    "caption": "Captured fluorescence power calculated using Eq.\u00a0(12) (black), cumulative average using Eq.\u00a0(12) (red), and predicted value from Eq.\u00a0(13) (blue), for a 14  core diameter fiber with 100 nm polishing depth over the polishing length from 0 to 5 cm."
+   },
+   {
+    "figure_number": 3,
+    "image": "../make_my_plot/figure_library/nature/2025_Baghapour_a_rigorous_theoretical_model_of_fluoresc/figures/fig03_Fig3.jpg",
+    "caption": "(a) Number of dipoles, (b) evanescent field strength with a log-scale inset for the fundamental mode, (c) number of modes, and (d) in-coupling efficiency, as functions of polishing depth for a 14 -core diameter fiber."
+   },
+   {
+    "figure_number": 4,
+    "image": "../make_my_plot/figure_library/nature/2025_Baghapour_a_rigorous_theoretical_model_of_fluoresc/figures/fig04_Fig4.jpg",
+    "caption": "Fluorescence power captured in segment 2 of a 14 -core fiber as a function of polishing depth. The captured fluorescence increases with polishing depth up to approximately the middle of the core, after which it decreases, reaching a minimum near the bottom of the core."
+   },
+   {
+    "figure_number": 5,
+    "image": "../make_my_plot/figure_library/nature/2025_Baghapour_a_rigorous_theoretical_model_of_fluoresc/figures/fig05_Fig5.jpg",
+    "caption": "(a) out-coupling efficiency and (b) coupled fluorescence power to the segment 3 of a 14 -core fiber. The out-coupling efficiency to segment 3 exhibits a decreasing trend with increasing polishing depth. Similar to captured fluorescence power, the fluorescence coupled back to the fiber reaches its maximum near the middle of the fiber at 8.2 ."
+   },
+   {
+    "figure_number": 6,
+    "image": "../make_my_plot/figure_library/nature/2025_Baghapour_a_rigorous_theoretical_model_of_fluoresc/figures/fig06_Fig6.jpg",
+    "caption": "(a) Maximum coupled fluorescence power for various excitation modes of a 14  core fiber. HoM excitation increases fluorescence output compared to FM excitation. (b) Coupled fluorescence power as a function of polishing depth for FM excitation (blue), HoM number 97 excitation (black), and the average of last 40 HoMs (red). HoM excitation results in greater coupled fluorescence power and a shift to "
+   },
+   {
+    "figure_number": 7,
+    "image": "../make_my_plot/figure_library/nature/2025_Baghapour_a_rigorous_theoretical_model_of_fluoresc/figures/fig07_Fig7.jpg",
+    "caption": "Comparison of maximum fluorescence power in segment 3 (solid columns) and optimal polishing depth of the core (stripped columns) between FM (blue and dark green) and HoM (red and gray) excitation for various core diameters. The excitation modes resulting in the maximum fluorescence output for the optimally polished fibers are indicated above each corresponding core diameter. The gray and dark gree"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC12848012",
+  "journal": "Communications biology",
+  "year": 2025,
+  "doi": "10.1038/s42003-025-09396-8",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "../make_my_plot/figure_library/nature/2025_Rasmussen_the_gene_regulating_proteins_nono_and_sf/figures/fig01_Fig1.jpg",
+    "caption": "a Crystal structure of the human NONO/SFPQ heterodimer (PDB: 6WMZ) showing two RNA recognition motives (RRM1, blue RRM2, pink/purple), a NonA/paraspeckle domain (NOPS, green) and a coiled-coil domain (brown). NONO is coloured in light and SFPQ in dark colours. The numbers of the N-terminal and C-terminal amino acids for NONO and SFPQ resolved in the structure are marked in the corresponding colour"
+   },
+   {
+    "figure_number": 2,
+    "image": "../make_my_plot/figure_library/nature/2025_Rasmussen_the_gene_regulating_proteins_nono_and_sf/figures/fig02_Fig2.jpg",
+    "caption": "The model of one of the two strands is shown in the centre for highlighting the \u03b1-helical network. Different heterodimers have different colours to explain which dimers interact with each other. NONO is shown in lighter and SFPQ in darker colours. The coiled-coil domain engages in interactions within a dimer (dimerisation region) and with other dimers within a strand (oligomerisation region). Regi"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC12858907",
+  "journal": "Nature communications",
+  "year": 2025,
+  "doi": "10.1038/s41467-025-67953-5",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "../make_my_plot/figure_library/nature/2025_Ruan_potentiators_empower_synthetic_microbiom/figures/fig01_Fig1.jpg",
+    "caption": "a Workflow for domesticating aquatic microbial communities from the same water sample via exposure to tetracycline (TC), oxytetracycline (OTC), and their combination (TCs). Functional microbiomes were analyzed by amplicon sequencingand metabolic modeling of the top 50 abundant strains. Potential keystone species were thus identified by integrating abundance shifts and strain isolation. Untargeted "
+   },
+   {
+    "figure_number": 2,
+    "image": "../make_my_plot/figure_library/nature/2025_Ruan_potentiators_empower_synthetic_microbiom/figures/fig02_Fig2.jpg",
+    "caption": "a Simulated relationship between growth time and biomass production in complete medium. Outliers (red dots) with excessive variability in growth time were excluded from the trend analysis (Student\u2019s t-test, simple linear regression). b Relationship between total metabolic reactions and biomass production in complete medium (Student\u2019s t-test, simple linear regression). c Relationship between the nu"
+   },
+   {
+    "figure_number": 3,
+    "image": "../make_my_plot/figure_library/nature/2025_Ruan_potentiators_empower_synthetic_microbiom/figures/fig03_Fig3.jpg",
+    "caption": "a Sources of the six isolated keystone species from TC-, OTC-, and TC&OTC-acclimated consortia. b Biomass production (\u0394OD600 after 4\u2009h) of single-, co-, and tri-cultures under control (CK), single contamination (TC or OTC, 10\u2009mg/L), and co-contamination (TCs, 10\u2009mg/L each) conditions. Gray shading indicates increased biomass. Data are presented as mean values\u2009\u00b1\u2009SD (n\u2009=\u20093 biological independent rep"
+   },
+   {
+    "figure_number": 4,
+    "image": "../make_my_plot/figure_library/nature/2025_Ruan_potentiators_empower_synthetic_microbiom/figures/fig04_Fig4.jpg",
+    "caption": "a Principal component analysis (PCA) of untargeted metabolomics data from single-, co-, and tri-strain communities under three treatment conditions: antibiotic-free control (CK), single-antibiotic treatments (TC or OTC), and combined-antibiotic treatment (TCs), delineated by dashed-line frames. b Quantitative analysis of significantly upregulated metabolites (compared to CK; Student\u2019s t-test, two-"
+   },
+   {
+    "figure_number": 5,
+    "image": "../make_my_plot/figure_library/nature/2025_Ruan_potentiators_empower_synthetic_microbiom/figures/fig05_Fig5.jpg",
+    "caption": "a Simulated optimal biomass production under varying environmental conditions. Using the SuperCC modeling framework, the maximum biomass was simulated for single- to six-strain combinations under three nutritional scenarios: (1) MM supplemented with 100\u2009mmol/gDW glucose (single carbon source, C\u2009=\u20091); (2) MM with 50\u2009mmol/gDW each of glucose and citrate (dual carbon sources, C\u2009=\u20092); and (3) MM with "
+   },
+   {
+    "figure_number": 6,
+    "image": "../make_my_plot/figure_library/nature/2025_Ruan_potentiators_empower_synthetic_microbiom/figures/fig06_Fig6.jpg",
+    "caption": "a Growth promotion by metabolite supplementation. Growth curves illustrate the responses of microbial communities to four types of combined pollution (10\u2009mg/L each), including tetracyclines (TC and OTC), sulfonamide antibiotics (SMX and SMT), herbicides (BO and QC), and biocides (DTAC and DBAC). Various metabolite combinations were added to the culture systems and monitored at 15-min intervals for"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC12868620",
+  "journal": "Communications biology",
+  "year": 2025,
+  "doi": "10.1038/s42003-025-09432-7",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "../make_my_plot/figure_library/nature/2025_Kielbik_nanosecond_pulsed_electric_fields_induce/figures/fig01_Fig1.jpg",
+    "caption": "a A schematic of the setup that enables a fluorescence imaging of electroporated cell. Tungsten electrodes were positioned on the glass coverslip with seeded normal or cancer urothelial cells on the stable 45\u00b0 angle between coverslip and electrodes. An 800\u2009\u00d7\u2009600\u2009\u00b5m region of interest (ROI) was positioned such that its longer edge overlapped the line connecting the tips of the two electrodes. The R"
+   },
+   {
+    "figure_number": 2,
+    "image": "../make_my_plot/figure_library/nature/2025_Kielbik_nanosecond_pulsed_electric_fields_induce/figures/fig02_Fig2.jpg",
+    "caption": "a Schematic representation of membrane resealing dynamics, visualized through changes in YP fluorescence. (1). Prior to electroporation, the cell membrane remains intact, preventing the uptake of the membrane-impermeant dye YP. (2) Following electroporation, transient nanopores form in the plasma membrane, enabling the entry of YP and water from the extracellular environment into the cell. The kin"
+   },
+   {
+    "figure_number": 3,
+    "image": "../make_my_plot/figure_library/nature/2025_Kielbik_nanosecond_pulsed_electric_fields_induce/figures/fig03_Fig3.jpg",
+    "caption": "a Representative images of monolayers of HBLAK, SV-HUC-1, UM-UC-3, and T24 cells stained with Phalloidin and Hoechst 33342 dyes to visualize actin filaments (red) and nuclei (blue), respectively. b Morphological features of the cells area measurements were obtained from 18 randomly selected ROIs (each 250\u2009\u00b5m\u2009\u00d7\u2009250\u2009\u00b5m) containing approximately 40\u201380 stained cells. The average of measured morphologi"
+   },
+   {
+    "figure_number": 4,
+    "image": "../make_my_plot/figure_library/nature/2025_Kielbik_nanosecond_pulsed_electric_fields_induce/figures/fig04_Fig4.jpg",
+    "caption": "a Representative image of PDOs and Bar graphs showing the distribution of the 2D projected cross-sectional area, mean radius, and form factor of PDOs from primary urothelial cancer cells obtained from patients with bladder cancer (mean\u2009\u00b1\u2009SEM; n\u2009=\u200930). Statistical comparisons between Spheroids and PDOs were performed using Welch\u2019s ANOVA, followed by Dunnett\u2019s T3 post hoc testing. Welch\u2019s ANOVA reve"
+   },
+   {
+    "figure_number": 5,
+    "image": "../make_my_plot/figure_library/nature/2025_Kielbik_nanosecond_pulsed_electric_fields_induce/figures/fig05_Fig5.jpg",
+    "caption": "a Spheroids and PDOs were positioned between two stainless steel electrodes. YP uptake was monitored via fluorescence imaging for 10\u2009min post-exposure to nsPEFs. Fluorescence images were pseudocolored to enhance visualization. b Representative pseudocolored images of spheroids and PDOs before and after nsPEFs exposure. c Time-course analysis of YP fluorescence uptake in spheroids derived from norm"
+   },
+   {
+    "figure_number": 6,
+    "image": "../make_my_plot/figure_library/nature/2025_Kielbik_nanosecond_pulsed_electric_fields_induce/figures/fig06_Fig6.jpg",
+    "caption": "a Changes in the 2D projected area of spheroids and PDOs (mean\u2009\u00b1\u2009SEM, n\u2009=\u20099\u201311) following nsPEFs exposure in solutions containing 0\u2009mM, 2\u2009mM, or 5\u2009mM Ca\u00b2\u207a. Statistical comparisons of the area under the curve (AUC) for 2D projected area changes over time were performed using Welch\u2019s ANOVA, followed by Dunnett\u2019s T3 post hoc test to compare normal urothelial SV-HUC-1 spheroids with cancer RT4 spheroi"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC12872613",
+  "journal": "Nature communications",
+  "year": 2025,
+  "doi": "10.1038/s41467-025-68099-0",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "../make_my_plot/figure_library/nature/2025_Li_adaptation_to_cystine_limitation_stress_/figures/fig01_Fig1.jpg",
+    "caption": "A, B The levels of Cys, Cys2, and Cys/ Cys2 ratios in PDAC tissues (Tumor) and paired para-tumor normal (Normal) pancreatic tissues from KPC xenograft mice (n\u2009=\u200910) (A) and PDAC patients (n\u2009=\u200911) (B) were determined through LC-MS/MS after NEM derivatization. C Relative Cys, Cys2 levels, and Cys/ Cys2 ratios in para-tumor pancreatic tissues (Normal), PanIN, PDAC (Tumor), and tumor-infiltrating lymp"
+   },
+   {
+    "figure_number": 2,
+    "image": "../make_my_plot/figure_library/nature/2025_Li_adaptation_to_cystine_limitation_stress_/figures/fig02_Fig2.jpg",
+    "caption": "A\u2013C Fractional labeling of Cys (A), GSH, GSSG (B), and Ala (C) in control and CLSA-25 MiaPaCa-2 cells after incubation with 200\u2009\u00b5M (in control group) or 25\u2009\u00b5M [13C6, 15N2]-Cys2 for 2 or 4\u2009h. D The effect of CLSA-25 on aconitase 1 (ACO1) and 2 (ACO2) activities in PDAC cells (n\u2009=\u20093 biological replicates). E Western blotting analysis showing the proteins levels of Fe-S proteins in mitochondrial comp"
+   },
+   {
+    "figure_number": 3,
+    "image": "../make_my_plot/figure_library/nature/2025_Li_adaptation_to_cystine_limitation_stress_/figures/fig03_Fig3.jpg",
+    "caption": "A Metabolic Set Enrichment Analysis showing the 25 most differentially regulated metabolic pathways in CLSA-25 MiaPaCa-2 and PANC-1 cells according to targeted metabolomics screening. p value was derived from Over-representation analysis through MetaboAnalyst 5.0. B Heatmap showing the levels of different nucleotides in CLSA-25 PANC-1 and MiaPaCa-2 cells in metabolomics screening. C Summary of 13C"
+   },
+   {
+    "figure_number": 4,
+    "image": "../make_my_plot/figure_library/nature/2025_Li_adaptation_to_cystine_limitation_stress_/figures/fig04_Fig4.jpg",
+    "caption": "A, B Western blotting showing the levels of G6PD, PGLS, and PGD, the three OxPPP enzymes in CLSA-25 PDAC cell lines (A) and CLSA-I PDOs (B). C, D Representative IHC staining (C) and quantitation (D) showing the levels of G6PD and PGD in PDAC tumor tissues and paired para-tumor normal tissues (n\u2009=\u200918). E AHA labeling of newly synthesized G6PD, PGD, and GAPDH in Ctrl and CLSA-25 PDAC cells. Cells we"
+   },
+   {
+    "figure_number": 5,
+    "image": "../make_my_plot/figure_library/nature/2025_Li_adaptation_to_cystine_limitation_stress_/figures/fig05_Fig5.jpg",
+    "caption": "A Summary of drug screening results. Drugs with reported roles in regulating lipid metabolism, nucleotide metabolism, or glycolysis were labeled was green, red, and cyan, respectively. The grey line indicates 70% of cell death in the high throughput screening. B Dose response curves showing the effects of lipid metabolism drugs on the viability of control and CLSA-25 MiaPaCa-2 cells. C Dose respon"
+   },
+   {
+    "figure_number": 6,
+    "image": "../make_my_plot/figure_library/nature/2025_Li_adaptation_to_cystine_limitation_stress_/figures/fig06_Fig6.jpg",
+    "caption": "A, B Volcano plot and heatmap showing that CLSA-mediated lipidomics reprogramming upregulates TG levels in PANC-1 (A) MiaPaCa-2 (B) cells. C, D TLC analysis (C) and densitometry quantitation (D) showing the effects of CLSA-25 on TG levels in MiaPaCa-2 and PANC-1 cells. E\u2013G Confocal microscopy imaging (E) and quantitation (F and G) of LD staining showing upregulation of LD formation in CLSA-25 PDAC"
+   },
+   {
+    "figure_number": 7,
+    "image": "../make_my_plot/figure_library/nature/2025_Li_adaptation_to_cystine_limitation_stress_/figures/fig07_Fig7.jpg",
+    "caption": "A, B Volcano plot (A) and heatmap (B) showing the effects of mFOLFIRINOX (8\u2009\u03bcM) treatment for 24\u2009h on the levels of TG, phospholipids (PL), and lysophospholipids (LPL) in MiaPaCa-2 cells, as determined by\u00a0LC-MS/MS targeted lipidomics screening. mFOLFIRINOX cocktail consists of 5-FU (8\u2009\u03bcM), Oxaliplatin (8\u2009\u03bcM), and SN-38 (4\u2009\u03bcM). Grey line indicates p\u2009=\u20090.05. C TLC analysis showing the effects of mFO"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC12877018",
+  "journal": "Communications biology",
+  "year": 2025,
+  "doi": "10.1038/s42003-025-09449-y",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "../make_my_plot/figure_library/nature/2025_Grunenwald_the_temporal_gene_expression_landscape_o/figures/fig01_Fig1.jpg",
+    "caption": "Ratio of complement activation fragments to creatinuria in urines of healthy donors (HD, n\u2009=\u20097), patients with renal ischemia reperfusion (IR, n\u2009=\u20093), rhabdomyolysis (Rh) without (wo) acute kidney injury (AKI), n\u2009=\u20094, or Rhabdomyolysis induced AKI (RIAKI, n\u2009=\u200927): Ba (a), Bb (b), C3a (c), C4a (d), C5a (e) and soluble C5b9 (sC5b9) (f). Ratio of complement active fragments to complement complete pro"
+   },
+   {
+    "figure_number": 2,
+    "image": "../make_my_plot/figure_library/nature/2025_Grunenwald_the_temporal_gene_expression_landscape_o/figures/fig02_Fig2.jpg",
+    "caption": "Multiplex sequential immunofluorescence staining using the in situ Complementomics approach of a control peritumoral kidney tissue and b an example of a kidney biopsy of a RIAKI patient with CD34 (red) and Na+K+ATPase (white) together with complement proteins C3c (orange), C3d (green) and Factor H (FH, cyan) in control kidney biopsies (left) and RIAKI patients (middle). c Multiplex sequential immu"
+   },
+   {
+    "figure_number": 3,
+    "image": "../make_my_plot/figure_library/nature/2025_Grunenwald_the_temporal_gene_expression_landscape_o/figures/fig03_Fig3.jpg",
+    "caption": "Multiplexed sequential immunofluorescence (SeqIF) staining for: a C3b/iC3b (green), CD31 (cyan, endothelial cells), Megalin (white, proximal tubular cells) and CD11b (red, immune cells) on snap frozen kidneys of C57Bl6 WT mice 24\u2009h after injection by PBS (left) or Glycerol (right), two representative images of each. b Spatial plot of proximity analyzes between C3b/iC3b positive tubules (green) and"
+   },
+   {
+    "figure_number": 4,
+    "image": "../make_my_plot/figure_library/nature/2025_Grunenwald_the_temporal_gene_expression_landscape_o/figures/fig04_Fig4.jpg",
+    "caption": "a C5 inhibition does not prevent kidney injury. BUN of WT mice injected by glycerol, preventively treated by C5 inhibitor BB5.1. The presented results are from one experiment with 5 PBS/PBS,3 BB5.1/PBS, 10 PBS/GLY, 10 BB5.1/GLY injected mice. b C5aR1 inhibition does not prevent kidney injury. BUN of C57Bl6 WT mice injected by glycerol, preventively treated by C5aR1 inhibitor PMX53. The presented r"
+   },
+   {
+    "figure_number": 5,
+    "image": "../make_my_plot/figure_library/nature/2025_Grunenwald_the_temporal_gene_expression_landscape_o/figures/fig05_Fig5.jpg",
+    "caption": "a Representative images of C3b (pink) immunofluorescence on snap-frozen mouse kidneys 0, 1, 3, 12, 24\u2009h and 7 days after injection by glycerol, original magnification 20. b Differential expression of Itgam (CD11b, component of the complement Receptor 3) and c C5aR1 (C5a Receptor 1) by QuantiGene in snap-frozen kidney of C57Bl6 WT mice at 0, 1, 3, 12, 24\u2009h and 7 days after injection by glycerol. Pr"
+   },
+   {
+    "figure_number": 6,
+    "image": "../make_my_plot/figure_library/nature/2025_Grunenwald_the_temporal_gene_expression_landscape_o/figures/fig06_Fig6.jpg",
+    "caption": "Kinetic studies were performed on snap-frozen kidneys at 0, 1, 3, 12, 24\u2009hours (n\u2009=\u20095/time point) and 7 days (n\u2009=\u20093) after injection by glycerol. a Cytoprotective transcription factors Maff, Myc and Sox9 and b anti-oxidant genes Hmox1 (Heme oxygenase 1), Ftl1 (ferritin light chain) and Fth1 (ferritin heavy chain). c Upregulation of classical tubular injury markers Havcr1 (Kim-1) and Lcn2 (NGAL) as"
+   },
+   {
+    "figure_number": 7,
+    "image": "../make_my_plot/figure_library/nature/2025_Grunenwald_the_temporal_gene_expression_landscape_o/figures/fig07_Fig7.jpg",
+    "caption": "Differential expression of a Neutrophils - Cxcl1 (CXC motif chemokine ligand 1) and b inflammatory monocytes/macrophages - Ccl2 (CC motif chemokine ligand 2), Ccl7, Ccl12. c Estimation of relative abundancy of granulocytes and monocytes/macrophages (Mo/Mac) from normalized QuantiGene median values of genes analyzed with mMCP counter tool (left, middle). Correlation between the mMCP counter tool es"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC12951864",
+  "journal": "Nature Biotechnology",
+  "year": "2026",
+  "doi": "10.1038/s41587-025-02866-8",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12951864/figures/Fig1.gif",
+    "caption": "UDC enhances the clearance of neurotoxic hemorrhagic debris from the CSF and interstitial brain compartments. a , Schematic of the FUS protocol (250 kHz, 0.45-MPa peak negative pressure (PNP), 25% duty cycle, 50-ms pulse width) efflux experiment. b , Simulated ultrasound pressure beam profiles and effect of the skull on the intracranial profile. c , Timeline of SAH and ICH experiments. d , UDC cle"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12951864/figures/Fig2.gif",
+    "caption": "UDC reduces neuroinflammation and neurocytotoxicity after hemorrhagic brain injury. a , Schematic of the SAH model with the location of interest (LOI) sampled for histological analyses. b , c , Immunohistological assessment of SAH brains for microglial activation (IBA1, purple; b ) and gliosis/astrocytic activation (GFAP, green; c ) revealed a decrease in both neuroinflammatory markers with UDC co"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12951864/figures/Fig3.jpg",
+    "caption": "UDC improves behavioral outcomes and reduces morbidity and mortality after hemorrhagic brain injury. a , Timeline of ICH outcomes experiment. b , Behavioral/functional assessments (corner turn test and grip strength) revealed an improvement in functional outcomes as early as 6 days after hemorrhage with UDC compared to sham (corner turn test, day 6: P = 0.0046, day 10: P = 0.0247, day 14: P = 0.00"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12951864/figures/Fig4.gif",
+    "caption": "Spatial transcriptomic analysis demonstrates UDC-mediated changes in inflammatory markers after hemorrhagic stroke. a , Brain region-level annotations of Leiden-derived spatial clusters of stereotranscriptomic data at a bin size of 100. Bins are colored by annotation; 4th ven., fourth ventricle; Cblm, cerebellum; ChP, choroid plexus; DG, dentate gyrus; DL-Ctx, deep-layer cortex; Hyp, hypothalamus;"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12951864/figures/Fig5.gif",
+    "caption": "UDC promotes blood clearance by modulating neuroinflammatory and glymphatic states. a , ICH model with the LOI sampled for histological analyses. b , Immunohistological assessment of ICH brains for constitutive astrocytic counts (S100\u03b2 + ) revealed no significant difference with ICH + UDC compared to ICH + sham ( P = 0.1455); FOV, field of view. c , Immunohistological assessment with three-dimensi"
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC12951864/figures/Fig6.jpg",
+    "caption": "UDC is reversed by a mechanosensitive ion channel blocker. a , Timeline of ICH experiment with UDC and a mechanosensitive ion channel blocker (GsMTx4). b , Administration of GsMTx4 reduced the blood product clearance of UDC, as assessed by hematoma volumes across treatment groups. c , Immunohistological analysis of meningeal lymphangiogenesis (LYVE-1 + ) revealed no significant difference between "
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13050621",
+  "journal": "Nature Biotechnology",
+  "year": "2026",
+  "doi": "10.1038/s41587-025-02833-3",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13050621/figures/Fig1.webp",
+    "caption": "Dual inhibition of Wnt and PKC enables derivation and long-term maintenance of chicken ES cells in combination with ovotransferrin. a , Representative images of chicken blastodermal cells cultured in the indicated conditions for 3 days. n = 5 independent experiments. Scale bars, 50 \u03bcm. b , Representative images of chicken ES cells maintained in IWR-1 + G\u00f66983 + 3% yolk from unfertilized egg (Yolk/"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13050621/figures/Fig2.webp",
+    "caption": "ES cells derived from multiple avian species. a , Representative images of ES cells derived from multiple avian species in OT/3i/chLIF. n = 3 independent experiments. Scale bars, 50 \u03bcm. b , A representative image of ostrich ES cells derived and maintained in OT/3i. n = 5 independent experiments. Scale bar, 50 \u03bcm. c , Growth curves of a representative chicken ES cell line (RIR41) cultured in OT/2i "
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13050621/figures/Fig3.webp",
+    "caption": "Characterization of chicken ES cells. a , Immunostaining of cells differentiated from chicken ES cells. n = 3 independent experiments. Scale bars, 50 \u03bcm. b , Principal component analysis (PCA) of RNA-seq data obtained from chicken ES cells (cES) and cells isolated from EGK.VIII, EGK.X and HH4 stage chicken embryos. Three biological replicates were performed for ES cells, EGK.VIII and EGK.X embryos"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13050621/figures/Fig4.webp",
+    "caption": "Chicken ES cells can contribute to chimera formation both ex ovo and in ovo. a , GFP-labeled chicken ES cells were implanted onto ex ovo cultured EGK.X or HH4 chicken embryos. Scale bars, 100 \u03bcm (cES cells), and 400 \u03bcm (EGK.X and HH4 embryos). b , Representative images showing HH4-HH11/12 stage embryos developed from ex ovo cultured chicken EGK.X embryos without the implantation of chicken ES cell"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13050621/figures/Fig5.webp",
+    "caption": "Avian ES cells can contribute to both intraspecies and interspecies chimera formation. a , GFP-labeled quail ES cells (left panel, scale bars, 50 \u03bcm) were implanted onto EGK.X chicken embryos, and the contribution of quail ES cell-derived cells in the chicken embryos was traced ex ovo for 3 days. Embryo scale bars, 220 \u03bcm. b , GFP-labeled goose ES cells (left panel, scale bars, 50 \u03bcm) were implant"
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13050621/figures/Fig6.webp",
+    "caption": "Avian ES cells are competent to give rise to germ cells. a , RT\u2013qPCR analysis of the expression of germ cell markers in chicken ES cells (day 0) and during EB differentiation. Data represent mean \u00b1 s.d. of three biological replicates. b , Immunofluorescence staining of DAZL in day-3 EBs formed from chicken or goose ES cells. n = 3 independent experiments. Scale bars, 10 \u03bcm. c , GFP fluorescence im"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13271882",
+  "journal": "Nature Biotechnology",
+  "year": "2026",
+  "doi": "10.1038/s41587-025-02761-2",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13271882/figures/Fig1.gif",
+    "caption": "Overview and evaluation of the PepMLM model. a , The architecture of the PepMLM model. Based on the finetuning of ESM-2, the model incorporates the target protein sequence along with a masked binder region during the training phase. During the generation phase, the model can accept target protein sequences and mask tokens to facilitate the creation of peptides of specified lengths. b , Perplexity "
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13271882/figures/Fig2.gif",
+    "caption": "Experimental validation of PepMLM-designed peptide binders in vitro . Four NCAM1-targeting peptides were designed for both RFdiffusion and PepMLM as C-terminal SUMO-tag fusions and screened for potential binding to NCAM1 (Supplementary Fig. 8 ). a , Binding analysis of top candidate peptide against NCAM1 fused to C-terminal SUMO-tag as measured by ELISA. PepMLM-designed peptides were immobilized o"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13271882/figures/Fig3.gif",
+    "caption": "Degradation of Huntington\u2019s disease-driving proteins in vitro with PepMLM-derived uAbs. a , Architecture and mechanism of uAb degradation system. CHIP\u0394TPR is fused to the C terminus of PepMLM-designed target-specific peptides and can thus tag endogenous target proteins for ubiquitin-mediated degradation in the proteasome following plasmid transfection. Created with BioRender . b , Quantitative imm"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13271882/figures/Fig4.gif",
+    "caption": "Screening of antiviral PepMLM-derived uAbs in vitro . a \u2013 c , Twenty uAb plasmids were co-transfected with plasmid DNA for each of the phosphoproteins from NiV ( a ), HeV ( b ) and HMPV ( c ) in HEK293T cells using PEI MAX. Whole-cell lysates were harvested 48 hours after transfection using RIPA buffer according to the manufacturer\u2019s protocol. uAbs and phosphoproteins were probed using mouse anti-"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13345946",
+  "journal": "Nature Methods",
+  "year": "2026",
+  "doi": "10.1038/s41592-026-03111-z",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13345946/figures/Fig1.jpg",
+    "caption": "CloudScope enabled remote neurosurveillance over 24 h in healthy freely behaving animals. a , Schematic illustrating the cloud-based IoT architecture that supports internet access to multiple CloudScopes. CloudScopes can be housed in a laboratory or an animal facility and connect to a cloud-based server via local Wi-Fi. b , Schematic of the system setup. A control unit placed above the cage handle"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13345946/figures/Fig2.jpg",
+    "caption": "Deep learning can predict individual animal behavior from 24-h neurosurveillance data. a , Distributions of Neu ACT (\u03bc Neu ACT ) corresponding to MM, INT and R Behavior SYL over 24 h. Data shown are from M2. b , Schematic illustrating the DL pipeline. First, 1-min intervals, during which, an animal consistently maintained a Behavior SYL (MM, INT or R) were identified and the corresponding Neu ACT "
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13345946/figures/Fig3.jpg",
+    "caption": "Hemodynamic changes and neuronal activity did not always colocalize during natural behavior. a \u2013 c , Scatter-plots of F ACTIVE versus Neu ACT ( a ); F ACTIVE versus CBF ( b ); and Neu ACT versus CBF ( c ), over 24-h of natural behavior for n = 5 animals, M1\u2013M5. Data points for Neu ACT and CBF are averages computed over 15-min epochs from the cortical parenchyma (that is, the FoV excluding surface "
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13345946/figures/Fig4.jpg",
+    "caption": "Neurosurveillance reveals the trajectory of seizure-induced neurovascular disruption and recovery. a \u2013 d , Representative 24-h time-series illustrating changes in Neu ACT ( a ), CBV ( b ), CBF ( c ) and Hb SAT ( d ) in a murine seizure model. Two spontaneous seizures (SZ SP1 and SZ SP2 ) were observed at ~5.5 h and ~10.5 h after recovery from an initial seizure (SZ PTZ ) induced via an i.p. inject"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13345946/figures/Fig5.gif",
+    "caption": "Neurosurveillance of brain tumor evolution. a , Timelapse images of glioma cell migration and proliferation in a brain tumor-bearing animal acquired over 72 h via neurosurveillance during the TI phase. Images are shown in a gray scale, with bright spots indicating fluorescent GL261\u2013GFP murine glioma cells and hatched rectangles indicating regions of interest (ROIs R1\u2013R5) within the brain tumor mic"
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13345946/figures/Fig6.gif",
+    "caption": "In vivo phenotyping of the brain tumor microenvironment during tumor initiation and tumor aggregation phases. a \u2013 f , Wide-area maps of tumor progression ( a , d , \u2018Tum\u2019); microvasculature ( b , e , \u2018Vasc\u2019); and CBF ( c , f ) during TI ( a \u2013 c ) and the subsequent TA ( d \u2013 f ) phases, respectively, over a representative 24-h period within a central 1.8 \u00d7 2.2-mm 2 ROI (R5) from the FoV shown in Fig"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13346115",
+  "journal": "Nature Methods",
+  "year": "2026",
+  "doi": "10.1038/s41592-026-03129-3",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13346115/figures/Fig1.gif",
+    "caption": "SmartTrap setup. a , 3D illustration of the SmartTrap optical tweezers instrument and control system. The instrument is in the front and the control system behind it with the computer and interface on the right and the controllers on the left. b , Schematics of the optics. Lasers A and B follow mirrored pathways and form a counterpropagating optical trap in the sample. Along each laser path, there"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13346115/figures/Fig2.jpg",
+    "caption": "Algorithms used for automation. a , Data processing feedback loop. After acquisition (step 1), data are processed (step 2) to extract information about the experiment. This information is then used to make a decision about what to do next (step 3), which is then executed by the instrument (step 4). b , Neural networks used in the image analysis. First, the objects of interest are located with YOLO"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13346115/figures/Fig3.jpg",
+    "caption": "Size distribution of particles. The hydrodynamic radius was measured to be 2.11 \u03bcm \u00b1 0.04 \u03bcm where the error is the standard deviation of the measurements. The average radius (solid line) and the manufacturer\u2019s specified value (dashed line) are shown in the histogram."
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13346115/figures/Fig4.jpg",
+    "caption": "DNA pulling experiment. a , Illustration of a DNA pulling experiment. The DNA molecule is attached between two particles. One of the particles is kept fixed by a micropipette, while the other is moved back and forth using an optical trap. b , Force\u2013extension curves from the experiment (solid lines) and the extensible WLC model (dashed line). Both the stretching (blue line) and relaxation (red line"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13346115/figures/Fig5.jpg",
+    "caption": "Optical stretching of red blood cells. a , Illustrations of a trapped red blood cell. When the trapping power is 5 mW per laser, there is no measurable stretching, and the cell is near spherical due to the low osmotic pressure. To the right, there is an experimental image with the dashed blue line showing the outline of the cell. When the cells are trapped with 80 mW per laser, they stretch along "
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13346115/figures/Fig6.jpg",
+    "caption": "Electrostatic interactions between particles. a , Depiction of the electrostatic interaction experiments across varying salt concentrations. As the salt concentration increases, so does the screening that reduces the electrostatic force, illustrated as more ions aggregated around the particles. b , Force as a function of particle\u2013particle distance for various salt concentrations. The experimental "
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13364638",
+  "journal": "Nature Cell Biology",
+  "year": "2026",
+  "doi": "10.1038/s41556-026-01986-w",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364638/figures/Fig1.jpg",
+    "caption": "mEGFP\u2013DRP1 oligomers scan the surface of mitochondria with spiral-like trajectories. a , Snapshot from a SIM video of a U2OS mEGFP\u2013DRP1 cell showing mitochondria (green, labelled with MitoTracker Deep Red) and mEGFP\u2013DRP1 (magenta). Scale bar, 20 \u00b5m. b , Zoomed-in view of the boxed region in a . mEGFP\u2013DRP1 particle trajectories colour-coded by time. Scale bar, 500 nm. c , Right: schematic represent"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364638/figures/Fig2.gif",
+    "caption": "DRP1 mito-scanning motion proceeds via free diffusion of stable oligomers. a , Schematic representation of the \u2018tubular model\u2019, depicting mitochondria as a cylindrical tube with a DRP1 particle represented as a green sphere on its surface. The 3D model includes the z axis, radius ( r ) and angle ( \u03d5 ), measured from the top view and ranging from \u221290\u00b0 to 90\u00b0. The lower part of the model shows a 2D "
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364638/figures/Fig3.gif",
+    "caption": "Super-resolution analysis of DRP1 assemblies. a , Snapshot from a STED microscopy image of a U2OS mEGFP\u2013DRP1 cell showing mitochondria labelled with MitoTracker orange (green) and mEGFP\u2013DRP1 labelled with anti-GFP nanobodies coupled with ATTO643 (magenta). The zoomed-in views (right) highlight the super-resolved structure of non-random DRP1 macromolecular assemblies, appearing as lines, arcs and r"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364638/figures/Fig4.gif",
+    "caption": "Coarse-grained simulation model and polymer diffusion dynamics. a , Schematic of the coarse-grained (CG) simulation model. A single polymer chain, representing DRP1, is constrained to diffuse along the surface of a rigid cylindrical scaffold that mimics the MOM. Polymer flexibility is controlled by an angular potential with tunable force constant k \u03b8 (kJ mol\u207b 1 rad \u22122 ), which modulates the radius"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364638/figures/Fig5.gif",
+    "caption": "Altering DRP1 dynamics impairs mitochondrial fission efficiency. a , Schematic summary of the reported effects of DRP1 mutants on interactions with DRP1 receptors. The S600A mutation reduces interaction with MiD49/51 48 , D221A disrupts interaction with MID49 24 and 4KR enhances interaction with MFF 49 . b , Schematic representation of DRP1 mutants, with variants displayed according to the domain "
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364638/figures/Fig6.jpg",
+    "caption": "DRP1 diffuses on the MOM in dynamic co-assemblies with MID49. a , Log\u2013log plot displaying the MSD of mEGFP\u2013DRP1 particles in U2OS mEGFP\u2013DRP1 MID49 KO clones #1 and #2. Data were collected from 200 trajectories, each lasting longer than 15 s. Mean MSD is shown as a dashed line, and the shaded area represents the s.d. b \u2013 e , Quantification of mitochondrial morphological parameters: mean branch leng"
+   },
+   {
+    "figure_number": 7,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364638/figures/Fig7.jpg",
+    "caption": "MFF is required for DRP1 recruitment to mitochondria. a , Representative SIM images of DRP1 KO HeLa cells overexpressing mCherry\u2013DRP1 R376E (magenta). Mitochondria were labelled with MitoTracker (green). Scale bars, 5 \u00b5m. Representative of three independent experiments. b \u2013 e , Quantification of mitochondrial morphological parameters: mean branch length ( b ), perimeter ( c ), circularity ( d ) an"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13364683",
+  "journal": "Nature Cell Biology",
+  "year": "2026",
+  "doi": "10.1038/s41556-026-01982-0",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364683/figures/Fig1.jpg",
+    "caption": "Epigenetic regulators of ecDNA segregation. a , An illustration of profiling ecDNA trans -interaction sites between G1 and M phases. b , HiC contact heat map showing MYC ecDNA interactions between G1 and M phases in MSTO211H cells. The MYC ecDNA locus is highlighted. c , ChIP-seq coverage tracks for H3K27ac and H3K4me3 in asynchronous (Asyn) or mitotic (M) MSTO211H cells. WGS, whole-genome sequenc"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364683/figures/Fig2.jpg",
+    "caption": "Bromodomain proteins anchor ecDNAs to mitotic chromosomes. a , Treatment strategies to manipulate bromodomain proteins. Cells were treated either with pre-mitosis-entry arrest or post-mitosis-entry arrest. b , Representative MYC ecDNA FISH on 200-nM dBET6 (pre-mitosis entry) or 1-\u03bcM dBET6 (post-mitosis entry) treated MSTO211H metaphase cells (scale bar, 5 \u03bcm). c , d , The number ( c ) and percenta"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364683/figures/Fig3.gif",
+    "caption": "The Mediator complex and RNA Pol II regulate ecDNA segregation. a , An illustration depicting the Mediator complex components. b , Representative MYC ecDNA FISH on MSTO211H metaphase cells after CDK8 knockdown (scale bar, 5 \u03bcm). c , d , The number ( c ) and percentage ( d ) of detached MYC ecDNAs per MSTO211H metaphase cell after CDK8 knockdown (two-sided Wilcoxon test). Nocodazole treatment: 8\u201312"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364683/figures/Fig4.jpg",
+    "caption": "Transcriptionally active ecDNA regions mediate ecDNA attachment. a , ChIP-seq coverage tracks for H3K27ac, BRD4, SMARCA4 and Pol II during mitosis in MSTO211H cells. The chosen \u2018non-peak\u2019 and \u2018peak\u2019 ecDNA regions for CRISPRi and engineered plasmid construction were labelled in green and pink, respectively. b , Representative MYC ecDNA FISH on CRISPRi-treated MSTO211H metaphase cells (scale bar, 5 "
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364683/figures/Fig5.jpg",
+    "caption": "The consequence of mis-segregated ecDNAs. a , Live-cell imaging with COLO320DM TetO-MYC TetR-mNeonGreen cell line under the treatment with 1-\u03bcM dBET6 (scale bar, 5 \u03bcm. Time scale, 2 h and 4 min. White arrow, detached ecDNA; yellow arrow, micronuclei-like morphology). b , Representative MYC and FGFR2 ecDNA FISH in SNU16 interphase cells. Cells were treated with 10-\u03bcM A485 with a 12-h nocodazole arr"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13364714",
+  "journal": "Nature Cell Biology",
+  "year": "2026",
+  "doi": "10.1038/s41556-026-01981-1",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364714/figures/Fig1.jpg",
+    "caption": "EGFR signals via PI3K to maintain leader-bleb-based migration in low-adhesive confinement. a , f , l , Representative time-lapse phase-contrast images (left three columns) of A375M2 cells migrating under 3-\u00b5m confinement, with temporal colour-encoded projections of cell outlines at 10-min intervals (right). Scale bars, 25 \u03bcm. a , Four major bleb phenotypes are observed: round transient blebs (top "
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364714/figures/Fig2.gif",
+    "caption": "EGFR, PI3K and Rac1 activities form rear-to-front gradients in leader blebs. a , b , d , f , j , l , Super-resolution confocal images taken during confinement to 3 \u00b5m of A375M2 melanoma cells. Scale bars, 5 \u03bcm. a , Inverted contrast image of a cell transfected with EGFR\u2013GFP with marked leader bleb in blue and cell body in orange. b , Inverted contrast image of a cell transfected with EGFR\u2013GFP. c ,"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364714/figures/Fig3.gif",
+    "caption": "EGFR and Rac1 activity at the rear of the bleb is required for bleb stability. a , Intensity-pseudocoloured confocal image of EGFR\u2013GFP in A375M2 melanoma cells under 3-\u03bcm confinement exhibiting dynamic elongated bleb (left) or leader-bleb (right) morphology. Scale bars, 20 \u03bcm. b , Scatter plot of bleb aspect ratio of dynamic elongate blebs (rose, n = 17 blebs) and leader blebs (purple, n = 22 bleb"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364714/figures/Fig4.gif",
+    "caption": "Experiment and modelling indicate that neither cortical nor membrane flow mediate EGFR gradient formation in leader blebs. a , Schematic of a confined cell undergoing leader-bleb-based migration (left) and plasma membrane components (right). The direction of migration (large arrow, top) and transmembrane protein flux (small arrows around the bleb) are indicated. EGFR (pink) with its ligand EGF (re"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364714/figures/Fig5.jpg",
+    "caption": "EGFR has restricted diffusion at the rear of the leader bleb. a , Outcomes of the transmembrane protein gradient mathematical model. EGFR receptor density as a function of length along the bleb under different corralling efficiencies \u03b5 , with actin retrograde flow velocity V f ( x ) = \u22120.10 + 0.80e \u22120.2 x (\u03bcm s \u22121 ) and the interaction with flowing F-actin \u03b5 2 ( x ) set to 0.1 (weak interaction). "
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364714/figures/Fig6.jpg",
+    "caption": "CD44 restricts the diffusion of EGFR at the rear of the leader bleb. a , c , f , h , Confocal images of blebs in A375M2 melanoma cells under 3-\u03bcm confinement. a , Inverted contrast image of blebs in cells expressing EGFR\u2013GFP and either scramble control siRNA (left) or siRNA targeting CD44 (right). Scale bar, 10 \u03bcm. b , Left: mean normalized intensity profile of EGFR\u2013GFP across the normalized lengt"
+   },
+   {
+    "figure_number": 7,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364714/figures/Fig7.gif",
+    "caption": "CD44 is required for rear-to-front Rac1 activity gradient and leader-bleb stability and persistent migration under confinement. a , Inverted contrast confocal images of cells co-expressing Pak-GBD\u2013YFP, a reporter of active Rac1, following transfection with non-targeting control siRNA or CD44 -siRNA. Scale bar, 10 \u03bcm. b , Left: mean normalized Pak-GBD\u2013YFP intensity profiles along the normalized len"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13364725",
+  "journal": "Nature Cell Biology",
+  "year": "2026",
+  "doi": "10.1038/s41556-026-01991-z",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364725/figures/Fig1.jpg",
+    "caption": "ISR drives mouse LUAD progression to high-fitness lineages, leading to increased tumour heterogeneity. a , Schematic overview of the experimental design and analysis workflow. t-SNE, t-distributed stochastic neighbor editing. b , Representative ultrasound images of lung tumours detected in eIF2\u03b1 S/S ( n = 6) and eIF2\u03b1 A/A ( n = 7) mice 35 weeks after Cre-lentivirus intubation. Tumours are outlined"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364725/figures/Fig2.gif",
+    "caption": "ISR acts as the primary determinant of the high-fitness lineage trajectory. a , CellRank-computed macrostates highlight the most confidently assigned cells for each state. Names and colours were assigned based on overlap with clusters from Fig. 1c , with AT2-like cells representing the initial cell state. b , Circular projection of cells based on fate probabilities towards the macrostates shown in"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364725/figures/Fig3.gif",
+    "caption": "p-eIF2 and ATF4 haploinsufficiency restrains LUAD evolution. a , Ultrasound imaging and quantification of tumour burden. Representative ultrasound images of lung tumours at 35 weeks after Cre-lentivirus intubation in eIF2\u03b1 S/S and eIF2\u03b1 S/A mice. Tumours are outlined by dashed yellow lines. Right: quantification of tumour size based on the ultrasound imaging. Mean \u00b1 s.d.; dots represent individual"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364725/figures/Fig4.jpg",
+    "caption": "MYC drives ISR-linked lineage progression and ATF4-coupled transcription in LUAD. a , Schematic timeline of the KM LUAD experiment. Mice harbouring Kras G12D and Myc ER alleles were treated with tamoxifen 12 weeks after mutant KRAS expression to induce MYC activity ( Myc ON ). After 4 weeks, tamoxifen was withdrawn to switch Myc activity off ( Myc OFF ). Tumours were collected at defined timepoint"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364725/figures/Fig5.gif",
+    "caption": "ISR-deficient LUAD cells show mitochondrial dysfunction with reduced CHCHD10. a , TEM images of mitochondria in eIF2\u03b1 S/S and eIF2\u03b1 A/A LUAD cells ex vivo, with mitochondrial density quantification (number per \u03bcm 2 ). Yellow arrows indicate mitochondria. Scale bars, 2 \u00b5m (full cell) and 500 nm (enlarged views). Mean \u00b1 s.d.; n = 5 cells per genotype. Two-sided unpaired Student\u2019s t -test; P values i"
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364725/figures/Fig6.jpg",
+    "caption": "ISRIB blocks LUAD evolution and primes mitochondrial defects. a , Representative ultrasound images (left) and quantification of tumour size (right) after 30 days of vehicle (control) or ISRIB treatment, initiated 35 weeks post-Cre-lentivirus intubation. Tumours are outlined by dashed yellow lines. Mean \u00b1 s.d.; dots represent individual mice ( n = 5 per group). Two-sided Mann\u2013Whitney U test; P = 0."
+   },
+   {
+    "figure_number": 7,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13364725/figures/Fig7.jpg",
+    "caption": "ISR-high, dedifferentiated LUAD cells associate with worse patient outcomes. a \u2013 c , Prognostic significance of cluster markers in human LUAD cohorts. Hazard ratios (HRs) were calculated using Cox proportional hazards models, treating cluster marker activity scores as continuous variables. Forest plots show HRs with 95% confidence intervals (error bars). TCGA LUAD cohort ( n = 539 patients) ( a );"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13368582",
+  "journal": "Nature Biotechnology",
+  "year": "2026",
+  "doi": "10.1038/s41587-025-02797-4",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13368582/figures/Fig1.gif",
+    "caption": "Robustness and reproducibility of skin metatranscriptomes across different skin sites. a , Box plot showing the fraction of non-rRNA reads with ( n = 63) and without ( n = 4) oligonucleotide-based microbial rRNA depletion during library preparation for the pilot cohort. A two-sided Wilcoxon rank-sum test was used. b , Box plot of Sorensen similarity indices (1 \u2013 Bray\u2013Curtis dissimilarity) computed"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13368582/figures/Fig2.gif",
+    "caption": "Niche-specific signatures of core active species and transcribed functions. a , Bar plots showing median relative abundances (total sum scaled) of reads assigned to various skin commensals across different skin sites presented in log 2 scale. Abundances for metagenomes and metatranscriptomes are shown. b , Bubble plot showing core, common and variable components of skin metagenomes (DNA) and metat"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13368582/figures/Fig3.gif",
+    "caption": "Species-level differential enrichment of metabolic pathways in various in vivo and in vitro growth conditions. a , Volcano plot of differentially expressed genes for M. restricta colonizing scalp versus cheek samples (\u2265200,000 M. restricta reads per library). Genes involved in peroxisomal activity or ether lipid/glycerophospholipid/sphingolipid metabolism are colored blue or yellow, respectively. "
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13368582/figures/Fig4.jpg",
+    "caption": "Transcriptome-aware, genome-scale metabolic models reveal metabolic dependencies in various in vivo and in vitro growth conditions. a , Bar plots showing mean flux values of various reactions associated with propionate production during cysteine and methionine metabolism in different in vivo and in vitro growth conditions for S. epidermidis . Flux values were estimated using transcriptome-aware ge"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13368582/figures/Fig5.jpg",
+    "caption": "Inferring host\u2013microbe and microbe\u2013microbe interactions from metatranscriptomes. a , Heatmap of various classes of antimicrobial genes with detected expression (\u22655 reads) in individual metatranscriptomes grouped by skin site. Blue tiles denote detected expression in each metatranscriptome. Red labels denote genes with site-specific enrichments based on two-sided Fisher\u2019s exact tests, with FDR-adju"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13368584",
+  "journal": "Nature Biotechnology",
+  "year": "2026",
+  "doi": "10.1038/s41587-025-02791-w",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13368584/figures/Fig1.gif",
+    "caption": "Overview of the alphaDIA framework. a , Components of alphaDIA and the integration into the alphaPept ecosystem. AlphaDIA uses alphaRaw and alphaTims 50 for accessing raw data from all major vendors. Importing and prediction of spectral libraries are facilitated by alphaBase and alphaPeptDeep 20 . After successful search, LFQ is performed using directLFQ 40 . Two leftmost mass spectrometry instrum"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13368584/figures/Fig2.gif",
+    "caption": "Central search engine components. a , Classifier features and their importance for the supervised target\u2013decoy competition. Feature importance is defined as percentage drop of precursor identifications at 0.1% FDR across replicate training with random initial parameters ( n = 100; box plot defined as per Methods ). b , Deep NN output probability for decoy peptides. c , Number of precursors identif"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13368584/figures/Fig3.gif",
+    "caption": "AlphaDIA enables flexible processing for different acquisition methods. a , Variable-window synchro-PASEF acquisition on the timsTOF. The precursor with sequence GTDDSMTLQSQK is sliced by the quadrupole, resulting in fragment signal across two synchro scans. b , Slicing patterns are resolved by calculating the expected distribution of fragment signal in form of a template matrix. The template matr"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13368584/figures/Fig4.jpg",
+    "caption": "Benchmarking alphaDIA against established software for empirical library-based DIA search. a , Overview of the benchmarking dataset 41 for empirical library-based search acquired on the quadrupole orbitrap QE-HF platform and timsTOF. Fractionated bulk samples were analyzed using DDA to generate sample-specific libraries using MSFragger. Mouse brain membrane isolates were spiked into a complex yeas"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13368584/figures/Fig5.jpg",
+    "caption": "Searching complex proteomes acquired on the Orbitrap Astral with fully predicted spectral libraries. a , Six replicates of 200-ng HeLa bulk data were analyzed on the Orbitrap Astral with a 60-SPD (21 min) gradient. A fully predicted alphaPeptDeep library was used for a two-step search in alphaDIA. Different search engines were used for comparison. Evosep liquid chromatography illustration created "
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13368584/figures/Fig6.jpg",
+    "caption": "DIA transfer learning for discovery of modified peptides. a , A custom deep learning model was trained for every experiment using the identifications from the DIA search engine. Evosep liquid chromatography illustration created with BioRender . b , Multiple properties were optimized, resulting in smaller and better matching spectral libraries. c , Observed and predicted retention times for dimethy"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13441886",
+  "journal": "Nature Methods",
+  "year": "2026",
+  "doi": "10.1038/s41592-026-03155-1",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13441886/figures/Fig1.gif",
+    "caption": "An exemplary workflow orchestrated with spatialproteomics. a , b , After raw images are obtained ( a ), segmentation is performed either on the nuclear or whole-cell level, or on multiple markers independently ( b ). c , Image-processing tools such as thresholding can boost the signal-to-noise ratio of the image. d , Fluorescence intensities are quantified for each segmented cell. e , The resultin"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13441886/figures/Fig2.gif",
+    "caption": "Analysis of a diverse selection of B cell non-Hodgkin lymphomas. a , A hierarchical gating tree used for cell type and subtype assignment. b , Cell types, neighborhoods and Shannon\u2019s diversity index of a single lymph node core. Only coarse cell types are shown in the visualization. Cell type colors correspond to the ones shown in a . c , Overview of patients and their cell type compositions; color"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13441886/figures/Fig3.jpg",
+    "caption": "Spatial analysis of the BNHL cohort. a , Area between theoretical and observed Ripley\u2019s K function. Several cell types (B cells, B prol , T FH \u2026) cluster more in LNs and lose structure in lymphomas. Lines indicate the mean; n = 29 LNs, 61 Indolent, 41 Aggressive; colors as in b . Statistical significance was assessed by analysis of variance (ANOVA). Significance levels are indicated as follows: * "
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13441886/figures/Fig4.gif",
+    "caption": "Analysis of five DLBCL whole-slide images. a , Spatialproteomics enables the application of arbitrary image-processing algorithms to multichannel images, allowing us to correct for differences in marker intensities across WSIs. b , Assigned cell types. c , Comparison of cell type abundances between whole-slide images and corresponding TMA cores. d , Neighborhood enrichment scores from squidpy, exc"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13441889",
+  "journal": "Nature Methods",
+  "year": "2026",
+  "doi": "10.1038/s41592-026-03159-x",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13441889/figures/Fig1.gif",
+    "caption": "The siibra tool suite implements a Multilevel Human Brain Atlas from complex, multiscale data resources. a , Contents of the multilevel atlas are curated and stored in cloud repositories, with EBRAINS ( https://ebrains.eu ) chosen as the main platform following the openMINDS metadata framework ( https://github.com/openMetadataInitiative/openMINDS ). We distinguish foundational content, predefined "
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13441889/figures/Fig2.gif",
+    "caption": "Visually guided exploration of brain structure from the whole brain down to individual cells with siibra-explorer. a , b , Selection of area 4p in the left hemisphere from the Julich-Brain cytoarchitectonic maps 6 in MNI Colin 27 space 10 brings up its probability map. c , When switching to the microscopic BigBrain model as a reference space 13 , the level of detail is substantially increased whil"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13441889/figures/Fig3.jpg",
+    "caption": "Anatomical characterization and multimodal profiling of regions of interest. a , b , siibra accepts user-defined location specifications in the form of reference space coordinates with optional certainty quantifiers ( a ) or feature maps from imaging experiments ( b ). c , Feature maps are typically separated into cluster components. d , Any region of interest (ROI) in image form can be used to ru"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13441889/figures/Fig4.gif",
+    "caption": "Multimodal comparison of two cortical brain areas. Maps and multimodal regional measurements obtained using siibra-python for language area IFG 44 and primary visual region hOc1d in the cytoarchitectonic reference atlas 6 . a , Probabilistic maps in MNI asymmetric space with representative cortical image patches at 1 - \u03bcm resolution extracted from scans of BigBrain sections (image contrast increas"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13441889/figures/Fig5.jpg",
+    "caption": "Anatomically guided reproducible extraction of full-resolution image data from cloud resources. a , b , The code on the left retrieves the probabilistic map of area 4p in the right motor cortex from the cytoarchitectonic atlas 6 ( a ; ll. 2\u20133) to sample relevant cortical patches from high-resolution scans of whole-brain tissue sections in BigBrain space 13 , 28 ( b ; l. 4). c , To define an orient"
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13441889/figures/Fig6.jpg",
+    "caption": "Anatomical evaluation of subcortical maps using siibra-python. a , Spatial correspondence of connectivity-based subthalamic cluster maps 26 with cytoarchitectonically defined nuclei. Dice scores in individual subject space between cluster maps and the VIM in the Distal atlas 27 reported in ref. 26 , compared to correlation coefficients with the Julich-Brain probabilistic map of VIM 62 computed in "
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13442000",
+  "journal": "Nature Methods",
+  "year": "2026",
+  "doi": "10.1038/s41592-026-03176-w",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13442000/figures/Fig1.jpg",
+    "caption": "Design and directed evolution of LATeNT. a , Design of LATeNT. hLOV (blue), an engineered light-sensitive LOV domain 17 , is inserted between amino acids 357 and 358 of TeNT protease and keeps the protease inactive in the dark. Protease activity is restored upon blue-light (470 nm) stimulation. Active LATeNT inhibits neurotransmitter release by cleaving the endogenous synaptic vesicle fusion prote"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13442000/figures/Fig2.gif",
+    "caption": "Characterization of LATeNT in HEK293T cells and cultured neurons. a , Comparison of TeNT and LATeNT cleavage rates. HEK293T lysates expressing TeNT or LATeNT were added to lysates expressing recombinant VAMP2 for 10\u201340 min. LATeNT samples were stimulated with 470 nm light during in vitro reaction. Data are mean \u00b1 s.d. ( n = 3). See Supplementary Fig. 6b for western blots of biological replicates. "
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13442000/figures/Fig3.jpg",
+    "caption": "LATeNT inhibits synaptic transmission. a , mEPSC recording scheme in cultured hippocampal neurons. b , Representative mEPSC traces recorded from uninfected and LATeNT-expressing neurons kept in the dark (light gray) or exposed to 0.55 mW cm \u2212 2 LED light for 30 min (blue). c , d , A quantification of mEPSC frequencies ( c ) and amplitudes ( d ) in b . Data are mean \u00b1 s.e.m. (uninfected, n = 19; LA"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13442000/figures/Fig4.jpg",
+    "caption": "LATeNT identifies causal role for CA1 SST + interneurons in anxiety-like behaviors. a , Experimental scheme for testing LATeNT effect on c-Fos expression after exposure to EE. A total of 3 weeks after AAV injection, 473 nm light was delivered to the dSub for 30 min (1.0 mW cm \u2212 2 , 2 s on, 10 s off), after which mice were provided EE conditions for 8 h per day for 5 consecutive days. Sections were"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13442000/figures/Fig5.gif",
+    "caption": "Control of eCB signaling and insulin secretion using LATeNT. a , Schematic of DSI. In DSI, depolarization of postsynaptic PCs triggers calcium influx, which leads to secretion of eCBs. Released eCBs activate cannabinoid type-1 receptor (CB1R) on presynaptic CCK BCs, which inhibits neurotransmitter release at the inhibitory synapse. Whether eCB release is SNARE-dependent is currently unclear. b , E"
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13442000/figures/Fig6.gif",
+    "caption": "LATeNT for the construction of synthetic circuits in cells lacking endogenous VAMP2. a , Calcium activated LATeNT through fusion of LATeNT to the Ca 2+ -activated luciferase CaBLAM 45 . FFz is used by CaBLAM to generate bioluminescence, which activates LATeNT through BRET. This experiment was performed three times in HEK293T cells with similar results. See Supplementary Fig. 6e for western blots o"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13457098",
+  "journal": "Nature Cell Biology",
+  "year": "2026",
+  "doi": "10.1038/s41556-026-02027-2",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13457098/figures/Fig1.gif",
+    "caption": "Comparison of major cell type class composition between scRNA-seq and Xenium datasets describing the human fetal small intestine. a \u2013 d , UMAP projections summarizing the major cell classes observed in human fetal small intestine as determined by scRNA-seq 1 ( a ) and Xenium spatial transcriptomics ( c ). Stacked bar graphs describing the cell population composition of the human fetal small intest"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13457098/figures/Fig2.jpg",
+    "caption": "Identification of diverse fibroblast populations within the developing intestine using scRNA-seq and Xenium. a , b , UMAP projections summarizing the extracted fibroblast populations observed in human fetal small intestine as determined by scRNA-seq ( a ) and Xenium spatial transcriptomics ( b ), pseudo-coloured by developmental stage. c , d , scRNA-seq ( c ) and Xenium ( d ) UMAPs pseudo-coloured"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13457098/figures/Fig3.jpg",
+    "caption": "Localization of fibroblast subpopulations using Xenium spatial transcriptomics. Expression of proposed human fetal intestinal fibroblast markers over developmental time in the duodenum. a , Landmark populations of the muscularis externa and muscularis mucosa (green), epithelium (orange), fibroblasts (navy), endothelium (cyan), ENS (yellow) and immune cells (pink) are provided for localization refe"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13457098/figures/Fig4.gif",
+    "caption": "CytoSPACE imputation and spatial CellChat using the Xenium atlas. a , Cell location annotations pre- ( a ) and post-CytoSPACE imputation ( a\u2019 ) of the Xenium 142 DPC sample and the sequencing 122, 127 and 132 DPC samples. b \u2013 d , Spatial CellChat post-CytoSPACE for EGF signalling highlighting signalling from the ISCs and enterocytes ( b and b\u2019 ), HH signalling highlighting signalling from ISCs and"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13457098/figures/Fig5.jpg",
+    "caption": "Identification and comparison of EGF-tHIO and EREG-tHIO major cell class composition. a , b , UMAP projections of the major cell class composition in a Xenium image of both an EGF-tHIO ( a ) and EREG-tHIO ( b ). c , A stacked bar graph summarizing the per cent cellular composition of the EGF-tHIO (left) and EREG-tHIO (right) samples. d , e , Cell ID masks generated in XE depicting the entire sampl"
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13457098/figures/Fig6.jpg",
+    "caption": "Fibroblast populations within tHIOs mimics distribution within human tissue. a , b , UMAP projections and dot plots ( a \u2019, b \u2019) indicating fibroblast subtypes and markers of the fibroblast cell class composition in a Xenium image of both an EGF-tHIO ( a ) and EREG-tHIO ( b ). c , A stacked bar graph summarizing the per cent cellular composition of the EGF-tHIO (left) and EREG-tHIO (right) samples."
+   },
+   {
+    "figure_number": 7,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13457098/figures/Fig7.jpg",
+    "caption": "Summary of adult duodenum major cell class and fibroblast composition. a \u2013 i , UMAP projections of the major cell class composition ( a ) and the fibroblast composition ( f ) in a Xenium image of a full-thickness cross-section of adult (44-year old, female) duodenum. Stacked bar graphs summarizing the per cent cellular composition of the major cell classes ( b ) and the fibroblast cell types ( g )"
+   },
+   {
+    "figure_number": 8,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13457098/figures/Fig8.gif",
+    "caption": "Summary of human small intestinal fibroblast localization and identity. a , Distribution of fibroblast populations identified by scRNA-seq of human fetal small intestine. Fibroblast subtypes have distinct localizations: SEC (yellow) form a single cell layer adjacent to the epithelium, LPF (cyan) populate the remainder of the lamina propria, SMF (pink) populate the submucosa and CXCL13 + fibroblast"
+   }
+  ]
+ },
+ {
+  "paper_id": "PMC13457102",
+  "journal": "Nature Cell Biology",
+  "year": "2026",
+  "doi": "10.1038/s41556-026-02009-4",
+  "figures": [
+   {
+    "figure_number": 1,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13457102/figures/Fig1.jpg",
+    "caption": "Cellular taxonomy of the macaque anterior insular cortex and transcriptomic mapping of Patch-seq neurons. a , Experimental paradigm of our scRNA-seq and Patch-seq approaches to study the macaque AIC. The crossed dashed lines label the ear bar zero (EBZ). The vertical black lines on the brain schematic indicate the anterior\u2013posterior position (anterior 23\u201328 to EBZ) of sample collection and coronal"
+   },
+   {
+    "figure_number": 2,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13457102/figures/Fig2.gif",
+    "caption": "Multimodal characterization of the insular projection neurons. a , UMAP visualization of AIC projection neurons, with Patch-seq neurons mapped to their corresponding cell types. Transcriptomic neuron types, Patch-seq neuron types and projection neuron subclasses are labelled. b , Stacked violin plots showing marker gene expression of projection neuron subclasses. The maximum log-normalized express"
+   },
+   {
+    "figure_number": 3,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13457102/figures/Fig3.jpg",
+    "caption": "Morphoelectric distinction between VEN and PC. a , Micrographs show an example of PC and VEN. Their somata and apical dendrites are indicated as \u2018s\u2019 and \u2018a\u2019, respectively. Their axons are indicated by the black closed arrowheads, and black arrows point to their originating sites. Independent replications ( n = 20) yielded the consistent results. b , Co-staining with biocytin and Pan-Nav antibodies"
+   },
+   {
+    "figure_number": 4,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13457102/figures/Fig4.jpg",
+    "caption": "AIS geometry of VEN accounts for its distinct electrophysiological properties from PCs. a , Top: examples of the first near-threshold APs of a PC and a VEN. Bottom: raster plots showing the amplitudes of the population APs of VENs and L5 PCs as a function of time. Comparisons with P < 0.001 for both AP amplitude and width (two-tailed Wilcoxon rank-sum test, n = 281 for VEN and 306 for PC). b , The"
+   },
+   {
+    "figure_number": 5,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13457102/figures/Fig5.gif",
+    "caption": "VENs establish sparse synaptic interactions within the local circuits. a , Example traces of sEPSCs/sIPSCs as well as mEPSCs/mIPSCs from either PC or VEN. Scale bar in amplitude, 20 pA for sEPSC, 60 pA for sIPSC, 20 pA for mEPSC and 40 pA for mIPSC. Time scale, 500 ms for all traces. b , Frequency of postsynaptic currents in VENs and PCs. sEPSC: n = 8 for VEN, n = 11 for PC. sIPSC: n = 7 for VEN, "
+   },
+   {
+    "figure_number": 6,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13457102/figures/Fig6.gif",
+    "caption": "Multimodal characteristics revealed two VEN subtypes. a , Morphology gallery of VEN subtypes (VEN-L and VEN-S) and neighbouring L5 ET neurons. b , Comparison of the prominent basal dendritic diameters of VEN-L and VEN-S. The stem diameters of the prominent basal dendrites were normalized and plotted as a function of their distances from the somata. The grey rectangle indicates the significant diff"
+   },
+   {
+    "figure_number": 7,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13457102/figures/Fig7.jpg",
+    "caption": "Correlations between the phenotypic traits and transcriptomic variation suggest fundamental differences in macaque AIC. a , Patch-seq neurons mapped to the reference scRNA-seq projection neuron atlas. The dots indicate mapped cells and were coloured by membrane time constant (tau). Four example transcriptomic type cells are labelled. b , Example firing patterns of neurons labelled in a with circle"
+   },
+   {
+    "figure_number": 8,
+    "image": "PRIVATE_REFERENCE_ONLY/corpus/PMC13457102/figures/Fig8.jpg",
+    "caption": "AIC exhibits a distinct metabolic state relative to PrC and V1, with a glycolytic/TCA re-wiring suggestive of HIF-1\u2013type remodelling. a , PCA of the metabolites detected for each brain region. The first two components explain approximately 52% of the variance. The ellipses represent the 95% CIs. b , Pathway-level enrichment using the human cortical neuron metabolic network applied to differentiall"
+   }
+  ]
+ }
+]

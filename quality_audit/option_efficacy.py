@@ -50,6 +50,10 @@ PRECONDITIONS = {
     "hierarchical_clustering": {"cluster_k_rows": 3},
     # The centroid labels - and so every control over them - need a label column.
     "embedding_scatter": {"label": "cell_type"},
+    # Bars draw no observations by default, so every point control over them has
+    # nothing to act on until they are switched on.
+    "barplot_with_error_bar": {"points": True},
+    "grouped_barplot_with_error_bar": {"points": True},
 }
 
 

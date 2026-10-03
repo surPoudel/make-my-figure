@@ -80,7 +80,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     with style.apply():
         fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.5))
         for ci, clab in enumerate(chrom_labels):
-            sub = work[work["__chrom"] == clab].sort_values(pos)
+            sub = work[work["__chrom"] == clab].sort_values(pos, kind="stable")
             positions = sub[pos].to_numpy(float)
             if positions.size == 0:
                 continue

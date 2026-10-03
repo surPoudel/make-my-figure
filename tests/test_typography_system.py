@@ -239,15 +239,14 @@ def test_every_plot_type_inherits_the_shared_typography(plot_type):
 # placement across those renderers, which belongs with the layout work rather than
 # here - see quality_audit/typography.md. Recorded so that the list cannot grow
 # unnoticed, and so that fixing one shows up as a test to update.
-KNOWN_CANVAS_OVERFLOW_AT_4X2 = {
-    # A 4 x 2 in panel plus an outside key with eight-odd entries is a genuine
-    # conflict: the fitting pass will not shrink the plot below 55% of the canvas
-    # to make room, and it says so in the render warnings rather than quietly
-    # cropping. The rest of this list was cleared by the central fitting pass.
-    "scatterplot_with_regression": "outside legend, no room at 4 x 2",
-    "spatial_categorical_map": "outside legend with many cell types",
-    "spatial_composition_map": "outside legend with many categories",
-}
+#
+# The list is now empty, and the tripwire below is what keeps it that way. The
+# last three went when the layout pass stopped judging a round by its worst
+# single edge - one round there cleared three edges and lifted the fourth by a
+# fraction, which the old worst-edge test called a regression and discarded,
+# along with the three genuine fixes - and when text measured against its axes
+# started being re-measured after those axes are resized.
+KNOWN_CANVAS_OVERFLOW_AT_4X2 = {}
 
 
 def _canvas_overflow_px(plot_type, width_mm=101.6, height_mm=50.8, axis="x"):
@@ -561,7 +560,11 @@ KNOWN_ADHOC_TYPE_SIZES = {
     "hierarchical_clustering.py": 2,
     "manhattan.py": 1,
     "precision_recall.py": 1,
-    "scatter.py": 1,
+    # scatter.py held one - a fixed 8 pt floor under the regression-stats box,
+    # which the figure-wide type scale could not reach. The box now takes the
+    # style's size and is re-wrapped to its axes when it does not fit, so the
+    # floor was not needed. The count stays here at 0 to record that.
+    "scatter.py": 0,
     "spatial_feature_map.py": 2,
     "upset.py": 1,
     "volcano.py": 2,

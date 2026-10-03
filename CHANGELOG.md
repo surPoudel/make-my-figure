@@ -50,6 +50,9 @@
   so the 21 plot types added since v0.3 showed "Required columns: —" and "Example file: None"; it now
   reads `examples/example_data_manifest.json` (complete for all 39 types) with the legacy manifest as
   fallback. Regression test `tests/test_help_content.py`.
+### Fixed
+
+- **Renderers draw the same figure on every supported pandas version.** Every `sort_values` in the plot renderers now uses a stable sort, so rows that tie on the sort key keep their table order instead of an arbitrary order that differed between pandas 2 (`object` columns) and pandas 3 (default `str` columns). Found by the whole-library render fingerprint: stacked composition bars ordered by a grouping column were drawn as S01, S14, S13, ... on pandas 2 and S01, S02, S03, ... on pandas 3 for the same data. Also affects tie-breaking in the oncoprint gene order (equal frequencies), lollipop draw order and top-n labels, volcano / MA label ranking, enrichment and network top-n selection, and the waterfall, calibration, precision-recall, Manhattan and spider sorts; values, counts and statistics are unchanged. Regression tests: `tests/test_renderer_sort_stability.py`.
 
 All notable changes to Make My Figure are recorded here. This project uses a
 single, evolving `Publication` style — it does not target or claim compliance

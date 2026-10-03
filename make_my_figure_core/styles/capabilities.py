@@ -74,14 +74,12 @@ _DEFAULT = PlotStyleCapabilities(plot_type="_default")
 # script, then regenerate, so a control is never declared to work when it does not.
 _CAPS: Dict[str, PlotStyleCapabilities] = {
     "barplot_with_error_bar": PlotStyleCapabilities(
-        plot_type="barplot_with_error_bar", supports_legend=False,
-        supports_marker_size=False, supports_line_width=False,
+        plot_type="barplot_with_error_bar", supports_line_width=False,
         unsupported_controls_reason=(
             "bars have no markers or data lines; error-bar and edge widths come from the "
             "profile")),
     "grouped_barplot_with_error_bar": PlotStyleCapabilities(
-        plot_type="grouped_barplot_with_error_bar", supports_marker_size=False,
-        supports_line_width=False,
+        plot_type="grouped_barplot_with_error_bar", supports_line_width=False,
         unsupported_controls_reason=(
             "bars have no markers or data lines; error-bar and edge widths come from the "
             "profile")),
@@ -97,9 +95,6 @@ _CAPS: Dict[str, PlotStyleCapabilities] = {
         unsupported_controls_reason=(
             "a volcano colours points by significance class (up / down / not significant) - "
             "set those three colours in the plot options; the palette does not apply")),
-    "boxplot_or_violin_with_points": PlotStyleCapabilities(
-        plot_type="boxplot_or_violin_with_points", supports_legend=False,
-        supports_marker_size=False),
     "lineplot_timecourse_with_error_band": PlotStyleCapabilities(
         plot_type="lineplot_timecourse_with_error_band", supports_marker_size=False),
     "ridge_or_density_plot": PlotStyleCapabilities(

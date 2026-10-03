@@ -24,6 +24,7 @@ from make_my_figure_core.plots.base import (
     resolve_figure_size,
     RenderError, RenderResult, base_metadata, figure_size, get_mapping, require_columns,
     resolve_legend_location,
+    requested_width
 )
 from make_my_figure_core.styles.engine import StyleProfile
 
@@ -100,7 +101,8 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     w, h = figure_size(spec, style, aspect=0.95)
 
     show_legend = bool(block.get("legend", True) and levels)
-    fig_w, legend_rect = (widen_for_outside_legend(w, levels, style, str(gene))
+    fig_w, legend_rect = (widen_for_outside_legend(w, levels, style, str(gene),
+                                                   limit=requested_width(spec))
                           if show_legend else (w, None))
 
     with style.apply():

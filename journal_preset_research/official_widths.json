@@ -1,0 +1,17 @@
+{
+ "Nature": {
+  "single_mm": 89.0,
+  "full_mm": 183.0,
+  "source": "Nature figure guide / final-submission page, official_guidelines_audit.csv 2026-09-16"
+ },
+ "Science": {
+  "single_mm": 57.0,
+  "full_mm": 184.0,
+  "source": "Science instructions for preparing initial manuscript (Wayback 2025-08-10), official_guidelines_audit.csv"
+ },
+ "Cell": {
+  "single_mm": 85.0,
+  "full_mm": 174.0,
+  "source": "Cell Press figure guidelines (Wayback 2025-09-11), official_guidelines_audit.csv"
+ }
+}

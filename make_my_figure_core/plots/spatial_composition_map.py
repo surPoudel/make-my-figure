@@ -30,6 +30,7 @@ from make_my_figure_core.plots.base import (
     resolve_figure_size,
     RenderError, RenderResult, base_metadata, figure_size, get_mapping, require_columns,
     resolve_legend_location,
+    requested_width
 )
 from make_my_figure_core.styles.engine import StyleProfile
 
@@ -88,7 +89,7 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     other_label = str(block.get("other_label", "Other"))
     collapsed = []
     if top_k or min_fraction:
-        weight = data.groupby(data[category].astype(str))["_f"].sum().sort_values(ascending=False)
+        weight = data.groupby(data[category].astype(str))["_f"].sum().sort_values(ascending=False, kind="stable")
         keep = set(weight.index)
         if top_k:
             keep &= set(weight.head(int(top_k)).index)
@@ -133,7 +134,8 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     drawn = 0
 
     show_legend = bool(block.get("legend", True))
-    fig_w, legend_rect = (widen_for_outside_legend(w, levels, style, str(category))
+    fig_w, legend_rect = (widen_for_outside_legend(w, levels, style, str(category),
+                                                   limit=requested_width(spec))
                           if show_legend else (w, None))
 
     with style.apply():

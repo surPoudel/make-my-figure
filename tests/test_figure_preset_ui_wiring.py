@@ -125,3 +125,37 @@ def test_figure_builder_has_layout_preset_actions():
     assert 'QGroupBox("Layout preset")' in _STATS
     # the user is told the difference between a layout preset and a saved figure
     assert "never contains the panels" in _STATS
+
+
+# --- preview before apply, experimental library -----------------------------------------------
+
+def test_desktop_has_preview_before_apply_and_experimental_listing():
+    assert "def action_preview_preset(" in _MAIN
+    assert "preview_pair(" in _MAIN and "apply_with_guard(" in _MAIN
+    assert "chk_experimental_presets" in _MAIN
+    assert "list_experimental_presets(" in _MAIN
+    # an experimental preset is never applied blind: Apply routes it to the preview
+    body = _MAIN[_MAIN.index("def action_apply_preset("):]
+    body = body[:body.index("\n    def ", 10)]
+    assert "is_experimental(preset)" in body and "self.action_preview_preset()" in body
+    # the plain Apply path is guarded too
+    assert "apply_with_guard(preset, base" in body
+    assert "Preview & apply selected preset" in _MAIN
+
+
+def test_streamlit_has_preview_before_apply_and_experimental_listing():
+    assert "preset_show_experimental" in _STREAM
+    assert "list_experimental_presets(" in _STREAM
+    assert "_pv.preview_pair(" in _STREAM
+    assert "apply_with_guard(" in _STREAM
+    assert 'key="preset_preview_apply"' in _STREAM and 'key="preset_preview_cancel"' in _STREAM
+    assert "protected_violations" in _STREAM
+
+
+def test_no_frontend_claims_journal_compliance():
+    """Neutral wording rule: shipping UI text never names a journal or promises compliance."""
+    for src, name in ((_MAIN, "desktop"), (_STREAM, "streamlit")):
+        low = src.lower()
+        for phrase in ("nature preset", "nature-compliant", "cell-approved", "science-ready",
+                       "journal-compliant", "guaranteed acceptance"):
+            assert phrase not in low, f"{name} contains {phrase!r}"

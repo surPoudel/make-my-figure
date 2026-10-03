@@ -23,6 +23,7 @@ from make_my_figure_core.plots.base import (
     resolve_figure_size,
     RenderResult, base_metadata, figure_size, get_mapping, require_columns,
     resolve_legend_location,
+    requested_width
 )
 from make_my_figure_core.styles.engine import StyleProfile
 
@@ -81,7 +82,8 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     fig_w = w * ncols
     legend_rect = None
     if show_legend:
-        fig_w, legend_rect = widen_for_outside_legend(w * ncols, levels, style, str(category))
+        fig_w, legend_rect = widen_for_outside_legend(
+            w * ncols, levels, style, str(category), limit=requested_width(spec))
 
     with style.apply():
         fig, axes = plt.subplots(nrows, ncols,

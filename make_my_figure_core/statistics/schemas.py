@@ -71,12 +71,23 @@ def default_annotation() -> Dict[str, Any]:
         # compared against one control: N-1 stacked brackets would take most of the panel height.
         "placement": "bracket",
         "above_bar_pad_frac": 0.02,   # gap between a bar top and its label, fraction of y-range
-        # --- geometry (bracket engine) ---
+        # --- geometry (bracket engine; see plots/stats_overlay.bracket_geometry) ---
+        # Geometry is point-based by default: tick height, gap, label offset and top margin are
+        # derived from ``font_size`` (the annotation font, pt) and ``line_width`` (pt), so a bracket
+        # reads the same at any y-range or panel size. A preset may pin them in points with the
+        # ``*_pt`` keys. The ``*_frac`` keys (fractions of the y-range) are the legacy geometry:
+        # ``None`` means "use points"; a number is honoured as before, so older specs render as
+        # they did. These keys change geometry only - never which comparisons are drawn or how a
+        # p-value is written.
         "font_size": None,            # None -> style.annotation_pt
-        "line_width": None,           # None -> style-derived
-        "bracket_height_frac": 0.03,  # bracket tick height, fraction of y-range
-        "gap_frac": 0.06,             # vertical gap between stacked brackets
-        "top_margin_frac": 0.10,      # extra headroom added above the data
+        "line_width": None,           # None -> style.spine_width_pt
+        "bracket_height_pt": None,    # tick height (pt); None -> 0.4 x font_size
+        "gap_pt": None,               # gap data->bracket and bracket->bracket (pt); None -> 0.6 x font_size + line_width
+        "label_offset_pt": None,      # tick top -> label (pt); None -> 0.2 x font_size + line_width / 2
+        "top_margin_pt": None,        # headroom above the top label (pt); None -> 0.5 x font_size
+        "bracket_height_frac": None,  # legacy: tick height as a fraction of the y-range
+        "gap_frac": None,             # legacy: gap as a fraction of the y-range
+        "top_margin_frac": None,      # legacy: headroom as a fraction of the y-range
     }
 
 

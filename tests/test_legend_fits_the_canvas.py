@@ -16,8 +16,12 @@ pytest.importorskip("matplotlib")
 # These genuinely cannot fit at 4 x 2 in: an eight-entry key beside a two-inch
 # plot leaves no room, and the fitting pass will not shrink the plot below 55% of
 # the canvas to buy some. They are reported, not cropped in silence.
-NO_ROOM_AT_4X2 = {"scatterplot_with_regression", "spatial_categorical_map",
-                  "spatial_composition_map", "neighborhood_enrichment_matrix"}
+# scatterplot_with_regression left this set once its regression-stats box began
+# re-wrapping to whatever axes it ends up with: the box, not the legend, was what
+# hung off the edge, and squeezing the axes to rescue a legend had been carrying
+# it further out. It now fits at 4 x 2 in and is held to the stricter assertion.
+NO_ROOM_AT_4X2 = {"spatial_categorical_map", "spatial_composition_map",
+                  "neighborhood_enrichment_matrix"}
 
 
 def _all_plot_types():

@@ -195,21 +195,86 @@ def test_lineplot_error_none_draws_no_band():
     assert [c for c in ax.collections if c.get_paths()] == []
 
 
-@pytest.mark.parametrize("plot_type,expected", [
-    ("barplot_with_error_bar", ["sem", "sd", "ci95", "none"]),
-    ("grouped_barplot_with_error_bar", ["sem", "sd", "ci95", "none"]),
-    ("lineplot_timecourse_with_error_band",
-     ["sem", "sd", "ci95", "iqr", "range", "none"]),
-])
-def test_every_offered_error_choice_is_one_the_renderer_understands(plot_type, expected):
-    """No choice may fall through to summarize_error's unknown-method default.
+# The whisker has to describe the bar: SEM/SD/CI say something about a mean, the
+# IQR about a median. The renderer pairs them and corrects a mismatch, so a test
+# has to pair them too.
+_SUMMARY_FOR = {"sem": "mean", "sd": "mean", "ci95": "mean", "ci95_t": "mean",
+                "iqr": "median"}
 
-    That fallback silently returns SEM, so an offered-but-unrecognised choice is
-    exactly the failure mode these tests exist to rule out.
+
+def _drawn_error_extent(plot_type, **mapping):
+    """Total vertical ink of the error marks on a rendered figure."""
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    from make_my_figure_core import examples
+    from make_my_figure_core.plots import registry
+
+    table, aux, spec = examples.load_example(plot_type)
+    spec = {**spec, "mapping": {**(spec.get("mapping") or {}), **mapping}}
+    result = registry.render(spec, table.dataframe,
+                             aux={k: v.dataframe for k, v in (aux or {}).items()})
+    figure = result.figure
+    figure.canvas.draw()
+    extent = 0.0
+    for collection in figure.axes[0].collections:
+        try:
+            segments = collection.get_segments()
+        except AttributeError:
+            continue
+        for seg in segments:
+            seg = np.asarray(seg)
+            if seg.shape[0] >= 2:
+                extent += abs(float(seg[:, 1].max() - seg[:, 1].min()))
+    for line in figure.axes[0].lines:
+        ydata = np.asarray(line.get_ydata(), dtype=float)
+        if ydata.size == 2 and ydata[0] != ydata[1]:
+            extent += abs(float(ydata[1] - ydata[0]))
+    plt.close(figure)
+    return round(extent, 6), list(result.warnings)
+
+
+@pytest.mark.parametrize("plot_type", ["barplot_with_error_bar",
+                                       "grouped_barplot_with_error_bar"])
+def test_every_offered_error_choice_draws_its_own_interval(plot_type):
+    """No two choices may draw the same interval when each is paired with the
+    summary it describes.
+
+    An unrecognised method falls through to a SEM default, so a choice that
+    silently reproduces another is the failure this rules out. Measured on the
+    DRAWN figure, not by calling a statistics function: the bars moved from
+    base.summarize_error to _bar_shared.summarize_group, and a test bound to the
+    old one reported a perfectly good ci95_t and iqr as broken.
     """
     option = next(o for o in ui_hints.options(plot_type) if o.key == "error")
-    assert option.choices == expected
     assert option.default == "sem"
+    drawn = {}
+    for choice in option.choices:
+        if choice == "none":
+            continue
+        extent, _ = _drawn_error_extent(
+            plot_type, error=choice, summary=_SUMMARY_FOR.get(choice, "mean"))
+        drawn[choice] = extent
+    collided = {v: [k for k in drawn if drawn[k] == v]
+                for v in set(drawn.values())}
+    collided = {v: ks for v, ks in collided.items() if len(ks) > 1}
+    assert not collided, (
+        f"{plot_type}: these draw an identical interval, so one is falling "
+        f"through to another's statistic: {collided}")
+
+
+@pytest.mark.parametrize("plot_type", ["barplot_with_error_bar",
+                                       "grouped_barplot_with_error_bar"])
+def test_a_whisker_that_does_not_describe_the_bar_is_corrected_and_said_so(plot_type):
+    """IQR around a mean is not a thing. The renderer substitutes the statistic
+    that does describe the bar and reports it, rather than drawing a number that
+    means nothing - which is the behaviour worth protecting here.
+    """
+    extent, warns = _drawn_error_extent(plot_type, error="iqr", summary="mean")
+    sd_extent, _ = _drawn_error_extent(plot_type, error="sd", summary="mean")
+    assert extent == sd_extent, "the mismatch was not corrected to the SD"
+    assert any("interquartile" in w.lower() for w in warns), (
+        f"the substitution happened silently; warnings were {warns}")
 
 
 def test_audit_sends_plot_options_to_the_mapping_block(monkeypatch):

@@ -42,11 +42,13 @@ def test_save_then_apply_style_preset_on_new_data(tmp_path, monkeypatch):
     at = _run()
     _pick_sample(at, "Bar plot with error bars")
 
-    # configure: fonts, palette, tick angle, legend, and a plot option
+    # configure: fonts, palette, tick angle, legend, a visual plot option (bar fill) and an
+    # analytical one (the error bar definition) - only the visual one belongs in a style preset
     at.session_state["sty_title_pt"] = 19
     at.session_state["sty_palette"] = "grayscale"
     at.session_state["lay_xrot"] = "45"
     at.session_state["lay_legloc"] = "outside right"
+    at.session_state["opt_barplot_with_error_bar_bar_fill"] = "outline"
     at.session_state["opt_barplot_with_error_bar_error"] = "sd"
     at.run()
     assert not at.exception
@@ -62,6 +64,7 @@ def test_save_then_apply_style_preset_on_new_data(tmp_path, monkeypatch):
     assert preset["style"]["palette_name"] == "grayscale"
     assert preset["layout"]["x_tick_rotation"] == 45
     assert preset["layout"]["legend_location"] == "outside right"
+    assert preset["options"]["bar_fill"] == "outline"
     # The error-bar statistic must NOT travel in a style preset. It is analysis,
     # not appearance: SEM, SD and CI95 bars are drawn identically and only the
     # number differs, so a shared lab style that carried it could silently turn a
@@ -90,8 +93,9 @@ def test_save_then_apply_style_preset_on_new_data(tmp_path, monkeypatch):
     assert at2.session_state["sty_palette"] == "grayscale"
     assert at2.session_state["lay_xrot"] == "45"
     assert at2.session_state["lay_legloc"] == "outside right"
-    # ...and the new session keeps its OWN error statistic. This is the point of
-    # the change: the appearance travels, the statistic does not.
+    assert at2.session_state["opt_barplot_with_error_bar_bar_fill"] == "outline"
+    # ...and the new session keeps its OWN error statistic. This is the point:
+    # the appearance travels, the statistic does not.
     assert at2.session_state["opt_barplot_with_error_bar_error"] == "sem"
 
 

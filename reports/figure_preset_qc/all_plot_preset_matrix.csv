@@ -1,10 +1,10 @@
 plot_type,preset_save,preset_load,style_roundtrip,full_config_roundtrip,color_roundtrip,typography_roundtrip,layout_roundtrip,legend_roundtrip,annotation_roundtrip,plot_specific_roundtrip,new_data_safe,png_export,pdf_export,svg_export,status,notes
-barplot_with_error_bar,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample | legend_roundtrip: N/A - this plot type draws no legend
+barplot_with_error_bar,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
 grouped_barplot_with_error_bar,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
 heatmap_clustered_matrix,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
 volcano_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample | palette control declared inapplicable: a volcano colours points by significance class (up / down / not significant) - set those three colours in the plot options; the palette does not apply
 scatterplot_with_regression,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
-boxplot_or_violin_with_points,PASS,PASS,PASS,PASS,PASS,PASS,PASS,N/A,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample | legend_roundtrip: N/A - this plot type draws no legend
+boxplot_or_violin_with_points,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
 lineplot_timecourse_with_error_band,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
 ridge_or_density_plot,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: mock sample
 histogram_distribution,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,PASS,new data: example with values perturbed
