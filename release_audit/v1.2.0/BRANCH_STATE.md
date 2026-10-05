@@ -18,9 +18,13 @@ branch lacks.
 
 - 6 commits on `feature/desktop-tutorial` that are not on `main`
 - 53 commits on `main` that are not on the tutorial branch
-- **The local tutorial branch (`5b0ab70`) is behind its own remote (`a758520`).**
-  Recorded here because Phase 21 must reconcile that *after* the release, and must
-  not resolve it by overwriting either side.
+- **The local tutorial branch (`5b0ab70`) is one commit *ahead* of its own remote
+  (`a758520`), not behind.** `5b0ab70`'s parent is exactly `a758520`. The commit is
+  "Master replay: one continuous action script covering the main capabilities in a
+  single window (48 checks PASS)" of 2026-09-23, 35 files including screenshots and
+  a driver log. An earlier revision of this document said "behind", which inverted
+  the risk: this is unpushed work that exists in one place only, not stale local
+  state that can be discarded.
 - No tutorial commit is an ancestor of the release commit. Verified in
   RELEASE_SOURCE.md.
 
