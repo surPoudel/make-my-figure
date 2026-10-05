@@ -5,7 +5,7 @@
   "mode": "offscreen",
   "status": "PASS",
   "error": "",
-  "seconds": 13.7,
+  "seconds": 12.1,
   "checks": [],
   "failed_checks": [],
   "captures": [
@@ -41,7 +41,7 @@
       "name": "05_controls_full",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/getting_started/05_controls_full.png",
       "widget": "controls_full",
-      "size": "584x3916",
+      "size": "584x4075",
       "note": "the whole control column, top to bottom"
     },
     {
@@ -119,7 +119,8 @@
       "Recommended figures",
       "2. Map columns",
       "3. Options",
-      "4. Labels & size",
+      "4. Figure size",
+      "4. Labels",
       "Figure preset",
       "5. Publication style",
       "\u2461 Typography",
@@ -137,5 +138,5 @@
     ]
   },
   "notes": [],
-  "generated": "2026-09-22T20:39:48"
+  "generated": "2026-10-05T11:33:50"
 }

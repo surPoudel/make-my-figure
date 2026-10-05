@@ -7,7 +7,7 @@
   "mode": "offscreen",
   "status": "PASS",
   "error": "",
-  "seconds": 29.9,
+  "seconds": 32.7,
   "checks": [
     {
       "check": "data loaded",
@@ -290,5 +290,5 @@
     ]
   },
   "notes": [],
-  "generated": "2026-09-22T20:40:18"
+  "generated": "2026-10-05T11:34:23"
 }

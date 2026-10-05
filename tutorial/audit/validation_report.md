@@ -1,22 +1,22 @@
 # Tutorial validation report
 
-Generated 2026-09-23 14:18 by `tutorial/automation/validate_tutorials.py`. Each row is one action script run against the real desktop application (offscreen). Checks are recorded by the driver as the script performs the tutorial's own steps.
+Generated 2026-10-05 11:41 by `tutorial/automation/validate_tutorials.py`. Each row is one action script run against the real desktop application (offscreen). Checks are recorded by the driver as the script performs the tutorial's own steps.
 
 | tutorial | status | checks | failed | captures | seconds | datasets | detail |
 |---|---|---|---|---|---|---|---|
-| `figure_builder` | **PASS** | 8 | 0 | 3 | 50.8 | group_comparison.csv, relationship_data.csv |  |
-| `figure_package` | **PASS** | 9 | 0 | 7 | 32.7 | group_comparison.csv |  |
-| `figure_preset` | **PASS** | 8 | 0 | 6 | 27.8 | group_comparison.csv, one_table_many_plots.csv |  |
-| `getting_started` | **PASS** | 0 | 0 | 6 | 13.7 |  |  |
-| `group_comparison_box` | **PASS** | 8 | 0 | 8 | 29.9 | group_comparison.csv |  |
-| `heatmap_clustered` | **PASS** | 5 | 0 | 6 | 22.1 | feature_sample_matrix.csv |  |
-| `kaplan_meier` | **PASS** | 6 | 0 | 7 | 26.7 | survival.csv |  |
-| `mapping_ambiguous` | **PASS** | 7 | 0 | 11 | 34.7 | ambiguous_columns.csv |  |
-| `master_capabilities` | **PASS** | 48 | 0 | 27 | 208.3 | ambiguous_columns.csv, showcase_group_comparison.csv, rnaseq_results.csv, rnaseq_results_renamed.csv, feature_sample_matrix.csv, survival.csv, relationship_data.csv |  |
-| `observations_jitter` | **PASS** | 20 | 0 | 17 | 74.1 | showcase_group_comparison.csv |  |
-| `publication_presets` | **PASS** | 13 | 0 | 9 | 50.6 | showcase_group_comparison.csv |  |
-| `scatter_regression` | **PASS** | 6 | 0 | 8 | 30.3 | relationship_data.csv |  |
-| `volcano_manual_mapping` | **PASS** | 8 | 0 | 10 | 34.1 | rnaseq_results.csv, rnaseq_results_renamed.csv |  |
+| `figure_builder` | **PASS** | 8 | 0 | 3 | 44.6 | group_comparison.csv, relationship_data.csv |  |
+| `figure_package` | **PASS** | 9 | 0 | 7 | 28.7 | group_comparison.csv |  |
+| `figure_preset` | **PASS** | 8 | 0 | 6 | 30.1 | group_comparison.csv, one_table_many_plots.csv |  |
+| `getting_started` | **PASS** | 0 | 0 | 6 | 12.1 |  |  |
+| `group_comparison_box` | **PASS** | 8 | 0 | 8 | 32.7 | group_comparison.csv |  |
+| `heatmap_clustered` | **PASS** | 5 | 0 | 6 | 22.6 | feature_sample_matrix.csv |  |
+| `kaplan_meier` | **PASS** | 6 | 0 | 7 | 25.9 | survival.csv |  |
+| `mapping_ambiguous` | **PASS** | 7 | 0 | 11 | 34.9 | ambiguous_columns.csv |  |
+| `master_capabilities` | **PASS** | 48 | 0 | 27 | 172.7 | ambiguous_columns.csv, showcase_group_comparison.csv, rnaseq_results.csv, rnaseq_results_renamed.csv, feature_sample_matrix.csv, survival.csv, relationship_data.csv |  |
+| `observations_jitter` | **PASS** | 20 | 0 | 17 | 58.9 | showcase_group_comparison.csv |  |
+| `publication_presets` | **PASS** | 13 | 0 | 9 | 39.5 | showcase_group_comparison.csv |  |
+| `scatter_regression` | **PASS** | 6 | 0 | 8 | 30.5 | relationship_data.csv |  |
+| `volcano_manual_mapping` | **PASS** | 8 | 0 | 10 | 34.9 | rnaseq_results.csv, rnaseq_results_renamed.csv |  |
 
 ## Checks per tutorial
 

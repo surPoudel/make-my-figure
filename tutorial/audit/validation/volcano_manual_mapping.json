@@ -8,7 +8,7 @@
   "mode": "offscreen",
   "status": "PASS",
   "error": "",
-  "seconds": 34.1,
+  "seconds": 34.9,
   "checks": [
     {
       "check": "data loaded",
@@ -71,7 +71,7 @@
       "name": "02b_messages",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/02b_messages.png",
       "widget": "messages",
-      "size": "622x14",
+      "size": "1048x28",
       "note": "the Messages text about detected columns"
     },
     {
@@ -113,7 +113,7 @@
       "name": "06_customization",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/volcano_manual_mapping/06_customization.png",
       "widget": "options",
-      "size": "566x502",
+      "size": "566x558",
       "note": "thresholds"
     },
     {
@@ -224,7 +224,7 @@
       "label": "gene_symbol",
       "id_col": "(none)"
     },
-    "message_after_detection": "Publication check: passed",
+    "message_after_detection": "Publication check: passed\n\u26a0 The figure was widened to 5.40 x 4.35 in so the legend fits on the canvas. Set a figure size explicitly to keep it fixed.",
     "columns_renamed": [
       "feature",
       "name",
@@ -255,5 +255,5 @@
     }
   },
   "notes": [],
-  "generated": "2026-09-22T20:42:46"
+  "generated": "2026-10-05T11:41:26"
 }

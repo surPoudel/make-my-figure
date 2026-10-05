@@ -6,7 +6,7 @@
     "purpose": "Compare a mean readout across experimental conditions with replicate error bars",
     "required": "x, y, color",
     "thumb": "screenshots/gallery/barplot_with_error_bar.png",
-    "tutorial": "",
+    "tutorial": "plots/barplot_with_error_bar.md",
     "video": ""
   },
   {
@@ -16,7 +16,7 @@
     "purpose": "Two-factor comparison (e.g",
     "required": "x, group, y",
     "thumb": "screenshots/gallery/grouped_barplot_with_error_bar.png",
-    "tutorial": "",
+    "tutorial": "plots/grouped_barplot_with_error_bar.md",
     "video": ""
   },
   {
@@ -66,7 +66,7 @@
     "purpose": "Mean response over time per treatment, with a shaded SEM/CI error band",
     "required": "x, y, color, style_by",
     "thumb": "screenshots/gallery/lineplot_timecourse_with_error_band.png",
-    "tutorial": "",
+    "tutorial": "plots/lineplot_timecourse_with_error_band.md",
     "video": ""
   },
   {
@@ -76,7 +76,7 @@
     "purpose": "Stacked density (ridgeline) distributions of a value per condition",
     "required": "x, group",
     "thumb": "screenshots/gallery/ridge_or_density_plot.png",
-    "tutorial": "",
+    "tutorial": "plots/ridge_or_density_plot.md",
     "video": ""
   },
   {
@@ -86,7 +86,7 @@
     "purpose": "Binned counts of one measurement, as separate panels per group or overlaid - shows the distribution's actual shape (modes, gaps, tails) rather than a smoothed curve",
     "required": "x, group, value_columns",
     "thumb": "screenshots/gallery/histogram_distribution.png",
-    "tutorial": "",
+    "tutorial": "plots/histogram_distribution.md",
     "video": ""
   },
   {
@@ -96,7 +96,7 @@
     "purpose": "Pathway/term enrichment: dot size = gene count, color = significance",
     "required": "y, x, size, color",
     "thumb": "screenshots/gallery/enrichment_dotplot.png",
-    "tutorial": "",
+    "tutorial": "plots/enrichment_dotplot.md",
     "video": ""
   },
   {
@@ -116,7 +116,7 @@
     "purpose": "Cell-type (or category) composition per sample as stacked fractions",
     "required": "x, stack, y, facet_or_sort_by",
     "thumb": "screenshots/gallery/stacked_bar_composition.png",
-    "tutorial": "",
+    "tutorial": "plots/stacked_bar_composition.md",
     "video": ""
   },
   {
@@ -126,7 +126,7 @@
     "purpose": "Best percent change per patient (oncology response), sorted into a waterfall",
     "required": "x, y, color",
     "thumb": "screenshots/gallery/waterfall_plot.png",
-    "tutorial": "",
+    "tutorial": "plots/waterfall_plot.md",
     "video": ""
   },
   {
@@ -136,7 +136,7 @@
     "purpose": "PCA of an expression matrix; samples colored by group and shaped by batch",
     "required": "matrix_row_id",
     "thumb": "screenshots/gallery/pca_scatter_from_matrix.png",
-    "tutorial": "",
+    "tutorial": "plots/pca_scatter_from_matrix.md",
     "video": ""
   },
   {
@@ -146,7 +146,7 @@
     "purpose": "Gene-by-sample alteration grid (oncoprint) colored by alteration type",
     "required": "sample, row, fill",
     "thumb": "screenshots/gallery/oncoprint_mutation_heatmap.png",
-    "tutorial": "",
+    "tutorial": "plots/oncoprint_mutation_heatmap.md",
     "video": ""
   },
   {
@@ -156,7 +156,7 @@
     "purpose": "Mutation counts along a protein, as lollipops colored by mutation type",
     "required": "x, y, color, label",
     "thumb": "screenshots/gallery/lollipop_mutation_plot.png",
-    "tutorial": "",
+    "tutorial": "plots/lollipop_mutation_plot.md",
     "video": ""
   },
   {
@@ -166,7 +166,7 @@
     "purpose": "ROC curves with AUC comparing one or two classifier scores",
     "required": "label, score, score2",
     "thumb": "screenshots/gallery/roc_curve.png",
-    "tutorial": "",
+    "tutorial": "plots/roc_curve.md",
     "video": ""
   },
   {
@@ -176,7 +176,7 @@
     "purpose": "Subgroup effect sizes (hazard/odds ratios) with confidence intervals",
     "required": "label, estimate, lower, upper",
     "thumb": "screenshots/gallery/forest_plot.png",
-    "tutorial": "",
+    "tutorial": "plots/forest_plot.md",
     "video": ""
   },
   {
@@ -186,7 +186,7 @@
     "purpose": "Show every observation per group with an optional mean/median summary \u2014 a readable alternative to a bar plot",
     "required": "x, y, color",
     "thumb": "screenshots/gallery/dot_strip_plot.png",
-    "tutorial": "",
+    "tutorial": "plots/dot_strip_plot.md",
     "video": ""
   },
   {
@@ -196,7 +196,7 @@
     "purpose": "Show every observation per group with a collision-avoiding layout \u2014 a readable alternative to a bar plot",
     "required": "x, y, color",
     "thumb": "screenshots/gallery/beeswarm_plot.png",
-    "tutorial": "",
+    "tutorial": "plots/beeswarm_plot.md",
     "video": ""
   },
   {
@@ -206,7 +206,7 @@
     "purpose": "Connect matched observations across conditions/timepoints (before/after, repeated measures)",
     "required": "subject, condition, value, color",
     "thumb": "screenshots/gallery/paired_slopegraph.png",
-    "tutorial": "",
+    "tutorial": "plots/paired_slopegraph.md",
     "video": ""
   },
   {
@@ -216,7 +216,7 @@
     "purpose": "Full distribution per group as a half-violin cloud + box summary + raw points",
     "required": "x, y",
     "thumb": "screenshots/gallery/raincloud_plot.png",
-    "tutorial": "",
+    "tutorial": "plots/raincloud_plot.md",
     "video": ""
   },
   {
@@ -226,7 +226,7 @@
     "purpose": "Hierarchical clustering of a feature-by-sample matrix as a standalone dendrogram",
     "required": "row_id",
     "thumb": "screenshots/gallery/hierarchical_dendrogram.png",
-    "tutorial": "",
+    "tutorial": "plots/hierarchical_dendrogram.md",
     "video": ""
   },
   {
@@ -236,7 +236,7 @@
     "purpose": "Differential expression: average abundance (A) vs log fold change (M), colored by significance",
     "required": "x, y, p, label, id_col",
     "thumb": "screenshots/gallery/ma_plot.png",
-    "tutorial": "",
+    "tutorial": "plots/ma_plot.md",
     "video": ""
   },
   {
@@ -246,7 +246,7 @@
     "purpose": "Genome-wide association -log10(p) across chromosomes with significance thresholds",
     "required": "chrom, pos, p, snp",
     "thumb": "screenshots/gallery/manhattan_plot.png",
-    "tutorial": "",
+    "tutorial": "plots/manhattan_plot.md",
     "video": ""
   },
   {
@@ -256,7 +256,7 @@
     "purpose": "Observed vs expected -log10(p) Q-Q plot with genomic inflation (lambda)",
     "required": "p",
     "thumb": "screenshots/gallery/qq_plot.png",
-    "tutorial": "",
+    "tutorial": "plots/qq_plot.md",
     "video": ""
   },
   {
@@ -266,7 +266,7 @@
     "purpose": "Agreement between two measurement methods (bias and limits of agreement)",
     "required": "method_a, method_b, label",
     "thumb": "screenshots/gallery/bland_altman_plot.png",
-    "tutorial": "",
+    "tutorial": "plots/bland_altman_plot.md",
     "video": ""
   },
   {
@@ -276,7 +276,7 @@
     "purpose": "Precision vs recall for one or two classifiers on an imbalanced outcome, with average precision (AUPRC)",
     "required": "label, score, score2",
     "thumb": "screenshots/gallery/precision_recall_curve.png",
-    "tutorial": "",
+    "tutorial": "plots/precision_recall_curve.md",
     "video": ""
   },
   {
@@ -286,7 +286,7 @@
     "purpose": "Classification confusion matrix (binary or multiclass) with optional row/column/total normalization",
     "required": "true, predicted",
     "thumb": "screenshots/gallery/confusion_matrix.png",
-    "tutorial": "",
+    "tutorial": "plots/confusion_matrix.md",
     "video": ""
   },
   {
@@ -296,7 +296,7 @@
     "purpose": "Reliability of a clinical risk model: predicted vs observed probability, binned, with a perfect-calibration diagonal",
     "required": "label, prob",
     "thumb": "screenshots/gallery/calibration_plot.png",
-    "tutorial": "",
+    "tutorial": "plots/calibration_plot.md",
     "video": ""
   },
   {
@@ -306,7 +306,7 @@
     "purpose": "Drug dose-response with a 4-parameter logistic fit and EC50/IC50 per group",
     "required": "dose, response, group",
     "thumb": "screenshots/gallery/dose_response_curve.png",
-    "tutorial": "",
+    "tutorial": "plots/dose_response_curve.md",
     "video": ""
   },
   {
@@ -316,7 +316,7 @@
     "purpose": "Intersections among many sets (a scalable alternative to Venn diagrams)",
     "required": "chosen in Map columns",
     "thumb": "screenshots/gallery/upset_plot.png",
-    "tutorial": "",
+    "tutorial": "plots/upset_plot.md",
     "video": ""
   },
   {
@@ -326,7 +326,7 @@
     "purpose": "Per-patient treatment/follow-up timelines (oncology), colored by response with event markers",
     "required": "subject, start, end, duration, event, group",
     "thumb": "screenshots/gallery/swimmer_plot.png",
-    "tutorial": "",
+    "tutorial": "plots/swimmer_plot.md",
     "video": ""
   },
   {
@@ -336,7 +336,7 @@
     "purpose": "Longitudinal per-patient change over time (e.g",
     "required": "subject, time, value, group",
     "thumb": "screenshots/gallery/spider_plot.png",
-    "tutorial": "",
+    "tutorial": "plots/spider_plot.md",
     "video": ""
   },
   {
@@ -346,7 +346,7 @@
     "purpose": "Flow between two sets of categories (e.g",
     "required": "source, target, value",
     "thumb": "screenshots/gallery/sankey_plot.png",
-    "tutorial": "",
+    "tutorial": "plots/sankey_plot.md",
     "video": ""
   },
   {
@@ -356,7 +356,7 @@
     "purpose": "Single-cell / sample embedding (UMAP or t-SNE) colored by cluster or metadata",
     "required": "x, y, color, shape, label",
     "thumb": "screenshots/gallery/embedding_scatter.png",
-    "tutorial": "",
+    "tutorial": "plots/embedding_scatter.md",
     "video": ""
   },
   {
@@ -366,7 +366,7 @@
     "purpose": "Cluster a feature-by-sample matrix into k groups and export the cluster assignment table",
     "required": "row_id",
     "thumb": "screenshots/gallery/hierarchical_clustering.png",
-    "tutorial": "",
+    "tutorial": "plots/hierarchical_clustering.md",
     "video": ""
   },
   {
@@ -376,7 +376,7 @@
     "purpose": "Interaction / co-expression network: nodes are genes/features, edges are interactions or correlations, colored by module and sized by degree",
     "required": "source, target, weight, interaction_type",
     "thumb": "screenshots/gallery/network_graph.png",
-    "tutorial": "",
+    "tutorial": "plots/network_graph.md",
     "video": ""
   },
   {
@@ -386,7 +386,67 @@
     "purpose": "Ligand-receptor interaction counts between cell types drawn as a Circos-style chord diagram: one segment per cell type sized by its total interactions, ribbons sized by the count of each pair, and a compartment band on the outside",
     "required": "source, target, value, group",
     "thumb": "screenshots/gallery/chord_diagram.png",
-    "tutorial": "",
+    "tutorial": "plots/chord_diagram.md",
+    "video": ""
+  },
+  {
+    "plot_id": "spatial_categorical_map",
+    "display": "Spatial map (categories)",
+    "family": "08_Advanced_Plots",
+    "purpose": "Show where each cell type sits in a tissue section",
+    "required": "x, y, category, facet",
+    "thumb": "screenshots/gallery/spatial_categorical_map.png",
+    "tutorial": "plots/spatial_categorical_map.md",
+    "video": ""
+  },
+  {
+    "plot_id": "spatial_feature_map",
+    "display": "Spatial map (continuous value)",
+    "family": "08_Advanced_Plots",
+    "purpose": "Show where a protein marker is expressed across a section",
+    "required": "x, y, value, feature, facet",
+    "thumb": "screenshots/gallery/spatial_feature_map.png",
+    "tutorial": "plots/spatial_feature_map.md",
+    "video": ""
+  },
+  {
+    "plot_id": "spatial_transcript_map",
+    "display": "Spatial transcript map",
+    "family": "08_Advanced_Plots",
+    "purpose": "Show where transcripts of selected genes were detected in a section",
+    "required": "x, y, gene, quality",
+    "thumb": "screenshots/gallery/spatial_transcript_map.png",
+    "tutorial": "plots/spatial_transcript_map.md",
+    "video": ""
+  },
+  {
+    "plot_id": "spatial_roi_map",
+    "display": "Spatial ROI / region outlines",
+    "family": "08_Advanced_Plots",
+    "purpose": "Outline and label anatomical or analytical regions on a section",
+    "required": "roi, x, y, vertex_order, roi_label, roi_category",
+    "thumb": "screenshots/gallery/spatial_roi_map.png",
+    "tutorial": "plots/spatial_roi_map.md",
+    "video": ""
+  },
+  {
+    "plot_id": "spatial_composition_map",
+    "display": "Spatial composition glyphs",
+    "family": "08_Advanced_Plots",
+    "purpose": "Show cell-type mixtures across a section, Visium-spot style",
+    "required": "spot, x, y, category, value",
+    "thumb": "screenshots/gallery/spatial_composition_map.png",
+    "tutorial": "plots/spatial_composition_map.md",
+    "video": ""
+  },
+  {
+    "plot_id": "neighborhood_enrichment_matrix",
+    "display": "Cellular-neighbourhood enrichment matrix",
+    "family": "08_Advanced_Plots",
+    "purpose": "Show which cell types are enriched in which neighbourhoods",
+    "required": "neighborhood, cell_type, enrichment, frequency",
+    "thumb": "screenshots/gallery/neighborhood_enrichment_matrix.png",
+    "tutorial": "plots/neighborhood_enrichment_matrix.md",
     "video": ""
   }
 ]

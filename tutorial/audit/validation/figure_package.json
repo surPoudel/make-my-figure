@@ -7,7 +7,7 @@
   "mode": "offscreen",
   "status": "PASS",
   "error": "",
-  "seconds": 32.7,
+  "seconds": 28.7,
   "checks": [
     {
       "check": "data loaded",
@@ -255,7 +255,7 @@
       "show_n": "none",
       "x_tick_rotation": "auto"
     },
-    "reopened_status": "Opened figure package box_copy.mmfpackage \u2014 integrity verified; frozen data from 2026-09-23T01:38:54Z. Editing and re-exporting work as usual.",
+    "reopened_status": "Opened figure package box_copy.mmfpackage \u2014 integrity verified; frozen data from 2026-10-05T16:32:56Z. Editing and re-exporting work as usual.",
     "reopened_stats_enabled": true,
     "plotspec_file_dialogs": [
       {
@@ -273,5 +273,5 @@
     "plotspec_reopened_message": "Publication check: passed"
   },
   "notes": [],
-  "generated": "2026-09-22T20:39:06"
+  "generated": "2026-10-05T11:33:07"
 }

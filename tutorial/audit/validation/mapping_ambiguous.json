@@ -7,7 +7,7 @@
   "mode": "offscreen",
   "status": "PASS",
   "error": "",
-  "seconds": 34.7,
+  "seconds": 34.9,
   "checks": [
     {
       "check": "data loaded",
@@ -290,5 +290,5 @@
     "bar_proposed_error_option": "sem"
   },
   "notes": [],
-  "generated": "2026-09-22T20:41:41"
+  "generated": "2026-10-05T11:35:48"
 }

@@ -179,7 +179,7 @@
       "name": "25_figure_builder",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/master_capabilities/25_figure_builder.png",
       "widget": "FigureBuilderDialog",
-      "size": "1500x902",
+      "size": "1500x900",
       "note": "Multi-panel Figure Builder"
     },
     {
@@ -843,7 +843,7 @@
     {
       "messagebox": "information",
       "title": "Figure package saved",
-      "text": "Saved /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_composite.mmfpackage (0.41 MB)."
+      "text": "Saved /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/master_capabilities/master_composite.mmfpackage (0.49 MB)."
     }
   ]
 }

@@ -7,7 +7,7 @@
   "mode": "offscreen",
   "status": "PASS",
   "error": "",
-  "seconds": 50.6,
+  "seconds": 39.5,
   "checks": [
     {
       "check": "data loaded",
@@ -334,8 +334,8 @@
     ],
     "statistics_unchanged": true,
     "apply_89mm_status": "Applied preset \u201cSingle column 89 mm (N)\u201d after preview: 38 setting(s).",
-    "preview_89mm_changes": "style.annotation_pt: 10.0 -> 5.5\nstyle.axis_font_pt: 12.0 -> 6.5\nstyle.bar_edge_width: None -> 0.5\nstyle.base_font_pt: None -> 5.5\nstyle.errorbar_capsize: None -> 1.5\nstyle.errorbar_line_width: None -> 0.5\nstyle.font_family: None -> 'Arial'\nstyle.font_weight: None -> 'normal'\nstyle.grid_width: None -> 0.4\nstyle.legend_frameon: None -> False\nstyle.legend_loc: None -> 'best'\nstyle.legend_ncol: None -> 1\nstyle.legend_pt: 10.0 -> 5.5\nstyle.legend_title_pt: None -> 6.5\nstyle.line_width_pt: 1.8 -> 0.75\nstyle.marker_alpha: None -> 0.9\nstyle.marker_edge_width: None -> 0.4\nstyle.marker_size: 45.0 -> 20.0\nstyle.palette_name: None -> 'publication'\nstyle.panel_label_pt: None -> 8.0\nstyle.regression_line_width: 1.8 -> 0.75\nstyle.show_right_spine: None -> False\nstyle.show_top_spine: None -> False\nstyle.spine_width_pt: 1.1 -> 0.5\nstyle.text_color: None -> '#000000'\nstyle.tick_direction: None -> 'out'\nstyle.tick_label_pt: 10.0 -> 5.5\nstyle.tick_length: None -> 2.5\nstyle.tick_width: None -> 0.5\nstyle.title_font_pt: 14.0 -> 6.5\nlayout.column_width: 'default' -> '89mm'\nlayout.legend_location: None -> 'best'\noutput.dpi: 300 -> 450\noutput.formats: ['svg', 'png', 'pdf'] -> ['pdf', 'svg', 'png']\noutput.width_mm: 110.0 -> 89.0\nstatistics.annotation: {'mode': 'stars', 'content': 'p', 'template': '', 'digits': 3, 'sci_threshold': 0.001, 'stat_digits': 2, 'effect_digits': 2, 'p_less_than_style': True, 'use_ns': True, 'show_p': False, 'show_p_adj': False, 'show_stars': False, 'show_stat': False, 'show_e"
+    "preview_89mm_changes": "style.annotation_pt: 10.0 -> 5.5\nstyle.axis_font_pt: 12.0 -> 6.5\nstyle.bar_edge_width: None -> 0.5\nstyle.base_font_pt: None -> 5.5\nstyle.errorbar_capsize: None -> 1.5\nstyle.errorbar_line_width: None -> 0.5\nstyle.font_family: None -> 'Arial'\nstyle.font_weight: None -> 'normal'\nstyle.grid_width: None -> 0.4\nstyle.legend_frameon: None -> False\nstyle.legend_loc: None -> 'best'\nstyle.legend_ncol: None -> 1\nstyle.legend_pt: 10.0 -> 5.5\nstyle.legend_title_pt: None -> 6.5\nstyle.line_width_pt: 1.8 -> 0.75\nstyle.marker_alpha: None -> 0.9\nstyle.marker_edge_width: None -> 0.4\nstyle.marker_size: 45.0 -> 20.0\nstyle.palette_name: None -> 'publication'\nstyle.panel_label_pt: None -> 8.0\nstyle.regression_line_width: 1.8 -> 0.75\nstyle.show_right_spine: None -> False\nstyle.show_top_spine: None -> False\nstyle.spine_width_pt: 1.1 -> 0.5\nstyle.text_color: None -> '#000000'\nstyle.tick_direction: None -> 'out'\nstyle.tick_label_pt: 10.0 -> 5.5\nstyle.tick_length: None -> 2.5\nstyle.tick_width: None -> 0.5\nstyle.title_font_pt: 14.0 -> 6.5\nlayout.column_width: 'default' -> '89mm'\nlayout.legend_location: None -> 'best'\noutput.dpi: 300 -> 450\noutput.formats: ['svg', 'png', 'pdf'] -> ['pdf', 'svg', 'png']\noutput.width_mm: 130.0 -> 89.0\nstatistics.annotation: {'mode': 'stars', 'content': 'p', 'template': '', 'digits': 3, 'sci_threshold': 0.001, 'stat_digits': 2, 'effect_digits': 2, 'p_less_than_style': True, 'use_ns': True, 'show_p': False, 'show_p_adj': False, 'show_stars': False, 'show_stat': False, 'show_e"
   },
   "notes": [],
-  "generated": "2026-09-22T20:43:39"
+  "generated": "2026-10-05T11:40:19"
 }

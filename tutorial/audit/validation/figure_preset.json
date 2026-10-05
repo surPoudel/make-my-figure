@@ -8,7 +8,7 @@
   "mode": "offscreen",
   "status": "PASS",
   "error": "",
-  "seconds": 27.8,
+  "seconds": 30.1,
   "checks": [
     {
       "check": "data loaded",
@@ -164,7 +164,7 @@
       "Export\u2026",
       "Reset to Publication defaults"
     ],
-    "preset_file": "/tmp/mmf_tutorial_5s_z32bf/presets/Tutorial_violin_style.mmfpreset.json",
+    "preset_file": "/tmp/mmf_tutorial_bcg54zzy/presets/Tutorial_violin_style.mmfpreset.json",
     "preset_top_level_keys": [
       "app_version",
       "created",
@@ -217,5 +217,5 @@
     }
   },
   "notes": [],
-  "generated": "2026-09-22T20:39:34"
+  "generated": "2026-10-05T11:33:38"
 }

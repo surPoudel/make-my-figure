@@ -7,7 +7,7 @@
   "mode": "offscreen",
   "status": "PASS",
   "error": "",
-  "seconds": 22.1,
+  "seconds": 22.6,
   "checks": [
     {
       "check": "data loaded",
@@ -62,7 +62,7 @@
       "name": "04_customization",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/heatmap_clustered/04_customization.png",
       "widget": "options",
-      "size": "566x661",
+      "size": "566x936",
       "note": "heatmap options"
     },
     {
@@ -191,6 +191,16 @@
       "cluster_k_rows",
       "cluster_k_columns",
       "sort_by_cluster",
+      "cluster_palette",
+      "cluster_strip_width",
+      "cluster_strip_pad",
+      "cluster_strip_labels",
+      "row_cluster_bar_side",
+      "column_cluster_bar_side",
+      "row_label_side",
+      "column_label_side",
+      "cluster_legend",
+      "cluster_legend_location",
       "group_separators",
       "cell_border_color",
       "cell_border_width",
@@ -214,5 +224,5 @@
     ]
   },
   "notes": [],
-  "generated": "2026-09-22T20:40:40"
+  "generated": "2026-10-05T11:34:46"
 }

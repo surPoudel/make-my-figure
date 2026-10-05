@@ -8,7 +8,7 @@
   "mode": "offscreen",
   "status": "PASS",
   "error": "",
-  "seconds": 50.8,
+  "seconds": 44.6,
   "checks": [
     {
       "check": "data loaded",
@@ -71,7 +71,7 @@
       "name": "03_figure_builder",
       "path": "/mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/screenshots/figure_builder/03_figure_builder.png",
       "widget": "FigureBuilderDialog",
-      "size": "1500x902",
+      "size": "1500x900",
       "note": "Multi-panel Figure Builder"
     }
   ],
@@ -153,7 +153,7 @@
     {
       "messagebox": "information",
       "title": "Figure package saved",
-      "text": "Saved /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_builder/composite.mmfpackage (0.24 MB)."
+      "text": "Saved /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot_tutorial/tutorial/automation/_outputs/figure_builder/composite.mmfpackage (0.32 MB)."
     }
   ],
   "facts": {
@@ -227,12 +227,12 @@
     ],
     "builder_groupboxes": [
       "Layout preset",
-      "Selected panel size",
+      "Selected panel size \u2014 A  Response by group",
       "Fonts (points, applied to all panels)"
     ],
     "builder_panel_list": [
-      "A. Response by group",
-      "B. Expression A vs B"
+      "A   Response by group",
+      "B   Expression A vs B"
     ],
     "builder_result": {
       "figure_files": [
@@ -244,5 +244,5 @@
     }
   },
   "notes": [],
-  "generated": "2026-09-22T20:38:33"
+  "generated": "2026-10-05T11:32:38"
 }
