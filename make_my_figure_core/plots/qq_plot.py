@@ -18,6 +18,7 @@ import numpy as np
 
 from make_my_figure_core.plots._v04_shared import neg_log10, pick_column
 from make_my_figure_core.plots.base import (
+    reference_line_kwargs,
     RenderError,
     RenderResult,
     base_metadata,
@@ -118,8 +119,10 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             used = [obs_col]
 
         # y = x reference line.
-        ax.plot([lo, lim], [lo, lim], color=style.text_color, ls="--",
-                lw=style.line_width_pt, zorder=2, label="y = x")
+        _ref_kw = reference_line_kwargs(spec, style,
+                                        default_color=style.text_color)
+        _ref_kw["lw"] = style.line_width_pt
+        ax.plot([lo, lim], [lo, lim], zorder=2, label="y = x", **_ref_kw)
         ax.set_xlabel(spec.get("layout", {}).get("x_label", x_label))
         ax.set_ylabel(spec.get("layout", {}).get("y_label", y_label))
         title = spec.get("layout", {}).get("title")

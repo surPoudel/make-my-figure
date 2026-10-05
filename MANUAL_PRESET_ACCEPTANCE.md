@@ -51,7 +51,7 @@ result in the table at the end. A step that cannot be completed is a blocker for
 |---|---|---|
 | W1 | Search both UIs and `docs/EXPERIMENTAL_PUBLICATION_PRESETS.md` for journal names in preset *names* or any "compliant / approved / ready / guaranteed" wording. | None in shipping UI text; journal families are named only in the provenance/evidence documentation. |
 | W2 | Read the provenance text of each preset. | It states the evidence family, counts, official sources with access dates, the target width and its source, and the evidence class of each value (observed / inferred / estimated / official). |
-| W3 | Confirm `reports/journal_presets/manuscript_future_claims.md` exists and that the manuscript itself was **not** changed. | True. |
+| W3 | Confirm the claims-discipline record exists and that the manuscript itself was **not** changed. | True. The record was untracked from the repository for the v1.2.0 release (its filename trips the release private-file scanner, which stops on anything named `manuscript*`) and is kept outside the public tree; it remains in git history up to `932427e`. The manuscript was not changed. |
 
 ## Record
 

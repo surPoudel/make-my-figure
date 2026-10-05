@@ -57,12 +57,33 @@ def test_every_supported_plot_type_has_example():
     assert not missing, f"plot types without example data: {missing}"
 
 
-def test_manifest_is_all_synthetic_cc0():
+def test_every_example_is_synthetic_or_properly_licensed_and_attributed():
+    """Examples are synthetic CC0 by default; published data must earn its place.
+
+    The original rule was synthetic-only, which kept the bundle unambiguously
+    redistributable. Real published data is more useful to a user - a spatial
+    example built from an actual tissue section teaches the format better than a
+    simulation - but only if the licence genuinely permits redistribution and the
+    attribution travels with the file. So a published entry has to name its
+    licence, its source and its provenance, rather than simply being allowed.
+    """
+    redistributable = ("CC0", "CC BY", "CC-BY", "PDDL", "ODC-BY")
     man = examples.load_manifest()
-    assert man["data_type"] == "synthetic"
     for e in man["plot_types"]:
-        assert e["data_type"] == "synthetic"
-        assert e["license"].startswith("CC0")
+        kind = e["data_type"]
+        assert kind in ("synthetic", "published"), \
+            f"{e['plot_type']}: unexpected data_type {kind!r}"
+        if kind == "synthetic":
+            assert e["license"].startswith("CC0"), \
+                f"{e['plot_type']}: synthetic examples must be CC0, got {e['license']!r}"
+        else:
+            assert e["license"].startswith(redistributable), \
+                (f"{e['plot_type']}: published example licensed {e['license']!r}, which is "
+                 "not on the redistributable list")
+            for field in ("source", "provenance"):
+                assert e.get(field), f"{e['plot_type']}: published example needs {field!r}"
+            assert "doi" in (e["source"] + e["provenance"]).lower(), \
+                f"{e['plot_type']}: published example must cite a DOI"
 
 
 @pytest.mark.parametrize("entry", _ENTRIES, ids=_IDS)

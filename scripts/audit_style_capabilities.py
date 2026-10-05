@@ -53,9 +53,29 @@ _NAMED = re.compile(r'\b(?:color|c|edgecolor|facecolor)=\s*"(black|white|red|blu
                     r'crimson|firebrick|steelblue|darkgrey|lightgrey|0\.\d+)"')
 
 
+def _renderer_source(plot_type: str) -> str:
+    """The renderer's source, plus any shared plot helper it imports from.
+
+    Several renderers delegate styling to a helper in the same package - the
+    spatial maps hand categorical colours to ``_spatial_shared.categorical_styles``.
+    Scanning only the renderer file would see no ``style.color_for`` there and
+    report that the palette has no effect, which is the opposite of the truth.
+    Following first-party helper imports keeps the audit measuring what the
+    renderer actually does rather than where the call happens to live.
+    """
+    module = importlib.import_module(R._RENDERERS[plot_type].__module__)
+    src = pathlib.Path(module.__file__).read_text(encoding="utf-8")
+    for helper in re.findall(r"from make_my_figure_core\.plots\.(_[a-z0-9_]+) import", src):
+        try:
+            hmod = importlib.import_module(f"make_my_figure_core.plots.{helper}")
+            src += "\n" + pathlib.Path(hmod.__file__).read_text(encoding="utf-8")
+        except Exception:  # noqa: BLE001 - a missing helper must not break the audit
+            continue
+    return src
+
+
 def scan_renderer(plot_type: str) -> Dict[str, object]:
-    fn = R._RENDERERS[plot_type]
-    src = pathlib.Path(importlib.import_module(fn.__module__).__file__).read_text(encoding="utf-8")
+    src = _renderer_source(plot_type)
     tokens = set(re.findall(r"\bstyle\.([a-z_]+)\b", src))
     mapping_colors = sorted(set(re.findall(
         r'get_mapping\(spec,\s*"([a-z_]*(?:color|cmap|colormap|palette)[a-z_]*)"', src)))
@@ -72,7 +92,10 @@ def scan_renderer(plot_type: str) -> Dict[str, object]:
         # the palette control switches the colormaps too, so it has an effect on cmap plots
         "palette_control_has_effect": uses_palette or uses_cmap,
         "colorbar": ".colorbar(" in src,
-        "legend": ("legend(" in src) or ("place_legend(" in src),
+        # Match the CALL, not any identifier containing the word: a helper named
+        # widen_for_outside_legend() must not read as "this renderer draws a legend".
+        "legend": bool(re.search(r"(?:\b(?:ax|fig|axes\[[^\]]*\]\[[^\]]*\])\.legend|"
+                                 r"\bplace_legend)\s*\(", src)),
         "marker_size": "marker_size" in tokens,
         "line_width": bool({"line_width_pt", "regression_line_width"} & tokens),
         "mapping_color_keys": ";".join(mapping_colors),

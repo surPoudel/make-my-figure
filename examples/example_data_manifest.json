@@ -4,7 +4,7 @@
   "seed": 42,
   "data_type": "synthetic",
   "license": "CC0-1.0",
-  "note": "All example datasets are synthetic. Published papers/figures are used only as visual style references (layout, typography, panels, legends), never as a source of copied data. Do not cite these examples as real findings.",
+  "note": "Example datasets are synthetic unless the entry says data_type='published'. Published entries carry real data under a redistributable licence, with the source, DOI and the changes made recorded in the entry and its README. Do not cite the synthetic examples as real findings.",
   "combined_workbook": "examples/Make_My_Figure_All_Example_Data.xlsx",
   "plot_types": [
     {
@@ -1783,6 +1783,297 @@
         "Do not supply a matrix: melt it to one row per source/target pair first.",
         "Negative or missing values are not drawn and are counted in the export warnings.",
         "A chord diagram summarises flows; it carries no statistical test."
+      ]
+    },
+    {
+      "plot_type": "spatial_categorical_map",
+      "name": "Spatial map (categories)",
+      "slug": "spatial_categorical",
+      "description": "Cells of a real CODEX tissue section positioned in image coordinates and coloured by annotated cell type.",
+      "use_case": "Show where each cell type sits in a tissue section.",
+      "required_columns": [
+        "x",
+        "y",
+        "cell_type"
+      ],
+      "optional_columns": [
+        "cell_id",
+        "neighborhood",
+        "image",
+        "patient",
+        "CD8",
+        "CD68",
+        "Ki67",
+        "CD4"
+      ],
+      "files": {
+        "csv": "examples/by_plot_type/spatial_categorical/data.csv",
+        "tsv": "examples/by_plot_type/spatial_categorical/data.tsv",
+        "xlsx": "examples/by_plot_type/spatial_categorical/data.xlsx",
+        "plotspec": "examples/by_plot_type/spatial_categorical/plotspec.json",
+        "readme": "examples/by_plot_type/spatial_categorical/README.md"
+      },
+      "aux_tables": {},
+      "excel_sheet": "Spatial_categorical",
+      "compatible_renderers": [
+        "spatial_categorical_map"
+      ],
+      "n_rows": 2192,
+      "source": "Sch\u00fcrch CM, et al. Coordinated cellular neighborhood orchestrates antitumoral immunity at the colorectal cancer invasive front. Cell 2020. doi:10.1016/j.cell.2020.07.005. Dataset: doi:10.17632/mpjzbtfgfr.1 (Mendeley Data, CC BY 4.0).",
+      "provenance": "Derived from image reg052_B of the CRC CODEX dataset (source SHA-256 416cc3926a7a900c...). Sch\u00fcrch CM, et al. Coordinated cellular neighborhood orchestrates antitumoral immunity at the colorectal cancer invasive front. Cell 2020. doi:10.1016/j.cell.2020.07.005. Dataset: doi:10.17632/mpjzbtfgfr.1 (Mendeley Data, CC BY 4.0). Changes made: one image selected; columns subset and renamed; no measured value altered.",
+      "user_replacement_note": "One row per cell. Replace x/y with your coordinates and cell_type with your labels. These coordinates are image pixels, which is why the example declares coordinate_units='pixel' and draws no physical scale bar.",
+      "common_mistakes": [
+        "Do not mix sections in one table without an image/sample column \u2014 neighbours are never computed across images.",
+        "Imaging coordinates run y-downward; set orientation='y_down' rather than flipping y by hand."
+      ],
+      "data_type": "published",
+      "license": "CC BY 4.0",
+      "recommended_style_profiles": [
+        "publication"
+      ],
+      "expected_export_formats": [
+        "svg",
+        "png",
+        "pdf",
+        "plot_spec.json"
+      ]
+    },
+    {
+      "plot_type": "spatial_feature_map",
+      "name": "Spatial map (continuous value)",
+      "slug": "spatial_feature",
+      "description": "Cells coloured by a measured marker intensity from a real CODEX image.",
+      "use_case": "Show where a protein marker is expressed across a section.",
+      "required_columns": [
+        "x",
+        "y",
+        "CD8"
+      ],
+      "optional_columns": [
+        "cell_id",
+        "cell_type",
+        "neighborhood",
+        "CD68",
+        "Ki67",
+        "CD4"
+      ],
+      "files": {
+        "csv": "examples/by_plot_type/spatial_feature/data.csv",
+        "tsv": "examples/by_plot_type/spatial_feature/data.tsv",
+        "xlsx": "examples/by_plot_type/spatial_feature/data.xlsx",
+        "plotspec": "examples/by_plot_type/spatial_feature/plotspec.json",
+        "readme": "examples/by_plot_type/spatial_feature/README.md"
+      },
+      "aux_tables": {},
+      "excel_sheet": "Spatial_feature",
+      "compatible_renderers": [
+        "spatial_feature_map"
+      ],
+      "n_rows": 2192,
+      "source": "Sch\u00fcrch CM, et al. Coordinated cellular neighborhood orchestrates antitumoral immunity at the colorectal cancer invasive front. Cell 2020. doi:10.1016/j.cell.2020.07.005. Dataset: doi:10.17632/mpjzbtfgfr.1 (Mendeley Data, CC BY 4.0).",
+      "provenance": "Derived from image reg052_B of the CRC CODEX dataset (source SHA-256 416cc3926a7a900c...). Sch\u00fcrch CM, et al. Coordinated cellular neighborhood orchestrates antitumoral immunity at the colorectal cancer invasive front. Cell 2020. doi:10.1016/j.cell.2020.07.005. Dataset: doi:10.17632/mpjzbtfgfr.1 (Mendeley Data, CC BY 4.0). Changes made: one image selected; columns subset and renamed; no measured value altered.",
+      "user_replacement_note": "Replace CD8 with your own measurement column. These are raw CODEX intensities, deliberately untransformed: set spatial.transform yourself and the colourbar label follows.",
+      "common_mistakes": [
+        "Do not pre-log the values and leave the label saying the raw marker name \u2014 set spatial.transform so the colourbar is honest.",
+        "These intensities contain exact zeros, so log2/log10 are refused; use log1p or log2p1."
+      ],
+      "data_type": "published",
+      "license": "CC BY 4.0",
+      "recommended_style_profiles": [
+        "publication"
+      ],
+      "expected_export_formats": [
+        "svg",
+        "png",
+        "pdf",
+        "plot_spec.json"
+      ]
+    },
+    {
+      "plot_type": "spatial_transcript_map",
+      "name": "Spatial transcript map",
+      "slug": "spatial_transcript",
+      "description": "Individual transcript detections coloured by gene.",
+      "use_case": "Show where transcripts of selected genes were detected in a section.",
+      "required_columns": [
+        "x",
+        "y",
+        "gene"
+      ],
+      "optional_columns": [
+        "transcript_id",
+        "qv"
+      ],
+      "files": {
+        "csv": "examples/by_plot_type/spatial_transcript/data.csv",
+        "tsv": "examples/by_plot_type/spatial_transcript/data.tsv",
+        "xlsx": "examples/by_plot_type/spatial_transcript/data.xlsx",
+        "plotspec": "examples/by_plot_type/spatial_transcript/plotspec.json",
+        "readme": "examples/by_plot_type/spatial_transcript/README.md"
+      },
+      "aux_tables": {},
+      "excel_sheet": "Spatial_transcript",
+      "compatible_renderers": [
+        "spatial_transcript_map"
+      ],
+      "n_rows": 6100,
+      "user_replacement_note": "One row per detected transcript. spatial.genes selects which to draw and spatial.min_quality filters on a score column; both are recorded in the figure metadata.",
+      "common_mistakes": [
+        "A transcript table is not a cell table \u2014 one row is one detection, not one cell.",
+        "Nothing is subsampled automatically; set spatial.max_points for an explicit, recorded subsample."
+      ],
+      "data_type": "synthetic",
+      "license": "CC0-1.0",
+      "recommended_style_profiles": [
+        "publication"
+      ],
+      "expected_export_formats": [
+        "svg",
+        "png",
+        "pdf",
+        "plot_spec.json"
+      ],
+      "source": "generated by scripts/generate_spatial_example_data.py",
+      "provenance": "Synthetic; not derived from any published dataset."
+    },
+    {
+      "plot_type": "spatial_roi_map",
+      "name": "Spatial ROI / region outlines",
+      "slug": "spatial_roi",
+      "description": "Regions of interest drawn as labelled polygon outlines.",
+      "use_case": "Outline and label anatomical or analytical regions on a section.",
+      "required_columns": [
+        "roi_id",
+        "x",
+        "y"
+      ],
+      "optional_columns": [
+        "vertex_order",
+        "roi_label",
+        "roi_category"
+      ],
+      "files": {
+        "csv": "examples/by_plot_type/spatial_roi/data.csv",
+        "tsv": "examples/by_plot_type/spatial_roi/data.tsv",
+        "xlsx": "examples/by_plot_type/spatial_roi/data.xlsx",
+        "plotspec": "examples/by_plot_type/spatial_roi/plotspec.json",
+        "readme": "examples/by_plot_type/spatial_roi/README.md"
+      },
+      "aux_tables": {},
+      "excel_sheet": "Spatial_roi",
+      "compatible_renderers": [
+        "spatial_roi_map"
+      ],
+      "n_rows": 72,
+      "user_replacement_note": "One row per polygon vertex. Keep vertex_order so the outline is traced in sequence; a repeated closing vertex is fine.",
+      "common_mistakes": [
+        "Unordered vertices produce a self-crossing outline \u2014 keep vertex_order.",
+        "An ROI with fewer than three vertices is reported and skipped, not silently dropped."
+      ],
+      "data_type": "synthetic",
+      "license": "CC0-1.0",
+      "recommended_style_profiles": [
+        "publication"
+      ],
+      "expected_export_formats": [
+        "svg",
+        "png",
+        "pdf",
+        "plot_spec.json"
+      ],
+      "source": "generated by scripts/generate_spatial_example_data.py",
+      "provenance": "Synthetic; not derived from any published dataset."
+    },
+    {
+      "plot_type": "spatial_composition_map",
+      "name": "Spatial composition glyphs",
+      "slug": "spatial_composition",
+      "description": "Cell-type composition of real tissue, aggregated into square bins and drawn as pie glyphs.",
+      "use_case": "Show cell-type mixtures across a section, Visium-spot style.",
+      "required_columns": [
+        "spot_id",
+        "x",
+        "y",
+        "cell_type",
+        "cell_count"
+      ],
+      "optional_columns": [],
+      "files": {
+        "csv": "examples/by_plot_type/spatial_composition/data.csv",
+        "tsv": "examples/by_plot_type/spatial_composition/data.tsv",
+        "xlsx": "examples/by_plot_type/spatial_composition/data.xlsx",
+        "plotspec": "examples/by_plot_type/spatial_composition/plotspec.json",
+        "readme": "examples/by_plot_type/spatial_composition/README.md"
+      },
+      "aux_tables": {},
+      "excel_sheet": "Spatial_composition",
+      "compatible_renderers": [
+        "spatial_composition_map"
+      ],
+      "n_rows": 287,
+      "source": "Sch\u00fcrch CM, et al. Coordinated cellular neighborhood orchestrates antitumoral immunity at the colorectal cancer invasive front. Cell 2020. doi:10.1016/j.cell.2020.07.005. Dataset: doi:10.17632/mpjzbtfgfr.1 (Mendeley Data, CC BY 4.0).",
+      "provenance": "Derived from image reg052_B of the CRC CODEX dataset (source SHA-256 416cc3926a7a900c...). Sch\u00fcrch CM, et al. Coordinated cellular neighborhood orchestrates antitumoral immunity at the colorectal cancer invasive front. Cell 2020. doi:10.1016/j.cell.2020.07.005. Dataset: doi:10.17632/mpjzbtfgfr.1 (Mendeley Data, CC BY 4.0). Changes made: one image selected; columns subset and renamed; no measured value altered. Cells were aggregated into a 9x7 grid of square bins; bins with fewer than 12 cells were dropped and cell types outside the seven most common were pooled as 'other'.",
+      "user_replacement_note": "Long form: one row per spot and category. These are raw counts, so the spec sets normalize='fraction' to convert them.",
+      "common_mistakes": [
+        "Fractions that do not sum to 1 are reported, not rescaled \u2014 a short sum usually means a missing category.",
+        "Use top_k or min_fraction to merge rare categories rather than drawing unreadable slivers."
+      ],
+      "data_type": "published",
+      "license": "CC BY 4.0",
+      "recommended_style_profiles": [
+        "publication"
+      ],
+      "expected_export_formats": [
+        "svg",
+        "png",
+        "pdf",
+        "plot_spec.json"
+      ]
+    },
+    {
+      "plot_type": "neighborhood_enrichment_matrix",
+      "name": "Cellular-neighbourhood enrichment matrix",
+      "slug": "neighborhood_enrichment",
+      "description": "Published cell-type enrichment across cellular neighbourhoods; colour is the enrichment score, point area the frequency within the neighbourhood.",
+      "use_case": "Show which cell types are enriched in which neighbourhoods.",
+      "required_columns": [
+        "neighborhood",
+        "cell_type",
+        "enrichment_score"
+      ],
+      "optional_columns": [
+        "cell_type_frequency_in_neighborhood"
+      ],
+      "files": {
+        "csv": "examples/by_plot_type/neighborhood_enrichment/data.csv",
+        "tsv": "examples/by_plot_type/neighborhood_enrichment/data.tsv",
+        "xlsx": "examples/by_plot_type/neighborhood_enrichment/data.xlsx",
+        "plotspec": "examples/by_plot_type/neighborhood_enrichment/plotspec.json",
+        "readme": "examples/by_plot_type/neighborhood_enrichment/README.md"
+      },
+      "aux_tables": {},
+      "excel_sheet": "Neighborhood_enrichment",
+      "compatible_renderers": [
+        "neighborhood_enrichment_matrix"
+      ],
+      "n_rows": 252,
+      "source": "Tao Y, et al. CNTools: a computational toolbox for cellular neighborhood analysis from multiplexed images. PLOS Comput Biol 2024;20(8):e1012344. doi:10.1371/journal.pcbi.1012344 (S1 Data, CC BY 4.0).",
+      "provenance": "Published Fig 3A (CRC, CC*) values from CNTools S1 Data, tidied by benchmarks/spatial_validation/cntools_2024. Reproduced from the deposited CRC data to 7.8e-14 maximum absolute difference. doi:10.1371/journal.pcbi.1012344",
+      "user_replacement_note": "Produced by make_my_figure_core.spatial.ct_cn_enrichment from your own cells; the renderer plots these values and never recomputes them.",
+      "common_mistakes": [
+        "Enrichment is a log ratio: zero means 'as expected', so the colour scale is centred on zero by default.",
+        "A dot matrix is unreadable without a size key \u2014 keep size_legend on."
+      ],
+      "data_type": "published",
+      "license": "CC BY 4.0",
+      "recommended_style_profiles": [
+        "publication"
+      ],
+      "expected_export_formats": [
+        "svg",
+        "png",
+        "pdf",
+        "plot_spec.json"
       ]
     }
   ]

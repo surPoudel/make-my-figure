@@ -35,6 +35,23 @@ def _bbox(artist, renderer):
         return None
 
 
+def _is_frameless(ax) -> bool:
+    """True when the renderer has deliberately removed the axes frame.
+
+    Spatial maps, tissue images and similar panels hide ticks and spines on
+    purpose: the picture is the data and a labelled x/y axis would be noise, not
+    rigour. Asking those panels for axis labels would report a defect where the
+    convention is correct. Detected from the drawn state rather than from a list
+    of plot types, so any renderer that frames its axes normally is still checked.
+    """
+    try:
+        no_ticks = not ax.get_xticks().size and not ax.get_yticks().size
+        no_spines = not any(sp.get_visible() for sp in ax.spines.values())
+        return bool(no_ticks and no_spines)
+    except Exception:  # noqa: BLE001 - never let a QA check raise
+        return False
+
+
 def check_publication_readiness(fig) -> PublicationCheckResult:
     """Inspect a Matplotlib figure and return warnings about common issues."""
     warnings: List[str] = []
@@ -62,7 +79,7 @@ def check_publication_readiness(fig) -> PublicationCheckResult:
 
     for ax in fig.axes:
         # Missing axis labels (skip colorbars, which have no meaningful xlabel).
-        if not getattr(ax, "_colorbar", None):
+        if not getattr(ax, "_colorbar", None) and not _is_frameless(ax):
             if not ax.get_xlabel().strip() and not ax.get_ylabel().strip():
                 warnings.append("Axes are missing x/y labels")
 

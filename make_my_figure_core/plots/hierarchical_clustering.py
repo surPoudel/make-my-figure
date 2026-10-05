@@ -21,6 +21,7 @@ import numpy as np
 from make_my_figure_core import clustering as _clust
 from make_my_figure_core.plots._v04_shared import numeric_matrix
 from make_my_figure_core.plots.base import (
+    resolve_figure_size,
     RenderError,
     RenderResult,
     base_metadata,
@@ -176,7 +177,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     else:
         h_in = w_in * 0.9
     with style.apply():
-        fig, ax = plt.subplots(figsize=(w_in, h_in))
+        _size = resolve_figure_size(spec, (w_in, h_in))
+        fig, ax = plt.subplots(figsize=_size)
         im = ax.imshow(ordered, aspect="auto", cmap=cmap, vmin=vmin, vmax=vmax,
                        interpolation="nearest")
         strip_ax = _draw_cluster_strip(ax, "left" if axis == "rows" else "top",

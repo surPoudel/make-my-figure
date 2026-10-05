@@ -416,7 +416,7 @@ def test_layout_preset_keeps_geometry_and_drops_content(tmp_path):
     assert "volcano" not in text and "logFC" not in text
     assert preset["n_panels"] == 3
     assert preset["layout"]["ncols"] == 2 and preset["layout"]["height_ratios"] == [2, 1]
-    assert preset["panel_sizes"][0] == {"width_in": 6.0, "height_in": 2.5}
+    assert preset["panel_sizes"][0] == {"width_in": 6.0, "height_in": 2.5, "fill_cell": False}
     path = P.save_layout_preset(preset, str(tmp_path / "layout"))
     assert P.load_layout_preset(path) == preset
 

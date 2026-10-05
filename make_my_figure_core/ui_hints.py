@@ -55,6 +55,15 @@ COLUMN_FIELDS: Dict[str, List[str]] = {
     "hierarchical_clustering": ["row_id"],
     "network_graph": ["source", "target", "weight", "interaction_type"],
     "chord_diagram": ["source", "target", "value", "group"],
+    # --- spatial (v2) ---
+    # These drive the GUI column pickers as well as preset/role handling, so the
+    # list is exactly the mapping keys each spatial renderer reads.
+    "spatial_categorical_map": ["x", "y", "category", "facet"],
+    "spatial_feature_map": ["x", "y", "value", "feature", "facet"],
+    "spatial_transcript_map": ["x", "y", "gene", "quality"],
+    "spatial_roi_map": ["roi", "x", "y", "vertex_order", "roi_label", "roi_category"],
+    "spatial_composition_map": ["spot", "x", "y", "category", "value"],
+    "neighborhood_enrichment_matrix": ["neighborhood", "cell_type", "enrichment", "frequency"],
 }
 
 # Mapping keys that are columns of the PCA *metadata* table, not the matrix.
@@ -90,6 +99,10 @@ class Option:
                              f"got {self.scope!r}")
 
 
+# Which statistic the bars show is analysis, not appearance, so it stays out of
+# style presets: a lab's shared "Default Barplot" style must not be able to turn
+# a colleague's SD bars into SEM on the way past. (Both are drawn identically;
+# only the number changes, which is exactly what makes the swap dangerous.)
 _ERROR_CHOICES = ["sem", "sd", "ci95", "none"]
 # Line plot bands add median-centred order statistics for replicate measurements.
 _BAND_CHOICES = ["sem", "sd", "ci95", "iqr", "range", "none"]
@@ -151,6 +164,75 @@ def _point_options_for(arrangement: str, jitter_width: float) -> List[Option]:
 
 
 # Extra (non-column) options per plot type.
+# --- spatial (v2) ---
+# The spatial renderers read a rich set of appearance settings from the PlotSpec
+# "spatial" block, but none were declared here, so the GUI offered nothing at all
+# for six plot types and the global Palette appeared to do nothing on them. These
+# are scope="config": they land in mapping, and spatial_block() overlays them on
+# the saved spatial block so a control the user just changed wins over whatever a
+# bundled example pinned.
+_SPATIAL_CMAP = Option(
+    "cmap", "Colormap", "choice", "",
+    ["", "viridis", "magma", "cividis", "Blues", "YlOrRd", "Greys",
+     "RdBu_r", "coolwarm", "PuOr", "BrBG"], scope="config")
+_SPATIAL_ALPHA = Option("alpha", "Point opacity", "number", 1.0, minimum=0.05,
+                        maximum=1.0, step=0.05, decimals=2, scope="config")
+_SPATIAL_MARKER_SIZE = Option("marker_size", "Point size (0 = auto)", "number", 0,
+                              minimum=0, maximum=200, step=1, decimals=0,
+                              scope="config")
+_SPATIAL_MARKER = Option("marker", "Point shape", "choice", "",
+                         ["", "o", "s", "^", "D", "v", "P", "X"], scope="config")
+_SPATIAL_SHOW_AXES = Option("show_axes", "Show coordinate axes", "bool", False,
+                            scope="config")
+_SPATIAL_FACET_COLS = Option("facet_columns", "Facet columns (0 = auto)", "number", 0,
+                             minimum=0, maximum=8, step=1, decimals=0, scope="config")
+_SPATIAL_MISSING = Option("missing_color", "Colour for missing values", "choice",
+                          "", ["", "#DDDDDD", "#999999", "white", "none"],
+                          scope="config")
+
+
+# A threshold, identity or reference line - a volcano's cutoffs, a ROC diagonal,
+# a Bland-Altman limit, a waterfall's response thresholds. Every plot that draws
+# one had the dash pattern and the grey baked in; these are the lines authors
+# most often want to restyle or tone down for print.
+_REF_LINE_STYLE = Option("reference_line_style", "Reference line style", "choice",
+                         "dashed", ["dashed", "dotted", "dash-dot", "solid"],
+                         scope="style")
+_REF_LINE_COLOR = Option("reference_line_color", "Reference line colour", "choice",
+                         "0.5", ["0.5", "0.3", "0.7", "black", "#B2182B",
+                                 "#2166AC"], scope="style")
+
+# The outline round a point marker. The style already carries its WIDTH
+# (marker_edge_width) but never its colour, so three plot types hard-coded one -
+# white to separate overlapping points, black to weight an estimate. Both are
+# legitimate and neither should be the only choice.
+_MARKER_EDGE_COLOR = Option("marker_edge_color", "Point outline colour", "choice",
+                            "auto", ["auto", "white", "black", "none",
+                                     "#444444"], scope="style")
+
+# How much of its slot a bar fills, 1.0 meaning bars touch. Every bar-shaped
+# plot had its own number baked in (0.6 to 0.85) and none of them was reachable,
+# so the gap between bars - which is what makes a grouped figure readable or not
+# - could only be changed by editing Python.
+_BAR_WIDTH = Option("bar_width", "Bar thickness (fraction of slot)", "number",
+                    0.0, minimum=0.0, maximum=1.0, step=0.05, decimals=2,
+                    scope="style")
+
+# Colourbar geometry for the plots that draw one. Same keys the clustered heatmap
+# already uses; 0 means "this plot's own default".
+#
+# NOT offered on embedding_scatter or network_graph: both call tight_layout()
+# after creating the colourbar, which recomputes every axes position and discards
+# the pad. The control would be visible and do nothing, which is worse than not
+# having it. Making it real there means reordering their layout, which changes
+# where the colourbar sits on every existing figure of those types - recorded in
+# quality_audit/feature_coverage.md rather than slipped in here.
+_CBAR_PAD = Option("colorbar_pad", "Colourbar pad (0 = auto)", "number", 0.0,
+                   minimum=0.0, maximum=0.5, step=0.01, decimals=2, scope="style")
+_CBAR_FRACTION = Option("colorbar_fraction", "Colourbar thickness (0 = auto)",
+                        "number", 0.0, minimum=0.0, maximum=0.2, step=0.005,
+                        decimals=3, scope="style")
+
 OPTIONS: Dict[str, List[Option]] = {
     # Bars: the summary (mean/median) and the whisker (sem/sd/ci95/ci95_t/iqr/none) decide what is
     # computed, so they are config; everything else is appearance. ``ci95`` keeps its historical
@@ -214,6 +296,31 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("cluster_k_rows", "Row clusters (k, 0=off)", "number", 0, minimum=0, maximum=20, step=1, decimals=0),
         Option("cluster_k_columns", "Column clusters (k, 0=off)", "number", 0, minimum=0, maximum=20, step=1, decimals=0),
         Option("sort_by_cluster", "Sort by cluster", "bool", False),
+        # Cluster-bar appearance. Deliberately the same shape of control as the
+        # colourbar below (thickness / pad / placement) plus a palette, because the
+        # row and column bars are annotation elements the author needs to tune just
+        # as often.
+        Option("cluster_palette", "Cluster bar colours", "choice", "auto",
+               ["auto", "style", "publication", "colorblind_safe", "high_contrast",
+                "grayscale"], scope="style"),
+        Option("cluster_strip_width", "Cluster bar thickness (% of plot)", "number", 4.0,
+               minimum=1.0, maximum=20.0, step=0.5, decimals=1, scope="style"),
+        Option("cluster_strip_pad", "Cluster bar pad", "number", 0.06,
+               minimum=0.0, maximum=0.5, step=0.02, decimals=2, scope="style"),
+        Option("cluster_strip_labels", "Label the cluster bars", "bool", False,
+               scope="style"),
+        Option("row_cluster_bar_side", "Row cluster bar on", "choice", "left",
+               ["left", "right"], scope="style"),
+        Option("column_cluster_bar_side", "Column cluster bar on", "choice",
+               "top", ["top", "bottom"], scope="style"),
+        Option("row_label_side", "Row labels on", "choice", "left",
+               ["left", "right"], scope="style"),
+        Option("column_label_side", "Column labels on", "choice", "bottom",
+               ["bottom", "top"], scope="style"),
+        Option("cluster_legend", "Cluster legend", "choice", "auto",
+               ["auto", "rows", "columns", "both", "off"], scope="style"),
+        Option("cluster_legend_location", "Cluster legend location", "choice", "right",
+               ["right", "right_lower", "inside"], scope="style"),
         Option("group_separators", "Group separator lines", "bool", True, scope="style"),
         # Catchy cell grid + group-separator styling (all user-controllable).
         Option("cell_border_color", "Cell grid color", "choice", "white",
@@ -232,7 +339,54 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("col_label_fontsize", "Column label font (0=auto)", "number", 0, minimum=0, maximum=20, step=1, decimals=0, scope="style"),
         Option("y_label_pad", "Y-axis label padding", "number", 6.0, minimum=0.0, maximum=40.0, step=1.0, decimals=1, scope="style"),
     ],
+    # --- spatial (v2) ---
+    "spatial_categorical_map": [
+        _SPATIAL_MARKER_SIZE, _SPATIAL_MARKER, _SPATIAL_ALPHA, _SPATIAL_MISSING,
+        _SPATIAL_SHOW_AXES, _SPATIAL_FACET_COLS,
+        Option("legend", "Show category legend", "bool", True, scope="config"),
+        Option("legend_columns", "Legend columns (0 = auto)", "number", 0,
+               minimum=0, maximum=6, step=1, decimals=0, scope="config"),
+        Option("marker_edgecolor", "Point outline", "choice", "",
+               ["", "none", "black", "white", "#444444"], scope="config"),
+    ],
+    "spatial_feature_map": [
+        _CBAR_PAD, _CBAR_FRACTION,
+        _SPATIAL_CMAP, _SPATIAL_MARKER_SIZE, _SPATIAL_MARKER, _SPATIAL_ALPHA,
+        _SPATIAL_MISSING, _SPATIAL_SHOW_AXES, _SPATIAL_FACET_COLS,
+        Option("color_scale", "Colour scale", "choice", "",
+               ["", "sequential", "diverging"], scope="config"),
+        Option("transform", "Value transform", "choice", "",
+               ["", "none", "log1p", "sqrt", "symlog"], scope="config"),
+        Option("percentile_clip", "Clip to percentile (0 = off)", "number", 0,
+               minimum=0, maximum=20, step=0.5, decimals=1, scope="config"),
+        Option("colorbar", "Show colourbar", "bool", True, scope="config"),
+        Option("shared_color_scale", "Share colour scale across facets", "bool",
+               True, scope="config"),
+    ],
+    "spatial_transcript_map": [
+        _SPATIAL_MARKER_SIZE, _SPATIAL_MARKER, _SPATIAL_ALPHA, _SPATIAL_SHOW_AXES,
+        Option("legend", "Show gene legend", "bool", True, scope="config"),
+    ],
+    "spatial_roi_map": [
+        _SPATIAL_ALPHA, _SPATIAL_SHOW_AXES,
+        Option("legend", "Show ROI legend", "bool", True, scope="config"),
+    ],
+    "spatial_composition_map": [
+        _SPATIAL_MARKER_SIZE, _SPATIAL_ALPHA, _SPATIAL_SHOW_AXES,
+        Option("legend", "Show category legend", "bool", True, scope="config"),
+        Option("max_point_area", "Largest pie size (0 = auto)", "number", 0,
+               minimum=0, maximum=2000, step=20, decimals=0, scope="config"),
+    ],
+    "neighborhood_enrichment_matrix": [
+        _CBAR_PAD, _CBAR_FRACTION,
+        _SPATIAL_CMAP,
+        Option("max_point_area", "Largest dot area", "number", 260.0, minimum=20.0,
+               maximum=2000.0, step=20.0, decimals=0, scope="config"),
+        Option("size_legend", "Show the size key", "bool", True, scope="config"),
+        Option("grid", "Grid", "bool", True, scope="config"),
+    ],
     "volcano_plot": [
+        _REF_LINE_STYLE, _REF_LINE_COLOR,
         Option("show_legend", "Show Up / Down / n.s. legend", "bool", True, scope="style"),
         Option("color_up", "Up-regulated colour", "choice", "#B2182B", _SIG_COLORS, scope="style"),
         Option("color_down", "Down-regulated colour", "choice", "#2166AC", _SIG_COLORS, scope="style"),
@@ -298,7 +452,7 @@ OPTIONS: Dict[str, List[Option]] = {
                scope="style"),
         _X_TICK_ROTATION,
     ],
-    "lineplot_timecourse_with_error_band": [Option("error", "Error band", "choice", "sem", _BAND_CHOICES, scope="style")],
+    "lineplot_timecourse_with_error_band": [Option("error", "Error band", "choice", "sem", _BAND_CHOICES)],
     "ridge_or_density_plot": [
         Option("density_mode", "Density mode", "choice", "ridge", ["ridge", "overlay"], scope="style"),
         Option("overlap", "Ridge overlap", "number", 0.7, minimum=0.0, maximum=0.95, step=0.05, decimals=2, scope="style"),
@@ -360,8 +514,11 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("x_max", "X-axis maximum (blank for auto)", "number", None,
                minimum=-100000.0, maximum=100000.0, step=1.0, decimals=2),
     ],
-    "stacked_bar_composition": [_X_TICK_ROTATION],
-    "waterfall_plot": [Option("sort", "Sort", "choice", "ascending", ["ascending", "descending"], scope="style")],
+    "stacked_bar_composition": [
+        _BAR_WIDTH,_X_TICK_ROTATION],
+    "waterfall_plot": [
+        _BAR_WIDTH,
+        _REF_LINE_STYLE, _REF_LINE_COLOR,Option("sort", "Sort", "choice", "ascending", ["ascending", "descending"], scope="style")],
     "pca_scatter_from_matrix": [],
     "oncoprint_mutation_heatmap": [
         Option("order", "Row / column order", "choice", "frequency", ["frequency", "input"]),
@@ -375,8 +532,11 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("y_margin", "Top y-margin", "number", 0.42, minimum=0.05, maximum=0.6, step=0.05, decimals=2, scope="style"),
         Option("label_font_size", "Label font size (0=auto)", "number", 0, minimum=0, maximum=20, step=1, decimals=0, scope="style"),
     ],
-    "roc_curve": [],
+    "roc_curve": [
+        _REF_LINE_STYLE, _REF_LINE_COLOR,],
     "forest_plot": [
+        _MARKER_EDGE_COLOR,
+        _REF_LINE_STYLE, _REF_LINE_COLOR,
         Option("reference", "Reference line", "number", 1.0, minimum=0.0, maximum=100.0, step=0.5, decimals=2, scope="style"),
         Option("log_scale", "Log x-axis", "bool", True, scope="style"),
     ],
@@ -413,24 +573,31 @@ OPTIONS: Dict[str, List[Option]] = {
                "pvalue", ["pvalue", "padj", "effect", "statistic", "first"], scope="style"),
         Option("duplicate_label_show_count", "Append (n=…) count", "bool", False, scope="style"),
     ],
-    "manhattan_plot": [],
-    "qq_plot": [Option("mode", "Mode", "choice", "pvalue", ["pvalue", "quantile"])],
-    "bland_altman_plot": [Option("show_ci", "Shade 95% CI of bias", "bool", False, scope="style")],
-    "precision_recall_curve": [],
+    "qq_plot": [
+        _REF_LINE_STYLE, _REF_LINE_COLOR,Option("mode", "Mode", "choice", "pvalue", ["pvalue", "quantile"])],
+    "bland_altman_plot": [
+        _REF_LINE_STYLE, _REF_LINE_COLOR,Option("show_ci", "Shade 95% CI of bias", "bool", False, scope="style")],
+    "precision_recall_curve": [
+        _REF_LINE_STYLE, _REF_LINE_COLOR,],
     "confusion_matrix": [
         Option("normalize", "Normalize", "choice", "none", ["none", "row", "column", "total"], scope="style"),
     ],
     "calibration_plot": [
+        _REF_LINE_STYLE, _REF_LINE_COLOR,
         Option("n_bins", "Number of bins", "number", 10, minimum=3, maximum=20, step=1, decimals=0),
     ],
     "dose_response_curve": [Option("fit", "Fit 4PL curve", "bool", True)],
-    "upset_plot": [],
-    "swimmer_plot": [],
+    "upset_plot": [
+        _BAR_WIDTH,],
     "spider_plot": [
+        _MARKER_EDGE_COLOR,
+        _REF_LINE_STYLE, _REF_LINE_COLOR,
         Option("reference", "Reference line (y)", "number", 0.0, minimum=-100.0, maximum=100.0, step=5.0, decimals=1, scope="style"),
     ],
     "sankey_plot": [],
-    "embedding_scatter": [],
+    "embedding_scatter": [
+        Option("bold_cluster_labels", "Bold cluster labels", "bool", True,
+               scope="style"),],
     # --- v0.5 ---
     "hierarchical_clustering": [
         Option("cluster", "Cluster", "choice", "rows", ["rows", "columns"]),
@@ -498,6 +665,7 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("show_suggestive_line", "Suggestive line", "bool", True, scope="style"),
     ],
     "paired_slopegraph": [
+        _MARKER_EDGE_COLOR,
         Option("point_color", "Point color", "choice", "(group)",
                ["(group)", "#2166AC", "#B2182B", "#1B7837", "#333333", "black"], scope="style"),
         Option("line_color", "Line color", "choice", "(group)",
@@ -507,6 +675,7 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("line_alpha", "Line alpha", "number", 0.7, minimum=0.1, maximum=1.0, step=0.1, decimals=1, scope="style"),
     ],
     "swimmer_plot": [
+        _BAR_WIDTH,
         Option("right_pad_frac", "Right-side headroom", "number", 0.06, minimum=0.0, maximum=0.4, step=0.02, decimals=2, scope="style"),
     ],
     "chord_diagram": [

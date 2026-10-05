@@ -1,0 +1,288 @@
+spot_id,x,y,cell_type,cell_count
+bin_00_02,10.0,485.7,tumor cells,7
+bin_00_02,10.0,485.7,CD68+CD163+ macrophages,1
+bin_00_02,10.0,485.7,smooth muscle,3
+bin_00_02,10.0,485.7,stroma,1
+bin_00_02,10.0,485.7,plasma cells,1
+bin_00_02,10.0,485.7,other,3
+bin_00_03,10.0,724.0,tumor cells,56
+bin_00_03,10.0,724.0,CD68+CD163+ macrophages,1
+bin_00_03,10.0,724.0,CD8+ T cells,1
+bin_00_03,10.0,724.0,stroma,1
+bin_00_04,10.0,962.3,tumor cells,37
+bin_01_01,248.6,247.3,tumor cells,55
+bin_01_01,248.6,247.3,CD68+CD163+ macrophages,1
+bin_01_01,248.6,247.3,smooth muscle,6
+bin_01_01,248.6,247.3,CD8+ T cells,1
+bin_01_01,248.6,247.3,other,1
+bin_01_02,248.6,485.7,tumor cells,34
+bin_01_02,248.6,485.7,CD68+CD163+ macrophages,1
+bin_01_02,248.6,485.7,smooth muscle,10
+bin_01_02,248.6,485.7,CD8+ T cells,1
+bin_01_02,248.6,485.7,stroma,3
+bin_01_02,248.6,485.7,other,1
+bin_01_03,248.6,724.0,tumor cells,14
+bin_01_03,248.6,724.0,CD68+CD163+ macrophages,10
+bin_01_03,248.6,724.0,smooth muscle,9
+bin_01_03,248.6,724.0,CD8+ T cells,7
+bin_01_03,248.6,724.0,stroma,5
+bin_01_03,248.6,724.0,plasma cells,2
+bin_01_03,248.6,724.0,vasculature,5
+bin_01_03,248.6,724.0,other,1
+bin_01_04,248.6,962.3,tumor cells,72
+bin_01_04,248.6,962.3,CD68+CD163+ macrophages,3
+bin_01_04,248.6,962.3,CD8+ T cells,4
+bin_01_04,248.6,962.3,stroma,2
+bin_01_04,248.6,962.3,other,1
+bin_01_05,248.6,1200.7,tumor cells,21
+bin_01_05,248.6,1200.7,CD68+CD163+ macrophages,7
+bin_01_05,248.6,1200.7,CD8+ T cells,3
+bin_01_05,248.6,1200.7,stroma,7
+bin_01_05,248.6,1200.7,vasculature,1
+bin_01_05,248.6,1200.7,other,8
+bin_02_00,487.2,9.0,tumor cells,34
+bin_02_00,487.2,9.0,smooth muscle,3
+bin_02_00,487.2,9.0,stroma,1
+bin_02_00,487.2,9.0,other,1
+bin_02_01,487.2,247.3,tumor cells,94
+bin_02_01,487.2,247.3,smooth muscle,1
+bin_02_02,487.2,485.7,tumor cells,66
+bin_02_02,487.2,485.7,smooth muscle,1
+bin_02_02,487.2,485.7,stroma,2
+bin_02_02,487.2,485.7,other,6
+bin_02_03,487.2,724.0,tumor cells,4
+bin_02_03,487.2,724.0,CD68+CD163+ macrophages,23
+bin_02_03,487.2,724.0,smooth muscle,4
+bin_02_03,487.2,724.0,CD8+ T cells,13
+bin_02_03,487.2,724.0,stroma,2
+bin_02_03,487.2,724.0,other,7
+bin_02_04,487.2,962.3,tumor cells,1
+bin_02_04,487.2,962.3,CD68+CD163+ macrophages,21
+bin_02_04,487.2,962.3,smooth muscle,1
+bin_02_04,487.2,962.3,CD8+ T cells,5
+bin_02_04,487.2,962.3,stroma,2
+bin_02_04,487.2,962.3,plasma cells,2
+bin_02_04,487.2,962.3,vasculature,4
+bin_02_04,487.2,962.3,other,9
+bin_02_05,487.2,1200.7,tumor cells,1
+bin_02_05,487.2,1200.7,CD68+CD163+ macrophages,22
+bin_02_05,487.2,1200.7,smooth muscle,1
+bin_02_05,487.2,1200.7,CD8+ T cells,13
+bin_02_05,487.2,1200.7,stroma,11
+bin_02_05,487.2,1200.7,plasma cells,6
+bin_02_05,487.2,1200.7,vasculature,1
+bin_02_05,487.2,1200.7,other,9
+bin_02_06,487.2,1439.0,tumor cells,5
+bin_02_06,487.2,1439.0,CD68+CD163+ macrophages,4
+bin_02_06,487.2,1439.0,smooth muscle,1
+bin_02_06,487.2,1439.0,CD8+ T cells,3
+bin_02_06,487.2,1439.0,stroma,3
+bin_02_06,487.2,1439.0,plasma cells,1
+bin_02_06,487.2,1439.0,other,5
+bin_03_00,725.9,9.0,tumor cells,3
+bin_03_00,725.9,9.0,CD68+CD163+ macrophages,4
+bin_03_00,725.9,9.0,smooth muscle,11
+bin_03_00,725.9,9.0,CD8+ T cells,4
+bin_03_00,725.9,9.0,stroma,2
+bin_03_00,725.9,9.0,plasma cells,4
+bin_03_00,725.9,9.0,other,2
+bin_03_01,725.9,247.3,tumor cells,68
+bin_03_01,725.9,247.3,CD68+CD163+ macrophages,1
+bin_03_01,725.9,247.3,smooth muscle,6
+bin_03_01,725.9,247.3,CD8+ T cells,3
+bin_03_01,725.9,247.3,plasma cells,2
+bin_03_01,725.9,247.3,other,1
+bin_03_02,725.9,485.7,tumor cells,79
+bin_03_02,725.9,485.7,smooth muscle,1
+bin_03_02,725.9,485.7,CD8+ T cells,1
+bin_03_02,725.9,485.7,other,1
+bin_03_03,725.9,724.0,tumor cells,3
+bin_03_03,725.9,724.0,CD68+CD163+ macrophages,17
+bin_03_03,725.9,724.0,smooth muscle,13
+bin_03_03,725.9,724.0,CD8+ T cells,3
+bin_03_03,725.9,724.0,stroma,1
+bin_03_03,725.9,724.0,other,4
+bin_03_04,725.9,962.3,CD68+CD163+ macrophages,28
+bin_03_04,725.9,962.3,smooth muscle,5
+bin_03_04,725.9,962.3,CD8+ T cells,9
+bin_03_04,725.9,962.3,stroma,3
+bin_03_04,725.9,962.3,plasma cells,1
+bin_03_04,725.9,962.3,vasculature,1
+bin_03_04,725.9,962.3,other,7
+bin_03_05,725.9,1200.7,tumor cells,2
+bin_03_05,725.9,1200.7,CD68+CD163+ macrophages,25
+bin_03_05,725.9,1200.7,smooth muscle,3
+bin_03_05,725.9,1200.7,CD8+ T cells,12
+bin_03_05,725.9,1200.7,stroma,7
+bin_03_05,725.9,1200.7,plasma cells,8
+bin_03_05,725.9,1200.7,vasculature,3
+bin_03_05,725.9,1200.7,other,5
+bin_03_06,725.9,1439.0,tumor cells,5
+bin_03_06,725.9,1439.0,CD68+CD163+ macrophages,15
+bin_03_06,725.9,1439.0,CD8+ T cells,2
+bin_03_06,725.9,1439.0,plasma cells,1
+bin_03_06,725.9,1439.0,vasculature,5
+bin_03_06,725.9,1439.0,other,4
+bin_04_00,964.5,9.0,CD68+CD163+ macrophages,1
+bin_04_00,964.5,9.0,smooth muscle,6
+bin_04_00,964.5,9.0,CD8+ T cells,8
+bin_04_00,964.5,9.0,stroma,4
+bin_04_00,964.5,9.0,vasculature,1
+bin_04_00,964.5,9.0,other,1
+bin_04_01,964.5,247.3,tumor cells,10
+bin_04_01,964.5,247.3,CD68+CD163+ macrophages,1
+bin_04_01,964.5,247.3,smooth muscle,5
+bin_04_01,964.5,247.3,CD8+ T cells,5
+bin_04_01,964.5,247.3,stroma,2
+bin_04_01,964.5,247.3,vasculature,7
+bin_04_01,964.5,247.3,other,3
+bin_04_02,964.5,485.7,tumor cells,52
+bin_04_02,964.5,485.7,CD68+CD163+ macrophages,2
+bin_04_02,964.5,485.7,smooth muscle,6
+bin_04_02,964.5,485.7,CD8+ T cells,1
+bin_04_02,964.5,485.7,stroma,2
+bin_04_02,964.5,485.7,vasculature,1
+bin_04_02,964.5,485.7,other,3
+bin_04_03,964.5,724.0,CD68+CD163+ macrophages,18
+bin_04_03,964.5,724.0,smooth muscle,14
+bin_04_03,964.5,724.0,CD8+ T cells,3
+bin_04_03,964.5,724.0,stroma,4
+bin_04_03,964.5,724.0,vasculature,1
+bin_04_03,964.5,724.0,other,2
+bin_04_04,964.5,962.3,tumor cells,1
+bin_04_04,964.5,962.3,CD68+CD163+ macrophages,25
+bin_04_04,964.5,962.3,smooth muscle,8
+bin_04_04,964.5,962.3,CD8+ T cells,2
+bin_04_04,964.5,962.3,stroma,3
+bin_04_04,964.5,962.3,plasma cells,3
+bin_04_04,964.5,962.3,vasculature,1
+bin_04_04,964.5,962.3,other,1
+bin_04_05,964.5,1200.7,tumor cells,1
+bin_04_05,964.5,1200.7,CD68+CD163+ macrophages,24
+bin_04_05,964.5,1200.7,smooth muscle,2
+bin_04_05,964.5,1200.7,CD8+ T cells,18
+bin_04_05,964.5,1200.7,stroma,6
+bin_04_05,964.5,1200.7,plasma cells,5
+bin_04_05,964.5,1200.7,vasculature,3
+bin_04_05,964.5,1200.7,other,8
+bin_04_06,964.5,1439.0,tumor cells,1
+bin_04_06,964.5,1439.0,CD68+CD163+ macrophages,10
+bin_04_06,964.5,1439.0,smooth muscle,1
+bin_04_06,964.5,1439.0,CD8+ T cells,8
+bin_04_06,964.5,1439.0,stroma,4
+bin_04_06,964.5,1439.0,vasculature,1
+bin_04_06,964.5,1439.0,other,3
+bin_05_00,1203.1,9.0,tumor cells,1
+bin_05_00,1203.1,9.0,CD68+CD163+ macrophages,1
+bin_05_00,1203.1,9.0,smooth muscle,5
+bin_05_00,1203.1,9.0,CD8+ T cells,2
+bin_05_00,1203.1,9.0,stroma,2
+bin_05_00,1203.1,9.0,other,3
+bin_05_01,1203.1,247.3,tumor cells,2
+bin_05_01,1203.1,247.3,CD68+CD163+ macrophages,1
+bin_05_01,1203.1,247.3,smooth muscle,7
+bin_05_01,1203.1,247.3,CD8+ T cells,2
+bin_05_01,1203.1,247.3,stroma,3
+bin_05_02,1203.1,485.7,CD68+CD163+ macrophages,2
+bin_05_02,1203.1,485.7,smooth muscle,14
+bin_05_02,1203.1,485.7,CD8+ T cells,2
+bin_05_02,1203.1,485.7,stroma,2
+bin_05_02,1203.1,485.7,plasma cells,5
+bin_05_02,1203.1,485.7,vasculature,5
+bin_05_02,1203.1,485.7,other,3
+bin_05_03,1203.1,724.0,CD68+CD163+ macrophages,4
+bin_05_03,1203.1,724.0,smooth muscle,9
+bin_05_03,1203.1,724.0,CD8+ T cells,3
+bin_05_03,1203.1,724.0,stroma,3
+bin_05_03,1203.1,724.0,plasma cells,2
+bin_05_03,1203.1,724.0,other,5
+bin_05_04,1203.1,962.3,CD68+CD163+ macrophages,17
+bin_05_04,1203.1,962.3,smooth muscle,12
+bin_05_04,1203.1,962.3,CD8+ T cells,1
+bin_05_04,1203.1,962.3,stroma,2
+bin_05_04,1203.1,962.3,plasma cells,1
+bin_05_04,1203.1,962.3,vasculature,1
+bin_05_05,1203.1,1200.7,tumor cells,1
+bin_05_05,1203.1,1200.7,CD68+CD163+ macrophages,15
+bin_05_05,1203.1,1200.7,smooth muscle,3
+bin_05_05,1203.1,1200.7,CD8+ T cells,9
+bin_05_05,1203.1,1200.7,stroma,5
+bin_05_05,1203.1,1200.7,plasma cells,2
+bin_05_05,1203.1,1200.7,vasculature,8
+bin_05_05,1203.1,1200.7,other,6
+bin_05_06,1203.1,1439.0,CD68+CD163+ macrophages,7
+bin_05_06,1203.1,1439.0,smooth muscle,3
+bin_05_06,1203.1,1439.0,CD8+ T cells,3
+bin_05_06,1203.1,1439.0,stroma,1
+bin_05_06,1203.1,1439.0,plasma cells,1
+bin_05_06,1203.1,1439.0,other,5
+bin_06_00,1441.8,9.0,tumor cells,33
+bin_06_00,1441.8,9.0,smooth muscle,2
+bin_06_00,1441.8,9.0,stroma,1
+bin_06_01,1441.8,247.3,tumor cells,32
+bin_06_01,1441.8,247.3,smooth muscle,32
+bin_06_01,1441.8,247.3,CD8+ T cells,1
+bin_06_01,1441.8,247.3,stroma,2
+bin_06_02,1441.8,485.7,tumor cells,23
+bin_06_02,1441.8,485.7,smooth muscle,15
+bin_06_02,1441.8,485.7,CD8+ T cells,1
+bin_06_02,1441.8,485.7,stroma,2
+bin_06_02,1441.8,485.7,plasma cells,4
+bin_06_02,1441.8,485.7,other,2
+bin_06_03,1441.8,724.0,tumor cells,1
+bin_06_03,1441.8,724.0,smooth muscle,10
+bin_06_03,1441.8,724.0,CD8+ T cells,1
+bin_06_03,1441.8,724.0,stroma,3
+bin_06_03,1441.8,724.0,plasma cells,4
+bin_06_03,1441.8,724.0,other,4
+bin_06_04,1441.8,962.3,CD68+CD163+ macrophages,5
+bin_06_04,1441.8,962.3,smooth muscle,15
+bin_06_04,1441.8,962.3,stroma,1
+bin_06_05,1441.8,1200.7,CD68+CD163+ macrophages,8
+bin_06_05,1441.8,1200.7,smooth muscle,14
+bin_06_05,1441.8,1200.7,CD8+ T cells,4
+bin_06_05,1441.8,1200.7,plasma cells,1
+bin_06_05,1441.8,1200.7,vasculature,2
+bin_06_05,1441.8,1200.7,other,2
+bin_06_06,1441.8,1439.0,tumor cells,1
+bin_06_06,1441.8,1439.0,CD68+CD163+ macrophages,5
+bin_06_06,1441.8,1439.0,smooth muscle,5
+bin_06_06,1441.8,1439.0,CD8+ T cells,1
+bin_06_06,1441.8,1439.0,stroma,3
+bin_06_06,1441.8,1439.0,plasma cells,3
+bin_06_06,1441.8,1439.0,other,3
+bin_07_00,1680.4,9.0,tumor cells,35
+bin_07_00,1680.4,9.0,CD68+CD163+ macrophages,1
+bin_07_00,1680.4,9.0,stroma,4
+bin_07_00,1680.4,9.0,other,1
+bin_07_01,1680.4,247.3,tumor cells,35
+bin_07_01,1680.4,247.3,CD68+CD163+ macrophages,2
+bin_07_01,1680.4,247.3,smooth muscle,12
+bin_07_01,1680.4,247.3,CD8+ T cells,4
+bin_07_01,1680.4,247.3,stroma,2
+bin_07_01,1680.4,247.3,other,2
+bin_07_02,1680.4,485.7,tumor cells,44
+bin_07_02,1680.4,485.7,smooth muscle,16
+bin_07_02,1680.4,485.7,CD8+ T cells,2
+bin_07_02,1680.4,485.7,stroma,1
+bin_07_03,1680.4,724.0,smooth muscle,15
+bin_07_03,1680.4,724.0,stroma,4
+bin_07_03,1680.4,724.0,vasculature,1
+bin_07_04,1680.4,962.3,tumor cells,1
+bin_07_04,1680.4,962.3,CD68+CD163+ macrophages,2
+bin_07_04,1680.4,962.3,smooth muscle,5
+bin_07_04,1680.4,962.3,stroma,3
+bin_07_04,1680.4,962.3,plasma cells,1
+bin_07_04,1680.4,962.3,other,3
+bin_08_01,1919.0,247.3,tumor cells,2
+bin_08_01,1919.0,247.3,CD68+CD163+ macrophages,2
+bin_08_01,1919.0,247.3,smooth muscle,9
+bin_08_01,1919.0,247.3,CD8+ T cells,2
+bin_08_01,1919.0,247.3,stroma,1
+bin_08_01,1919.0,247.3,other,1
+bin_08_02,1919.0,485.7,tumor cells,1
+bin_08_02,1919.0,485.7,CD68+CD163+ macrophages,3
+bin_08_02,1919.0,485.7,smooth muscle,3
+bin_08_02,1919.0,485.7,CD8+ T cells,1
+bin_08_02,1919.0,485.7,stroma,2
+bin_08_02,1919.0,485.7,other,3

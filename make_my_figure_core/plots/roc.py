@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from make_my_figure_core.plots.base import (
+    reference_line_kwargs,
     RenderError,
     RenderResult,
     base_metadata,
@@ -78,7 +79,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             ax.step(fpr, tpr, where="post", color=style.color_for(mi),
                     lw=style.line_width_pt, label=f"{m} (AUC={auc:.3f})")
 
-        ax.plot([0, 1], [0, 1], ls="--", color="0.6", lw=style.spine_width_pt)
+        _ref_kw = reference_line_kwargs(spec, style)
+        ax.plot([0, 1], [0, 1], **_ref_kw)
         ax.set_xlim(0, 1)
         ax.set_ylim(0, 1.02)
         ax.set_aspect("equal", adjustable="box")

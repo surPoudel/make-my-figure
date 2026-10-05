@@ -23,6 +23,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from make_my_figure_core.plots.base import (
+    reference_line_kwargs,
+    LABEL_ADJUST_ITERATIONS,
+    repel_labels,
     RenderResult,
     base_metadata,
     coerce_numeric,
@@ -50,41 +53,9 @@ _LABEL_MODES = ("top_fdr", "top_lfc", "top_up_down", "selected", "pasted", "sign
 
 def _repel_labels(ax, points, style, *, show_arrows=True, box=False, color=None,
                   font_size=None, repel=None):
-    """Draw point labels with overlap avoidance.
-
-    Uses ``adjustText`` when installed (with optional subtle connector arrows);
-    otherwise a distance-offset fallback. Never fails the render.
-    """
-    color = color or style.text_color
-    fs = font_size or style.annotation_pt
-    bbox = dict(boxstyle="round,pad=0.2", fc="white", ec=color, lw=0.5,
-                alpha=0.85) if box else None
-    texts = []
-    for lx, ly, txt in points:
-        texts.append(ax.text(lx, ly, txt, fontsize=fs, color=color, zorder=5, bbox=bbox))
-    if not texts:
-        return 0
-    try:
-        from adjustText import adjust_text  # type: ignore
-
-        arrowprops = dict(arrowstyle="-", color="0.5", lw=0.5) if show_arrows else None
-        kw = {}
-        if repel is not None:
-            try:
-                kw["force_text"] = (float(repel), float(repel))
-            except (TypeError, ValueError):
-                pass
-        adjust_text(texts, ax=ax, arrowprops=arrowprops, **kw)
-        return len(texts)
-    except Exception:
-        for t in texts:
-            t.remove()
-        arrowprops = dict(arrowstyle="-", color="0.5", lw=0.5) if show_arrows else None
-        for lx, ly, txt in points:
-            ax.annotate(txt, (lx, ly), fontsize=fs, color=color, xytext=(4, 4),
-                        textcoords="offset points", zorder=5, bbox=bbox,
-                        arrowprops=arrowprops)
-        return len(points)
+    """Thin wrapper; the implementation is shared in plots.base."""
+    return repel_labels(ax, points, style, show_arrows=show_arrows, box=box,
+                        color=color, font_size=font_size, repel=repel)
 
 
 def _label_text(row, label_col, id_col, label_by):
@@ -190,9 +161,10 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                    linewidths=0.4, alpha=0.95, zorder=3)
 
         thr_lw = max(0.8, style.spine_width_pt * 0.8)
-        ax.axvline(lfc_cutoff, ls="--", lw=thr_lw, color="0.5", zorder=0)
-        ax.axvline(-lfc_cutoff, ls="--", lw=thr_lw, color="0.5", zorder=0)
-        ax.axhline(-np.log10(p_cutoff), ls="--", lw=thr_lw, color="0.5", zorder=0)
+        _ref_kw = reference_line_kwargs(spec, style)
+        ax.axvline(lfc_cutoff, zorder=0, **_ref_kw)
+        ax.axvline(-lfc_cutoff, zorder=0, **_ref_kw)
+        ax.axhline(-np.log10(p_cutoff), zorder=0, **_ref_kw)
 
         ymax = float(work["_neglog10p"].max()) if len(work) else 1.0
 

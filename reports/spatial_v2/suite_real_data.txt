@@ -1,0 +1,422 @@
+........................................................................ [  3%]
+............................s....F...........F.......................... [  7%]
+........................................................................ [ 11%]
+........................................................................ [ 15%]
+........................................................................ [ 18%]
+........................................................................ [ 22%]
+....................................................................F... [ 26%]
+........................................................................ [ 30%]
+........................................................................ [ 34%]
+........................................................................ [ 37%]
+........................................................................ [ 41%]
+........................................................................ [ 45%]
+........................................................................ [ 49%]
+............................................................FFFF........ [ 52%]
+........................................................................ [ 56%]
+........................................................................ [ 60%]
+............ss.......................................................... [ 64%]
+..............................s......................................... [ 68%]
+.......FF..F............................................................ [ 71%]
+........................................................................ [ 75%]
+........................................................................ [ 79%]
+........................................................................ [ 83%]
+..................F..........F.......................................... [ 87%]
+........................................................................ [ 90%]
+........................................................................ [ 94%]
+........................................................................ [ 98%]
+..............................                                           [100%]
+=================================== FAILURES ===================================
+_____________________ test_every_example_loads_and_renders _____________________
+
+controller = <apps.desktop_app.controller.DesktopController object at 0x72da3f716b50>
+
+    def test_every_example_loads_and_renders(controller):
+        for pt in available_plot_types():
+            data = controller.load_example(pt)
+            assert data.info.n_rows > 0
+            mapping = controller.default_mapping(pt)
+            spec = controller.build_spec(pt, "nature_like", data.table_name, mapping)
+>           result = controller.render(spec, data)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_desktop_controller.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+apps/desktop_app/controller.py:443: in render
+    return render(spec, data.info.dataframe, aux=aux)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+make_my_figure_core/plots/registry.py:371: in render
+    result = renderer(spec, df, style)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+make_my_figure_core/plots/spatial_feature_map.py:131: in render
+    require_columns(df, [c for c in (x, y, value, feature, facet) if c], context=PLOT_TYPE)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+df =              cell_id     x     y  ...     CD68   Ki67     CD4
+0     reg052_B_00000   360   852  ...  1361.07  60.10  5...00  ...  1833.77  23.91  504.18
+2191  reg052_B_02191  1796   955  ...  3353.39  12.39  253.24
+
+[2192 rows x 11 columns]
+columns = ['x', 'y', 'EPCAM'], context = 'spatial_feature_map'
+
+    def require_columns(df: pd.DataFrame, columns: List[str], *, context: str) -> None:
+        missing = [c for c in columns if c and c not in df.columns]
+        if missing:
+>           raise RenderError(
+                f"{context}: missing required column(s) {missing}. "
+                f"Available columns: {list(df.columns)}"
+            )
+E           make_my_figure_core.plots.base.RenderError: spatial_feature_map: missing required column(s) ['EPCAM']. Available columns: ['cell_id', 'x', 'y', 'cell_type', 'neighborhood', 'image', 'patient', 'CD8', 'CD68', 'Ki67', 'CD4']
+
+make_my_figure_core/plots/base.py:46: RenderError
+________________ test_every_plot_type_loads_and_renders_in_gui _________________
+
+app = <PySide6.QtWidgets.QApplication(0xfb20640) at 0x72da851cfd00>
+
+    def test_every_plot_type_loads_and_renders_in_gui(app):
+        win = MainWindow()
+        for pt in available_plot_types():
+            win.load_example(pt)
+>           assert win._current_result is not None, f"no figure for {pt}"
+E           AssertionError: no figure for spatial_feature_map
+E           assert None is not None
+E            +  where None = <apps.desktop_app.main.MainWindow(0x19fff1f0) at 0x72da96b459c0>._current_result
+
+tests/test_desktop_gui.py:132: AssertionError
+__________________ test_every_plot_type_packages_and_reopens ___________________
+
+controller = <apps.desktop_app.controller.DesktopController object at 0x72da9563ddd0>
+
+    def test_every_plot_type_packages_and_reopens(controller):
+        from make_my_figure_core.plots.registry import available_plot_types
+    
+        failures = []
+        for pt in available_plot_types():
+            try:
+                data = controller.load_example(pt)
+                spec = controller.build_spec(pt, "publication", data.table_name, controller.default_mapping(pt))
+                result = controller.render(spec, data)
+                pkg = controller.open_package(controller.package_bytes(controller.package_content(data, spec, result, name=pt)))
+                loaded2, spec2 = controller.loaded_from_package(pkg)
+                r2 = controller.render(spec2, loaded2)
+                assert r2.metadata.get("plot_type") == result.metadata.get("plot_type")
+            except Exception as exc:  # noqa: BLE001
+                failures.append(f"{pt}: {exc}")
+>       assert not failures, failures
+E       AssertionError: ["spatial_feature_map: spatial_feature_map: missing required column(s) ['EPCAM']. Available columns: ['cell_id', 'x', ...ion_map: missing required column(s) ['fraction']. Available columns: ['spot_id', 'x', 'y', 'cell_type', 'cell_count']"]
+E       assert not ["spatial_feature_map: spatial_feature_map: missing required column(s) ['EPCAM']. Available columns: ['cell_id', 'x', ...ion_map: missing required column(s) ['fraction']. Available columns: ['spot_id', 'x', 'y', 'cell_type', 'cell_count']"]
+
+tests/test_figure_package_controller.py:101: AssertionError
+______ test_every_plot_type_renders_after_migration[nature_like_learned] _______
+
+name = 'nature_like_learned'
+
+    @pytest.mark.parametrize("name", LEGACY_LEARNED + ["nature_like"])
+    def test_every_plot_type_renders_after_migration(name):
+        """Old specs referencing removed profiles still render (mapped to Publication)."""
+        from make_my_figure_core import examples
+    
+        for pt in available_plot_types():
+            info, aux, _spec = examples.load_example(pt)
+            aux_dfs = {k: v.dataframe for k, v in aux.items()} or None
+            spec = make_spec(pt, info.source_name, name, mapping=None)
+>           result = render(spec, info.dataframe, aux=aux_dfs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_learned_styles.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+make_my_figure_core/plots/registry.py:371: in render
+    result = renderer(spec, df, style)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+make_my_figure_core/plots/spatial_feature_map.py:131: in render
+    require_columns(df, [c for c in (x, y, value, feature, facet) if c], context=PLOT_TYPE)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+df =              cell_id     x     y  ...     CD68   Ki67     CD4
+0     reg052_B_00000   360   852  ...  1361.07  60.10  5...00  ...  1833.77  23.91  504.18
+2191  reg052_B_02191  1796   955  ...  3353.39  12.39  253.24
+
+[2192 rows x 11 columns]
+columns = ['x', 'y', 'EPCAM'], context = 'spatial_feature_map'
+
+    def require_columns(df: pd.DataFrame, columns: List[str], *, context: str) -> None:
+        missing = [c for c in columns if c and c not in df.columns]
+        if missing:
+>           raise RenderError(
+                f"{context}: missing required column(s) {missing}. "
+                f"Available columns: {list(df.columns)}"
+            )
+E           make_my_figure_core.plots.base.RenderError: spatial_feature_map: missing required column(s) ['EPCAM']. Available columns: ['cell_id', 'x', 'y', 'cell_type', 'neighborhood', 'image', 'patient', 'CD8', 'CD68', 'Ki67', 'CD4']
+
+make_my_figure_core/plots/base.py:46: RenderError
+______ test_every_plot_type_renders_after_migration[science_like_learned] ______
+
+name = 'science_like_learned'
+
+    @pytest.mark.parametrize("name", LEGACY_LEARNED + ["nature_like"])
+    def test_every_plot_type_renders_after_migration(name):
+        """Old specs referencing removed profiles still render (mapped to Publication)."""
+        from make_my_figure_core import examples
+    
+        for pt in available_plot_types():
+            info, aux, _spec = examples.load_example(pt)
+            aux_dfs = {k: v.dataframe for k, v in aux.items()} or None
+            spec = make_spec(pt, info.source_name, name, mapping=None)
+>           result = render(spec, info.dataframe, aux=aux_dfs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_learned_styles.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+make_my_figure_core/plots/registry.py:371: in render
+    result = renderer(spec, df, style)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+make_my_figure_core/plots/spatial_feature_map.py:131: in render
+    require_columns(df, [c for c in (x, y, value, feature, facet) if c], context=PLOT_TYPE)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+df =              cell_id     x     y  ...     CD68   Ki67     CD4
+0     reg052_B_00000   360   852  ...  1361.07  60.10  5...00  ...  1833.77  23.91  504.18
+2191  reg052_B_02191  1796   955  ...  3353.39  12.39  253.24
+
+[2192 rows x 11 columns]
+columns = ['x', 'y', 'EPCAM'], context = 'spatial_feature_map'
+
+    def require_columns(df: pd.DataFrame, columns: List[str], *, context: str) -> None:
+        missing = [c for c in columns if c and c not in df.columns]
+        if missing:
+>           raise RenderError(
+                f"{context}: missing required column(s) {missing}. "
+                f"Available columns: {list(df.columns)}"
+            )
+E           make_my_figure_core.plots.base.RenderError: spatial_feature_map: missing required column(s) ['EPCAM']. Available columns: ['cell_id', 'x', 'y', 'cell_type', 'neighborhood', 'image', 'patient', 'CD8', 'CD68', 'Ki67', 'CD4']
+
+make_my_figure_core/plots/base.py:46: RenderError
+_______ test_every_plot_type_renders_after_migration[cell_like_learned] ________
+
+name = 'cell_like_learned'
+
+    @pytest.mark.parametrize("name", LEGACY_LEARNED + ["nature_like"])
+    def test_every_plot_type_renders_after_migration(name):
+        """Old specs referencing removed profiles still render (mapped to Publication)."""
+        from make_my_figure_core import examples
+    
+        for pt in available_plot_types():
+            info, aux, _spec = examples.load_example(pt)
+            aux_dfs = {k: v.dataframe for k, v in aux.items()} or None
+            spec = make_spec(pt, info.source_name, name, mapping=None)
+>           result = render(spec, info.dataframe, aux=aux_dfs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_learned_styles.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+make_my_figure_core/plots/registry.py:371: in render
+    result = renderer(spec, df, style)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+make_my_figure_core/plots/spatial_feature_map.py:131: in render
+    require_columns(df, [c for c in (x, y, value, feature, facet) if c], context=PLOT_TYPE)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+df =              cell_id     x     y  ...     CD68   Ki67     CD4
+0     reg052_B_00000   360   852  ...  1361.07  60.10  5...00  ...  1833.77  23.91  504.18
+2191  reg052_B_02191  1796   955  ...  3353.39  12.39  253.24
+
+[2192 rows x 11 columns]
+columns = ['x', 'y', 'EPCAM'], context = 'spatial_feature_map'
+
+    def require_columns(df: pd.DataFrame, columns: List[str], *, context: str) -> None:
+        missing = [c for c in columns if c and c not in df.columns]
+        if missing:
+>           raise RenderError(
+                f"{context}: missing required column(s) {missing}. "
+                f"Available columns: {list(df.columns)}"
+            )
+E           make_my_figure_core.plots.base.RenderError: spatial_feature_map: missing required column(s) ['EPCAM']. Available columns: ['cell_id', 'x', 'y', 'cell_type', 'neighborhood', 'image', 'patient', 'CD8', 'CD68', 'Ki67', 'CD4']
+
+make_my_figure_core/plots/base.py:46: RenderError
+__________ test_every_plot_type_renders_after_migration[nature_like] ___________
+
+name = 'nature_like'
+
+    @pytest.mark.parametrize("name", LEGACY_LEARNED + ["nature_like"])
+    def test_every_plot_type_renders_after_migration(name):
+        """Old specs referencing removed profiles still render (mapped to Publication)."""
+        from make_my_figure_core import examples
+    
+        for pt in available_plot_types():
+            info, aux, _spec = examples.load_example(pt)
+            aux_dfs = {k: v.dataframe for k, v in aux.items()} or None
+            spec = make_spec(pt, info.source_name, name, mapping=None)
+>           result = render(spec, info.dataframe, aux=aux_dfs)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_learned_styles.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+make_my_figure_core/plots/registry.py:371: in render
+    result = renderer(spec, df, style)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+make_my_figure_core/plots/spatial_feature_map.py:131: in render
+    require_columns(df, [c for c in (x, y, value, feature, facet) if c], context=PLOT_TYPE)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+df =              cell_id     x     y  ...     CD68   Ki67     CD4
+0     reg052_B_00000   360   852  ...  1361.07  60.10  5...00  ...  1833.77  23.91  504.18
+2191  reg052_B_02191  1796   955  ...  3353.39  12.39  253.24
+
+[2192 rows x 11 columns]
+columns = ['x', 'y', 'EPCAM'], context = 'spatial_feature_map'
+
+    def require_columns(df: pd.DataFrame, columns: List[str], *, context: str) -> None:
+        missing = [c for c in columns if c and c not in df.columns]
+        if missing:
+>           raise RenderError(
+                f"{context}: missing required column(s) {missing}. "
+                f"Available columns: {list(df.columns)}"
+            )
+E           make_my_figure_core.plots.base.RenderError: spatial_feature_map: missing required column(s) ['EPCAM']. Available columns: ['cell_id', 'x', 'y', 'cell_type', 'neighborhood', 'image', 'patient', 'CD8', 'CD68', 'Ki67', 'CD4']
+
+make_my_figure_core/plots/base.py:46: RenderError
+___ test_publication_check_passes_for_all_examples[spatial_categorical_map] ____
+
+pt = 'spatial_categorical_map'
+
+>   ???
+E   AssertionError: spatial_categorical_map: ['Some labels may be clipped in the fixed preview (exports use a tight bounding box)']
+E   assert False
+
+/Users/spoudel1/Library/CloudStorage/OneDrive-St.JudeChildren'sResearchHospital/make_my_plot/tests/test_publication_style.py:102: AssertionError
+_____ test_publication_check_passes_for_all_examples[spatial_feature_map] ______
+
+pt = 'spatial_feature_map'
+
+>   ???
+
+/Users/spoudel1/Library/CloudStorage/OneDrive-St.JudeChildren'sResearchHospital/make_my_plot/tests/test_publication_style.py:99: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/spoudel1/Library/CloudStorage/OneDrive-St.JudeChildren'sResearchHospital/make_my_plot/tests/test_publication_style.py:33: in _render
+    ???
+make_my_figure_core/plots/registry.py:371: in render
+    result = renderer(spec, df, style)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+make_my_figure_core/plots/spatial_feature_map.py:131: in render
+    require_columns(df, [c for c in (x, y, value, feature, facet) if c], context=PLOT_TYPE)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+df =              cell_id     x     y  ...     CD68   Ki67     CD4
+0     reg052_B_00000   360   852  ...  1361.07  60.10  5...00  ...  1833.77  23.91  504.18
+2191  reg052_B_02191  1796   955  ...  3353.39  12.39  253.24
+
+[2192 rows x 11 columns]
+columns = ['x', 'y', 'EPCAM'], context = 'spatial_feature_map'
+
+    def require_columns(df: pd.DataFrame, columns: List[str], *, context: str) -> None:
+        missing = [c for c in columns if c and c not in df.columns]
+        if missing:
+>           raise RenderError(
+                f"{context}: missing required column(s) {missing}. "
+                f"Available columns: {list(df.columns)}"
+            )
+E           make_my_figure_core.plots.base.RenderError: spatial_feature_map: missing required column(s) ['EPCAM']. Available columns: ['cell_id', 'x', 'y', 'cell_type', 'neighborhood', 'image', 'patient', 'CD8', 'CD68', 'Ki67', 'CD4']
+
+make_my_figure_core/plots/base.py:46: RenderError
+___ test_publication_check_passes_for_all_examples[spatial_composition_map] ____
+
+pt = 'spatial_composition_map'
+
+>   ???
+
+/Users/spoudel1/Library/CloudStorage/OneDrive-St.JudeChildren'sResearchHospital/make_my_plot/tests/test_publication_style.py:99: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/Users/spoudel1/Library/CloudStorage/OneDrive-St.JudeChildren'sResearchHospital/make_my_plot/tests/test_publication_style.py:33: in _render
+    ???
+make_my_figure_core/plots/registry.py:371: in render
+    result = renderer(spec, df, style)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+make_my_figure_core/plots/spatial_composition_map.py:45: in render
+    require_columns(df, [spot, x, y, category, value], context=PLOT_TYPE)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+df =        spot_id       x      y                cell_type  cell_count
+0    bin_00_02    10.0  485.7              tumor ce...          stroma           2
+286  bin_08_02  1919.0  485.7                    other           3
+
+[287 rows x 5 columns]
+columns = ['spot_id', 'x', 'y', 'cell_type', 'fraction']
+context = 'spatial_composition_map'
+
+    def require_columns(df: pd.DataFrame, columns: List[str], *, context: str) -> None:
+        missing = [c for c in columns if c and c not in df.columns]
+        if missing:
+>           raise RenderError(
+                f"{context}: missing required column(s) {missing}. "
+                f"Available columns: {list(df.columns)}"
+            )
+E           make_my_figure_core.plots.base.RenderError: spatial_composition_map: missing required column(s) ['fraction']. Available columns: ['spot_id', 'x', 'y', 'cell_type', 'cell_count']
+
+make_my_figure_core/plots/base.py:46: RenderError
+_______ test_capabilities_agree_with_renderer_source_for_every_plot_type _______
+
+    def test_capabilities_agree_with_renderer_source_for_every_plot_type():
+        rows = [audit.scan_renderer(pt) for pt in available_plot_types()]
+>       assert audit.drift(rows) == []
+E       AssertionError: assert ['spatial_cat...s not use it'] == []
+E         
+E         Left contains one more item: 'spatial_categorical_map: palette_control_has_effect is declared True but the renderer does not use it'
+E         Use -v to get more diff
+
+tests/test_style_capabilities_audit.py:33: AssertionError
+__________________________ test_audit_csv_is_written ___________________________
+
+tmp_path = PosixPath('/tmp/pytest-of-spoudel1/pytest-13/test_audit_csv_is_written0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x72da2e9a0950>
+
+    def test_audit_csv_is_written(tmp_path, monkeypatch):
+        monkeypatch.setattr(audit, "OUT_DIR", tmp_path)
+        monkeypatch.setattr(audit, "CSV_PATH", tmp_path / "audit.csv")
+        monkeypatch.setattr(sys, "argv", ["audit"])
+>       assert audit.main() == 0
+E       assert 1 == 0
+E        +  where 1 = <function main at 0x72da99f054e0>()
+E        +    where <function main at 0x72da99f054e0> = audit.main
+
+tests/test_style_capabilities_audit.py:110: AssertionError
+----------------------------- Captured stdout call -----------------------------
+wrote /tmp/pytest-of-spoudel1/pytest-13/test_audit_csv_is_written0/audit.csv (45 renderers)
+
+1 declaration(s) disagree with renderer source:
+  - spatial_categorical_map: palette_control_has_effect is declared True but the renderer does not use it
+=============================== warnings summary ===============================
+tests/test_differential.py::test_raw_count_matrix_warns
+  /home/spoudel1/venvs/mmf-v111/lib/python3.11/site-packages/scipy/stats/_axis_nan_policy.py:635: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+    res = hypotest_fun_out(*samples, axis=axis, **kwds)
+
+tests/test_duplicate_labels.py::test_pasted_list_obeys_policy
+tests/test_matrix_plot_builder.py::test_differential_plots_build_and_render
+  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/plots/volcano.py:177: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.85))
+
+tests/test_figure_package.py::test_unicode_missing_values_and_extreme_floats
+  /home/spoudel1/venvs/mmf-v111/lib/python3.11/site-packages/numpy/_core/fromnumeric.py:57: RuntimeWarning: overflow encountered in multiply
+    return bound(*args, **kwds)
+
+tests/test_figure_package_controller.py::test_every_plot_type_packages_and_reopens
+  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/plots/survival.py:289: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.8))
+
+tests/test_layout_and_annotations.py::test_lollipop_per_label_offset_renders
+  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/plots/lollipop.py:64: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.42))
+
+tests/test_reproducibility_export_qc.py::test_plotspec_roundtrip_reproduces_key_metadata[barplot_with_error_bar]
+  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/plots/barplot.py:50: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.8))
+
+tests/test_style_font_stack.py::test_font_stack_is_kept_outside_the_style_context
+  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/plots/scatter.py:119: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+    fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.78))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_count_model_de_optional.py:51: optional 'count-de' extra (pydeseq2) not installed
+SKIPPED [1] tests/test_package_data.py:135: set RUN_PACKAGING_BUILD_TESTS=1 to build a wheel (slow, needs network)
+SKIPPED [1] tests/test_package_data.py:152: set RUN_PACKAGING_BUILD_TESTS=1 to build and install (slow)
+SKIPPED [1] tests/test_publication_recreation_pipeline.py:52: gapminder already cached; offline path not exercised
+12 failed, 1886 passed, 4 skipped, 8 warnings in 1129.81s (0:18:49)

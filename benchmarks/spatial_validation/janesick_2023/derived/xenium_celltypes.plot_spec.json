@@ -1,0 +1,32 @@
+{
+  "plot_type": "spatial_categorical_map",
+  "input_table": "xenium_rep1_cells_celltypes.csv",
+  "mapping": {
+    "x": "x",
+    "y": "y",
+    "category": "cell_type"
+  },
+  "journal_style": "publication",
+  "layout": {
+    "title": "Xenium Rep 1 \u2014 published cell types (Janesick et al. 2023, Fig. 3l)"
+  },
+  "spatial": {
+    "coordinate_units": "micrometre",
+    "orientation": "y_down",
+    "marker_size": 1.2,
+    "alpha": 0.75,
+    "rasterize": true,
+    "scale_bar": true,
+    "scale_bar_length": 1000.0,
+    "legend_columns": 1
+  },
+  "output": {
+    "formats": [
+      "png",
+      "pdf"
+    ],
+    "dpi": 300,
+    "width_mm": 180,
+    "height_mm": 140
+  }
+}

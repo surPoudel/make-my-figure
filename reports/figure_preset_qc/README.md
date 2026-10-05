@@ -1,8 +1,8 @@
 # Figure Preset QC — every registered plot type
 
-Generated 2026-09-20T23:05:52+00:00 by `scripts/build_figure_preset_qc.py` against the live plot registry (39 renderers, enumerated from code).
+Generated 2026-10-01T00:45:39+00:00 by `scripts/build_figure_preset_qc.py` against the live plot registry (45 renderers, enumerated from code).
 
-**39 / 39 plot types PASS.** 20 individual checks are N/A, each with its reason in the `notes` column (a plot that draws no legend has no legend to round-trip; a plot whose options are all analytical has no visual option to carry in a style preset).
+**45 / 45 plot types PASS.** 28 individual checks are N/A, each with its reason in the `notes` column (a plot that draws no legend has no legend to round-trip; a plot whose options are all analytical has no visual option to carry in a style preset).
 
 Per plot type the harness renders the bundled example with defaults, changes typography, colour, layout, legend and export settings plus one visual plot option where one exists, saves a style preset and a full-configuration preset, loads a *different* dataset of the same type, applies both, and checks that every setting came back, that the new data stayed the new data, that nothing from the original table travelled in either preset, that PNG/PDF/SVG export, and that PlotSpec and preset both survive a JSON round-trip.
 
@@ -47,6 +47,12 @@ Per plot type the harness renders the bundled example with defaults, changes typ
 | hierarchical_clustering | PASS | — |
 | network_graph | PASS | — |
 | chord_diagram | PASS | — |
+| spatial_categorical_map | PASS | plot_specific_roundtrip |
+| spatial_feature_map | PASS | legend_roundtrip, plot_specific_roundtrip |
+| spatial_transcript_map | PASS | plot_specific_roundtrip |
+| spatial_roi_map | PASS | plot_specific_roundtrip |
+| spatial_composition_map | PASS | plot_specific_roundtrip |
+| neighborhood_enrichment_matrix | PASS | color_roundtrip, plot_specific_roundtrip |
 
 Columns of `all_plot_preset_matrix.csv`: plot_type, preset_save, preset_load, style_roundtrip, full_config_roundtrip, color_roundtrip, typography_roundtrip, layout_roundtrip, legend_roundtrip, annotation_roundtrip, plot_specific_roundtrip, new_data_safe, png_export, pdf_export, svg_export, status, notes.
 

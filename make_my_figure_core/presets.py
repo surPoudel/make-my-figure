@@ -664,7 +664,10 @@ def extract_layout_preset(mpf, *, name: str = "", description: str = "") -> Dict
         "app_version": __version__,
         "n_panels": len(mpf.panels),
         "layout": layout,
-        "panel_sizes": [{"width_in": p.width_in, "height_in": p.height_in} for p in mpf.panels],
+        # fill_cell travels with the sizes: "this panel uses its whole cell" is a
+        # sizing decision, and a layout that drops it comes back with dead space.
+        "panel_sizes": [{"width_in": p.width_in, "height_in": p.height_in,
+                         "fill_cell": p.fill_cell} for p in mpf.panels],
     }
 
 
@@ -697,6 +700,7 @@ def apply_layout_preset(preset: Dict[str, Any], mpf) -> LayoutApplyResult:
     for panel, size in zip(mpf.panels, sizes):
         panel.width_in = size.get("width_in")
         panel.height_in = size.get("height_in")
+        panel.fill_cell = bool(size.get("fill_cell", False))   # absent in older presets
     if n_have != n_want and sizes:
         res.warnings.append(
             f"Layout was saved for {n_want} panel(s) and this figure has {n_have}; "
@@ -728,7 +732,8 @@ def load_layout_preset(path: str) -> Dict[str, Any]:
             "app_version": __version__,
             "n_panels": len(fig.get("panels") or []),
             "layout": fig.get("layout") or {},
-            "panel_sizes": [{"width_in": p.get("width_in"), "height_in": p.get("height_in")}
+            "panel_sizes": [{"width_in": p.get("width_in"), "height_in": p.get("height_in"),
+                             "fill_cell": bool(p.get("fill_cell", False))}
                             for p in (fig.get("panels") or [])],
         }
         return preset

@@ -332,7 +332,15 @@ class DesktopController:
         source: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         style = load_profile(style_name)
-        w_mm = style.double_column_width_mm if width == "double" else style.single_column_width_mm
+        # Every preset, not just "double": this used to collapse default, single
+        # and onehalf onto the single-column width, so three of the four choices
+        # exported at the same size.
+        from make_my_figure_core.styles.engine import WIDTH_PRESETS_MM
+
+        w_mm = WIDTH_PRESETS_MM.get(width)
+        if w_mm is None:
+            w_mm = (style.double_column_width_mm if width == "double"
+                    else style.single_column_width_mm)
         spec: Dict[str, Any] = {
             "plot_type": plot_type,
             "input_table": table_name,

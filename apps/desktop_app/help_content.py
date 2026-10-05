@@ -1,7 +1,10 @@
 """Help text for the desktop app.
 
-Plot descriptions and required columns are read from the bundled
-``plot_schema_manifest.json`` so they stay factual and in sync with the data.
+Plot descriptions, required/optional columns and the example file are read from the
+bundled ``examples/example_data_manifest.json`` (one entry per plot type, kept complete by
+``tests/test_examples.py``), falling back to the older ``plot_schema_manifest.json`` for any
+plot type without an example. Before v1.1.2 only the legacy manifest was consulted, so the
+Help page showed no columns for the 21 plot types added after v0.3.
 """
 
 from __future__ import annotations
@@ -9,6 +12,7 @@ from __future__ import annotations
 from typing import Dict, List
 
 from make_my_figure_core import data as mock_data
+from make_my_figure_core import examples
 from make_my_figure_core.plots.registry import available_plot_types, display_name
 
 DISCLAIMER = (
@@ -53,18 +57,23 @@ FORMATTING = (
 
 
 def plot_help() -> List[Dict[str, object]]:
-    """Return a help entry per supported plot type, from the manifest."""
-    manifest = {d["plot_type"]: d for d in mock_data.load_manifest().get("datasets", [])}
+    """Return a help entry per supported plot type, from the examples manifest (legacy fallback)."""
+    legacy = {d["plot_type"]: d for d in mock_data.load_manifest().get("datasets", [])}
     entries: List[Dict[str, object]] = []
     for pt in available_plot_types():
-        m = manifest.get(pt, {})
+        ex = examples.entry(pt) or {} if examples.has_manifest() else {}
+        m = legacy.get(pt, {})
+        files = ex.get("files") or {}
+        example_file = files.get("csv") or mock_data.sample_filename(pt)
+        if isinstance(example_file, str) and example_file.startswith("examples/"):
+            example_file = example_file[len("examples/"):]
         entries.append({
             "plot_type": pt,
             "title": display_name(pt),
-            "description": m.get("description", ""),
-            "required_columns": m.get("required_columns", []),
-            "optional_columns": m.get("optional_columns", []),
-            "replacement_note": m.get("user_replacement_note", ""),
-            "example_file": mock_data.sample_filename(pt),
+            "description": ex.get("description") or m.get("description", ""),
+            "required_columns": ex.get("required_columns") or m.get("required_columns", []),
+            "optional_columns": ex.get("optional_columns") or m.get("optional_columns", []),
+            "replacement_note": ex.get("user_replacement_note") or m.get("user_replacement_note", ""),
+            "example_file": example_file,
         })
     return entries

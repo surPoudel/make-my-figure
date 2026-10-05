@@ -82,3 +82,16 @@ def test_matrix_value_types_are_generic():
     from make_my_figure_core.matrix_workflow import VALUE_TYPES
     joined = " ".join(VALUE_TYPES).lower()
     assert "rna" not in joined and "seq" not in joined
+
+
+def test_build_wrappers_do_not_embed_the_repo_path_in_python_one_liners():
+    # The per-OS build wrappers read the version with a Python one-liner. Embedding the
+    # repository path inside that quoted string breaks for paths containing quotes or
+    # apostrophes (e.g. OneDrive "... Children's Research Hospital ..." folders): the
+    # wrappers must `cd` to the repo root instead (fixed 2026-09-23).
+    offenders = []
+    for name in ("build_linux.sh", "build_macos.sh", "build_windows.ps1"):
+        text = (ROOT / "scripts" / name).read_text(encoding="utf-8", errors="ignore")
+        if "sys.path.insert(0, '$ROOT')" in text or "sys.path.insert(0, r'$Root')" in text:
+            offenders.append(name)
+    assert not offenders, f"repo path embedded in a Python one-liner: {offenders}"

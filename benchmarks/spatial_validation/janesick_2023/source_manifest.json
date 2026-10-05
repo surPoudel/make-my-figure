@@ -1,0 +1,67 @@
+{
+  "publication": {
+    "title": "High resolution mapping of the tumor microenvironment using integrated single-cell, spatial and in situ analysis",
+    "authors": "Janesick A, Shelansky R, Gottscho AD, Wagner F, Williams SR, Rouault M, et al.",
+    "journal": "Nature Communications",
+    "year": 2023,
+    "volume_pages": "14:8353",
+    "doi": "10.1038/s41467-023-43458-x",
+    "license": "CC BY 4.0",
+    "license_note": "Nature Communications is open access under CC BY 4.0. The DATA are deposited separately; see per-source terms below."
+  },
+  "data_availability": {
+    "geo_accession": "GSE243280",
+    "note": "The series-level GSE243280_RAW.tar is 31.78 GB and the Xenium outs.zip is 9.18 GB. Neither is downloaded in full: per-sample files are fetched individually, and a single member is pulled from the Xenium archive using HTTP range requests (scripts/zip_member.py).",
+    "tenx_landing_page": "https://www.10xgenomics.com/products/xenium-in-situ/preview-dataset-human-breast"
+  },
+  "sources": [
+    {
+      "id": "xenium_rep1_cells",
+      "description": "Xenium Rep 1 cell table (centroids, counts, areas) - one member extracted from a 9.18 GB archive",
+      "archive_url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM7780nnn/GSM7780153/suppl/GSM7780153_Xenium_FFPE_Human_Breast_Cancer_Rep1_outs.zip",
+      "archive_member": "outs/cells.csv.gz",
+      "archive_bytes": 9861155708,
+      "filename": "xenium_cells.csv.gz",
+      "sha256": "8fc6f2b4c000c42ca97a1bb904a8d7608b33fa69ff86b1be0291016acbc2649c",
+      "bytes": 7930261,
+      "downloaded": "2026-09-30",
+      "redistributable": false,
+      "redistribution_note": "Not committed; fetched by scripts/download.sh."
+    },
+    {
+      "id": "xenium_rep1_supervised",
+      "description": "Published supervised cell-type annotations used for Figures 1-5",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM7780nnn/GSM7780153/suppl/GSM7780153_Xenium_R1_Fig1-5_supervised.csv.gz",
+      "filename": "xen_sup.csv.gz",
+      "sha256": "1668413f78973816c8afee8003d073c9645d4f5eb9ec85f4e1bfc4cd62465c24",
+      "bytes": 526694,
+      "downloaded": "2026-09-30",
+      "redistributable": false
+    },
+    {
+      "id": "visium_filtered_matrix",
+      "description": "Visium CytAssist filtered feature-barcode matrix (raw UMI counts)",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM7782nnn/GSM7782699/suppl/GSM7782699_filtered_feature_bc_matrix.h5",
+      "filename": "GSM7782699_filtered_feature_bc_matrix.h5",
+      "sha256": "6b00ec1f4abcafde2d2f140ea0456553dd47b8279c684a38eaa45adc09e72a4b",
+      "bytes": 33301941,
+      "downloaded": "2026-09-30",
+      "redistributable": false
+    },
+    {
+      "id": "visium_spatial",
+      "description": "Visium spatial bundle: tissue_positions.csv, scalefactors, spatial_enrichment.csv",
+      "url": "https://ftp.ncbi.nlm.nih.gov/geo/samples/GSM7782nnn/GSM7782699/suppl/GSM7782699_spatial.tar.gz",
+      "extracted": ["spatial/tissue_positions.csv", "spatial/spatial_enrichment.csv", "spatial/scalefactors_json.json"],
+      "sha256_tissue_positions": "fd8953276dad4f010ab1a876fb6eff78b7fca641e4ee1b268dd4d5e46fe33492",
+      "sha256_spatial_enrichment": "44513fdbeda0187ed17a0e2a269f394170f2d5832e18c6e0fb0519064b0eb578",
+      "downloaded": "2026-09-30",
+      "redistributable": false
+    }
+  ],
+  "transformations": {
+    "xenium": "Join cells.csv (centroids) to the supervised annotation on cell_id == Barcode. No value altered; coordinates passed through in micrometres.",
+    "visium": "Each spot scaled to the median total UMI count across spots (median = 13532), then log2(1 + x) for display. The normalisation was RECOVERED and verified against the deposited per-gene 'Median Normalized Average Counts' for all 18,056 genes (worst relative difference 8.6e-13)."
+  },
+  "licensing_posture": "No 10x Genomics software or restricted companion code is copied or vendored. Every operation is implemented independently from the deposited data."
+}

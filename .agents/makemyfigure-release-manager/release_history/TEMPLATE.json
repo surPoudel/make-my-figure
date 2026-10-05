@@ -1,0 +1,19 @@
+{
+  "tag": "vX.Y.Z",
+  "commit": "<40-hex>",
+  "commit_short": "<10-hex>",
+  "commit_date": "<ISO 8601>",
+  "annotated": true,
+  "tag_date": "<ISO 8601>",
+  "tag_message": "MakeMyFigure vX.Y.Z",
+  "version_py_at_tag": "X.Y.Z",
+  "recorded": "<ISO 8601 when this record was written>",
+  "notes": "free text: who built which platform where, CI run id, deviations, post-release checks",
+  "github_release": {
+    "url": "https://github.com/surPoudel/make-my-figure/releases/tag/vX.Y.Z",
+    "published_at": "<ISO 8601>",
+    "prerelease": false,
+    "draft": false,
+    "assets": [{"name": "MakeMyFigure-X.Y.Z-Setup.exe", "size": 0}]
+  }
+}

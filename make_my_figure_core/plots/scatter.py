@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from make_my_figure_core.plots.base import (
+    register_refit,
+    repel_labels,
     RenderResult,
     base_metadata,
     coerce_numeric,
@@ -50,6 +52,48 @@ def _fmt_p(p: float) -> str:
     if not np.isfinite(p):
         return "n/a"
     return "P < 0.001" if p < 1e-3 else f"P = {p:.3g}"
+
+
+def _fit_annotation_to_axes(ax, text) -> None:
+    """Keep the fit-stats box inside the axes it is anchored to.
+
+    The box is placed in axes coordinates, so a line of statistics wider than the
+    axes hangs off the canvas - which is what happens on a single-column figure
+    whose legend has been pushed outside, leaving the plot area narrow. Neither
+    resizing nor squeezing can help: the text is centred on the axes, so a
+    narrower plot area carries it further out, not nearer in.
+
+    Breaking the statistics onto separate lines is what a person does here, and
+    it costs nothing but height. If one statistic is still too wide on its own,
+    the type steps down to ``ABSOLUTE_MIN_PT`` and no further; past that the
+    figure is simply too narrow, and the honest result is a legible box that
+    overhangs rather than an illegible one that fits.
+    """
+    from make_my_figure_core.styles.typography import ABSOLUTE_MIN_PT
+
+    fig = ax.figure
+    try:
+        fig.canvas.draw()
+    except Exception:  # noqa: BLE001
+        return
+
+    def too_wide() -> float:
+        try:
+            box = text.get_window_extent(fig.canvas.get_renderer())
+        except Exception:  # noqa: BLE001
+            return 0.0
+        return box.width - ax.get_window_extent().width
+
+    if too_wide() <= 0:
+        return
+    if ", " in text.get_text():
+        text.set_text(text.get_text().replace(", ", "\n"))
+        if too_wide() <= 0:
+            return
+    size = float(text.get_fontsize())
+    while too_wide() > 0 and size > ABSOLUTE_MIN_PT:
+        size = max(ABSOLUTE_MIN_PT, size - 0.5)
+        text.set_fontsize(size)
 
 
 def _fit_annotation(fits: Dict[str, Any], opts: Dict[str, bool]) -> str:
@@ -138,14 +182,19 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
         # Optional point labels (all labelled points, or only 'selected_labels').
         if label_col and label_col in work.columns:
+            # Collected and placed together, not annotated one at a time with a
+            # fixed offset: picking several nearby points that way stacked their
+            # names on top of each other, which is what click-to-label is for.
+            _pts = []
             for _, row in work.iterrows():
                 txt = str(row[label_col]).strip()
                 if not txt or txt.lower() == "nan":
                     continue
                 if _sel_set and txt.lower() not in _sel_set:
                     continue
-                ax.annotate(txt, (row[x], row[y]), fontsize=style.annotation_pt,
-                            xytext=(3, 3), textcoords="offset points")
+                _pts.append((row[x], row[y], txt))
+            if _pts:
+                repel_labels(ax, _pts, style, show_arrows=len(_pts) > 1)
 
         # Regression-stats annotation (each statistic individually toggleable).
         if fit_line and show_fit_stats and fits:
@@ -158,10 +207,12 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                     "lower left": (0.03, 0.03, "left", "bottom"),
                 }
                 ax_, ay_, ha_, va_ = loc_map.get(fit_stats_loc, loc_map["lower right"])
-                ax.text(ax_, ay_, txt, transform=ax.transAxes, ha=ha_, va=va_,
-                        fontsize=max(8.0, style.annotation_pt), color=style.text_color,
-                        bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="0.7",
-                                  lw=0.5, alpha=0.85), zorder=6)
+                _ann = ax.text(ax_, ay_, txt, transform=ax.transAxes, ha=ha_, va=va_,
+                               fontsize=style.annotation_pt, color=style.text_color,
+                               bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="0.7",
+                                         lw=0.5, alpha=0.85), zorder=6)
+                _fit_annotation_to_axes(ax, _ann)
+                register_refit(ax.figure, lambda a=ax, t=_ann: _fit_annotation_to_axes(a, t))
 
         ax.set_xlabel(spec.get("layout", {}).get("x_label", x))
         ax.set_ylabel(spec.get("layout", {}).get("y_label", y))

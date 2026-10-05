@@ -25,6 +25,33 @@ from make_my_figure_core.recommendations.recommendation_models import (
 
 # --- alias lists for role detection (matched against normalised names) -------
 _ALIASES: Dict[str, List[str]] = {
+    # --- spatial (v2) ---------------------------------------------------------
+    # Names that mean "tissue coordinate" on their own. A bare "x"/"y" is NOT
+    # here: those are the most common scatter-plot headers in existence, and
+    # treating every x/y table as spatial data would hijack ordinary scatters.
+    # Bare x/y only counts as spatial when a companion column corroborates it
+    # (see _spatial_coordinate_columns).
+    "spatial_x": ["x_centroid", "xcentroid", "x_position", "xposition", "x_coord",
+                  "xcoord", "x_um", "x_micron", "x_pixel", "x_px", "spatial_x",
+                  "imagecol", "pxl_col_in_fullres", "centroid_x", "global_x", "x:x"],
+    "spatial_y": ["y_centroid", "ycentroid", "y_position", "yposition", "y_coord",
+                  "ycoord", "y_um", "y_micron", "y_pixel", "y_px", "spatial_y",
+                  "imagerow", "pxl_row_in_fullres", "centroid_y", "global_y", "y:y"],
+    "cell_type": ["cell_type", "celltype", "cluster_name", "clustername", "annotation",
+                  "cell_annotation", "phenotype", "cell_class"],
+    "neighborhood": ["neighborhood", "neighbourhood", "cellular_neighborhood",
+                     "cn", "niche", "cn_label"],
+    "image_id": ["image", "image_id", "imageid", "fov", "roi_image", "section",
+                 "slide", "file_name", "filename", "tile"],
+    "transcript_gene": ["gene", "target", "feature_name", "gene_name", "transcript",
+                        "gene_id"],
+    "transcript_id": ["transcript_id", "transcriptid", "molecule_id", "detection_id"],
+    "quality_score": ["qv", "q_score", "qscore", "quality", "quality_score", "phred"],
+    "roi_id": ["roi_id", "roiid", "roi", "region_id", "regionid", "polygon_id"],
+    "vertex_order": ["vertex_order", "vertexorder", "vertex", "vertex_index",
+                     "point_order", "ordinal"],
+    "spot_id": ["spot_id", "spotid", "barcode", "bin_id", "spot"],
+    "fraction": ["fraction", "proportion", "percentage", "percent", "prop", "share"],
     "group": ["group", "condition", "treatment", "genotype", "arm", "cohort", "class",
               "category", "cluster", "celltype", "cell_type", "status", "response_category"],
     "subject": ["subject", "subjectid", "patient", "patientid", "sampleid", "sample",
@@ -131,6 +158,47 @@ def _classify_matrix(block: pd.DataFrame) -> Optional[str]:
     return "expression_like"
 
 
+def _spatial_coordinate_columns(columns, numeric, df=None):
+    """Find tissue-coordinate columns, or return (None, None, "").
+
+    Two ways to qualify, and the distinction matters:
+
+    * an **unambiguous name** - ``x_centroid``, ``pxl_col_in_fullres``, ``imagecol``
+      and friends mean a tissue coordinate and nothing else;
+    * a **bare ``x``/``y`` plus corroboration** - a cell-type, neighbourhood,
+      image/FOV, transcript or ROI-vertex column in the same table.
+
+    Bare ``x``/``y`` alone is deliberately NOT enough. They are the most common
+    headers in any scatter-plot table, and claiming those as spatial data would
+    hijack ordinary scatters and recommend tissue maps for dose-response curves.
+    """
+    x = _find(columns, _ALIASES["spatial_x"])
+    y = _find(columns, _ALIASES["spatial_y"])
+    if x and y and x != y:
+        return x, y, "coordinate-specific column names"
+
+    normed = {_norm(c): c for c in columns}
+    bare_x = normed.get("x") or normed.get("xcoordinate")
+    bare_y = normed.get("y") or normed.get("ycoordinate")
+    if not (bare_x and bare_y) or bare_x == bare_y:
+        return None, None, ""
+    if bare_x not in numeric or bare_y not in numeric:
+        return None, None, ""
+
+    corroboration = [
+        ("cell_type", _find(columns, _ALIASES["cell_type"])),
+        ("neighborhood", _find(columns, _ALIASES["neighborhood"])),
+        ("image", _find(columns, _ALIASES["image_id"])),
+        ("transcript gene", _find(columns, _ALIASES["transcript_gene"])),
+        ("ROI vertex order", _find(columns, _ALIASES["vertex_order"])),
+        ("spot id", _find(columns, _ALIASES["spot_id"])),
+    ]
+    found = [name for name, col in corroboration if col]
+    if found:
+        return bare_x, bare_y, f"x/y with {found[0]} in the same table"
+    return None, None, ""
+
+
 def profile_table(df: pd.DataFrame, table_name: str = "data") -> DataProfile:
     """Profile ``df`` into a :class:`DataProfile` (cheap, no rendering)."""
     columns = [str(c) for c in df.columns]
@@ -176,6 +244,16 @@ def profile_table(df: pd.DataFrame, table_name: str = "data") -> DataProfile:
 
     def has(role: str) -> bool:
         return any(r.role == role for r in roles)
+
+    # spatial coordinates, only when the table corroborates them (see the resolver)
+    _sx, _sy, _why = _spatial_coordinate_columns(columns, numeric, df)
+    if _sx and _sy:
+        add("spatial_x", _sx, 0.85, _why)
+        add("spatial_y", _sy, 0.85, _why)
+    for _role in ("cell_type", "neighborhood", "image_id", "transcript_gene",
+                  "transcript_id", "quality_score", "roi_id", "vertex_order",
+                  "spot_id", "fraction"):
+        add(_role, _find(columns, _ALIASES[_role]), 0.7, f"{_role}-like header")
 
     add("p_value", _find(columns, _ALIASES["p_value"]), 0.8, "p-value-like header")
     add("adj_p", _find(columns, _ALIASES["adj_p"]), 0.8, "adjusted-p/FDR-like header")

@@ -20,6 +20,7 @@ import pandas as pd
 
 from make_my_figure_core.plots._v04_shared import ordered_unique, pick_column
 from make_my_figure_core.plots.base import (
+    colorbar_geometry,
     RenderResult,
     base_metadata,
     coerce_numeric,
@@ -84,7 +85,9 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                 sel = (work[shape_by].astype(str) == str(sh)).to_numpy() if has_shape else np.ones(len(work), bool)
                 sc = ax.scatter(work[x][sel], work[y][sel], c=cvals[sel], cmap=style.sequential_cmap,
                                 marker=_MARKERS[si % len(_MARKERS)], zorder=3, **mk)
-            cbar = fig.colorbar(sc, ax=ax, fraction=0.045, pad=0.03)
+            cbar = fig.colorbar(sc, ax=ax,
+                                **colorbar_geometry(spec, default_fraction=0.045,
+                                                    default_pad=0.03))
             cbar.set_label(str(color_by), fontsize=style.axis_font_pt)
             cbar.ax.tick_params(labelsize=style.tick_label_pt)
         else:
@@ -101,13 +104,18 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                     ax.scatter(work[x][sel], work[y][sel], color=col,
                                marker=_MARKERS[si % len(_MARKERS)], label=lab, zorder=3, **mk)
 
-        # Annotate category centroids when a label column is supplied.
+        # Annotate category centroids when a label column is supplied. Bold by
+        # default - the name sits on top of the points it names and has to win -
+        # but a dense UMAP with many small clusters often reads better without it.
+        _bold_cluster_labels = bool(get_mapping(spec, "bold_cluster_labels", True))
         if label_by and label_by in work.columns:
             for lvl in ordered_unique(work[label_by].tolist()):
                 sub = work[work[label_by].astype(str) == str(lvl)]
                 if len(sub):
                     ax.annotate(str(lvl), (sub[x].mean(), sub[y].mean()),
-                                fontsize=style.annotation_pt, fontweight="bold",
+                                fontsize=style.annotation_pt,
+                                fontweight=("bold" if _bold_cluster_labels
+                                            else "normal"),
                                 ha="center", va="center",
                                 bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="none", alpha=0.7))
 

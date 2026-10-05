@@ -1,0 +1,30 @@
+{
+  "plot_type": "spatial_transcript_map",
+  "input_table": "data.csv",
+  "mapping": {
+    "x": "x",
+    "y": "y",
+    "gene": "gene",
+    "quality": "qv"
+  },
+  "journal_style": "publication",
+  "layout": {
+    "title": "Transcripts by gene (synthetic)"
+  },
+  "spatial": {
+    "coordinate_units": "pixel",
+    "orientation": "y_down",
+    "marker_size": 1.4,
+    "alpha": 0.55
+  },
+  "output": {
+    "formats": [
+      "png",
+      "pdf",
+      "svg"
+    ],
+    "dpi": 300,
+    "width_mm": 180,
+    "height_mm": 150
+  }
+}

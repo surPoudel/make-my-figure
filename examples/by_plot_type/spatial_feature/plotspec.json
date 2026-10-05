@@ -1,0 +1,30 @@
+{
+  "plot_type": "spatial_feature_map",
+  "input_table": "data.csv",
+  "mapping": {
+    "x": "x",
+    "y": "y",
+    "value": "CD8"
+  },
+  "journal_style": "publication",
+  "layout": {
+    "title": "CD8 intensity, CRC section reg052_B"
+  },
+  "spatial": {
+    "coordinate_units": "pixel",
+    "orientation": "y_down",
+    "marker_size": 8,
+    "transform": "log1p",
+    "colorbar_label": "log(1 + CD8 intensity)"
+  },
+  "output": {
+    "formats": [
+      "png",
+      "pdf",
+      "svg"
+    ],
+    "dpi": 300,
+    "width_mm": 180,
+    "height_mm": 150
+  }
+}

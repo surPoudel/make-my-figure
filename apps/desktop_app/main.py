@@ -199,6 +199,21 @@ def debug_info_text() -> str:
 # ---------------------------------------------------------------------------
 # Help dialog
 # ---------------------------------------------------------------------------
+def _make_scrollable(combo, max_visible: int = 14) -> None:
+    """Give a long QComboBox a scrollable popup.
+
+    Qt's default popup grows to fit every entry and can extend past the bottom of
+    the screen, leaving the items below it unreachable - there is no scrollbar
+    unless ``combobox-popup: 0`` is set, which is what makes Qt honour
+    ``maxVisibleItems``. Applied to the combos that can grow with the registry,
+    so adding plot types never makes some of them unreachable again.
+    """
+    combo.setMaxVisibleItems(max_visible)
+    existing = combo.styleSheet() or ""
+    if "combobox-popup" not in existing:
+        combo.setStyleSheet((existing + " QComboBox { combobox-popup: 0; }").strip())
+
+
 class HelpDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -482,6 +497,11 @@ class MainWindow(QMainWindow):
         self.plot_combo.addItem(PLOT_TYPE_PLACEHOLDER, None)
         for pt, label in self.controller.plot_types():
             self.plot_combo.addItem(label, pt)
+        # The list is long enough to run past the bottom of the screen. Qt only
+        # honours maxVisibleItems - and only gives the popup a scrollbar - when
+        # the combo is told not to use the native popup, so set both together.
+        # Without this the entries below the screen edge cannot be reached at all.
+        _make_scrollable(self.plot_combo)
         self.plot_combo.currentIndexChanged.connect(self._on_plot_type_changed)
 
         self.style_combo = QComboBox()
@@ -520,7 +540,7 @@ class MainWindow(QMainWindow):
         self.options_form = QFormLayout(self.options_box)
         cv.addWidget(self.options_box)
 
-        labels_box = QGroupBox("4. Labels & size")
+        labels_box = QGroupBox("4. Labels")
         lb = QFormLayout(labels_box)
         self.title_edit = QLineEdit()
         self.xlabel_edit = QLineEdit()
@@ -533,8 +553,44 @@ class MainWindow(QMainWindow):
         lb.addRow("Title", self.title_edit)
         lb.addRow("X label", self.xlabel_edit)
         lb.addRow("Y label", self.ylabel_edit)
-        lb.addRow("Figure width", self.width_combo)
-        lb.addRow("Raster DPI", self.dpi_spin)
+        # Explicit size in millimetres. The width preset times a renderer's fixed
+        # aspect cannot describe every figure - a wide, short dot matrix has no
+        # preset - so 0 keeps the preset behaviour and any positive value wins.
+        from make_my_figure_core.plots.base import MIN_FIGURE_MM
+
+        def _size_spin(special: str, tip: str):
+            """A size box in the currently selected unit, where 0 means automatic.
+
+            Values below the usable floor snap up to it: a figure of half a
+            millimetre is never what someone meant, and matplotlib cannot lay one
+            out. The unit is display only - the spec always stores millimetres.
+            """
+            box = QDoubleSpinBox()
+            box.setRange(0.0, 400.0)
+            box.setDecimals(2)
+            box.setSingleStep(0.5)
+            box.setValue(0.0)
+            box.setSuffix(" in")
+            box.setSpecialValueText(special)
+            box.setToolTip(tip)
+
+            def _skip_dead_zone(v, _b=box):
+                floor = self._size_floor_in_current_units()
+                if 0 < v < floor:
+                    _b.blockSignals(True)
+                    _b.setValue(floor)
+                    _b.blockSignals(False)
+            box.valueChanged.connect(_skip_dead_zone)
+            return box
+
+        self.fig_w_mm = _size_spin(
+            "auto (use preset)",
+            "Exact figure width. 0 uses the Width preset. "
+            "Inches match matplotlib's figsize.")
+        self.fig_h_mm = _size_spin(
+            "auto (from width)",
+            "Exact figure height. 0 derives the height from the width.")
+
         # Click-to-identify / label (volcano & scatter): clicking a point shows
         # its name in the status bar and toggles a label on it (saved in PlotSpec).
         self.chk_click_label = QCheckBox("Click a point to identify / label it")
@@ -543,6 +599,38 @@ class MainWindow(QMainWindow):
             "clicking toggles a label on that point (stored in the PlotSpec).")
         self.chk_click_label.toggled.connect(self._on_click_label_toggled)
         lb.addRow("Point picking", self.chk_click_label)
+        # --- figure size -----------------------------------------------------
+        # Its own section: figure dimensions are not a label property, and a
+        # user coming from matplotlib thinks in inches (figsize=(4, 2)), not in
+        # the millimetres a journal spec sheet uses. Both are offered, and the
+        # spec always stores millimetres so a saved figure is unambiguous.
+        size_box = QGroupBox("4. Figure size")
+        sb = QFormLayout(size_box)
+        self.size_units = QComboBox()
+        self.size_units.addItems(["inches", "mm"])
+        self.size_units.setToolTip(
+            "Units for the width and height below. Inches match matplotlib's "
+            "figsize; millimetres match journal figure specifications.")
+        self.size_units.currentTextChanged.connect(self._on_size_units_changed)
+        # Every size control has to redraw the preview. Without this the whole
+        # section is inert: the value is read the next time something else
+        # triggers a render, so changing the width preset or the figure
+        # dimensions appears to do nothing at all.
+        self.width_combo.currentTextChanged.connect(self.render_preview)
+        self.fig_w_mm.valueChanged.connect(self.render_preview)
+        self.fig_h_mm.valueChanged.connect(self.render_preview)
+        self.dpi_spin.valueChanged.connect(self.render_preview)
+        sb.addRow("Width preset", self.width_combo)
+        sb.addRow("Units", self.size_units)
+        sb.addRow("Width", self.fig_w_mm)
+        sb.addRow("Height", self.fig_h_mm)
+        sb.addRow("Raster DPI", self.dpi_spin)
+        _hint = QLabel("0 = automatic. A journal panel is typically 4x2 to 7x5 inches.")
+        _hint.setStyleSheet("color:#666; font-size:11px;")
+        _hint.setWordWrap(True)
+        sb.addRow("", _hint)
+        cv.addWidget(size_box)
+
         cv.addWidget(labels_box)
 
         cv.addWidget(self._build_preset_panel())
@@ -704,6 +792,8 @@ class MainWindow(QMainWindow):
                        "contain your data.")
         outer = QVBoxLayout(box)
         self.preset_combo = QComboBox()
+        # Presets accumulate as the user saves them, so this list grows too.
+        _make_scrollable(self.preset_combo)
         self.preset_combo.setToolTip("Presets saved for this plot type, plus universal ones.")
         outer.addWidget(self.preset_combo)
         row1 = QHBoxLayout()
@@ -2769,6 +2859,45 @@ class MainWindow(QMainWindow):
                 mapping[key] = w.value()
         return mapping
 
+
+    MM_PER_INCH = 25.4
+
+    def _size_units_are_mm(self) -> bool:
+        return getattr(self, "size_units", None) is not None \
+            and self.size_units.currentText() == "mm"
+
+    def _size_floor_in_current_units(self) -> float:
+        from make_my_figure_core.plots.base import MIN_FIGURE_MM
+        return MIN_FIGURE_MM if self._size_units_are_mm() else MIN_FIGURE_MM / self.MM_PER_INCH
+
+    def _size_value_to_mm(self, value: float) -> float:
+        """Whatever the box shows -> millimetres, which is what the spec stores."""
+        if value <= 0:
+            return 0.0
+        return float(value) if self._size_units_are_mm() else float(value) * self.MM_PER_INCH
+
+    def _on_size_units_changed(self, _text: str) -> None:
+        """Convert the current numbers so the figure does not change size.
+
+        Switching the unit is a change of display, not of intent: a 4 inch figure
+        must stay 4 inches when the label flips to millimetres.
+        """
+        to_mm = self._size_units_are_mm()
+        factor = self.MM_PER_INCH if to_mm else 1.0 / self.MM_PER_INCH
+        for box, special in ((self.fig_w_mm, "auto (use preset)"),
+                             (self.fig_h_mm, "auto (from width)")):
+            box.blockSignals(True)
+            box.setSuffix(" mm" if to_mm else " in")
+            box.setRange(0.0, 1000.0 if to_mm else 400.0)
+            box.setDecimals(0 if to_mm else 2)
+            box.setSingleStep(5.0 if to_mm else 0.5)
+            box.setSpecialValueText(special)
+            if box.value() > 0:
+                box.setValue(round(box.value() * factor, 2))
+            box.blockSignals(False)
+        self.render_preview()
+
+
     def _on_plot_type_changed(self):
         """Keep plot type, dataset, mappings, PlotSpec and preview in sync.
 
@@ -2817,6 +2946,10 @@ class MainWindow(QMainWindow):
         pt = self.plot_combo.currentData()
         style = self.style_combo.currentData()
         layout = {}
+        if getattr(self, "fig_w_mm", None) is not None and self.fig_w_mm.value() > 0:
+            layout["width_mm"] = self._size_value_to_mm(self.fig_w_mm.value())
+        if getattr(self, "fig_h_mm", None) is not None and self.fig_h_mm.value() > 0:
+            layout["height_mm"] = self._size_value_to_mm(self.fig_h_mm.value())
         if self.title_edit.text().strip():
             layout["title"] = self.title_edit.text().strip()
         if self.xlabel_edit.text().strip():

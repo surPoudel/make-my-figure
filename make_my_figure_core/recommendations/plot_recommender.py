@@ -62,6 +62,40 @@ def _numeric_values(profile: DataProfile) -> List[str]:
     return [c for c in profile.numeric_columns if c not in special]
 
 
+def _measurement_columns(profile, df, exclude) -> List[str]:
+    """Numeric columns that plausibly carry a measurement, not an identifier.
+
+    A patient number and a cell index are numeric, but colouring tissue by
+    "patient" is meaningless. Identifier-like columns are dropped, and so are
+    near-constant ones, so the suggestion lands on something worth mapping.
+    """
+    skip = set(exclude) | set(profile.id_columns)
+    for role in ("subject", "image_id", "spot_id", "transcript_id", "roi_id",
+                 "vertex_order", "neighborhood", "cell_type"):
+        col = profile.role_column(role)
+        if col:
+            skip.add(col)
+    out = []
+    for c in profile.numeric_columns:
+        if c in skip or _looks_like_identifier(c):
+            continue
+        if df is not None and c in df.columns:
+            try:
+                if df[c].nunique(dropna=True) < 5:      # near-constant or a coded label
+                    continue
+            except Exception:  # noqa: BLE001
+                pass
+        out.append(c)
+    return out
+
+
+def _looks_like_identifier(name: str) -> bool:
+    n = str(name).strip().lower().replace(" ", "_")
+    return (n.endswith(("_id", "_idx", "_index", "_no", "_number"))
+            or n in {"id", "index", "patient", "donor", "subject", "sample",
+                     "replicate", "batch", "slide", "well", "tile", "fov"})
+
+
 def recommend_plots(profile: DataProfile, schema: str, df: pd.DataFrame,
                     table_name: str = "data") -> List[Recommendation]:
     recs: List[Recommendation] = []
@@ -80,6 +114,95 @@ def recommend_plots(profile: DataProfile, schema: str, df: pd.DataFrame,
             suggested_statistics=stats, suggested_thresholds=thresholds or {},
             estimated_cost=cost, requires_confirmation=confirm,
             warnings=warnings or [], plot_spec_draft=draft))
+
+    # ---- spatial (v2) -------------------------------------------------------
+    # Advisory only, and deliberately shallow. A recommendation may suggest which
+    # column looks like a coordinate or a label; it never proposes k, a radius, a
+    # number of neighbourhoods, a transform or a normalisation, because those are
+    # scientific choices the data cannot make on the user's behalf.
+    if schema.startswith("spatial") or schema == "neighborhood_enrichment":
+        sx = profile.role_column("spatial_x")
+        sy = profile.role_column("spatial_y")
+        cell_type = profile.role_column("cell_type")
+        neighborhood = profile.role_column("neighborhood")
+        image = profile.role_column("image_id")
+        gene = profile.role_column("transcript_gene")
+        roi = profile.role_column("roi_id")
+        spot = profile.role_column("spot_id")
+        units_note = ("Declare the coordinate units before export: units are never inferred, "
+                      "and a scale bar is only drawn when they are physical.")
+
+    if schema == "spatial_cells":
+        if cell_type:
+            add("spatial_categorical_map", 0.88,
+                f"Tissue coordinates plus a {cell_type!r} label — a spatial map shows where "
+                "each population sits in the section.",
+                {"x": sx, "y": sy, "category": cell_type, "facet": image},
+                warnings=[units_note])
+        if neighborhood:
+            add("spatial_categorical_map", 0.72,
+                f"A {neighborhood!r} column is present — the same map colours cells by "
+                "neighbourhood instead of by type.",
+                {"x": sx, "y": sy, "category": neighborhood, "facet": image})
+        values = _measurement_columns(profile, df, {sx, sy})
+        if values:
+            add("spatial_feature_map", 0.80,
+                f"Numeric column(s) such as {values[0]!r} can be drawn as a continuous "
+                "spatial map. No transform is applied unless you ask for one.",
+                {"x": sx, "y": sy, "value": values[0], "facet": image},
+                warnings=[units_note,
+                          "Choose the transform yourself; the colourbar label follows it."])
+        if cell_type:
+            add("cellular_neighborhood_analysis", 0.55,
+                f"With coordinates and {cell_type!r}, cellular-neighbourhood analysis is "
+                "available. You choose the graph (k or radius) and the number of "
+                "neighbourhoods — these are scientific decisions and are not suggested here."
+                + ("" if image else " No image/sample column was found: set one, or every "
+                   "cell in the table is treated as a single tissue."),
+                {"x": sx, "y": sy, "cell_type": cell_type, "sample": image},
+                cost="medium", confirm=True, renderable=False)
+
+    elif schema == "spatial_transcripts":
+        add("spatial_transcript_map", 0.9,
+            f"One row per detection with a {gene!r} column — a transcript map shows where "
+            "each gene was detected. Nothing is subsampled unless you ask.",
+            {"x": sx, "y": sy, "gene": gene,
+             "quality": profile.role_column("quality_score")},
+            warnings=[units_note])
+
+    elif schema == "spatial_roi_polygons":
+        add("spatial_roi_map", 0.9,
+            f"Ordered vertices grouped by {roi!r} — these are region outlines.",
+            {"roi": roi, "x": sx, "y": sy,
+             "vertex_order": profile.role_column("vertex_order")},
+            warnings=[units_note])
+
+    elif schema == "spatial_composition":
+        add("spatial_composition_map", 0.85,
+            f"One row per ({spot or roi!r}, {cell_type!r}) with a value — composition "
+            "glyphs show the mixture at each position.",
+            {"spot": spot or roi, "x": sx, "y": sy, "category": cell_type,
+             "value": profile.role_column("fraction")
+                      or next(iter(_measurement_columns(profile, df, {sx, sy})), None)},
+            warnings=[units_note,
+                      "Set normalize explicitly: counts and fractions are not guessed apart."])
+
+    elif schema == "spatial_long_expression":
+        add("spatial_feature_map", 0.85,
+            f"Long form with a {gene!r} column — one panel per feature, on shared coordinates.",
+            {"x": sx, "y": sy,
+             "value": next(iter(_measurement_columns(profile, df, {sx, sy})), None),
+             "feature": gene},
+            warnings=[units_note])
+
+    elif schema == "neighborhood_enrichment":
+        enr = next((c for c in df.columns if "enrich" in str(c).lower()), None)
+        freq = next((c for c in df.columns if "freq" in str(c).lower()), None)
+        add("neighborhood_enrichment_matrix", 0.9,
+            "Enrichment values per (neighbourhood, cell type) — the dot matrix shows "
+            "enrichment as colour and frequency as point area.",
+            {"neighborhood": neighborhood, "cell_type": cell_type,
+             "enrichment": enr, "frequency": freq})
 
     # ---- precomputed differential results ----------------------------------
     if schema == "precomputed_differential":

@@ -375,6 +375,109 @@ def test_all_plots_honor_y_tick_rotation():
     assert failed == 0, f"{failed}/{checked} plots ignored y_tick_rotation"
 
 
+# Plot types that offer "X-axis label angle" on their own option list. The option
+# and layout['x_tick_rotation'] are the same control, so the option has to reach
+# the same code path; before the central resolution it only worked in whichever
+# block that plot's renderer happened to read.
+_X_ROT_OPTION_PLOTS = [
+    "barplot_with_error_bar", "beeswarm_plot", "boxplot_or_violin_with_points",
+    "dot_strip_plot", "grouped_barplot_with_error_bar", "histogram_distribution",
+    "manhattan_plot", "raincloud_plot", "stacked_bar_composition",
+]
+
+
+def _x_rot_option_spec(pt, block, value):
+    from make_my_figure_core import examples as ex
+    from make_my_figure_core.plots.registry import default_mapping
+
+    info, aux, ps = ex.load_example(pt)
+    sp = dict(ps) if ps else make_spec(pt, "a", "publication", mapping=default_mapping(pt))
+    sp.setdefault("plot_type", pt)
+    sp["journal_style"] = "publication"
+    sp[block] = {**(sp.get(block) or {}), "x_tick_rotation": value}
+    return sp, info.dataframe, {k: v.dataframe for k, v in (aux or {}).items()} or None
+
+
+def test_x_tick_rotation_option_is_declared_by_the_plots_that_use_it():
+    # Guards the list below against drifting away from the registry.
+    from make_my_figure_core import ui_hints as u
+    for pt in _X_ROT_OPTION_PLOTS:
+        assert "x_tick_rotation" in {o.key for o in u.options(pt)}, \
+            f"{pt} no longer declares the x_tick_rotation option"
+
+
+@pytest.mark.parametrize("pt", _X_ROT_OPTION_PLOTS)
+@pytest.mark.parametrize("block", ["mapping", "style"])
+@pytest.mark.parametrize("value,angle", [("horizontal", 0), ("45", 45), ("vertical", 90)])
+def test_x_tick_rotation_option_rotates_labels(pt, block, value, angle):
+    # The option is written to spec['mapping'] by both frontends, while its declared
+    # scope ("style") is a preset-portability class that reads like a block address -
+    # so a spec can carry it in either block and must behave the same in both.
+    import matplotlib.pyplot as plt
+    sp, df, aux = _x_rot_option_spec(pt, block, value)
+    r = render(sp, df, aux=aux)
+    ax = r.figure.axes[0]
+    labels = [t for t in ax.get_xticklabels() if t.get_text()]
+    rotations = {round(t.get_rotation()) for t in labels}
+    plt.close(r.figure)
+    assert labels, f"{pt} drew no x tick labels to rotate"
+    assert rotations == {angle}, f"{pt} ({block}={value!r}) -> {sorted(rotations)}"
+
+
+def test_layout_x_tick_rotation_wins_over_the_option():
+    # Both controls exist; the layout block is the more specific setting.
+    import matplotlib.pyplot as plt
+    sp, df, aux = _x_rot_option_spec("barplot_with_error_bar", "mapping", "vertical")
+    sp["layout"] = {**(sp.get("layout") or {}), "x_tick_rotation": 45}
+    r = render(sp, df, aux=aux)
+    rotations = {round(t.get_rotation())
+                 for t in r.figure.axes[0].get_xticklabels() if t.get_text()}
+    plt.close(r.figure)
+    assert rotations == {45}
+
+
+def test_x_tick_rotation_option_auto_leaves_the_renderer_in_charge():
+    # "auto" means "choose for me": it must not be forced through the central layout,
+    # or every default render would lose the count/length-aware angle.
+    import matplotlib.pyplot as plt
+    from make_my_figure_core.plots.base import resolve_x_tick_rotation_option
+    assert resolve_x_tick_rotation_option({"mapping": {"x_tick_rotation": "auto"}}) is None
+    assert resolve_x_tick_rotation_option({}) is None
+
+    sp, df, aux = _x_rot_option_spec("stacked_bar_composition", "mapping", "auto")
+    r = render(sp, df, aux=aux)
+    rotations = {round(t.get_rotation())
+                 for t in r.figure.axes[0].get_xticklabels() if t.get_text()}
+    plt.close(r.figure)
+    assert rotations == {90}, f"auto angle changed: {sorted(rotations)}"
+
+
+@pytest.mark.parametrize("pt", ["chord_diagram", "sankey_plot", "waterfall_plot",
+                                "oncoprint_mutation_heatmap", "network_graph",
+                                "spatial_categorical_map", "spatial_composition_map",
+                                "spatial_feature_map", "spatial_roi_map",
+                                "spatial_transcript_map"])
+def test_plots_without_x_tick_labels_have_nothing_to_rotate(pt):
+    # These draw no x tick labels on purpose - chord/sankey turn the axes off, the
+    # spatial maps and network graph clear the ticks (pixel coordinates are not
+    # meaningful), waterfall bars are anonymous sorted patients, and an oncoprint
+    # does not label every sample. "Rotation has no effect" is the correct outcome
+    # here, not a dead control, so this records it rather than treating it as a bug.
+    import matplotlib.pyplot as plt
+    from make_my_figure_core import examples as ex
+    info, aux, ps = ex.load_example(pt)
+    sp = dict(ps)
+    sp.setdefault("plot_type", pt)
+    sp["journal_style"] = "publication"
+    sp["layout"] = {**(sp.get("layout") or {}), "x_tick_rotation": "vertical"}
+    auxd = {k: v.dataframe for k, v in (aux or {}).items()} or None
+    r = render(sp, info.dataframe, aux=auxd)
+    ax = r.figure.axes[0]
+    drawn = ax.axison and [t for t in ax.get_xticklabels() if t.get_text()]
+    plt.close(r.figure)
+    assert not drawn, f"{pt} does draw x tick labels - rotation must be asserted, not excused"
+
+
 @pytest.mark.parametrize("pt", ["grouped_barplot_with_error_bar", "volcano_plot",
                                 "scatterplot_with_regression", "roc_curve",
                                 "pca_scatter_from_matrix", "manhattan_plot"])

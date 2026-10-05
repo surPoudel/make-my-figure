@@ -37,6 +37,7 @@ from make_my_figure_core.plots import (
     lollipop,
     ma_plot,
     manhattan,
+    neighborhood_enrichment_matrix,
     network_graph,
     oncoprint,
     paired_slope,
@@ -48,6 +49,11 @@ from make_my_figure_core.plots import (
     roc,
     sankey,
     scatter,
+    spatial_categorical_map,
+    spatial_composition_map,
+    spatial_feature_map,
+    spatial_roi_map,
+    spatial_transcript_map,
     spider,
     stacked,
     survival,
@@ -56,7 +62,9 @@ from make_my_figure_core.plots import (
     volcano,
     waterfall,
 )
-from make_my_figure_core.plots.base import RenderError, RenderResult
+from make_my_figure_core.plots.base import (
+    RenderError, RenderResult, figure_size_adjustments,
+)
 from make_my_figure_core.spec.validate import (
     SpecValidationError,
     default_output_block,
@@ -108,6 +116,12 @@ _RENDERERS: Dict[str, Callable[..., RenderResult]] = {
     network_graph.PLOT_TYPE: network_graph.render,
     # --- v1.2 ---
     chord_diagram.PLOT_TYPE: chord_diagram.render,
+    spatial_categorical_map.PLOT_TYPE: spatial_categorical_map.render,
+    spatial_feature_map.PLOT_TYPE: spatial_feature_map.render,
+    spatial_transcript_map.PLOT_TYPE: spatial_transcript_map.render,
+    spatial_roi_map.PLOT_TYPE: spatial_roi_map.render,
+    spatial_composition_map.PLOT_TYPE: spatial_composition_map.render,
+    neighborhood_enrichment_matrix.PLOT_TYPE: neighborhood_enrichment_matrix.render,
 }
 
 # Default column mappings per plot type (mirrors the mock-data manifest).
@@ -119,6 +133,17 @@ _DEFAULT_MAPPINGS: Dict[str, Dict[str, Any]] = {
                         "lfc_cutoff": 1.0, "p_cutoff": 0.05,
                         "annotate": True, "label_mode": "top_fdr", "top_n": 10, "show_arrows": True},
     scatter.PLOT_TYPE: {"x": "x_marker", "y": "y_response", "color": "group", "fit_line": True},
+    spatial_categorical_map.PLOT_TYPE: {"x": "x", "y": "y", "category": "cell_type"},
+    spatial_feature_map.PLOT_TYPE: {"x": "x", "y": "y", "value": "CD8"},
+    spatial_transcript_map.PLOT_TYPE: {"x": "x", "y": "y", "gene": "gene"},
+    spatial_roi_map.PLOT_TYPE: {"roi": "roi_id", "x": "x", "y": "y",
+                                "vertex_order": "vertex_order", "roi_label": "roi_label"},
+    spatial_composition_map.PLOT_TYPE: {"spot": "spot_id", "x": "x", "y": "y",
+                                        "category": "cell_type", "value": "cell_count"},
+    neighborhood_enrichment_matrix.PLOT_TYPE: {
+        "neighborhood": "neighborhood", "cell_type": "cell_type",
+        "enrichment": "enrichment_score",
+        "frequency": "cell_type_frequency_in_neighborhood"},
     box_violin.PLOT_TYPE: {"x": "group", "y": "value", "kind": "box", "points": True},
     lineplot.PLOT_TYPE: {"x": "time_hours", "y": "signal", "color": "treatment", "error": "sem"},
     ridge.PLOT_TYPE: {"x": "pseudotime", "group": "condition", "overlap": 0.7},
@@ -184,6 +209,12 @@ _DISPLAY_NAMES: Dict[str, str] = {
     heatmap.PLOT_TYPE: "Clustered heatmap",
     volcano.PLOT_TYPE: "Volcano plot",
     scatter.PLOT_TYPE: "Scatter plot",
+    spatial_categorical_map.PLOT_TYPE: "Spatial map (categories)",
+    spatial_feature_map.PLOT_TYPE: "Spatial map (continuous value)",
+    spatial_transcript_map.PLOT_TYPE: "Spatial transcript map",
+    spatial_roi_map.PLOT_TYPE: "Spatial ROI / region outlines",
+    spatial_composition_map.PLOT_TYPE: "Spatial composition glyphs",
+    neighborhood_enrichment_matrix.PLOT_TYPE: "Cellular-neighbourhood enrichment matrix",
     box_violin.PLOT_TYPE: "Box / violin plot with points",
     lineplot.PLOT_TYPE: "Line / time-course with error band",
     ridge.PLOT_TYPE: "Ridge / density plot",
@@ -326,6 +357,29 @@ def render(
     # Apply GUI/PlotSpec style refinements (fonts, widths, markers, palette, ...).
     style = style.with_overrides(spec.get("style"))
 
+    # One typography system for every plot type. The style defines its hierarchy in
+    # absolute points, which are correct for its reference canvas and wrong for a
+    # 2x1 inch panel - a 13 pt title there overflows the axes. When the canvas is
+    # pinned far enough from the reference that fixed points stop working, scale the
+    # whole hierarchy together so the style's ratios survive at any size. Applied
+    # here, once, so all renderers inherit it rather than each solving it its own
+    # way. Guarded - typography is a nicety and must never break a render.
+    _typo_scale = 1.0
+    try:
+        from make_my_figure_core.plots.base import explicit_figure_size
+        from make_my_figure_core.styles.typography import scaled_for_canvas
+
+        # A multi-panel composite sets one type size for the whole figure, and
+        # every panel is a different size, so scaling each panel to its own
+        # canvas is exactly what makes the fonts come out different per panel.
+        # The composite opts out and its point sizes are taken literally.
+        _scale_typo = (spec.get("layout") or {}).get("scale_typography", True)
+        _canvas = explicit_figure_size(spec) if _scale_typo else None
+        if _canvas is not None:
+            style, _typo_scale = scaled_for_canvas(style, _canvas[0], _canvas[1])
+    except Exception:  # noqa: BLE001
+        _typo_scale = 1.0
+
     # Honest style capabilities: a style control that does not apply to this plot type
     # is reported (never silently ignored). Guarded — never blocks a render.
     _cap_warnings: List[str] = []
@@ -343,6 +397,54 @@ def render(
     for _w in _cap_warnings:
         if _w not in result.warnings:
             result.warnings.append(_w)
+    # Report a size request that had to be corrected. Done centrally so every
+    # renderer behaves the same, and so a figure never comes back silently
+    # different from the size that was asked for.
+    for _w in figure_size_adjustments(spec):
+        if _w not in result.warnings:
+            result.warnings.append(_w)
+    # A title longer than the figure is wide is wrapped rather than shrunk, for
+    # every plot type at once. Guarded - a title nicety must never break a render.
+    try:
+        from make_my_figure_core.styles.typography import wrap_overlong_titles
+
+        if getattr(result, "figure", None) is not None:
+            for _note in wrap_overlong_titles(result.figure):
+                if _note not in result.warnings:
+                    result.warnings.append(_note)
+    except Exception as _exc:  # noqa: BLE001
+        result.warnings.append(f"Title fitting skipped: {_exc}")
+
+    # Last, after every other layout pass: bring anything drawn outside the
+    # canvas back inside. An outside legend is positioned relative to the axes,
+    # so a long label hangs off the edge - on 11 of the 45 plot types this was
+    # happening in their default output. Grows the canvas when the user has not
+    # pinned a size, and pulls the subplot area in when they have. Guarded; a
+    # fitting pass must never break a render.
+    try:
+        from make_my_figure_core.plots.base import (
+            fit_content_to_canvas, pinned_dimension, requested_width)
+
+        if getattr(result, "figure", None) is not None:
+            # Per axis: pinning only a width is the usual journal-column case,
+            # and growing the figure to hold a legend would hand back a width
+            # nobody asked for. A chosen column width counts as asking.
+            for _note in fit_content_to_canvas(
+                    result.figure,
+                    may_grow_x=requested_width(spec) is None,
+                    may_grow_y=pinned_dimension(spec, "height_mm") is None):
+                if _note not in result.warnings:
+                    result.warnings.append(_note)
+    except Exception as _exc:  # noqa: BLE001
+        result.warnings.append(f"Legend fitting skipped: {_exc}")
+
+    if _typo_scale != 1.0:
+        _msg = (
+            f"Text sizes were scaled to {_typo_scale:.0%} of the style's values to "
+            f"suit the figure size you set. The relative sizes of title, axis "
+            f"labels, ticks and legend are unchanged.")
+        if _msg not in result.warnings:
+            result.warnings.append(_msg)
 
     # Uniform PublicationLayoutSpec application (spec['layout']): tick rotation/pad,
     # axis-label pad, title pad, and explicit margins apply to the primary axes of
@@ -351,11 +453,22 @@ def render(
     # (empty layout => no-op), so default output is unchanged. Guarded — never breaks
     # a render.
     try:
-        from make_my_figure_core.plots.base import apply_publication_layout
+        from make_my_figure_core.plots.base import (
+            apply_publication_layout, resolve_x_tick_rotation_option)
 
-        if (spec.get("layout") and getattr(result, "figure", None) is not None
+        # The per-plot x_tick_rotation option routes through the same central
+        # application, so a spec that sets only that option (empty layout block)
+        # must still reach it.
+        _have_layout = bool(spec.get("layout")) or (
+            resolve_x_tick_rotation_option(spec) is not None)
+        if (_have_layout and getattr(result, "figure", None) is not None
                 and result.figure.axes):
             apply_publication_layout(result.figure, result.figure.axes[0], spec, style)
+            from make_my_figure_core.plots.base import drain_layout_notes
+
+            for _note in drain_layout_notes():
+                if _note not in result.warnings:
+                    result.warnings.append(_note)
     except Exception as _exc:  # noqa: BLE001
         result.warnings.append(f"Layout adjustment skipped: {_exc}")
 

@@ -27,12 +27,22 @@ from make_my_figure_core.styles.engine import mm_to_inches
 _VECTOR_TEXT_RC = {"svg.fonttype": "none", "pdf.fonttype": 42, "ps.fonttype": 42}
 
 
-def _render_panel_figure(panel: Panel, font_overrides: Optional[Dict[str, Any]] = None) -> Figure:
+def _render_panel_figure(panel: Panel, font_overrides: Optional[Dict[str, Any]] = None,
+                         size_in: Optional[Tuple[float, float]] = None) -> Figure:
     """Return the panel's Figure, rendering from its PlotSpec if needed.
 
     ``font_overrides`` (figure-level font sizes) are merged into the panel's
     style overrides so the whole composite stays typographically consistent.
     A pre-rendered figure is returned as-is (fonts were fixed at render time).
+
+    ``size_in`` is ``(width, height)`` in inches for the panel's own canvas. It
+    is the mechanism behind the per-panel size controls: a panel asked to be
+    taller is *drawn* taller (pinned ``layout.width_mm``/``height_mm``, which
+    every renderer already honours) rather than having its finished image
+    stretched, so the axes grow and nothing in the plot is distorted. Render
+    warnings from a size the plot type had to correct are stashed on the figure
+    for the caller to surface; they are the user's only clue that a request was
+    adjusted.
     """
     if panel.figure is not None:
         return panel.figure
@@ -47,15 +57,51 @@ def _render_panel_figure(panel: Panel, font_overrides: Optional[Dict[str, Any]] 
         # Figure-level fonts win over the panel's own so panels match; a panel
         # that set a token explicitly still keeps anything not overridden here.
         spec["style"] = {**(spec.get("style") or {}), **font_overrides}
+    if size_in is not None:
+        w_in, h_in = float(size_in[0]), float(size_in[1])
+        if w_in > 0 and h_in > 0:
+            spec["layout"] = {**(spec.get("layout") or {}),
+                              "width_mm": w_in * 25.4, "height_mm": h_in * 25.4}
+    if font_overrides:
+        # The figure-level font sizes are a choice about the whole composite, so
+        # they must land on the page as the same points in every panel. Letting
+        # each panel scale type to its own canvas is what produced a 1.42x spread
+        # between panels asked to share one setting.
+        spec["layout"] = {**(spec.get("layout") or {}), "scale_typography": False}
     aux = panel.aux or None
     result = render(spec, panel.table, aux=aux)
-    return result.figure
+    fig = result.figure
+    fig._mmf_render_warnings = list(result.warnings)  # type: ignore[attr-defined]
+    return fig
 
 
-def _figure_to_image(fig: Figure, dpi: int) -> np.ndarray:
-    """Rasterize a figure to an RGBA image array (tight bbox)."""
+def _can_resize(panel: Panel) -> bool:
+    """True when the panel can be *re-drawn* at a requested size.
+
+    Only a panel that still carries its PlotSpec + table can honour a size by
+    rendering at it. A pre-rendered figure or an imported image has a fixed
+    aspect, so for those a requested height can only scale the finished picture.
+    """
+    return (not panel.is_external and panel.figure is None
+            and panel.plot_spec is not None and panel.table is not None)
+
+
+def _figure_to_image(fig: Figure, dpi: int, *, keep_canvas: bool = False) -> np.ndarray:
+    """Rasterize a figure to an RGBA image array.
+
+    Trims to the content by default, which is what keeps a panel from carrying a
+    band of its own margin into the composite.
+
+    ``keep_canvas`` turns the trim off, and is used when the panel was rendered
+    at a size the user explicitly asked for. Trimming there defeats the request:
+    a panel rendered on a 3.2 x 4.5 in canvas came back as an image of aspect
+    0.77 rather than 1.41, so "make it 4.5 inches tall" drew 2.46 inches. The
+    whitespace kept here is the plot's own margin, at the size that was asked
+    for, which is exactly what the user is buying.
+    """
     buf = io.BytesIO()
-    fig.savefig(buf, format="png", dpi=dpi, bbox_inches="tight",
+    fig.savefig(buf, format="png", dpi=dpi,
+                bbox_inches=None if keep_canvas else "tight",
                 facecolor=fig.get_facecolor())
     buf.seek(0)
     img = plt.imread(buf)
@@ -103,46 +149,90 @@ def build_figure(mpf: MultiPanelFigure) -> Figure:
 
     _ann_style = load_profile("publication")   # for per-panel annotation defaults
 
+    n = len(panels)
+    nrows, ncols = _auto_grid(n, layout)
+
+    # Effective per-panel WIDTH in inches. An unset width defaults to an even
+    # share of the figure width, so old specs keep their overall width.
+    default_w = mm_to_inches(layout.fig_width_mm) / ncols
+    panel_w = [float(p.width_in) if p.width_in else default_w for p in panels]
+
     # Render + rasterize each panel; capture aspect (height/width). External
     # (imported) panels load their asset image directly instead of rendering a plot.
     images: List[np.ndarray] = []
     aspects: List[float] = []
     own_figs: List[Figure] = []
     panel_warnings: List[str] = []
-    for panel in panels:
+    for i, panel in enumerate(panels):
         if panel.is_external:
             img, warns = _external_panel_image(panel)
             panel_warnings.extend(f"[{panel.label}] {w}" for w in warns)
         else:
-            fig = _render_panel_figure(panel, font_overrides)
-            img = _figure_to_image(fig, layout.panel_dpi)
+            # A requested height is honoured where it can actually be honoured:
+            # at render time. Scaling a finished panel can only ever give it its
+            # own proportions back, which is why setting a height used to do
+            # nothing visible - it moved the grid row and left the picture the
+            # same shape, floating in a taller cell. Rendering the panel at the
+            # requested canvas makes it genuinely that tall with no distortion.
+            size_in = ((panel_w[i], float(panel.height_in))
+                       if (panel.height_in and _can_resize(panel)) else None)
+            fig = _render_panel_figure(panel, font_overrides, size_in=size_in)
+            # Keep the full canvas when the size was requested, or the trim gives
+            # the panel its own proportions straight back and the control looks
+            # dead again - which is the bug this was meant to fix.
+            img = _figure_to_image(fig, layout.panel_dpi,
+                                   keep_canvas=size_in is not None)
             if panel.figure is None:
                 own_figs.append(fig)   # close figures we rendered ourselves
+                if size_in is not None:
+                    panel_warnings.extend(
+                        f"[{panel.label}] {w}" for w in getattr(fig, "_mmf_render_warnings", []))
         images.append(img)
         h, w = img.shape[0], img.shape[1]
         aspects.append(h / w if w else 1.0)
 
-    n = len(panels)
-    nrows, ncols = _auto_grid(n, layout)
-
-    # Effective per-panel size in inches. An unset width defaults to an even
-    # share of the figure width (so old specs keep their overall width); an
-    # unset height follows the panel's own aspect ratio, so by default a panel
-    # exactly fills its cell (no letterboxing, no distortion).
-    default_w = mm_to_inches(layout.fig_width_mm) / ncols
-    panel_w = [float(p.width_in) if p.width_in else default_w for p in panels]
-    panel_h = [float(p.height_in) if p.height_in else panel_w[i] * aspects[i]
-               for i, p in enumerate(panels)]
+    # Effective per-panel HEIGHT in inches = the height the panel is really
+    # DRAWN at, which is its width times its own aspect. For a panel we could
+    # re-render that already *is* the requested height (it was rendered at it),
+    # and using the drawn value rather than the raw request keeps the grid row
+    # the same size as the picture instead of a hair taller.
+    panel_h: List[float] = []
+    for i, p in enumerate(panels):
+        natural = panel_w[i] * aspects[i]
+        requested = float(p.height_in) if p.height_in else 0.0
+        if requested and not _can_resize(p):
+            # A pre-rendered figure or an imported image has one fixed shape, so
+            # at this width it has one possible height. Honour a request to make
+            # it SHORTER (scale the whole picture down), but cap a request to make
+            # it taller: growing the row to a height the picture cannot fill only
+            # manufactures the white space the user was trying to get rid of.
+            panel_h.append(min(requested, natural))
+            if requested > natural * 1.01:
+                panel_warnings.append(
+                    f"[{p.label}] keeps its own proportions, so at {panel_w[i]:.2f} in wide it is "
+                    f"{natural:.2f} in tall and cannot be made {requested:.2f} in tall. Make it "
+                    f"wider, or set it to fill its cell to use the whole space.")
+        else:
+            panel_h.append(natural)
 
     # Column width = widest panel in the column; row height = tallest in the row.
     col_w = [max((panel_w[i] for i in range(c, n, ncols)), default=default_w)
              for c in range(ncols)]
     row_h = [max((panel_h[i] for i in range(r * ncols, min((r + 1) * ncols, n))),
                  default=1.0) for r in range(nrows)]
+    # The tallest DRAWN panel per row: the yardstick each panel's own height is
+    # measured against when it is placed in its cell. Kept separately from row_h
+    # because row_h is about to be replaced by any explicit height_ratios.
+    content_h = list(row_h)
     if layout.width_ratios and len(layout.width_ratios) == ncols:
         col_w = list(layout.width_ratios)
     if layout.height_ratios and len(layout.height_ratios) == nrows:
         row_h = list(layout.height_ratios)
+        # Explicit ratios decouple a row's cell height from the inches its panels
+        # asked for, so there is nothing left to measure a panel against: every
+        # panel simply fits its cell, exactly as it did before per-panel heights
+        # were honoured. Only the ratios the user gave decide the proportions.
+        content_h = [0.0] * nrows
 
     # Approximate figure size from the grid + relative gutters. Exactness isn't
     # required (sizes are "approximate"); gridspec distributes the ratios.
@@ -164,16 +254,75 @@ def build_figure(mpf: MultiPanelFigure) -> Figure:
         for i, panel in enumerate(panels):
             r, c = divmod(i, ncols)
             ax = comp.add_subplot(gs[r, c])
-            # Fit mode: imported panels may 'fill'/'stretch' the cell (aspect=auto)
-            # or 'contain'/'crop' preserving aspect (default). Generated panels
-            # always preserve aspect (letterboxed) so they are never distorted.
-            fill = panel.is_external and panel.fit_mode in ("fill", "stretch")
+            cell = gs[r, c].get_position(comp)
+            cell_w_in, cell_h_in = cell.width * fig_w_in, cell.height * fig_h_in
+            # Fit mode: a panel may FILL its cell edge to edge instead of keeping
+            # its own proportions. Imported panels say so with 'fill'/'stretch';
+            # any panel can say so with fill_cell. Preserving the proportions is
+            # and stays the default - a stretched scientific figure is a wrong one.
+            fill = panel.fill_cell or (panel.is_external
+                                       and panel.fit_mode in ("fill", "stretch"))
+            if fill and _can_resize(panel):
+                # The honest way to fill a cell: re-draw the plot ON a canvas that
+                # size. The axes grow, the data keeps its shape and the fonts keep
+                # their points - nothing is stretched. Only a panel that has lost
+                # its PlotSpec has to fall back to scaling the finished picture.
+                f2 = _render_panel_figure(panel, font_overrides,
+                                          size_in=(cell_w_in, cell_h_in))
+                own_figs.append(f2)
+                images[i] = _figure_to_image(f2, layout.panel_dpi)
+                aspects[i] = (images[i].shape[0] / images[i].shape[1]
+                              if images[i].shape[1] else aspects[i])
+                # Keep panel_h on the same (requested-inch) basis as every other
+                # entry - the grid is laid out in those units, not in cell inches.
+                # content_h is deliberately NOT raised with it: the row's cells
+                # are already fixed, and nudging the yardstick here would shrink
+                # whichever sibling happens to be placed after this one.
+                panel_h[i] = panel_w[i] * aspects[i]
+                panel_warnings.extend(
+                    f"[{panel.label}] {w}" for w in getattr(f2, "_mmf_render_warnings", []))
+                fill = False     # it now fits by construction; keep square pixels
             if fill:
+                ax.set_position([cell.x0, cell.y0, cell.width, cell.height])
                 ax.imshow(images[i], aspect="auto", interpolation="antialiased")
-                if panel.fit_mode == "stretch":
+                if panel.fit_mode == "stretch" or panel.fill_cell:
                     panel_warnings.append(
                         f"[{panel.label}] stretched non-proportionally; may distort the figure.")
             else:
+                # The largest box with the panel's own proportions that fits in
+                # the height this panel asked for, inside its cell. Pinned to the
+                # TOP of the cell: a short panel beside a tall one belongs level
+                # with its neighbour, with the dead space below it, not floating
+                # in the middle of an empty cell. Horizontally it stays centred,
+                # which is where matplotlib's 'N' anchor already put it - nothing
+                # moves sideways in a figure that was laid out before this.
+                avail_h = cell_h_in * (min(1.0, panel_h[i] / content_h[r])
+                                       if content_h[r] > 0 else 1.0)
+                draw_w = min(cell_w_in, avail_h / aspects[i] if aspects[i] else cell_w_in)
+                draw_h = draw_w * aspects[i]
+                # Second pass: re-draw the panel AT the size it is about to occupy.
+                #
+                # "Fonts (applied to all panels)" sets the same points in every
+                # panel's render, and the compositor then scaled each finished
+                # image to its cell by a DIFFERENT factor - so a 10 pt label came
+                # out nearly twice as large in one panel as in another (measured
+                # spread 1.18x untouched, 1.90x once a panel's size was changed).
+                # Rendering at the drawn size makes every scale exactly 1.0, so
+                # the point sizes the user asked for are the point sizes on the
+                # page. The box is unchanged: a canvas-sized raster of this box
+                # has precisely this aspect, so nothing moves.
+                if _can_resize(panel) and draw_w > 0 and draw_h > 0:
+                    f2 = _render_panel_figure(panel, font_overrides,
+                                              size_in=(draw_w, draw_h))
+                    own_figs.append(f2)
+                    images[i] = _figure_to_image(f2, layout.panel_dpi,
+                                                 keep_canvas=True)
+                    panel_warnings.extend(
+                        f"[{panel.label}] {w}"
+                        for w in getattr(f2, "_mmf_render_warnings", []))
+                ax.set_position([cell.x0 + (cell_w_in - draw_w) / 2.0 / fig_w_in,
+                                 cell.y1 - draw_h / fig_h_in,
+                                 draw_w / fig_w_in, draw_h / fig_h_in])
                 ax.imshow(images[i], interpolation="antialiased")
                 ax.set_anchor("N")  # top-align within the cell so panel tops line up
             ax.set_xticks([]); ax.set_yticks([])
@@ -237,7 +386,8 @@ def import_external_panel(src_path: str, assets_dir: str, *, label: str = "", ti
     meta = dict(asset.metadata)
     meta["warnings"] = list(asset.warnings)
     allowed = {"fit_mode", "preserve_aspect", "crop", "rotate", "flip_h", "flip_v",
-               "auto_trim", "background", "border", "border_width", "annotations"}
+               "auto_trim", "background", "border", "border_width", "annotations",
+               "fill_cell"}
     kw = {k: v for k, v in transform.items() if k in allowed}
     panel = Panel(label=label, title=title, width_in=width_in,
                   image_path=os.path.join(assets_dir, meta["stored_asset"]),
@@ -262,6 +412,8 @@ def panel_from_dict(d: Dict[str, Any], assets_dir: Optional[str] = None) -> Pane
         source_name=d.get("source_name", ""),
         source_workbook=d.get("source_workbook", ""), source_sheet=d.get("source_sheet", ""),
         width_in=d.get("width_in"), height_in=d.get("height_in"),
+        # Missing in layouts saved before fill_cell existed -> keep proportions.
+        fill_cell=bool(d.get("fill_cell", False)),
         image_path=image_path, image_meta=d.get("image_meta", {}) or {},
         fit_mode=d.get("fit_mode", "contain"), preserve_aspect=d.get("preserve_aspect", True),
         crop=d.get("crop", {}) or {}, rotate=int(d.get("rotate", 0)),

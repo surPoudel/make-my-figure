@@ -322,7 +322,33 @@ def single_plot_inputs(pkg: FigurePackage) -> Tuple[Dict[str, Any], pd.DataFrame
     spec = json.loads(json.dumps(spec))
     if spec.get("journal_style"):
         spec["journal_style"] = normalize_style_name(spec["journal_style"])
+    _repoint_spatial_background(spec, pkg)
     return spec, tbl.dataframe, pkg.aux_for(comp)
+
+
+def _repoint_spatial_background(spec: Dict[str, Any], pkg: "FigurePackage") -> None:
+    """Point a spatial background image at the copy inside the package.
+
+    The spec was written on another machine, so the path it carries is that
+    machine's. Leaving it alone makes the figure come back as bare points over
+    white - or, worse, silently pick up a different image that happens to sit at
+    the same path. The packaged copy is checksummed, so this is also the only
+    version that can be trusted.
+    """
+    block = spec.get("spatial")
+    if not isinstance(block, dict) or not block.get("background_image"):
+        return
+    for entry in (pkg.manifest.get("assets") or []):
+        if entry.get("asset_id") == "spatial_background":
+            extracted = pkg.asset_paths.get(entry["path"])
+            if extracted:
+                block["background_image"] = extracted
+                block["background_image_sha256"] = entry.get("sha256")
+                block["background_image_original_filename"] = entry.get("original_filename")
+            return
+    # Packaged without the image: say so rather than silently drawing nothing.
+    block["background_image_missing"] = True
+    block.pop("background_image", None)
 
 
 def rebuild_composite(pkg: FigurePackage):

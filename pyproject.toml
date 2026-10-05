@@ -36,6 +36,10 @@ app = ["streamlit>=1.30,<2"]
 desktop = ["PySide6>=6.5,<7"]
 build = ["pyinstaller>=6.0", "pillow>=9.0"]
 dev = ["pytest>=7.0,<10", "pytest-qt>=4.2,<5"]
+# The publication-recreation benchmarks load iris/wine/diabetes from scikit-learn's
+# bundled toy datasets. Not needed by the app or by the core tests, which skip when
+# it is absent.
+benchmarks = ["scikit-learn>=1.0,<2"]
 # Optional: import PDF/SVG figures as Figure Builder panels (raster formats work
 # without these). PyMuPDF handles PDF; cairosvg handles SVG.
 import-panels = ["pymupdf>=1.23", "cairosvg>=2.5"]

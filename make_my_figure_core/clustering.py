@@ -179,10 +179,16 @@ def leaf_order(linkage_z) -> List[int]:
     return list(leaves_list(linkage_z))
 
 
-def cluster_color_map(cluster_ids: np.ndarray, prefix: str = "Cluster") -> Dict[str, str]:
-    """Map ``f"{prefix} {id}"`` -> hex color, in ascending cluster-id order."""
+def cluster_color_map(cluster_ids: np.ndarray, prefix: str = "Cluster",
+                      palette: Optional[List[str]] = None) -> Dict[str, str]:
+    """Map ``f"{prefix} {id}"`` -> hex color, in ascending cluster-id order.
+
+    ``palette`` overrides the default cluster colours; ``None`` keeps them, so
+    existing callers are unaffected.
+    """
+    colors = list(palette) if palette else CLUSTER_PALETTE
     uniq = sorted(set(int(c) for c in cluster_ids))
-    return {f"{prefix} {cid}": CLUSTER_PALETTE[i % len(CLUSTER_PALETTE)]
+    return {f"{prefix} {cid}": colors[i % len(colors)]
             for i, cid in enumerate(uniq)}
 
 

@@ -174,6 +174,51 @@ _CAPS: Dict[str, PlotStyleCapabilities] = {
         plot_type="chord_diagram", supports_marker_size=False, supports_line_width=False,
         supports_axes=False, supports_x_tick_rotation=False,
         supports_y_tick_rotation=False, supports_axis_label_padding=False),
+    # --- spatial (v2) --------------------------------------------------------
+    # Declared from what each renderer actually reads, checked by
+    # scripts/audit_style_capabilities.py. Spatial maps draw marks and polygons,
+    # not lines, so line-width controls genuinely do not apply.
+    "spatial_categorical_map": PlotStyleCapabilities(
+        plot_type="spatial_categorical_map", supports_line_width=False,
+        unsupported_controls_reason=(
+            "a spatial map draws point marks; line styling does not apply")),
+    "spatial_feature_map": PlotStyleCapabilities(
+        plot_type="spatial_feature_map",
+        # The palette control selects the sequential colormap for continuous
+        # plots, so it does have an effect here even though there are no
+        # categorical colours to set.
+        supports_group_colors=False, supports_continuous_colormap=True,
+        supports_colorbar=True, supports_legend=False, supports_line_width=False,
+        unsupported_controls_reason=(
+            "this map colours by a continuous value: the palette chooses the colormap, "
+            "and there are no per-group colours or line styling to set")),
+    "spatial_transcript_map": PlotStyleCapabilities(
+        plot_type="spatial_transcript_map", supports_line_width=False,
+        unsupported_controls_reason=(
+            "a transcript map draws point marks; line styling does not apply")),
+    "spatial_roi_map": PlotStyleCapabilities(
+        plot_type="spatial_roi_map", supports_marker_size=False,
+        supports_line_width=False,
+        unsupported_controls_reason=(
+            "ROI outlines are sized by spatial.roi_linewidth, and the map draws "
+            "polygons rather than markers")),
+    "spatial_composition_map": PlotStyleCapabilities(
+        plot_type="spatial_composition_map", supports_marker_size=False,
+        supports_line_width=False,
+        unsupported_controls_reason=(
+            "glyph size follows spatial.glyph_radius, which is in data units so the "
+            "pies stay aligned to the spots")),
+    "neighborhood_enrichment_matrix": PlotStyleCapabilities(
+        plot_type="neighborhood_enrichment_matrix",
+        # The palette now reaches this plot. It used to fall back to a hard-coded
+        # "RdBu_r", so declaring it unsupported was accurate; the colormap follows
+        # the style's diverging/sequential choice, which is what the palette sets.
+        supports_palette=True, supports_continuous_colormap=True,
+        supports_group_colors=False, supports_colorbar=True,
+        supports_marker_size=False, supports_line_width=False,
+        unsupported_controls_reason=(
+            "point area carries the frequency, so it is set by the data rather "
+            "than by the marker-size control")),
 }
 
 

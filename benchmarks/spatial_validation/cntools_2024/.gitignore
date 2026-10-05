@@ -1,0 +1,3 @@
+# Source data is fetched by scripts/download.sh and verified by checksum.
+# The CRC table is 223 MB and its redistribution terms are not confirmed.
+raw/

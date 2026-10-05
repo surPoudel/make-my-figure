@@ -1,0 +1,13 @@
+published_quantity,source_data_field,makemyfigure_quantity,published_value,absolute_difference,relative_difference,pass,notes
+genes with recovered normalisation matching deposited values,spatial_enrichment.csv 'Median Normalized Average Counts',18056.0,18056.0,0.0,0.0,True,establishes the normalisation by evidence instead of assuming it
+worst relative difference across all genes,spatial_enrichment.csv vs recovered,8.566484076515533e-13,0.0,8.566484076515533e-13,inf,True,scale each spot to the median total UMI count
+spots under tissue carried into the figure,tissue_positions.csv in_tissue==1,4992.0,4992.0,0.0,0.0,True,every in-tissue spot is drawn; none dropped
+SCGB2A2: spots with a value,normalised matrix,4992.0,4992.0,0.0,0.0,True,no spot silently dropped
+CPB1: spots with a value,normalised matrix,4992.0,4992.0,0.0,0.0,True,no spot silently dropped
+KRT17: spots with a value,normalised matrix,4992.0,4992.0,0.0,0.0,True,no spot silently dropped
+FABP4: spots with a value,normalised matrix,4992.0,4992.0,0.0,0.0,True,no spot silently dropped
+IL2RG: spots with a value,normalised matrix,4992.0,4992.0,0.0,0.0,True,no spot silently dropped
+SFRP2: spots with a value,normalised matrix,4992.0,4992.0,0.0,0.0,True,no spot silently dropped
+CDH2: spots with a value,normalised matrix,4992.0,4992.0,0.0,0.0,True,no spot silently dropped
+MT-ND1: spots with a value,normalised matrix,4992.0,4992.0,0.0,0.0,True,no spot silently dropped
+marker panels drawn,renderer metadata panels,8.0,8.0,0.0,0.0,True,one panel per published marker

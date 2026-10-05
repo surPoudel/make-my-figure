@@ -1,0 +1,9 @@
+# Source data: fetched by scripts/download.sh, verified by checksum, never committed.
+# The Xenium output bundle alone is 9.18 GB.
+raw/
+
+# Derived tables and rendered figures regenerate from the scripts above, and are
+# large (14 MB and 16 MB). The audit tables in validation/ are the evidence and
+# ARE committed, along with the PlotSpecs, so the result stays auditable.
+derived/*.csv
+figures/

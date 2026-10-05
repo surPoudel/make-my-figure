@@ -42,6 +42,7 @@ import numpy as np
 import pandas as pd
 
 from make_my_figure_core.plots.base import (
+    explicit_figure_size,
     RenderError,
     RenderResult,
     apply_axis_overrides,
@@ -361,10 +362,12 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             ncols = min(len(groups), _MAX_PANEL_COLS)
             nrows = int(math.ceil(len(groups) / ncols))
             width, height = figure_size(spec, style, aspect=0.78)
+            _pinned = explicit_figure_size(spec)
             # Keep the figure's overall width - that is the journal column width the style
             # resolved - and grow only the height for extra rows, so a two-panel figure still
             # fits the column it was sized for. Pick a wider column_width for roomier panels.
-            fig, grid = plt.subplots(nrows, ncols, figsize=(width, height * nrows * 0.72),
+            _fs = _pinned or (width, height * nrows * 0.72)
+            fig, grid = plt.subplots(nrows, ncols, figsize=_fs,
                                      sharex=share_axes, sharey=share_axes, squeeze=False)
             axes = [a for row in grid for a in row]
             for i, g in enumerate(groups):

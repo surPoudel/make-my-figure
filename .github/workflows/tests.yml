@@ -1,0 +1,63 @@
+name: Tests
+
+# The test suite had no automation at all: it ran only when someone remembered
+# to run it locally. Run it on every pull request and on pushes to main, so a
+# regression is caught before it reaches a release.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A new push to the same branch supersedes the previous run.
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    name: pytest (headless)
+    # Same image as the release build, so the tests run against the glibc and
+    # system libraries the shipped Linux app is actually built on.
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install Qt runtime libraries
+        # PySide6 is imported by the GUI tests even under the offscreen
+        # platform, and it needs these present to load at all.
+        run: |
+          set -euxo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libegl1 libgl1 libdbus-1-3 \
+            libxkbcommon0 libxkbcommon-x11-0 \
+            libxcb1 libx11-xcb1 libxcb-cursor0 libxcb-icccm4 libxcb-image0 \
+            libxcb-keysyms1 libxcb-randr0 libxcb-render0 libxcb-render-util0 \
+            libxcb-shape0 libxcb-shm0 libxcb-sync1 libxcb-util1 libxcb-xfixes0 \
+            libxcb-xkb1
+
+      - name: Install dependencies
+        # The lock file pins the exact versions the release was tested with;
+        # --no-deps keeps the editable install from re-resolving them.
+        run: |
+          set -euxo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-lock.txt
+          python -m pip install -e . --no-deps
+
+      - name: Run the test suite
+        env:
+          QT_QPA_PLATFORM: offscreen
+          MPLBACKEND: Agg
+        run: python -m pytest -q -rs

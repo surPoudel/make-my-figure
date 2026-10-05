@@ -14,6 +14,8 @@ import numpy as np
 
 from make_my_figure_core.plots._v04_shared import ordered_unique
 from make_my_figure_core.plots.base import (
+    bar_thickness,
+    resolve_figure_size,
     RenderError,
     RenderResult,
     apply_publication_layout,
@@ -88,11 +90,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         event_levels = ordered_unique(work[event_col].tolist())
 
     with style.apply():
-        fig, ax = plt.subplots(figsize=(w_in, h_in))
+        _size = resolve_figure_size(spec, (w_in, h_in))
+        fig, ax = plt.subplots(figsize=_size)
         for row, i in enumerate(order_idx):
             g = groups[i] if groups is not None else None
             color = gcolor.get(g, style.color_for(0))
-            ax.barh(row, duration[i], left=start[i], height=0.62, color=color,
+            ax.barh(row, duration[i], left=start[i], color=color,
+                    height=bar_thickness(spec, 0.62),
                     edgecolor=style.text_color, linewidth=style.spine_width_pt * 0.6, zorder=2)
         # Event markers at each subject's bar end.
         if event_levels:

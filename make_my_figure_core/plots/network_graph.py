@@ -24,6 +24,13 @@ import pandas as pd
 from make_my_figure_core.clustering import CLUSTER_PALETTE
 from make_my_figure_core.plots._v04_shared import numeric_matrix, ordered_unique, pick_column
 from make_my_figure_core.plots.base import (
+    colorbar_geometry,
+    LABEL_ADJUST_ITERATIONS,
+    polish_repelled_labels,
+    chosen_column_width,
+    explicit_figure_size,
+    resolve_figure_size,
+    width_floor_note,
     RenderError,
     RenderResult,
     base_metadata,
@@ -317,7 +324,16 @@ def render(spec: Dict[str, Any], df, style: StyleProfile, aux=None) -> RenderRes
     # --- draw ---
     with style.apply():
         w_in, h_in = figure_size(spec, style, aspect=0.9)
-        fig, ax = plt.subplots(figsize=(max(w_in, 5.2), max(h_in, 4.6)))
+        # The floors keep a graph's labels apart at the automatic size. They are
+        # not an answer to a direct request: asking for a single column used to
+        # return 132 mm whatever was picked, which made the width control look
+        # dead on this plot type.
+        if chosen_column_width(spec) is None:
+            w_in, h_in = max(w_in, 5.2), max(h_in, 4.6)
+        elif w_in < 5.2:
+            warnings.append(width_floor_note(PLOT_TYPE, w_in, 5.2))
+        _size = explicit_figure_size(spec) or resolve_figure_size(spec, (w_in, h_in))
+        fig, ax = plt.subplots(figsize=_size)
         nx.draw_networkx_edges(G, pos, ax=ax, width=list(ew), edge_color=edge_colors,
                                alpha=0.35, arrows=directed)
         nodes_art = nx.draw_networkx_nodes(
@@ -351,17 +367,23 @@ def render(spec: Dict[str, Any], df, style: StyleProfile, aux=None) -> RenderRes
             try:
                 from adjustText import adjust_text
 
-                adjust_text(texts, ax=ax, only_move={"text": "xy"},
-                            expand_text=(1.1, 1.25), expand_points=(1.1, 1.25),
-                            arrowprops=dict(arrowstyle="-", color="0.6", lw=0.5),
-                            force_text=(0.3, 0.5))
+                _anchors = [t.get_position() for t in texts]
+                _kw = dict(only_move={"text": "xy"}, expand_text=(1.1, 1.25),
+                           expand_points=(1.1, 1.25), force_text=(0.3, 0.5),
+                           arrowprops=dict(arrowstyle="-", color="0.6", lw=0.5))
+                adjust_text(texts, ax=ax, iter_lim=LABEL_ADJUST_ITERATIONS, **_kw)
+                polish_repelled_labels(
+                    ax, texts, _anchors, adjust_text, adjust_kwargs=_kw,
+                    may_shrink=not float(get_mapping(spec, "label_font_size", 0) or 0))
             except Exception:
                 pass
 
         if cmap_obj is not None:
             sm = plt.cm.ScalarMappable(cmap=cmap_obj)
             sm.set_array(np.asarray(node_colors, dtype=float))
-            cb = fig.colorbar(sm, ax=ax, fraction=0.045, pad=0.02)
+            cb = fig.colorbar(sm, ax=ax,
+                              **colorbar_geometry(spec, default_fraction=0.045,
+                                                  default_pad=0.02))
             cb.set_label(str(get_mapping(spec, "color_label", "node value")),
                          fontsize=style.axis_font_pt)
 

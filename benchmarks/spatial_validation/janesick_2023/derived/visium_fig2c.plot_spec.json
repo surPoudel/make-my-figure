@@ -1,0 +1,32 @@
+{
+  "plot_type": "spatial_feature_map",
+  "input_table": "visium_fig2c_markers.csv",
+  "mapping": {
+    "x": "x",
+    "y": "y",
+    "value": "log2_normalized_umi",
+    "feature": "gene"
+  },
+  "journal_style": "publication",
+  "layout": {
+    "title": "Visium marker expression (Janesick et al. 2023, Fig. 2c markers)"
+  },
+  "spatial": {
+    "coordinate_units": "pixel",
+    "orientation": "y_down",
+    "marker_size": 6,
+    "transform": "none",
+    "facet_columns": 4,
+    "shared_color_scale": false,
+    "colorbar_label": "log2(1 + normalized UMI)"
+  },
+  "output": {
+    "formats": [
+      "png",
+      "pdf"
+    ],
+    "dpi": 300,
+    "width_mm": 180,
+    "height_mm": 110
+  }
+}
