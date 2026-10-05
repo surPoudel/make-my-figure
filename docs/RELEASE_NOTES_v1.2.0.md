@@ -1,6 +1,6 @@
 # Make My Figure v1.2.0 — release notes
 
-Prepared on `main` at `932427e` on 2026-10-05. Six new plot types, one typography system shared by
+Released from `main` at `420344b`, tagged `v1.2.0`, on 2026-10-05. Six new plot types, one typography system shared by
 every renderer, and a figure width that no layer is allowed to overrule.
 
 The registry count below is read from the live registry at release time, not maintained by hand:

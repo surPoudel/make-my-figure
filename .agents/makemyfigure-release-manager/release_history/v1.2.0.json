@@ -1,0 +1,52 @@
+{
+  "tag": "v1.2.0",
+  "commit": "420344b684f1620c6730c42de7e8e118161d63d0",
+  "commit_short": "420344b684",
+  "commit_date": "2026-10-05T05:48:37-05:00",
+  "annotated": true,
+  "tag_date": "2026-10-05 05:50:26 -0500",
+  "tag_message": "MakeMyFigure v1.2.0",
+  "version_py_at_tag": "1.2.0",
+  "recorded": "2026-10-05T06:01:32-0500",
+  "notes": "Six spatial plot types (39 -> 45), one shared typography system, and a requested figure width that no layer may overrule (225/225 plot-type x width combinations exact). Full suite 3956 passed / 4 skipped / 0 failed on the release commit, locally and in CI. Gallery audit 39 of 45 clean; the six remaining are pre-existing text overlaps verified against v1.1.1 with the same instrument. 1689 controls exercised, 0 confirmed dead. All five platform artifacts built by one GitHub Actions run from this commit and smoke-tested on their own runner; every published digest re-verified locally. macOS .dmg is arm64 only. Windows and macOS were not validated interactively by a person. Tutorial branch not merged.",
+  "github_release": {
+    "url": "https://github.com/surPoudel/make-my-figure/releases/tag/v1.2.0",
+    "published_at": "2026-10-05T10:56:06Z",
+    "prerelease": false,
+    "draft": false,
+    "assets": [
+      {
+        "name": "MakeMyFigure-1.2.0-linux-x86_64.tar.gz",
+        "size": 189962000
+      },
+      {
+        "name": "MakeMyFigure-1.2.0-Setup.exe",
+        "size": 104875918
+      },
+      {
+        "name": "MakeMyFigure-1.2.0-windows.zip",
+        "size": 153563812
+      },
+      {
+        "name": "MakeMyFigure-1.2.0.AppImage",
+        "size": 174410232
+      },
+      {
+        "name": "MakeMyFigure-1.2.0.dmg",
+        "size": 138712714
+      },
+      {
+        "name": "make_my_figure_core-1.2.0-py3-none-any.whl",
+        "size": 2743746
+      },
+      {
+        "name": "make_my_figure_core-1.2.0.tar.gz",
+        "size": 2631866
+      },
+      {
+        "name": "SHA256SUMS.txt",
+        "size": 688
+      }
+    ]
+  }
+}
