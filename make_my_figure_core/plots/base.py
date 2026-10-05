@@ -450,13 +450,18 @@ def fit_content_to_canvas(figure, *, may_grow_x: bool = True,
             _refit_text(figure)
             remaining = content_overflow_inches(figure)
 
-    grew = (abs(figure.get_size_inches()[0] - start_w) > 0.01
-            or abs(figure.get_size_inches()[1] - start_h) > 0.01)
-    if grew:
+    end_w, end_h = (float(v) for v in figure.get_size_inches())
+    wider, taller = end_w - start_w > 0.01, end_h - start_h > 0.01
+    if wider or taller:
+        # Name the dimension that actually changed. Saying "widened" when only the
+        # height moved sent people looking for a width problem that was not there,
+        # and it reads as a contradiction on a figure whose width was pinned and
+        # honoured - which is now every figure with a column width set.
+        what = ("widened and made taller" if wider and taller
+                else "widened" if wider else "made taller")
         notes.append(
-            f"The figure was widened to {figure.get_size_inches()[0]:.2f} x "
-            f"{figure.get_size_inches()[1]:.2f} in so the legend fits on the "
-            f"canvas. Set a figure size explicitly to keep it fixed.")
+            f"The figure was {what} to {end_w:.2f} x {end_h:.2f} in so the legend "
+            f"fits on the canvas. Set a figure size explicitly to keep it fixed.")
     elif max(remaining) <= FIT_TOLERANCE_IN:
         notes.append(
             "The plot area was reduced slightly so the legend fits inside the "
@@ -482,6 +487,42 @@ LABEL_SHRINK_PT = 1.0
 # than that and the figure needs fewer labels or more room, which is a decision
 # for the person making it.
 LABEL_MIN_SHRINK_FRACTION = 0.65
+
+
+def _keep_labels_inside_axes(ax, texts) -> None:
+    """Move any label the solver pushed out of the plot area back inside it.
+
+    ``adjust_text`` separates labels without knowing where the axes ends, and a
+    point label is drawn with clipping on, so a label that lands past the edge is
+    not merely ugly - matplotlib cuts it in half. On the MA plot two gene names
+    came out truncated, one 35 px beyond the right spine, which is the worst kind
+    of defect here: the label the author deliberately picked is the one destroyed.
+
+    A point label belongs inside the plot area, so it is shifted back by exactly
+    the overhang rather than being re-solved from scratch - the solver's spacing
+    is still the best available, and this is the smallest correction that makes it
+    drawable.
+    """
+    figure = ax.figure
+    try:
+        renderer = figure.canvas.get_renderer()
+        box = ax.get_window_extent(renderer)
+    except Exception:  # noqa: BLE001
+        return
+    for text in texts:
+        try:
+            bb = text.get_window_extent(renderer)
+        except Exception:  # noqa: BLE001
+            continue
+        dx = (box.x0 - bb.x0) if bb.x0 < box.x0 else (box.x1 - bb.x1 if bb.x1 > box.x1 else 0.0)
+        dy = (box.y0 - bb.y0) if bb.y0 < box.y0 else (box.y1 - bb.y1 if bb.y1 > box.y1 else 0.0)
+        if not dx and not dy:
+            continue
+        try:
+            px, py = ax.transData.transform(text.get_position())
+            text.set_position(ax.transData.inverted().transform((px + dx, py + dy)))
+        except Exception:  # noqa: BLE001
+            continue
 
 
 def _overlap_count(texts, renderer) -> int:
@@ -538,6 +579,7 @@ def _shrink_until_separated(ax, texts, points, adjust_text, *, arrowprops, kw,
                 text.set_fontsize(size)
             adjust_text(texts, ax=ax, arrowprops=arrowprops,
                         iter_lim=LABEL_ADJUST_ITERATIONS, **kw)
+            _keep_labels_inside_axes(ax, texts)
             figure.canvas.draw()
             if _overlap_count(texts, figure.canvas.get_renderer()) == 0:
                 return
@@ -546,7 +588,7 @@ def _shrink_until_separated(ax, texts, points, adjust_text, *, arrowprops, kw,
 
 
 def repel_labels(ax, points, style, *, show_arrows=True, box=False, color=None,
-                  font_size=None, repel=None):
+                  font_size=None, repel=None, shrink_to_fit=None):
     """Draw point labels with overlap avoidance. Returns how many were drawn.
 
     Lives here, not in one renderer, because every plot that labels individual
@@ -579,19 +621,34 @@ def repel_labels(ax, points, style, *, show_arrows=True, box=False, color=None,
                 pass
         adjust_text(texts, ax=ax, arrowprops=arrowprops,
                     iter_lim=LABEL_ADJUST_ITERATIONS, **kw)
-        if font_size is None:
-            # A floor relative to where the labels started: shrinking is a last
-            # resort for a crowded figure, not a licence to reach 4.5 pt.
-            _floor = max(fs * LABEL_MIN_SHRINK_FRACTION, 0.0)
+        # Keeping a label inside the plot area and re-separating it after the
+        # layout moves are corrections that do not change the type size, so they
+        # apply however the size was chosen. Only *shrinking* needs permission:
+        # a size the caller passed may be the user's own choice, and overriding
+        # that would be the control not working.
+        #
+        # Deciding all three on `font_size is None` was wrong, and measurably so.
+        # The lollipop and the network graph compute a default size and pass it,
+        # so they were excluded from every correction - and both came out of this
+        # release line with more overlapping labels than v1.1.1 had, because the
+        # iteration budget that made rendering reproducible also does fewer passes
+        # than the old one-second budget managed on a fast machine. They get the
+        # corrections now; a size the user actually set is still respected.
+        _floor = max(fs * LABEL_MIN_SHRINK_FRACTION, 0.0)
+        _may_shrink = (font_size is None) if shrink_to_fit is None else bool(shrink_to_fit)
+        _keep_labels_inside_axes(ax, texts)
+        if _may_shrink:
             _shrink_until_separated(ax, texts, points, adjust_text,
                                     arrowprops=arrowprops, kw=kw, floor_pt=_floor)
-            # The labels were separated for the axes they were drawn in. The
-            # layout pass narrows those axes to bring a legend back on canvas,
-            # which pushes the labels together again - so the separation has to
-            # be redone against whatever the axes end up as.
-            register_refit(ax.figure, lambda: _shrink_until_separated(
-                ax, texts, points, adjust_text, arrowprops=arrowprops, kw=kw,
-                floor_pt=_floor))
+
+        def _refit(ax=ax, texts=texts, points=points, floor=_floor, shrink=_may_shrink):
+            _keep_labels_inside_axes(ax, texts)
+            if shrink:
+                _shrink_until_separated(ax, texts, points, adjust_text,
+                                        arrowprops=arrowprops, kw=kw, floor_pt=floor)
+                _keep_labels_inside_axes(ax, texts)
+
+        register_refit(ax.figure, _refit)
         return len(texts)
     except Exception:
         for t in texts:
@@ -602,6 +659,51 @@ def repel_labels(ax, points, style, *, show_arrows=True, box=False, color=None,
                         textcoords="offset points", zorder=5, bbox=bbox,
                         arrowprops=arrowprops)
         return len(points)
+
+
+def polish_repelled_labels(ax, texts, anchors, adjust_text, *, adjust_kwargs=None,
+                           may_shrink=True) -> None:
+    """Apply the shared label corrections to labels a renderer solved itself.
+
+    Two renderers - the lollipop and the network graph - call ``adjust_text``
+    directly with their own tuning rather than going through :func:`repel_labels`,
+    and that tuning is worth keeping. What they were missing is everything that
+    happens *after* the solve: pulling a label back inside the plot area, and
+    re-separating once the layout pass has moved the axes.
+
+    They are the two plot types that came out of this release line with more
+    overlapping labels than v1.1.1 had. The cause was not their tuning but the
+    iteration budget that replaced ``adjustText``'s one-second wall clock to make
+    rendering reproducible: a fixed 60 passes is less than a fast machine used to
+    fit into a second, so a solve that used to converge now sometimes stops short.
+    The corrections cover that difference without giving up reproducibility.
+
+    ``anchors`` are the label positions *before* the solve, in data coordinates,
+    so a re-solve can start from the points rather than from wherever the last
+    pass left things.
+    """
+    if not texts:
+        return
+    kwargs = dict(adjust_kwargs or {})
+    arrowprops = kwargs.pop("arrowprops", None)
+    kwargs.pop("iter_lim", None)
+    points = [(float(ax_), float(ay_), t.get_text())
+              for (ax_, ay_), t in zip(anchors, texts)]
+    floor = max(float(texts[0].get_fontsize()) * LABEL_MIN_SHRINK_FRACTION, 0.0)
+
+    _keep_labels_inside_axes(ax, texts)
+    if may_shrink:
+        _shrink_until_separated(ax, texts, points, adjust_text,
+                                arrowprops=arrowprops, kw=kwargs, floor_pt=floor)
+
+    def _refit():
+        _keep_labels_inside_axes(ax, texts)
+        if may_shrink:
+            _shrink_until_separated(ax, texts, points, adjust_text,
+                                    arrowprops=arrowprops, kw=kwargs, floor_pt=floor)
+            _keep_labels_inside_axes(ax, texts)
+
+    register_refit(ax.figure, _refit)
 
 
 # Dash patterns a reference line may use, as the UI offers them.

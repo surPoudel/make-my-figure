@@ -49,7 +49,7 @@ tests/test_figure_presets.py: 1 warning
 tests/test_learned_styles.py: 4 warnings
 tests/test_publication_style.py: 1 warning
 tests/test_typography_system.py: 1 warning
-  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/plots/base.py:369: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  make_my_figure_core/plots/base.py:369: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
     figure.tight_layout(rect=(_l / width_in, _b / height_in,
 
 tests/test_desktop_gui.py: 3 warnings
@@ -60,61 +60,61 @@ tests/test_figure_presets.py: 1 warning
 tests/test_imported_panels.py: 1 warning
 tests/test_legend_fits_the_canvas.py: 3 warnings
 tests/test_typography_system.py: 5 warnings
-  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/plots/base.py:369: UserWarning: Tight layout not applied. The left and right margins cannot be made large enough to accommodate all Axes decorations.
+  make_my_figure_core/plots/base.py:369: UserWarning: Tight layout not applied. The left and right margins cannot be made large enough to accommodate all Axes decorations.
     figure.tight_layout(rect=(_l / width_in, _b / height_in,
 
 tests/test_differential.py::test_raw_count_matrix_warns
-  /home/spoudel1/venvs/mmf-v111/lib/python3.11/site-packages/scipy/stats/_axis_nan_policy.py:635: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
+  <site-packages>/scipy/stats/_axis_nan_policy.py:635: RuntimeWarning: Precision loss occurred in moment calculation due to catastrophic cancellation. This occurs when the data are nearly identical. Results may be unreliable.
     res = hypotest_fun_out(*samples, axis=axis, **kwds)
 
 tests/test_duplicate_labels.py::test_pasted_list_obeys_policy
 tests/test_matrix_plot_builder.py::test_differential_plots_build_and_render
-  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/plots/volcano.py:148: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  make_my_figure_core/plots/volcano.py:148: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
     fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.85))
 
 tests/test_figure_package.py::test_unicode_missing_values_and_extreme_floats
-  /home/spoudel1/venvs/mmf-v111/lib/python3.11/site-packages/numpy/_core/fromnumeric.py:57: RuntimeWarning: overflow encountered in multiply
+  <site-packages>/numpy/_core/fromnumeric.py:57: RuntimeWarning: overflow encountered in multiply
     return bound(*args, **kwds)
 
 tests/test_figure_package_controller.py::test_every_plot_type_packages_and_reopens
-  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/plots/survival.py:289: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  make_my_figure_core/plots/survival.py:289: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
     fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.8))
 
 tests/test_figure_package_spatial.py::test_coordinate_units_and_orientation_survive_the_round_trip[spatial_composition_map]
-  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/plots/spatial_composition_map.py:140: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  make_my_figure_core/plots/spatial_composition_map.py:140: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
     fig, ax = plt.subplots(figsize=resolve_figure_size(spec, (fig_w, h)))
 
 tests/test_layout_and_annotations.py::test_lollipop_per_label_offset_renders
-  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/plots/lollipop.py:65: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  make_my_figure_core/plots/lollipop.py:65: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
     fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.42))
 
 tests/test_legend_fits_the_canvas.py: 2 warnings
 tests/test_typography_system.py: 10 warnings
-  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/plots/base.py:369: UserWarning: Tight layout not applied. The bottom and top margins cannot be made large enough to accommodate all Axes decorations.
+  make_my_figure_core/plots/base.py:369: UserWarning: Tight layout not applied. The bottom and top margins cannot be made large enough to accommodate all Axes decorations.
     figure.tight_layout(rect=(_l / width_in, _b / height_in,
 
 tests/test_multipanel_sizing.py::test_shorter_request_shrinks_a_fixed_shape_panel
-  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/panels/builder.py:249: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  make_my_figure_core/panels/builder.py:249: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
     comp = plt.figure(figsize=(fig_w_in, fig_h_in), facecolor=layout.background)
 
 tests/test_reproducibility_export_qc.py::test_plotspec_roundtrip_reproduces_key_metadata[barplot_with_error_bar]
-  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/plots/barplot.py:51: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  make_my_figure_core/plots/barplot.py:51: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
     fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.8))
 
 tests/test_style_capabilities_network.py::test_figure_builder_preserves_network_colors
-  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/plots/network_graph.py:324: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  make_my_figure_core/plots/network_graph.py:324: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
     fig, ax = plt.subplots(figsize=_size)
 
 tests/test_style_font_stack.py::test_font_stack_is_kept_outside_the_style_context
-  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/plots/scatter.py:120: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  make_my_figure_core/plots/scatter.py:120: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
     fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.78))
 
 tests/test_typography_system.py::test_every_plot_type_inherits_the_shared_typography[hierarchical_clustering]
-  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/plots/hierarchical_clustering.py:254: UserWarning: Tight layout not applied. The bottom and top margins cannot be made large enough to accommodate all Axes decorations.
+  make_my_figure_core/plots/hierarchical_clustering.py:254: UserWarning: Tight layout not applied. The bottom and top margins cannot be made large enough to accommodate all Axes decorations.
     fig.tight_layout()
 
 tests/test_typography_system.py::test_every_plot_type_inherits_the_shared_typography[neighborhood_enrichment_matrix]
-  /mnt/c/Users/spoudel1/OneDrive - St. Jude Children's Research Hospital/make_my_plot/make_my_figure_core/plots/neighborhood_enrichment_matrix.py:169: UserWarning: Tight layout not applied. The bottom and top margins cannot be made large enough to accommodate all Axes decorations.
+  make_my_figure_core/plots/neighborhood_enrichment_matrix.py:169: UserWarning: Tight layout not applied. The bottom and top margins cannot be made large enough to accommodate all Axes decorations.
     fig.tight_layout(rect=(0, 0.12 if needs_key else 0.0, 0.98, 1))
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html

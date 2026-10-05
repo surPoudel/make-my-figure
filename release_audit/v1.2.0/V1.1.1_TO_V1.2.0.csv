@@ -1,0 +1,49 @@
+category,change,evidence_commit,notes
+new plots,spatial_categorical_map - categorical cell/ROI map with per-facet scale bars,8243c0d,"registry 39 -> 45; queried from live registry, not counted by hand"
+new plots,spatial_composition_map - local neighbourhood composition map,55097a0,
+new plots,spatial_feature_map - continuous feature map with an honest colour scale,dcffc4e,
+new plots,spatial_roi_map - region-of-interest map,55097a0,
+new plots,spatial_transcript_map - transcript/gene spatial map,55097a0,
+new plots,neighborhood_enrichment_matrix - cell-type neighbourhood enrichment,b6ebdb2,
+internal changes,spatial core - neighbour graphs / local composition / CC neighbourhoods / enrichment,b6ebdb2,shared engine behind the six spatial renderers
+internal changes,spatial JSON schemas and recommendation-engine wiring,98ce5e6,
+internal changes,bundled spatial example data built from published CRC tissue,d010342,
+typography,one shared typography system across every renderer,7666e24,"Phase 2 of the quality brief; TYPE_ATTRS scaling, title wrapping"
+typography,one font setting produces one size on the page in every panel,b4c2f70,composite panels opt out of per-panel scaling
+typography,scatter regression-stats box takes the style size and re-wraps to its axes,932427e,removed the last ad-hoc 8pt floor in scatter.py
+UI,figure size in inches with its own section; figure margins work,2702468,
+UI,explicit width/height for every plot type,b258193,
+UI,figure size refuses a dimension too small to lay out and says so,53fb390,
+UI,width preset works on every plot type,312c88d,
+UI,a requested column width is final - no layer may overrule it,932427e,"225/225 plot-type x width combinations exact; new test_width_request_is_honoured.py"
+UI,Figure Builder made usable - scrollable panel list / pinned actions / drag reorder,00ce865,
+UI,desktop plot-type dropdown made scrollable,03eb20d,
+heatmap,cluster bars get the same class of controls as the colourbar,8b2d048,
+heatmap,separators between cluster groups and a side for each cluster bar,06c804b,
+heatmap,row and column label side controls; shared divider; redundant Cluster labels removed,5b618b6,
+annotations,picked point labels repel each other instead of piling up,5b618b6,
+annotations,picked labels re-separate after the layout pass and step type down if crowded,932427e,"0 overlaps at 110/180/57mm; was 4 pairs overlapping at 110mm"
+bug fixes,every legend fits inside its canvas,6c5318e,11 of 45 plot types clipped their legend in default output
+bug fixes,every render reproducible - adjustText wall-clock budget replaced with an iteration budget,6c5318e,"volcano, network graph, lollipop rendered differently run to run"
+bug fixes,dead controls found by audit and fixed,36575eb,audit of every control on every plot
+bug fixes,no plot type overflows a pinned 4x2in canvas,932427e,KNOWN_CANVAS_OVERFLOW_AT_4X2 is now empty
+bug fixes,error statistic no longer travels inside a style,00ce865,
+bug fixes,stable renderer sorts so pandas 2 and pandas 3 agree on tie order,7f06d85,
+bug fixes,"library compatibility - matplotlib <3.10 box/violin orientation, pandas 3 read-only views and str dtype",f56f411,
+bug fixes,Linux build self-contained for Qt xcb platform plugin,df596fa,the v1.1.1 AppImage could not start
+bug fixes,Linux build pinned to Ubuntu 22.04 so the app runs on older systems,0a431ed,glibc floor
+statistics,shared bar/error-bar summaries - sem sd ci95 ci95_t iqr,7f06d85,"whisker that does not describe the bar is corrected and reported"
+statistics,group-comparison renderers,1591d94,
+Figure Presets,experimental evidence-derived publication presets with preview-before-apply,1591d94,"opt-in, off by default, read-only, style-only, no endorsement claim"
+Figure Package,figure-package round trips for spatial plots; background image packaged,bbcdf6c,
+performance,performance benchmarks for the spatial workflow,63950eb,
+testing,test suite runs in CI on pull request and push to main,2b67766,
+testing,plot capability matrix generated from the live registry,049c717,
+testing,quality-hardening baseline recorded,eec50f1,
+testing,full-suite runs recorded at each milestone,"a411956,61afd1e,df1addd,9ea5ee5",
+validation,CNTools benchmark - exact numerical reproduction of Fig 3A (CRC CC*),e2cbee6,
+validation,CNTools benchmark - independent hand-check importing no project code,5bd7a39,
+validation,Janesick 2023 - Xenium Fig 3l reproduced; Visium Fig 2c normalisation recovered,8643c0d,
+validation,karate-network QC figures recorded now that output is stable,cb26118,
+documentation,spatial v2 audit findings and transcribed published methods,84126fa,
+documentation,release ledger entries for the v1.1.1 asset rebuilds,"31e49a9,d70087d",historical - left as written

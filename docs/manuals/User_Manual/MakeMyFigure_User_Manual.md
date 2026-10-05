@@ -1,8 +1,8 @@
 # Make My Figure — User Manual
 
-**MakeMyFigure version:** 1.1.1  
-**Documentation generated from commit:** `15b6b40`  
-**Date:** 2026-09-20
+**MakeMyFigure version:** 1.2.0  
+**Documentation generated from commit:** `932427e`  
+**Date:** 2026-10-05
 
 This manual describes the application exactly as built at the commit above. Where the packaged installers of an earlier release differ, the text says so.
 

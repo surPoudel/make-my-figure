@@ -93,12 +93,33 @@ def test_a_legend_that_cannot_fit_is_reported_rather_than_cropped(plot_type):
         f"{result.warnings}")
 
 
-def test_growing_the_canvas_is_reported():
+def test_growing_the_canvas_is_reported_and_names_what_changed():
     """A figure coming back a different size than the renderer chose is worth a
-    word, so nobody wonders why their export is 4.75 in and not 4.33."""
+    word, so nobody wonders why their export is 4.75 in and not 4.33.
+
+    The word has to be the true one. This asserted "widened" on a plot whose width
+    is pinned to a single column and therefore never changes, so the report sent
+    people looking for a width problem that did not exist - and read as a flat
+    contradiction next to a figure measured at exactly the width they asked for.
+    """
     result = _render("volcano_plot")
+    width_in, height_in = (float(v) for v in result.figure.get_size_inches())
     _close(result.figure)
-    assert any("widened" in w for w in result.warnings)
+
+    resize_notes = [w for w in result.warnings if "so the legend fits" in w]
+    assert resize_notes, f"the resize was not reported: {result.warnings}"
+    note = resize_notes[0]
+
+    # The example asks for a single column, and a requested width is final, so
+    # this figure can only have grown taller.
+    assert abs(width_in * 25.4 - 110.0) < 0.5, (
+        f"the single-column width was not honoured: {width_in * 25.4:.1f} mm")
+    assert "made taller" in note, note
+    assert "widened" not in note, (
+        f"claimed the figure was widened, but the width is still "
+        f"{width_in * 25.4:.1f} mm: {note}")
+    assert f"{height_in:.2f}" in note, (
+        f"the reported size does not match the drawn height {height_in:.2f}: {note}")
 
 
 def test_growing_keeps_the_plot_area_rather_than_shrinking_it():

@@ -3,7 +3,7 @@
 **Publication-ready scientific plots and multi-panel figures from common data tables — with a
 machine-readable record of how every panel was made.**
 
-![Version](https://img.shields.io/badge/version-1.1.1-blue)
+![Version](https://img.shields.io/badge/version-1.2.0-blue)
 ![Python](https://img.shields.io/badge/python-3.9%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Plot types](https://img.shields.io/badge/plot%20types-39-blueviolet)
@@ -35,9 +35,9 @@ Download the installer for your system from the
 
 | System | File | Steps |
 |---|---|---|
-| **macOS** | `MakeMyFigure-1.1.1.dmg` | Open the DMG, drag *Make My Figure* to *Applications*, launch. The bundle is not notarised: on first launch right-click → **Open**, or allow it under *System Settings → Privacy & Security*. |
-| **Windows** | `MakeMyFigure-1.1.1-Setup.exe` (or `MakeMyFigure-1.1.1-windows.zip`) | Run the installer (or unzip and start `MakeMyFigure\MakeMyFigure.exe`). SmartScreen may warn about an unsigned program; choose *More info → Run anyway* if you trust the source. |
-| **Linux** | `MakeMyFigure-1.1.1-linux-x86_64.tar.gz` (or `MakeMyFigure-1.1.1.AppImage`) | Unpack the tarball and run `MakeMyFigure/MakeMyFigure`, or `chmod +x` the AppImage and run it. The desktop app needs the usual Qt system libraries (`libxkbcommon0 libgl1 libegl1 libxcb-*`). Built on Ubuntu 24.04: needs glibc 2.38 or newer (Ubuntu 24.04+, Fedora 39+, Debian 13+); on older distributions use the wheel or the source install. |
+| **macOS** | `MakeMyFigure-1.2.0.dmg` | Open the DMG, drag *Make My Figure* to *Applications*, launch. The bundle is not notarised: on first launch right-click → **Open**, or allow it under *System Settings → Privacy & Security*. |
+| **Windows** | `MakeMyFigure-1.2.0-Setup.exe` (or `MakeMyFigure-1.2.0-windows.zip`) | Run the installer (or unzip and start `MakeMyFigure\MakeMyFigure.exe`). SmartScreen may warn about an unsigned program; choose *More info → Run anyway* if you trust the source. |
+| **Linux** | `MakeMyFigure-1.2.0-linux-x86_64.tar.gz` (or `MakeMyFigure-1.2.0.AppImage`) | Unpack the tarball and run `MakeMyFigure/MakeMyFigure`, or `chmod +x` the AppImage and run it. The desktop app needs the usual Qt system libraries (`libxkbcommon0 libgl1 libegl1 libxcb-*`). Built on Ubuntu 24.04: needs glibc 2.38 or newer (Ubuntu 24.04+, Fedora 39+, Debian 13+); on older distributions use the wheel or the source install. |
 | **WSL2** (Linux running under Windows) | no native package | WSL2 is not native Windows: use the source install below with WSLg (Windows 11), or run the browser app inside WSL2 and open it in a Windows browser. |
 
 On launch the desktop status bar shows `Make My Figure v1.1.1 · <commit> · <platform> · <backend>`;
@@ -62,7 +62,7 @@ python -m apps.desktop_app.main                         # desktop app
 Python 3.10–3.12 is recommended. Optional extras: `desktop` (PySide6), `dev` (pytest,
 pytest-qt), `build` (PyInstaller), `import-panels` (PDF/SVG panel import), `count-de`
 (an opt-in, Python-only count-model differential path; never required). Installing the
-wheel (`pip install make_my_figure_core-1.1.1-py3-none-any.whl`) gives the engine and the
+wheel (`pip install make_my_figure_core-1.2.0-py3-none-any.whl`) gives the engine and the
 bundled resources for use from your own scripts, without a GUI.
 
 On Linux/WSL2 the desktop app needs Qt system libraries; if PySide6 cannot load, the app

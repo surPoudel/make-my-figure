@@ -17,6 +17,7 @@ from matplotlib.patches import Patch
 
 from make_my_figure_core.plots.base import (
     LABEL_ADJUST_ITERATIONS,
+    polish_repelled_labels,
     RenderResult,
     base_metadata,
     coerce_numeric,
@@ -115,10 +116,16 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             try:
                 from adjustText import adjust_text
 
-                adjust_text(texts, ax=ax, only_move={"text": "xy"},
-                            expand_text=(1.05, 1.3),
-                            iter_lim=LABEL_ADJUST_ITERATIONS,
-                            arrowprops=dict(arrowstyle="-", color="0.65", lw=0.6))
+                _anchors = [t.get_position() for t in texts]
+                _kw = dict(only_move={"text": "xy"}, expand_text=(1.05, 1.3),
+                           arrowprops=dict(arrowstyle="-", color="0.65", lw=0.6))
+                adjust_text(texts, ax=ax, iter_lim=LABEL_ADJUST_ITERATIONS, **_kw)
+                # The size here is this plot's own default unless the user set
+                # label_font_size, so shrinking to separate crowded labels is
+                # allowed only in the first case.
+                polish_repelled_labels(
+                    ax, texts, _anchors, adjust_text, adjust_kwargs=_kw,
+                    may_shrink=not float(get_mapping(spec, "label_font_size", 0) or 0))
             except Exception:
                 pass
         ax.set_xlim(xs.min() - 0.02 * (xs.max() - xs.min() or 1),

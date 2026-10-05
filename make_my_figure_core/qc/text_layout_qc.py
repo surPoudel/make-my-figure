@@ -100,12 +100,21 @@ def _visible_texts(fig: Figure, renderer) -> List[TextBox]:
         boxes.append(TextBox(s, bb, float(t.get_fontsize()), role, ax_i))
 
     for i, ax in enumerate(fig.axes):
-        for t in ax.get_xticklabels() + ax.get_yticklabels():
-            add(t, "tick", i)
-        for t in ax.get_xticklabels(minor=True) + ax.get_yticklabels(minor=True):
-            add(t, "tick", i)
-        add(ax.xaxis.label, "label", i)
-        add(ax.yaxis.label, "label", i)
+        # An axes with its axis switched off (``ax.set_axis_off()``, or
+        # ``axison = False``) draws no ticks and no axis labels - but the Text
+        # objects still exist and still report ``get_visible() is True``, because
+        # matplotlib skips the whole axis at draw time rather than hiding each
+        # label. Measuring them reported overlaps between labels nobody can see:
+        # the chord diagram, which hides its axes, was credited with three
+        # overlapping pairs of tick labels that are never drawn. Real findings get
+        # buried under phantom ones, so the axis state is checked first.
+        if ax.axison:
+            for t in ax.get_xticklabels() + ax.get_yticklabels():
+                add(t, "tick", i)
+            for t in ax.get_xticklabels(minor=True) + ax.get_yticklabels(minor=True):
+                add(t, "tick", i)
+            add(ax.xaxis.label, "label", i)
+            add(ax.yaxis.label, "label", i)
         add(ax.title, "title", i)
         add(ax._left_title, "title", i)   # noqa: SLF001
         add(ax._right_title, "title", i)  # noqa: SLF001

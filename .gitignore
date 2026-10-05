@@ -96,3 +96,8 @@ release_staging/
 .agents/makemyfigure-release-manager/reports/
 # publisher figures used only as research references (never distributed)
 PRIVATE_REFERENCE_ONLY/
+
+# Claims-discipline record kept locally, out of the public tree (release lead
+# decision, v1.2.0). Its name trips the release private-file scanner and the file
+# is not needed to build or run anything.
+reports/journal_presets/manuscript_future_claims.md

@@ -26,6 +26,7 @@ from make_my_figure_core.plots._v04_shared import numeric_matrix, ordered_unique
 from make_my_figure_core.plots.base import (
     colorbar_geometry,
     LABEL_ADJUST_ITERATIONS,
+    polish_repelled_labels,
     chosen_column_width,
     explicit_figure_size,
     resolve_figure_size,
@@ -366,11 +367,14 @@ def render(spec: Dict[str, Any], df, style: StyleProfile, aux=None) -> RenderRes
             try:
                 from adjustText import adjust_text
 
-                adjust_text(texts, ax=ax, only_move={"text": "xy"},
-                            expand_text=(1.1, 1.25), expand_points=(1.1, 1.25),
-                            iter_lim=LABEL_ADJUST_ITERATIONS,
-                            arrowprops=dict(arrowstyle="-", color="0.6", lw=0.5),
-                            force_text=(0.3, 0.5))
+                _anchors = [t.get_position() for t in texts]
+                _kw = dict(only_move={"text": "xy"}, expand_text=(1.1, 1.25),
+                           expand_points=(1.1, 1.25), force_text=(0.3, 0.5),
+                           arrowprops=dict(arrowstyle="-", color="0.6", lw=0.5))
+                adjust_text(texts, ax=ax, iter_lim=LABEL_ADJUST_ITERATIONS, **_kw)
+                polish_repelled_labels(
+                    ax, texts, _anchors, adjust_text, adjust_kwargs=_kw,
+                    may_shrink=not float(get_mapping(spec, "label_font_size", 0) or 0))
             except Exception:
                 pass
 

@@ -23,6 +23,7 @@ from make_my_figure_core.plots.base import (
     figure_size,
     get_mapping,
     place_legend,
+    repel_labels,
     require_columns,
     resolve_legend_location,
     style_axes,
@@ -154,20 +155,33 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                 seen_pid.add(pt.point_id)
                 label_points.append(pt)
 
+            # A label the user has positioned by hand is deliberate and is drawn
+            # where they put it; the rest go to the shared repeller. This plot used
+            # a fixed (4, 4) offset for every label, which is the same defect the
+            # volcano and the scatter were fixed for: two genes close together
+            # always collided, and with clipping on, a label pushed past the spine
+            # was cut in half rather than merely crowded. Six overlapping pairs and
+            # two truncated gene names in the bundled example.
             point_offsets = lp.parse_offsets(get_mapping(spec, "point_offsets", None))
             legacy_offsets = lp.parse_offsets(get_mapping(spec, "label_offsets", None))
+            manual: List = []
+            auto: List = []
             for pt in label_points:
                 off = point_offsets.get(pt.point_id)
                 if off is None:
                     off = (legacy_offsets.get(pt.label_text)
-                           or legacy_offsets.get(str(pt.label_text).lower()) or (4, 4))
+                           or legacy_offsets.get(str(pt.label_text).lower()))
+                (manual.append((pt, off)) if off is not None else auto.append(pt))
+            for pt, off in manual:
                 dx, dy = float(off[0]), float(off[1])
                 ax.annotate(pt.label_text, (pt.anchor_x, pt.anchor_y),
                             fontsize=style.annotation_pt,
                             xytext=(dx, dy), textcoords="offset points",
                             arrowprops=dict(arrowstyle="-", color="0.6", lw=0.5)
                             if (abs(dx) > 12 or abs(dy) > 12) else None)
-            n_labeled = len(label_points)
+            n_labeled = len(manual) + repel_labels(
+                ax, [(pt.anchor_x, pt.anchor_y, pt.label_text) for pt in auto],
+                style, show_arrows=len(auto) > 1)
 
         ax.set_xlabel(spec.get("layout", {}).get("x_label", "Average expression"))
         ax.set_ylabel(spec.get("layout", {}).get("y_label", "log2 fold change"))

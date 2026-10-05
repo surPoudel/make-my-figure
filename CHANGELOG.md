@@ -1,62 +1,209 @@
 # Changelog
 
+All notable changes to Make My Figure are recorded here. This project uses a
+single, evolving `Publication` style — it does not target or claim compliance
+with any journal.
+
 ## Unreleased
 
-### Added
-- **The test suite runs in CI.** It had no automation at all: it ran only when someone
-  remembered to run it locally, so nothing would have caught a regression before a release.
-  `.github/workflows/tests.yml` runs the full suite headless (`QT_QPA_PLATFORM=offscreen`,
-  `MPLBACKEND=Agg`) on every pull request and on pushes to `main`, on `ubuntu-22.04` — the same
-  image the released Linux app is built on.
+_Nothing yet._
 
-### Fixed
-- **`scikit-learn` is declared.** The publication-recreation benchmarks load the iris/wine/diabetes
-  built-ins from scikit-learn, but it appeared in no requirements file, so a clean environment
-  built from `requirements-lock.txt` failed `test_curation_is_deterministic` with
-  `ModuleNotFoundError: No module named 'sklearn'`. It is now a `benchmarks` extra, pinned in the
-  lock file, and the test skips cleanly when it is genuinely absent rather than erroring.
-- **The Linux app runs on Ubuntu 22.04 again.** The bundled CPython links against the build
-  machine's glibc, and glibc is forward- but not backward-compatible, so the builder sets the
-  oldest system the app can run on. GitHub's `ubuntu-latest` label moved from 22.04 to 24.04,
-  which raised the floor from glibc 2.35 to 2.38 with no code change and made the rebuilt
-  v1.1.1 Linux assets fail to start on 22.04 (supported to 2027) with
-  `libpython3.11.so.1.0: version 'GLIBC_2.38' not found`. The Linux build is now pinned to
-  `ubuntu-22.04`, and the build log reports the bundled CPython's glibc requirement so a future
-  runner-image migration is visible instead of silent.
-- **The Linux app now starts on a desktop that does not already have Qt's X11 libraries.**
-  The v1.1.1 AppImage and Linux tarball bundled Qt's `xcb` platform plugin but not the nine
-  libraries it links against (`libxkbcommon-x11.so.0`, `libxcb-cursor.so.0`, `libxcb-icccm.so.4`,
-  `libxcb-util.so.1`, `libxcb-image.so.0`, `libxcb-keysyms.so.1`, `libxcb-render-util.so.0`,
-  `libxcb-shape.so.0`, `libxcb-xkb.so.1`). On a machine without them the app exited before
-  drawing a window with "Could not load the Qt platform plugin xcb ... even though it was
-  found." `scripts/build_linux.sh` now copies the plugin's libraries into the bundle — before
-  the tarball is packed, so both artifacts get them — sets `LD_LIBRARY_PATH` in `AppRun`, and
-  **fails the build** if any is still absent. The GL stack, core X11/XCB and glibc are still
-  taken from the host, as AppImage convention requires. Reported by the AppImage catalog test
-  (AppImage/appimage.github.io#6693).
-- **CI now exercises the `xcb` plugin.** The build smoke test ran only with
-  `QT_QPA_PLATFORM=offscreen`, which loads `libqoffscreen.so` and never touches `libqxcb.so`, so
-  a build that could not start on any real Linux desktop passed cleanly. A second smoke test now
-  runs under `xvfb` with `QT_QPA_PLATFORM=xcb`. The Linux build step no longer swallows failures
-  with `|| true`, and a redundant second PyInstaller run that discarded the bundled libraries has
-  been removed.
+## [1.2.0] — Spatial analysis, one typography system, and a width that is final
+
+### Added — plot types (39 → 45)
+
+Six spatial renderers, built on a shared spatial core (neighbour graphs, local composition,
+cellular-neighbourhood clustering and enrichment). The registry count is read from the live
+registry, not maintained by hand.
+
+- **`spatial_categorical_map`** — categorical cell or region map, with a scale bar per facet.
+- **`spatial_composition_map`** — local neighbourhood composition.
+- **`spatial_feature_map`** — a continuous feature on tissue coordinates, with a colour scale that
+  states its own limits rather than implying precision it does not have.
+- **`spatial_roi_map`** — region-of-interest map.
+- **`spatial_transcript_map`** — transcript or gene positions.
+- **`neighborhood_enrichment_matrix`** — cell-type neighbourhood enrichment.
+
+Example data for all six is built from published colorectal-carcinoma tissue and bundled, so every
+one opens from the Examples menu with no download. Spatial plots round-trip through a Figure
+Package, including the background image.
+
+### Added — figure size and typography
+
+- **One typography system, shared by every renderer.** Title, axis label, tick, legend and
+  annotation sizes come from one scale with fixed ratios, and that scale adapts to the canvas
+  instead of each renderer inventing its own floor. A figure shrunk or enlarged keeps its
+  hierarchy; nothing is scaled past legibility.
+- **One font setting produces one size on the page, in every panel.** In a multi-panel figure each
+  panel was scaled independently — four panels of one figure came out at 69%, 71%, 98% and 66% of
+  the requested size. Composite figures now opt out of per-panel scaling and are laid out once at
+  their drawn size.
+- **Figure size is a real control on every plot type.** Explicit width and height in millimetres or
+  inches, in their own section, with working margins. A dimension too small to lay out is refused
+  with an explanation rather than producing an unusable figure.
+- **A requested width is final.** Asking for a single column, a double column or a measurement such
+  as `174mm` now produces exactly that width on all 45 plot types (225 of 225 plot-type × width
+  combinations exact). Three separate layers used to overrule it: the layout pass grew the canvas
+  to rescue an outside legend, the spatial maps widened themselves for their key beforehand, and a
+  renderer's own legibility floor outranked a measurement it did not recognise — `network_graph`
+  returned 132 mm whatever was picked, and `confusion_matrix` returned 79 mm when asked for 57 mm.
+  Where the content genuinely cannot fit the requested width, the plot area gives up the room and
+  the render says so; it never silently returns a different size.
+
+### Added — statistics
+
+- **Error-bar statistics with explicit choices:** standard error, standard deviation, 95%
+  confidence interval (normal and t-based) and interquartile range. A whisker that does not
+  describe its bar — an IQR around a mean, say — is corrected and the correction is reported rather
+  than drawn as though it were intended.
+- Group-comparison renderers for summary-plus-observations figures.
+
+### Added — experimental publication presets (opt-in, off by default)
+
+A bundled, read-only library of style presets whose values were measured in a corpus of published
+open-access figures and cross-checked against publishers' stated artwork requirements. They are
+shown under an "Experimental" heading, **off by default**, and always through a
+preview-before-apply flow that lists every setting a preset will change.
+
+A preset here is **style only** — typography, line and marker weights, palette, legend and axis
+geometry, and a target width. The loader refuses a preset file that tries to change data, column
+roles, statistics, P values, transformations, normalisation, feature selection or thresholds.
+
+These are **not** journal templates. No preset claims compliance with, approval by, endorsement by
+or acceptance at any journal, and none reproduces any published figure — they encode aggregate
+visual conventions under neutral names. See *Known limitations* below.
+
+### Added — controls
+
+- **Cluster bars get the same class of controls the colourbar has** on the clustered heatmap:
+  thickness, padding, side, label size, palette and legend placement.
+- **Separators between cluster groups**, with their own colour, width and style.
+- **Row and column labels can be placed on either side**, independently of the cluster bars.
+- **The Figure Builder is usable at a normal window size.** Its panel list scrolls, its action bar
+  is pinned, and panels can be reordered by dragging or with Alt+↑/↓. Its minimum height went from
+  902 px — taller than many laptop screens, so the window had to be maximised to reach the controls
+  — to 136 px.
 
 ### Changed
+
 - Linux AppImages are built with `appimagetool` from `AppImage/appimagetool`, which embeds the
   current `type2-runtime`, instead of the retired AppImageKit build whose older runtime required
   the host's `libfuse2`.
 - **Desktop Help → Plot types** now lists the required/optional columns, description, example file
   and replacement note for every registered plot type. It read only the legacy 18-dataset manifest,
   so the 21 plot types added since v0.3 showed "Required columns: —" and "Example file: None"; it now
-  reads `examples/example_data_manifest.json` (complete for all 39 types) with the legacy manifest as
-  fallback. Regression test `tests/test_help_content.py`.
+  reads `examples/example_data_manifest.json` with the legacy manifest as fallback. Regression test
+  `tests/test_help_content.py`.
+- The desktop plot-type dropdown scrolls, so every registered type is reachable.
+
 ### Fixed
 
-- **Renderers draw the same figure on every supported pandas version.** Every `sort_values` in the plot renderers now uses a stable sort, so rows that tie on the sort key keep their table order instead of an arbitrary order that differed between pandas 2 (`object` columns) and pandas 3 (default `str` columns). Found by the whole-library render fingerprint: stacked composition bars ordered by a grouping column were drawn as S01, S14, S13, ... on pandas 2 and S01, S02, S03, ... on pandas 3 for the same data. Also affects tie-breaking in the oncoprint gene order (equal frequencies), lollipop draw order and top-n labels, volcano / MA label ranking, enrichment and network top-n selection, and the waterfall, calibration, precision-recall, Manhattan and spider sorts; values, counts and statistics are unchanged. Regression tests: `tests/test_renderer_sort_stability.py`.
+- **Every legend now fits inside its canvas.** Eleven of the 45 plot types clipped an outside
+  legend in their default output. The legend is placed relative to the axes, so a long entry hung
+  off the edge; exporting with a tight bounding box hid it, which is why it survived — the saved
+  file looked right and the on-screen preview and any fixed-size export did not.
+- **No plot type draws outside a pinned canvas.** At a pinned 4 × 2 in panel size, content — most
+  often the axis label — fell off the edge on several plot types. The list of known offenders is now
+  empty and the pinned-size test runs on every plot type instead of skipping the exceptions.
+- **Every render is reproducible.** Three plot types (volcano, network graph, lollipop) drew a
+  different figure on each run from identical input. The label-overlap solver was given a
+  one-second wall-clock budget by default and iterated until the timer expired, so the result
+  depended on machine speed and load. No seed fixes that; it now gets a fixed iteration budget,
+  which is both reproducible and faster than the second it used to spend.
+- **Picked point labels no longer pile up.** Selecting several nearby points annotated each one at a
+  fixed offset, so close points always collided. They now repel each other, are re-separated after
+  the layout pass moves the axes, and step down in size when a narrow column leaves no room —
+  fourteen labels separate cleanly at 180 mm, 110 mm and 57 mm.
+- **Dead controls.** Every control on every plot type was exercised by measuring the rendered
+  output, and the ones that changed nothing were fixed. Among them: cluster-bar padding was dead
+  whenever both bars were shown (two layout dividers overwrote each other), colourbar padding was
+  computed against the figure width instead of the axes width and came out ~40% short, and three
+  renderers silently dropped a new option because of a duplicate dictionary key.
+- **The error statistic no longer travels inside a style.** Choosing a style could change which
+  error statistic a figure reported.
+- **Renderers draw the same figure on every supported pandas version.** Every `sort_values` in the
+  plot renderers now uses a stable sort, so rows that tie on the sort key keep their table order
+  instead of an arbitrary order that differed between pandas 2 (`object` columns) and pandas 3
+  (default `str` columns). Found by the whole-library render fingerprint: stacked composition bars
+  ordered by a grouping column were drawn as S01, S14, S13, … on pandas 2 and S01, S02, S03, … on
+  pandas 3 for the same data. Also affects tie-breaking in the oncoprint gene order, lollipop draw
+  order and top-n labels, volcano / MA label ranking, enrichment and network top-n selection, and
+  the waterfall, calibration, precision-recall, Manhattan and spider sorts; values, counts and
+  statistics are unchanged. Regression tests: `tests/test_renderer_sort_stability.py`.
+- **Library-version compatibility:** box/violin orientation on matplotlib < 3.10, and pandas 3
+  read-only views and default `str` dtype.
+- **The Linux app runs on Ubuntu 22.04 again.** The bundled CPython links against the build
+  machine's glibc, and glibc is forward- but not backward-compatible, so the builder sets the
+  oldest system the app can run on. GitHub's `ubuntu-latest` label moved from 22.04 to 24.04,
+  which raised the floor from glibc 2.35 to 2.38 with no code change and made the rebuilt v1.1.1
+  Linux assets fail to start on 22.04 (supported to 2027) with
+  `libpython3.11.so.1.0: version 'GLIBC_2.38' not found`. The Linux build is pinned to
+  `ubuntu-22.04`, and the build log reports the bundled CPython's glibc requirement so a future
+  runner-image migration is visible instead of silent.
+- **The Linux app starts on a desktop that does not already have Qt's X11 libraries.** The v1.1.1
+  AppImage and Linux tarball bundled Qt's `xcb` platform plugin but not the nine libraries it
+  links against. On a machine without them the app exited before drawing a window with "Could not
+  load the Qt platform plugin xcb … even though it was found." `scripts/build_linux.sh` now copies
+  the plugin's libraries into the bundle — before the tarball is packed, so both artifacts get them
+  — sets `LD_LIBRARY_PATH` in `AppRun`, and **fails the build** if any is still absent. The GL
+  stack, core X11/XCB and glibc are still taken from the host, as AppImage convention requires.
+  Reported by the AppImage catalog test (AppImage/appimage.github.io#6693).
 
-All notable changes to Make My Figure are recorded here. This project uses a
-single, evolving `Publication` style — it does not target or claim compliance
-with any journal.
+### Validation
+
+- **CNTools (cellular neighbourhoods):** exact numerical reproduction of Fig 3A (CRC, CC*), plus an
+  independent hand-check that imports no project code.
+- **Janesick 2023:** Xenium Fig 3l reproduced; Visium Fig 2c normalisation recovered.
+- Performance benchmarks for the spatial workflow.
+- Karate-network QC figures recorded now that the output is stable.
+
+### Documentation
+
+- Spatial v2 audit findings, with the published methods transcribed and the scope stated.
+- The plot capability matrix is generated from the live registry rather than maintained by hand.
+
+### Packaging
+
+- **The test suite runs in CI.** It had no automation at all: it ran only when someone remembered
+  to run it locally, so nothing would have caught a regression before a release.
+  `.github/workflows/tests.yml` runs the full suite headless (`QT_QPA_PLATFORM=offscreen`,
+  `MPLBACKEND=Agg`) on every pull request and on pushes to `main`, on `ubuntu-22.04` — the same
+  image the released Linux app is built on.
+- **CI exercises the `xcb` plugin.** The build smoke test ran only with
+  `QT_QPA_PLATFORM=offscreen`, which loads `libqoffscreen.so` and never touches `libqxcb.so`, so a
+  build that could not start on any real Linux desktop passed cleanly. A second smoke test now runs
+  under `xvfb` with `QT_QPA_PLATFORM=xcb`.
+- **`scikit-learn` is declared.** The publication-recreation benchmarks load the
+  iris/wine/diabetes built-ins from scikit-learn, but it appeared in no requirements file, so a
+  clean environment built from `requirements-lock.txt` failed `test_curation_is_deterministic` with
+  `ModuleNotFoundError: No module named 'sklearn'`. It is now a `benchmarks` extra, pinned in the
+  lock file, and the test skips cleanly when it is genuinely absent rather than erroring.
+
+### Known limitations
+
+- **The experimental publication presets have had no user testing.** They are merged and shipped,
+  opt-in and off by default, but `MANUAL_PRESET_ACCEPTANCE.md` is not signed off. Treat them as
+  what their heading says. No number measured during that work should be quoted until it has been
+  regenerated on this released build.
+- **Some text still ignores the figure-wide type scale.** Twenty-one places across twelve renderers
+  derive a size from the style and then clamp it to a fixed floor, which the shared scale cannot
+  reach. On a small figure this shows as mixed sizes within one panel — a 60 × 45 mm volcano draws
+  its subtitle at 9 pt beside 5.8 pt body text. Eight plot types are affected. The sizes are
+  legible; they are not uniform.
+- **Dense category labels can still overlap, and one bundled example shows it.**
+  `stacked_bar_composition` with 30 samples at a single-column width draws its
+  category labels in a plot area 240 px wide on a 476 px canvas, because the
+  outside key takes the other half. The labels have 7.3 px of room and need 15 px
+  at 10 pt, so fitting them would mean about 4.9 pt type — below legibility. The
+  figure is over-constrained rather than mislaid out: 30 samples, a 12-entry key
+  and 110 mm do not coexist. Widen the figure, reduce the categories, or move the
+  key inside the axes. Five other plot types have a 3–8 px overlap where the
+  leftmost x tick label meets the lowest y tick label; both conditions are
+  unchanged from v1.1.1, measured with the same instrument.
+- **Interactive Windows and macOS validation for this release was automated, not manual.** Each
+  platform's app was built and smoke-tested on its own runner (`--selftest`, plus an `xcb` check
+  under `xvfb` on Linux). A human did not click through the Windows or macOS build before
+  publication.
 
 ## [1.1.1] — Reproducible figure packages, Circos chord diagram, compatibility fixes
 
