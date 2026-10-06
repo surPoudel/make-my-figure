@@ -284,16 +284,24 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                                fontsize=style.annotation_pt, color=style.text_color,
                                bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="0.7",
                                          lw=0.5, alpha=0.85), zorder=6)
-                if _auto:
-                    # Drawn first so its size can be measured, then moved to the
-                    # corner that covers the least data.
-                    _chosen = _emptiest_corner(ax, _ann)
-                    ax_, ay_, ha_, va_ = _STATS_CORNERS[_chosen]
-                    _ann.set_position((ax_, ay_))
-                    _ann.set_ha(ha_)
-                    _ann.set_va(va_)
-                _fit_annotation_to_axes(ax, _ann)
-                register_refit(ax.figure, lambda a=ax, t=_ann: _fit_annotation_to_axes(a, t))
+                def _place(a=ax, t=_ann, auto=_auto):
+                    # Shape first, then position. The box is only wrapped once it
+                    # is wider than its axes, and the axes are not final until the
+                    # layout pass has reserved room for the legend - so at draw
+                    # time this box is still one 88%-wide line, and every corner
+                    # scores the same. Choosing from that shape is choosing from a
+                    # figure that never exists; by the time it is six lines tall
+                    # the corners differ by 22 points covered.
+                    _fit_annotation_to_axes(a, t)
+                    if auto:
+                        cx, cy, cha, cva = _STATS_CORNERS[_emptiest_corner(a, t)]
+                        t.set_position((cx, cy))
+                        t.set_ha(cha)
+                        t.set_va(cva)
+                        _fit_annotation_to_axes(a, t)
+
+                _place()
+                register_refit(ax.figure, _place)
 
         ax.set_xlabel(spec.get("layout", {}).get("x_label", x))
         ax.set_ylabel(spec.get("layout", {}).get("y_label", y))

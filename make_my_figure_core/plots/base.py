@@ -1090,6 +1090,11 @@ def fit_tick_labels(ax, axis: str = "y", *, floor_pt: float = MIN_TICK_LABEL_PT)
     return size
 
 
+# Clear space an axis label keeps from the nearest tick label, in pixels. Zero
+# would be "not quite touching", which reads as a collision even when it is not.
+AXIS_LABEL_MARGIN_PX = 4.0
+
+
 def clear_axis_label(ax, axis: str = "y", *, max_pad_pt: float = 48.0) -> float:
     """Push an axis label clear of its tick labels. Returns the pad used.
 
@@ -1121,7 +1126,10 @@ def clear_axis_label(ax, axis: str = "y", *, max_pad_pt: float = 48.0) -> float:
                 tb = t.get_window_extent(renderer)
             except Exception:  # noqa: BLE001
                 continue
-            if lb.overlaps(tb):
+            if (lb.x0 - AXIS_LABEL_MARGIN_PX < tb.x1
+                    and lb.x1 + AXIS_LABEL_MARGIN_PX > tb.x0
+                    and lb.y0 - AXIS_LABEL_MARGIN_PX < tb.y1
+                    and lb.y1 + AXIS_LABEL_MARGIN_PX > tb.y0):
                 return True
         return False
 
