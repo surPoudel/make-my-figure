@@ -44,7 +44,14 @@ def format_p(p: Optional[float], *, digits: int = 3, sci_threshold: float = 1e-3
         if p < smallest:
             return f"{label} < {smallest:g}"
         return f"{label} = {p:.{max(1, digits)}e}"
-    return f"{label} = {p:.{digits}f}"
+    text = f"{p:.{digits}f}"
+    # A p that is not zero must never be printed as zero. At digits=1 - which the
+    # UI allows - p = 0.049 rounded to "p = 0.0", reporting a significant result
+    # as no result at all. Round-to-zero falls back to the "smaller than what we
+    # can show" form, which is true at any number of digits.
+    if float(text) == 0.0 and p > 0:
+        return f"{label} < {float(f'1e-{digits}'):g}"
+    return f"{label} = {text}"
 
 
 def _pairing_phrase(r: StatResult) -> str:
