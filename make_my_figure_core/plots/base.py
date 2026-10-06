@@ -996,6 +996,141 @@ def style_axes(ax, style: "StyleProfile | None" = None) -> None:
                 ax.spines[spine].set_visible(False)
 
 
+# A tick label never shrinks below the size the project's own publication check
+# requires. Picking a lower number here would mean this helper could quietly turn
+# a publication-ready figure into one that fails `publication_check` - which is
+# exactly what happened at 5 pt: the heatmap's column labels were taken to 7.5 pt
+# and the check reported "Tick labels may be too small". When labels still do not
+# fit at this size there are too many of them for the space, and the renderers'
+# own "hide the labels" rules are the better answer than illegible text.
+def _min_tick_label_pt() -> float:
+    try:
+        from make_my_figure_core.qa.publication_check import MIN_TICK_PT
+
+        return float(MIN_TICK_PT)
+    except Exception:  # noqa: BLE001
+        return 8.0
+
+
+MIN_TICK_LABEL_PT = _min_tick_label_pt()
+
+# The clear space neighbouring tick labels need, as a fraction of their own
+# height. Zero would mean "not quite touching", which is what 30 gene labels at
+# +0.48 px apart already were, and they were unreadable.
+LABEL_GAP_FRACTION = 0.22
+
+
+def fit_tick_labels(ax, axis: str = "y", *, floor_pt: float = MIN_TICK_LABEL_PT) -> float:
+    """Shrink tick labels until consecutive ones stop overlapping. Returns the size used.
+
+    Label sizes are usually picked from a count - "30 rows, so one point smaller"
+    - which cannot know how much room a row actually has. On a clustered heatmap
+    drawn at presentation type sizes, 30 gene labels were set at 13 pt into rows
+    12 pt tall: every label overlapped its neighbour, and the longest ran under
+    the y axis label as well.
+
+    Measuring is the fix. Nothing happens unless neighbouring labels actually
+    collide, so a figure that was already correct is untouched; and the size only
+    ever goes down to ``floor_pt``, below which the renderer's own decision to
+    hide labels is the better one.
+    """
+    figure = ax.figure
+    getter = ax.get_yticklabels if axis == "y" else ax.get_xticklabels
+    try:
+        figure.canvas.draw()
+        renderer = figure.canvas.get_renderer()
+    except Exception:  # noqa: BLE001
+        return 0.0
+
+    def shortfall() -> float:
+        """How far the tightest pair is from having breathing room, in pixels.
+
+        Not "do the boxes intersect": consecutive gene labels measured +0.48 px
+        apart, which is not an overlap by half a pixel and is unreadable on a
+        slide. Text needs a gap proportional to its own size, so the requirement
+        is a fraction of the label height rather than zero.
+        """
+        labels = [t for t in getter() if t.get_visible() and t.get_text().strip()]
+        if len(labels) < 2:
+            return 0.0
+        boxes = []
+        for t in labels:
+            try:
+                boxes.append(t.get_window_extent(renderer))
+            except Exception:  # noqa: BLE001
+                return 0.0
+        key = (lambda b: b.y0) if axis == "y" else (lambda b: b.x0)
+        boxes.sort(key=key)
+        height = max(b.height for b in boxes) or 1.0
+        needed = max(1.0, LABEL_GAP_FRACTION * height)
+        worst = 0.0
+        for a, b in zip(boxes, boxes[1:]):
+            gap = (b.y0 - a.y1) if axis == "y" else (b.x0 - a.x1)
+            worst = min(worst, gap - needed)
+        return -worst                      # positive when they are too close
+
+    labels = [t for t in getter() if t.get_visible() and t.get_text().strip()]
+    if not labels:
+        return 0.0
+    size = float(labels[0].get_fontsize())
+    if shortfall() <= 0.0:
+        return size
+
+    while size > floor_pt:
+        size = max(floor_pt, size - 0.5)
+        for t in getter():
+            t.set_fontsize(size)
+        try:
+            figure.canvas.draw()
+            renderer = figure.canvas.get_renderer()
+        except Exception:  # noqa: BLE001
+            break
+        if shortfall() <= 0.0:
+            break
+    return size
+
+
+def clear_axis_label(ax, axis: str = "y", *, max_pad_pt: float = 48.0) -> float:
+    """Push an axis label clear of its tick labels. Returns the pad used.
+
+    ``labelpad`` is a fixed number of points, so it cannot know how far the
+    longest tick label reaches. On a clustered heatmap the row labels vary in
+    width - "G14" against "G107" - and the six longest ran under the y axis label
+    at the shipped 6 pt pad. Measuring the drawn text and stepping the pad out
+    until it clears costs nothing on a figure that was already correct.
+    """
+    figure = ax.figure
+    label = ax.yaxis.label if axis == "y" else ax.xaxis.label
+    getter = ax.get_yticklabels if axis == "y" else ax.get_xticklabels
+    if not label.get_text().strip():
+        return 0.0
+    axis_obj = ax.yaxis if axis == "y" else ax.xaxis
+    pad = float(axis_obj.labelpad)
+
+    def collides() -> bool:
+        try:
+            figure.canvas.draw()
+            renderer = figure.canvas.get_renderer()
+            lb = label.get_window_extent(renderer)
+        except Exception:  # noqa: BLE001
+            return False
+        for t in getter():
+            if not t.get_visible() or not t.get_text().strip():
+                continue
+            try:
+                tb = t.get_window_extent(renderer)
+            except Exception:  # noqa: BLE001
+                continue
+            if lb.overlaps(tb):
+                return True
+        return False
+
+    while collides() and pad < max_pad_pt:
+        pad = min(max_pad_pt, pad + 2.0)
+        axis_obj.labelpad = pad
+    return pad
+
+
 def autorotate_xticklabels(ax, style: "StyleProfile | None" = None, *,
                            rotation: "str | int" = "auto") -> None:
     """Keep categorical x tick labels readable — rotate + size them sensibly.

@@ -30,6 +30,8 @@ from make_my_figure_core.plots.base import (
     RenderError,
     RenderResult,
     base_metadata,
+    clear_axis_label,
+    fit_tick_labels,
     get_mapping,
     require_columns,
 )
@@ -735,6 +737,25 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         for spine in ax.spines.values():
             spine.set_visible(False)
         fig.tight_layout()
+
+        # The label sizes above are chosen from a row/column count, which cannot
+        # know how much room a row actually has: at presentation type sizes 30
+        # gene labels were set at 13 pt into rows 12 pt tall, so every one
+        # overlapped its neighbour and the longest ran under the y axis label.
+        # Measure now that the axes are laid out, and shrink only if they really
+        # collide. tight_layout runs again so the axis labels clear whatever size
+        # the ticks ended up at.
+        _before = (row_fs, col_fs)
+        if row_fs:
+            row_fs = fit_tick_labels(ax, "y") or row_fs
+        if col_fs:
+            col_fs = fit_tick_labels(ax, "x") or col_fs
+        if (row_fs, col_fs) != _before:
+            fig.tight_layout()
+        # The axis label sits a fixed number of points from the axis, which cannot
+        # account for the longest tick label; "gene_symbol" ran under six of them.
+        clear_axis_label(ax, "y")
+        clear_axis_label(ax, "x")
 
     meta = base_metadata(spec, style, work, used_columns=[row_id] + sample_cols)
     meta["matrix_shape"] = [int(raw_matrix.shape[0]), int(raw_matrix.shape[1])]

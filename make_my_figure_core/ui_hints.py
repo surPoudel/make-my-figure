@@ -421,8 +421,8 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("show_intercept", "  • intercept", "bool", False, scope="style"),
         Option("show_n", "  • n", "bool", False, scope="style"),
         Option("show_equation", "  • full equation (y = a·x + b)", "bool", False, scope="style"),
-        Option("fit_stats_loc", "Stats box location", "choice", "lower right",
-               ["lower right", "lower left", "upper right", "upper left"], scope="style"),
+        Option("fit_stats_loc", "Stats box location", "choice", "auto",
+               ["auto", "lower right", "lower left", "upper right", "upper left"], scope="style"),
     ],
     "boxplot_or_violin_with_points": [
         Option("kind", "Kind", "choice", "box", ["box", "violin", "box+violin", "summary"], scope="style"),

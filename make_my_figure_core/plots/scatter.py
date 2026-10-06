@@ -96,6 +96,83 @@ def _fit_annotation_to_axes(ax, text) -> None:
         text.set_fontsize(size)
 
 
+# Corners the fit-stats box may occupy, as (x, y, ha, va) in axes coordinates.
+_STATS_CORNERS = {
+    "upper right": (0.97, 0.97, "right", "top"),
+    "upper left": (0.03, 0.97, "left", "top"),
+    "lower right": (0.97, 0.03, "right", "bottom"),
+    "lower left": (0.03, 0.03, "left", "bottom"),
+}
+
+
+def _emptiest_corner(ax, text) -> str:
+    """The corner whose box covers the least drawn content.
+
+    A fixed corner puts the statistics on top of the data whenever the data
+    happens to be there: on a two-group regression the box sat over the middle of
+    the scatter, hiding the points the slopes were computed from. matplotlib
+    solves the same problem for legends with ``loc="best"``; this is that idea for
+    the stats box, and it is what "auto" selects.
+
+    Scored by how many drawn points fall inside the candidate rectangle, with the
+    legend counted as occupied area too, so the box does not simply move from the
+    data onto the key. Ties keep the first corner tried, which makes the choice
+    reproducible for a given figure.
+    """
+    figure = ax.figure
+    try:
+        figure.canvas.draw()
+        renderer = figure.canvas.get_renderer()
+        box = text.get_window_extent(renderer)
+        axes_box = ax.get_window_extent(renderer)
+    except Exception:  # noqa: BLE001
+        return "lower right"
+    if not axes_box.width or not axes_box.height:
+        return "lower right"
+
+    w = box.width / axes_box.width
+    h = box.height / axes_box.height
+
+    points = []
+    for coll in ax.collections:
+        try:
+            offsets = coll.get_offsets()
+        except Exception:  # noqa: BLE001
+            continue
+        for px, py in getattr(offsets, "tolist", lambda: offsets)():
+            try:
+                dx, dy = ax.transData.transform((px, py))
+            except Exception:  # noqa: BLE001
+                continue
+            points.append(((dx - axes_box.x0) / axes_box.width,
+                           (dy - axes_box.y0) / axes_box.height))
+
+    blocked = []
+    legend = ax.get_legend()
+    if legend is not None and legend.get_visible():
+        try:
+            lb = legend.get_window_extent(renderer)
+            blocked.append(((lb.x0 - axes_box.x0) / axes_box.width,
+                            (lb.y0 - axes_box.y0) / axes_box.height,
+                            (lb.x1 - axes_box.x0) / axes_box.width,
+                            (lb.y1 - axes_box.y0) / axes_box.height))
+        except Exception:  # noqa: BLE001
+            pass
+
+    best, best_score = "lower right", None
+    for name, (cx, cy, ha, va) in _STATS_CORNERS.items():
+        x0 = cx - w if ha == "right" else cx
+        y0 = cy - h if va == "top" else cy
+        x1, y1 = x0 + w, y0 + h
+        score = sum(1 for px, py in points if x0 <= px <= x1 and y0 <= py <= y1)
+        for bx0, by0, bx1, by1 in blocked:
+            if not (x1 < bx0 or x0 > bx1 or y1 < by0 or y0 > by1):
+                score += max(len(points), 1)     # never trade the data for the key
+        if best_score is None or score < best_score:
+            best, best_score = name, score
+    return best
+
+
 def _fit_annotation(fits: Dict[str, Any], opts: Dict[str, bool]) -> str:
     """Build the fit-stats annotation from the user's show/hide options."""
     lines: List[str] = []
@@ -141,7 +218,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         "n": bool(get_mapping(spec, "show_n", False)),
         "equation": bool(get_mapping(spec, "show_equation", False)),
     }
-    fit_stats_loc = str(get_mapping(spec, "fit_stats_loc", "lower right")).lower()
+    fit_stats_loc = str(get_mapping(spec, "fit_stats_loc", "auto")).lower()
     # When 'selected_labels' is provided (e.g. click-to-label in the desktop app),
     # only those points are annotated; otherwise every labelled point is annotated.
     selected_labels = get_mapping(spec, "selected_labels", None) or []
@@ -200,17 +277,21 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if fit_line and show_fit_stats and fits:
             txt = _fit_annotation(fits, fit_opts)
             if txt:
-                loc_map = {
-                    "upper right": (0.97, 0.97, "right", "top"),
-                    "upper left": (0.03, 0.97, "left", "top"),
-                    "lower right": (0.97, 0.03, "right", "bottom"),
-                    "lower left": (0.03, 0.03, "left", "bottom"),
-                }
-                ax_, ay_, ha_, va_ = loc_map.get(fit_stats_loc, loc_map["lower right"])
+                _auto = fit_stats_loc in ("auto", "best", "")
+                _loc = "lower right" if _auto else fit_stats_loc
+                ax_, ay_, ha_, va_ = _STATS_CORNERS.get(_loc, _STATS_CORNERS["lower right"])
                 _ann = ax.text(ax_, ay_, txt, transform=ax.transAxes, ha=ha_, va=va_,
                                fontsize=style.annotation_pt, color=style.text_color,
                                bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="0.7",
                                          lw=0.5, alpha=0.85), zorder=6)
+                if _auto:
+                    # Drawn first so its size can be measured, then moved to the
+                    # corner that covers the least data.
+                    _chosen = _emptiest_corner(ax, _ann)
+                    ax_, ay_, ha_, va_ = _STATS_CORNERS[_chosen]
+                    _ann.set_position((ax_, ay_))
+                    _ann.set_ha(ha_)
+                    _ann.set_va(va_)
                 _fit_annotation_to_axes(ax, _ann)
                 register_refit(ax.figure, lambda a=ax, t=_ann: _fit_annotation_to_axes(a, t))
 
