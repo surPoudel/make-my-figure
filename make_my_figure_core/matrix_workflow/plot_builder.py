@@ -96,11 +96,30 @@ def build_plot_inputs(rec: RecommendedPlot, df: pd.DataFrame, matrix_spec: Matri
     if key in ("pca", "pca_by_group"):
         mapping: Dict[str, Any] = {"matrix_row_id": fid, "value_columns": vcols}
         aux: Dict[str, pd.DataFrame] = {}
-        if key == "pca_by_group":
-            if not (metadata and metadata.confirmed_by_user):
-                raise ValueError("Confirm sample groups to color the PCA by group.")
-            meta_df = metadata.metadata_frame(sample_col="sample_id", group_col="group")
-            aux = {"metadata": meta_df}
+        # Groups are applied because the data has them, not because of which of
+        # the two PCA recommendations was picked. "PCA scatter" sits high in the
+        # list and "PCA colored by group" last, so the obvious choice was the one
+        # that ignored groups the user had already confirmed - and it shipped an
+        # empty aux, so the editor's metadata menus were empty too and the
+        # grouping could not even be restored by hand.
+        #
+        # Every other matrix plot here already auto-applies confirmed groups via
+        # _group_strip; this makes the PCA consistent with them.
+        has_groups = bool(
+            metadata and metadata.confirmed_by_user
+            and any(str(metadata.sample_to_group.get(s, "") or "").strip() for s in vcols))
+        if key == "pca_by_group" and not has_groups:
+            raise ValueError("Confirm sample groups to color the PCA by group.")
+        if has_groups:
+            # One row per value column, not one per assigned sample: the renderer
+            # keys off this table, and a sample missing from it must still appear
+            # in the PCA. UNASSIGNED is an explicit level so it reads as itself.
+            from make_my_figure_core.plots.pca import UNASSIGNED
+
+            aux = {"metadata": pd.DataFrame(
+                [{"sample_id": s,
+                  "group": (str(metadata.sample_to_group.get(s, "") or "").strip() or UNASSIGNED)}
+                 for s in vcols])}
             mapping.update({"metadata_key": "sample_id", "color": "group"})
         return PlotInputs("pca_scatter_from_matrix", df, mapping, aux=aux)
 

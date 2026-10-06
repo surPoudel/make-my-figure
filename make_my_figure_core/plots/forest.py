@@ -16,6 +16,7 @@ from make_my_figure_core.plots.base import (
     coerce_numeric,
     figure_size,
     get_mapping,
+    role_color,
     require_columns,
     style_axes,
 )
@@ -51,8 +52,10 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
     with style.apply():
         fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.7))
-        ax.errorbar(est, y_pos, xerr=xerr, fmt="s", color=style.color_for(0),
-                    ecolor="black", elinewidth=style.line_width_pt,
+        ax.errorbar(est, y_pos, xerr=xerr, fmt="s",
+                    color=role_color(spec, "point_color", style.color_for(0)),
+                    ecolor=role_color(spec, "ci_line_color", "black"),
+                    elinewidth=style.line_width_pt,
                     capsize=style.errorbar_capsize,
                     markersize=4, linestyle="none",
                     markeredgecolor=marker_edge_color(spec, "black"))

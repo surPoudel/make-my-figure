@@ -23,6 +23,7 @@ from make_my_figure_core.plots.base import (
     base_metadata,
     figure_size,
     get_mapping,
+    role_color,
     style_axes,
 )
 from make_my_figure_core.styles.engine import StyleProfile
@@ -96,7 +97,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             labels=[str(x) for x in labels],
             no_labels=not show_labels,
             color_threshold=0,
-            above_threshold_color=style.color_for(0),
+            above_threshold_color=role_color(spec, "link_color", style.color_for(0)),
             leaf_rotation=90 if orientation == "top" else 0,
         )
         # Tidy leaf-label font to the style's tick size.

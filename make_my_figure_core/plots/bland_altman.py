@@ -20,6 +20,7 @@ from make_my_figure_core.plots.base import (
     coerce_numeric,
     figure_size,
     get_mapping,
+    role_color,
     require_columns,
     style_axes,
 )
@@ -52,15 +53,19 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
     with style.apply():
         fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.72))
-        ax.scatter(means, diffs, color=style.color_for(0), s=style.marker_size,
+        ax.scatter(means, diffs, color=role_color(spec, "point_color", style.color_for(0)),
+                   s=style.marker_size,
                    edgecolors="white", linewidths=style.marker_edge_width,
                    alpha=style.marker_alpha, zorder=3)
 
         if show_ci and n > 1:
             ci = 1.96 * sd / np.sqrt(n)
-            ax.axhspan(bias - ci, bias + ci, color=style.color_for(0), alpha=0.12, zorder=1)
+            ax.axhspan(bias - ci, bias + ci,
+                       color=role_color(spec, "ci_band_color", style.color_for(0)),
+                       alpha=0.12, zorder=1)
 
-        ax.axhline(bias, color=style.text_color, lw=style.line_width_pt, zorder=2)
+        ax.axhline(bias, color=role_color(spec, "bias_line_color", style.text_color),
+                   lw=style.line_width_pt, zorder=2)
         # The limits of agreement are a related PAIR, so they keep the palette
         # colour unless the author names one; the dash pattern is the control's.
         _ref_kw = reference_line_kwargs(spec, style)

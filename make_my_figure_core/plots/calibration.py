@@ -23,6 +23,7 @@ from make_my_figure_core.plots.base import (
     coerce_numeric,
     figure_size,
     get_mapping,
+    role_color,
     require_columns,
     style_axes,
 )
@@ -79,8 +80,11 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             mean_pred = np.array(mean_pred); obs_rate = np.array(obs_rate)
             counts = np.array(counts, dtype=float)
             sizes = style.marker_size * (0.6 + 0.9 * counts / counts.max()) if counts.size else style.marker_size
-            ax.plot(mean_pred, obs_rate, color=style.color_for(0), lw=style.line_width_pt, zorder=2)
-            ax.scatter(mean_pred, obs_rate, s=sizes, color=style.color_for(0), edgecolors="white",
+            ax.plot(mean_pred, obs_rate, color=role_color(spec, "curve_color", style.color_for(0)),
+                    lw=style.line_width_pt, zorder=2)
+            ax.scatter(mean_pred, obs_rate, s=sizes,
+                       color=role_color(spec, "point_color", style.color_for(0)),
+                       edgecolors=role_color(spec, "marker_edge_color", "white"),
                        linewidths=style.marker_edge_width, zorder=3,
                        label=f"model (Brier={brier:.3f})")
             used = [label_col, prob_col]
@@ -90,8 +94,11 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             work[obs_col] = coerce_numeric(work, obs_col, context=PLOT_TYPE)
             sub = work[[pred_col, obs_col]].dropna().sort_values(pred_col, kind="stable")
             mp = sub[pred_col].to_numpy(float); ob = sub[obs_col].to_numpy(float)
-            ax.plot(mp, ob, color=style.color_for(0), lw=style.line_width_pt, zorder=2)
-            ax.scatter(mp, ob, s=style.marker_size, color=style.color_for(0), edgecolors="white",
+            ax.plot(mp, ob, color=role_color(spec, "curve_color", style.color_for(0)),
+                    lw=style.line_width_pt, zorder=2)
+            ax.scatter(mp, ob, s=style.marker_size,
+                       color=role_color(spec, "point_color", style.color_for(0)),
+                       edgecolors=role_color(spec, "marker_edge_color", "white"),
                        linewidths=style.marker_edge_width, zorder=3, label="observed")
             used = [pred_col, obs_col]
             meta_bins = int(len(mp))

@@ -126,14 +126,15 @@ def run_and_annotate(
             # Reserve headroom so the panel sits above the data rather than over it.
             y0, y1 = ax.get_ylim()
             ax.set_ylim(y0, y1 + (0.085 * len(panel_lines) + 0.04) * (y1 - y0))
-            stats_overlay.annotate_corner(ax, panel_lines, style=style, loc="upper left")
+            stats_overlay.annotate_corner(ax, panel_lines, style=style, loc="upper left",
+                                          cfg=ann_cfg)
     elif mode == "corner":
         lines = stat_text_panel(report.results, digits=int(ann_cfg.get("digits", 3)))
-        stats_overlay.annotate_corner(ax, lines, style=style, loc=corner_loc)
+        stats_overlay.annotate_corner(ax, lines, style=style, loc=corner_loc, cfg=ann_cfg)
     elif mode == "survival":
         lines = stat_text_panel(report.results, digits=int(ann_cfg.get("digits", 3)))
         # Placement is user-configurable (annotation block 'location'); lower left by default.
-        stats_overlay.annotate_corner(ax, lines, style=style,
+        stats_overlay.annotate_corner(ax, lines, style=style, cfg=ann_cfg,
                                       loc=str(ann_cfg.get("location", "lower left")).lower())
 
     return report

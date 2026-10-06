@@ -75,7 +75,10 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     work[y] = coerce_numeric(work, y, context=PLOT_TYPE)
 
     groups = ordered_unique(work[x].tolist())
-    has_color = bool(color_by and color_by in work.columns and color_by != x)
+    # Colouring by the x column is a legitimate request ('colour my three
+    # groups'), and the column chooser offers it. Rejecting it sent the
+    # renderer down the single-colour path with no warning.
+    has_color = bool(color_by and color_by in work.columns)
     color_levels = ordered_unique(work[color_by].tolist()) if has_color else []
     warnings: List[str] = []
     obs = _observation_style(spec, style)
@@ -131,7 +134,14 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                         legend_seen.add(str(lvl))
                     top = max(top, info["max"])
             else:
-                info = draw_observations(ax, gi, yy, color=style.color_for(0), style=style, obs=obs, rng=rng)
+                # One colour per category when no colour column is mapped - the
+                # same fallback barplot already uses. This was color_for(0) for
+                # every group, so three groups drew in one colour; and because
+                # the guard below also rejected a colour column that happened to
+                # BE the x column, asking to colour by the grouping variable -
+                # the obvious thing to do - landed here too.
+                info = draw_observations(ax, gi, yy, color=style.color_for(gi),
+                                         style=style, obs=obs, rng=rng)
                 top = info["max"]
             if info.get("suggestion") and info["suggestion"] not in warnings:
                 warnings.append(info["suggestion"])

@@ -89,6 +89,17 @@ _CAPS: Dict[str, PlotStyleCapabilities] = {
         supports_marker_size=False, supports_line_width=False,
         unsupported_controls_reason=(
             "heatmaps use a continuous colormap, not per-point markers")),
+    # Plots whose colour is one accent, not a set of categories. They advertised
+    # the categorical palette and then reached exactly one of its entries, so the
+    # control appeared broken rather than inapplicable - and index 0 is blue in
+    # two palettes and black in the other two, which is precisely the reported
+    # "only black or blue". Each now exposes a picker per artist it actually
+    # draws, in the same style the volcano does below.
+    "calibration_plot": PlotStyleCapabilities(
+        plot_type="calibration_plot", supports_group_colors=False,
+        unsupported_controls_reason=(
+            "a calibration plot draws one curve against a reference line, not categories - "
+            "set the curve, point and reference colours in the plot options")),
     "volcano_plot": PlotStyleCapabilities(
         plot_type="volcano_plot", supports_palette=False, supports_group_colors=False,
         supports_line_width=False,
@@ -124,20 +135,35 @@ _CAPS: Dict[str, PlotStyleCapabilities] = {
     "roc_curve": PlotStyleCapabilities(
         plot_type="roc_curve", supports_marker_size=False),
     "forest_plot": PlotStyleCapabilities(
-        plot_type="forest_plot", supports_legend=False, supports_marker_size=False),
+        plot_type="forest_plot", supports_legend=False, supports_marker_size=False,
+        supports_group_colors=False,
+        unsupported_controls_reason=(
+            "a forest plot draws estimates with confidence intervals against a null line, "
+            "not categories - set those colours in the plot options")),
     "raincloud_plot": PlotStyleCapabilities(
         plot_type="raincloud_plot", supports_legend=False),
     "hierarchical_dendrogram": PlotStyleCapabilities(
         plot_type="hierarchical_dendrogram", supports_legend=False,
         supports_marker_size=False, supports_line_width=False,
+        supports_group_colors=False,
         unsupported_controls_reason=(
-            "a dendrogram has no markers; branch width follows the profile")),
+            "a dendrogram has no markers, branch width follows the profile, and it draws "
+            "one set of branches rather than categories - set the branch colour in the "
+            "plot options")),
     "ma_plot": PlotStyleCapabilities(
         plot_type="ma_plot", supports_line_width=False),
     "qq_plot": PlotStyleCapabilities(
-        plot_type="qq_plot", supports_legend=False),
+        plot_type="qq_plot", supports_legend=False,
+        supports_group_colors=False,
+        unsupported_controls_reason=(
+            "a Q-Q plot draws points against a reference line, not categories - set the "
+            "point and reference colours in the plot options")),
     "bland_altman_plot": PlotStyleCapabilities(
-        plot_type="bland_altman_plot", supports_legend=False),
+        plot_type="bland_altman_plot", supports_legend=False,
+        supports_group_colors=False,
+        unsupported_controls_reason=(
+            "a Bland-Altman plot draws points, a mean-difference line and limits of "
+            "agreement, not categories - set those colours in the plot options")),
     "precision_recall_curve": PlotStyleCapabilities(
         plot_type="precision_recall_curve", supports_marker_size=False),
     "confusion_matrix": PlotStyleCapabilities(

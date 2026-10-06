@@ -41,6 +41,10 @@ GUI_SETTABLE_SPATIAL_KEYS = (
     "alpha", "marker", "marker_size", "marker_edgecolor", "missing_color",
     "show_axes", "grid", "legend", "legend_columns", "colorbar", "colorbar_label",
     "palette", "facet_columns", "max_point_area", "size_legend", "scale_bar",
+    # ROI appearance. These existed in the renderer but were not listed here, so
+    # they could not be set from either frontend - not even by hand-editing the
+    # mapping - which is why every ROI came out as a near-black wireframe.
+    "roi_edgecolor", "roi_fill_alpha", "roi_linewidth",
 )
 
 

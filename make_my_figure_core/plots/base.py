@@ -744,6 +744,23 @@ def marker_edge_color(spec: Dict[str, Any], default: str) -> str:
     return default if chosen in ("", "auto") else chosen
 
 
+def role_color(spec: Dict[str, Any], key: str, default: str) -> str:
+    """The colour chosen for one named artist, or that artist's own default.
+
+    Plots that are scientifically a single colour were given a categorical palette
+    control, which is the wrong instrument: a Q-Q plot has points and a reference
+    line, not categories, so the palette appeared to do almost nothing. The honest
+    control is one picker per artist the plot actually draws - the way the volcano
+    already exposes its up / down / not-significant classes.
+
+    Follows :func:`marker_edge_color` exactly: "(auto)" means "whatever this plot
+    was already doing", so a figure made before the control existed is unchanged.
+    """
+    mapping = (spec or {}).get("mapping", {}) or {}
+    chosen = str(mapping.get(key, "") or "").strip()
+    return default if chosen.lower() in ("", "auto", "(auto)") else chosen
+
+
 def bar_thickness(spec: Dict[str, Any], default: float) -> float:
     """How much of its slot a bar fills; ``0`` keeps the plot's own default.
 
