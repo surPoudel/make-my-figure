@@ -136,6 +136,14 @@ def shot(tid, name):
     return p
 
 
+def whats_new(name):
+    """A presentation render built for the v1.2.0 slides."""
+    p = os.path.join(SHOW, "6_whats_new", name)
+    if not os.path.exists(p):
+        raise SystemExit(f"missing {p} - run tutorial/showcase/build_whats_new.py")
+    return p
+
+
 def show(folder, name):
     p = os.path.join(SHOW, folder, name)
     if not os.path.exists(p):
@@ -405,19 +413,65 @@ def build(template, out):
     add_caption(s, Inches(0.5), Inches(8.1), Inches(11), "Thumbnails for breadth only - each is a real render of the bundled synthetic example (tutorial/PLOT_GALLERY.md)")
     add_footer(s, n)
 
-    # 20 next
+    # --- new in 1.2.0 -------------------------------------------------------
+    # Added after the mosaic so the existing narrative and its order are untouched.
+
+    # 20 spatial
+    s = new_slide(); add_title(s, "New in 1.2.0 - spatial analysis")
+    add_picture_fit(s, whats_new("spatial_six.png"), L, CONTENT_TOP, Inches(11.0), Inches(5.5),
+                    border=False, kind="plot")
+    add_message(s, "Six plot types on one spatial core. Checked against published results, not against "
+                   "itself: CNTools Fig 3A reproduced exactly, and again by a hand-check importing no "
+                   "project code.", top=Inches(7.45), size=19)
+    add_footer(s, n)
+
+    # 21 width
+    s = new_slide(); add_title(s, "New in 1.2.0 - the width you ask for is the width you get")
+    add_picture_fit(s, whats_new("width_is_final.png"), L, CONTENT_TOP, Inches(11.0), Inches(5.3),
+                    border=False, kind="plot")
+    add_message(s, "Three layers used to overrule a requested width - a network graph returned 132 mm "
+                   "whatever you picked. All 45 plot types now honour all five settings exactly.",
+                top=Inches(7.3), size=19)
+    add_footer(s, n)
+
+    # 22 the rest of 1.2.0
+    s = new_slide(); add_title(s, "New in 1.2.0 - what else changed")
+    add_bullets(s, Inches(0.7), CONTENT_TOP, Inches(10.6), Inches(5.4), [
+        ("One typography system", 0, True),
+        ("one font setting gives one size on the page - four panels of one figure used to come "
+         "out at 69%, 71%, 98% and 66% of the size asked for", 1),
+        ("Error bars say which statistic they are", 0, True),
+        ("SEM, SD, 95% CI (normal and t), IQR - and a whisker that does not describe its bar is "
+         "corrected and reported, not drawn as though it were intended", 1),
+        ("The clustered heatmap's cluster bars got the colourbar's controls", 0, True),
+        ("thickness, padding, side, labels, palette, legend placement, and separators between groups", 1),
+        ("Every render is reproducible", 0, True),
+        ("three plot types drew a different figure on each run from identical input; the label "
+         "solver was given a wall-clock budget and now gets a fixed number of passes", 1),
+        ("Every control on every plot type was exercised by measuring the output", 0, True),
+        ("1,689 controls; the ones that changed nothing were fixed", 1),
+    ], size=17, gap=7)
+    add_message(s, "Experimental publication presets ship opt-in and off by default. They are not "
+                   "journal templates and claim no compliance, endorsement or acceptance.",
+                top=Inches(7.55), size=17)
+    add_footer(s, n)
+
+    # 23 next
     s = new_slide(); add_title(s, "Where this goes next")
     add_bullets(s, Inches(0.7), CONTENT_TOP, Inches(10.6), Inches(6.0), [
         ("Reviewed and rebuilt", 0, True),
         ("tutorial and slides re-evaluated as visual demonstrations; observations, jitter and publication presets shown at readable size", 1),
         ("After author review", 0, True),
         ("remaining plot tutorials with the same template; matrix workflow tutorial and video; master and plot videos recorded live", 1),
-        ("decision whether the presets branch (observation controls, experimental presets) is merged - without it these chapters cannot ship", 1),
-        ("Not merged, tagged, released, published or pushed", 0, True),
+        ("Released as v1.2.0", 0, True),
+        ("the observation controls and the experimental presets were merged and released, so these chapters ship", 1),
+        ("built on Windows, macOS and Linux from one commit, each smoke-tested on its own runner; "
+         "Windows and macOS were not validated interactively by a person", 1),
+        ("This tutorial branch is not merged into main", 0, True),
     ], size=19, gap=9)
     add_footer(s, n)
 
-    # 21 summary
+    # 24 summary
     s = new_slide(); add_title(s, "Summary")
     add_bullets(s, Inches(0.7), CONTENT_TOP, Inches(10.6), Inches(5.2), [
         "Open any table; the application detects, recommends and proposes - and you assign every role yourself",

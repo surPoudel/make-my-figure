@@ -282,9 +282,9 @@
   "file": "tutorial/automation/_outputs/figure_builder/composite.png",
   "kind": "plot",
   "placed_width_in": 11.0,
-  "placed_height_in": 4.61,
+  "placed_height_in": 4.81,
   "pixel_width": 1877,
-  "pixel_height": 787,
+  "pixel_height": 821,
   "dpi": 299.9994
  },
  {
@@ -498,9 +498,9 @@
   "file": "tutorial/screenshots/gallery/ma_plot.png",
   "kind": "thumbnail",
   "placed_width_in": 1.3,
-  "placed_height_in": 0.9,
+  "placed_height_in": 0.89,
   "pixel_width": 369,
-  "pixel_height": 256,
+  "pixel_height": 253,
   "dpi": 72.009
  },
  {
@@ -637,5 +637,32 @@
   "pixel_width": 368,
   "pixel_height": 409,
   "dpi": 72.009
+ },
+ {
+  "file": "tutorial/screenshots/gallery/spatial_categorical_map.png",
+  "kind": "thumbnail",
+  "placed_width_in": 1.3,
+  "placed_height_in": 0.8,
+  "pixel_width": 555,
+  "pixel_height": 340,
+  "dpi": 72.009
+ },
+ {
+  "file": "tutorial/showcase/6_whats_new/spatial_six.png",
+  "kind": "plot",
+  "placed_width_in": 10.23,
+  "placed_height_in": 5.5,
+  "pixel_width": 2400,
+  "pixel_height": 1290,
+  "dpi": 150.01239999999999
+ },
+ {
+  "file": "tutorial/showcase/6_whats_new/width_is_final.png",
+  "kind": "plot",
+  "placed_width_in": 10.6,
+  "placed_height_in": 5.3,
+  "pixel_width": 2400,
+  "pixel_height": 1200,
+  "dpi": 150.01239999999999
  }
 ]
