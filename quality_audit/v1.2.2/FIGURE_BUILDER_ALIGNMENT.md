@@ -1,0 +1,77 @@
+# Figure Builder: measured alignment and panel sizing
+
+Reported against the v1.2.1 build with two screenshots and a saved
+`Figure_1.mmfpackage`: four unmodified example plots (bar with error bars,
+clustered heatmap, scatter with regression, volcano) added as panels A-D of a
+2x2 figure, then panel C widened from 3.2 in to 4.2 in.
+
+Every number below is from `make_my_figure_core.panels.builder.panel_frames`,
+which reports where each panel's **plotting frame** - not its picture - landed
+on the composite, in inches. The reproduction harness loads the user's own
+package, so these are that figure, not a stand-in.
+
+## What was wrong, and what it measures now
+
+| # | Reported | Before | After |
+|---|----------|--------|-------|
+| 1 | "As I try to increase width of C, the alignment between A and C changed" | A.x0 - C.x0 = **0.408 in** at C = 4.2 in | **0.0000 in**, at C = 3.2 / 4.2 / 5.0 in |
+| 2 | B -> D alignment | 0.000 in (already held) | 0.0000 in |
+| 3 | Widening C moved A | A's frame x0 **0.726 -> 0.839 in**, width 2.378 -> 2.250 in | x0 **0.664 -> 0.664 in**, width 2.732 -> 2.730 in |
+| 4 | "The plot should be unchanged and reduced as exact to put in panel" | a panel asked for 3.2 in got a **2.684 in** cell (0.84x, which the help text apologised for) | **3.200 in**, exactly |
+| 5 | Row bottoms/tops | panel *images* top-aligned; the plots inside them were not | frame tops equal to **0.002 in** per row |
+| 6 | "The text kill the scatterplot C" | the 6-line regression box measured **209 px against a 210 px axes** - the full width of the plot - and its legend took **38%** of the panel | box <= 65% of the axes width and <= 28% of its area; legend moved inside |
+| 7 | Volcano count line | wrapped onto **3 lines**, the last reading `1)` | **1-2 balanced lines** |
+| 8 | Panel A's y-axis label | drawn as `measurement (mean ± SE` - cropped | full text, wrapped or shrunk to fit |
+| 9 | Type sizes across panels | axis labels **12.0 pt in C, 10.21 pt in A** | one value in every panel |
+| 10 | "Diminish heatmap and the fonts should also decrease" | 30 row labels became an illegible grey stack | type scales with the smallest panel; labels thin to 1 in 3 and say so |
+
+## How the alignment works now
+
+`build_figure` is three steps instead of one:
+
+1. **Draw every panel as it was finalized** and measure two boxes: the image
+   box, and the union of its data axes. The difference is the pad - the inches
+   of y-axis label, tick numbers, legend and colourbar wrapped around the plot.
+2. **Draw each panel again at the size it will occupy**, and re-measure. A panel
+   drawn smaller may wrap its title or drop a tick, so the first measurement is
+   only good enough to reserve room with.
+3. **Build the grid from the second measurement** and place each panel by its
+   frame: one shared left edge down each column, one shared top edge across each
+   row. The figure size is computed so that a grid cell is exactly the inches
+   its panel asked for.
+
+Two supporting changes make the alignment *stable* rather than merely correct:
+
+* **Panel margins are fitted to their content.** A renderer sizes its margins as
+  a fraction of its canvas, so the same axis label reserved 0.394 in at 3.2 in
+  wide and 0.519 in at 4.2 in - which moved the column's shared edge every time
+  a panel was resized. Fitted margins are a measurement in inches and do not
+  drift. They also give the plot the room: panel A's frame went from 2.378 in to
+  2.732 in inside the same 3.2 in panel.
+* **One type hierarchy per figure, scaled to the smallest panel.** Scaling each
+  panel to its own canvas is what put 12 pt axis labels beside 10.2 pt ones.
+  Taking the *median* panel instead made a single edit global - widening C
+  restyled the figure, which grew C's own legend until it no longer fitted
+  beside its plot, so widening C made C's plot narrower. The smallest panel is
+  the one the type has to stay legible in, and using it means making a panel
+  bigger never restyles anything.
+
+## Gates
+
+| Gate | Result |
+|------|--------|
+| Full suite, `-n 12` | **3995 passed**, 4 skipped, 1 failure: `test_pop_out_panels` crashes an xdist worker (Qt), passes serially |
+| New permanent regression tests | `tests/test_figure_builder_alignment.py`, **20 tests**, all 10 reported defects |
+| Gallery audit, 45 registered plot types | **45/45 clean**; render, publication render, PNG/SVG/PDF export, PlotSpec round-trip, package round-trip |
+| Clipped text, all 45 | **0** (unchanged) |
+| Overlapping text pairs, all 45 | **36 -> 34** (bland_altman_plot 3 -> 1) |
+| Colour contract | 119 controls audited, 3 with no effect - the same three continuous-colormap plots as v1.2.1, unchanged |
+
+## Known, unchanged
+
+* `confusion_matrix`, `enrichment_dotplot` and `spatial_feature_map` expose a
+  categorical palette control that a continuous colormap cannot use. Recorded in
+  `palette_contract.csv` in both v1.2.1 and here.
+* `spatial_categorical_map`, `spatial_composition_map` and
+  `neighborhood_enrichment_matrix` still overflow a pinned 4 x 2 in canvas
+  vertically (`KNOWN_VERTICAL_OVERFLOW_AT_4X2`). Pre-existing, tripwired.

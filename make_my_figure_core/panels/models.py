@@ -135,6 +135,14 @@ class FigureLayout:
     label_dy: float = 1.04
     panel_dpi: int = 300                     # raster DPI for embedded panel content
     background: str = "white"
+    # White space kept between a panel's own content (its longest tick label,
+    # its legend) and the edge of the space it is given, in millimetres. The
+    # panels' margins are fitted to their content, so this is the figure's
+    # breathing room and it is the user's to spend: 0 butts the panels up
+    # against each other, a larger value opens the composite out. ``None`` uses
+    # the built-in hairline, which is what every figure laid out before this
+    # control existed was drawn with.
+    panel_pad_mm: Optional[float] = None
     # Per-panel titles are OFF by default: the panel letter (A, B, ...) plus the
     # figure legend already identify each panel, and a centered title collides
     # with the top-left label. The title stays populated on the Panel for use in
@@ -184,6 +192,7 @@ class FigureLayout:
             "label_size": self.label_size, "label_weight": self.label_weight,
             "label_dx": self.label_dx, "label_dy": self.label_dy,
             "panel_dpi": self.panel_dpi, "background": self.background,
+            "panel_pad_mm": self.panel_pad_mm,
             "show_titles": self.show_titles,
             "base_font_pt": self.base_font_pt, "axis_font_pt": self.axis_font_pt,
             "tick_label_pt": self.tick_label_pt, "legend_pt": self.legend_pt,

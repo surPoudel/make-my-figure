@@ -6,7 +6,63 @@ with any journal.
 
 ## Unreleased
 
-_Nothing yet._
+### Fixed — Figure Builder panels line up on their plots, not their pictures
+
+Reported from real use of v1.2.1: four unmodified example plots added as panels
+A–D of a 2×2 figure, then panel C widened. Every measurement below is of that
+figure, taken from the composite in inches.
+
+- **Widening one panel no longer moves its neighbours.** A panel is a picture of
+  a plot wrapped in its own y-axis label, tick numbers, legend and colourbar, and
+  those are a different width in every panel — so laying the *pictures* out in a
+  tidy grid left the *plots* inside them crooked. A↔C measured **0.408 in out of
+  line** at C = 4.2 in, and widening C moved A's plot sideways. Panels are now
+  drawn, measured, and placed by their plotting frame: one shared left edge down
+  each column, one shared top edge across each row, **0.000 in** at every width.
+- **A panel is the size you type.** The grid sat inside Matplotlib's default
+  subplot margins, so a panel asked for 3.2 in was drawn 2.684 in — the "comes
+  out around 0.85× the number here" the help text had to apologise for. A cell is
+  now exactly the inches its panel asked for.
+- **Panel margins are fitted to their content**, which both gives the plot the
+  room its own margin was holding (panel A: 2.378 in → 2.732 in of frame inside
+  the same 3.2 in panel) and stops the column's shared edge drifting when a panel
+  is resized. The leftover white space is a control: **Panel padding**, in mm.
+- **One type hierarchy per figure.** Scaling each panel to its own canvas put
+  12 pt axis labels beside 10.2 pt ones in the same figure. The hierarchy is now
+  scaled once, to the smallest panel — so making a panel smaller still pulls the
+  type down, and making one bigger never restyles the figure.
+- **Panel letters sit on one line.** They were hung off each panel's picture, and
+  the pictures in a row start at different heights, so A and B were at different
+  heights on the page.
+- **Fonts for every feature, defaulting to what you pushed in.** The override had
+  five boxes for seven sizes — the panel title, the statistics and the legend
+  heading could not be reached at all. All seven are now there, and the boxes open
+  filled with the sizes the panels are *actually drawn with*, so switching the
+  override on changes nothing until a number is moved.
+
+### Fixed — text that no longer covers the plot it belongs to
+
+- **An axis label is not cropped.** "measurement (mean ± SEM)" came back as
+  "measurement (mean ± SE". Matplotlib deliberately leaves the along-axis extent
+  of an axis label out of every tight bounding box it computes, so no layout pass
+  could see it; this one looks at the label directly, and wraps or shrinks it.
+- **Regression statistics annotate the plot instead of replacing it.** Six lines
+  of statistics for a two-group fit measured 209 px against a 210 px axes, which
+  passed the old "narrower than the axes" test while covering the scatter it
+  described. The box now takes at most 65% of the axes width and 28% of its area.
+- **An outside legend that costs more than a third of the figure goes inside** —
+  but only where the plot has a corner to spare. A volcano that labels its own
+  points keeps the width it paid for, because those labels are still being
+  repelled apart when the legend is placed.
+- **A count line wraps onto balanced lines.** The volcano's "Up 16 · Down 8 · NS
+  476 (P < 0.05, |log₂FC| ≥ 1)" went onto three lines with "1)" alone on the last
+  one: the wrap width was guessed from the character count, which is half as wide
+  as the measured overflow called for, and an 8.5 pt floor kept the line larger
+  than the axis labels on any panel-sized canvas.
+- **A heatmap too small for its row labels shows fewer of them, legibly, and says
+  so.** Thirty gene names in a panel 2.2 in tall have about 4 pt of row each;
+  shrinking stops at the publication minimum, and past it the labels were printed
+  on top of each other. Now 1 in every *n* is shown, with a warning naming *n*.
 
 ## [1.2.1] — Corrective release: Figure Builder, style state, palettes, spatial ROI, PCA grouping, margins
 

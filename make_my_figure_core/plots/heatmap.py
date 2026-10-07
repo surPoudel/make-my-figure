@@ -32,6 +32,7 @@ from make_my_figure_core.plots.base import (
     base_metadata,
     clear_axis_label,
     fit_tick_labels,
+    thin_tick_labels,
     get_mapping,
     require_columns,
 )
@@ -752,6 +753,21 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             col_fs = fit_tick_labels(ax, "x") or col_fs
         if (row_fs, col_fs) != _before:
             fig.tight_layout()
+        # Shrinking stops at the readable minimum, and below it there is nothing
+        # left to give: 26 gene names in a panel 1.5 in tall have 4 pt of row
+        # each. Thin them instead, and say which ones are shown - a grey smear
+        # of overlapping names is worse than no names at all, and silently
+        # dropping them is worse than either.
+        for _axis, _what, _n in (("y", "Row", len(ordered_rows)),
+                                 ("x", "Column", len(ordered_cols))):
+            if not (row_fs if _axis == "y" else col_fs):
+                continue
+            _stride = thin_tick_labels(ax, _axis)
+            if _stride > 1:
+                warnings.append(
+                    f"{_what} labels do not fit at a readable size on a heatmap this "
+                    f"size, so 1 in every {_stride} of the {_n} is shown. Make the "
+                    f"heatmap bigger, or hide the labels, to change that.")
         # The axis label sits a fixed number of points from the axis, which cannot
         # account for the longest tick label; "gene_symbol" ran under six of them.
         clear_axis_label(ax, "y")

@@ -567,7 +567,12 @@ KNOWN_ADHOC_TYPE_SIZES = {
     "scatter.py": 0,
     "spatial_feature_map.py": 2,
     "upset.py": 1,
-    "volcano.py": 2,
+    # volcano.py held two - an 8.5 pt floor under the count line under the
+    # title and a 9 pt one under the count line used AS the title. Both were
+    # above the scaled annotation size on any panel-sized canvas, which is what
+    # sent a 47-character count line onto three wrapped lines in a 2.9 in panel.
+    # The count line now takes the style's annotation size. 0 records that.
+    "volcano.py": 0,
 }
 
 # One renderer still sets a text colour directly rather than from the style: the

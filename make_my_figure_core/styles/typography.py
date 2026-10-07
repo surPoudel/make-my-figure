@@ -48,17 +48,27 @@ ABSOLUTE_MIN_PT = 4.5
 
 
 def typography_scale(width_in: float, height_in: float,
-                     reference: Tuple[float, float]) -> float:
+                     reference: Tuple[float, float], *,
+                     dead_band: bool = True) -> float:
     """Scale factor for the type hierarchy on a canvas of this size.
 
     Uses the square root of the area ratio rather than the width ratio: type is a
     two-dimensional thing on the page, and scaling by width alone makes a short
     wide panel illegible.
+
+    ``dead_band=False`` scales continuously, with no "leave it alone" range. It
+    is for a multi-panel composite, where every panel has been resized on
+    purpose: the dead band exists so that a figure the user has NOT resized
+    renders exactly as it did before, and in a composite that guarantee has
+    nothing to protect. Keeping it there instead put 10 pt legend text on a 3 in
+    panel, where the key came out as wide as the plot it explained.
     """
     ref_w, ref_h = reference
     if ref_w <= 0 or ref_h <= 0 or width_in <= 0 or height_in <= 0:
         return 1.0
     area_ratio = (width_in * height_in) / (ref_w * ref_h)
+    if not dead_band:
+        return max(MIN_SCALE, min(MAX_SCALE, math.sqrt(area_ratio)))
     if SHRINK_BELOW <= area_ratio <= GROW_ABOVE:
         return 1.0                       # normal range: leave the figure alone
     edge = SHRINK_BELOW if area_ratio < SHRINK_BELOW else GROW_ABOVE
@@ -76,8 +86,19 @@ def scaled_for_canvas(style: StyleProfile, width_in: float, height_in: float,
     costs nothing and cannot drift.
     """
     ref = reference or tuple(style.figure_size_inches())
-    scale = typography_scale(width_in, height_in, ref)
-    if scale == 1.0:
+    return scaled_by(style, typography_scale(width_in, height_in, ref))
+
+
+def scaled_by(style: StyleProfile, scale: float) -> Tuple[StyleProfile, float]:
+    """``(style, scale)`` with the whole type hierarchy multiplied by ``scale``.
+
+    Separate from :func:`scaled_for_canvas` because a multi-panel composite has
+    to decide the factor itself: every panel is a different size, so scaling
+    each to its own canvas gave one figure two type hierarchies - axis labels at
+    12 pt in one panel and 10.2 in the panel beside it, from the same style -
+    and a figure has one.
+    """
+    if scale == 1.0 or scale <= 0:
         return style, 1.0
     changes = {}
     for attr in TYPE_ATTRS:
@@ -125,6 +146,9 @@ TITLE_OVERFLOW_TOLERANCE_PX = 4.0
 # rather than push the axes off the figure.
 MAX_TITLE_LINES = 4
 
+# How many narrower wraps to try before giving up (each 10% tighter).
+_WRAP_ATTEMPTS = 12
+
 # The axes may be pushed down to make room for a taller title, but never below
 # this fraction of the figure height - a plot squeezed into a sliver under a
 # four-line title is worse than being told the title is too long.
@@ -148,6 +172,36 @@ def _horizontal_overflow(text_obj, figure) -> float:
         return 0.0
     box = text_obj.get_window_extent(renderer)
     return max(0.0, -box.x0) + max(0.0, box.x1 - width_px)
+
+
+def _drawn_width(text_obj, figure) -> float:
+    """The text's drawn width in pixels (0 when it cannot be measured)."""
+    try:
+        renderer = figure.canvas.get_renderer()
+    except AttributeError:
+        return 0.0
+    return float(text_obj.get_window_extent(renderer).width)
+
+
+def _wrap_within_lines(text: str, width: int, max_lines: int):
+    """``(wrapped, width_used)`` - wrapped at ``width``, widened to fit the budget.
+
+    A title far too long for its canvas asks for a line width that implies ten
+    lines. Rejecting that outright left the title untouched AND unreported,
+    which is the one outcome that helps nobody: the user saw a title running off
+    the figure and no warning about it. Widening to the narrowest layout the
+    line budget does allow gives the best available answer, and the caller still
+    reports that it does not fit.
+    """
+    import textwrap
+
+    candidate = textwrap.fill(text, width=width, break_long_words=False)
+    for _ in range(40):
+        if candidate.count("\n") + 1 <= max_lines:
+            break
+        width = int(width * 1.15) + 1
+        candidate = textwrap.fill(text, width=width, break_long_words=False)
+    return candidate, width
 
 
 def _make_room_above(figure, text_obj) -> bool:
@@ -205,32 +259,60 @@ def wrap_overlong_titles(figure) -> list:
             continue            # already laid out deliberately; leave it alone
         if _horizontal_overflow(text_obj, figure) <= TITLE_OVERFLOW_TOLERANCE_PX:
             continue
-        # Try successively narrower lines. ``textwrap`` breaks on words, so asking
-        # for n lines can yield more than n - the line count has to be checked
-        # against the budget rather than inferred from the loop counter.
+        # Wrap to the width that was actually measured, rather than to a guessed
+        # character count. ``len // 2`` lines are half as long as the title, which
+        # is far narrower than the overflow called for, and the extra narrowness
+        # is what pushed a two-line title onto three and left "1)" alone on the
+        # last one. The overflow says how much too wide the title is, so the
+        # fraction of it that fits says how many characters a line may hold.
+        drawn = max(_drawn_width(text_obj, figure), 1.0)
+        room = max(drawn - _horizontal_overflow(text_obj, figure), 1.0)
         fitted, fits = original, False
-        for target in range(2, MAX_TITLE_LINES + 1):
-            candidate = textwrap.fill(original, width=max(8, len(original) // target),
-                                      break_long_words=False)
-            if candidate.count("\n") + 1 > MAX_TITLE_LINES:
-                break               # narrower would only add more lines
+        want = max(8, int(len(original) * (room / drawn)))
+        # Tighten in 10% steps until it fits or the line budget stops it. The
+        # step count is not the line budget: starting from a measured width and
+        # stepping four times stopped 10% short on a three-line title, which
+        # then hung 15 px off the edge and was reported as unfittable when one
+        # more step would have fitted it.
+        for _ in range(_WRAP_ATTEMPTS):
+            candidate, w_used = _wrap_within_lines(original, want, MAX_TITLE_LINES)
             fitted = candidate
             text_obj.set_text(fitted)
             if _horizontal_overflow(text_obj, figure) <= TITLE_OVERFLOW_TOLERANCE_PX:
                 fits = True
                 break
+            if w_used > want:
+                break               # already the narrowest the line budget allows
+            want = max(8, int(want * 0.9))      # the longest line still overhangs
+        if fits:
+            # Balance the lines. Wrapping at the first width that fits leaves a
+            # dangling tail - a two-line subtitle came out as a full line and
+            # then "1)" on its own - because the character count is only a proxy
+            # for the drawn width, and mathtext ("|log$_2$FC|") is far shorter on
+            # the page than in characters. The widest wrap with the same number
+            # of lines is the balanced one.
+            lines = fitted.count("\n") + 1
+            for step in range(1, 40):
+                candidate = textwrap.fill(original, width=w_used + step,
+                                          break_long_words=False)
+                if candidate.count("\n") + 1 != lines:
+                    break
+                text_obj.set_text(candidate)
+                if _horizontal_overflow(text_obj, figure) > TITLE_OVERFLOW_TOLERANCE_PX:
+                    break
+                fitted = candidate
         text_obj.set_text(fitted)
         if fitted == original:
             continue
         fits = _make_room_above(figure, text_obj) and fits
-        used = fitted.count("\n") + 1
+        lines_used = fitted.count("\n") + 1
         if fits:
             notes.append(f"The title was too long for the figure width and has been "
-                         f"wrapped onto {used} lines.")
+                         f"wrapped onto {lines_used} lines.")
         else:
             # Say so plainly rather than stacking lines over the axes.
             notes.append(
                 f"The title is too long for this figure width. It has been wrapped "
-                f"onto {used} lines and still does not fit; shorten it, or make the "
+                f"onto {lines_used} lines and still does not fit; shorten it, or make the "
                 f"figure wider.")
     return notes

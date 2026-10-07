@@ -49,5 +49,8 @@ def test_composite_letters_use_the_publication_font_stack():
                                              Panel(plot_spec=spec, table=df, source_name="t.csv")],
                            layout=FigureLayout(ncols=2))
     comp = build_figure(mpf)
-    letters = [t for ax in comp.axes for t in ax.texts if t.get_text() in ("A", "B")]
+    # The letters are drawn on the composite figure, not on the panel images:
+    # the pictures in a row start at different heights, so hanging a letter off
+    # one put A and B at different heights on the page.
+    letters = [t for t in comp.texts if t.get_text() in ("A", "B")]
     assert letters and all(list(t.get_fontfamily()) == list(load_profile("publication").font_family) for t in letters)

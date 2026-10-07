@@ -5,8 +5,16 @@ the bug these tests lock down was invisible to "does it render?" checks: setting
 a panel's height moved the grid row and left the panel the same size, floating in
 a taller cell. The measurements are:
 
-* ``cell``  - the grid cell the panel was given (``gridspec`` position)
-* ``box``   - the panel's drawn image box (axes position after ``apply_aspect``)
+* ``cell``   - the grid cell the panel was given (``gridspec`` position)
+* ``box``    - the panel's drawn image box (axes position after ``apply_aspect``)
+* ``frame``  - where the PLOT inside that image landed (``panel_frames``)
+
+The frame is the measurement that matters for alignment: a panel is a picture of
+a plot surrounded by its own axis labels, so lining the pictures up leaves the
+plots crooked. The compositor therefore places each panel by its frame, which
+means a panel's image box is its cell less however far it had to be shifted in
+to meet the column's shared left edge - several of the assertions below are
+about exactly that difference.
 """
 
 import matplotlib
@@ -18,7 +26,8 @@ import pandas as pd
 import pytest
 
 from make_my_figure_core.panels import FigureLayout, MultiPanelFigure, Panel, build_figure
-from make_my_figure_core.panels.builder import panel_from_dict, panel_warnings
+from make_my_figure_core.panels.builder import (
+    panel_frames, panel_from_dict, panel_warnings)
 
 # One fixed table for the whole module: these tests compare one build against
 # another to the inch, so the panel content must be identical every time (fresh
@@ -98,16 +107,21 @@ def _image_aspects(mpf):
 # the default: proportions preserved, nothing stretched, nothing moved
 # --------------------------------------------------------------------------------------------
 
-def test_default_panel_fills_its_cell_width_at_its_own_aspect():
-    """The unchanged default: each panel is as wide as its cell and as tall as its
-    own proportions make it. This is the geometry every saved layout relies on."""
+def test_default_panel_uses_its_whole_cell_less_the_alignment_shift():
+    """Each panel occupies its cell from the column's shared frame edge to the
+    cell's far side, and is as tall as its own proportions make it.
+
+    The shift is the only thing between the panel and the full cell width, and it
+    is there on purpose: it is how far this panel's plotting frame had to move in
+    to line up with its neighbour's.
+    """
     mpf = _mpf()
     aspects = _image_aspects(mpf)
     fig = build_figure(mpf)
     m = _measure(fig)
     for i, d in enumerate(m):
-        assert d["box_w"] == pytest.approx(d["cell_w"], rel=0.02)
-        assert d["box_h"] == pytest.approx(d["cell_w"] * aspects[i], rel=0.02)
+        assert d["box_w"] + d["gap_left"] == pytest.approx(d["cell_w"], rel=0.02)
+        assert d["box_h"] == pytest.approx(d["box_w"] * aspects[i], rel=0.02)
     plt.close(fig)
 
 
@@ -124,21 +138,32 @@ def test_aspect_is_preserved_by_default():
 
 
 def test_short_panel_in_a_tall_row_is_top_aligned():
-    """All the leftover height goes BELOW the short panel, so panel tops line up."""
+    """All the leftover height goes BELOW the short panel, so the PLOTS line up.
+
+    The plots, not the pictures: the top edge each panel is aligned on is the top
+    of its plotting frame, so a panel whose picture carries a title still has its
+    axes level with the panel beside it.
+    """
     fig = build_figure(_mpf())
-    short = _measure(fig)[1]
-    assert short["gap_above"] == pytest.approx(0.0, abs=0.01)
-    assert short["gap_below"] > 0.5          # the dead space the user reported
+    tops = [f["y1"] for f in panel_frames(fig)[:2]]
+    assert tops[0] == pytest.approx(tops[1], abs=0.005)
+    assert _measure(fig)[1]["gap_below"] > 0.5    # the dead space the user reported
     plt.close(fig)
 
 
-def test_panels_stay_horizontally_centred_in_their_cell():
-    """Horizontal placement is unchanged (matplotlib's 'N' anchor centred it too):
-    a figure laid out before per-panel heights were honoured must not shift sideways."""
+def test_panels_in_a_column_share_one_plot_left_edge():
+    """The alignment contract, and it replaces centring each picture in its cell.
+
+    Centring is what produced the reported defect: panel A's y-axis label is a
+    different width from panel C's, so centring their pictures left their plots
+    0.41 in out of line, and widening C moved A.
+    """
     mpf = _mpf()
     mpf.layout.height_ratios = [2, 1]        # squeezes the rows, so panels narrow
-    for d in _measure(build_figure(mpf)):
-        assert d["gap_left"] == pytest.approx(d["gap_right"], abs=0.01)
+    frames = panel_frames(build_figure(mpf))
+    for col in (0, 1):
+        xs = [f["x0"] for f in frames if f["col"] == col]
+        assert max(xs) - min(xs) == pytest.approx(0.0, abs=0.005)
     plt.close("all")
 
 
@@ -172,10 +197,11 @@ def test_requested_height_grows_the_drawn_panel():
 
 
 def test_panel_asked_to_be_the_tallest_fills_its_cell():
-    """A panel asked for more height than anything else in its row gets the whole cell."""
+    """A panel asked for more height than anything else in its row gets the whole
+    cell, less whatever the row's shared plot-top edge needed."""
     m = _measure(build_figure(_mpf(height_in=12.0)))[1]
-    assert m["box_h"] == pytest.approx(m["cell_h"], rel=0.05)
-    assert m["empty"] < 0.10
+    assert m["box_h"] + m["gap_above"] == pytest.approx(m["cell_h"], rel=0.05)
+    assert m["gap_below"] == pytest.approx(0.0, abs=0.05)
     plt.close("all")
 
 
@@ -211,7 +237,11 @@ def test_fill_cell_removes_the_dead_space():
     before = _measure(build_figure(_mpf()))[1]
     after = _measure(build_figure(_mpf(fill_cell=True)))[1]
     assert before["empty"] > 0.40            # the reported white band
-    assert after["empty"] < 0.10
+    # What is left is the alignment shift, not dead space: the panel reaches the
+    # bottom of its cell and the full width from the column's shared frame edge.
+    assert after["gap_below"] == pytest.approx(0.0, abs=0.12)
+    assert after["empty"] < before["empty"] / 3.0
+    assert after["box_w"] + after["gap_left"] == pytest.approx(after["cell_w"], rel=0.02)
     assert after["box_h"] > before["box_h"] * 1.5
     plt.close("all")
 

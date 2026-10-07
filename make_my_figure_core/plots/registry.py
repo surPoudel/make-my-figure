@@ -374,8 +374,20 @@ def render(
         # canvas is exactly what makes the fonts come out different per panel.
         # The composite opts out and its point sizes are taken literally.
         _scale_typo = (spec.get("layout") or {}).get("scale_typography", True)
+        # A composite decides the factor for the whole figure and passes it in,
+        # so that one style produces one type hierarchy across panels of
+        # different sizes - see styles.typography.scaled_by.
+        _given = (spec.get("layout") or {}).get("typography_scale")
+        try:
+            _given = float(_given) if _given else None
+        except (TypeError, ValueError):
+            _given = None
         _canvas = explicit_figure_size(spec) if _scale_typo else None
-        if _canvas is not None:
+        if _given is not None and _given > 0:
+            from make_my_figure_core.styles.typography import scaled_by
+
+            style, _typo_scale = scaled_by(style, _given)
+        elif _canvas is not None:
             style, _typo_scale = scaled_for_canvas(style, _canvas[0], _canvas[1])
     except Exception:  # noqa: BLE001
         _typo_scale = 1.0
@@ -414,6 +426,21 @@ def render(
                     result.warnings.append(_note)
     except Exception as _exc:  # noqa: BLE001
         result.warnings.append(f"Title fitting skipped: {_exc}")
+
+    # An axis label longer than the canvas is cropped, and - uniquely among the
+    # things that can overflow - it is invisible to every tight-bounding-box
+    # measurement matplotlib offers, so the fitting pass below cannot see it.
+    # Wrapped or shrunk here, before that pass, so the room the new layout needs
+    # is part of what it fits. Guarded; a label nicety must never break a render.
+    try:
+        from make_my_figure_core.plots.base import fit_axis_labels
+
+        if getattr(result, "figure", None) is not None:
+            for _note in fit_axis_labels(result.figure):
+                if _note not in result.warnings:
+                    result.warnings.append(_note)
+    except Exception as _exc:  # noqa: BLE001
+        result.warnings.append(f"Axis label fitting skipped: {_exc}")
 
     # Last, after every other layout pass: bring anything drawn outside the
     # canvas back inside. An outside legend is positioned relative to the axes,

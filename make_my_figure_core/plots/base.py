@@ -1037,6 +1037,69 @@ MIN_TICK_LABEL_PT = _min_tick_label_pt()
 LABEL_GAP_FRACTION = 0.22
 
 
+def _tick_label_shortfall(ax, axis: str, renderer) -> float:
+    """How far the tightest pair of tick labels is from having breathing room, in px.
+
+    Not "do the boxes intersect": consecutive gene labels measured +0.48 px
+    apart, which is not an overlap by half a pixel and is unreadable on a slide.
+    Text needs a gap proportional to its own size, so the requirement is a
+    fraction of the label height rather than zero. Positive means too close.
+    """
+    getter = ax.get_yticklabels if axis == "y" else ax.get_xticklabels
+    labels = [t for t in getter() if t.get_visible() and t.get_text().strip()]
+    if len(labels) < 2:
+        return 0.0
+    boxes = []
+    for t in labels:
+        try:
+            boxes.append(t.get_window_extent(renderer))
+        except Exception:  # noqa: BLE001
+            return 0.0
+    boxes.sort(key=(lambda b: b.y0) if axis == "y" else (lambda b: b.x0))
+    height = max(b.height for b in boxes) or 1.0
+    needed = max(1.0, LABEL_GAP_FRACTION * height)
+    worst = 0.0
+    for a, b in zip(boxes, boxes[1:]):
+        gap = (b.y0 - a.y1) if axis == "y" else (b.x0 - a.x1)
+        worst = min(worst, gap - needed)
+    return -worst
+
+
+def thin_tick_labels(ax, axis: str = "y", *, max_stride: int = 12) -> int:
+    """Hide every nth tick label until the rest can be read. Returns the stride.
+
+    Shrinking has a floor - the publication check's own minimum - and below it
+    there is nothing left to give: 26 gene names in a 1.5 in panel have about
+    4 pt of row each, so at any legible size they overlap. Printing all 26 as a
+    grey smear shows nothing at all; showing every third, legibly, shows where
+    you are in the matrix. The stride is returned so the caller can say so
+    rather than quietly dropping labels.
+    """
+    figure = ax.figure
+    getter = ax.get_yticklabels if axis == "y" else ax.get_xticklabels
+    try:
+        figure.canvas.draw()
+        renderer = figure.canvas.get_renderer()
+    except Exception:  # noqa: BLE001
+        return 1
+    labels = [t for t in getter() if t.get_text().strip()]
+    if len(labels) < 3 or _tick_label_shortfall(ax, axis, renderer) <= 0.0:
+        return 1
+    for stride in range(2, min(max_stride, len(labels) // 2) + 1):
+        for i, t in enumerate(labels):
+            t.set_visible(i % stride == 0)
+        try:
+            figure.canvas.draw()
+            renderer = figure.canvas.get_renderer()
+        except Exception:  # noqa: BLE001
+            break
+        if _tick_label_shortfall(ax, axis, renderer) <= 0.0:
+            return stride
+    # Even the widest stride tried does not clear them; leave the last attempt
+    # rather than putting every label back on top of its neighbour.
+    return min(max_stride, max(2, len(labels) // 2))
+
+
 def fit_tick_labels(ax, axis: str = "y", *, floor_pt: float = MIN_TICK_LABEL_PT) -> float:
     """Shrink tick labels until consecutive ones stop overlapping. Returns the size used.
 
@@ -1060,31 +1123,7 @@ def fit_tick_labels(ax, axis: str = "y", *, floor_pt: float = MIN_TICK_LABEL_PT)
         return 0.0
 
     def shortfall() -> float:
-        """How far the tightest pair is from having breathing room, in pixels.
-
-        Not "do the boxes intersect": consecutive gene labels measured +0.48 px
-        apart, which is not an overlap by half a pixel and is unreadable on a
-        slide. Text needs a gap proportional to its own size, so the requirement
-        is a fraction of the label height rather than zero.
-        """
-        labels = [t for t in getter() if t.get_visible() and t.get_text().strip()]
-        if len(labels) < 2:
-            return 0.0
-        boxes = []
-        for t in labels:
-            try:
-                boxes.append(t.get_window_extent(renderer))
-            except Exception:  # noqa: BLE001
-                return 0.0
-        key = (lambda b: b.y0) if axis == "y" else (lambda b: b.x0)
-        boxes.sort(key=key)
-        height = max(b.height for b in boxes) or 1.0
-        needed = max(1.0, LABEL_GAP_FRACTION * height)
-        worst = 0.0
-        for a, b in zip(boxes, boxes[1:]):
-            gap = (b.y0 - a.y1) if axis == "y" else (b.x0 - a.x1)
-            worst = min(worst, gap - needed)
-        return -worst                      # positive when they are too close
+        return _tick_label_shortfall(ax, axis, renderer)
 
     labels = [t for t in getter() if t.get_visible() and t.get_text().strip()]
     if not labels:
@@ -1154,6 +1193,117 @@ def clear_axis_label(ax, axis: str = "y", *, max_pad_pt: float = 48.0) -> float:
         pad = min(max_pad_pt, pad + 2.0)
         axis_obj.labelpad = pad
     return pad
+
+
+# An axis label is wrapped or shrunk only once it actually runs off the canvas,
+# less this much margin. A label that merely over-runs its own axis is normal
+# typography and is left alone.
+AXIS_LABEL_EDGE_MARGIN_IN = 0.02
+
+# Wrapping past this many lines means the label is a sentence; stop there and
+# shrink instead.
+MAX_AXIS_LABEL_LINES = 3
+
+
+def fit_axis_labels(figure, *, floor_pt: float = MIN_TICK_LABEL_PT) -> List[str]:
+    """Wrap or shrink an axis label that runs off the edge of the canvas.
+
+    matplotlib deliberately leaves the ALONG-axis extent of an axis label out of
+    every tight bounding box it computes (``Axes.get_tightbbox`` always asks the
+    axis ``for_layout_only``), because the label is centred on the axes and is
+    normally shorter than it. When it is longer, the label runs off the canvas
+    and is cropped - "measurement (mean +/- SEM)" came back as "measurement
+    (mean +/- SE" on a 2.6 in panel - and none of the layout passes can see it,
+    because the measurement they all share is the one that hides it. This is the
+    pass that looks directly at the label.
+
+    Wrapping is tried first: two lines of a rotated y label is ordinary
+    typography and keeps the type size. Only a label that still does not fit is
+    shrunk, and never below ``floor_pt``. Returns a note per label it had to
+    change; a figure whose labels already fit is untouched.
+    """
+    import textwrap
+
+    notes: List[str] = []
+    try:
+        figure.canvas.draw()
+        renderer = figure.canvas.get_renderer()
+    except Exception:  # noqa: BLE001
+        return notes
+    width_in, height_in = (float(v) for v in figure.get_size_inches())
+
+    def _line_height_in(label) -> float:
+        return float(label.get_fontsize()) * 1.4 / 72.0
+
+    def _perp_slack(figure, renderer, axis_name) -> float:
+        """Unused canvas inches ACROSS the axis a label belongs to."""
+        try:
+            box = figure.get_tightbbox(renderer)
+        except Exception:  # noqa: BLE001
+            return 0.0
+        if axis_name == "y":
+            return width_in - float(box.width)
+        return height_in - float(box.height)
+
+    def _spill(label, axis_name):
+        """Inches of the label hanging off the canvas, along the axis it labels.
+
+        Length alone is not the question. An axis label is centred on its AXES,
+        and the axes is rarely centred on the canvas - a bar chart with rotated
+        tick labels sits in the top 60% of its panel - so a y label comfortably
+        shorter than the canvas is tall can still run off the top of it.
+        """
+        box = label.get_window_extent(renderer)
+        if axis_name == "y":
+            limit = height_in * figure.dpi
+            return max(0.0, -box.y0, box.y1 - limit) / figure.dpi
+        limit = width_in * figure.dpi
+        return max(0.0, -box.x0, box.x1 - limit) / figure.dpi
+
+    for ax in figure.axes:
+        if not ax.get_visible():
+            continue
+        for axis_name, label in (("x", ax.xaxis.label), ("y", ax.yaxis.label)):
+            text = label.get_text()
+            if not text.strip() or "\n" in text:
+                continue           # already laid out deliberately; leave it alone
+            if _spill(label, axis_name) <= AXIS_LABEL_EDGE_MARGIN_IN:
+                continue
+            original, size = text, float(label.get_fontsize())
+            # Wrapping a label costs room ACROSS the axis it labels - a second
+            # line of a rotated y label is a second column of text - so it is
+            # only the right tool when the figure has that room to give. On a
+            # figure already using its full width it would push the canvas
+            # wider, which silently breaks a pinned size; there, shrinking is
+            # the honest move.
+            may_wrap = _perp_slack(figure, renderer, axis_name) > _line_height_in(label)
+            for lines in range(2, (MAX_AXIS_LABEL_LINES if may_wrap else 1) + 1):
+                candidate = textwrap.fill(original, width=max(6, len(original) // lines),
+                                          break_long_words=False)
+                if candidate.count("\n") + 1 > MAX_AXIS_LABEL_LINES:
+                    break
+                label.set_text(candidate)
+                figure.canvas.draw()
+                if _spill(label, axis_name) <= AXIS_LABEL_EDGE_MARGIN_IN:
+                    break
+            while (_spill(label, axis_name) > AXIS_LABEL_EDGE_MARGIN_IN
+                   and size > floor_pt):
+                size = max(floor_pt, size - 0.5)
+                label.set_fontsize(size)
+                figure.canvas.draw()
+            spill = _spill(label, axis_name)
+            axis_word = "y" if axis_name == "y" else "x"
+            if spill <= AXIS_LABEL_EDGE_MARGIN_IN:
+                notes.append(
+                    f"The {axis_word} axis label was longer than the figure and has been "
+                    f"laid out on {label.get_text().count(chr(10)) + 1} line(s) at "
+                    f"{label.get_fontsize():.1f} pt to fit.")
+            else:
+                notes.append(
+                    f"The {axis_word} axis label is too long for this figure size: it has "
+                    f"been wrapped and shrunk as far as is readable and still does not "
+                    f"fit. Shorten it, or make the figure bigger.")
+    return notes
 
 
 def autorotate_xticklabels(ax, style: "StyleProfile | None" = None, *,
@@ -1228,6 +1378,130 @@ def autorotate_xticklabels(ax, style: "StyleProfile | None" = None, *,
         t.set_fontsize(fs)
 
 
+# An outside legend may not cost more than this fraction of the figure width.
+# Past it the figure is a key with a picture attached: a two-group scatter's
+# legend measured 1.55 in beside a 4.1 in panel, which left the plot 1.9 in wide
+# and its own regression-stats box covering a third of that. A legend that
+# expensive goes inside instead, where it costs no plotting width at all. The
+# threshold is set so a figure at the style's own size keeps the outside legend
+# it was designed with, and only a panel too small for one loses it.
+MAX_OUTSIDE_LEGEND_WIDTH_FRACTION = 1.0 / 3.0
+
+# Clear space between an outside legend and the plot, in inches.
+OUTSIDE_LEGEND_GAP_IN = 0.06
+
+# The most of a figure's width an outside legend may be given. A legend wider
+# than this is a figure that needs a different layout, not a thinner plot.
+_MAX_LEGEND_RESERVE = 0.62
+
+
+def _outside_legend_cost(ax, leg) -> float:
+    """The fraction of the figure width an outside legend takes (0 if unmeasurable)."""
+    figure = ax.figure
+    try:
+        figure.canvas.draw()
+        box = leg.get_window_extent(figure.canvas.get_renderer())
+    except Exception:  # noqa: BLE001
+        return 0.0
+    width_in = float(figure.get_size_inches()[0])
+    if width_in <= 0:
+        return 0.0
+    return (box.width / figure.dpi) / width_in
+
+
+# How much of the plotted data an inside legend may cover before an expensive
+# outside legend is the better trade. Two per cent is "a stray point behind the
+# box", which is what matplotlib's own ``loc="best"`` settles for on a figure
+# with an empty corner; a dense volcano has no such corner and keeps its legend
+# outside however much width that costs.
+MAX_LEGEND_DATA_OVERLAP = 0.02
+
+
+def _legend_data_overlap(ax, leg) -> float:
+    """The fraction of the plotted points an inside legend's box covers.
+
+    Returns 1.0 when there is nothing measurable to compare against, so a plot
+    type whose data this cannot see keeps the placement its renderer asked for
+    rather than being moved on a guess.
+    """
+    figure = ax.figure
+    try:
+        figure.canvas.draw()
+        renderer = figure.canvas.get_renderer()
+        box = leg.get_window_extent(renderer)
+    except Exception:  # noqa: BLE001
+        return 1.0
+    points = []
+    for coll in ax.collections:
+        try:
+            offsets = coll.get_offsets()
+        except Exception:  # noqa: BLE001
+            continue
+        try:
+            points.extend(ax.transData.transform(offsets))
+        except Exception:  # noqa: BLE001
+            continue
+    for line in ax.lines:
+        try:
+            xy = line.get_xydata()
+            if len(xy):
+                points.extend(ax.transData.transform(xy))
+        except Exception:  # noqa: BLE001
+            continue
+    # A plot that labels its own points has no spare corner, whatever the
+    # measurement says at this moment: those labels are positioned in DATA
+    # coordinates and are still being repelled apart by later layout passes, so
+    # a volcano's upper left is empty when the legend is placed and holds
+    # GENE0165 by the time the figure is drawn. Text the renderer pinned to a
+    # CORNER (a stats box at axes coordinates) does not move and is measured
+    # honestly below.
+    for text in ax.texts:
+        if not text.get_visible() or not text.get_text().strip():
+            continue
+        if text.get_transform() is ax.transData:
+            return 1.0
+        try:
+            tb = text.get_window_extent(renderer)
+        except Exception:  # noqa: BLE001
+            continue
+        if not (tb.x1 < box.x0 or tb.x0 > box.x1 or tb.y1 < box.y0 or tb.y0 > box.y1):
+            return 1.0
+    if not points:
+        return 1.0
+    inside = sum(1 for px, py in points
+                 if box.x0 <= px <= box.x1 and box.y0 <= py <= box.y1)
+    return inside / len(points)
+
+
+def _reserve_for_outside_legend(ax, leg, side: str = "right") -> None:
+    """Reserve exactly the room the legend measures, not a fixed fraction.
+
+    ``subplots_adjust(right=0.75)`` is right for one figure size and wrong for
+    every other: the same legend is a quarter of a 5 in figure and a half of a
+    2.5 in panel, so a fixed reserve either clips the legend or takes plotting
+    width that nothing uses.
+    """
+    cost = _outside_legend_cost(ax, leg)
+    if cost <= 0:
+        return
+    width_in = float(ax.figure.get_size_inches()[0])
+    pad = OUTSIDE_LEGEND_GAP_IN / max(width_in, 1e-6)
+    try:
+        # The floor is low on purpose. Clamping the reserve at half the figure
+        # left a legend that needed 55% of the width still over the edge, and
+        # the renderer's own tight_layout then went looking for the room - and
+        # took it from the left margin, pushing the y tick labels off the
+        # canvas. Reserving what the legend actually measures gives a narrow
+        # plot, which is honest, instead of a clipped one.
+        if side == "left":
+            ax.figure.subplots_adjust(left=min(_MAX_LEGEND_RESERVE, cost + pad))
+        else:
+            ax.figure.subplots_adjust(right=max(1.0 - _MAX_LEGEND_RESERVE,
+                                                1.0 - cost - pad))
+    except Exception:  # noqa: BLE001
+        pass
+
+
 def place_legend(ax, style, *, title=None, handles=None, labels=None,
                  force_outside: bool = False, loc: str = None, location=None):
     """Place a legend without overlapping data.
@@ -1249,20 +1523,34 @@ def place_legend(ax, style, *, title=None, handles=None, labels=None,
             leg = ax.legend(*args, loc=lloc, bbox_to_anchor=bbox, **kw)
         else:
             leg = ax.legend(*args, loc=lloc, **kw)
-        # Reserve room for an outside legend so it isn't clipped on export.
-        reserve = {"right": {"right": 0.75}, "left": {"left": 0.28},
-                   "top": {"top": 0.82}, "bottom": {"bottom": 0.22}}.get(side)
-        if reserve:
-            try:
-                ax.figure.subplots_adjust(**reserve)
-            except Exception:  # noqa: BLE001
-                pass
+        # Reserve room for an outside legend so it isn't clipped on export. A
+        # side the user chose explicitly is honoured whatever it costs; only the
+        # width is measured rather than guessed.
+        if side in ("right", "left"):
+            _reserve_for_outside_legend(ax, leg, side)
+        else:
+            reserve = {"top": {"top": 0.82}, "bottom": {"bottom": 0.22}}.get(side)
+            if reserve:
+                try:
+                    ax.figure.subplots_adjust(**reserve)
+                except Exception:  # noqa: BLE001
+                    pass
         return leg
 
     outside = force_outside or getattr(style, "legend_outside", False)
     if outside:
         leg = ax.legend(*args, loc="center left", bbox_to_anchor=(1.02, 0.5), **kw)
-        ax.figure.subplots_adjust(right=0.75)
+        if _outside_legend_cost(ax, leg) > MAX_OUTSIDE_LEGEND_WIDTH_FRACTION:
+            # Too expensive for this canvas. Inside costs no width at all - but
+            # only where the plot has a corner to spare, so the two costs are
+            # compared rather than one being assumed: a two-group regression has
+            # an empty upper left and moves in; a volcano with 500 points has
+            # none and keeps the width it paid for.
+            inside = ax.legend(*args, loc=loc or "best", **kw)
+            if _legend_data_overlap(ax, inside) <= MAX_LEGEND_DATA_OVERLAP:
+                return inside
+            leg = ax.legend(*args, loc="center left", bbox_to_anchor=(1.02, 0.5), **kw)
+        _reserve_for_outside_legend(ax, leg, "right")
     else:
         leg = ax.legend(*args, loc=loc or getattr(style, "legend_loc", "best"), **kw)
     return leg

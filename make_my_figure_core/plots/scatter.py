@@ -77,23 +77,44 @@ def _fit_annotation_to_axes(ax, text) -> None:
     except Exception:  # noqa: BLE001
         return
 
-    def too_wide() -> float:
+    def over_budget() -> float:
+        """How far past its budget the box is, as a fraction (0 when within it).
+
+        "Narrower than the axes" was the old test, and a box that is exactly as
+        wide as the plot passes it while covering the plot: six lines of
+        statistics for a two-group fit measured 209 px against a 210 px axes and
+        a third of its height. Statistics annotate a plot; they are given a
+        share of it, not the whole thing.
+        """
         try:
             box = text.get_window_extent(fig.canvas.get_renderer())
+            axes_box = ax.get_window_extent()
         except Exception:  # noqa: BLE001
             return 0.0
-        return box.width - ax.get_window_extent().width
+        if not axes_box.width or not axes_box.height:
+            return 0.0
+        wide = box.width / (axes_box.width * MAX_STATS_WIDTH_FRACTION)
+        area = ((box.width * box.height)
+                / (axes_box.width * axes_box.height * MAX_STATS_AREA_FRACTION))
+        return max(wide, area) - 1.0
 
-    if too_wide() <= 0:
+    if over_budget() <= 0:
         return
     if ", " in text.get_text():
         text.set_text(text.get_text().replace(", ", "\n"))
-        if too_wide() <= 0:
+        if over_budget() <= 0:
             return
     size = float(text.get_fontsize())
-    while too_wide() > 0 and size > ABSOLUTE_MIN_PT:
+    while over_budget() > 0 and size > ABSOLUTE_MIN_PT:
         size = max(ABSOLUTE_MIN_PT, size - 0.5)
         text.set_fontsize(size)
+
+
+# The share of the plot the regression-stats box may take: at most this much of
+# the axes width, and this much of its area. Past either the box stops annotating
+# the plot and starts replacing it.
+MAX_STATS_WIDTH_FRACTION = 0.65
+MAX_STATS_AREA_FRACTION = 0.28
 
 
 # Corners the fit-stats box may occupy, as (x, y, ha, va) in axes coordinates.

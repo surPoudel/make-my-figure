@@ -416,7 +416,20 @@ class FigureBuilderDialog(QDialog):
     # three-inch journal panel wants 6-8 pt. "label" is the panel letter, drawn on
     # the composite itself rather than inside a panel, so it was never scaled and
     # does not change.
-    _FONT_DEFAULTS = {"text": 7.0, "axis": 7.5, "tick": 6.5, "legend": 6.5, "label": 14.0}
+    #
+    # They are only a fallback. The boxes are filled from the type sizes the
+    # panels are ACTUALLY drawn with, measured on the last preview, so turning
+    # the override on changes nothing until the user moves a box - the default
+    # is always the typography the panels were pushed in with.
+    _FONT_DEFAULTS = {"text": 7.0, "axis": 7.5, "tick": 6.5, "legend": 6.5,
+                      "title": 8.0, "annotation": 7.0, "legend_title": 7.0,
+                      "label": 14.0}
+
+    # Which measured token fills which box (see panels.builder.panel_typography).
+    _FONT_TOKENS = {"text": "base_font_pt", "axis": "axis_font_pt",
+                    "tick": "tick_label_pt", "legend": "legend_pt",
+                    "title": "title_font_pt", "annotation": "annotation_pt",
+                    "legend_title": "legend_title_pt"}
 
     def __init__(self, controller, saved_panels: List[Dict[str, Any]], parent=None, *,
                  initial_layout: Optional[Dict[str, Any]] = None, initial_name: Optional[str] = None,
@@ -539,6 +552,17 @@ class FigureBuilderDialog(QDialog):
         self.hspace_spin.setValue(0.22); self.hspace_spin.setDecimals(2)
         self.hspace_spin.valueChanged.connect(self._schedule_preview)
         form.addRow("Vertical gutter", self.hspace_spin)
+        self.panel_pad_spin = QDoubleSpinBox()
+        self.panel_pad_spin.setRange(0.0, 10.0); self.panel_pad_spin.setSingleStep(0.25)
+        self.panel_pad_spin.setValue(0.5); self.panel_pad_spin.setDecimals(2)
+        self.panel_pad_spin.setSuffix(" mm")
+        self.panel_pad_spin.setToolTip(
+            "White space kept around each panel's own content. Each panel's margins "
+            "are fitted to its longest tick label and its legend, so this is the "
+            "figure's breathing room and it is yours to spend: 0 butts the panels up "
+            "against each other, a larger value opens the composite out.")
+        self.panel_pad_spin.valueChanged.connect(self._schedule_preview)
+        form.addRow("Panel padding", self.panel_pad_spin)
         self.label_style_combo = QComboBox()
         self.label_style_combo.addItems(["A", "a", "1"])
         self.label_style_combo.setToolTip("Panel letter style: A B C, a b c, or 1 2 3.")
@@ -610,12 +634,13 @@ class FigureBuilderDialog(QDialog):
         self.size_group = QGroupBox("Selected panel size")
         sg = self._form(self.size_group)
         self.size_hint_label = QLabel(
-            "Approximate size in inches (1 in = 2.54 cm), like Matplotlib's "
-            "figsize — the panel comes out around 0.85× the number here once the "
-            "grid spacing is taken out. Height on \"auto\" keeps the panel's own "
-            "proportions; set a height and the panel is re-drawn that tall — the "
-            "axes grow, the plot is not stretched. \"Fill the cell\" is the quick "
-            "way to clear a band of white space beside a taller neighbour.")
+            "Size in inches (1 in = 2.54 cm), like Matplotlib's figsize — the "
+            "panel is drawn at the number you type. Height on \"auto\" keeps the "
+            "proportions the plot was finalized with; set a height and the panel is "
+            "re-drawn that tall — the axes grow, the plot is not stretched. "
+            "\"Fill the cell\" is the quick way to clear a band of white space beside "
+            "a taller neighbour. Panels line up on their plotting frames, so a wider "
+            "y-axis label on one panel never pushes its neighbour's plot sideways.")
         self.size_hint_label.setWordWrap(True)
         self.size_hint_label.setStyleSheet("color: #666;")
         # Word-wrapped labels report a one-line sizeHint; MinimumExpanding makes the layout ask
@@ -668,11 +693,22 @@ class FigureBuilderDialog(QDialog):
         self.axis_spin = self._font_spin(self._FONT_DEFAULTS["axis"])
         self.tick_spin = self._font_spin(self._FONT_DEFAULTS["tick"])
         self.legend_spin = self._font_spin(self._FONT_DEFAULTS["legend"])
+        # Every token in the hierarchy gets its own box. Deriving the title, the
+        # statistics and the legend heading from "Text (general)" meant three of
+        # the seven sizes on the page could not be reached from here at all:
+        # shrinking a panel until its statistics were too small left no way to
+        # put just those back up.
+        self.title_spin = self._font_spin(self._FONT_DEFAULTS["title"])
+        self.annotation_spin = self._font_spin(self._FONT_DEFAULTS["annotation"])
+        self.legend_title_spin = self._font_spin(self._FONT_DEFAULTS["legend_title"])
         self.label_spin = self._font_spin(self._FONT_DEFAULTS["label"])
         fg.addRow("Text (general)", self.text_spin)
+        fg.addRow("Panel title", self.title_spin)
         fg.addRow("Axis labels", self.axis_spin)
         fg.addRow("Tick numbers", self.tick_spin)
         fg.addRow("Legend", self.legend_spin)
+        fg.addRow("Legend heading", self.legend_title_spin)
+        fg.addRow("Statistics / annotations", self.annotation_spin)
         fg.addRow("Panel letters (A, B ...)", self.label_spin)
         v.addWidget(font_group)
 
@@ -890,9 +926,10 @@ class FigureBuilderDialog(QDialog):
             axis_font_pt=(float(self.axis_spin.value()) if _fonts_on else None),
             tick_label_pt=(float(self.tick_spin.value()) if _fonts_on else None),
             legend_pt=(float(self.legend_spin.value()) if _fonts_on else None),
-            title_font_pt=(float(self.text_spin.value()) * 1.15 if _fonts_on else None),
-            annotation_pt=(float(self.text_spin.value()) if _fonts_on else None),
-            legend_title_pt=(float(self.legend_spin.value()) if _fonts_on else None),
+            title_font_pt=(float(self.title_spin.value()) if _fonts_on else None),
+            annotation_pt=(float(self.annotation_spin.value()) if _fonts_on else None),
+            legend_title_pt=(float(self.legend_title_spin.value()) if _fonts_on else None),
+            panel_pad_mm=float(self.panel_pad_spin.value()),
         )
 
     # --- layout presets --------------------------------------------------------------------
@@ -928,10 +965,22 @@ class FigureBuilderDialog(QDialog):
                 self.label_style_combo.setCurrentText(layout.label_style)
             self.dpi_spin.setValue(int(layout.panel_dpi))
             self.label_spin.setValue(float(layout.label_size))
-            for spin, val in ((self.text_spin, layout.base_font_pt), (self.axis_spin, layout.axis_font_pt),
-                              (self.tick_spin, layout.tick_label_pt), (self.legend_spin, layout.legend_pt)):
+            if layout.panel_pad_mm is not None:
+                self.panel_pad_spin.setValue(float(layout.panel_pad_mm))
+            pairs = ((self.text_spin, layout.base_font_pt),
+                     (self.axis_spin, layout.axis_font_pt),
+                     (self.tick_spin, layout.tick_label_pt),
+                     (self.legend_spin, layout.legend_pt),
+                     (self.title_spin, layout.title_font_pt),
+                     (self.annotation_spin, layout.annotation_pt),
+                     (self.legend_title_spin, layout.legend_title_pt))
+            for spin, val in pairs:
                 if val is not None:
                     spin.setValue(float(val))
+            # A preset that carried explicit sizes was asking for them: turn the
+            # override on so what is applied matches what the boxes show.
+            if getattr(self, "_font_group", None) is not None:
+                self._font_group.setChecked(any(v is not None for _, v in pairs))
         finally:
             self._syncing = False
 
@@ -1083,6 +1132,44 @@ class FigureBuilderDialog(QDialog):
             QMessageBox.information(self, "Imported (with notes)", "\n".join(asset.warnings))
         self._schedule_preview()
 
+    # Panel raster DPI for the live preview (the preview itself is 110 dpi).
+    _PREVIEW_PANEL_DPI = 150
+
+    def _sync_font_boxes(self, figure) -> None:
+        """Fill the font boxes with the sizes the panels are actually drawn at.
+
+        "The default should always be preserved from what they push to panel
+        builder": the override is all-or-nothing, so the moment it is switched on
+        it replaces every panel's type hierarchy - and if the boxes hold numbers
+        from nowhere, switching it on restyles the whole figure before the user
+        has asked for anything. Measuring what is on the page and showing that
+        makes the switch a no-op until a number is moved.
+
+        Does nothing once the override is on: from then on the numbers are the
+        user's, and writing over them would fight the person typing.
+        """
+        if getattr(self, "_font_group", None) is None or self._font_group.isChecked():
+            return
+        try:
+            from make_my_figure_core.panels.builder import panel_typography
+
+            measured = panel_typography(figure)
+        except Exception:  # noqa: BLE001 - a convenience must not break the preview
+            return
+        for key, token in self._FONT_TOKENS.items():
+            spin = getattr(self, f"{key}_spin", None)
+            if spin is None:
+                continue
+            values = sorted(float(d[token]) for d in measured if d.get(token))
+            if not values:
+                continue
+            median = values[len(values) // 2]
+            spin.blockSignals(True)      # never re-trigger the render that measured it
+            try:
+                spin.setValue(median)
+            finally:
+                spin.blockSignals(False)
+
     def _schedule_preview(self, *args) -> None:
         self._preview_timer.start()
 
@@ -1097,11 +1184,17 @@ class FigureBuilderDialog(QDialog):
             self.preview_label.setText("Save at least one plot as a panel first.")
             return
         mpf = self._build_mpf()
+        # The preview is shown at 110 dpi, so rasterizing every panel at the
+        # export DPI (up to 600) is work nobody sees - and each panel is now
+        # drawn twice, once to measure and once to place. Capping it is what
+        # keeps the live preview live.
+        mpf.layout.panel_dpi = min(int(mpf.layout.panel_dpi), self._PREVIEW_PANEL_DPI)
         try:
             fig = build_figure(mpf)
         except Exception as exc:  # noqa: BLE001 - surface errors in the preview pane
             self.preview_label.setText(f"Preview error:\n{exc}")
             return
+        self._sync_font_boxes(fig)
         buf = io.BytesIO()
         fig.savefig(buf, format="png", dpi=110, bbox_inches="tight",
                     facecolor=fig.get_facecolor())

@@ -310,10 +310,14 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             ax.set_title(str(title), fontsize=style.title_font_pt, fontweight=getattr(style, "title_font_weight", "bold"),
                          pad=(20 if subtitle else 8))
             if subtitle:
+                # No floor under the style's annotation size: the hierarchy is
+                # already scaled to the canvas, and a 8.5 pt floor on a 2.6 in
+                # panel made the count line bigger than the axis labels and sent
+                # it onto three wrapped lines.
                 ax.text(0.5, 1.015, subtitle, transform=ax.transAxes, ha="center",
-                        va="bottom", fontsize=max(8.5, style.annotation_pt), color="0.4")
+                        va="bottom", fontsize=style.annotation_pt, color="0.4")
         elif subtitle:
-            ax.set_title(subtitle, fontsize=max(9.0, style.annotation_pt), color="0.4")
+            ax.set_title(subtitle, fontsize=style.annotation_pt, color="0.4")
         style_axes(ax, style)
         # The Up / Down / n.s. legend can be switched off (e.g. when a figure legend
         # explains the colours, as most published volcano plots do).
