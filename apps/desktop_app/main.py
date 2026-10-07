@@ -1238,7 +1238,8 @@ class MainWindow(QMainWindow):
             has_layout_geometry = any(k in layout for k in (
                 "x_tick_rotation", "y_tick_rotation", "legend_location", "x_label_pad",
                 "y_label_pad", "title_pad", "margin_left", "margin_right", "margin_top",
-                "margin_bottom", "auto_fix_layout"))
+                "margin_bottom", "auto_fix_layout", "show_x_tick_labels",
+                "show_y_tick_labels", "show_x_label", "show_y_label"))
             has_colorbar = any(k in mapping for k in ("colorbar_location", "colorbar_pad",
                                                       "colorbar_shrink"))
             if (style or has_layout_geometry or has_colorbar) and getattr(self, "_style_box", None):
@@ -1293,6 +1294,11 @@ class MainWindow(QMainWindow):
                             w.setValue(_v)
                         except (TypeError, ValueError):
                             pass
+                for key, w in (("show_x_tick_labels", self.chk_xticklabels),
+                               ("show_y_tick_labels", self.chk_yticklabels),
+                               ("show_x_label", self.chk_xlabel),
+                               ("show_y_label", self.chk_ylabel)):
+                    w.setChecked(layout.get(key, True) is not False)
                 self.chk_autofix.setChecked(bool(layout.get("auto_fix_layout", False)))
                 # colorbar geometry rides in the mapping
                 if "colorbar_location" in mapping:
@@ -1376,10 +1382,32 @@ class MainWindow(QMainWindow):
         self.sp_xpad = _spin(0, 40, 0, 1, dbl=True)
         self.sp_ypad = _spin(0, 40, 0, 1, dbl=True)
         self.sp_titlepad = _spin(0, 40, 0, 1, dbl=True)
+        # Show/hide for the four things on an axis. Checked is the default, and
+        # a checked box writes nothing into the spec, so a figure that has never
+        # touched these is byte-for-byte what it was. Unchecking is the answer to
+        # a heatmap whose 30 row names will not fit, and to a panel whose axis is
+        # already named by the panel beside it.
+        self.chk_xticklabels = QCheckBox()
+        self.chk_yticklabels = QCheckBox()
+        self.chk_xlabel = QCheckBox()
+        self.chk_ylabel = QCheckBox()
+        for _chk, _tip in (
+                (self.chk_xticklabels, "Draw the numbers or category names along the x axis."),
+                (self.chk_yticklabels, "Draw the numbers or row names along the y axis. Turn "
+                                       "this off on a heatmap with more rows than will fit."),
+                (self.chk_xlabel, "Draw the x axis name."),
+                (self.chk_ylabel, "Draw the y axis name.")):
+            _chk.setChecked(True)
+            _chk.setToolTip(_tip)
+            _chk.stateChanged.connect(self.render_preview)
         axesb = QGroupBox("③ Axes & labels")
         af = QFormLayout(axesb)
         af.addRow("X tick angle", self.cmb_xrot)
         af.addRow("Y tick angle", self.cmb_yrot)
+        af.addRow("X tick labels", self.chk_xticklabels)
+        af.addRow("Y tick labels", self.chk_yticklabels)
+        af.addRow("X axis label", self.chk_xlabel)
+        af.addRow("Y axis label", self.chk_ylabel)
         af.addRow("X label padding", self.sp_xpad)
         af.addRow("Y label padding", self.sp_ypad)
         af.addRow("Title padding", self.sp_titlepad)
@@ -1463,6 +1491,15 @@ class MainWindow(QMainWindow):
         for key, w in (("margin_right", self.sp_mr), ("margin_top", self.sp_mt)):
             if w.value() > 0:
                 lay[key] = round(1.0 - float(w.value()), 4)
+        # Only the hidden state is recorded: "shown" is every renderer's own
+        # decision and writing True would override, for instance, a heatmap's
+        # choice to drop row labels it has no room for.
+        for key, w in (("show_x_tick_labels", self.chk_xticklabels),
+                       ("show_y_tick_labels", self.chk_yticklabels),
+                       ("show_x_label", self.chk_xlabel),
+                       ("show_y_label", self.chk_ylabel)):
+            if not w.isChecked():
+                lay[key] = False
         if self.chk_autofix.isChecked():
             lay["auto_fix_layout"] = True
         cb = {}
@@ -1515,6 +1552,9 @@ class MainWindow(QMainWindow):
         self.sp_cbshrink.setValue(1.0)
         self.chk_autofix.setChecked(False)
         self.chk_legend_outside.setChecked(False); self.chk_grid.setChecked(False)
+        for _chk in (self.chk_xticklabels, self.chk_yticklabels,
+                     self.chk_xlabel, self.chk_ylabel):
+            _chk.setChecked(True)
 
     def reset_plot_styling(self) -> None:
         """Return every PLOT-LOCAL setting to its default. A new plot starts here.

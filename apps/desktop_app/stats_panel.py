@@ -545,6 +545,15 @@ class FigureBuilderDialog(QDialog):
             "widths - it is reported under the preview.")
         self.width_mm_spin.valueChanged.connect(self._schedule_preview)
         form.addRow("Figure width", self.width_mm_spin)
+        # The finished size, measured on the composite after it is built. It
+        # belongs directly under the width control because it is the answer to
+        # that control: a journal asks for a figure's width in millimetres, and
+        # the panel widths are what actually decide it. Wrapped rather than
+        # elided - a number cut off halfway is worse than one on two lines.
+        self.size_report_label = QLabel("")
+        self.size_report_label.setWordWrap(True)
+        self.size_report_label.setStyleSheet("color: #666;")
+        form.addRow("", self.size_report_label)
         self.wspace_spin = QDoubleSpinBox()
         self.wspace_spin.setRange(0.0, 1.0); self.wspace_spin.setSingleStep(0.02)
         self.wspace_spin.setValue(0.18); self.wspace_spin.setDecimals(2)
@@ -784,16 +793,7 @@ class FigureBuilderDialog(QDialog):
         w = QWidget()
         v = QVBoxLayout(w)
         v.setContentsMargins(0, 0, 0, 0)
-        head = QHBoxLayout()
-        head.addWidget(QLabel("Live preview"))
-        head.addStretch(1)
-        # The finished size, measured on the composite. The panel widths decide
-        # it - a journal asks for the figure's width in millimetres, so it has to
-        # be visible rather than worked out from four spin boxes.
-        self.size_report_label = QLabel("")
-        self.size_report_label.setStyleSheet("color: #666;")
-        head.addWidget(self.size_report_label)
-        v.addLayout(head)
+        v.addWidget(QLabel("Live preview"))
         self.preview_scroll = QScrollArea()
         self.preview_scroll.setWidgetResizable(True)
         self.preview_scroll.setStyleSheet("background: #f5f5f5;")

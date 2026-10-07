@@ -1730,6 +1730,25 @@ def apply_publication_layout(fig, ax, spec: Dict[str, Any],
         ax.tick_params(axis="x", pad=_num("x_tick_pad"))
     if _num("y_tick_pad") is not None:
         ax.tick_params(axis="y", pad=_num("y_tick_pad"))
+    # Tick labels and axis labels, on or off.
+    #
+    # One control for every plot type, applied here with the rest of the shared
+    # layout, because the need is the same everywhere: a heatmap whose 30 row
+    # names will not fit, a panel whose axis is already named by the panel
+    # beside it, a figure whose caption says what the x axis is. Only the
+    # explicit False does anything - the key being absent, or True, leaves the
+    # renderer's own decision alone, so no existing figure changes. The reserved
+    # margin is not reclaimed here (the layout pass has already run); an export
+    # is written with a tight bounding box, so it does not show in the file, and
+    # a panel in a composite has its margins re-fitted anyway.
+    if layout.get("show_x_tick_labels") is False:
+        ax.tick_params(axis="x", labelbottom=False, labeltop=False)
+    if layout.get("show_y_tick_labels") is False:
+        ax.tick_params(axis="y", labelleft=False, labelright=False)
+    if layout.get("show_x_label") is False:
+        ax.set_xlabel("")
+    if layout.get("show_y_label") is False:
+        ax.set_ylabel("")
     # Axis-label padding.
     if _num("x_label_pad") is not None:
         ax.xaxis.labelpad = _num("x_label_pad")

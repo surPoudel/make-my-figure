@@ -77,6 +77,7 @@ LAYOUT_STYLE_KEYS = frozenset({
     "margin_left", "margin_right", "margin_top", "margin_bottom",
     "subplot_wspace", "subplot_hspace",
     "legend_location", "auto_fix_layout",
+    "show_x_tick_labels", "show_y_tick_labels", "show_x_label", "show_y_label",
     "colorbar_location", "colorbar_pad", "colorbar_shrink", "colorbar_fraction",
 })
 # layout keys that are text about the data - full configuration only

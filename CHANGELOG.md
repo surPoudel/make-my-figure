@@ -59,6 +59,22 @@ figure, taken from the composite in inches.
   filled with the sizes the panels are *actually drawn with*, so switching the
   override on changes nothing until a number is moved.
 
+### Added — tick labels and axis names can be turned off, on any plot
+
+- **X/Y tick labels and X/Y axis label each have a show/hide box** (Advanced ▸
+  ③ Axes & labels). The need is the same on every plot type — a heatmap whose
+  30 row names will not fit, a panel whose axis is already named by the panel
+  beside it, a figure whose caption says what the x axis is — so they are
+  shared layout controls applied in one place for all 45 plot types rather than
+  wired per renderer. Blanking an axis name with a space is no longer necessary.
+- They are **opt-in**: a box is checked by default and a checked box writes
+  nothing into the PlotSpec, so a figure that has never touched them renders
+  exactly as before. Only an explicit "off" does anything — `True` is not an
+  override, so a heatmap that dropped row labels it had no room for keeps that
+  decision.
+- Carried by style presets, saved in the PlotSpec, and reset when you start a
+  new plot (the leak that v1.2.1 fixed for 21 other settings).
+
 ### Fixed — text that no longer covers the plot it belongs to
 
 - **An axis label is not cropped.** "measurement (mean ± SEM)" came back as
