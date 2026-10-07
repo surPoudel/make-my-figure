@@ -83,6 +83,22 @@ asked for.
 | Overlapping text pairs, all 45 | **36 -> 34** (bland_altman_plot 3 -> 1) |
 | Colour contract | 119 controls audited, 3 with no effect - the same three continuous-colormap plots as v1.2.1, unchanged |
 
+## Cost
+
+`build_figure` draws each panel twice and measures it, which is what it did
+before (once to size the grid, once at the drawn size). Measured on the reported
+figure, the two builders are the same speed:
+
+| | 4 panels | 8 panels |
+|---|---|---|
+| before | 5.84 s | 11.13 s |
+| after  | 5.84 s | 10.70 s |
+
+So the live preview is no slower - but it is slow, at about 1.4 s per panel, and
+that is a pre-existing cost rather than a new one. The preview now also caps the
+panel raster DPI at 150 (it is displayed at 110), so a figure set to export at
+600 DPI no longer rasterizes every panel at 600 for a preview nobody sees.
+
 ## Known, unchanged
 
 * `confusion_matrix`, `enrichment_dotplot` and `spatial_feature_map` expose a

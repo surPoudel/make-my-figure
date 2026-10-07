@@ -538,8 +538,11 @@ class FigureBuilderDialog(QDialog):
         self.width_mm_spin = QDoubleSpinBox()
         self.width_mm_spin.setRange(40.0, 400.0); self.width_mm_spin.setSingleStep(5.0)
         self.width_mm_spin.setValue(180.0); self.width_mm_spin.setSuffix(" mm")
-        self.width_mm_spin.setToolTip("Overall figure width. 89 mm is a typical single column, "
-                                      "180 mm a double column.")
+        self.width_mm_spin.setToolTip(
+            "The width each panel starts at, shared out across the columns: 89 mm is a "
+            "typical single column, 180 mm a double column. A panel whose own width has "
+            "been set keeps it, so the composite's finished size follows the panel "
+            "widths - it is reported under the preview.")
         self.width_mm_spin.valueChanged.connect(self._schedule_preview)
         form.addRow("Figure width", self.width_mm_spin)
         self.wspace_spin = QDoubleSpinBox()
@@ -781,7 +784,16 @@ class FigureBuilderDialog(QDialog):
         w = QWidget()
         v = QVBoxLayout(w)
         v.setContentsMargins(0, 0, 0, 0)
-        v.addWidget(QLabel("Live preview"))
+        head = QHBoxLayout()
+        head.addWidget(QLabel("Live preview"))
+        head.addStretch(1)
+        # The finished size, measured on the composite. The panel widths decide
+        # it - a journal asks for the figure's width in millimetres, so it has to
+        # be visible rather than worked out from four spin boxes.
+        self.size_report_label = QLabel("")
+        self.size_report_label.setStyleSheet("color: #666;")
+        head.addWidget(self.size_report_label)
+        v.addLayout(head)
         self.preview_scroll = QScrollArea()
         self.preview_scroll.setWidgetResizable(True)
         self.preview_scroll.setStyleSheet("background: #f5f5f5;")
@@ -1207,6 +1219,10 @@ class FigureBuilderDialog(QDialog):
             self.preview_label.setText(f"Preview error:\n{exc}")
             return
         self._sync_font_boxes(fig)
+        _w_in, _h_in = (float(v) for v in fig.get_size_inches())
+        self.size_report_label.setText(
+            f"composite: {_w_in * 25.4:.0f} × {_h_in * 25.4:.0f} mm "
+            f"({_w_in:.2f} × {_h_in:.2f} in)")
         buf = io.BytesIO()
         fig.savefig(buf, format="png", dpi=110, bbox_inches="tight",
                     facecolor=fig.get_facecolor())
