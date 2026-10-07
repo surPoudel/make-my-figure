@@ -101,3 +101,16 @@ PRIVATE_REFERENCE_ONLY/
 # decision, v1.2.0). Its name trips the release private-file scanner and the file
 # is not needed to build or run anything.
 reports/journal_presets/manuscript_future_claims.md
+
+# Matrix-workflow QC output. preprocessing_reports.py writes these beside the
+# matrix the workflow was run on, so running it with the repo root as the output
+# directory drops 39 generated files into the project — which is how they came to
+# be committed here. Nothing reads them, and their presence as untracked copies
+# after a later run blocks `git checkout` of any branch that still tracks them.
+# Anchored to the root so reports/publication_qc_gallery/qc_summary.csv, which is
+# deliberately tracked, is unaffected.
+/per_plot/
+/before_after_contact_sheet.png
+/before_after_contact_sheet.pdf
+/preprocessing_report.md
+/qc_summary.csv
