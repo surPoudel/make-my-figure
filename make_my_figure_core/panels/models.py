@@ -148,10 +148,22 @@ class FigureLayout:
     axis_font_pt: Optional[float] = None     # x/y axis label size
     tick_label_pt: Optional[float] = None    # tick number size
     legend_pt: Optional[float] = None        # legend text size
+    # The rest of the hierarchy. Overriding only the four above left the title,
+    # the statistics and the legend title at their original sizes while the axis
+    # labels and ticks dropped, so the panel's type hierarchy inverted and text
+    # collided. An override is all-or-nothing by design.
+    title_font_pt: Optional[float] = None    # panel title size
+    annotation_pt: Optional[float] = None    # statistics / annotation size
+    legend_title_pt: Optional[float] = None  # legend heading size
 
     def font_overrides(self) -> Dict[str, float]:
-        """Return the non-None font tokens as a style-override dict."""
-        keys = ("base_font_pt", "axis_font_pt", "tick_label_pt", "legend_pt")
+        """Return the non-None font tokens as a style-override dict.
+
+        Empty when the user has not opted in, which is the default: an empty dict
+        means every panel keeps the typography it was finalized with.
+        """
+        keys = ("base_font_pt", "axis_font_pt", "tick_label_pt", "legend_pt",
+                "title_font_pt", "annotation_pt", "legend_title_pt")
         return {k: getattr(self, k) for k in keys if getattr(self, k) is not None}
 
     @classmethod
@@ -175,6 +187,8 @@ class FigureLayout:
             "show_titles": self.show_titles,
             "base_font_pt": self.base_font_pt, "axis_font_pt": self.axis_font_pt,
             "tick_label_pt": self.tick_label_pt, "legend_pt": self.legend_pt,
+            "title_font_pt": self.title_font_pt, "annotation_pt": self.annotation_pt,
+            "legend_title_pt": self.legend_title_pt,
         }
 
 

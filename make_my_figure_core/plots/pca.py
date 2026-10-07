@@ -28,6 +28,10 @@ from make_my_figure_core.styles.engine import StyleProfile
 
 PLOT_TYPE = "pca_scatter_from_matrix"
 
+# Shown for a sample the metadata does not assign to a group. An explicit
+# level, so it appears in the legend as itself rather than as a blank entry.
+UNASSIGNED = "Unassigned"
+
 _MARKERS = ["o", "s", "^", "D", "v", "P", "X", "*"]
 
 
@@ -53,11 +57,25 @@ def render(spec: Dict[str, Any], df, style: StyleProfile,
         ids = set(meta_df[meta_key].astype(str))
         matched = [c for c in sample_cols if str(c) in ids]
         if matched:
-            dropped_meta = [c for c in sample_cols if c not in matched]
-            if dropped_meta:
+            # Only ANNOTATION columns may be dropped here. A column that is
+            # numeric is a sample, and a sample stays in the PCA whether or not
+            # the metadata happens to list it - otherwise supplying a group
+            # column silently deletes samples and moves every score: dropping one
+            # of six samples moved PC1 for the rest by about 20%, so "colour by
+            # group" quietly changed the analysis. Unlisted samples are drawn as
+            # UNASSIGNED instead, and the count is reported.
+            _numeric = df[sample_cols].apply(lambda s: pd.to_numeric(s, errors="coerce"))
+            annotation = [c for c in sample_cols
+                          if str(c) not in ids and not _numeric[c].notna().any()]
+            if annotation:
                 warnings.append(f"Ignored column(s) not present in metadata '{meta_key}': "
-                                f"{dropped_meta}.")
-            sample_cols = matched
+                                f"{annotation}.")
+            sample_cols = [c for c in sample_cols if c not in annotation]
+            unlisted = [c for c in sample_cols if str(c) not in ids]
+            if unlisted:
+                warnings.append(
+                    f"{len(unlisted)} sample(s) have no entry in the metadata and are drawn "
+                    f"as '{UNASSIGNED}': {unlisted}. They are still included in the PCA.")
             meta_restricted = True
     numeric_all = df[sample_cols].apply(lambda s: pd.to_numeric(s, errors="coerce"))
     numeric_cols = [c for c in sample_cols if numeric_all[c].notna().any()]
@@ -96,14 +114,37 @@ def render(spec: Dict[str, Any], df, style: StyleProfile,
     meta_df = aux.get("metadata")
     meta_lookup = {}
     if meta_df is not None and meta_key in meta_df.columns:
-        meta_lookup = meta_df.set_index(meta_df[meta_key].astype(str)).to_dict("index")
+        # Duplicate sample ids used to reach pandas as
+        # "DataFrame index must be unique for orient='index'" - an unhandled
+        # crash from a data problem the user can fix. First row wins, and a
+        # genuine disagreement is reported rather than silently resolved.
+        _keys = meta_df[meta_key].astype(str)
+        _dupes = sorted({k for k, n in _keys.value_counts().items() if n > 1})
+        _meta = meta_df.loc[~_keys.duplicated(keep="first")]
+        if _dupes:
+            _conflicting = []
+            for key in _dupes:
+                rows = meta_df.loc[_keys == key].drop(columns=[meta_key], errors="ignore")
+                if len(rows.drop_duplicates()) > 1:
+                    _conflicting.append(key)
+            if _conflicting:
+                warnings.append(
+                    f"Sample(s) {_conflicting} appear more than once in the metadata with "
+                    f"different values; the first row for each was used.")
+        meta_lookup = _meta.set_index(_meta[meta_key].astype(str)).to_dict("index")
     elif color_by or shape_by:
         warnings.append("No matching sample metadata supplied; points drawn uncolored.")
         color_by = shape_by = None
 
     def _attr(sample: str, col):
         rec = meta_lookup.get(str(sample))
-        return rec.get(col) if rec and col in rec else None
+        value = rec.get(col) if rec and col in rec else None
+        if value is None or (isinstance(value, float) and pd.isna(value)):
+            return UNASSIGNED if col else None
+        text = str(value).strip()
+        # A blank cell drew its own colour and an empty legend entry; it is the
+        # same thing as having no entry at all, and says so.
+        return text if text else UNASSIGNED
 
     color_vals = [_attr(s, color_by) for s in sample_cols] if color_by else [None] * len(sample_cols)
     shape_vals = [_attr(s, shape_by) for s in sample_cols] if shape_by else [None] * len(sample_cols)

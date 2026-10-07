@@ -1,0 +1,23 @@
+{
+  "benchmark_id": "osipovich2023_zfp92_islet",
+  "paper_title": "ZFP92, a KRAB domain zinc finger protein enriched in pancreatic islets, binds to B1/Alu SINE transposable elements and regulates retroelements and genes",
+  "authors": "Osipovich AB; Dudek KD; Trinh LT; Kim LH; Shrestha S; Cartailler J-P; Magnuson MA",
+  "journal": "PLOS Genetics",
+  "year": 2023,
+  "volume": "19",
+  "article": "e1010729",
+  "doi": "10.1371/journal.pgen.1010729",
+  "article_license": "CC BY 4.0 (http://creativecommons.org/licenses/by/4.0/)",
+  "data_license": "CC BY 4.0 - supporting information distributed under the article's Creative Commons Attribution License",
+  "license_statement_verbatim": "(c) 2023 Osipovich et al. This is an open access article distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use, distribution, and reproduction in any medium, provided the original author and source are credited.",
+  "supplementary_item": "S2 Table",
+  "download_url": "https://doi.org/10.1371/journal.pgen.1010729.s012",
+  "resolved_url": "https://storage.googleapis.com/plos-corpus-prod/10.1371/journal.pgen.1010729/1/pgen.1010729.s012.xlsx?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=wombat-sa%40plos-prod.iam.gserviceaccount.com%2F20260814%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20260814T041517Z&X-Goog-Expires=86400&X-Goog-SignedHeaders=host&X-Goog-Signature=5cbcd68823271b9af543129f6eedeb86c7d262e63a3f41079cf10f39230698a307e3a675545d0e11550c25d2b697002e77c0560777c32edef9241eb25c8df91931d3143301a214533225fe97a196d46be89238fe36f2730f115e0ea484d9cbbee185acde66e9d63e60f7e66130d764d899cfb35b5358087e09eda500feaef916227e92adad654fee5652ad11064371396a551ca08dce2a4f0406247206b3e5f30440d85f236a7546736caa001faf40db8b71dfd3684ba03f9c1b2604faaf9b2b1b358620d97c18df61c2d2b08cd67a3eda7de4c574006d6f6ff93cfa38b0932903ad43e6e8b69be0b5e046819153470d3650a9655a972aa6edf898cefefb0ead",
+  "date_accessed": "2026-08-13",
+  "sha256": "bf546707f4a20254b433204145f3b765eeec45cf1dbd285c21fda03966e2fb91",
+  "bytes": 2865511,
+  "underlying_data_accession": "ArrayExpress E-MTAB-11637 (RNA-seq); E-MTAB-12576 (CUT&RUN)",
+  "upstream_method": "DESeq2 results() output (baseMean, log2FoldChange, lfcSE, stat, pvalue, padj)",
+  "filtered": "no - complete unfiltered DESeq2 result set for every tested gene",
+  "reuse_permission": "CC BY 4.0 permits redistribution with attribution; the numeric table is reused, no published figure image is redistributed"
+}

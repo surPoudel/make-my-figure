@@ -96,10 +96,29 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
     override = block.get("palette")
     cat_colour = {c: (override[i % len(override)] if override else style.color_for(i))
                   for i, c in enumerate(cats)}
-    default_edge = block.get("roi_edgecolor", style.text_color)
-    edge = [cat_colour.get(m["category"], default_edge) if category else default_edge
-            for m in meta_rows]
-    fill_alpha = float(block.get("roi_fill_alpha", 0.0))
+    # With no ROI category mapped this fell back to style.text_color (#1a1a1a) for
+    # EVERY region, and the fill defaulted to fully transparent - so a user's own
+    # ROI table drew as a near-black wireframe. The bundled example only looked
+    # right because its PlotSpec pins roi_fill_alpha, which masked the default.
+    #
+    # Uncategorised regions now take successive palette colours, so they are told
+    # apart the way every other categorical plot does it, and an explicit
+    # roi_edgecolor still wins when the user sets one.
+    # "(auto)" means "follow the ROI category, or the palette when there is no
+    # category"; any other value is the user naming one colour for every outline
+    # and must win - otherwise the control is visible and does nothing whenever a
+    # category happens to be mapped, which is the common case. Same sentinel the
+    # slopegraph's colour options already use.
+    _explicit_edge = str(block.get("roi_edgecolor") or "").strip()
+    if _explicit_edge.lower() in ("", "(auto)", "auto"):
+        _explicit_edge = ""
+    if _explicit_edge:
+        edge = [_explicit_edge for _ in meta_rows]
+    elif category:
+        edge = [cat_colour.get(m["category"], style.color_for(0)) for m in meta_rows]
+    else:
+        edge = [style.color_for(i) for i in range(len(meta_rows))]
+    fill_alpha = float(block.get("roi_fill_alpha", 0.12))
     lw = float(block.get("roi_linewidth", 1.4))
     w, h = figure_size(spec, style, aspect=0.95)
 

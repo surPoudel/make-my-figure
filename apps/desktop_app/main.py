@@ -505,6 +505,9 @@ class MainWindow(QMainWindow):
         self.plot_combo.currentIndexChanged.connect(self._on_plot_type_changed)
 
         self.style_combo = QComboBox()
+        # Also unconnected: changing the style profile did nothing until the next
+        # unrelated interaction.
+        self.style_combo.currentIndexChanged.connect(self._schedule_render)
         for s, label in self.controller.styles():
             self.style_combo.addItem(label, s)
 
@@ -545,6 +548,15 @@ class MainWindow(QMainWindow):
         self.title_edit = QLineEdit()
         self.xlabel_edit = QLineEdit()
         self.ylabel_edit = QLineEdit()
+        # These were connected to nothing at all: typing a title drew zero
+        # renders, and the text only appeared when some unrelated control
+        # happened to trigger one. That is a large part of "the controls need
+        # several interactions". textEdited keeps the preview live through the
+        # same debounce every other control uses; editingFinished catches a
+        # paste or a focus change.
+        for _edit in (self.title_edit, self.xlabel_edit, self.ylabel_edit):
+            _edit.textEdited.connect(self._schedule_render)
+            _edit.editingFinished.connect(self._schedule_render)
         self.width_combo = QComboBox()
         self.width_combo.addItems(["default", "single", "onehalf", "double"])
         self.dpi_spin = QSpinBox()
@@ -1147,13 +1159,22 @@ class MainWindow(QMainWindow):
         size, style tokens, layout geometry, colorbar and statistics.
 
         This is the one place a spec becomes widget state, used by both “Open PlotSpec” and
-        “Apply preset”. A value with no widget is left in the spec's hands; a widget with no
-        value keeps what it had.
+        “Apply preset”. A value with no widget is left in the spec's hands.
+
+        The controls are reset FIRST, so what you get is the spec and nothing else.
+        This used to be purely additive - it set what the spec mentioned and
+        cleared nothing - so opening a PlotSpec inherited whatever the previous
+        figure happened to leave behind. A spec carrying only margins came back
+        with the last plot's palette, font, title size, grid and DPI.
+        ``keep_plot_type`` marks the preset path, which edits the current figure
+        rather than replacing it, so it resets only what the preset will set.
         """
         self._loading_spec = True
         prev = self._suppress_change
         self._suppress_change = True
         try:
+            if not keep_plot_type:
+                self.reset_plot_styling()
             pt = spec.get("plot_type")
             if not keep_plot_type:
                 idx = self.plot_combo.findData(pt)
@@ -1255,13 +1276,21 @@ class MainWindow(QMainWindow):
                 if "legend_location" in layout:
                     j = self.cmb_legloc.findText(str(layout["legend_location"]))
                     self.cmb_legloc.setCurrentIndex(j if j >= 0 else 0)
+                # margin_right/margin_top are stored as edge positions; the spin
+                # boxes show blank space. Without the inverse conversion a spec
+                # saved with margin_right=0.70 came back as the widget maximum
+                # 0.50 and was then re-emitted as 0.5 - silently altering a saved
+                # figure on reopen.
                 for key, w in (("x_label_pad", self.sp_xpad), ("y_label_pad", self.sp_ypad),
                                ("title_pad", self.sp_titlepad), ("margin_left", self.sp_ml),
                                ("margin_right", self.sp_mr), ("margin_top", self.sp_mt),
                                ("margin_bottom", self.sp_mb)):
                     if key in layout:
                         try:
-                            w.setValue(float(layout[key]))
+                            _v = float(layout[key])
+                            if key in ("margin_right", "margin_top") and _v > 0:
+                                _v = round(1.0 - _v, 4)
+                            w.setValue(_v)
                         except (TypeError, ValueError):
                             pass
                 self.chk_autofix.setChecked(bool(layout.get("auto_fix_layout", False)))
@@ -1390,10 +1419,10 @@ class MainWindow(QMainWindow):
         self.chk_autofix.stateChanged.connect(self.render_preview)
         figb = QGroupBox("① Figure margins")
         gf = QFormLayout(figb)
-        gf.addRow("Left (0 = auto)", self.sp_ml)
-        gf.addRow("Right (0 = auto)", self.sp_mr)
-        gf.addRow("Top (0 = auto)", self.sp_mt)
-        gf.addRow("Bottom (0 = auto)", self.sp_mb)
+        gf.addRow("Left space (0 = auto)", self.sp_ml)
+        gf.addRow("Right space (0 = auto)", self.sp_mr)
+        gf.addRow("Top space (0 = auto)", self.sp_mt)
+        gf.addRow("Bottom space (0 = auto)", self.sp_mb)
         gf.addRow("Auto-fix layout", self.chk_autofix)
         outer.addWidget(figb)
 
@@ -1420,10 +1449,20 @@ class MainWindow(QMainWindow):
             lay["legend_location"] = self.cmb_legloc.currentText()
         for key, w in (("x_label_pad", self.sp_xpad), ("y_label_pad", self.sp_ypad),
                        ("title_pad", self.sp_titlepad), ("margin_left", self.sp_ml),
-                       ("margin_right", self.sp_mr), ("margin_top", self.sp_mt),
                        ("margin_bottom", self.sp_mb)):
             if w.value() > 0:
                 lay[key] = float(w.value())
+        # The spin boxes mean "how much blank space at this edge", which is what
+        # "Right margin" means to a person. The layout engine wants the far edge's
+        # POSITION ("right=0.75 leaves a quarter blank"). Those are opposites, and
+        # the mismatch is the whole of the reported bug: nudging Right from 0 gave
+        # right=0.02, matplotlib refused it because left was already 0.116, the
+        # refusal was buried in a truncated warning, and nothing happened. Five
+        # clicks did nothing; the sixth passed left and collapsed the plot to a
+        # sliver. Converting here means one click does one visible thing.
+        for key, w in (("margin_right", self.sp_mr), ("margin_top", self.sp_mt)):
+            if w.value() > 0:
+                lay[key] = round(1.0 - float(w.value()), 4)
         if self.chk_autofix.isChecked():
             lay["auto_fix_layout"] = True
         cb = {}
@@ -1460,7 +1499,8 @@ class MainWindow(QMainWindow):
             ov["font_family"] = font
         return ov
 
-    def action_reset_style(self):
+    def _reset_style_widgets(self) -> None:
+        """Put every style widget back to its publication default. Draws nothing."""
         self.palette_combo.setCurrentIndex(0)
         self.font_combo.setCurrentIndex(0)
         self.sp_title.setValue(14)
@@ -1475,7 +1515,61 @@ class MainWindow(QMainWindow):
         self.sp_cbshrink.setValue(1.0)
         self.chk_autofix.setChecked(False)
         self.chk_legend_outside.setChecked(False); self.chk_grid.setChecked(False)
+
+    def reset_plot_styling(self) -> None:
+        """Return every PLOT-LOCAL setting to its default. A new plot starts here.
+
+        Plot-local configuration lives only in long-lived Qt widgets, so nothing
+        ever cleared it: starting a new plot carried the previous plot's title,
+        labels, fonts, palette, margins, figure size, picked labels and statistics
+        settings - 21 settings in all - into a figure of entirely different data.
+
+        Application-level preferences (the style profile menu, window geometry,
+        recent files) are deliberately NOT touched: those are the user's, not the
+        plot's.
+        """
+        _prev = getattr(self, "_suppress_change", False)
+        self._suppress_change = True
+        try:
+            self._reset_style_widgets()
+            if getattr(self, "_style_box", None) is not None:
+                self._style_box.setChecked(False)
+            for _edit in (self.title_edit, self.xlabel_edit, self.ylabel_edit):
+                _edit.clear()
+            self.width_combo.setCurrentIndex(0)
+            self.dpi_spin.setValue(300)
+            self.fig_w_mm.setValue(0.0)
+            self.fig_h_mm.setValue(0.0)
+            # Annotations the user placed on the previous figure.
+            self._picked_labels = {}
+            self._picked_points = {}
+            self._pick_cols = {}
+            self._label_offsets = {}
+            self._point_offsets = {}
+            self._drag_label = None
+            self._pending_column_annotations = None
+            if getattr(self, "chk_click_label", None) is not None:
+                self.chk_click_label.setChecked(False)
+            # The statistics panel owns its own defaults; it was never reset.
+            _stats = getattr(self, "stats_panel", None)
+            for _m in ("_on_reset", "_on_clear"):
+                if _stats is not None and hasattr(_stats, _m):
+                    try:
+                        getattr(_stats, _m)()
+                    except Exception:  # noqa: BLE001
+                        pass
+        finally:
+            self._suppress_change = _prev
+
+    def action_reset_style(self):
+        self._reset_style_widgets()
         self.statusBar().showMessage("Style reset to publication defaults.", 4000)
+        self.render_preview()
+
+    def action_new_plot(self):
+        """Keep the data, start the figure again from defaults."""
+        self.reset_plot_styling()
+        self.statusBar().showMessage("New plot: styling reset to defaults.", 4000)
         self.render_preview()
 
     # --- menu ------------------------------------------------------------
@@ -1948,6 +2042,7 @@ class MainWindow(QMainWindow):
 
     # --- loading ---------------------------------------------------------
     def load_path(self, path: str):
+        self.reset_plot_styling()
         if is_package_path(path):
             self.open_package_path(path)
             return
@@ -2364,6 +2459,7 @@ class MainWindow(QMainWindow):
         Clears dataset, plot spec, render result, figure preview, and statistics
         panel results — without restarting the app.
         """
+        self.reset_plot_styling()
         self.data = None
         self._current_spec = None
         self._current_result = None

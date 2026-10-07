@@ -233,6 +233,18 @@ _CBAR_FRACTION = Option("colorbar_fraction", "Colourbar thickness (0 = auto)",
                         "number", 0.0, minimum=0.0, maximum=0.2, step=0.005,
                         decimals=3, scope="style")
 
+# Colours offered for a single named artist. "(auto)" keeps whatever the plot was
+# already doing, so adding a picker never changes an existing figure.
+_ROLE_COLORS = ["(auto)", "#0072B2", "#D55E00", "#009E73", "#CC79A7", "#E69F00",
+                "#56B4E9", "#CC6677", "#332288", "#117733", "#882255",
+                "black", "#555555", "white"]
+
+
+def _color_role(key: str, label: str) -> "Option":
+    """A picker for one artist, in the style the volcano already uses."""
+    return Option(key, label, "choice", "(auto)", _ROLE_COLORS, scope="style")
+
+
 OPTIONS: Dict[str, List[Option]] = {
     # Bars: the summary (mean/median) and the whisker (sem/sd/ci95/ci95_t/iqr/none) decide what is
     # computed, so they are config; everything else is appearance. ``ci95`` keeps its historical
@@ -368,7 +380,16 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("legend", "Show gene legend", "bool", True, scope="config"),
     ],
     "spatial_roi_map": [
-        _SPATIAL_ALPHA, _SPATIAL_SHOW_AXES,
+        # _SPATIAL_ALPHA was the only colour-ish control here and it did nothing:
+        # it is read for context points, which this plot type never receives.
+        _SPATIAL_SHOW_AXES,
+        Option("roi_edgecolor", "ROI outline colour", "choice", "(auto)",
+               ["(auto)", "#0072B2", "#D55E00", "#009E73", "#CC79A7", "#E69F00",
+                "#56B4E9", "#1a1a1a", "black"], scope="style"),
+        Option("roi_fill_alpha", "ROI fill opacity", "number", 0.12,
+               minimum=0.0, maximum=1.0, step=0.02, decimals=2, scope="style"),
+        Option("roi_linewidth", "ROI outline width", "number", 1.4,
+               minimum=0.2, maximum=6.0, step=0.2, decimals=1, scope="style"),
         Option("legend", "Show ROI legend", "bool", True, scope="config"),
     ],
     "spatial_composition_map": [
@@ -535,6 +556,8 @@ OPTIONS: Dict[str, List[Option]] = {
     "roc_curve": [
         _REF_LINE_STYLE, _REF_LINE_COLOR,],
     "forest_plot": [
+        _color_role("point_color", "Estimate marker colour"),
+        _color_role("ci_line_color", "Confidence-interval colour"),
         _MARKER_EDGE_COLOR,
         _REF_LINE_STYLE, _REF_LINE_COLOR,
         Option("reference", "Reference line", "number", 1.0, minimum=0.0, maximum=100.0, step=0.5, decimals=2, scope="style"),
@@ -557,6 +580,7 @@ OPTIONS: Dict[str, List[Option]] = {
     ],
     "raincloud_plot": [_X_TICK_ROTATION, *_point_options_for("jitter", 0.14)],
     "hierarchical_dendrogram": [
+        _color_role("link_color", "Branch colour"),
         Option("method", "Linkage method", "choice", "average", ["average", "complete", "single", "ward"]),
         Option("cluster", "Cluster", "choice", "rows", ["rows", "columns"]),
         Option("orientation", "Orientation", "choice", "top", ["top", "left"], scope="style"),
@@ -574,8 +598,13 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("duplicate_label_show_count", "Append (n=…) count", "bool", False, scope="style"),
     ],
     "qq_plot": [
+        _color_role("point_color", "Point colour"),
+        _color_role("marker_edge_color", "Point outline colour"),
         _REF_LINE_STYLE, _REF_LINE_COLOR,Option("mode", "Mode", "choice", "pvalue", ["pvalue", "quantile"])],
     "bland_altman_plot": [
+        _color_role("point_color", "Point colour"),
+        _color_role("bias_line_color", "Mean-difference line colour"),
+        _color_role("ci_band_color", "Confidence band colour"),
         _REF_LINE_STYLE, _REF_LINE_COLOR,Option("show_ci", "Shade 95% CI of bias", "bool", False, scope="style")],
     "precision_recall_curve": [
         _REF_LINE_STYLE, _REF_LINE_COLOR,],
@@ -583,6 +612,9 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("normalize", "Normalize", "choice", "none", ["none", "row", "column", "total"], scope="style"),
     ],
     "calibration_plot": [
+        _color_role("curve_color", "Calibration curve colour"),
+        _color_role("point_color", "Point colour"),
+        _color_role("marker_edge_color", "Point outline colour"),
         _REF_LINE_STYLE, _REF_LINE_COLOR,
         Option("n_bins", "Number of bins", "number", 10, minimum=3, maximum=20, step=1, decimals=0),
     ],

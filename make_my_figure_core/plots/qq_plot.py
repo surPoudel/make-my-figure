@@ -25,6 +25,7 @@ from make_my_figure_core.plots.base import (
     coerce_numeric,
     figure_size,
     get_mapping,
+    role_color,
     require_columns,
     style_axes,
 )
@@ -71,8 +72,14 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             obs = np.sort(neg_log10(pv))[::-1]           # largest -log10 first
             expected_p = (np.arange(1, n + 1) - 0.5) / n
             exp = -np.log10(expected_p)                  # also largest first
-            ax.scatter(exp, obs, s=max(8.0, style.marker_size * 0.4), color=style.color_for(0),
-                       edgecolors="none", alpha=style.marker_alpha, zorder=3)
+            ax.scatter(exp, obs, s=max(8.0, style.marker_size * 0.4),
+                       color=role_color(spec, "point_color", style.color_for(0)),
+                       # "none" stays the default, so a p-value Q-Q looks exactly
+                       # as it did; the control was simply unreachable on this
+                       # branch while it worked on the other.
+                       edgecolors=role_color(spec, "marker_edge_color", "none"),
+                       linewidths=style.marker_edge_width,
+                       alpha=style.marker_alpha, zorder=3)
             lam = _lambda_gc(pv)
             meta_extra["lambda_gc"] = lam
             meta_extra["n_points"] = int(n)
@@ -109,7 +116,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             mu, sd = float(np.mean(vals)), float(np.std(vals) or 1.0)
             theo_scaled = mu + sd * theo
             ax.scatter(theo_scaled, vals, s=max(8.0, style.marker_size * 0.4),
-                       color=style.color_for(0), edgecolors="white",
+                       color=role_color(spec, "point_color", style.color_for(0)),
+                       edgecolors=role_color(spec, "marker_edge_color", "white"),
                        linewidths=style.marker_edge_width, alpha=style.marker_alpha, zorder=3)
             meta_extra["n_points"] = int(n)
             x_label = "Theoretical quantiles (normal)"

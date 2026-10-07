@@ -648,7 +648,21 @@ class FigureBuilderDialog(QDialog):
         v.addWidget(self.size_group)
 
         # --- figure-wide fonts ---
-        font_group = QGroupBox("Fonts (points, applied to all panels)")
+        # Checkable and OFF by default. These boxes always held a value, so the
+        # "None keeps each panel's own size" contract in FigureLayout was
+        # unreachable from the GUI: every panel was restyled on insertion whether
+        # or not the user had asked. Measured at identical physical size, that
+        # moved the title +50%, the axis labels -37.5% and the statistics +50%,
+        # inverting the type hierarchy by 2.4x - which is the whole of the
+        # "I have to format the plot again" report.
+        font_group = QGroupBox("Override fonts for all panels")
+        font_group.setCheckable(True)
+        font_group.setChecked(False)
+        font_group.setToolTip(
+            "Off: each panel keeps the typography it was finalized with.\n"
+            "On: these sizes are applied to every panel, replacing their own.")
+        font_group.toggled.connect(self._schedule_preview)
+        self._font_group = font_group
         fg = self._form(font_group)
         self.text_spin = self._font_spin(self._FONT_DEFAULTS["text"])
         self.axis_spin = self._font_spin(self._FONT_DEFAULTS["axis"])
@@ -857,6 +871,7 @@ class FigureBuilderDialog(QDialog):
         ncols = None if ncols_txt == "Auto" else int(ncols_txt)
         nrows_txt = self.rows_combo.currentText()
         nrows = None if nrows_txt == "Auto" else int(nrows_txt)
+        _fonts_on = bool(getattr(self, "_font_group", None) and self._font_group.isChecked())
         return FigureLayout(
             ncols=ncols,
             nrows=nrows,
@@ -866,10 +881,18 @@ class FigureBuilderDialog(QDialog):
             label_style=self.label_style_combo.currentText(),
             panel_dpi=self.dpi_spin.value(),
             label_size=float(self.label_spin.value()),
-            base_font_pt=float(self.text_spin.value()),
-            axis_font_pt=float(self.axis_spin.value()),
-            tick_label_pt=float(self.tick_spin.value()),
-            legend_pt=float(self.legend_spin.value()),
+            # None means "keep the panel's own typography", which is now the
+            # default. When the user does opt in, the WHOLE hierarchy is replaced:
+            # overriding four of nine tokens left the title and the statistics at
+            # their original size while the axis labels dropped, which is what
+            # made type collide.
+            base_font_pt=(float(self.text_spin.value()) if _fonts_on else None),
+            axis_font_pt=(float(self.axis_spin.value()) if _fonts_on else None),
+            tick_label_pt=(float(self.tick_spin.value()) if _fonts_on else None),
+            legend_pt=(float(self.legend_spin.value()) if _fonts_on else None),
+            title_font_pt=(float(self.text_spin.value()) * 1.15 if _fonts_on else None),
+            annotation_pt=(float(self.text_spin.value()) if _fonts_on else None),
+            legend_title_pt=(float(self.legend_spin.value()) if _fonts_on else None),
         )
 
     # --- layout presets --------------------------------------------------------------------

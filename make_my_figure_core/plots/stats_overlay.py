@@ -395,12 +395,78 @@ def annotate_above(
     return {"n_labels": len(placed), "placed": placed, "unplaced": unplaced,
             "reference": ref, "top": ax.get_ylim()[1]}
 
+def _fit_corner_panel(ax, text) -> None:
+    """Keep the corner statistics panel inside the figure.
+
+    The panel is placed in axes coordinates with no fitting pass, so a line like
+    "One-way ANOVA: F = 636, p < 0.001" simply ran off the canvas - and what the
+    author saw as a formatting bug, "p < 0.", was the right-hand end of a
+    correctly formatted string being cut off. At a three-up panel width only 26%
+    of it survived, leaving "One-way A".
+
+    Shrinking cannot be the whole answer for a statistic, so the text is wrapped
+    at its separators first and only then stepped down, never below the shared
+    legibility floor. The caller is told when it had to act.
+    """
+    from make_my_figure_core.styles.typography import ABSOLUTE_MIN_PT
+
+    figure = ax.figure
+    try:
+        figure.canvas.draw()
+        renderer = figure.canvas.get_renderer()
+    except Exception:  # noqa: BLE001
+        return
+
+    def overflow() -> float:
+        try:
+            box = text.get_window_extent(renderer)
+        except Exception:  # noqa: BLE001
+            return 0.0
+        return max(0.0, -box.x0, box.x1 - figure.bbox.width,
+                   -box.y0, box.y1 - figure.bbox.height)
+
+    if overflow() <= 0.5:
+        return
+    # Wrap at ", " before shrinking: a statistic stays readable on two lines and
+    # stops being a statistic at four points.
+    if ", " in text.get_text():
+        text.set_text(text.get_text().replace(", ", "\n"))
+        try:
+            figure.canvas.draw()
+            renderer = figure.canvas.get_renderer()
+        except Exception:  # noqa: BLE001
+            return
+        if overflow() <= 0.5:
+            return
+    size = float(text.get_fontsize())
+    while overflow() > 0.5 and size > ABSOLUTE_MIN_PT:
+        size = max(ABSOLUTE_MIN_PT, size - 0.5)
+        text.set_fontsize(size)
+        try:
+            figure.canvas.draw()
+            renderer = figure.canvas.get_renderer()
+        except Exception:  # noqa: BLE001
+            return
+
+
 def annotate_corner(ax, lines: List[str], *, style, loc: str = "upper left",
-                    fontsize: Optional[float] = None) -> None:
-    """Place a small multi-line stats panel in a plot corner without overlap."""
+                    fontsize: Optional[float] = None, cfg: Optional[dict] = None) -> None:
+    """Place a small multi-line stats panel in a plot corner without overlap.
+
+    ``cfg`` is the StatsSpec annotation block. Reading ``font_size`` from it is
+    what makes the "Annotation font pt" control work here: the bracket engine
+    already honoured it, this panel did not, so setting the control to 6 or to 20
+    produced the same 7.83 pt text either way.
+    """
     if not lines:
         return
-    fs = fontsize or getattr(style, "annotation_pt", 9.5)
+    cfg = cfg or {}
+    _cfg_fs = cfg.get("font_size")
+    try:
+        _cfg_fs = float(_cfg_fs) if _cfg_fs else None
+    except (TypeError, ValueError):
+        _cfg_fs = None
+    fs = fontsize or _cfg_fs or getattr(style, "annotation_pt", 9.5)
     text_color = getattr(style, "text_color", "#1a1a1a")
     positions = {
         "upper left": (0.03, 0.97, "left", "top"),
@@ -411,10 +477,19 @@ def annotate_corner(ax, lines: List[str], *, style, loc: str = "upper left",
         "center left": (0.03, 0.50, "left", "center"),
     }
     x, y, ha, va = positions.get(loc, positions["upper left"])
-    ax.text(x, y, "\n".join(lines), transform=ax.transAxes, ha=ha, va=va,
-            fontsize=fs, color=text_color,
-            bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="none", alpha=0.75),
-            zorder=8)
+    _panel = ax.text(x, y, "\n".join(lines), transform=ax.transAxes, ha=ha, va=va,
+                     fontsize=fs, color=text_color,
+                     bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="none", alpha=0.75),
+                     zorder=8)
+    _fit_corner_panel(ax, _panel)
+    # The axes move again when the layout pass reserves room for a legend, so the
+    # fit has to be redone against whatever the axes end up as.
+    try:
+        from make_my_figure_core.plots.base import register_refit
+
+        register_refit(ax.figure, lambda a=ax, t=_panel: _fit_corner_panel(a, t))
+    except Exception:  # noqa: BLE001
+        pass
 
 
 def annotate_text_below_legend(ax, text: str, *, style, y: float = -0.02) -> None:

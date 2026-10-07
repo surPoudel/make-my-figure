@@ -57,7 +57,9 @@ _GRAYSCALE = ["#111111", "#555555", "#888888", "#AAAAAA", "#333333", "#666666"]
 
 _PALETTES: Dict[str, List[str]] = {
     "publication": _PUBLICATION,
+    # Unchanged: an old PlotSpec naming this must still resolve to Okabe-Ito.
     "nature_like": _OKABE_ITO,
+    "okabe_ito": _OKABE_ITO,
     "science_like": ["#1B1B1B", "#0072B2", "#D55E00", "#009E73", "#CC79A7", "#E69F00"],
     "cell_like": ["#3B6FB6", "#E8743B", "#19A979", "#945ECF", "#ED4A7B", "#13A4B4"],
 }
@@ -66,9 +68,30 @@ _PALETTES: Dict[str, List[str]] = {
 # The trailing journal-named entries are retained ONLY as back-compat aliases so
 # old PlotSpecs with those palette_name values still resolve; they are NOT shown
 # in the UI (see USER_PALETTES) and are not journal templates.
+# Paul Tol's "muted" qualitative scheme. Also colourblind-safe, and chosen here
+# because it is genuinely DIFFERENT from Okabe-Ito at every index.
+#
+# "colorblind_safe" used to be _OKABE_ITO, which differs from the publication
+# default at exactly one of its eight entries. Any figure with six categories or
+# fewer therefore rendered pixel-identically under the two palettes - measured on
+# 40 of the 45 plot types - so the palette chooser appeared to do nothing. The
+# publication default is itself Okabe-Ito based and remains colourblind-safe; the
+# problem was never that it was unsafe, it was that picking the "safe" one changed
+# nothing visible.
+_TOL_MUTED = [
+    "#CC6677",  # rose
+    "#332288",  # indigo
+    "#DDCC77",  # sand
+    "#117733",  # green
+    "#88CCEE",  # cyan
+    "#882255",  # wine
+    "#44AA99",  # teal
+    "#999933",  # olive
+]
+
 NAMED_PALETTES: Dict[str, List[str]] = {
     "publication": _PUBLICATION,
-    "colorblind_safe": _OKABE_ITO,
+    "colorblind_safe": _TOL_MUTED,
     "high_contrast": _HIGH_CONTRAST,
     "grayscale": _GRAYSCALE,
     # --- legacy aliases (hidden) ---
