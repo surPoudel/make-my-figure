@@ -56,6 +56,36 @@ Two supporting changes make the alignment *stable* rather than merely correct:
   the one the type has to stay legible in, and using it means making a panel
   bigger never restyles anything.
 
+## Second report: the block edge, not just the plot edge
+
+Re-tested on `2ba687a` with a second package (`Figure_1_new`: box plot, bar
+chart, clustered heatmap, Kaplan-Meier). Measured on the preview PNG, in pixels
+of a 2159 px wide figure:
+
+| | panel A (box plot) | panel C (heatmap) |
+|---|---|---|
+| plot frame left | x = 227 | x = 229 |
+| leftmost ink (the y-axis label) | x = **77** | x = **41** |
+
+So the frames were aligned to a pixel and the blocks were 36 px - about 3 mm on
+a 180 mm figure - out of line, which reads as the heatmap sticking out past its
+neighbour. Both can be true at once: a y-axis label is positioned by a pad
+rather than by the data, so the narrower panel's label is pushed out until its
+leading decoration measures the same as the column's widest. After the fix, on
+the same package:
+
+| | frame x0 | block x0 (leftmost ink) |
+|---|---|---|
+| A | 0.950 in | 0.234 in |
+| C | 0.950 in | 0.234 in |
+| B | 4.484 in | 4.054 in |
+| D | 4.484 in | 4.055 in |
+
+The panel letter now hangs off the block's top-left corner rather than the
+plot's, with its offset taken against the column width, so the letters line up
+down a column too (measured 1 px apart, which is the difference between the
+antialiased apex of an `A` and the bowl of a `C`).
+
 ## Bottom alignment is now a control
 
 Panels in a row are drawn the same height already; what differs is how much of

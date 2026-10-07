@@ -328,3 +328,58 @@ def test_matching_plot_heights_lines_the_frames_up_along_the_bottom():
     assert abs(a["y0"] - b["y0"]) > 0.5           # the reported mismatch
     assert a2["y0"] == pytest.approx(b2["y0"], abs=0.005)
     assert a2["y1"] == pytest.approx(b2["y1"], abs=0.005)
+
+
+# --------------------------------------------------------------------------
+# the outside edge of the panel, not just the plot inside it
+# --------------------------------------------------------------------------
+
+@pytest.mark.parametrize("width", [3.2, 4.2])
+def test_panels_in_a_column_share_one_block_left_edge(frames_by_width, width):
+    """"The ylabel, or whichever is the leftmost part, should align."
+
+    Aligning the plotting frames alone leaves the panels ragged on the OUTSIDE:
+    a heatmap's row labels are wider than a bar chart's tick numbers, so the
+    heatmap's block hung 3 mm past the panel above it in the same column. Both
+    edges are true at once now, because a y-axis label is positioned by a pad
+    rather than by the data and can be pushed out to match its neighbour.
+    """
+    f = frames_by_width[width]
+    for col in (0, 1):
+        edges = [v["block_x0"] for v in f.values() if v["col"] == col]
+        assert max(edges) - min(edges) == pytest.approx(0.0, abs=0.01), (
+            f"column {col} panel blocks start at {edges}")
+
+
+def test_the_block_edge_does_not_cost_the_plot_its_alignment():
+    """Flushing the blocks must not break the frames - both, or it is no good."""
+    fig = build_figure(_composite(widths={2: 4.2}))
+    frames = {f["label"]: f for f in panel_frames(fig)}
+    plt.close(fig)
+    assert frames["A"]["x0"] == pytest.approx(frames["C"]["x0"], abs=0.002)
+    assert frames["B"]["x0"] == pytest.approx(frames["D"]["x0"], abs=0.002)
+
+
+def test_the_panel_letter_sits_just_outside_the_block_corner():
+    """"A should have little gap and the plot should be aligned just below A,
+    so A looks little more left than plot."
+
+    The letter is the leftmost thing in its panel, by a hair, and the block
+    starts just below it. Hung off the column rather than off each panel's own
+    plot width, or A ends up 0.03 in further out than C in the same column.
+    """
+    fig = build_figure(_composite())
+    frames = {f["label"]: f for f in panel_frames(fig)}
+    width_in, height_in = (float(v) for v in fig.get_size_inches())
+    letters = {t.get_text(): (t.get_position()[0] * width_in,
+                              t.get_position()[1] * height_in)
+               for t in fig.texts if t.get_text() in ("A", "B", "C", "D")}
+    plt.close(fig)
+    assert set(letters) == {"A", "B", "C", "D"}
+    for label, (lx, ly) in letters.items():
+        block = frames[label]["block_x0"]
+        assert lx < block, f"{label}: the letter is not left of its block"
+        assert block - lx < 0.25, f"{label}: the letter is {block - lx:.2f} in adrift"
+        assert ly > frames[label]["y1"], f"{label}: the letter is not above the plot"
+    assert letters["A"][0] == pytest.approx(letters["C"][0], abs=0.002)
+    assert letters["B"][0] == pytest.approx(letters["D"][0], abs=0.002)

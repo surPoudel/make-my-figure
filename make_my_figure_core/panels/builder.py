@@ -149,6 +149,7 @@ class _PanelGeometry:
     box: Bbox
     axes: Bbox
     overflow: float = 0.0          # inches of content that spilled off the canvas
+    ink: Optional[Bbox] = None     # the drawn content, without the canvas margin
 
     @property
     def pad_left(self) -> float:
@@ -176,7 +177,8 @@ class _PanelGeometry:
             return Bbox([[b.x0 * factor, b.y0 * factor], [b.x1 * factor, b.y1 * factor]])
 
         return _PanelGeometry(box=_mul(self.box), axes=_mul(self.axes),
-                              overflow=self.overflow * factor)
+                              overflow=self.overflow * factor,
+                              ink=_mul(self.ink) if self.ink is not None else None)
 
 
 def _measure_panel(fig: Figure) -> _PanelGeometry:
@@ -210,7 +212,8 @@ def _measure_panel(fig: Figure) -> _PanelGeometry:
         boxes.append(Bbox([[ext.x0 / fig.dpi, ext.y0 / fig.dpi],
                            [ext.x1 / fig.dpi, ext.y1 / fig.dpi]]))
     axes = Bbox.union(boxes) if boxes else box
-    return _PanelGeometry(box=box, axes=axes, overflow=overflow)
+    return _PanelGeometry(box=box, axes=axes, overflow=overflow,
+                          ink=tight if tight is not None else box)
 
 
 # Breathing room left around a panel's content when its margins are fitted, in
@@ -462,7 +465,7 @@ def _draw_panel(panel: Panel, font_overrides: Dict[str, Any],
             image_cache[id(panel)] = (img, px_aspect)
         height = float(want_h) if want_h else want_w * px_aspect
         box = Bbox([[0.0, 0.0], [want_w, height]])
-        return _PanelDraw(img, _PanelGeometry(box=box, axes=box))
+        return _PanelDraw(img, _PanelGeometry(box=box, axes=box, ink=box))
 
     if panel.figure is not None:
         # A pre-rendered figure has one shape; it is scaled, never re-drawn.
@@ -481,6 +484,40 @@ def _draw_panel(panel: Panel, font_overrides: Dict[str, Any],
     warns.extend(f"[{panel.label}] {w}" for w in getattr(fig, "_mmf_render_warnings", []))
     return _PanelDraw(img, geo, figure=fig, margins_fitted=fitted,
                       typography=_measured_typography(fig))
+
+
+# The most a y-axis label may be pushed out to make a column's left edges
+# flush, in inches. Past this the two panels are not comparable - a plot with no
+# decoration at all beside a heatmap with 20-character row labels - and leaving
+# the block edge ragged is better than throwing the label halfway across the
+# figure to hide it.
+MAX_LABEL_LEAD_PUSH_IN = 0.75
+
+
+def _leftmost_data_axes(fig: Figure):
+    """The data axes nearest the left edge, or ``None``."""
+    axes = _data_axes(fig)
+    if not axes:
+        return None
+    return min(axes, key=lambda a: a.get_position().x0)
+
+
+def _push_axis_label_out(fig: Figure, inches: float) -> bool:
+    """Move the y-axis label ``inches`` further from its axes. False if it has none.
+
+    ``labelpad`` is points of white space between the tick labels and the axis
+    label, so this moves the label and nothing else: the axes does not move, the
+    plot keeps its width, and the space opens up in the gap between two pieces
+    of text where no reader can see it.
+    """
+    ax = _leftmost_data_axes(fig)
+    if ax is None or not ax.yaxis.label.get_text().strip():
+        return False
+    try:
+        ax.yaxis.labelpad = float(ax.yaxis.labelpad) + inches * 72.0
+    except Exception:  # noqa: BLE001
+        return False
+    return True
 
 
 def _label_padding(layout: FigureLayout, n: int) -> Tuple[float, float]:
@@ -699,6 +736,35 @@ def build_figure(mpf: MultiPanelFigure) -> Figure:
                     own_figs.append(draw.figure)
                 final[i] = draw
 
+    # Flush the left edge of the panel BLOCKS as well as the plots inside them.
+    #
+    # Aligning the plotting frames leaves the panels ragged on the outside,
+    # because one panel's row labels are wider than another's tick numbers:
+    # measured 3 mm between a box plot and a heatmap in the same column, which
+    # reads as the heatmap sticking out past its neighbour. Both edges can be
+    # true at once. A y-axis label is positioned by a pad rather than by the
+    # data, so pushing the narrower panel's label out until its leading
+    # decoration measures the same as its neighbour's puts the block edges flush
+    # AND keeps the frames aligned - and the white space it adds falls between
+    # the tick numbers and the label, where there is nothing to see.
+    def _ink_lead(g: _PanelGeometry) -> float:
+        """Inches from the leftmost thing the panel draws to its plotting frame."""
+        return float(g.axes.x0 - (g.ink if g.ink is not None else g.box).x0)
+
+    for c in range(ncols):
+        target = max((_ink_lead(final[i].geometry) for i in _col(c)), default=0.0)
+        for i in _col(c):
+            short = target - _ink_lead(final[i].geometry)
+            fig = final[i].figure
+            if (short <= 0.01 or short > MAX_LABEL_LEAD_PUSH_IN or fig is None
+                    or not _push_axis_label_out(fig, short)):
+                continue
+            geo = _measure_panel(fig)
+            final[i] = _PanelDraw(_figure_to_image(fig, layout.panel_dpi, geo.box),
+                                  geo, figure=fig,
+                                  margins_fitted=final[i].margins_fitted,
+                                  typography=final[i].typography)
+
     # --- step 3: the grid, from what the drawn panels measure ---------------
     align_left = [max((final[i].geometry.pad_left for i in _col(c)), default=0.0)
                   for c in range(ncols)]
@@ -758,6 +824,7 @@ def build_figure(mpf: MultiPanelFigure) -> Figure:
             r, c = rc[i]
             cell = gs[r, c].get_position(comp)
             geo = final[i].geometry
+            ink = geo.ink if geo.ink is not None else geo.box
             img = final[i].image
             ax = comp.add_subplot(gs[r, c])
             x0 = cell.x0 * fig_w_in + shift_x[i]
@@ -779,6 +846,13 @@ def build_figure(mpf: MultiPanelFigure) -> Figure:
                 "x1": x0 + (geo.axes.x1 - geo.box.x0),
                 "y1": y1 - (geo.box.y1 - geo.axes.y1),
                 "y0": y1 - (geo.box.y1 - geo.axes.y0),
+                # The panel BLOCK - the leftmost and rightmost thing it
+                # actually draws, axis label included, rather than the edge of
+                # its canvas. Panels in a column share "block_x0" as well as
+                # "x0"; that is what stops a heatmap's row labels hanging out
+                # past the box plot above it.
+                "block_x0": x0 + (ink.x0 - geo.box.x0),
+                "block_x1": x0 + (ink.x1 - geo.box.x0),
             })
             if geo.overflow > 0.02:
                 warns.append(
@@ -804,15 +878,22 @@ def build_figure(mpf: MultiPanelFigure) -> Figure:
                     if panel.is_external and a.coords == "data":
                         a.coords = "axes"
                 apply_annotations(comp, ax, anns, _ann_style)
-            # Bold panel label, placed on the CELL rather than on the picture:
+            # Bold panel label, outside the panel's top-left corner: a hair
+            # left of everything the panel draws, with the block starting just
+            # below it. Hung off the CELL rather than off the picture, because
             # the pictures in a row start at different heights (one has a title,
-            # another does not), so hanging the letters off them put A and B at
-            # different heights on the page.
-            label_x = (cell.x0 * fig_w_in + align_left[c]
-                       + layout.label_dx * max(geo.axes.width, 0.1))
+            # another does not) and that put A and B at different heights on the
+            # page; and off the block's left edge rather than the plot's, so the
+            # letter is the leftmost thing in its panel rather than sitting over
+            # the y-axis label.
+            # ``label_dx`` is taken against the COLUMN's width, not this panel's
+            # own plot width: the letters hang off the cell now, and scaling the
+            # offset by each panel's plot made A sit 0.03 in further out than C
+            # in the same column, which is visible as a ragged left edge.
+            label_x = cell.x0 * fig_w_in + layout.label_dx * col_w[c]
             label_y = cell.y1 * fig_h_in + (layout.label_dy - 1.0) * (cell.height * fig_h_in)
             comp.text(label_x / fig_w_in, label_y / fig_h_in, panel.label,
-                      ha="right", va="bottom", fontsize=layout.label_size,
+                      ha="left", va="bottom", fontsize=layout.label_size,
                       fontweight=layout.label_weight, color="#000000")
         # Hide any unused trailing cells.
         for j in range(n, nrows * ncols):
@@ -853,9 +934,10 @@ def panel_typography(fig: Figure) -> List[Dict[str, float]]:
 def panel_frames(fig: Figure) -> List[Dict[str, Any]]:
     """Where each panel's plotting frame sits on the composite, in inches.
 
-    One dict per panel: ``label``, ``row``, ``col`` and the frame's ``x0``,
-    ``x1``, ``y0``, ``y1``. Panels in a column share ``x0`` and panels in a row
-    share ``y1``; that is the alignment contract, and this is how to check it.
+    One dict per panel: ``label``, ``row``, ``col``, the frame's ``x0``, ``x1``,
+    ``y0``, ``y1``, and the panel block's ``block_x0`` / ``block_x1``. Panels in
+    a column share ``x0`` AND ``block_x0``; panels in a row share ``y1``. That
+    is the alignment contract, and this is how to check it.
     """
     return [dict(f) for f in getattr(fig, "_mmf_panel_frames", [])]
 

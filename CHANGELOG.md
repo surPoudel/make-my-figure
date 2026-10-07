@@ -38,6 +38,18 @@ figure, taken from the composite in inches.
   **Match plot heights across each row** re-draws the shorter panels taller so
   every frame in the row shares a top *and* a bottom edge. Off by default: it
   draws a panel at a height other than the one that was asked for.
+- **The panel block lines up, not just the plot inside it.** Aligning the
+  plotting frames left the panels ragged on the outside: a heatmap's row labels
+  are wider than a box plot's tick numbers, so the heatmap's block hung about
+  3 mm past the panel above it in the same column. Both edges are true at once
+  now — a y-axis label is positioned by a pad rather than by the data, so the
+  narrower panel's label is pushed out until its leading decoration measures the
+  same as its neighbour's. The white space goes between the tick numbers and the
+  label, where there is nothing to see.
+- **The panel letter sits just outside the block's top-left corner**, a hair left
+  of everything the panel draws, with the block starting just below it — and its
+  offset is taken against the column's width rather than each panel's own plot,
+  so A and C are not 0.03 in apart in the same column.
 - **Panel letters sit on one line.** They were hung off each panel's picture, and
   the pictures in a row start at different heights, so A and B were at different
   heights on the page.
