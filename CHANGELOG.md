@@ -31,6 +31,13 @@ figure, taken from the composite in inches.
   12 pt axis labels beside 10.2 pt ones in the same figure. The hierarchy is now
   scaled once, to the smallest panel — so making a panel smaller still pulls the
   type down, and making one bigger never restyles the figure.
+- **Plot heights can be matched across a row.** Panels in a row are drawn the
+  same height already; what differs is how much of that height goes below the
+  axes — rotated category labels take more room than a heatmap's sample names —
+  so the plots ended at different places and the bottoms could not be lined up.
+  **Match plot heights across each row** re-draws the shorter panels taller so
+  every frame in the row shares a top *and* a bottom edge. Off by default: it
+  draws a panel at a height other than the one that was asked for.
 - **Panel letters sit on one line.** They were hung off each panel's picture, and
   the pictures in a row start at different heights, so A and B were at different
   heights on the page.

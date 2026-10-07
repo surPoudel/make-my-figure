@@ -676,6 +676,29 @@ def build_figure(mpf: MultiPanelFigure) -> Figure:
             own_figs.append(draw.figure)
         final.append(draw)
 
+    # Optional: one PLOT height per row, so the frames line up along the bottom
+    # as well as the top. Panels in a row are already drawn the same height; what
+    # differs is how much of it goes below the axes - a bar chart with rotated
+    # category labels spends 0.5 in there and a heatmap 0.3 in - so the plots end
+    # at different places. Equalizing means re-drawing the shorter ones on a
+    # taller canvas, which is why it is a choice rather than the default.
+    if layout.match_plot_heights:
+        for r in range(nrows):
+            target = max((final[i].geometry.axes.height for i in _row(r)), default=0.0)
+            for i in _row(r):
+                short = target - final[i].geometry.axes.height
+                if short <= 0.01 or not _can_resize(panels[i]):
+                    continue
+                draw = _draw_panel(panels[i], font_overrides,
+                                   (final[i].geometry.width,
+                                    final[i].geometry.height + short),
+                                   layout.panel_dpi, rasterize=True, warns=warns,
+                                   image_cache=image_cache, pad_in=pad_in,
+                                   typo_scale=typo_scale)
+                if draw.figure is not None:
+                    own_figs.append(draw.figure)
+                final[i] = draw
+
     # --- step 3: the grid, from what the drawn panels measure ---------------
     align_left = [max((final[i].geometry.pad_left for i in _col(c)), default=0.0)
                   for c in range(ncols)]

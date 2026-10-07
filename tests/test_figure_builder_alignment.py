@@ -311,3 +311,20 @@ def test_a_heatmap_with_room_keeps_every_label():
     notes = panel_warnings(fig)
     plt.close(fig)
     assert not any("1 in every" in n and "Row labels" in n for n in notes), notes
+
+
+def test_matching_plot_heights_lines_the_frames_up_along_the_bottom():
+    """"The plot height should be aligned at any cost, or the top part."
+
+    Panels in a row are drawn the same height already; what differs is how much
+    of it goes below the axes - a bar chart's rotated category labels take more
+    room than a heatmap's sample names - so the plots end at different places.
+    """
+    loose = build_figure(_composite(widths={2: 4.2}))
+    tight = build_figure(_composite(widths={2: 4.2}, match_plot_heights=True))
+    a, b = (f for f in panel_frames(loose) if f["label"] in ("A", "B"))
+    a2, b2 = (f for f in panel_frames(tight) if f["label"] in ("A", "B"))
+    plt.close(loose); plt.close(tight)
+    assert abs(a["y0"] - b["y0"]) > 0.5           # the reported mismatch
+    assert a2["y0"] == pytest.approx(b2["y0"], abs=0.005)
+    assert a2["y1"] == pytest.approx(b2["y1"], abs=0.005)

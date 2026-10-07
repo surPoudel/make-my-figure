@@ -563,6 +563,16 @@ class FigureBuilderDialog(QDialog):
             "against each other, a larger value opens the composite out.")
         self.panel_pad_spin.valueChanged.connect(self._schedule_preview)
         form.addRow("Panel padding", self.panel_pad_spin)
+        self.match_heights_check = QCheckBox("Match plot heights across each row")
+        self.match_heights_check.setToolTip(
+            "Give every panel in a row the same plot height, so the plots line up "
+            "along the bottom as well as the top. Panels in a row are already drawn "
+            "the same height; what differs is how much of it goes below the axes - "
+            "rotated category labels take more room than a heatmap's sample names - "
+            "so without this the plots end at different places. The shorter panels "
+            "are re-drawn taller to match; nothing is stretched.")
+        self.match_heights_check.toggled.connect(self._schedule_preview)
+        form.addRow("", self.match_heights_check)
         self.label_style_combo = QComboBox()
         self.label_style_combo.addItems(["A", "a", "1"])
         self.label_style_combo.setToolTip("Panel letter style: A B C, a b c, or 1 2 3.")
@@ -930,6 +940,7 @@ class FigureBuilderDialog(QDialog):
             annotation_pt=(float(self.annotation_spin.value()) if _fonts_on else None),
             legend_title_pt=(float(self.legend_title_spin.value()) if _fonts_on else None),
             panel_pad_mm=float(self.panel_pad_spin.value()),
+            match_plot_heights=bool(self.match_heights_check.isChecked()),
         )
 
     # --- layout presets --------------------------------------------------------------------
@@ -967,6 +978,7 @@ class FigureBuilderDialog(QDialog):
             self.label_spin.setValue(float(layout.label_size))
             if layout.panel_pad_mm is not None:
                 self.panel_pad_spin.setValue(float(layout.panel_pad_mm))
+            self.match_heights_check.setChecked(bool(layout.match_plot_heights))
             pairs = ((self.text_spin, layout.base_font_pt),
                      (self.axis_spin, layout.axis_font_pt),
                      (self.tick_spin, layout.tick_label_pt),

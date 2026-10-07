@@ -143,6 +143,13 @@ class FigureLayout:
     # the built-in hairline, which is what every figure laid out before this
     # control existed was drawn with.
     panel_pad_mm: Optional[float] = None
+    # Give every panel in a row the same PLOT height, so their frames line up
+    # along the bottom as well as the top. Panels in a row are drawn the same
+    # height by default, but a bar chart with rotated tick labels spends more of
+    # that height below its axes than a heatmap does, so the plots themselves
+    # end at different places. Off by default: it re-draws a panel to a height
+    # other than the one that was asked for, which is the user's call.
+    match_plot_heights: bool = False
     # Per-panel titles are OFF by default: the panel letter (A, B, ...) plus the
     # figure legend already identify each panel, and a centered title collides
     # with the top-left label. The title stays populated on the Panel for use in
@@ -193,6 +200,7 @@ class FigureLayout:
             "label_dx": self.label_dx, "label_dy": self.label_dy,
             "panel_dpi": self.panel_dpi, "background": self.background,
             "panel_pad_mm": self.panel_pad_mm,
+            "match_plot_heights": self.match_plot_heights,
             "show_titles": self.show_titles,
             "base_font_pt": self.base_font_pt, "axis_font_pt": self.axis_font_pt,
             "tick_label_pt": self.tick_label_pt, "legend_pt": self.legend_pt,

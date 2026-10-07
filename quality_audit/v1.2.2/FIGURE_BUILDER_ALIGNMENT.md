@@ -56,6 +56,22 @@ Two supporting changes make the alignment *stable* rather than merely correct:
   the one the type has to stay legible in, and using it means making a panel
   bigger never restyles anything.
 
+## Bottom alignment is now a control
+
+Panels in a row are drawn the same height already; what differs is how much of
+that height goes below the axes. In the reported figure, panel A (rotated
+category labels) and panel B (a heatmap) differed by **1.52 in** of frame
+height, which is why their bottoms could not be lined up. With **Match plot
+heights across each row**:
+
+| | A frame | B frame | C frame | D frame |
+|---|---|---|---|---|
+| off | 6.440 – 8.205 | 4.918 – 8.205 | 0.396 – 3.214 | 1.158 – 3.214 |
+| on  | 5.048 – 8.335 | 5.048 – 8.335 | 0.434 – 3.253 | 0.434 – 3.253 |
+
+Off by default, because it draws a panel at a height other than the one that was
+asked for.
+
 ## Gates
 
 | Gate | Result |
