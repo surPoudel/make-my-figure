@@ -8,6 +8,97 @@ with any journal.
 
 _Nothing yet._
 
+## [1.2.1] — Corrective release: Figure Builder, style state, palettes, spatial ROI, PCA grouping, margins
+
+A patch release fixing regressions reported from real use of v1.2.0. No new
+scientific capability; every item below is a defect corrected.
+
+### Fixed — Figure Builder no longer restyles a finished plot
+
+- **A panel keeps the typography it was finalized with.** The builder's font
+  boxes always held a value, so the documented "keep each panel's own size"
+  setting was unreachable and every panel was restyled on insertion whether or
+  not it was asked for. Measured at identical physical size, the title grew 50%,
+  the axis labels shrank 37.5% and the statistics grew 50%, inverting the type
+  hierarchy by 2.4× — which is why text collided and the plot had to be formatted
+  again. The override is now a checkbox, **off by default**, and when it is used
+  it replaces the whole hierarchy rather than four of nine tokens.
+- **Statistics text is sized by its own control.** "Annotation font pt" did
+  nothing for the corner statistics panel: 6 pt and 20 pt both drew 7.83 pt. The
+  bracket engine honoured the setting; the corner panel did not.
+- **Statistics text is no longer cut off.** `p < 0.` was not a formatting fault —
+  the formatter is correct — it was a correctly formatted string running past the
+  edge of the canvas, with as little as 26% of it visible on a three-up panel.
+  The panel is now fitted to the figure.
+- **A p value that is not zero can no longer print as zero.** At one decimal
+  digit, `p = 0.049` was reported as `p = 0.0`; it now reads `p < 0.1`.
+
+### Fixed — a new plot starts clean
+
+- Styling from the previous figure carried into the next one: title, axis labels,
+  fonts, palette, margins, figure size, picked labels and statistics settings —
+  21 settings in all — so a box plot of different data arrived titled with the
+  previous figure's title in its fonts. There was no plot-state object at all;
+  every setting lived in long-lived widgets that nothing ever cleared.
+- **Opening a PlotSpec or a Figure Package now restores that spec and nothing
+  else.** Loading was additive and cleared nothing, so a spec carrying only
+  margins came back with the previous figure's palette, font and resolution.
+- **File ▸ New plot** added; the action did not exist.
+
+### Fixed — colour
+
+- **The palette chooser offered the same palette twice.** `publication` and
+  `colorblind_safe` differed at exactly one of their eight entries, so any figure
+  with six categories or fewer was pixel-identical between them — 40 of the 45
+  plot types. The first colour across the four palettes was blue, blue, black,
+  black. `colorblind_safe` is now a distinct colourblind-safe scheme; old specs
+  naming `nature_like` still resolve to the previous palette.
+- **Three groups draw three colours** on the beeswarm and dot/strip plots. They
+  rejected a colour column that named the x column — asking to colour by the
+  grouping variable, the obvious action — and then fell back to a single colour
+  for every group.
+- **Spatial ROI regions are visible.** With no ROI category mapped, every outline
+  fell back to the text colour and the fill defaulted to transparent, so an ROI
+  table drew as a near-black wireframe. Outline colour, fill opacity and outline
+  width are now adjustable; they existed in the renderer but could not be set
+  from either frontend. The one control that was shown there did nothing and has
+  been removed.
+- **Colour pickers for plots that use a single colour**, in the style the volcano
+  already used for its significance classes: calibration (curve, points, outline),
+  Bland-Altman (points, mean-difference line, confidence band), Q-Q (points,
+  outline), forest (estimate marker, confidence interval) and dendrogram
+  (branches). Plots that cannot use a categorical palette now say so with a
+  reason instead of offering a control that does almost nothing.
+
+### Fixed — Matrix Workflow PCA
+
+- **A PCA started from the Matrix Workflow uses the sample groups you confirmed**,
+  with a legend, by default. Which of two PCA entries you picked decided whether
+  grouping applied, and the obvious one ignored it — and shipped no metadata, so
+  the grouping could not be restored by hand either.
+- **Supplying metadata no longer changes the analysis.** Samples were restricted
+  to those listed in the metadata *before* the decomposition, so an incomplete
+  metadata table silently removed samples and moved every score — dropping one
+  sample of six moved PC1 by about 20%, and four missing raised an error about
+  too few columns. Unlisted samples are kept, drawn as `Unassigned`, and counted.
+  Duplicate sample identifiers no longer raise an unhandled error.
+
+### Fixed — figure margins
+
+- **One change to a margin now does one visible thing.** The controls offered
+  blank space while the layout engine expected edge positions, so nudging the
+  right or top margin produced a value the engine rejected: five clicks did
+  nothing and the sixth collapsed the plot. A saved figure also no longer changes
+  when it is reopened, which that mismatch caused.
+- **The title and axis-label boxes and the style-profile menu now redraw.** They
+  were connected to nothing, so typing a title drew no figure until some other
+  control happened to trigger one.
+
+### Validation
+
+- 22 permanent regression tests, one per defect, each failing on v1.2.0.
+- Full suite: 3979 passed, 3 skipped (v1.2.0: 3957 passed, 3 skipped).
+
 ## [1.2.0] — Spatial analysis, one typography system, and a width that is final
 
 ### Added — plot types (39 → 45)

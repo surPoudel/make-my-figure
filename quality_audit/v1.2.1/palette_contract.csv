@@ -1,0 +1,120 @@
+plot,color_semantics,control,expected_target,palette_A,palette_B,changed,distinct_colours,status
+barplot_with_error_bar,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,5,ok
+barplot_with_error_bar,CATEGORICAL,point_fill,Point fill,default,#CC6677,no,,needs a precondition / no effect
+barplot_with_error_bar,CATEGORICAL,bar_fill,,,,,,refused: RenderError
+beeswarm_plot,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,4,ok
+beeswarm_plot,CATEGORICAL,point_fill,Point fill,default,#CC6677,no,,needs a precondition / no effect
+bland_altman_plot,SINGLE ACCENT / CONTINUOUS,palette_name,categorical artists,publication,colorblind_safe,yes,3,ok
+bland_altman_plot,SINGLE ACCENT / CONTINUOUS,point_color,Point colour,default,#CC6677,yes,,ok
+bland_altman_plot,SINGLE ACCENT / CONTINUOUS,bias_line_color,Mean-difference line colour,default,#CC6677,yes,,ok
+bland_altman_plot,SINGLE ACCENT / CONTINUOUS,ci_band_color,Confidence band colour,default,#CC6677,yes,,ok
+bland_altman_plot,SINGLE ACCENT / CONTINUOUS,reference_line_color,Reference line colour,default,#CC6677,yes,,ok
+boxplot_or_violin_with_points,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,4,ok
+boxplot_or_violin_with_points,CATEGORICAL,point_fill,Point fill,default,#CC6677,no,,needs a precondition / no effect
+boxplot_or_violin_with_points,CATEGORICAL,box_fill,Box fill,default,#CC6677,no,,needs a precondition / no effect
+calibration_plot,SINGLE ACCENT / CONTINUOUS,palette_name,categorical artists,publication,colorblind_safe,yes,3,ok
+calibration_plot,SINGLE ACCENT / CONTINUOUS,curve_color,Calibration curve colour,default,#CC6677,yes,,ok
+calibration_plot,SINGLE ACCENT / CONTINUOUS,point_color,Point colour,default,#CC6677,yes,,ok
+calibration_plot,SINGLE ACCENT / CONTINUOUS,marker_edge_color,Point outline colour,default,#CC6677,yes,,ok
+calibration_plot,SINGLE ACCENT / CONTINUOUS,reference_line_color,Reference line colour,default,#CC6677,yes,,ok
+chord_diagram,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,7,ok
+chord_diagram,CATEGORICAL,ribbon_color_by,Colour ribbons by,default,#CC6677,no,,needs a precondition / no effect
+confusion_matrix,SINGLE ACCENT / CONTINUOUS,palette_name,categorical artists,publication,colorblind_safe,no,256,PALETTE HAS NO EFFECT
+dose_response_curve,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,4,ok
+dot_strip_plot,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,4,ok
+dot_strip_plot,CATEGORICAL,point_fill,Point fill,default,#CC6677,no,,needs a precondition / no effect
+embedding_scatter,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,5,ok
+enrichment_dotplot,SINGLE ACCENT / CONTINUOUS,palette_name,categorical artists,publication,colorblind_safe,no,257,PALETTE HAS NO EFFECT
+forest_plot,SINGLE ACCENT / CONTINUOUS,palette_name,categorical artists,publication,colorblind_safe,yes,2,ok
+forest_plot,SINGLE ACCENT / CONTINUOUS,point_color,Estimate marker colour,default,#CC6677,yes,,ok
+forest_plot,SINGLE ACCENT / CONTINUOUS,ci_line_color,Confidence-interval colour,default,#CC6677,yes,,ok
+forest_plot,SINGLE ACCENT / CONTINUOUS,marker_edge_color,Point outline colour,default,#CC6677,yes,,ok
+forest_plot,SINGLE ACCENT / CONTINUOUS,reference_line_color,Reference line colour,default,#CC6677,yes,,ok
+grouped_barplot_with_error_bar,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,3,ok
+grouped_barplot_with_error_bar,CATEGORICAL,point_fill,Point fill,default,#CC6677,no,,needs a precondition / no effect
+grouped_barplot_with_error_bar,CATEGORICAL,bar_fill,,,,,,refused: RenderError
+heatmap_clustered_matrix,SINGLE ACCENT / CONTINUOUS,palette_name,categorical artists,publication,colorblind_safe,yes,256,ok
+heatmap_clustered_matrix,SINGLE ACCENT / CONTINUOUS,color_scale,Color scale,default,#CC6677,yes,,ok
+heatmap_clustered_matrix,SINGLE ACCENT / CONTINUOUS,colormap,,,,,,refused: ValueError
+heatmap_clustered_matrix,SINGLE ACCENT / CONTINUOUS,cluster_palette,Cluster bar colours,default,#CC6677,no,,needs a precondition / no effect
+heatmap_clustered_matrix,SINGLE ACCENT / CONTINUOUS,cell_border_color,Cell grid color,default,#CC6677,yes,,ok
+heatmap_clustered_matrix,SINGLE ACCENT / CONTINUOUS,group_separator_color,Group separator color,default,#CC6677,no,,needs a precondition / no effect
+heatmap_clustered_matrix,SINGLE ACCENT / CONTINUOUS,colorbar_location,Colorbar location,default,#CC6677,no,,needs a precondition / no effect
+heatmap_clustered_matrix,SINGLE ACCENT / CONTINUOUS,colorbar_pad,Colorbar pad,default,0.7,yes,,ok
+heatmap_clustered_matrix,SINGLE ACCENT / CONTINUOUS,colorbar_shrink,Colorbar size,default,0.7,no,,needs a precondition / no effect
+hierarchical_clustering,SINGLE ACCENT / CONTINUOUS,palette_name,categorical artists,publication,colorblind_safe,yes,256,ok
+hierarchical_clustering,SINGLE ACCENT / CONTINUOUS,colormap,,,,,,refused: ValueError
+hierarchical_clustering,SINGLE ACCENT / CONTINUOUS,colorbar_location,Colorbar location,default,#CC6677,no,,needs a precondition / no effect
+hierarchical_clustering,SINGLE ACCENT / CONTINUOUS,colorbar_pad,Colorbar pad,default,0.7,yes,,ok
+hierarchical_clustering,SINGLE ACCENT / CONTINUOUS,colorbar_shrink,Colorbar size,default,0.7,no,,needs a precondition / no effect
+hierarchical_dendrogram,SINGLE ACCENT / CONTINUOUS,palette_name,categorical artists,publication,colorblind_safe,yes,0,ok
+hierarchical_dendrogram,SINGLE ACCENT / CONTINUOUS,link_color,Branch colour,default,#CC6677,yes,,ok
+histogram_distribution,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,2,ok
+kaplan_meier_survival_curve,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,2,ok
+lineplot_timecourse_with_error_band,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,6,ok
+lollipop_mutation_plot,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,5,ok
+ma_plot,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,5,ok
+ma_plot,CATEGORICAL,color_ns,Not-significant colour,default,#CC6677,yes,,ok
+manhattan_plot,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,4,ok
+manhattan_plot,CATEGORICAL,cutoff_line_color,Cutoff line color,default,#CC6677,yes,,ok
+neighborhood_enrichment_matrix,SINGLE ACCENT / CONTINUOUS,palette_name,categorical artists,publication,colorblind_safe,yes,256,ok
+neighborhood_enrichment_matrix,SINGLE ACCENT / CONTINUOUS,colorbar_pad,Colourbar pad (0 = auto),default,0.7,yes,,ok
+neighborhood_enrichment_matrix,SINGLE ACCENT / CONTINUOUS,colorbar_fraction,Colourbar thickness (0 = auto),default,0.7,yes,,ok
+neighborhood_enrichment_matrix,SINGLE ACCENT / CONTINUOUS,cmap,,,,,,refused: ValueError
+network_graph,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,3,ok
+network_graph,CATEGORICAL,color_by,Color nodes by,default,#CC6677,yes,,ok
+network_graph,CATEGORICAL,node_color,Node color (when 'none'),default,#CC6677,no,,needs a precondition / no effect
+network_graph,CATEGORICAL,node_cmap,Node colormap (when 'value'),default,#CC6677,no,,needs a precondition / no effect
+network_graph,CATEGORICAL,edge_color_by,Color edges by category,default,#CC6677,no,,needs a precondition / no effect
+network_graph,CATEGORICAL,edge_color,Edge color (single),default,#CC6677,yes,,ok
+network_graph,CATEGORICAL,edge_color_positive,Edge color +corr,default,#CC6677,no,,needs a precondition / no effect
+network_graph,CATEGORICAL,edge_color_negative,Edge color -corr,default,#CC6677,no,,needs a precondition / no effect
+network_graph,CATEGORICAL,label_color,Label color,default,#CC6677,yes,,ok
+oncoprint_mutation_heatmap,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,6,ok
+paired_slopegraph,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,1,ok
+paired_slopegraph,CATEGORICAL,marker_edge_color,Point outline colour,default,#CC6677,yes,,ok
+paired_slopegraph,CATEGORICAL,point_color,Point color,default,#CC6677,yes,,ok
+paired_slopegraph,CATEGORICAL,line_color,Line color,default,#CC6677,yes,,ok
+pca_scatter_from_matrix,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,3,ok
+precision_recall_curve,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,3,ok
+precision_recall_curve,CATEGORICAL,reference_line_color,Reference line colour,default,#CC6677,yes,,ok
+qq_plot,SINGLE ACCENT / CONTINUOUS,palette_name,categorical artists,publication,colorblind_safe,yes,2,ok
+qq_plot,SINGLE ACCENT / CONTINUOUS,point_color,Point colour,default,#CC6677,yes,,ok
+qq_plot,SINGLE ACCENT / CONTINUOUS,marker_edge_color,Point outline colour,default,#CC6677,yes,,ok
+qq_plot,SINGLE ACCENT / CONTINUOUS,reference_line_color,Reference line colour,default,#CC6677,yes,,ok
+raincloud_plot,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,8,ok
+raincloud_plot,CATEGORICAL,point_fill,Point fill,default,#CC6677,no,,needs a precondition / no effect
+ridge_or_density_plot,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,4,ok
+roc_curve,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,3,ok
+roc_curve,CATEGORICAL,reference_line_color,Reference line colour,default,#CC6677,yes,,ok
+sankey_plot,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,4,ok
+scatterplot_with_regression,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,4,ok
+spatial_categorical_map,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,8,ok
+spatial_categorical_map,CATEGORICAL,missing_color,Colour for missing values,default,#CC6677,no,,needs a precondition / no effect
+spatial_categorical_map,CATEGORICAL,marker_edgecolor,Point outline,default,#CC6677,yes,,ok
+spatial_composition_map,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,8,ok
+spatial_feature_map,SINGLE ACCENT / CONTINUOUS,palette_name,categorical artists,publication,colorblind_safe,no,256,PALETTE HAS NO EFFECT
+spatial_feature_map,SINGLE ACCENT / CONTINUOUS,colorbar_pad,Colourbar pad (0 = auto),default,0.7,yes,,ok
+spatial_feature_map,SINGLE ACCENT / CONTINUOUS,colorbar_fraction,Colourbar thickness (0 = auto),default,0.7,yes,,ok
+spatial_feature_map,SINGLE ACCENT / CONTINUOUS,cmap,,,,,,refused: ValueError
+spatial_feature_map,SINGLE ACCENT / CONTINUOUS,missing_color,Colour for missing values,default,#CC6677,no,,needs a precondition / no effect
+spatial_feature_map,SINGLE ACCENT / CONTINUOUS,color_scale,,,,,,refused: RenderError
+spatial_feature_map,SINGLE ACCENT / CONTINUOUS,colorbar,Show colourbar,default,0.7,no,,needs a precondition / no effect
+spatial_feature_map,SINGLE ACCENT / CONTINUOUS,shared_color_scale,Share colour scale across facets,default,0.7,no,,needs a precondition / no effect
+spatial_roi_map,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,3,ok
+spatial_roi_map,CATEGORICAL,roi_edgecolor,ROI outline colour,default,#CC6677,yes,,ok
+spatial_roi_map,CATEGORICAL,roi_fill_alpha,ROI fill opacity,default,0.7,yes,,ok
+spatial_transcript_map,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,5,ok
+spider_plot,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,3,ok
+spider_plot,CATEGORICAL,marker_edge_color,Point outline colour,default,#CC6677,yes,,ok
+spider_plot,CATEGORICAL,reference_line_color,Reference line colour,default,#CC6677,yes,,ok
+stacked_bar_composition,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,5,ok
+swimmer_plot,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,5,ok
+upset_plot,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,5,ok
+volcano_plot,NONE,palette_name,,,,n/a,,declared inapplicable (warns)
+volcano_plot,NONE,reference_line_color,Reference line colour,default,#CC6677,yes,,ok
+volcano_plot,NONE,color_up,Up-regulated colour,default,#CC6677,yes,,ok
+volcano_plot,NONE,color_down,Down-regulated colour,default,#CC6677,yes,,ok
+volcano_plot,NONE,color_ns,Not-significant colour,default,#CC6677,yes,,ok
+waterfall_plot,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,5,ok
+waterfall_plot,CATEGORICAL,reference_line_color,Reference line colour,default,#CC6677,yes,,ok
