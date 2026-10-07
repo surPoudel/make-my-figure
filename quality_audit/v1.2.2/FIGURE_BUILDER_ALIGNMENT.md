@@ -76,7 +76,8 @@ asked for.
 
 | Gate | Result |
 |------|--------|
-| Full suite, `-n 12` | **3995 passed**, 4 skipped, 1 failure: `test_pop_out_panels` crashes an xdist worker (Qt), passes serially |
+| Full suite, serial (authoritative — CI runs serially) | **3999 passed**, 4 skipped, **0 failed** in 43 min, on `9d27532` |
+| Full suite, `-n 12` | 3995 passed, 4 skipped, 1 failure: `test_pop_out_panels` crashes an xdist worker (Qt) and passes serially |
 | New permanent regression tests | `tests/test_figure_builder_alignment.py`, **20 tests**, all 10 reported defects |
 | Gallery audit, 45 registered plot types | **45/45 clean**; render, publication render, PNG/SVG/PDF export, PlotSpec round-trip, package round-trip |
 | Clipped text, all 45 | **0** (unchanged) |
