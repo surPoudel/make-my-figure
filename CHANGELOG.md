@@ -61,12 +61,15 @@ figure, taken from the composite in inches.
 
 ### Added — tick labels and axis names can be turned off, on any plot
 
-- **X/Y tick labels and X/Y axis label each have a show/hide box** (Advanced ▸
-  ③ Axes & labels). The need is the same on every plot type — a heatmap whose
-  30 row names will not fit, a panel whose axis is already named by the panel
-  beside it, a figure whose caption says what the x axis is — so they are
-  shared layout controls applied in one place for all 45 plot types rather than
-  wired per renderer. Blanking an axis name with a space is no longer necessary.
+- **X/Y ticks and X/Y axis label each have a show/hide box** (Advanced ▸
+  ③ Axes & labels). The need is the same on every plot type — a heatmap whose 30
+  row names will not fit, a panel whose axis is already named by the panel beside
+  it, a figure whose caption says what the x axis is — so they are shared layout
+  controls applied in one place for all 45 plot types rather than wired per
+  renderer. Blanking an axis name with a space is no longer necessary.
+- **Hiding tick labels hides their tick marks too.** A row of bare dashes down
+  the side of a heatmap, with nothing beside them, reads as a figure someone
+  forgot to finish.
 - They are **opt-in**: a box is checked by default and a checked box writes
   nothing into the PlotSpec, so a figure that has never touched them renders
   exactly as before. Only an explicit "off" does anything — `True` is not an

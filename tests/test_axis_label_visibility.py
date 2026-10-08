@@ -1,10 +1,14 @@
-"""Show/hide for tick labels and axis names, on every plot type at once.
+"""Show/hide for ticks and axis names, on every plot type at once.
 
 Reported need: a heatmap whose 30 row names will not fit, and panels whose axes
 are already named by the panel beside them. The controls live in the shared
 layout block and are applied centrally, so there is one implementation rather
 than forty-five - and the condition for acting is an explicit ``False``, so a
 figure that has never touched them renders exactly as it did before.
+
+Hiding tick labels hides their tick MARKS too, which the first cut did not: a
+row of bare dashes down the side of a heatmap, with nothing beside them, reads
+as a figure someone forgot to finish.
 """
 
 import matplotlib
@@ -32,6 +36,13 @@ def _render(plot_type, **layout):
                            aux={k: v.dataframe for k, v in (aux or {}).items()})
 
 
+def _visible_marks(ax, axis):
+    """How many tick MARKS the axis still draws."""
+    ticks = ax.xaxis.get_major_ticks() if axis == "x" else ax.yaxis.get_major_ticks()
+    return sum(1 for t in ticks
+               if t.tick1line.get_visible() or t.tick2line.get_visible())
+
+
 def _axis_state(figure):
     figure.canvas.draw()
     ax = figure.axes[0]
@@ -40,6 +51,8 @@ def _axis_state(figure):
                         if t.get_visible() and t.get_text().strip()]),
         "y_ticks": len([t for t in ax.get_yticklabels()
                         if t.get_visible() and t.get_text().strip()]),
+        "x_marks": _visible_marks(ax, "x"),
+        "y_marks": _visible_marks(ax, "y"),
         "x_label": ax.get_xlabel(),
         "y_label": ax.get_ylabel(),
     }
@@ -51,6 +64,7 @@ def test_by_default_every_axis_keeps_everything_it_had(plot_type):
     state = _axis_state(_render(plot_type).figure)
     plt.close("all")
     assert state["x_ticks"] > 0 and state["y_ticks"] > 0
+    assert state["x_marks"] > 0 and state["y_marks"] > 0
     assert state["x_label"] and state["y_label"]
 
 
@@ -60,19 +74,28 @@ def test_each_part_of_an_axis_can_be_turned_off(plot_type):
     plt.close("all")
     assert state["x_ticks"] == 0, f"{plot_type}: x tick labels still drawn"
     assert state["y_ticks"] == 0, f"{plot_type}: y tick labels still drawn"
+    assert state["x_marks"] == 0, f"{plot_type}: x tick marks left behind"
+    assert state["y_marks"] == 0, f"{plot_type}: y tick marks left behind"
     assert state["x_label"] == "" and state["y_label"] == ""
 
 
-@pytest.mark.parametrize("key,field", [("show_x_tick_labels", "x_ticks"),
-                                       ("show_y_tick_labels", "y_ticks"),
-                                       ("show_x_label", "x_label"),
-                                       ("show_y_label", "y_label")])
-def test_each_control_acts_alone(key, field):
-    """Turning one off must not take the other three with it."""
+@pytest.mark.parametrize("key,fields", [
+    ("show_x_tick_labels", ("x_ticks", "x_marks")),
+    ("show_y_tick_labels", ("y_ticks", "y_marks")),
+    ("show_x_label", ("x_label",)),
+    ("show_y_label", ("y_label",)),
+])
+def test_each_control_acts_alone(key, fields):
+    """Turning one off must not take the others with it.
+
+    A tick control owns two things - the labels and the marks they point at -
+    and nothing else on the axes.
+    """
     state = _axis_state(_render("heatmap_clustered_matrix", **{key: False}).figure)
     plt.close("all")
-    off = state.pop(field)
-    assert off == 0 or off == ""
+    for field in fields:
+        off = state.pop(field)
+        assert off == 0 or off == "", f"{key} left {field} behind"
     for name, value in state.items():
         assert value, f"{key} also removed {name}"
 
@@ -90,6 +113,8 @@ def test_true_is_not_an_override_of_the_renderer():
                              aux={k: v.dataframe for k, v in (aux or {}).items()})
     state = _axis_state(result.figure)
     plt.close("all")
+    # The renderer drops the ticks with the labels here, which is its decision
+    # to make - the point is only that ``True`` did not countermand it.
     assert state["y_ticks"] == 0
 
 
@@ -105,6 +130,7 @@ def test_the_setting_survives_a_plotspec_round_trip():
         aux={k: v.dataframe for k, v in (aux or {}).items()}).figure)
     plt.close("all")
     assert state["x_ticks"] == 0 and state["y_ticks"] == 0
+    assert state["x_marks"] == 0 and state["y_marks"] == 0
     assert state["x_label"] == "" and state["y_label"] == ""
 
 

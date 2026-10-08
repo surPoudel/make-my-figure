@@ -1392,9 +1392,12 @@ class MainWindow(QMainWindow):
         self.chk_xlabel = QCheckBox()
         self.chk_ylabel = QCheckBox()
         for _chk, _tip in (
-                (self.chk_xticklabels, "Draw the numbers or category names along the x axis."),
-                (self.chk_yticklabels, "Draw the numbers or row names along the y axis. Turn "
-                                       "this off on a heatmap with more rows than will fit."),
+                (self.chk_xticklabels, "Draw the tick marks and the numbers or category names "
+                                       "along the x axis. Unchecking removes both: a tick with "
+                                       "nothing beside it only looks unfinished."),
+                (self.chk_yticklabels, "Draw the tick marks and the numbers or row names along "
+                                       "the y axis. Unchecking removes both. Turn this off on a "
+                                       "heatmap with more rows than will fit."),
                 (self.chk_xlabel, "Draw the x axis name."),
                 (self.chk_ylabel, "Draw the y axis name.")):
             _chk.setChecked(True)
@@ -1404,8 +1407,8 @@ class MainWindow(QMainWindow):
         af = QFormLayout(axesb)
         af.addRow("X tick angle", self.cmb_xrot)
         af.addRow("Y tick angle", self.cmb_yrot)
-        af.addRow("X tick labels", self.chk_xticklabels)
-        af.addRow("Y tick labels", self.chk_yticklabels)
+        af.addRow("X ticks + labels", self.chk_xticklabels)
+        af.addRow("Y ticks + labels", self.chk_yticklabels)
         af.addRow("X axis label", self.chk_xlabel)
         af.addRow("Y axis label", self.chk_ylabel)
         af.addRow("X label padding", self.sp_xpad)
