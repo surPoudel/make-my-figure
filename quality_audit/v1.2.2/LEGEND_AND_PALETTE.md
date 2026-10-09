@@ -57,8 +57,10 @@ the suggestion is checked rather than assumed.
 | `tests/test_semantic_class_colors.py` | 18 | MA / Bland–Altman / UpSet classes, label wording, counts and statistics unchanged |
 | `tests/test_palette_system.py` | 21 | 2 / 3 / 5 / 8 / 10 / 14 categories, capacity warning and its alternatives, overrides by name and position, the catalogue |
 
-Full suite: **4084 passed** under `-n 12`; the one failure is
-`test_pop_out_panels`, which crashes an xdist worker on Qt and passes serially.
+Full suite, serial (authoritative — CI runs serially): **4085 passed, 4 skipped,
+0 failed** in 46 min on `31db9b7`. Under `-n 12` the same tree is 4084 passed with
+one failure, `test_pop_out_panels`, which crashes an xdist worker on Qt and passes
+in the serial run above.
 
 ## Visual QC
 
