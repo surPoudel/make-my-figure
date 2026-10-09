@@ -53,10 +53,32 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
     with style.apply():
         fig, ax = plt.subplots(figsize=figure_size(spec, style, aspect=0.72))
-        ax.scatter(means, diffs, color=role_color(spec, "point_color", style.color_for(0)),
-                   s=style.marker_size,
-                   edgecolors="white", linewidths=style.marker_edge_width,
-                   alpha=style.marker_alpha, zorder=3)
+        _point_kw = dict(s=style.marker_size, edgecolors="white",
+                         linewidths=style.marker_edge_width,
+                         alpha=style.marker_alpha, zorder=3)
+        _base_point = role_color(spec, "point_color", style.color_for(0))
+        if bool(get_mapping(spec, "color_points_by_agreement", False)):
+            # Where each observation falls relative to the limits of agreement.
+            # An agreement category, not a significance class: the limits are
+            # the mean difference +/- 1.96 SD and nothing here is a test, so the
+            # labels say "limit of agreement" and never "up" or "significant".
+            above = diffs > loa_upper
+            below = diffs < loa_lower
+            within = ~(above | below)
+            for mask, key, label, fallback in (
+                    (above, "point_color_above", "Above upper LoA", style.color_for(1)),
+                    (within, "point_color_within", "Within LoA", _base_point),
+                    (below, "point_color_below", "Below lower LoA", style.color_for(2))):
+                if mask.any():
+                    ax.scatter(means[mask], diffs[mask],
+                               color=role_color(spec, key, fallback),
+                               label=label, **_point_kw)
+            meta_counts = {"n_above_upper_loa": int(above.sum()),
+                           "n_within_loa": int(within.sum()),
+                           "n_below_lower_loa": int(below.sum())}
+        else:
+            ax.scatter(means, diffs, color=_base_point, **_point_kw)
+            meta_counts = {}
 
         if show_ci and n > 1:
             ci = 1.96 * sd / np.sqrt(n)
@@ -72,8 +94,10 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         if not (spec.get("mapping") or {}).get("reference_line_color"):
             _ref_kw["color"] = style.color_for(1)
         _ref_kw["lw"] = style.line_width_pt
-        for loa, name in ((loa_upper, "+1.96 SD"), (loa_lower, "-1.96 SD")):
-            ax.axhline(loa, zorder=2, **_ref_kw)
+        for loa, key in ((loa_upper, "loa_upper_color"), (loa_lower, "loa_lower_color")):
+            _kw = dict(_ref_kw)
+            _kw["color"] = role_color(spec, key, _kw.get("color", style.text_color))
+            ax.axhline(loa, zorder=2, **_kw)
 
         # Right-edge annotations for the reference lines.
         xmax = float(np.nanmax(means)) if n else 1.0
@@ -104,4 +128,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
     meta = base_metadata(spec, style, work, used_columns=[a, b, label_col])
     meta.update({"bias": bias, "sd_diff": sd, "loa_upper": loa_upper,
                  "loa_lower": loa_lower, "n": n})
+    # How many observations fall outside the limits, recorded when the colouring
+    # is on so the figure's categories are reproducible from the sidecar. The
+    # limits themselves are unchanged: this only counts against them.
+    meta.update(meta_counts)
     return RenderResult(figure=fig, metadata=meta, warnings=warnings)

@@ -25,6 +25,7 @@ from make_my_figure_core.plots.base import (
     place_legend,
     repel_labels,
     require_columns,
+    role_color,
     resolve_legend_location,
     style_axes,
 )
@@ -96,9 +97,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             ns_color = str(get_mapping(spec, "color_ns", "#B8B8B8") or "#B8B8B8")
             ax.scatter(xs[ns], ys[ns], color=ns_color, label="Not sig.", zorder=2, **mk)
         if up.any():
-            ax.scatter(xs[up], ys[up], color=style.color_for(1), label="Up", zorder=3, **mk)
+            ax.scatter(xs[up], ys[up],
+                       color=role_color(spec, "color_up", style.color_for(1)),
+                       label="Up", zorder=3, **mk)
         if down.any():
-            ax.scatter(xs[down], ys[down], color=style.color_for(0), label="Down", zorder=3, **mk)
+            ax.scatter(xs[down], ys[down],
+                       color=role_color(spec, "color_down", style.color_for(0)),
+                       label="Down", zorder=3, **mk)
 
         # Labels: explicit click-selected points, then legacy text selections, then the
         # strongest significant hits by |logFC| — all routed through the shared

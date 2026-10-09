@@ -34,6 +34,7 @@ from make_my_figure_core.plots.base import (
     base_metadata,
     get_mapping,
     require_columns,
+    role_color,
 )
 from make_my_figure_core.styles.engine import StyleProfile
 
@@ -115,7 +116,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
         xs = np.arange(n_inter)
         sizes = [c for _, c in inter]
-        ax_bars.bar(xs, sizes, color=style.color_for(0),
+        ax_bars.bar(xs, sizes,
+                    color=role_color(spec, "intersection_bar_color", style.color_for(0)),
                     width=bar_thickness(spec, 0.6),
                     edgecolor=style.text_color, linewidth=style.bar_edge_width)
         for xi, s in zip(xs, sizes):
@@ -133,12 +135,13 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
             members = [yidx[s] for s in set_order if s in combo]
             # background (all) dots
             ax_matrix.scatter([xi] * n_sets, list(range(n_sets)), s=style.marker_size * 1.1,
-                              color="#D9D9D9", zorder=2)
+                              color="#D9D9D9", zorder=2)   # empty slots stay grey
             if members:
-                ax_matrix.plot([xi, xi], [min(members), max(members)], color=style.text_color,
+                _dot = role_color(spec, "matrix_dot_color", style.text_color)
+                ax_matrix.plot([xi, xi], [min(members), max(members)], color=_dot,
                                lw=style.line_width_pt, zorder=3)
                 ax_matrix.scatter([xi] * len(members), members, s=style.marker_size * 1.1,
-                                  color=style.text_color, zorder=4)
+                                  color=_dot, zorder=4)
         ax_matrix.set_xlim(-0.6, n_inter - 0.4)
         ax_matrix.set_ylim(-0.6, n_sets - 0.4)
         ax_matrix.set_xticks([])
@@ -149,7 +152,8 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 
         # Per-set size bars (horizontal), aligned to matrix rows, growing left.
         rows = [yidx[s] for s in set_order]
-        ax_sets.barh(rows, [set_sizes[s] for s in set_order], color=style.color_for(1),
+        ax_sets.barh(rows, [set_sizes[s] for s in set_order],
+                     color=role_color(spec, "set_bar_color", style.color_for(1)),
                      height=bar_thickness(spec, 0.6),
                      edgecolor=style.text_color, linewidth=style.bar_edge_width)
         ax_sets.set_yticks(list(range(n_sets)))

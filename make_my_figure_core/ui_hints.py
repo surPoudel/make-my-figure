@@ -586,6 +586,11 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("orientation", "Orientation", "choice", "top", ["top", "left"], scope="style"),
     ],
     "ma_plot": [
+        # The three significance classes, each its own picker, as the volcano
+        # does. "(auto)" keeps the palette colour the plot has always used, so
+        # offering the control changes no existing figure.
+        _color_role("color_up", "Up-regulated colour"),
+        _color_role("color_down", "Down-regulated colour"),
         Option("color_ns", "Not-significant colour", "choice", "#B8B8B8", _SIG_COLORS, scope="style"),
         Option("p_cutoff", "Significance cutoff", "number", 0.05, minimum=0.0, maximum=1.0, step=0.01, decimals=4),
         Option("lfc_cutoff", "|log2FC| cutoff (0 = none)", "number", 0.0, minimum=0.0, maximum=20.0, step=0.5, decimals=2),
@@ -605,6 +610,20 @@ OPTIONS: Dict[str, List[Option]] = {
         _color_role("point_color", "Point colour"),
         _color_role("bias_line_color", "Mean-difference line colour"),
         _color_role("ci_band_color", "Confidence band colour"),
+        # The two limits of agreement, each its own colour. They shared one
+        # control, so an author who wanted the upper limit picked out had to
+        # recolour both. "(auto)" keeps the pair matching, exactly as before.
+        _color_role("loa_upper_color", "Upper limit-of-agreement colour"),
+        _color_role("loa_lower_color", "Lower limit-of-agreement colour"),
+        # Colour the observations by where they fall RELATIVE TO THE LIMITS OF
+        # AGREEMENT. That is an agreement category, not significance and not
+        # up/down regulation: the limits are the mean difference +/- 1.96 SD, a
+        # description of spread, and nothing here is a test.
+        Option("color_points_by_agreement", "Colour points by agreement limits",
+               "bool", False, scope="style"),
+        _color_role("point_color_above", "Above upper limit colour"),
+        _color_role("point_color_within", "Within limits colour"),
+        _color_role("point_color_below", "Below lower limit colour"),
         _REF_LINE_STYLE, _REF_LINE_COLOR,Option("show_ci", "Shade 95% CI of bias", "bool", False, scope="style")],
     "precision_recall_curve": [
         _REF_LINE_STYLE, _REF_LINE_COLOR,],
@@ -620,7 +639,13 @@ OPTIONS: Dict[str, List[Option]] = {
     ],
     "dose_response_curve": [Option("fit", "Fit 4PL curve", "bool", True)],
     "upset_plot": [
-        _BAR_WIDTH,],
+        _BAR_WIDTH,
+        # The two bar charts are different quantities - how big each set is, and
+        # how big each intersection is - so they get a colour each. "(auto)"
+        # keeps the palette slots the plot has always used.
+        _color_role("intersection_bar_color", "Intersection-size bar colour"),
+        _color_role("set_bar_color", "Set-size bar colour"),
+        _color_role("matrix_dot_color", "Membership dot colour"),],
     "spider_plot": [
         _MARKER_EDGE_COLOR,
         _REF_LINE_STYLE, _REF_LINE_COLOR,
