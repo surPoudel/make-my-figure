@@ -1239,7 +1239,9 @@ class MainWindow(QMainWindow):
                 "x_tick_rotation", "y_tick_rotation", "legend_location", "x_label_pad",
                 "y_label_pad", "title_pad", "margin_left", "margin_right", "margin_top",
                 "margin_bottom", "auto_fix_layout", "show_x_tick_labels",
-                "show_y_tick_labels", "show_x_label", "show_y_label"))
+                "show_y_tick_labels", "show_x_label", "show_y_label",
+                "legend_offset_x", "legend_offset_y", "legend_gap",
+                "legend_borderpad", "legend_labelspacing", "legend_columnspacing"))
             has_colorbar = any(k in mapping for k in ("colorbar_location", "colorbar_pad",
                                                       "colorbar_shrink"))
             if (style or has_layout_geometry or has_colorbar) and getattr(self, "_style_box", None):
@@ -1292,6 +1294,17 @@ class MainWindow(QMainWindow):
                             if key in ("margin_right", "margin_top") and _v > 0:
                                 _v = round(1.0 - _v, 4)
                             w.setValue(_v)
+                        except (TypeError, ValueError):
+                            pass
+                for key, w in (("legend_offset_x", self.sp_legoffx),
+                               ("legend_offset_y", self.sp_legoffy),
+                               ("legend_gap", self.sp_leggap),
+                               ("legend_borderpad", self.sp_legborderpad),
+                               ("legend_labelspacing", self.sp_leglabelspacing),
+                               ("legend_columnspacing", self.sp_legcolspacing)):
+                    if key in layout:
+                        try:
+                            w.setValue(float(layout[key]))
                         except (TypeError, ValueError):
                             pass
                 for key, w in (("show_x_tick_labels", self.chk_xticklabels),
@@ -1423,11 +1436,41 @@ class MainWindow(QMainWindow):
         self.sp_legend = _spin(6, 24, 10)
         self.chk_legend_outside = QCheckBox()
         self.chk_legend_outside.stateChanged.connect(self.render_preview)
+        # Legend geometry. Offsets and the gap are in POINTS, the unit a figure
+        # is specified in, so the same number means the same distance at any
+        # figure size; the padding controls are in matplotlib's own units
+        # (multiples of the legend font size) so they agree with its docs. 0 is
+        # "as the plot drew it" everywhere, which is also the reset.
+        self.sp_legoffx = _spin(-200.0, 200.0, 0.0, 1.0, dbl=True)
+        self.sp_legoffy = _spin(-200.0, 200.0, 0.0, 1.0, dbl=True)
+        self.sp_leggap = _spin(0.0, 200.0, 0.0, 1.0, dbl=True)
+        self.sp_legborderpad = _spin(0.0, 5.0, 0.0, 0.1, dbl=True)
+        self.sp_leglabelspacing = _spin(0.0, 5.0, 0.0, 0.1, dbl=True)
+        self.sp_legcolspacing = _spin(0.0, 5.0, 0.0, 0.1, dbl=True)
+        for _w, _tip in (
+                (self.sp_legoffx, "Move the legend left/right, in points. It keeps the "
+                                  "placement the plot gave it - this only nudges."),
+                (self.sp_legoffy, "Move the legend down/up, in points."),
+                (self.sp_leggap, "Extra space between the plot and an outside legend, in "
+                                 "points. No effect on a legend inside the axes."),
+                (self.sp_legborderpad, "Space inside the legend's frame, in legend font "
+                                       "sizes. 0 keeps matplotlib's default."),
+                (self.sp_leglabelspacing, "Space between legend rows, in legend font sizes."),
+                (self.sp_legcolspacing, "Space between legend columns, in legend font "
+                                        "sizes (only visible with more than one column).")):
+            _w.setToolTip(_tip)
         legb = QGroupBox("④ Legend")
         lf = QFormLayout(legb)
         lf.addRow("Location", self.cmb_legloc)
         lf.addRow("Legend pt", self.sp_legend)
         lf.addRow("Legend outside", self.chk_legend_outside)
+        lf.addRow("Offset X (pt)", self.sp_legoffx)
+        lf.addRow("Offset Y (pt)", self.sp_legoffy)
+        lf.addRow("Gap to plot (pt)", self.sp_leggap)
+        lf.addRow("Inner padding", self.sp_legborderpad)
+        lf.addRow("Row spacing", self.sp_leglabelspacing)
+        lf.addRow("Column spacing", self.sp_legcolspacing)
+        self._legend_group = legb      # hidden on plot types that draw no legend
         outer.addWidget(legb)
 
         # ⑤ Colorbar (heatmap / clustering / confusion / enrichment)
@@ -1465,6 +1508,26 @@ class MainWindow(QMainWindow):
         self._style_box = box
         return box
 
+    def _apply_style_capabilities(self, plot_type) -> None:
+        """Show only the style controls this plot type can honour.
+
+        The capability registry already knows - the render path uses it to warn
+        rather than silently ignore a control - but the GUI was not asking, so a
+        Bland-Altman plot offered six legend controls for a legend it does not
+        draw. A control that cannot do anything is worse than a missing one: it
+        is a promise the figure then breaks.
+        """
+        group = getattr(self, "_legend_group", None)
+        if group is None:
+            return
+        try:
+            from make_my_figure_core.styles.capabilities import get_style_capabilities
+
+            supported = bool(get_style_capabilities(plot_type).supports_legend)
+        except Exception:  # noqa: BLE001 - never block the panel on a lookup
+            supported = True
+        group.setVisible(supported)
+
     def _collect_layout_controls(self):
         """Return (layout_fragment, colorbar_mapping) from the grouped panel; empty
         when the style box is unchecked. Layout keys feed the shared layout engine;
@@ -1497,6 +1560,15 @@ class MainWindow(QMainWindow):
         # Only the hidden state is recorded: "shown" is every renderer's own
         # decision and writing True would override, for instance, a heatmap's
         # choice to drop row labels it has no room for.
+        # Legend geometry: 0 means "as the plot drew it", so it writes nothing.
+        for key, w in (("legend_offset_x", self.sp_legoffx),
+                       ("legend_offset_y", self.sp_legoffy),
+                       ("legend_gap", self.sp_leggap),
+                       ("legend_borderpad", self.sp_legborderpad),
+                       ("legend_labelspacing", self.sp_leglabelspacing),
+                       ("legend_columnspacing", self.sp_legcolspacing)):
+            if w.value():
+                lay[key] = float(w.value())
         for key, w in (("show_x_tick_labels", self.chk_xticklabels),
                        ("show_y_tick_labels", self.chk_yticklabels),
                        ("show_x_label", self.chk_xlabel),
@@ -1550,7 +1622,9 @@ class MainWindow(QMainWindow):
         for _c in (self.cmb_xrot, self.cmb_yrot, self.cmb_legloc, self.cmb_cbloc):
             _c.setCurrentIndex(0)
         for _s in (self.sp_xpad, self.sp_ypad, self.sp_titlepad, self.sp_ml, self.sp_mr,
-                   self.sp_mt, self.sp_mb, self.sp_cbpad):
+                   self.sp_mt, self.sp_mb, self.sp_cbpad,
+                   self.sp_legoffx, self.sp_legoffy, self.sp_leggap,
+                   self.sp_legborderpad, self.sp_leglabelspacing, self.sp_legcolspacing):
             _s.setValue(0.0)
         self.sp_cbshrink.setValue(1.0)
         self.chk_autofix.setChecked(False)
@@ -2783,6 +2857,7 @@ class MainWindow(QMainWindow):
             self._option_widgets = {}
             self._multi_col_widgets = {}
             return
+        self._apply_style_capabilities(pt)
         defaults = self.controller.default_mapping(pt)
         col_opts = self._column_options()
         # For a DE/volcano table, auto-detect logFC / p-value / label columns

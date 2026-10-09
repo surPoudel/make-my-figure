@@ -1502,8 +1502,166 @@ def _reserve_for_outside_legend(ax, leg, side: str = "right") -> None:
         pass
 
 
+# Legend geometry the user can ask for, in the shared layout block. Absent means
+# "as the plot type drew it", which is how a figure that has never touched these
+# renders exactly as before - and is also the reset.
+#
+# Offsets and the gap are in POINTS (1/72 in), the unit a figure is specified in,
+# so an offset means the same thing at any figure size. The four padding keys are
+# in matplotlib's own units (multiples of the legend font size), because they are
+# passed straight to the legend and inventing a second unit for them would make
+# the numbers disagree with every matplotlib reference.
+LEGEND_OFFSET_KEYS = ("legend_offset_x", "legend_offset_y", "legend_gap")
+LEGEND_PAD_KEYS = {"legend_borderpad": "borderpad",
+                   "legend_labelspacing": "labelspacing",
+                   "legend_handlelength": "handlelength",
+                   "legend_columnspacing": "columnspacing"}
+LEGEND_GEOMETRY_KEYS = tuple(LEGEND_OFFSET_KEYS) + tuple(LEGEND_PAD_KEYS)
+
+
+def legend_geometry(spec: Dict[str, Any]) -> Dict[str, float]:
+    """The legend geometry asked for in ``layout``, as floats. Empty when untouched."""
+    layout = (spec or {}).get("layout", {}) or {}
+    out: Dict[str, float] = {}
+    for key in LEGEND_GEOMETRY_KEYS:
+        if layout.get(key) is None:
+            continue
+        try:
+            out[key] = float(layout[key])
+        except (TypeError, ValueError):
+            continue
+    return out
+
+
+def _legend_pad_kwargs(geometry: Dict[str, float]) -> Dict[str, float]:
+    return {arg: geometry[key] for key, arg in LEGEND_PAD_KEYS.items() if key in geometry}
+
+
+def offset_legend(ax, leg, geometry: Dict[str, float], side: Optional[str] = None) -> None:
+    """Shift a placed legend by the requested offset, in points.
+
+    The legend keeps whatever anchor it was given - inside a corner, or outside
+    on a side - and the whole anchor box is translated. Doing it this way means
+    one implementation covers ``loc="best"``, a named corner and an outside
+    placement, instead of three special cases that would each drift.
+
+    ``legend_gap`` is the same movement expressed the way a person thinks about
+    an outside legend ("a bit further from the plot"), so it is applied along the
+    axis that side hangs off and needs no sign.
+    """
+    dx = float(geometry.get("legend_offset_x", 0.0))
+    dy = float(geometry.get("legend_offset_y", 0.0))
+    gap = float(geometry.get("legend_gap", 0.0))
+    if gap:
+        dx += {"right": gap, "left": -gap}.get(side or "", 0.0)
+        dy += {"top": gap, "bottom": -gap}.get(side or "", 0.0)
+    if not (dx or dy) or leg is None:
+        return
+    from matplotlib.transforms import ScaledTranslation
+
+    figure = ax.figure
+    try:
+        anchor = leg.get_bbox_to_anchor()
+        inv = ax.transAxes.inverted()
+        (x0, y0), (x1, y1) = inv.transform(anchor.get_points())
+        shift = ScaledTranslation(dx / 72.0, dy / 72.0, figure.dpi_scale_trans)
+        leg.set_bbox_to_anchor((x0, y0, x1 - x0, y1 - y0),
+                               transform=ax.transAxes + shift)
+    except Exception:  # noqa: BLE001 - a nicety must never break a render
+        pass
+
+
+def current_legend_placement(ax, leg):
+    """``(loc, bbox_to_anchor)`` that puts a re-created legend back where this one is.
+
+    Needed because the padding controls cannot be applied to a legend that
+    already exists - matplotlib packs the rows once, at construction - so the
+    only way to honour them is to build the legend again. Building it again at a
+    *resolved* location would move it, and "give the legend more internal
+    padding" must not also relocate a legend the plot type deliberately put
+    outside the axes. So the current placement is read back and handed in.
+    """
+    loc = getattr(leg, "_loc", None)
+    bbox = None
+    try:
+        anchor = leg.get_bbox_to_anchor()
+        (x0, y0), (x1, y1) = ax.transAxes.inverted().transform(anchor.get_points())
+        is_axes_box = (abs(x0) < 1e-6 and abs(y0) < 1e-6
+                       and abs(x1 - 1.0) < 1e-6 and abs(y1 - 1.0) < 1e-6)
+        if not is_axes_box:
+            bbox = (x0, y0, x1 - x0, y1 - y0)
+    except Exception:  # noqa: BLE001
+        pass
+    return loc, bbox
+
+
+def outside_legend_side(ax, leg) -> Optional[str]:
+    """Which side of the axes a legend hangs off, or ``None`` if it is inside."""
+    try:
+        renderer = ax.figure.canvas.get_renderer()
+        lb = leg.get_window_extent(renderer)
+        ab = ax.get_window_extent(renderer)
+    except Exception:  # noqa: BLE001
+        return None
+    if lb.x0 >= ab.x1 - 1:
+        return "right"
+    if lb.x1 <= ab.x0 + 1:
+        return "left"
+    if lb.y0 >= ab.y1 - 1:
+        return "top"
+    if lb.y1 <= ab.y0 + 1:
+        return "bottom"
+    return None
+
+
+def reapply_legend_geometry(ax, style, geometry: Dict[str, float]) -> bool:
+    """Apply legend geometry to the legend that is already there, in place.
+
+    Geometry is not a relocation: asking for "6 pt further left" or "more room
+    between the rows" must leave a legend where its plot type put it. Only
+    ``legend_location`` moves a legend. Returns False when there is no legend.
+    """
+    leg = ax.get_legend()
+    if leg is None or not geometry:
+        return False
+    pads = _legend_pad_kwargs(geometry)
+    if pads:
+        loc, bbox = current_legend_placement(ax, leg)
+        handles = list(getattr(leg, "legend_handles",
+                               getattr(leg, "legendHandles", [])))
+        labels = [t.get_text() for t in leg.get_texts()]
+        title = leg.get_title().get_text() or None
+        if handles and len(handles) == len(labels):
+            kw = dict(frameon=getattr(style, "legend_frameon", False),
+                      ncol=max(1, getattr(style, "legend_ncol", 1)),
+                      title=title, **pads)
+            try:
+                if bbox is not None:
+                    leg = ax.legend(handles, labels, loc=loc, bbox_to_anchor=bbox, **kw)
+                else:
+                    leg = ax.legend(handles, labels, loc=loc, **kw)
+            except Exception:  # noqa: BLE001 - keep the original legend
+                leg = ax.get_legend()
+    offset_legend(ax, leg, geometry, outside_legend_side(ax, leg))
+    return True
+
+
+def legend_axes(figure):
+    """The axes whose legend the layout controls should act on, or ``None``.
+
+    Not simply ``axes[0]``: a composition map puts its key on a second axes and a
+    clustered heatmap on a divider, and re-creating a legend on the primary axes
+    there would leave the original where it was and add a second one.
+    """
+    for ax in figure.axes:
+        if ax.get_legend() is not None:
+            return ax
+    return figure.axes[0] if figure.axes else None
+
+
 def place_legend(ax, style, *, title=None, handles=None, labels=None,
-                 force_outside: bool = False, loc: str = None, location=None):
+                 force_outside: bool = False, loc: str = None, location=None,
+                 geometry: Optional[Dict[str, float]] = None):
     """Place a legend without overlapping data.
 
     ``location`` is a resolved ``(loc, bbox_to_anchor, outside_side)`` tuple (see
@@ -1511,8 +1669,10 @@ def place_legend(ax, style, *, title=None, handles=None, labels=None,
     reserving figure margin for whichever outside side is used so the legend is
     never clipped on export. Otherwise falls back to outside-right (when the profile
     / ``force_outside`` requests it) or the profile's preferred location."""
+    geometry = geometry or {}
     kw = dict(frameon=getattr(style, "legend_frameon", False),
               ncol=max(1, getattr(style, "legend_ncol", 1)), title=title)
+    kw.update(_legend_pad_kwargs(geometry))
     args = ()
     if handles is not None:
         args = (handles,) if labels is None else (handles, labels)
@@ -1535,6 +1695,7 @@ def place_legend(ax, style, *, title=None, handles=None, labels=None,
                     ax.figure.subplots_adjust(**reserve)
                 except Exception:  # noqa: BLE001
                     pass
+        offset_legend(ax, leg, geometry, side)
         return leg
 
     outside = force_outside or getattr(style, "legend_outside", False)
@@ -1548,11 +1709,14 @@ def place_legend(ax, style, *, title=None, handles=None, labels=None,
             # none and keeps the width it paid for.
             inside = ax.legend(*args, loc=loc or "best", **kw)
             if _legend_data_overlap(ax, inside) <= MAX_LEGEND_DATA_OVERLAP:
+                offset_legend(ax, inside, geometry)
                 return inside
             leg = ax.legend(*args, loc="center left", bbox_to_anchor=(1.02, 0.5), **kw)
         _reserve_for_outside_legend(ax, leg, "right")
+        offset_legend(ax, leg, geometry, "right")
     else:
         leg = ax.legend(*args, loc=loc or getattr(style, "legend_loc", "best"), **kw)
+        offset_legend(ax, leg, geometry)
     return leg
 
 

@@ -505,27 +505,50 @@ def render(
     # legend on its main axes, without editing each renderer. Guarded.
     try:
         _layout = spec.get("layout") or {}
-        if _layout.get("legend_location") and getattr(result, "figure", None) is not None \
-                and result.figure.axes:
-            from make_my_figure_core.plots.base import place_legend, resolve_legend_location
+        from make_my_figure_core.plots.base import LEGEND_GEOMETRY_KEYS
 
-            _ax = result.figure.axes[0]
-            _existing = _ax.get_legend()
-            if _existing is not None:
-                _title = _existing.get_title().get_text() or None
-                _h, _l = _ax.get_legend_handles_labels()
-                if not _h:
-                    # Legends built from manual handle lists (e.g. PCA) aren't returned
-                    # by get_legend_handles_labels(); read them off the existing legend.
-                    _h = list(getattr(_existing, "legend_handles",
-                                      getattr(_existing, "legendHandles", [])))
-                    _l = [t.get_text() for t in _existing.get_texts()]
-                if _h:
-                    # Inside the profile's rc context, otherwise the re-created legend
-                    # takes matplotlib's default legend/title font sizes, not the profile's.
-                    with style.apply():
-                        place_legend(_ax, style, title=_title, handles=_h, labels=_l,
-                                     location=resolve_legend_location(spec, style))
+        # Geometry counts as asking, not just location: "move the legend 6 pt
+        # left" has to work without first choosing a location it already has.
+        _wants_legend = bool(_layout.get("legend_location")) or any(
+            _layout.get(k) is not None for k in LEGEND_GEOMETRY_KEYS)
+        if _wants_legend and getattr(result, "figure", None) is not None \
+                and result.figure.axes:
+            from make_my_figure_core.plots.base import (
+                legend_axes, legend_geometry, place_legend, resolve_legend_location)
+
+            # The axes that HAS the legend, which is not always the first: a
+            # composition map keys its second axes, and re-creating on the
+            # primary one would leave the original and add a second.
+            _ax = legend_axes(result.figure) or result.figure.axes[0]
+            _geometry = legend_geometry(spec)
+            if not _layout.get("legend_location"):
+                # Geometry alone is not a relocation. Keep the legend exactly
+                # where its plot type put it and change only its geometry:
+                # resolving a location here instead moved the volcano's outside
+                # legend inside the axes the moment an offset was nudged -
+                # measured 91 pt of travel from a control that asked for 18.
+                from make_my_figure_core.plots.base import reapply_legend_geometry
+
+                with style.apply():
+                    reapply_legend_geometry(_ax, style, _geometry)
+            else:
+                _existing = _ax.get_legend()
+                if _existing is not None:
+                    _title = _existing.get_title().get_text() or None
+                    _h, _l = _ax.get_legend_handles_labels()
+                    if not _h:
+                        # Legends built from manual handle lists (e.g. PCA) aren't returned
+                        # by get_legend_handles_labels(); read them off the existing legend.
+                        _h = list(getattr(_existing, "legend_handles",
+                                          getattr(_existing, "legendHandles", [])))
+                        _l = [t.get_text() for t in _existing.get_texts()]
+                    if _h:
+                        # Inside the profile's rc context, otherwise the re-created legend
+                        # takes matplotlib's default legend/title font sizes, not the profile's.
+                        with style.apply():
+                            place_legend(_ax, style, title=_title, handles=_h, labels=_l,
+                                         location=resolve_legend_location(spec, style),
+                                         geometry=_geometry)
     except Exception as _exc:  # noqa: BLE001
         result.warnings.append(f"Legend placement skipped: {_exc}")
 

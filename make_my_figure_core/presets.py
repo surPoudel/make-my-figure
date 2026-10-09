@@ -77,6 +77,8 @@ LAYOUT_STYLE_KEYS = frozenset({
     "margin_left", "margin_right", "margin_top", "margin_bottom",
     "subplot_wspace", "subplot_hspace",
     "legend_location", "auto_fix_layout",
+    "legend_offset_x", "legend_offset_y", "legend_gap", "legend_borderpad",
+    "legend_labelspacing", "legend_handlelength", "legend_columnspacing",
     "show_x_tick_labels", "show_y_tick_labels", "show_x_label", "show_y_label",
     "colorbar_location", "colorbar_pad", "colorbar_shrink", "colorbar_fraction",
 })
