@@ -57,7 +57,15 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                          linewidths=style.marker_edge_width,
                          alpha=style.marker_alpha, zorder=3)
         _base_point = role_color(spec, "point_color", style.color_for(0))
-        if bool(get_mapping(spec, "color_points_by_agreement", False)):
+        # Setting one of the category colours IS asking for the categories. The
+        # switch stays, for turning them on with the default colours, but a
+        # picker that does nothing until a second control is found is a picker
+        # that looks broken - and the project's own audit says so.
+        _by_agreement = bool(get_mapping(spec, "color_points_by_agreement", False)) or any(
+            str(get_mapping(spec, key, "") or "").strip().lower()
+            not in ("", "auto", "(auto)")
+            for key in ("point_color_above", "point_color_within", "point_color_below"))
+        if _by_agreement:
             # Where each observation falls relative to the limits of agreement.
             # An agreement category, not a significance class: the limits are
             # the mean difference +/- 1.96 SD and nothing here is a test, so the

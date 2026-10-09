@@ -1,0 +1,3 @@
+plot_type,n2,n3,n5,n10
+barplot_with_error_bar,pass 2/2,pass 3/3,pass 5/5,pass 8/10 warned
+boxplot_or_violin_with_points,pass 2/2,pass 3/3,pass 5/5,pass 8/10 warned

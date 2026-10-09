@@ -355,7 +355,14 @@ def categorical_styles(levels, style, palette=None, base_marker="o"):
     n_colours = len(palette) if palette else 8
     colours, markers = {}, {}
     for i, lv in enumerate(levels):
-        colours[lv] = palette[i % len(palette)] if palette else style.color_for(i)
+        # style.color_for even when a palette was passed in: it is where the
+        # per-category overrides and the capacity warning are, and indexing the
+        # list directly steps around both.
+        colours[lv] = (style.color_for(i, str(lv)) if not palette
+                       else str((getattr(style, "color_overrides", None) or {}).get(
+                           str(lv),
+                           (getattr(style, "color_overrides", None) or {}).get(
+                               str(i), palette[i % len(palette)]))))
         wrap = i // n_colours
         markers[lv] = (base_marker if wrap == 0
                        else CATEGORY_MARKERS[wrap % len(CATEGORY_MARKERS)])

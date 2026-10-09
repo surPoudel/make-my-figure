@@ -262,9 +262,18 @@ def render(spec: Dict[str, Any], df, style: StyleProfile, aux=None) -> RenderRes
         levels = ordered_unique([g for g in groups if g is not None])
         # Honor the active Publication palette for group node colors (falls back to the
         # clustering palette); a user-supplied node_color_map wins per category.
-        palette = list(getattr(style, "palette", None) or []) or list(CLUSTER_PALETTE)
-        cmap_lv = {lv: str(node_color_map.get(str(lv), palette[i % len(palette)]))
-                   for i, lv in enumerate(levels)}
+        # Through style.color_for, not by indexing the palette: that is the one
+        # place per-category overrides and the "more groups than colours"
+        # warning live, and a renderer reaching past it opts out of both.
+        # node_color_map stays the more specific control and still wins.
+        _fallback = list(getattr(style, "palette", None) or []) or list(CLUSTER_PALETTE)
+        cmap_lv = {}
+        for i, lv in enumerate(levels):
+            chosen = node_color_map.get(str(lv))
+            if not chosen:
+                chosen = (style.color_for(i, str(lv)) if getattr(style, "palette", None)
+                          else _fallback[i % len(_fallback)])
+            cmap_lv[lv] = str(chosen)
         node_colors = [cmap_lv.get(g, "#BBBBBB") for g in groups]
         from matplotlib.patches import Patch
 

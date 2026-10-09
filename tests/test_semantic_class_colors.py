@@ -215,3 +215,20 @@ def test_class_colours_round_trip_through_the_plotspec(plot_type, mapping, probe
         drawn.update(to_hex(l.get_color()) for l in ax.lines)
     plt.close(figure)
     assert probe in drawn
+
+
+def test_an_agreement_colour_on_its_own_turns_the_categories_on():
+    """A picker that needs a second control set before it does anything looks
+    broken. Setting one category's colour is the request."""
+    result = _render("bland_altman_plot", point_color_above="#FF0000")
+    colors = _labelled_collection_colors(result.figure)
+    plt.close(result.figure)
+    assert colors.get("Above upper LoA") == "#ff0000"
+    assert "Within LoA" in colors
+
+
+def test_setting_none_of_them_leaves_one_undivided_scatter():
+    result = _render("bland_altman_plot")
+    colors = _labelled_collection_colors(result.figure)
+    plt.close(result.figure)
+    assert colors == {}, "the plot split itself into categories uninvited"

@@ -1,0 +1,46 @@
+plot_type,render,legend,palette,override,science,roundtrip,export,export_parity
+barplot_with_error_bar,pass,no legend in example,pass,pass,pass,pass,pass,pass
+beeswarm_plot,pass,no legend in example,pass,pass,pass,pass,pass,pass
+bland_altman_plot,pass,n/a,pass,n/a,pass,pass,pass,pass
+boxplot_or_violin_with_points,pass,no legend in example,pass,pass,pass,pass,pass,pass
+calibration_plot,pass,pass,pass,n/a,pass,pass,pass,pass
+chord_diagram,pass,pass,pass,pass,pass,pass,pass,pass
+confusion_matrix,pass,n/a,pass,n/a,pass,pass,pass,pass
+dose_response_curve,pass,pass,pass,pass,pass,pass,pass,pass
+dot_strip_plot,pass,no legend in example,pass,pass,pass,pass,pass,pass
+embedding_scatter,pass,pass,pass,pass,pass,pass,pass,pass
+enrichment_dotplot,pass,pass,pass,n/a,pass,pass,pass,pass
+forest_plot,pass,n/a,pass,n/a,pass,pass,pass,pass
+grouped_barplot_with_error_bar,pass,pass,pass,pass,pass,pass,pass,pass
+heatmap_clustered_matrix,pass,no legend in example,pass,n/a,pass,pass,pass,pass
+hierarchical_clustering,pass,pass,pass,n/a,pass,pass,pass,pass
+hierarchical_dendrogram,pass,n/a,pass,n/a,pass,pass,pass,pass
+histogram_distribution,pass,no legend in example,pass,pass,pass,pass,pass,pass
+kaplan_meier_survival_curve,pass,pass,pass,pass,pass,pass,pass,pass
+lineplot_timecourse_with_error_band,pass,pass,pass,pass,pass,pass,pass,pass
+lollipop_mutation_plot,pass,pass,pass,pass,pass,pass,pass,pass
+ma_plot,pass,pass,pass,pass,pass,pass,pass,pass
+manhattan_plot,pass,pass,pass,pass,pass,pass,pass,pass
+neighborhood_enrichment_matrix,pass,no legend in example,pass,n/a,pass,pass,pass,pass
+network_graph,pass,pass,pass,pass,pass,pass,pass,pass
+oncoprint_mutation_heatmap,pass,pass,pass,pass,pass,pass,pass,pass
+paired_slopegraph,pass,no legend in example,pass,pass,pass,pass,pass,pass
+pca_scatter_from_matrix,pass,pass,pass,pass,pass,pass,pass,pass
+precision_recall_curve,pass,pass,pass,pass,pass,pass,pass,pass
+qq_plot,pass,n/a,pass,n/a,pass,pass,pass,pass
+raincloud_plot,pass,n/a,pass,pass,pass,pass,pass,pass
+ridge_or_density_plot,pass,no legend in example,pass,pass,pass,pass,pass,pass
+roc_curve,pass,pass,pass,pass,pass,pass,pass,pass
+sankey_plot,pass,n/a,pass,pass,pass,pass,pass,pass
+scatterplot_with_regression,pass,pass,pass,pass,pass,pass,pass,pass
+spatial_categorical_map,pass,pass,pass,pass,pass,pass,pass,pass
+spatial_composition_map,pass,pass,pass,pass,pass,pass,pass,pass
+spatial_feature_map,pass,n/a,pass,n/a,pass,pass,pass,pass
+spatial_roi_map,pass,pass,pass,pass,pass,pass,pass,pass
+spatial_transcript_map,pass,pass,pass,pass,pass,pass,pass,pass
+spider_plot,pass,pass,pass,pass,pass,pass,pass,pass
+stacked_bar_composition,pass,pass,pass,pass,pass,pass,pass,pass
+swimmer_plot,pass,pass,pass,pass,pass,pass,pass,pass
+upset_plot,pass,n/a,pass,pass,pass,pass,pass,pass
+volcano_plot,pass,pass,n/a,n/a,pass,pass,pass,pass
+waterfall_plot,pass,pass,pass,pass,pass,pass,pass,pass

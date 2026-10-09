@@ -1561,10 +1561,27 @@ def offset_legend(ax, leg, geometry: Dict[str, float], side: Optional[str] = Non
 
     figure = ax.figure
     try:
-        anchor = leg.get_bbox_to_anchor()
-        inv = ax.transAxes.inverted()
-        (x0, y0), (x1, y1) = inv.transform(anchor.get_points())
         shift = ScaledTranslation(dx / 72.0, dy / 72.0, figure.dpi_scale_trans)
+        inv = ax.transAxes.inverted()
+        if getattr(leg, "_loc", None) == 0 and hasattr(leg, "set_loc"):
+            # loc="best" is not a position, it is a search: matplotlib re-solves
+            # it against the anchor box on every draw, so translating the box
+            # just moves the search area and the legend can land in a different
+            # corner entirely - measured 63 pt away from a request for 18. Pin
+            # it where it currently is first, and the offset is from a fixed
+            # point like every other placement.
+            figure.canvas.draw()
+            box = leg.get_window_extent(figure.canvas.get_renderer())
+            x0, y0 = inv.transform((box.x0, box.y0))
+            leg.set_loc("lower left")
+            # An anchored legend is inset from its anchor by borderaxespad, which
+            # a "best" legend has already spent - leaving it on would move the
+            # legend a further 5 pt on top of the offset that was asked for.
+            leg.borderaxespad = 0.0
+            leg.set_bbox_to_anchor((x0, y0), transform=ax.transAxes + shift)
+            return
+        anchor = leg.get_bbox_to_anchor()
+        (x0, y0), (x1, y1) = inv.transform(anchor.get_points())
         leg.set_bbox_to_anchor((x0, y0, x1 - x0, y1 - y0),
                                transform=ax.transAxes + shift)
     except Exception:  # noqa: BLE001 - a nicety must never break a render
