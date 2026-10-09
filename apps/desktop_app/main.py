@@ -1603,6 +1603,30 @@ class MainWindow(QMainWindow):
         group = getattr(self, "_legend_group", None)
         if group is not None:
             group.setVisible(bool(caps.supports_legend))
+        # Which palettes to offer. A plot with no categorical colour takes its
+        # colour from a colormap, and the palette reaches it only through the
+        # sequential/diverging partner each of this project's four palettes
+        # carries - matplotlib's qualitative sets have no such partner, so
+        # offering them there would be offering a control that does nothing.
+        combo = getattr(self, "palette_combo", None)
+        if combo is not None:
+            from make_my_figure_core.styles.engine import (
+                PALETTE_GROUPS, USER_PALETTES, palette_capacity)
+
+            wanted = (PALETTE_GROUPS["qualitative"] if caps.supports_group_colors
+                      else list(USER_PALETTES))
+            if [combo.itemData(i) for i in range(1, combo.count())] != wanted:
+                keep = combo.currentData()
+                combo.blockSignals(True)
+                combo.clear()
+                combo.addItem("(publication default)", None)
+                for name in wanted:
+                    capacity = palette_capacity(name)
+                    combo.addItem(f"{name}  ({capacity} colours)" if capacity else name,
+                                  name)
+                index = combo.findData(keep)
+                combo.setCurrentIndex(index if index >= 0 else 0)
+                combo.blockSignals(False)
         for form, widget, flag in getattr(self, "_capability_rows", ()):
             visible = bool(getattr(caps, flag, True))
             try:
