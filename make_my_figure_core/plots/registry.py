@@ -352,6 +352,12 @@ def render(
     if renderer is None:
         raise RenderError(f"No renderer registered for plot_type '{plot_type}'.")
 
+    # A render starts with a clean colour-notes slate; what it collects is drained
+    # into the warnings below, so "two groups got the same colour" is reported
+    # rather than left for the reader to notice.
+    from make_my_figure_core.styles.engine import drain_palette_notes
+
+    drain_palette_notes()
     if style is None:
         style = load_profile(spec["journal_style"])
     # Apply GUI/PlotSpec style refinements (fonts, widths, markers, palette, ...).
@@ -551,6 +557,22 @@ def render(
                                          geometry=_geometry)
     except Exception as _exc:  # noqa: BLE001
         result.warnings.append(f"Legend placement skipped: {_exc}")
+
+    # Per-category colours named by the author, applied to whichever artists
+    # carry that name. Guarded; a styling choice must never break a render.
+    try:
+        from make_my_figure_core.plots.base import apply_named_color_overrides
+
+        if getattr(result, "figure", None) is not None:
+            for _note in apply_named_color_overrides(result.figure, style):
+                if _note not in result.warnings:
+                    result.warnings.append(_note)
+    except Exception as _exc:  # noqa: BLE001
+        result.warnings.append(f"Named colour overrides skipped: {_exc}")
+
+    for _note in drain_palette_notes():
+        if _note not in result.warnings:
+            result.warnings.append(_note)
 
     # Stamp the spec into metadata for a reproducibility sidecar.
     result.metadata.setdefault("spec", spec)

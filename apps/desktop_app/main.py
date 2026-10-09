@@ -317,6 +317,30 @@ class _AspectView(QWidget):
 # ---------------------------------------------------------------------------
 # Main window
 # ---------------------------------------------------------------------------
+def _parse_color_overrides(text: str) -> dict:
+    """Read "name=colour" pairs, or a plain list of colours in group order.
+
+    Both forms are how people actually write this down, so both are accepted:
+    ``#1b9e77, #d95f02`` means "first group, second group", and
+    ``Drug_A=#d95f02`` names the group. A position key is honoured by every plot
+    type; a name is honoured wherever the plot labels its groups.
+    """
+    out: dict = {}
+    position = 0
+    for chunk in (text or "").split(","):
+        chunk = chunk.strip()
+        if not chunk:
+            continue
+        if "=" in chunk:
+            name, _, colour = chunk.partition("=")
+            if name.strip() and colour.strip():
+                out[name.strip()] = colour.strip()
+        else:
+            out[str(position)] = chunk
+            position += 1
+    return out
+
+
 class MainWindow(QMainWindow):
     def __init__(self, controller: DesktopController | None = None):
         super().__init__()
@@ -1251,6 +1275,19 @@ class MainWindow(QMainWindow):
                     kp = self.palette_combo.findData(pal)
                     if kp >= 0:
                         self.palette_combo.setCurrentIndex(kp)
+                for widget, skey in ((self.cmb_seqcmap, "sequential_cmap"),
+                                     (self.cmb_divcmap, "diverging_cmap")):
+                    if skey in style:
+                        j = widget.findText(str(style[skey]))
+                        if j >= 0:
+                            widget.setCurrentIndex(j)
+                raw_over = style.get("color_overrides")
+                if isinstance(raw_over, dict):
+                    self.ed_coloroverrides.setText(
+                        ", ".join(f"{k}={v}" if not str(k).isdigit() else str(v)
+                                  for k, v in raw_over.items()))
+                elif isinstance(raw_over, (list, tuple)):
+                    self.ed_coloroverrides.setText(", ".join(str(c) for c in raw_over))
                 fam = style.get("font_family")
                 fam = fam[0] if isinstance(fam, (list, tuple)) and fam else fam
                 if fam:
@@ -1356,11 +1393,41 @@ class MainWindow(QMainWindow):
             return c
 
         # ② Typography
+        # Categorical palettes only. A sequential map on nominal categories tells
+        # the reader that "Drug_B" sits between "Drug_A" and "Control", which is
+        # a claim the data does not make - the continuous maps have their own
+        # choosers below, shown only on plots that use one. The project's four
+        # palettes stay at the top, in order, so the default is where it was.
+        from make_my_figure_core.styles.engine import PALETTE_GROUPS, palette_capacity
+
         self.palette_combo = QComboBox()
         self.palette_combo.addItem("(publication default)", None)
-        for name in USER_PALETTES:
-            self.palette_combo.addItem(name, name)
+        for name in PALETTE_GROUPS["qualitative"]:
+            capacity = palette_capacity(name)
+            label = f"{name}  ({capacity} colours)" if capacity else name
+            self.palette_combo.addItem(label, name)
+        self.palette_combo.setToolTip(
+            "Distinct colours for categories. The number in brackets is how many "
+            "groups the palette can tell apart; past that, colours repeat and the "
+            "render says so.")
         self.palette_combo.currentIndexChanged.connect(self.render_preview)
+        # Continuous colormaps, for plots that map a magnitude rather than a set
+        # of categories. Named rather than copied, so they stay matplotlib's.
+        self.cmb_seqcmap = _combo(["(palette default)"] + PALETTE_GROUPS["sequential"])
+        self.cmb_divcmap = _combo(["(palette default)"] + PALETTE_GROUPS["diverging"])
+        self.cmb_seqcmap.setToolTip("Colormap for ordered values with a floor (counts, "
+                                    "intensities).")
+        self.cmb_divcmap.setToolTip("Colormap for signed values around a meaningful "
+                                    "centre (log fold change, z-scores).")
+        # Per-category colours. Positions are universal; a name works wherever the
+        # plot labels its groups, which is what the legend is built from.
+        self.ed_coloroverrides = QLineEdit()
+        self.ed_coloroverrides.setPlaceholderText("#1b9e77, #d95f02   or   Drug_A=#d95f02")
+        self.ed_coloroverrides.setToolTip(
+            "Colours for individual categories. Either a list in group order, or "
+            "name=colour pairs, separated by commas. Any matplotlib colour works, "
+            "including HEX. Leave empty to use the palette.")
+        self.ed_coloroverrides.editingFinished.connect(self.render_preview)
         self.font_combo = QComboBox()
         self.font_combo.addItem("(publication default)", None)
         for _fam in ("Arial", "Helvetica", "Liberation Sans", "DejaVu Sans", "Times New Roman"):
@@ -1378,6 +1445,16 @@ class MainWindow(QMainWindow):
         typo = QGroupBox("② Typography")
         tf = QFormLayout(typo)
         tf.addRow("Palette", self.palette_combo)
+        tf.addRow("Category colours", self.ed_coloroverrides)
+        tf.addRow("Sequential map", self.cmb_seqcmap)
+        tf.addRow("Diverging map", self.cmb_divcmap)
+        # Which capability flag decides whether each colour row is shown at all.
+        self._capability_rows = (
+            (tf, self.palette_combo, "supports_palette"),
+            (tf, self.ed_coloroverrides, "supports_group_colors"),
+            (tf, self.cmb_seqcmap, "supports_continuous_colormap"),
+            (tf, self.cmb_divcmap, "supports_continuous_colormap"),
+        )
         tf.addRow("Font", self.font_combo)
         tf.addRow("Title pt", self.sp_title)
         tf.addRow("Axis label pt", self.sp_axis)
@@ -1517,16 +1594,24 @@ class MainWindow(QMainWindow):
         draw. A control that cannot do anything is worse than a missing one: it
         is a promise the figure then breaks.
         """
-        group = getattr(self, "_legend_group", None)
-        if group is None:
-            return
         try:
             from make_my_figure_core.styles.capabilities import get_style_capabilities
 
-            supported = bool(get_style_capabilities(plot_type).supports_legend)
+            caps = get_style_capabilities(plot_type)
         except Exception:  # noqa: BLE001 - never block the panel on a lookup
-            supported = True
-        group.setVisible(supported)
+            return
+        group = getattr(self, "_legend_group", None)
+        if group is not None:
+            group.setVisible(bool(caps.supports_legend))
+        for form, widget, flag in getattr(self, "_capability_rows", ()):
+            visible = bool(getattr(caps, flag, True))
+            try:
+                form.setRowVisible(widget, visible)
+            except (AttributeError, TypeError):   # pragma: no cover - older Qt
+                widget.setVisible(visible)
+                label = form.labelForField(widget)
+                if label is not None:
+                    label.setVisible(visible)
 
     def _collect_layout_controls(self):
         """Return (layout_fragment, colorbar_mapping) from the grouped panel; empty
@@ -1606,6 +1691,14 @@ class MainWindow(QMainWindow):
         pal = self.palette_combo.currentData()
         if pal:
             ov["palette_name"] = pal
+        for widget, key in ((self.cmb_seqcmap, "sequential_cmap"),
+                            (self.cmb_divcmap, "diverging_cmap")):
+            name = widget.currentText()
+            if name and not name.startswith("("):
+                ov[key] = name
+        overrides = _parse_color_overrides(self.ed_coloroverrides.text())
+        if overrides:
+            ov["color_overrides"] = overrides
         font = self.font_combo.currentData()
         if font:
             ov["font_family"] = font
@@ -1627,6 +1720,9 @@ class MainWindow(QMainWindow):
                    self.sp_legborderpad, self.sp_leglabelspacing, self.sp_legcolspacing):
             _s.setValue(0.0)
         self.sp_cbshrink.setValue(1.0)
+        self.ed_coloroverrides.clear()
+        for _c in (self.cmb_seqcmap, self.cmb_divcmap):
+            _c.setCurrentIndex(0)
         self.chk_autofix.setChecked(False)
         self.chk_legend_outside.setChecked(False); self.chk_grid.setChecked(False)
         for _chk in (self.chk_xticklabels, self.chk_yticklabels,

@@ -1646,6 +1646,65 @@ def reapply_legend_geometry(ax, style, geometry: Dict[str, float]) -> bool:
     return True
 
 
+def apply_named_color_overrides(figure, style) -> List[str]:
+    """Recolour whichever artists carry a name the author gave a colour for.
+
+    ``color_overrides`` keyed by POSITION is honoured inside ``color_for``, so it
+    works on every plot type without a renderer knowing about it. Keyed by NAME -
+    "make Drug_B orange", which is how an author actually thinks - needs the
+    category's name at the moment the colour is chosen, and 38 renderers do not
+    pass one.
+
+    They do, however, label the artist they draw for each group, because that is
+    what the legend is built from. So the name is already on the figure: this
+    walks the labelled artists and recolours the ones that match. One
+    implementation, no renderer edits, and it cannot touch an artist the author
+    did not name.
+    """
+    overrides = {str(k): str(v) for k, v in (getattr(style, "color_overrides", None)
+                                             or {}).items() if not str(k).isdigit()}
+    if not overrides or figure is None:
+        return []
+    applied: List[str] = []
+    for ax in figure.axes:
+        for artist in list(ax.collections) + list(ax.lines) + list(ax.patches):
+            label = str(getattr(artist, "get_label", lambda: "")() or "")
+            colour = overrides.get(label)
+            if not colour or label.startswith("_"):
+                continue
+            try:
+                if hasattr(artist, "set_facecolor") and hasattr(artist, "set_edgecolor"):
+                    artist.set_facecolor(colour)
+                elif hasattr(artist, "set_color"):
+                    artist.set_color(colour)
+                applied.append(label)
+            except Exception:  # noqa: BLE001 - an unusable colour is reported below
+                continue
+        # The key is built from the artists, so it has to be rebuilt after them.
+        leg = ax.get_legend()
+        if leg is not None and applied:
+            handles, labels = ax.get_legend_handles_labels()
+            if handles:
+                title = leg.get_title().get_text() or None
+                loc, bbox = current_legend_placement(ax, leg)
+                try:
+                    if bbox is not None:
+                        ax.legend(handles, labels, loc=loc, bbox_to_anchor=bbox,
+                                  title=title,
+                                  frameon=getattr(style, "legend_frameon", False))
+                    else:
+                        ax.legend(handles, labels, loc=loc, title=title,
+                                  frameon=getattr(style, "legend_frameon", False))
+                except Exception:  # noqa: BLE001
+                    pass
+    missing = sorted(set(overrides) - set(applied))
+    if missing:
+        return [f"No drawn group is named {', '.join(repr(m) for m in missing)}, so "
+                f"that colour was not used. Name a group exactly as it appears in "
+                f"the legend, or give the colour by position instead."]
+    return []
+
+
 def legend_axes(figure):
     """The axes whose legend the layout controls should act on, or ``None``.
 

@@ -17,7 +17,7 @@ import json
 import os
 from dataclasses import dataclass, field
 from functools import lru_cache
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import matplotlib as mpl
 
@@ -114,6 +114,109 @@ _PALETTE_CMAPS: Dict[str, Dict[str, str]] = {
     "high_contrast": {"sequential_cmap": "inferno", "diverging_cmap": "seismic"},
     "grayscale": {"sequential_cmap": "Greys", "diverging_cmap": "gray"},
 }
+
+# ---------------------------------------------------------------------------
+# The palette catalogue, grouped by what a palette is FOR
+# ---------------------------------------------------------------------------
+#
+# Four kinds of colour decision, and they are not interchangeable:
+#
+#   qualitative  distinct hues for nominal categories - no order is implied
+#   sequential   one hue ramping by magnitude, for ordered values with a floor
+#   diverging    two hues away from a meaningful centre, for signed values
+#   grayscale    print-safe and photocopier-safe versions of the above
+#
+# Putting a sequential map on nominal categories tells the reader that "Drug_B"
+# is between "Drug_A" and "Control", which is a claim the data does not make.
+# The catalogue keeps them apart so a chooser can only offer what fits.
+#
+# The qualitative lists are this project's own (unchanged, and still the
+# defaults); the sequential and diverging entries are matplotlib's, named rather
+# than copied, so they stay whatever matplotlib ships.
+PALETTE_GROUPS: Dict[str, List[str]] = {
+    "qualitative": ["publication", "colorblind_safe", "high_contrast", "grayscale",
+                    "tab10", "tab20", "Set2", "Dark2", "Paired"],
+    "sequential": ["viridis", "plasma", "inferno", "magma", "cividis", "Blues",
+                   "Greens", "Oranges", "Purples", "Reds", "YlGnBu", "YlOrRd"],
+    "diverging": ["RdBu_r", "PuOr", "BrBG", "PRGn", "coolwarm", "seismic",
+                  "RdYlBu_r", "Spectral_r"],
+    "grayscale": ["grayscale", "Greys", "gray"],
+}
+
+# Qualitative matplotlib sets offered above, resolved on demand so the hex
+# values are always the ones matplotlib ships rather than a stale copy.
+_MPL_QUALITATIVE = ("tab10", "tab20", "Set2", "Dark2", "Paired")
+
+
+def _mpl_qualitative(name: str) -> List[str]:
+    try:
+        import matplotlib as mpl
+        from matplotlib.colors import to_hex
+
+        cmap = mpl.colormaps[name]
+        return [to_hex(c) for c in getattr(cmap, "colors", [])]
+    except Exception:  # noqa: BLE001 - an unknown name is simply not offered
+        return []
+
+
+def qualitative_palette(name: str) -> List[str]:
+    """The hex colours of a named qualitative palette, or ``[]``.
+
+    Looks in this project's palettes first so "publication" keeps meaning the
+    project's publication palette whatever matplotlib registers later.
+    """
+    if name in NAMED_PALETTES:
+        return list(NAMED_PALETTES[name])
+    if name in _MPL_QUALITATIVE:
+        return _mpl_qualitative(name)
+    return []
+
+
+def palette_capacity(name: str) -> int:
+    """How many visually distinct colours a qualitative palette has."""
+    return len({c.lower() for c in qualitative_palette(name)})
+
+
+def palettes_with_capacity(n: int) -> List[str]:
+    """Qualitative palettes that can give ``n`` distinct colours."""
+    return [p for p in PALETTE_GROUPS["qualitative"] if palette_capacity(p) >= n]
+
+
+# Notes raised while colours were being handed out - a palette asked for more
+# distinct colours than it has, for instance. Drained by the render path into the
+# result's warnings, the same way layout notes are, so the user is told rather
+# than silently given two identical colours for two different groups.
+_PALETTE_NOTES: List[str] = []
+
+# The widest overrun seen per palette, rather than one note per category past
+# the end: a ten-group figure on an eight-colour palette is one problem, not two.
+_PALETTE_WRAP: Dict[str, Tuple[int, int]] = {}
+
+
+def drain_palette_notes() -> List[str]:
+    """Messages from the last render's colour assignment, and clear them."""
+    notes = list(_PALETTE_NOTES)
+    for role, (count, capacity) in sorted(_PALETTE_WRAP.items()):
+        alternatives = [p for p in palettes_with_capacity(count) if p != role]
+        suffix = (f" Palettes with enough distinct colours: "
+                  f"{', '.join(alternatives[:4])}." if alternatives else
+                  " No bundled palette has that many distinct colours - set the "
+                  "colours you want explicitly, or group some categories together.")
+        notes.append(
+            f"{count} categories were drawn from a palette of {capacity} colours, "
+            f"so colours repeat and two different groups share one.{suffix}")
+    _PALETTE_NOTES.clear()
+    _PALETTE_WRAP.clear()
+    return notes
+
+
+def _note_palette_wrap(palette_role: str, count: int, capacity: int) -> None:
+    if capacity <= 0:
+        return
+    seen = _PALETTE_WRAP.get(palette_role)
+    if seen is None or count > seen[0]:
+        _PALETTE_WRAP[palette_role] = (count, capacity)
+
 
 # Figure width presets (mm). "default" is a comfortable medium size so the very
 # first plot reads well on screen and in slides without any tweaking.
@@ -234,6 +337,10 @@ class StyleProfile:
     preferred_exports: List[str] = field(default_factory=lambda: ["svg", "pdf", "png"])
     palette_role: str = "publication"
     palette: List[str] = field(default_factory=lambda: list(_PUBLICATION))
+    # Per-category colours that win over the palette, keyed by the category's own
+    # name or by its position ("0", "1", ...). Empty by default, so a figure that
+    # has not asked for one is coloured exactly as before.
+    color_overrides: Dict[str, str] = field(default_factory=dict)
     sequential_cmap: str = "viridis"
     diverging_cmap: str = "RdBu_r"
     is_learned: bool = False
@@ -254,8 +361,30 @@ class StyleProfile:
         w_in = mm_to_inches(w_mm)
         return (w_in, w_in * float(aspect))
 
-    def color_for(self, index: int) -> str:
+    def color_for(self, index: int, name: Optional[str] = None) -> str:
+        """The colour for category ``index`` (optionally named ``name``).
+
+        The one place 38 renderers get a categorical colour from, which is why
+        per-category overrides and the "more groups than colours" warning both
+        live here instead of being patched into each renderer.
+
+        An override may be keyed by the category's own name - which is what an
+        author means by "make Drug_B orange" - or by its position, which is what
+        a renderer that does not pass a name can still honour.
+        """
+        overrides = self.color_overrides or {}
+        if overrides:
+            if name is not None and str(name) in overrides:
+                return str(overrides[str(name)])
+            if str(index) in overrides:
+                return str(overrides[str(index)])
         palette = self.palette or _PUBLICATION
+        if index >= len(palette):
+            # Two different groups are about to get the same colour. That is
+            # sometimes acceptable and sometimes a ruined figure, and only the
+            # author can say which - so it is reported, never silent.
+            _note_palette_wrap(self.palette_role or "this palette",
+                               index + 1, len({c.lower() for c in palette}))
         return palette[index % len(palette)]
 
     def rc_params(self) -> Dict[str, Any]:
@@ -321,8 +450,11 @@ class StyleProfile:
             return self
         clone = copy.deepcopy(self)
         pal = overrides.get("palette_name")
-        if pal and pal in NAMED_PALETTES:
-            clone.palette = list(NAMED_PALETTES[pal])
+        if pal and qualitative_palette(pal):
+            # NAMED_PALETTES first, then matplotlib's own qualitative sets, so
+            # "publication" keeps meaning this project's palette and "tab10"
+            # means matplotlib's.
+            clone.palette = qualitative_palette(pal)
             clone.palette_role = pal
             # Palettes like grayscale also drive the heatmap colormaps (an explicit
             # sequential_cmap/diverging_cmap override in the loop below still wins).
@@ -335,6 +467,13 @@ class StyleProfile:
                 continue
             if hasattr(clone, key) and val is not None:
                 setattr(clone, key, val)
+        # Per-category colours arrive as {name_or_index: colour}; a list is also
+        # accepted because "the colours in order" is the obvious way to type it.
+        raw_over = overrides.get("color_overrides")
+        if isinstance(raw_over, (list, tuple)):
+            clone.color_overrides = {str(i): str(c) for i, c in enumerate(raw_over) if c}
+        elif isinstance(raw_over, dict):
+            clone.color_overrides = {str(k): str(v) for k, v in raw_over.items() if v}
         # A font_family override may arrive as a single family name (e.g. "Arial");
         # turn it into a proper fallback stack so matplotlib resolves it (and falls
         # back gracefully if that font isn't installed).
