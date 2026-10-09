@@ -190,3 +190,66 @@ def test_geometry_is_a_portable_preset_key():
     from make_my_figure_core.presets import LAYOUT_STYLE_KEYS
 
     assert set(LEGEND_GEOMETRY_KEYS) <= set(LAYOUT_STYLE_KEYS)
+
+
+# --------------------------------------------------------------------------
+# "Legend outside" is a decision, not a suggestion
+# --------------------------------------------------------------------------
+
+LEGEND_CAPABLE = [p for p in sorted(registry.available_plot_types())
+                  if examples.entry(p) and get_style_capabilities(p).supports_legend]
+
+
+def _legend_side(plot_type, **style):
+    table, aux, spec = examples.load_example(plot_type)
+    spec = {**spec, "style": {**(spec.get("style") or {}), **style}}
+    result = registry.render(spec, table.dataframe,
+                             aux={k: v.dataframe for k, v in (aux or {}).items()})
+    figure = result.figure
+    figure.canvas.draw()
+    ax = base.legend_axes(figure)
+    leg = ax.get_legend() if ax is not None else None
+    side = base.outside_legend_side(ax, leg) if leg is not None else "no legend"
+    plt.close(figure)
+    return side
+
+
+@pytest.mark.parametrize("plot_type", LEGEND_CAPABLE)
+def test_asking_for_an_outside_legend_puts_it_outside(plot_type):
+    """Two separate reasons this did nothing on 25 of the 27 plots with a legend:
+    sixteen renderers build their legend with a direct ax.legend() call that
+    never sees the style flag, and the cost rule that moves an expensive outside
+    legend inside was overruling the user as well as the plot type's default.
+    Both are fixed in one shared place, so this holds for every plot type."""
+    side = _legend_side(plot_type, legend_outside=True)
+    if side == "no legend":
+        pytest.skip(f"{plot_type}'s example data produces no legend")
+    assert side == "right", f"{plot_type}: asked for outside, got {side!r}"
+
+
+def test_the_cost_rule_still_protects_the_plot_types_own_default():
+    """A plot that asks for an outside legend ITSELF may still have it moved in
+    when the key would cost more than a third of the panel - that is the rule
+    that keeps a small panel usable. Only the user's explicit choice overrides
+    it, so the two paths are checked against the same expensive legend."""
+    from make_my_figure_core.plots.base import (
+        MAX_OUTSIDE_LEGEND_WIDTH_FRACTION, outside_legend_side, place_legend)
+    from make_my_figure_core.styles.engine import load_profile
+
+    assert 0.2 < MAX_OUTSIDE_LEGEND_WIDTH_FRACTION < 0.5
+    style = load_profile("publication")
+
+    def side_for(*, user_asked):
+        figure, ax = plt.subplots(figsize=(2.6, 2.0))
+        ax.plot([0, 1], [0, 1], label="a legend label long enough to be expensive")
+        profile = style.with_overrides({"legend_outside": True}) if user_asked else style
+        leg = place_legend(ax, profile, force_outside=not user_asked)
+        figure.canvas.draw()
+        side = outside_legend_side(ax, leg)
+        plt.close(figure)
+        return side
+
+    assert side_for(user_asked=False) is None, (
+        "the plot type's own default was not moved in by the cost rule")
+    assert side_for(user_asked=True) == "right", (
+        "the user asked for outside and a heuristic overruled it")

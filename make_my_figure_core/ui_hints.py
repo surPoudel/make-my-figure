@@ -399,6 +399,12 @@ OPTIONS: Dict[str, List[Option]] = {
                minimum=0, maximum=2000, step=20, decimals=0, scope="config"),
     ],
     "neighborhood_enrichment_matrix": [
+        # Which colour scale the matrix is on, and so which of the two style
+        # colormaps governs it. "auto" keeps the long-standing behaviour: an
+        # enrichment score is a log ratio, so zero means "as expected" and a
+        # diverging scale centred there is the honest default.
+        Option("color_scale", "Colour scale", "choice", "auto",
+               ["auto", "diverging", "sequential"], scope="style"),
         _CBAR_PAD, _CBAR_FRACTION,
         _SPATIAL_CMAP,
         Option("max_point_area", "Largest dot area", "number", 260.0, minimum=20.0,

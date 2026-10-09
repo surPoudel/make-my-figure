@@ -28,7 +28,14 @@ class PlotStyleCapabilities:
     supports_legend: bool = True
     supports_palette: bool = True            # categorical palette (bars/box/points/groups)
     supports_group_colors: bool = True
+    # One flag was not enough. A dot plot ramps a single magnitude and reads
+    # sequential_cmap only, so a "Diverging map" chooser shown beside it did
+    # nothing - visible, and unable to act. The two are declared separately now;
+    # supports_continuous_colormap stays as "either kind applies" so anything
+    # that already asks the old question is unaffected.
     supports_continuous_colormap: bool = False
+    supports_sequential_cmap: bool = False
+    supports_diverging_cmap: bool = False
     supports_colorbar: bool = False
     supports_node_colors: bool = False
     supports_edge_colors: bool = False
@@ -44,6 +51,7 @@ class PlotStyleCapabilities:
 # ``None`` is universal (font/size/figure/DPI/background/padding) and always applies.
 STYLE_CONTROL_CAPABILITY: Dict[str, str] = {
     "palette_name": "supports_palette",
+    "color_overrides": "supports_group_colors",
     "marker_size": "supports_marker_size",
     "line_width_pt": "supports_line_width",
     "legend_pt": "supports_legend",
@@ -54,8 +62,8 @@ STYLE_CONTROL_CAPABILITY: Dict[str, str] = {
     "edge_color_positive": "supports_edge_colors",
     "edge_color_negative": "supports_edge_colors",
     "label_color": "supports_label_colors",
-    "sequential_cmap": "supports_continuous_colormap",
-    "diverging_cmap": "supports_continuous_colormap",
+    "sequential_cmap": "supports_sequential_cmap",
+    "diverging_cmap": "supports_diverging_cmap",
     "colorbar_label": "supports_colorbar",
 }
 
@@ -85,7 +93,7 @@ _CAPS: Dict[str, PlotStyleCapabilities] = {
             "profile")),
     "heatmap_clustered_matrix": PlotStyleCapabilities(
         plot_type="heatmap_clustered_matrix", supports_group_colors=False,
-        supports_continuous_colormap=True, supports_colorbar=True,
+        supports_continuous_colormap=True, supports_sequential_cmap=True, supports_diverging_cmap=True, supports_colorbar=True,
         supports_marker_size=False, supports_line_width=False,
         unsupported_controls_reason=(
             "heatmaps use a continuous colormap, not per-point markers")),
@@ -112,7 +120,7 @@ _CAPS: Dict[str, PlotStyleCapabilities] = {
         plot_type="ridge_or_density_plot", supports_marker_size=False),
     "enrichment_dotplot": PlotStyleCapabilities(
         plot_type="enrichment_dotplot", supports_group_colors=False,
-        supports_continuous_colormap=True, supports_colorbar=True,
+        supports_continuous_colormap=True, supports_sequential_cmap=True, supports_colorbar=True,
         supports_marker_size=False, supports_line_width=False),
     "kaplan_meier_survival_curve": PlotStyleCapabilities(
         plot_type="kaplan_meier_survival_curve", supports_marker_size=False),
@@ -168,7 +176,7 @@ _CAPS: Dict[str, PlotStyleCapabilities] = {
         plot_type="precision_recall_curve", supports_marker_size=False),
     "confusion_matrix": PlotStyleCapabilities(
         plot_type="confusion_matrix", supports_group_colors=False,
-        supports_continuous_colormap=True, supports_colorbar=True, supports_legend=False,
+        supports_continuous_colormap=True, supports_sequential_cmap=True, supports_colorbar=True, supports_legend=False,
         supports_marker_size=False, supports_line_width=False),
     "upset_plot": PlotStyleCapabilities(
         plot_type="upset_plot", supports_legend=False),
@@ -181,14 +189,15 @@ _CAPS: Dict[str, PlotStyleCapabilities] = {
         unsupported_controls_reason=(
             "flows have no axes, markers or lines in the plot sense")),
     "embedding_scatter": PlotStyleCapabilities(
-        plot_type="embedding_scatter", supports_continuous_colormap=True,
+        plot_type="embedding_scatter", supports_continuous_colormap=True, supports_sequential_cmap=True,
         supports_colorbar=True, supports_line_width=False),
     "hierarchical_clustering": PlotStyleCapabilities(
         plot_type="hierarchical_clustering", supports_group_colors=False,
-        supports_continuous_colormap=True, supports_colorbar=True,
+        supports_continuous_colormap=True, supports_sequential_cmap=True, supports_diverging_cmap=True, supports_colorbar=True,
         supports_marker_size=False, supports_line_width=False),
     "network_graph": PlotStyleCapabilities(
         plot_type="network_graph", supports_continuous_colormap=True,
+        supports_sequential_cmap=True,
         supports_colorbar=True, supports_marker_size=False, supports_line_width=False,
         supports_axes=False, supports_x_tick_rotation=False,
         supports_y_tick_rotation=False, supports_axis_label_padding=False,
@@ -213,7 +222,7 @@ _CAPS: Dict[str, PlotStyleCapabilities] = {
         # The palette control selects the sequential colormap for continuous
         # plots, so it does have an effect here even though there are no
         # categorical colours to set.
-        supports_group_colors=False, supports_continuous_colormap=True,
+        supports_group_colors=False, supports_continuous_colormap=True, supports_sequential_cmap=True,
         supports_colorbar=True, supports_legend=False, supports_line_width=False,
         unsupported_controls_reason=(
             "this map colours by a continuous value: the palette chooses the colormap, "
@@ -239,7 +248,7 @@ _CAPS: Dict[str, PlotStyleCapabilities] = {
         # The palette now reaches this plot. It used to fall back to a hard-coded
         # "RdBu_r", so declaring it unsupported was accurate; the colormap follows
         # the style's diverging/sequential choice, which is what the palette sets.
-        supports_palette=True, supports_continuous_colormap=True,
+        supports_palette=True, supports_continuous_colormap=True, supports_sequential_cmap=True, supports_diverging_cmap=True,
         supports_group_colors=False, supports_colorbar=True,
         supports_marker_size=False, supports_line_width=False,
         unsupported_controls_reason=(

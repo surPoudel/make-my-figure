@@ -1,0 +1,46 @@
+plot_type,title_font_pt,axis_font_pt,tick_label_pt,legend_pt,annotation_pt,marker_size,line_width_pt,spine_width_pt,legend_outside,grid,font_family,palette_name,sequential_cmap,diverging_cmap,color_overrides
+barplot_with_error_bar,no title,acts,acts,no legend,no text,DEAD,hidden,acts,no legend,acts,acts,acts,hidden,hidden,acts
+beeswarm_plot,no title,acts,acts,no legend,no text,acts,acts,acts,no legend,acts,acts,acts,hidden,hidden,acts
+bland_altman_plot,no title,acts,acts,hidden,acts,acts,acts,acts,hidden,acts,acts,acts,hidden,hidden,hidden
+boxplot_or_violin_with_points,no title,acts,acts,no legend,no text,acts,acts,acts,no legend,acts,acts,acts,hidden,hidden,acts
+calibration_plot,no title,acts,acts,acts,no text,acts,acts,acts,acts,acts,acts,acts,hidden,hidden,hidden
+chord_diagram,no title,no axis labels,acts,acts,DEAD,hidden,hidden,no axes,acts,no axes,acts,acts,hidden,hidden,acts
+confusion_matrix,no title,acts,acts,hidden,DEAD,hidden,hidden,acts,hidden,acts,acts,acts,acts,hidden,hidden
+dose_response_curve,no title,acts,acts,acts,no text,acts,acts,acts,acts,acts,acts,acts,hidden,hidden,acts
+dot_strip_plot,no title,acts,acts,no legend,no text,acts,acts,acts,no legend,acts,acts,acts,hidden,hidden,acts
+embedding_scatter,no title,acts,acts,acts,no text,acts,hidden,acts,acts,acts,acts,acts,hidden,hidden,acts
+enrichment_dotplot,no title,acts,acts,acts,no text,hidden,hidden,acts,acts,acts,acts,acts,acts,hidden,hidden
+forest_plot,no title,acts,acts,hidden,no text,hidden,acts,acts,hidden,acts,acts,acts,hidden,hidden,hidden
+grouped_barplot_with_error_bar,no title,acts,acts,acts,no text,DEAD,hidden,acts,acts,acts,acts,acts,hidden,hidden,acts
+heatmap_clustered_matrix,no title,acts,acts,no legend,no text,hidden,hidden,acts,no legend,acts,acts,acts,hidden,acts,hidden
+hierarchical_clustering,no title,acts,acts,acts,no text,hidden,hidden,acts,acts,acts,acts,acts,hidden,acts,hidden
+hierarchical_dendrogram,no title,acts,acts,hidden,no text,hidden,hidden,acts,hidden,acts,acts,acts,hidden,hidden,hidden
+histogram_distribution,DEAD,acts,acts,no legend,no text,no markers,no lines,acts,no legend,acts,acts,acts,hidden,hidden,acts
+kaplan_meier_survival_curve,no title,acts,acts,acts,no text,hidden,acts,acts,acts,acts,acts,acts,hidden,hidden,acts
+lineplot_timecourse_with_error_band,no title,acts,acts,acts,no text,hidden,acts,acts,acts,acts,acts,acts,hidden,hidden,acts
+lollipop_mutation_plot,no title,acts,acts,acts,DEAD,hidden,acts,acts,acts,acts,acts,acts,hidden,hidden,acts
+ma_plot,no title,acts,acts,acts,acts,acts,hidden,acts,acts,acts,acts,acts,hidden,hidden,acts
+manhattan_plot,no title,acts,acts,acts,no text,acts,acts,acts,acts,acts,acts,acts,hidden,hidden,acts
+neighborhood_enrichment_matrix,acts,acts,acts,DEAD,no text,hidden,hidden,acts,DEAD,DEAD,acts,acts,hidden,acts,hidden
+network_graph,acts,no axis labels,no tick labels,acts,acts,hidden,hidden,DEAD,acts,DEAD,acts,acts,hidden,hidden,acts
+oncoprint_mutation_heatmap,no title,acts,acts,acts,no text,hidden,hidden,DEAD,acts,acts,acts,acts,hidden,hidden,acts
+paired_slopegraph,no title,acts,acts,no legend,no text,acts,acts,acts,no legend,acts,acts,acts,hidden,hidden,acts
+pca_scatter_from_matrix,no title,acts,acts,acts,no text,acts,hidden,acts,acts,acts,acts,acts,hidden,hidden,acts
+precision_recall_curve,no title,acts,acts,acts,no text,hidden,acts,acts,acts,acts,acts,acts,hidden,hidden,acts
+qq_plot,no title,acts,acts,hidden,acts,acts,acts,acts,hidden,acts,acts,acts,hidden,hidden,hidden
+raincloud_plot,no title,acts,acts,hidden,no text,acts,acts,acts,hidden,acts,acts,acts,hidden,hidden,acts
+ridge_or_density_plot,no title,acts,acts,no legend,no text,hidden,DEAD,acts,no legend,acts,acts,acts,hidden,hidden,acts
+roc_curve,no title,acts,acts,acts,no text,hidden,acts,acts,acts,acts,acts,acts,hidden,hidden,acts
+sankey_plot,acts,no axis labels,acts,hidden,DEAD,hidden,hidden,no axes,hidden,no axes,acts,acts,hidden,hidden,acts
+scatterplot_with_regression,no title,acts,acts,acts,acts,acts,acts,acts,acts,acts,acts,acts,hidden,hidden,acts
+spatial_categorical_map,acts,no axis labels,no tick labels,acts,no text,acts,hidden,DEAD,acts,DEAD,acts,acts,hidden,hidden,acts
+spatial_composition_map,acts,no axis labels,no tick labels,acts,no text,hidden,hidden,DEAD,acts,DEAD,acts,acts,hidden,hidden,acts
+spatial_feature_map,acts,acts,acts,hidden,no text,acts,hidden,acts,hidden,DEAD,acts,acts,acts,hidden,hidden
+spatial_roi_map,acts,no axis labels,no tick labels,acts,acts,hidden,hidden,DEAD,acts,DEAD,acts,acts,hidden,hidden,acts
+spatial_transcript_map,acts,no axis labels,no tick labels,acts,no text,acts,hidden,DEAD,acts,DEAD,acts,acts,hidden,hidden,acts
+spider_plot,no title,acts,acts,acts,no text,acts,acts,acts,acts,acts,acts,acts,hidden,hidden,acts
+stacked_bar_composition,no title,acts,acts,acts,no text,hidden,hidden,acts,acts,acts,acts,acts,hidden,hidden,acts
+swimmer_plot,no title,acts,acts,acts,no text,acts,hidden,acts,acts,acts,acts,acts,hidden,hidden,acts
+upset_plot,no title,acts,acts,hidden,acts,acts,acts,acts,hidden,acts,acts,acts,hidden,hidden,acts
+volcano_plot,DEAD,acts,acts,acts,acts,acts,hidden,acts,acts,acts,acts,hidden,hidden,hidden,hidden
+waterfall_plot,no title,acts,acts,acts,no text,hidden,hidden,acts,acts,acts,acts,acts,hidden,hidden,acts

@@ -1722,6 +1722,114 @@ def apply_named_color_overrides(figure, style) -> List[str]:
     return []
 
 
+# The two continuous-colormap controls, and which kind of scale each governs.
+_COLORMAP_CONTROLS = {"sequential_cmap": "sequential", "diverging_cmap": "diverging"}
+
+
+def figure_colormaps(figure) -> List[str]:
+    """The colormaps this figure draws with, the main one first.
+
+    Biggest artist first, because a matrix with a cluster strip beside it draws
+    with three colormaps and only one of them is the figure. A colormap built on
+    the fly from a list of colours ("from_list") is not a named choice anyone
+    made, so it is left out.
+    """
+    def _is_colorbar(ax) -> bool:
+        return (getattr(ax, "_colorbar", None) is not None
+                or str(ax.get_label()) == "<colorbar>")
+
+    axes = list(getattr(figure, "axes", []))
+    # The primary axes first: that is the plot. A colourbar carries the same map,
+    # and a ScalarMappable parked for a size key can carry a different one -
+    # neither is what a reader means by "the colours of this figure".
+    ordered = (axes[:1]
+               + [ax for ax in axes[1:] if not _is_colorbar(ax)]
+               + [ax for ax in axes[1:] if _is_colorbar(ax)])
+    names: List[str] = []
+    for ax in ordered:
+        for artist in list(ax.images) + list(ax.collections):
+            try:
+                # Every Collection carries a colormap whether or not it uses one:
+                # a bar chart's error bars have viridis attached and draw none of
+                # it. What marks a colour-MAPPED artist is having an array of
+                # values to map, so that is the test.
+                array = artist.get_array()
+                if array is None or not len(array):
+                    continue
+                cmap = artist.get_cmap()
+            except Exception:  # noqa: BLE001
+                continue
+            # A colormap built on the fly from a list of colours is not a named
+            # choice anyone made, so it is not offered as an explanation.
+            if cmap is None or cmap.name == "from_list":
+                continue
+            if cmap.name not in names:
+                names.append(cmap.name)
+    return names
+
+
+def colormap_role(figure, style) -> Optional[str]:
+    """Which colormap control governs this figure: ``"sequential"``, ``"diverging"``
+    or ``None``.
+
+    Several plot types choose between the two from the data - a matrix centred on
+    zero or z-scored is drawn diverging, the same matrix unscaled is drawn
+    sequential, and an embedding coloured by a category uses neither. So "which
+    control is live" is a property of the FIGURE, not of the plot type, and the
+    only honest way to know is to look at what was drawn. Reported on the render
+    so the app can show the chooser that works and hide the one that cannot,
+    without re-implementing each renderer's mode logic.
+    """
+    names = figure_colormaps(figure)
+    if not names:
+        return None
+    primary = names[0]
+    if primary == getattr(style, "diverging_cmap", None):
+        return "diverging"
+    if primary == getattr(style, "sequential_cmap", None):
+        return "sequential"
+    return None
+
+
+def unused_colormap_notes(figure, style, spec: Dict[str, Any]) -> List[str]:
+    """Say so when a colormap was chosen that this figure does not use.
+
+    Several plot types pick between the sequential and the diverging map from
+    the DATA: a matrix centred on zero or z-scored by row is drawn diverging, the
+    same matrix unscaled is drawn sequential, and an embedding coloured by a
+    category uses neither. So "Sequential map" can be a live control on the plot
+    type and do nothing to the figure in front of you - which is indistinguishable
+    from a broken control unless somebody says which one is in charge.
+
+    Only fires when a control was actually set and the figure really does draw
+    with a colormap, so it cannot nag a plot that has none.
+    """
+    asked = {key: str(((spec or {}).get("style") or {}).get(key) or "").strip()
+             for key in _COLORMAP_CONTROLS}
+    asked = {k: v for k, v in asked.items() if v}
+    if not asked:
+        return []
+    used = figure_colormaps(figure)
+    if not used:
+        return []
+    notes = []
+    for key, kind in _COLORMAP_CONTROLS.items():
+        name = asked.get(key)
+        if not name or name in used:
+            continue
+        other = "diverging" if kind == "sequential" else "sequential"
+        in_use = repr(used[0])
+        governing = getattr(style, f"{other}_cmap", None)
+        who = (f"the {other} map" if governing and governing in used
+               else "its own colormap option")
+        notes.append(
+            f"The {kind} colormap {name!r} is not what this figure is drawn with "
+            f"({in_use}): it is using {who}. A matrix that is centred or z-scored "
+            f"takes the {other} map, and an unscaled one takes the {kind} map - "
+            f"change the plot's colour-scale option to switch which applies.")
+    return notes
+
+
 def legend_axes(figure):
     """The axes whose legend the layout controls should act on, or ``None``.
 
@@ -1774,10 +1882,16 @@ def place_legend(ax, style, *, title=None, handles=None, labels=None,
         offset_legend(ax, leg, geometry, side)
         return leg
 
-    outside = force_outside or getattr(style, "legend_outside", False)
+    # "Outside" asked for by the USER is a decision, not a suggestion. Only the
+    # plot type's own default (force_outside) is subject to the cost rule below -
+    # otherwise a heuristic silently overrules the person using the app, and the
+    # "Legend outside" box does nothing on 25 of the plots that have a legend.
+    user_asked_outside = bool(getattr(style, "legend_outside", False))
+    outside = force_outside or user_asked_outside
     if outside:
         leg = ax.legend(*args, loc="center left", bbox_to_anchor=(1.02, 0.5), **kw)
-        if _outside_legend_cost(ax, leg) > MAX_OUTSIDE_LEGEND_WIDTH_FRACTION:
+        if (not user_asked_outside
+                and _outside_legend_cost(ax, leg) > MAX_OUTSIDE_LEGEND_WIDTH_FRACTION):
             # Too expensive for this canvas. Inside costs no width at all - but
             # only where the plot has a corner to spare, so the two costs are
             # compared rather than one being assumed: a two-group regression has

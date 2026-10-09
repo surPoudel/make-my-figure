@@ -515,7 +515,12 @@ def render(
 
         # Geometry counts as asking, not just location: "move the legend 6 pt
         # left" has to work without first choosing a location it already has.
-        _wants_legend = bool(_layout.get("legend_location")) or any(
+        # "Legend outside" is a style flag, and sixteen renderers build their
+        # legend with a direct ax.legend() call that never sees it - so the box
+        # did nothing on most of the plots that have a legend. Honoured here,
+        # once, for all of them, instead of editing sixteen renderers.
+        _outside = bool(getattr(style, "legend_outside", False))
+        _wants_legend = bool(_layout.get("legend_location")) or _outside or any(
             _layout.get(k) is not None for k in LEGEND_GEOMETRY_KEYS)
         if _wants_legend and getattr(result, "figure", None) is not None \
                 and result.figure.axes:
@@ -527,7 +532,7 @@ def render(
             # primary one would leave the original and add a second.
             _ax = legend_axes(result.figure) or result.figure.axes[0]
             _geometry = legend_geometry(spec)
-            if not _layout.get("legend_location"):
+            if not (_layout.get("legend_location") or _outside):
                 # Geometry alone is not a relocation. Keep the legend exactly
                 # where its plot type put it and change only its geometry:
                 # resolving a location here instead moved the volcano's outside
@@ -569,6 +574,22 @@ def render(
                     result.warnings.append(_note)
     except Exception as _exc:  # noqa: BLE001
         result.warnings.append(f"Named colour overrides skipped: {_exc}")
+
+    # A colormap control that was set but is not the one in charge of this
+    # figure. Guarded; an explanation must never break a render.
+    try:
+        from make_my_figure_core.plots.base import colormap_role, unused_colormap_notes
+
+        if getattr(result, "figure", None) is not None:
+            # Which of the two colormap controls this FIGURE answers to. The app
+            # shows that one and hides the other, so a chooser is never offered
+            # where it cannot act.
+            result.metadata["colormap_role"] = colormap_role(result.figure, style)
+            for _note in unused_colormap_notes(result.figure, style, spec):
+                if _note not in result.warnings:
+                    result.warnings.append(_note)
+    except Exception as _exc:  # noqa: BLE001
+        result.warnings.append(f"Colormap check skipped: {_exc}")
 
     for _note in drain_palette_notes():
         if _note not in result.warnings:

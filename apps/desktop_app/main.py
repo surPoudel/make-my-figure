@@ -1449,11 +1449,12 @@ class MainWindow(QMainWindow):
         tf.addRow("Sequential map", self.cmb_seqcmap)
         tf.addRow("Diverging map", self.cmb_divcmap)
         # Which capability flag decides whether each colour row is shown at all.
+        self._style_form = tf
         self._capability_rows = (
             (tf, self.palette_combo, "supports_palette"),
             (tf, self.ed_coloroverrides, "supports_group_colors"),
-            (tf, self.cmb_seqcmap, "supports_continuous_colormap"),
-            (tf, self.cmb_divcmap, "supports_continuous_colormap"),
+            (tf, self.cmb_seqcmap, "supports_sequential_cmap"),
+            (tf, self.cmb_divcmap, "supports_diverging_cmap"),
         )
         tf.addRow("Font", self.font_combo)
         tf.addRow("Title pt", self.sp_title)
@@ -1584,6 +1585,36 @@ class MainWindow(QMainWindow):
         box.toggled.connect(lambda _=False: self.render_preview())
         self._style_box = box
         return box
+
+    def _apply_colormap_role(self, result) -> None:
+        """Show the colormap chooser this FIGURE answers to, and hide the other.
+
+        Which of the two is live is a property of the figure, not of the plot
+        type: a matrix that is z-scored or centred is drawn with the diverging
+        map and the sequential one does nothing to it; unscale it and they swap.
+        Capabilities are static, so they can only say "this plot type uses
+        colormaps at all" - the render reports which one it actually used, and
+        that is what decides the rows. Nothing here re-implements a renderer's
+        mode logic, so it cannot drift from it.
+        """
+        role = None
+        try:
+            role = (result.metadata or {}).get("colormap_role")
+        except Exception:  # noqa: BLE001
+            return
+        rows = ((self.cmb_seqcmap, "sequential"), (self.cmb_divcmap, "diverging"))
+        for widget, kind in rows:
+            if widget is None:
+                continue
+            visible = role == kind
+            form = getattr(self, "_style_form", None)
+            try:
+                if form is not None:
+                    form.setRowVisible(widget, visible)
+                    continue
+            except (AttributeError, TypeError):   # pragma: no cover - older Qt
+                pass
+            widget.setVisible(visible)
 
     def _apply_style_capabilities(self, plot_type) -> None:
         """Show only the style controls this plot type can honour.
@@ -3350,6 +3381,7 @@ class MainWindow(QMainWindow):
     def _display_result(self, spec, result):
         self._current_spec = spec
         self._current_result = result
+        self._apply_colormap_role(result)
         self._hide_example_prompt()
         warns = list(result.warnings or [])
         check = result.metadata.get("publication_check", {})

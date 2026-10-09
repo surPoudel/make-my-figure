@@ -84,11 +84,24 @@ def scan_renderer(plot_type: str) -> Dict[str, object]:
                            if re.search(r"color|cmap|colormap|palette", o.key))
     literal = sorted(set(_HEX.findall(src)) | set(_NAMED.findall(src)))
     uses_palette = ("color_for(" in src) or ("palette" in tokens)
-    uses_cmap = bool({"sequential_cmap", "diverging_cmap"} & tokens)
+    # NOTE before regenerating with --write: this heuristic is coarser than the
+    # table it writes. It reads "color_for(" as "has categorical colour", which
+    # is true of a heatmap's cluster strips but not of its cells, so a plain
+    # regeneration undoes the v1.2.1 corrections for heatmap_clustered_matrix
+    # and calibration_plot and deletes their hand-written reasons. Diff the
+    # result before committing it.
+    uses_sequential = "sequential_cmap" in tokens
+    uses_diverging = "diverging_cmap" in tokens
+    uses_cmap = uses_sequential or uses_diverging
     return {
         "plot_type": plot_type,
         "categorical_palette": uses_palette,
         "continuous_colormap": uses_cmap,
+        # Declared apart, because they are two controls: a plot that ramps one
+        # magnitude reads only the sequential map, and offering it a diverging
+        # one is offering a control that cannot act.
+        "sequential_cmap": uses_sequential,
+        "diverging_cmap": uses_diverging,
         # the palette control switches the colormaps too, so it has an effect on cmap plots
         "palette_control_has_effect": uses_palette or uses_cmap,
         "colorbar": ".colorbar(" in src,
@@ -180,6 +193,8 @@ def render_caps_block(rows: List[Dict[str, object]]) -> str:
             "supports_palette": bool(row["palette_control_has_effect"]),
             "supports_group_colors": bool(row["categorical_palette"]),
             "supports_continuous_colormap": bool(row["continuous_colormap"]),
+            "supports_sequential_cmap": bool(row["sequential_cmap"]),
+            "supports_diverging_cmap": bool(row["diverging_cmap"]),
             "supports_colorbar": bool(row["colorbar"]),
             "supports_legend": bool(row["legend"]),
             "supports_marker_size": bool(row["marker_size"]),

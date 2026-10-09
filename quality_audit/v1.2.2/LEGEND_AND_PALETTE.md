@@ -72,6 +72,42 @@ measurement cannot judge:
 * `03_category_capacity.png` — 2 / 3 / 5 / 10 groups, and the suggested palettes
 * `04_colour_kinds.png` — categorical, named override, sequential, diverging
 
+## Follow-up: every style control, on every plot
+
+Four reports after the first round — a Diverging chooser beside the enrichment
+dot plot, and a Sequential chooser beside the clustered heatmap, the
+hierarchical clustering and the cellular-neighbourhood matrix, each doing
+nothing. All four were the same class of defect, so the whole style panel was
+swept rather than the four patched: **45 plot types × 15 controls**, changing
+each one and checking the figure actually changed
+(`quality_audit/v1.2.2/style_control_sweep.py`).
+
+**Visible controls that did nothing: 111 → 24.**
+
+| cause | controls affected | fix |
+|---|---|---|
+| one capability flag for two different colormap controls | `diverging_cmap` on 5 plots that read only the sequential map | the registry declares `supports_sequential_cmap` and `supports_diverging_cmap` separately; the panel hides the one the plot cannot read |
+| which map governs depends on the DATA, not the plot type | `sequential_cmap` on 5 plots whose example is centred or z-scored | the render reports `colormap_role` from what it actually drew; the panel shows that chooser and hides the other, and swaps when the scale changes |
+| the neighbourhood matrix's colour scale was spec-only | its sequential map could never be reached from the app | `color_scale` is now an option (auto / diverging / sequential) |
+| sixteen renderers build their legend with a direct `ax.legend()` | `legend_outside` on 25 of the 27 plots with a legend | honoured once in the shared re-placement path |
+| the "expensive legend" rule overruled the user as well as the plot default | `legend_outside` on the rest | only the plot type's own default is subject to it now |
+| `color_overrides` was not mapped to a capability | 7 plots with no categorical colour | mapped to `supports_group_colors`; the panel already hid that row |
+
+Measured after: **both colormap controls are now either hidden or acting on all
+45 plot types — zero dead**, and `legend_outside` acts on all 27 plots that draw
+a legend (9 more have no legend in their example data).
+
+The 24 that remain are one honest category: the plot draws nothing of that kind.
+`grid` and `spine_width_pt` on the 7 spatial/network plots that hide their frame
+and grid; `annotation_pt` on 4 plots whose text is sized by their own option;
+`marker_size` on 2 bar charts that draw no markers unless points are turned on;
+`title_font_pt` on 2 plots whose visible heading is an annotation rather than a
+title; and one each of `legend_pt`, `legend_outside` and `line_width_pt`. These
+are listed per plot in `style_control_sweep.csv`. Hiding them needs two more
+capability flags, and regenerating that table with the current script drops
+hand-tuned entries (noted in `scripts/audit_style_capabilities.py`), so they are
+recorded rather than papered over.
+
 ## Unresolved and deliberately not changed
 
 * **A 110-dpi preview and a 300-dpi export differ in fine text placement** on the

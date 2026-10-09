@@ -82,7 +82,16 @@ def render(spec: Dict[str, Any], df: pd.DataFrame, style: StyleProfile) -> Rende
         raise RenderError(f"{PLOT_TYPE}: no finite enrichment scores to draw.")
     lo = float(block["vmin"]) if block.get("vmin") is not None else float(finite.min())
     hi = float(block["vmax"]) if block.get("vmax") is not None else float(finite.max())
+    # Which colour scale this matrix is on, and therefore which of the two style
+    # colormaps governs it. It was decided by the spec block alone, with no way
+    # to reach it from the app - so "Sequential map" was a live control that
+    # could never act on this plot, which is indistinguishable from a broken one.
+    _scale = str(get_mapping(spec, "color_scale", "auto") or "auto").lower()
     centre = block.get("center", 0.0)
+    if _scale == "sequential":
+        centre = None
+    elif _scale == "diverging" and centre is None:
+        centre = 0.0
     if centre is not None:
         # Enrichment is a log ratio: zero means "as expected", so a diverging
         # scale centred on zero is the honest default.
