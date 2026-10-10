@@ -1,0 +1,52 @@
+{
+  "tag": "v1.3.0",
+  "commit": "60a8255fb72e54a4bb03d9a6d3e30acd1c67215d",
+  "commit_short": "60a8255fb7",
+  "commit_date": "2026-10-09T20:35:24-05:00",
+  "annotated": true,
+  "tag_date": "2026-10-09 21:25:04 -0500",
+  "tag_message": "Make My Figure v1.3.0",
+  "version_py_at_tag": "1.3.0",
+  "recorded": "2026-10-09T21:35:48-0500",
+  "notes": "",
+  "github_release": {
+    "url": "https://github.com/surPoudel/make-my-figure/releases/tag/v1.3.0",
+    "published_at": "2026-10-10T02:28:40Z",
+    "prerelease": false,
+    "draft": false,
+    "assets": [
+      {
+        "name": "MakeMyFigure-1.3.0-linux-x86_64.tar.gz",
+        "size": 190750981
+      },
+      {
+        "name": "MakeMyFigure-1.3.0-Setup.exe",
+        "size": 105433109
+      },
+      {
+        "name": "MakeMyFigure-1.3.0-windows.zip",
+        "size": 154393032
+      },
+      {
+        "name": "MakeMyFigure-1.3.0.AppImage",
+        "size": 175180280
+      },
+      {
+        "name": "MakeMyFigure-1.3.0.dmg",
+        "size": 139975385
+      },
+      {
+        "name": "make_my_figure_core-1.3.0-py3-none-any.whl",
+        "size": 2778260
+      },
+      {
+        "name": "make_my_figure_core-1.3.0.tar.gz",
+        "size": 2688119
+      },
+      {
+        "name": "SHA256SUMS.txt",
+        "size": 688
+      }
+    ]
+  }
+}
