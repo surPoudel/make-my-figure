@@ -12,7 +12,7 @@ embedding_scatter,pass,pass,0,0,pass,pass,pass,pass,pass,1
 enrichment_dotplot,pass,pass,0,0,pass,pass,pass,pass,pass,0
 forest_plot,pass,pass,0,0,pass,pass,pass,pass,pass,0
 grouped_barplot_with_error_bar,pass,pass,0,0,pass,pass,pass,pass,pass,1
-heatmap_clustered_matrix,pass,pass,0,0,pass,pass,pass,pass,pass,1
+heatmap_clustered_matrix,pass,pass,0,0,pass,pass,pass,pass,pass,2
 hierarchical_clustering,pass,pass,0,0,pass,pass,pass,pass,pass,0
 hierarchical_dendrogram,pass,pass,0,0,pass,pass,pass,pass,pass,2
 histogram_distribution,pass,pass,0,0,pass,pass,pass,pass,pass,0
@@ -33,7 +33,7 @@ ridge_or_density_plot,pass,pass,0,0,pass,pass,pass,pass,pass,0
 roc_curve,pass,pass,0,0,pass,pass,pass,pass,pass,0
 sankey_plot,pass,pass,0,0,pass,pass,pass,pass,pass,0
 scatterplot_with_regression,pass,pass,0,0,pass,pass,pass,pass,pass,1
-spatial_categorical_map,pass,pass,0,0,pass,pass,pass,pass,pass,1
+spatial_categorical_map,pass,pass,0,0,pass,pass,pass,pass,pass,2
 spatial_composition_map,pass,pass,0,0,pass,pass,pass,pass,pass,2
 spatial_feature_map,pass,pass,0,0,pass,pass,pass,pass,pass,1
 spatial_roi_map,pass,pass,0,0,pass,pass,pass,pass,pass,0

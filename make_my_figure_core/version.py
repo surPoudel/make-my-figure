@@ -5,7 +5,7 @@ app's About dialog imports ``__version__`` from here, so the version is defined
 in exactly one place.
 """
 
-__version__ = "1.2.1"
+__version__ = "1.3.0"
 
 
 def build_info() -> dict:

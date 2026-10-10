@@ -8,6 +8,12 @@ bland_altman_plot,SINGLE ACCENT / CONTINUOUS,palette_name,categorical artists,pu
 bland_altman_plot,SINGLE ACCENT / CONTINUOUS,point_color,Point colour,default,#CC6677,yes,,ok
 bland_altman_plot,SINGLE ACCENT / CONTINUOUS,bias_line_color,Mean-difference line colour,default,#CC6677,yes,,ok
 bland_altman_plot,SINGLE ACCENT / CONTINUOUS,ci_band_color,Confidence band colour,default,#CC6677,yes,,ok
+bland_altman_plot,SINGLE ACCENT / CONTINUOUS,loa_upper_color,Upper limit-of-agreement colour,default,#CC6677,yes,,ok
+bland_altman_plot,SINGLE ACCENT / CONTINUOUS,loa_lower_color,Lower limit-of-agreement colour,default,#CC6677,yes,,ok
+bland_altman_plot,SINGLE ACCENT / CONTINUOUS,color_points_by_agreement,Colour points by agreement limits,default,0.7,yes,,ok
+bland_altman_plot,SINGLE ACCENT / CONTINUOUS,point_color_above,Above upper limit colour,default,#CC6677,yes,,ok
+bland_altman_plot,SINGLE ACCENT / CONTINUOUS,point_color_within,Within limits colour,default,#CC6677,yes,,ok
+bland_altman_plot,SINGLE ACCENT / CONTINUOUS,point_color_below,Below lower limit colour,default,#CC6677,yes,,ok
 bland_altman_plot,SINGLE ACCENT / CONTINUOUS,reference_line_color,Reference line colour,default,#CC6677,yes,,ok
 boxplot_or_violin_with_points,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,4,ok
 boxplot_or_violin_with_points,CATEGORICAL,point_fill,Point fill,default,#CC6677,no,,needs a precondition / no effect
@@ -54,10 +60,13 @@ kaplan_meier_survival_curve,CATEGORICAL,palette_name,categorical artists,publica
 lineplot_timecourse_with_error_band,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,6,ok
 lollipop_mutation_plot,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,5,ok
 ma_plot,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,5,ok
+ma_plot,CATEGORICAL,color_up,Up-regulated colour,default,#CC6677,yes,,ok
+ma_plot,CATEGORICAL,color_down,Down-regulated colour,default,#CC6677,yes,,ok
 ma_plot,CATEGORICAL,color_ns,Not-significant colour,default,#CC6677,yes,,ok
 manhattan_plot,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,4,ok
 manhattan_plot,CATEGORICAL,cutoff_line_color,Cutoff line color,default,#CC6677,yes,,ok
 neighborhood_enrichment_matrix,SINGLE ACCENT / CONTINUOUS,palette_name,categorical artists,publication,colorblind_safe,yes,256,ok
+neighborhood_enrichment_matrix,SINGLE ACCENT / CONTINUOUS,color_scale,Colour scale,default,#CC6677,no,,needs a precondition / no effect
 neighborhood_enrichment_matrix,SINGLE ACCENT / CONTINUOUS,colorbar_pad,Colourbar pad (0 = auto),default,0.7,yes,,ok
 neighborhood_enrichment_matrix,SINGLE ACCENT / CONTINUOUS,colorbar_fraction,Colourbar thickness (0 = auto),default,0.7,yes,,ok
 neighborhood_enrichment_matrix,SINGLE ACCENT / CONTINUOUS,cmap,,,,,,refused: ValueError
@@ -111,6 +120,9 @@ spider_plot,CATEGORICAL,reference_line_color,Reference line colour,default,#CC66
 stacked_bar_composition,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,5,ok
 swimmer_plot,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,5,ok
 upset_plot,CATEGORICAL,palette_name,categorical artists,publication,colorblind_safe,yes,5,ok
+upset_plot,CATEGORICAL,intersection_bar_color,Intersection-size bar colour,default,#CC6677,yes,,ok
+upset_plot,CATEGORICAL,set_bar_color,Set-size bar colour,default,#CC6677,yes,,ok
+upset_plot,CATEGORICAL,matrix_dot_color,Membership dot colour,default,#CC6677,yes,,ok
 volcano_plot,NONE,palette_name,,,,n/a,,declared inapplicable (warns)
 volcano_plot,NONE,reference_line_color,Reference line colour,default,#CC6677,yes,,ok
 volcano_plot,NONE,color_up,Up-regulated colour,default,#CC6677,yes,,ok

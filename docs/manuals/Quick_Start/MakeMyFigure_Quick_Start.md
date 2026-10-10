@@ -1,6 +1,6 @@
 # Make My Figure — Quick Start
 
-**MakeMyFigure version:** 1.2.1  
+**MakeMyFigure version:** 1.3.0  
 **Documentation generated from commit:** `d110866`  
 **Date:** 2026-10-06
 

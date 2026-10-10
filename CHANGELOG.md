@@ -6,6 +6,12 @@ with any journal.
 
 ## Unreleased
 
+_Nothing yet._
+
+## [1.3.0] — Legend positioning, colour control, and a Figure Builder that lines up
+
+Released 2026-10-09. Includes everything prepared for 1.2.1, which was withdrawn before release when the Figure Builder defects below were found — those fixes ship here.
+
 ### Fixed — Figure Builder panels line up on their plots, not their pictures
 
 Reported from real use of v1.2.1: four unmodified example plots added as panels
@@ -102,7 +108,7 @@ figure, taken from the composite in inches.
   shrinking stops at the publication minimum, and past it the labels were printed
   on top of each other. Now 1 in every *n* is shown, with a warning naming *n*.
 
-## [1.2.1] — Corrective release: Figure Builder, style state, palettes, spatial ROI, PCA grouping, margins
+## [1.2.1] — WITHDRAWN before release; included in 1.3.0 — Corrective release: Figure Builder, style state, palettes, spatial ROI, PCA grouping, margins
 
 A patch release fixing regressions reported from real use of v1.2.0. No new
 scientific capability; every item below is a defect corrected.
