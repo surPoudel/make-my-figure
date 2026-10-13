@@ -6,7 +6,30 @@ with any journal.
 
 ## Unreleased
 
-_Nothing yet._
+### Fixed — desktop app quitting unexpectedly on macOS
+
+Reported on a MacBook Pro (M4 Pro, macOS 27.0.1) running v1.3.0: the app quit
+with `EXC_BAD_ACCESS (SIGSEGV)` at address `0x0` on the main thread, inside
+shiboken's `mainThreadDeletionHandler` under a PySide6 signal callback.
+
+- **Cause: the Qt binding bundled into v1.3.0, not MakeMyFigure's own code.**
+  The release build installs the newest PySide6 its version range allows; for
+  v1.3.0 that was **6.12.0** (v1.2.0 and v1.2.1 shipped 6.11.2). 6.12.0 releases
+  one reference too many each time a signal reaches a Python slot (`True`:
+  **−1.000** per emit) and each time a `QTimer.singleShot` callable fires
+  (`None`: **−1.005** per call), measured over 200 calls; 6.11.2 measures
+  **0.000** on both. Under Python 3.11 the count reaches zero and the
+  interpreter frees an object still in use — on Linux a fatal
+  "deallocating True or False" abort within 200 emits; on macOS the
+  `EXC_BAD_ACCESS` above.
+- **Fix:** the desktop extra now excludes PySide6 6.12.0
+  (`PySide6>=6.5,!=6.12.0,<7`), so builds resolve to 6.11.2 again.
+- **The build now checks the binding it actually bundles.** `--selftest`, which
+  CI runs on every built installer, measures reference-count drift through the
+  bundled PySide6 and fails the build if it is not zero — so a future defective
+  release fails CI rather than reaching users, whatever version pip picks.
+- Not reproduced on macOS hardware here; the defect and the fix were measured on
+  Linux with the same PySide6 versions. See `tests/test_qt_binding_refcounts.py`.
 
 ## [1.3.0] — Legend positioning, colour control, and a Figure Builder that lines up
 

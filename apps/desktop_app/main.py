@@ -3921,6 +3921,16 @@ def _selftest() -> int:
     except Exception as exc:  # noqa: BLE001
         failures.append(f"statistics: {exc}")
 
+    # Fail the build if the bundled Qt binding miscounts references — v1.3.0
+    # shipped PySide6 6.12.0, which does, and crashed on macOS.
+    try:
+        from apps.desktop_app.binding_check import assert_binding_refcounts_sound
+
+        assert_binding_refcounts_sound()
+        stats_ok.append("Qt binding refcounts")
+    except Exception as exc:  # noqa: BLE001
+        failures.append(f"Qt binding: {exc}")
+
     if failures:
         sys.stderr.write("SELFTEST FAILURES:\n" + "\n".join(failures) + "\n")
         return 1
