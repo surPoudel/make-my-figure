@@ -199,6 +199,51 @@ def _spatial_coordinate_columns(columns, numeric, df=None):
     return None, None, ""
 
 
+def looks_like_experimental_table(df: pd.DataFrame, numeric, non_numeric, n_rows: int) -> bool:
+    """One row per observation with factor columns - not a feature x sample matrix.
+
+    A feature matrix's numeric columns are samples: continuous, with many
+    distinct values each. An experimental table (treatment, time, colony, body
+    size, quantity...) has text factors whose few levels repeat down the rows,
+    and among its numeric columns factors coded as numbers (time = 2, 4) or
+    constants, or only two or three measurements. Calling it an
+    "expression-like matrix" offered a clustered heatmap and PCA of bee body
+    sizes. Both signs are required, so an annotated count matrix (a repeated
+    'biotype' column beside continuous sample columns) stays a matrix.
+    """
+    if n_rows < 2:
+        return False
+    factor_like = False
+    for c in non_numeric:
+        if c not in df.columns:
+            continue
+        k = int(df[c].dropna().nunique())
+        if 2 <= k <= min(20, n_rows / 2):
+            factor_like = True
+            break
+    if not factor_like:
+        return False
+    # Sample columns of a matrix are named alike (S1..S6, ctrl_1, ctrl_2): if most
+    # numeric columns share a stem once trailing digits are removed, it is a matrix.
+    import re
+
+    stems = [re.sub(r"[\d\s_.\-]+$", "", str(c).strip().lower()) for c in numeric]
+    shared = sum(1 for st in stems if st and stems.count(st) > 1)
+    if shared >= 0.5 * len(numeric):
+        return False
+    if len(numeric) <= 3:
+        return True
+    # Coded factors / constants: at most 5 distinct values (time = 2, 4). An
+    # absolute bound - a relative one called every low-count sample column of an
+    # annotated count matrix "coarse".
+    coarse = 0
+    for c in numeric:
+        k = int(pd.to_numeric(df[c], errors="coerce").dropna().nunique())
+        if k <= 5:
+            coarse += 1
+    return coarse >= 0.25 * len(numeric)
+
+
 def profile_table(df: pd.DataFrame, table_name: str = "data") -> DataProfile:
     """Profile ``df`` into a :class:`DataProfile` (cheap, no rendering)."""
     columns = [str(c) for c in df.columns]
@@ -352,7 +397,11 @@ def profile_table(df: pd.DataFrame, table_name: str = "data") -> DataProfile:
     if non_numeric:
         # prefer an id/feature-like leading column
         feature_col = next((c for c in non_numeric if _looks_like_id(c)), non_numeric[0])
-    if len(numeric) >= 3 and len(numeric) >= 0.5 * n_cols and feature_col is not None:
+    if (len(numeric) >= 3 and len(numeric) >= 0.5 * n_cols and feature_col is not None
+            and not looks_like_experimental_table(
+                df, numeric,
+                [c for c in columns if kinds[c] in ("categorical", "id", "binary")
+                 and not pd.api.types.is_numeric_dtype(df[c])], n_rows)):
         block = _numeric_block(df, numeric)
         prof.is_matrix = True
         prof.matrix_feature_col = feature_col

@@ -392,6 +392,19 @@ def classify_worksheet(
     if has_sample and has_group and numeric_frac < 0.5:
         return SHEET_TYPE_METADATA, "Found sample-id and group columns."
 
+    # An experimental table (factor columns whose levels repeat, numeric columns
+    # that include coded factors) is generic data, not a feature matrix - the
+    # same test the recommender uses, so the two never disagree.
+    try:
+        from make_my_figure_core.recommendations.data_profiler import looks_like_experimental_table
+
+        text_cols = [c for c in df.columns if c not in numeric_cols]
+        if numeric_cols and looks_like_experimental_table(df, numeric_cols, text_cols, int(df.shape[0])):
+            return SHEET_TYPE_GENERIC, ("One row per observation with factor columns "
+                                        "(an experimental table, not a feature matrix).")
+    except Exception:  # pragma: no cover - advisory only
+        pass
+
     # Matrix: a feature-id-like first column plus many numeric (sample) columns.
     first_is_feature = any(h in lowered[df.columns[0]] for h in _FEATURE_HINTS)
     if numeric_frac >= 0.6 and len(numeric_cols) >= 3:

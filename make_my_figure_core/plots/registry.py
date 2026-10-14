@@ -415,6 +415,18 @@ def render(
     for _w in _cap_warnings:
         if _w not in result.warnings:
             result.warnings.append(_w)
+    # Axis display scaling (log axes, tick notation) - display only, never data.
+    # Applied here, before every fitting pass, so wider log/scientific tick labels
+    # are fitted like any other. Guarded; a refused scale is reported, not dropped.
+    try:
+        from make_my_figure_core.plots.axis_scale import apply_axis_scales
+
+        if getattr(result, "figure", None) is not None and result.figure.axes:
+            for _note in apply_axis_scales(result.figure, result.figure.axes[0], spec, plot_type):
+                if _note not in result.warnings:
+                    result.warnings.append(_note)
+    except Exception as _exc:  # noqa: BLE001
+        result.warnings.append(f"Axis scale skipped: {_exc}")
     # Report a size request that had to be corrected. Done centrally so every
     # renderer behaves the same, and so a figure never comes back silently
     # different from the size that was asked for.

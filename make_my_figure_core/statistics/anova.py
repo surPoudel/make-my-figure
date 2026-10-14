@@ -61,12 +61,17 @@ def two_way_anova(df: pd.DataFrame, value_col: str, factor_a: str, factor_b: str
     work = work.dropna()
     if work.empty:
         raise StatsError("Two-way ANOVA: no complete rows after dropping missing values.")
+    from make_my_figure_core.statistics.factorial import check_design
+
+    design = check_design(work.astype({factor_a: str, factor_b: str}), value_col, [factor_a, factor_b])
+    if not design.estimable:
+        raise StatsError(design.explanation())
     work = work.rename(columns={value_col: "_y", factor_a: "_A", factor_b: "_B"})
     work["_A"] = work["_A"].astype(str)
     work["_B"] = work["_B"].astype(str)
     model = ols("_y ~ C(_A) + C(_B) + C(_A):C(_B)", data=work).fit()
     table = sm.stats.anova_lm(model, typ=2)
-    ss_total = float(table["sum_sq"].sum())
+    ss_res = float(table.loc["Residual", "sum_sq"])
     term_map = {"C(_A)": factor_a, "C(_B)": factor_b, "C(_A):C(_B)": f"{factor_a} x {factor_b}"}
     results: List[StatResult] = []
     for term, label in term_map.items():
@@ -81,12 +86,15 @@ def two_way_anova(df: pd.DataFrame, value_col: str, factor_a: str, factor_b: str
         r.statistic = float(row["F"]); r.statistic_name = "F"
         r.df = float(row["df"]); r.df2 = float(table.loc["Residual", "df"])
         r.p_value = float(row["PR(>F)"])
-        eta = float(row["sum_sq"] / ss_total) if ss_total > 0 else float("nan")
-        r.effect_size_name = "partial eta-squared (approx, eta-sq of total SS)"
-        r.effect_size = eta
+        # Partial eta-squared, SS_term / (SS_term + SS_residual). Up to v1.3.0 this
+        # field held SS_term / SS_total under the same name, which understates it.
+        ss = float(row["sum_sq"])
+        r.effect_size_name = "partial eta-squared"
+        r.effect_size = ss / (ss + ss_res) if (ss + ss_res) > 0 else float("nan")
         r.extra = {"term": label, "sum_sq": float(row["sum_sq"])}
         r.assumptions_checked = ["independent observations", "approximate normality",
-                                 "homogeneity of variances", "balanced/near-balanced design"]
+                                 "homogeneity of variances"]
+        r.warnings = list(design.warnings)
         results.append(r)
     return results
 

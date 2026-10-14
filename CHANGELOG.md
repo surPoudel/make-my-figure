@@ -8,6 +8,143 @@ with any journal.
 
 _Nothing yet._
 
+## [1.3.1] — Experimental tables, log axes, factorial ANOVA, and the macOS crash fix
+
+Released 2026-10-14. Fixes the v1.3.0 macOS crash (a defective bundled Qt binding) and a
+desktop title box that lost the keyboard while typing, and adds a workflow for
+ordinary experimental tables. Development builds of this work were labelled
+1.4.0.dev1.
+
+### Added — ordinary experimental tables: roles, recorded transformations, factorial ANOVA
+
+For tables from ecology, entomology, agriculture and other fields: one row per
+observation, with factors, covariates and measured responses under any column
+names. See `docs/GENERAL_TABULAR_DATA.md` and `tutorial/general_tabular_data/`.
+
+- **Prepare table** (desktop button; browser expander): assign column roles
+  (response, factor, time, covariate, subject/colony, identifier). Suggestions show
+  their reason, and your choice always wins.
+- **Transformations** log10 / log2 / ln / sqrt / z-score **add a new column** beside
+  the original (`log10(total quantity)`). The original table never changes. The
+  offset is explicit and defaults to **0**: no silent `+ 1`. Values the method is
+  undefined for are counted and shown before anything is applied. They are refused
+  unless you choose to record them as missing in the new column. A column that is
+  already log-scaled is not logged again.
+- **Preview**: original vs transformed values, method, base, offset, valid / invalid
+  / missing counts and range. Apply, Cancel, Reset; Revert to original data.
+- **Derived data is saved.** *Export table with derived columns* writes the actual
+  transformed values (CSV / TSV / XLSX) plus a JSON record (source file sha256,
+  worksheet, column, method, base, offset, invalid policy and counts, output
+  checksum). A Figure Package stores the raw table, the derived table and the record.
+  It reopens with the source file deleted, is unaffected by later edits to the
+  source, replays the record to `identical`, and detects tampering
+  (`tests/test_table_workflow_end_to_end.py`).
+- **Factorial ANOVA / ANCOVA** (1–3 factors, covariates, Type II or Type III with
+  sum-to-zero contrasts, partial η²): the design is checked first. Complete
+  confounding, empty factor combinations, rank deficiency, zero residual df, a
+  constant response, or repeated rows from one subject/colony are explained in
+  words and **not computed**. On the 4-row bee workbook, `total quantity ~ treatment
+  * social setting * time` reports all four reasons. Validated against base R
+  4.5.3 on synthetic designs: **509 of 509** quantities agree, worst relative
+  difference **6.5 × 10⁻¹³** against a prespecified tolerance of 10⁻⁹
+  (`docs/STATISTICS_FACTORIAL.md`). Mixed models are not fitted, and the app says so.
+- **Coefficient table** (R's `summary(lm)` under sum-to-zero coding: estimate, SE,
+  t, P, 95 % CI) beside the ANOVA table, with readable names (`treatment = control`,
+  `body size (slope)`) that map one-to-one onto R's coefficients. CSV export in the
+  desktop and browser apps.
+
+### Added — logarithmic axes and tick notation (display only)
+
+- `x_scale` / `y_scale` = log10 / log2 / ln; tick labels plain (1, 10, 1,000),
+  powers (10⁰, 10¹) or scientific (×10ⁿ on a linear axis); minor ticks; explicit
+  axis range. Desktop: *Axis scale & range* in the style panel. Browser: ③ Axes.
+  See `docs/AXIS_SCALING.md`.
+- **Values never change.** On all 7 applicable plot types the plotted values,
+  statistics and input table are identical, linear vs log
+  (`tests/test_axis_display_scaling.py`, 93 tests). The other 38 plot types each
+  record why they have no axis scale. Examples: volcano and MA axes are already
+  logs, spatial coordinates keep their geometry, survival keeps time and
+  probability linear.
+- Refused, with a message: plotted values ≤ 0; a column that is already log values
+  (a log axis would apply the logarithm twice); a non-positive minimum; a range that
+  would hide data. Bars on a log axis carry a note that bar length then depends on
+  the axis floor.
+- A log axis refits its limits to the plotted values. A bar chart's linear limits
+  start at 0, and left unrefitted that collapsed every bar to fill the panel.
+- Across under ~1.5 decades, ticks go at 1, 2, 5 × 10ᵏ, each labelled. With
+  matplotlib's defaults, a 3.5–7.5 range had no labelled major tick.
+- A style preset carries tick notation but **not** the axis scale or range, which
+  are choices about one dataset. A full preset carries both. Figure Builder panels
+  keep their scale.
+
+### Fixed — desktop title box loses the keyboard while typing
+
+Reported from v1.3.0: "when I try to put a title it seems to deactivate the title box
+immediately so I cannot type fully". Every pause while typing triggers a live
+re-render, and the re-render took focus twice:
+
+1. Old widgets were detached with `setParent(None)`, which made each one a
+   top-level window for an instant. Qt moved window focus to it
+   (`figureToolbarWindow`, `_AspectViewClassWindow`), so the main window lost
+   activation.
+2. The new canvas called `setFocus()`.
+
+Measured on v1.3.0 code, focus left the field after the first pause in 3 of 3 text
+fields. Old widgets are now hidden and deleted while still parented, and the canvas
+takes focus only if the old canvas had it. Tested on all 45 plot types plus the
+violin mode (`tests/test_text_fields_keep_focus_while_typing.py`, 51 tests; 4 of them
+fail on the unfixed code).
+
+### Fixed — experimental tables were called expression matrices
+
+The bee workbook (4 rows; 7 of 11 columns numeric) was profiled as an
+`expression_like_matrix`, and its worksheet as "matrix", so the first suggestions
+were a clustered heatmap and PCA of bee body sizes. A table whose text factors
+repeat, and whose numeric columns include coded factors or constants (or only two or
+three measurements), is now a generic table. An annotated count matrix and the bundled
+matrix examples keep their classification
+(`tests/test_experimental_table_is_not_a_feature_matrix.py`).
+
+### Fixed — two-way ANOVA effect size
+
+`two_way_anova` reported SS_term / SS_total as "partial eta-squared". On the
+unbalanced validation design that was 0.549 / 0.164 / 0.110; the partial η² is
+0.756 / 0.480 / 0.384. It now reports partial η², matching R. It also refuses a
+confounded or empty-cell design, which previously produced `NaN`.
+
+### Fixed — "so the legend fits" on figures without a legend
+
+The canvas-fit note named the legend for any overhang, including long log-axis tick
+labels on a figure without a legend. It now says "every label fits" when there is no
+legend.
+
+### Fixed — desktop app quitting unexpectedly on macOS
+
+Reported on a MacBook Pro (M4 Pro, macOS 27.0.1) running v1.3.0: the app quit
+with `EXC_BAD_ACCESS (SIGSEGV)` at address `0x0` on the main thread, inside
+shiboken's `mainThreadDeletionHandler` under a PySide6 signal callback.
+
+- **Cause: the Qt binding bundled into v1.3.0, not MakeMyFigure's own code.**
+  The release build installs the newest PySide6 its version range allows; for
+  v1.3.0 that was **6.12.0** (v1.2.0 and v1.2.1 shipped 6.11.2). 6.12.0 releases
+  one reference too many each time a signal reaches a Python slot (`True`:
+  **−1.000** per emit) and each time a `QTimer.singleShot` callable fires
+  (`None`: **−1.005** per call), measured over 200 calls; 6.11.2 measures
+  **0.000** on both. Under Python 3.11 the count reaches zero and the
+  interpreter frees an object still in use — on Linux a fatal
+  "deallocating True or False" abort within 200 emits; on macOS the
+  `EXC_BAD_ACCESS` above.
+- **Fix:** the desktop extra now excludes PySide6 6.12.0
+  (`PySide6>=6.5,!=6.12.0,<7`), so builds resolve to 6.11.2 again.
+- **The build now checks the binding it actually bundles.** `--selftest`, which
+  CI runs on every built installer, measures reference-count drift through the
+  bundled PySide6 and fails the build if it is not zero — so a future defective
+  release fails CI rather than reaching users, whatever version pip picks.
+- The defect and the fix were measured on Linux with the same PySide6 versions
+  (`tests/test_qt_binding_refcounts.py`). On macOS, a build with the fix was checked on
+  the reporter's MacBook Pro (M4 Pro, macOS 27.0.1), and the app no longer quit. The
+  reporter's full crash log was not available.
+
 ## [1.3.0] — Legend positioning, colour control, and a Figure Builder that lines up
 
 Released 2026-10-09. Includes everything prepared for 1.2.1, which was withdrawn before release when the Figure Builder defects below were found — those fixes ship here.

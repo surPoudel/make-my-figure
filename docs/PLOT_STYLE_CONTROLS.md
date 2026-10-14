@@ -138,3 +138,16 @@ In the shared infrastructure, not in a renderer:
 A renderer that reaches past these opts out of everything they provide — which is
 how a plot ended up unable to honour a per-category colour while advertising that
 it could.
+
+## Axis scale, tick notation and range (display only)
+
+`layout.x_scale` / `y_scale` (`linear`, `log10`, `log2`, `ln`), `*_tick_format`
+(`auto`, `plain`, `power`, `scientific`), `*_minor_ticks` and `x_min` … `y_max`.
+These are applied centrally by `plots/axis_scale.py`, straight after the renderer
+draws, and only on the plot axes listed in `styles/capabilities.AXIS_SCALE_AXES`
+(7 plot types; every other type has a recorded reason). The GUI shows the controls
+only there, and the render path reports a request anywhere else. A log axis never
+changes a value; a refusal (a value ≤ 0, an already-log column, a non-positive or
+data-hiding range) is reported in Messages. Contract tests:
+`test_axis_display_scaling.py`, `test_desktop_axis_scale_controls.py`,
+`test_axis_scale_presets_and_builder.py`. Details: [AXIS_SCALING.md](AXIS_SCALING.md).

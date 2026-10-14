@@ -1,0 +1,13 @@
+colony_id,treatment,social,time,body_size_mm,quantity
+C001,control,group,day2,3.365,7.3135
+C002,control,group,day4,3.859,10.2715
+C003,control,isolated,day2,3.224,10.4386
+C004,control,isolated,day4,3.44,11.1412
+C005,control,paired,day2,3.12,10.4119
+C006,control,paired,day4,3.38,9.9179
+C007,exposed,group,day2,3.831,12.7071
+C008,exposed,group,day4,3.519,12.6501
+C009,exposed,isolated,day2,3.619,14.177
+C010,exposed,isolated,day4,3.529,15.0978
+C011,exposed,paired,day2,2.81,13.0278
+C012,exposed,paired,day4,3.337,10.9877

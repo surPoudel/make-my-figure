@@ -36,6 +36,8 @@ TESTS: Dict[str, TestInfo] = {
     "wilcoxon": TestInfo("wilcoxon", "Wilcoxon signed-rank test", "two_group", False, requires_pairing=True, requires_subject=True, min_groups=2, max_groups=2),
     "one_way_anova": TestInfo("one_way_anova", "One-way ANOVA", "omnibus", True, min_groups=3),
     "two_way_anova": TestInfo("two_way_anova", "Two-way ANOVA", "omnibus", True, min_groups=2),
+    "factorial_anova": TestInfo("factorial_anova", "Factorial ANOVA / ANCOVA", "omnibus", True, min_groups=2,
+                                notes="1-3 factors (+ covariates); refuses designs that are not estimable"),
     "rm_anova": TestInfo("rm_anova", "Repeated-measures ANOVA", "omnibus", True, requires_subject=True, min_groups=2),
     "kruskal_wallis": TestInfo("kruskal_wallis", "Kruskal-Wallis test", "omnibus", False, min_groups=3),
     "dunn": TestInfo("dunn", "Dunn's test (post-hoc)", "posthoc", False, min_groups=3),

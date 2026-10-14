@@ -110,6 +110,12 @@ def stat_text_panel(results: List[StatResult], *, digits: int = 3,
                 label = "interaction" if len(term) == 2 else (r.group_a or "term")
                 lines.append(f"  {label}: {sn} = {r.statistic:.3g}, "
                              f"{report.format_p(r.display_p, digits=digits)}")
+            elif r.test_id == "factorial_anova":
+                head = f"{r.test_name}:"
+                if head not in lines:
+                    lines.append(head)
+                lines.append(f"  {r.group_a}: {sn}({r.df:g}, {r.df2:g}) = {r.statistic:.3g}, "
+                             f"{report.format_p(r.display_p, digits=digits)}")
             else:
                 lines.append(f"{r.test_name}: {sn} = {r.statistic:.3g}, "
                              f"{report.format_p(r.display_p, digits=digits)}")

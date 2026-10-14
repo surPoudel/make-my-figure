@@ -17,7 +17,7 @@ from make_my_figure_core.statistics.multiple_testing import canonical_method
 
 VALID_TESTS = {
     "auto", "students_t", "welch_t", "mann_whitney", "paired_t", "wilcoxon",
-    "one_way_anova", "two_way_anova", "rm_anova", "kruskal_wallis",
+    "one_way_anova", "two_way_anova", "factorial_anova", "rm_anova", "kruskal_wallis",
     "chi_square", "fishers_exact", "logrank", "cox_ph",
     "pearson", "spearman", "linear_regression",
 }
