@@ -6,6 +6,9 @@ with any journal.
 
 ## Unreleased
 
+_Development builds of this work are labelled **1.4.0.dev1** so they cannot be mistaken
+for v1.3.0. This is not a release: there is no tag or published installer._
+
 ### Added — ordinary experimental tables: roles, recorded transformations, factorial ANOVA
 
 For tables from ecology, entomology, agriculture and other fields: one row per
