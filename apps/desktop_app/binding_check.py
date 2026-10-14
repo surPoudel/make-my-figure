@@ -34,7 +34,18 @@ def binding_refcount_drift(calls: int = 200) -> dict[str, float]:
     """Return the per-call reference-count drift for each probed operation."""
     from PySide6.QtCore import QCoreApplication, QObject, QTimer, Signal
 
-    app = QCoreApplication.instance() or QCoreApplication(sys.argv[:1])
+    # Create the full QApplication when none exists. A bare QCoreApplication made
+    # here outlives the probe, and every QWidget created later in the process
+    # then aborts ("Cannot create a QWidget without QApplication") - it took down
+    # a test worker that ran this probe before a window test.
+    app = QCoreApplication.instance()
+    if app is None:
+        try:
+            from PySide6.QtWidgets import QApplication
+
+            app = QApplication(sys.argv[:1])
+        except Exception:  # noqa: BLE001 - no widget support: the core probe still works
+            app = QCoreApplication(sys.argv[:1])
 
     class _Emitter(QObject):
         sig = Signal(object)

@@ -45,3 +45,15 @@ def test_packaged_selftest_checks_the_bundled_binding():
     src = (ROOT / "apps" / "desktop_app" / "main.py").read_text(encoding="utf-8")
     selftest = src[src.index("def _selftest("):src.index("def _mk_loaded(")]
     assert "assert_binding_refcounts_sound()" in selftest
+
+
+def test_the_probe_leaves_an_application_that_can_create_widgets():
+    # The probe used to create a bare QCoreApplication, so the next QWidget in the
+    # process aborted the interpreter (a pytest worker died in MainWindow()).
+    from PySide6.QtCore import QCoreApplication
+    from PySide6.QtWidgets import QApplication, QWidget
+
+    binding_refcount_drift(calls=5)
+    assert isinstance(QCoreApplication.instance(), QApplication)
+    w = QWidget()
+    w.deleteLater()
