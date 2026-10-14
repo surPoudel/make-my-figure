@@ -3429,32 +3429,37 @@ class MainWindow(QMainWindow):
         Old widgets are detached AND scheduled for deletion with deleteLater()
         so no stale canvas/toolbar lingers to intercept events or draw.
         """
+        # Retire old widgets while they are still parented: hide, take out of the
+        # layout, deleteLater. Detaching with setParent(None) first turned each
+        # visible widget into a top-level window for an instant, and Qt moved
+        # window focus to it ("figureToolbarWindow", "_AspectViewClassWindow"),
+        # so the main window lost activation on every live re-render and a
+        # half-typed title lost the keyboard. deleteLater alone already hands
+        # ownership to Qt (shiboken: owned-by-Python False, refcount 2 -> 3).
+        def _retire(widget):
+            self.fig_layout.removeWidget(widget)
+            widget.hide()
+            widget.deleteLater()
+
         if self._toolbar is not None:
-            self.fig_layout.removeWidget(self._toolbar)
-            self._toolbar.setParent(None)
-            self._toolbar.deleteLater()
+            _retire(self._toolbar)
             self._toolbar = None
         if self._canvas is not None:
             old_fig = self._canvas.figure
-            # The canvas may live inside the aspect-view holder; remove whichever
-            # is actually in the layout.
+            # The canvas may live inside the aspect-view holder; retire whichever
+            # is actually in the layout (the holder takes its child canvas with it).
             if self._fig_view is not None:
-                self.fig_layout.removeWidget(self._fig_view)
-                self._fig_view.setParent(None)
-                self._fig_view.deleteLater()
+                _retire(self._fig_view)
                 self._fig_view = None
             else:
-                self.fig_layout.removeWidget(self._canvas)
-            self._canvas.setParent(None)
-            self._canvas.deleteLater()
+                _retire(self._canvas)
             self._canvas = None
             if old_fig is not None:
                 import matplotlib.pyplot as plt
 
                 plt.close(old_fig)
         if self.fig_placeholder is not None:
-            self.fig_placeholder.setParent(None)
-            self.fig_placeholder.deleteLater()
+            _retire(self.fig_placeholder)
             self.fig_placeholder = None
         if show_placeholder:
             self.fig_placeholder = QLabel("No figure to show — see the Messages tab above.")
@@ -3462,6 +3467,11 @@ class MainWindow(QMainWindow):
             self.fig_layout.addWidget(self.fig_placeholder)
 
     def _show_figure(self, fig):
+        # A live re-render must not take the keyboard. Typing a title schedules a
+        # render per pause, and handing focus to every new canvas moved the cursor
+        # out of the title box mid-word. The new canvas inherits focus only when
+        # the canvas it replaces had it (key/scroll interaction on the figure).
+        canvas_had_focus = self._canvas is not None and self._canvas.hasFocus()
         # Replace any previous canvas/toolbar so the toolbar always drives the
         # currently visible figure (no stale references left behind).
         self._clear_figure(show_placeholder=False)
@@ -3492,7 +3502,8 @@ class MainWindow(QMainWindow):
             canvas.mpl_connect("button_press_event", self._on_canvas_pick)
         except Exception:
             pass
-        canvas.setFocus()
+        if canvas_had_focus:
+            canvas.setFocus()
         canvas.draw()
         # Seed the navigation history with the current view so Home / Back /
         # Forward work immediately (matplotlib otherwise starts with an empty
