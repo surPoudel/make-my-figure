@@ -8,9 +8,10 @@ scratch environment for the crash work), R 4.5.3 (base R only, conda env `r_gsea
 | Branch | Base | Contents |
 |---|---|---|
 | `hotfix/pyside6-6.12.0-refcount-crash` | `v1.3.0` | `4c473f2` exclude PySide6 6.12.0, binding probe in `--selftest` (pushed; CI build passed on macOS/Windows/Linux) |
-| `feat/general-tabular-workflow` | `4c473f2` | this work, in three commits (binding-probe fix, title-focus fix, features) |
+| `feat/general-tabular-workflow` | `4c473f2` | `423eaf0` binding-probe fix · `2ee7d97` title-focus fix · `4a2a91d` features · `94d1445` coefficient table · `915323e` version label 1.4.0.dev1 (pushed) |
 
-Nothing has been merged, tagged or released. Recorded version is still 1.3.0.
+Nothing has been merged, tagged or released. The version label is `1.4.0.dev1`, a
+development label so test builds can be told apart; it is not a release.
 
 ## 1. macOS crash
 
@@ -118,12 +119,12 @@ Two unverified items were also confirmed and fixed: labels outside log axes, and
 ## 8. Tests
 
 * Baseline at `d69e848`: 4208 passed, 13 skipped.
-* Final parallel run: **4498 passed, 13 skipped, 0 failed**; `test_pop_out_panels.py`
-  serially 4 / 4.
+* Final, at `915323e` (version 1.4.0.dev1, including the coefficient table):
+  * **serial (authoritative): 4518 passed, 13 skipped, 0 failed** (1 h 02 min);
+  * parallel: 4514 passed, 13 skipped, 0 failed (`test_pop_out_panels.py` runs only
+    in the serial run).
 * Packaged `--selftest` from source: OK, now also covering the table transform, a
   three-way ANOVA, a log axis and binding refcounts.
-* The authoritative serial run of the full suite was started after the push; its
-  result is reported separately.
 
 ## 9. Documentation
 
