@@ -15,7 +15,7 @@ import pandas as pd
 import streamlit as st
 
 from make_my_figure_core.io.loaders import table_info_from_dataframe
-from make_my_figure_core.statistics.factorial import check_design, factorial_anova
+from make_my_figure_core.statistics.factorial import check_design, factorial_anova, model_coefficients
 from make_my_figure_core.statistics.models import StatsError
 from make_my_figure_core.tabular import (
     METHODS,
@@ -138,10 +138,19 @@ def render_table_tools(table_info, table_name: str) -> Tuple[Any, str, Optional[
                     try:
                         res = factorial_anova(frame, response, factors, covariates=covs, subject=subj,
                                               interactions=inter, ss_type=int(ss))
+                        st.markdown("**ANOVA table**")
                         st.dataframe(pd.DataFrame([{
                             "term": r.group_a, "df": r.df, "sum_sq": r.extra["sum_sq"], "F": r.statistic,
                             "P": r.p_value, "partial eta²": r.effect_size, "residual df": r.df2}
                             for r in res]), use_container_width=True)
+                        coef = model_coefficients(frame, response, factors, covariates=covs, subject=subj,
+                                                  interactions=inter)
+                        st.markdown("**Coefficients** (sum-to-zero coding: each level's deviation from the "
+                                    "mean of all levels; a factor's last level is minus the sum of the others; "
+                                    "covariates are slopes; 95 % CI)")
+                        st.dataframe(coef.drop(columns=["term"]), use_container_width=True)
+                        st.download_button("Download coefficients (CSV)", coef.to_csv(index=False).encode("utf-8"),
+                                           file_name="coefficients.csv", mime="text/csv")
                     except StatsError as exc:
                         st.error(str(exc))
     return table_info, table_name, record, raw

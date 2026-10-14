@@ -100,5 +100,12 @@ relative 1e-7 (absolute 1e-15 below 1e-8); degrees of freedom exactly equal.
 6.5 × 10⁻¹³.** All six non-estimable designs are refused, each where R shows the
 reason. Per-quantity table: `quality_audit/general_tabular_workflow/factorial_statistics_validation.csv`.
 
+The **coefficient table** (desktop: Factorial analysis ▸ Coefficients; browser:
+under the ANOVA table; API: `model_coefficients`) has readable names
+(`treatment = control`, `bee body size_mm (slope)`, `treatment = control × time = 2`)
+and an explanation of each. These names map one-to-one onto R's `contr.sum`
+coefficients (`treatment1`, …), and the estimates agree within the tolerances above
+on all 13 estimable designs.
+
 Not validated here, and therefore not offered: post-hoc comparisons after a factorial
 model, estimated marginal means, mixed models, and sphericity corrections.

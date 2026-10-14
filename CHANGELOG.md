@@ -39,6 +39,10 @@ names. See `docs/GENERAL_TABULAR_DATA.md` and `tutorial/general_tabular_data/`.
   4.5.3 on synthetic designs: **509 of 509** quantities agree, worst relative
   difference **6.5 × 10⁻¹³** against a prespecified tolerance of 10⁻⁹
   (`docs/STATISTICS_FACTORIAL.md`). Mixed models are not fitted, and the app says so.
+- **Coefficient table** (R's `summary(lm)` under sum-to-zero coding: estimate, SE,
+  t, P, 95 % CI) beside the ANOVA table, with readable names (`treatment = control`,
+  `body size (slope)`) that map one-to-one onto R's coefficients. CSV export in the
+  desktop and browser apps.
 
 ### Added — logarithmic axes and tick notation (display only)
 

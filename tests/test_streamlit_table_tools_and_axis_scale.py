@@ -79,3 +79,17 @@ def test_design_check_explains_a_non_estimable_design():
     at.run()
     assert not at.exception
     assert any("estimable" in t.value or "cannot be estimated" in t.value for t in at.text)
+
+
+def test_coefficient_table_is_shown_for_an_estimable_design():
+    at = _app()
+    factors = _by_label(at.multiselect, "Factors (up to 3)")
+    factors.set_value(["group"])
+    at.run()
+    _by_label(at.selectbox, "Response").set_value("value")
+    at.run()
+    _by_label(at.button, "Check design and run").click()
+    at.run()
+    assert not at.exception
+    assert any("Coefficients" in m.value for m in at.markdown)
+    assert "Download coefficients (CSV)" in [b.label for b in at.get("download_button")]

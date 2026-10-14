@@ -157,3 +157,31 @@ def test_two_way_anova_refuses_the_confounded_bee_design():
     bee = pd.read_excel(FX.parent / "bee_demo_workbook.xlsx")
     with pytest.raises(StatsError, match="completely confounded"):
         anova.two_way_anova(bee, "bee body size_mm", "treatment", "time")
+
+
+@pytest.mark.parametrize("case_id", ESTIMABLE)
+def test_readable_coefficient_labels_name_the_same_coefficients_as_r(case_id):
+    # "treatment = control" must be R's "treatment1" (level 1 of contr.sum), and so on.
+    row, df = _case(case_id)
+    factors, covs = _split(row.factors), _split(row.covariates)
+    ours = model_coefficients(df, row.response, factors, covariates=covs, interactions=row.interactions)
+    used = df.dropna(subset=[row.response, *factors, *covs])
+    levels = {f: sorted(used[f].astype(str).unique()) for f in factors}
+    ref = R_COEF[R_COEF.case_id == case_id].set_index("r_name")
+
+    def to_r(label):
+        if label == "Intercept":
+            return "(Intercept)"
+        out = []
+        for part in label.replace(" (slope)", "").split(" × "):
+            if " = " in part:
+                f, lev = part.split(" = ", 1)
+                out.append(f"{f}{levels[f].index(lev) + 1}")
+            else:
+                out.append(part)
+        return ":".join(out)
+
+    for _, o in ours.iterrows():
+        r = ref.loc[to_r(o.label)]
+        assert math.isclose(o.estimate, r.estimate, rel_tol=REL, abs_tol=1e-12), (o.label, o.estimate, r.estimate)
+        assert o.residual_df == R_DESIGN.loc[case_id].residual_df

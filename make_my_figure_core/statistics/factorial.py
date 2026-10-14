@@ -27,7 +27,7 @@ from __future__ import annotations
 
 import itertools
 from dataclasses import asdict, dataclass, field
-from typing import Any, Dict, List, Optional, Sequence
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
 import pandas as pd
@@ -322,18 +322,52 @@ def factorial_anova(df: pd.DataFrame, response: str, factors: Sequence[str], *,
     return results
 
 
+def _coefficient_label(term: str, fmap: Dict[str, str], cmap: Dict[str, str]) -> Tuple[str, str]:
+    """``("treatment = control × time = 2", meaning)`` for a patsy term name."""
+    if term == "Intercept":
+        return "Intercept", ("mean of the cell means (factors); with covariates, at covariate = 0"
+                             if cmap else "mean of the cell means")
+    inv = {v: k for k, v in {**fmap, **cmap}.items()}
+    parts, is_covariate = [], False
+    for piece in term.split(":"):
+        if piece.startswith("C("):
+            inner = piece[2:].split(",")[0].strip()
+            level = piece.split("[S.", 1)[1].rstrip("]") if "[S." in piece else "?"
+            parts.append(f"{inv.get(inner, inner)} = {level}")
+        else:
+            parts.append(inv.get(piece, piece))
+            is_covariate = True
+    label = " × ".join(parts)
+    if is_covariate and len(parts) == 1:
+        return f"{label} (slope)", "change in the response per unit of the covariate"
+    if len(parts) == 1:
+        return label, "deviation of this level from the mean of all levels (sum-to-zero)"
+    return label, "interaction deviation for this combination of levels (sum-to-zero)"
+
+
 def model_coefficients(df: pd.DataFrame, response: str, factors: Sequence[str], *,
-                       covariates: Sequence[str] = (), interactions: str = "full",
-                       alpha: float = 0.05) -> pd.DataFrame:
-    """Coefficient table of the sum-to-zero OLS fit (estimate, SE, t, P, CI)."""
-    rep = check_design(df, response, factors, covariates=covariates, interactions=interactions)
+                       covariates: Sequence[str] = (), subject: Optional[str] = None,
+                       interactions: str = "full", alpha: float = 0.05) -> pd.DataFrame:
+    """Coefficient table of the sum-to-zero OLS fit - R's ``summary(lm)`` under ``contr.sum``.
+
+    Columns: ``label`` (readable, e.g. ``treatment = control``), ``estimate``,
+    ``std_error``, ``t``, ``p_value``, ``ci_low``/``ci_high`` (``1 - alpha``),
+    ``residual_df``, ``meaning`` and ``term`` (the model's own name). With
+    sum-to-zero coding each factor's last level has no row: its deviation is minus
+    the sum of the others. Refuses, like :func:`factorial_anova`, a design that is
+    not estimable.
+    """
+    rep = check_design(df, response, factors, covariates=covariates, subject=subject,
+                       interactions=interactions)
     if not rep.estimable:
         raise StatsError(rep.explanation())
-    work = _prepare(df, response, list(factors), list(covariates), None, DesignReport(
-        response, list(factors), list(covariates), None, interactions))
+    work = _prepare(df, response, list(factors), list(covariates), subject, DesignReport(
+        response, list(factors), list(covariates), subject, interactions))
     model, fmap, cmap, _ = _fit(work, response, list(factors), list(covariates), interactions)
     ci = model.conf_int(alpha)
-    return pd.DataFrame({"term": model.params.index, "estimate": model.params.values,
+    labels = [_coefficient_label(str(t), fmap, cmap) for t in model.params.index]
+    return pd.DataFrame({"label": [lab for lab, _ in labels], "estimate": model.params.values,
                          "std_error": model.bse.values, "t": model.tvalues.values,
                          "p_value": model.pvalues.values, "ci_low": ci[0].values,
-                         "ci_high": ci[1].values})
+                         "ci_high": ci[1].values, "residual_df": float(model.df_resid),
+                         "meaning": [m for _, m in labels], "term": model.params.index})

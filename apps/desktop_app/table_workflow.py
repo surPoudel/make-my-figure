@@ -46,7 +46,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from make_my_figure_core.statistics.factorial import check_design, factorial_anova
+from make_my_figure_core.statistics.factorial import check_design, factorial_anova, model_coefficients
 from make_my_figure_core.statistics.models import StatsError
 from make_my_figure_core.tabular import (
     METHODS,
@@ -72,7 +72,7 @@ class TableWorkflowDialog(QDialog):
     def __init__(self, controller, data, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Prepare table — roles, transformations, factorial analysis")
-        self.resize(980, 720)
+        self.resize(1040, 820)
         self.controller = controller
         self.raw = controller.raw_of(data)
         self.rawdf: pd.DataFrame = self.raw.info.dataframe
@@ -322,7 +322,8 @@ class TableWorkflowDialog(QDialog):
         self.an_response = QComboBox()
         self.an_factors = [QComboBox() for _ in range(3)]
         self.an_covariates = QListWidget()
-        self.an_covariates.setMaximumHeight(90)
+        self.an_covariates.setMinimumHeight(64)
+        self.an_covariates.setMaximumHeight(96)
         self.an_subject = QComboBox()
         self.an_inter = QComboBox()
         self.an_inter.addItem("Full factorial (all interactions)", "full")
@@ -341,12 +342,15 @@ class TableWorkflowDialog(QDialog):
         row = QHBoxLayout()
         self.btn_check = QPushButton("Check design")
         self.btn_run = QPushButton("Run ANOVA")
-        self.btn_export_anova = QPushButton("Export results (CSV)…")
+        self.btn_export_anova = QPushButton("Export ANOVA table (CSV)…")
         self.btn_export_anova.setEnabled(False)
+        self.btn_export_coef = QPushButton("Export coefficients (CSV)…")
+        self.btn_export_coef.setEnabled(False)
+        self.btn_export_coef.clicked.connect(self._export_coefficients)
         self.btn_check.clicked.connect(self._check)
         self.btn_run.clicked.connect(self._run)
         self.btn_export_anova.clicked.connect(self._export_anova)
-        for b in (self.btn_check, self.btn_run, self.btn_export_anova):
+        for b in (self.btn_check, self.btn_run, self.btn_export_anova, self.btn_export_coef):
             row.addWidget(b)
         row.addStretch(1)
         lay.addLayout(row)
@@ -359,7 +363,29 @@ class TableWorkflowDialog(QDialog):
                                                  "Residual df"])
         self.an_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.an_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        lay.addWidget(self.an_table, 2)
+        # Coefficients: R's summary(lm) under contr.sum, validated against R.
+        coef_page = QWidget()
+        cl = QVBoxLayout(coef_page)
+        cl.setContentsMargins(0, 0, 0, 0)
+        self.coef_note = QLabel(
+            "Sum-to-zero coding: each level's coefficient is its deviation from the mean of all "
+            "levels; the last level of each factor has no row (it is minus the sum of the others). "
+            "A covariate's coefficient is its slope. 95 % confidence intervals.")
+        self.coef_note.setWordWrap(True)
+        self.coef_note.setStyleSheet("color:#555;")
+        cl.addWidget(self.coef_note)
+        self.coef_table = QTableWidget(0, 8)
+        self.coef_table.setHorizontalHeaderLabels(["Coefficient", "Estimate", "Std. error", "t", "P",
+                                                   "95 % CI low", "95 % CI high", "Residual df"])
+        self.coef_table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.coef_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.coef_table.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)
+        cl.addWidget(self.coef_table, 1)
+        self.result_tabs = QTabWidget()
+        self.result_tabs.addTab(self.an_table, "ANOVA table")
+        self.result_tabs.addTab(coef_page, "Coefficients")
+        lay.addWidget(self.result_tabs, 2)
+        self.coef_df = None
         self._fill_analysis_from_roles()
         return w
 
@@ -448,7 +474,10 @@ class TableWorkflowDialog(QDialog):
     def _run(self):
         rep = self._check()
         self.an_table.setRowCount(0)
+        self.coef_table.setRowCount(0)
         self.btn_export_anova.setEnabled(False)
+        self.btn_export_coef.setEnabled(False)
+        self.coef_df = None
         if not rep.estimable:
             return
         a = self._design_args()
@@ -472,6 +501,24 @@ class TableWorkflowDialog(QDialog):
         self.an_report.appendPlainText(f"\n{res[0].test_name} on {res[0].n_total} observations. "
                                        "Partial η² = SS_term / (SS_term + SS_residual).")
         self.btn_export_anova.setEnabled(True)
+        try:
+            coef = model_coefficients(self._analysis_frame(), a["response"], a["factors"],
+                                      covariates=a["covariates"], subject=a["subject"],
+                                      interactions=a["interactions"])
+        except StatsError as exc:
+            self.an_report.appendPlainText(f"\nCoefficients not available: {exc}")
+            return
+        self.coef_df = coef.assign(model=res[0].extra["formula"], n=res[0].n_total)
+        self.coef_table.setRowCount(len(coef))
+        for i, r in coef.iterrows():
+            vals = [r["label"], f"{r['estimate']:.6g}", f"{r['std_error']:.4g}", f"{r['t']:.4g}",
+                    f"{r['p_value']:.3g}", f"{r['ci_low']:.4g}", f"{r['ci_high']:.4g}", f"{r['residual_df']:g}"]
+            for j, v in enumerate(vals):
+                item = QTableWidgetItem(v)
+                if j == 0:
+                    item.setToolTip(r["meaning"])
+                self.coef_table.setItem(i, j, item)
+        self.btn_export_coef.setEnabled(True)
 
     def _export_anova(self):
         if self.anova_table is None:
@@ -479,6 +526,13 @@ class TableWorkflowDialog(QDialog):
         path, _ = QFileDialog.getSaveFileName(self, "Export ANOVA table", "anova.csv", "CSV (*.csv)")
         if path:
             self.anova_table.to_csv(path, index=False)
+
+    def _export_coefficients(self):
+        if self.coef_df is None:
+            return
+        path, _ = QFileDialog.getSaveFileName(self, "Export coefficients", "coefficients.csv", "CSV (*.csv)")
+        if path:
+            self.coef_df.to_csv(path, index=False)
 
     # ------------------------------------------------------------- dialog
     def _on_tab(self, index):

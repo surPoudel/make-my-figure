@@ -57,6 +57,8 @@ subject column; full factorial or main effects; Type II (default) or Type III
 checked first. Complete confounding, empty factor combinations, no residual degrees
 of freedom, a constant response, or repeated rows from one subject are explained,
 and nothing is computed. Validated against base R (509 of 509 quantities agree).
+The **Coefficients** tab gives R's `summary(lm)` under sum-to-zero coding (estimate,
+SE, t, P, 95 % CI) with readable names; each table has its own CSV export.
 
 ![A three-way design that four observations cannot support.](../../assets/screenshots/tabular_04_three_way_design_not_estimable.png)
 

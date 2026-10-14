@@ -114,7 +114,7 @@ def main():
 
     # 8. a replicated three-way design that IS estimable
     dlg = apply_dialog(win, lambda d: d.tabs.setCurrentIndex(0))
-    dlg.resize(1100, 760)
+    dlg.resize(1100, 860)
     dlg.tabs.setCurrentIndex(1)
     dlg.tf_column.setCurrentText("quantity per bee")
     dlg.tf_method.setCurrentIndex(dlg.tf_method.findData("log10"))
@@ -126,6 +126,8 @@ def main():
     dlg.an_subject.setCurrentText("colony id")
     dlg._run()
     grab(dlg, "08_three_way_anova_replicated_design.png")
+    dlg.result_tabs.setCurrentIndex(1)
+    grab(dlg, "08b_coefficients.png")
     dlg.close()
 
     # 9. save and reopen a Figure Package of the derived table. Back to a linear

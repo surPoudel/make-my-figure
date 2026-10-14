@@ -132,7 +132,15 @@ the same model is estimable. Here it is fitted to `log10(quantity per bee)`, wit
 ![Replicated three-way ANOVA](screenshots/08_three_way_anova_replicated_design.png)
 
 Type II sums of squares by default (Type III with sum-to-zero contrasts on
-request), with partial η² for each term. **Export results (CSV)…** saves the table.
+request), with partial η² for each term. **Export ANOVA table (CSV)…** saves it.
+
+The **Coefficients** tab is R's `summary(lm(...))` under sum-to-zero coding:
+estimate, standard error, t, P and 95 % confidence interval for each coefficient.
+Each level's coefficient is its deviation from the mean of all levels. The last
+level of each factor has no row, because it equals minus the sum of the others. A
+covariate's coefficient is its slope. **Export coefficients (CSV)…** saves them.
+
+![Coefficient table](screenshots/08b_coefficients.png)
 If any colony had contributed more than one row, the analysis would be refused:
 repeated measurements need a mixed-effects model, which this app does not fit.
 

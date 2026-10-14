@@ -22,6 +22,7 @@ import pytest
 matplotlib.use("Agg")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 try:
+    from PySide6.QtCore import Qt
     from PySide6.QtWidgets import QApplication, QDialog
 
     from apps.desktop_app import table_workflow
@@ -264,5 +265,35 @@ def test_every_invalid_row_in_the_preview_is_marked(app, tmp_path):
     dlg.tf_method.setCurrentIndex(dlg.tf_method.findData("log10"))
     marked = sum(1 for i in range(dlg.preview_table.rowCount()) if dlg.preview_table.item(i, 1).text() == "invalid")
     assert marked == 30          # rows past the 20th used to show "—"
+    dlg.close()
+    win.close()
+
+
+def test_coefficient_table_in_the_dialog(app):
+    from make_my_figure_core.statistics.factorial import model_coefficients
+
+    sim = ROOT / "tutorial" / "general_tabular_data" / "data" / "simulated_bee_factorial.csv"
+    win = MainWindow()
+    win.load_path(str(sim))
+    dlg = table_workflow.TableWorkflowDialog(win.controller, win.data, win)
+    dlg.an_response.setCurrentText("quantity per bee")
+    for i, f in enumerate(("treatment", "time (day)", "(none)")):
+        dlg.an_factors[i].setCurrentText(f)
+    for i in range(dlg.an_covariates.count()):
+        it = dlg.an_covariates.item(i)
+        it.setCheckState(Qt.Checked if it.text() == "bee body size_mm" else Qt.Unchecked)
+    dlg.an_subject.setCurrentText("colony id")
+    dlg._run()
+    ref = model_coefficients(pd.read_csv(sim), "quantity per bee", ["treatment", "time (day)"],
+                             covariates=["bee body size_mm"], subject="colony id")
+    assert dlg.coef_table.rowCount() == len(ref) == 5
+    assert [dlg.coef_table.item(i, 0).text() for i in range(5)] == ref["label"].tolist()
+    assert dlg.coef_table.item(4, 0).text() == "bee body size_mm (slope)"
+    assert float(dlg.coef_table.item(1, 1).text()) == pytest.approx(ref["estimate"][1], rel=1e-5)
+    assert dlg.btn_export_coef.isEnabled() and dlg.coef_df is not None
+    # a design that cannot be estimated leaves the table empty
+    dlg.an_factors[1].setCurrentText("colony id")
+    dlg._run()
+    assert dlg.coef_table.rowCount() == 0 and not dlg.btn_export_coef.isEnabled()
     dlg.close()
     win.close()
