@@ -40,7 +40,8 @@ effect size, and (where applicable) a confidence interval.
 | Paired t-test | paired, parametric | Cohen's dz | mean of diffs | scipy |
 | Wilcoxon signed-rank | paired, nonparametric | rank-biserial | – | scipy |
 | One-way ANOVA | ≥3 groups, one factor | η² (and ω²) | – | scipy |
-| Two-way ANOVA | two factors + interaction | η² per term | – | statsmodels |
+| Two-way ANOVA | two factors + interaction | partial η² per term | – | statsmodels |
+| Factorial ANOVA / ANCOVA | 1–3 factors (+ covariates), Type II or III, estimability checked | partial η² per term | coefficient CIs | statsmodels |
 | Repeated-measures ANOVA | within-subject | – | – | statsmodels |
 | Kruskal–Wallis | ≥3 groups, nonparametric | ε² | – | scipy |
 | Dunn's test (post-hoc) | pairwise after Kruskal | rank-biserial | – | native |
@@ -127,6 +128,14 @@ comparison per dose), raw p-values overstate significance. Available methods:
 The adjusted p-value is what the significance decision and the on-figure star
 use. Omnibus tests (ANOVA F, Kruskal H) are single tests and are not folded into
 the pairwise family.
+
+## Factorial designs
+
+`factorial_anova` fits 1–3 factors (with optional covariates) only after a design
+check. Confounded factors, empty factor combinations, zero residual df, a constant
+response, or repeated rows from one subject are explained and not computed. It is
+validated against base R (509 of 509 quantities agree; the largest relative
+difference is 6.5 × 10⁻¹³). Conventions and limits: [STATISTICS_FACTORIAL.md](STATISTICS_FACTORIAL.md).
 
 ## Effect sizes
 

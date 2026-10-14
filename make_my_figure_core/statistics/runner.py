@@ -237,6 +237,18 @@ def _dispatch(test: str, df: pd.DataFrame, cols: Dict[str, Any], plot_type: Opti
             raise StatsError("Two-way ANOVA needs a value column and two factors.")
         return anova.two_way_anova(df, value_col, group_col, subgroup_col, alpha=alpha)
 
+    # --- factorial ANOVA / ANCOVA (1-3 factors, estimability checked) ------
+    if test == "factorial_anova":
+        factors = [f for f in (stats_spec.get("factors") or [group_col, subgroup_col]) if f]
+        if not (value_col and factors):
+            raise StatsError("Factorial ANOVA needs a response column and at least one factor.")
+        from make_my_figure_core.statistics.factorial import factorial_anova
+
+        return factorial_anova(df, value_col, factors, covariates=stats_spec.get("covariates") or [],
+                               subject=stats_spec.get("subject_column") or subject_col,
+                               interactions=stats_spec.get("interactions", "full"),
+                               ss_type=int(stats_spec.get("ss_type", 2)))
+
     # --- repeated-measures ANOVA ------------------------------------------
     if test == "rm_anova":
         if not (value_col and group_col and subject_col):

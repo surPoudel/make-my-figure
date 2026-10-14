@@ -49,6 +49,14 @@ application also replays the recorded chain on the frozen source and reports whe
 still reproduces the derived table. It never substitutes the recomputed values for the
 frozen ones.
 
+The same holds for an ordinary experimental table with recorded transformations
+([GENERAL_TABULAR_DATA.md](GENERAL_TABULAR_DATA.md)). The package stores the raw table
+(`source_table`), the derived table with the new columns (`derived_table`,
+`derived_from: source_table`), and the record (`preprocessing_spec.json` with
+`workflow: "table"`: source file checksum, worksheet, column, method, base, offset,
+invalid-value policy and counts, and output checksum). On reopening, the record is
+replayed on the frozen raw table and must reproduce the frozen derived table exactly.
+
 ## Statistics
 
 The package stores the StatsSpec with every result (test, comparison, statistic, P,

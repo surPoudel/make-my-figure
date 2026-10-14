@@ -21,6 +21,14 @@ no Python, no terminal required.
 - **Welcome screen** — “Open data file”, “Use example data”, “Recent files”, “Help”.
 - **Data import** — `.xlsx`, `.csv`, `.tsv`; drag-and-drop onto the window; table
   preview with detected column types; friendly error messages for malformed files.
+- **Prepare table (ordinary experimental tables)** — assign column roles (response,
+  factors, covariate, subject/colony), add log2/log10/ln/sqrt/z-score columns with an
+  original-vs-transformed preview and an explicit offset and invalid-value decision,
+  check and run a factorial ANOVA, and export the table with its derived values. The
+  original table is never changed. See [GENERAL_TABULAR_DATA.md](GENERAL_TABULAR_DATA.md).
+- **Axis scale & range (display only)** — log10/log2/ln axes, plain/power/scientific
+  tick labels, minor ticks and explicit limits, on the plots whose axis carries a
+  magnitude. See [AXIS_SCALING.md](AXIS_SCALING.md).
 - **Plot workflow** — choose plot type (the Publication style is applied), map
   required columns with dropdowns, set key options, and see a **live preview**.
   Validation warnings appear before you export.

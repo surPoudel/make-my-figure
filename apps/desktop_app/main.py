@@ -71,8 +71,8 @@ except Exception as _qt_exc:  # noqa: BLE001
 
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT
-from PySide6.QtCore import Qt, QSettings, QTimer
-from PySide6.QtGui import QAction, QIcon
+from PySide6.QtCore import QLocale, Qt, QSettings, QTimer
+from PySide6.QtGui import QAction, QDoubleValidator, QIcon
 from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -493,6 +493,19 @@ class MainWindow(QMainWindow):
                                    "generate publication plots.")
         self.matrix_btn.clicked.connect(self.action_matrix_wizard)
         nav_row.addWidget(self.matrix_btn)
+        self.table_btn = QPushButton("\U0001F4CB  Prepare table (roles, transform, ANOVA)…")
+        self.table_btn.setToolTip("For an ordinary experimental table (one row per observation): "
+                                  "say which columns are response, factors, covariates and subject; "
+                                  "add log/sqrt/z-score columns with a preview; check and run a "
+                                  "factorial ANOVA. The original table is never changed.")
+        self.table_btn.clicked.connect(self.action_table_workflow)
+        nav_row.addWidget(self.table_btn)
+        self.export_table_btn = QPushButton("\U0001F4BE  Export table with derived columns…")
+        self.export_table_btn.setToolTip("Write the current table - including any transformed columns, "
+                                         "with their actual values - to CSV or Excel, plus a JSON record "
+                                         "of how each derived column was made.")
+        self.export_table_btn.clicked.connect(self.action_export_table)
+        nav_row.addWidget(self.export_table_btn)
         cv.addLayout(nav_row)
 
         # Worksheet selector — shown only for multi-sheet Excel workbooks. Every
@@ -1265,7 +1278,11 @@ class MainWindow(QMainWindow):
                 "margin_bottom", "auto_fix_layout", "show_x_tick_labels",
                 "show_y_tick_labels", "show_x_label", "show_y_label",
                 "legend_offset_x", "legend_offset_y", "legend_gap",
-                "legend_borderpad", "legend_labelspacing", "legend_columnspacing"))
+                "legend_borderpad", "legend_labelspacing", "legend_columnspacing",
+                # axis scale / notation / range - a spec from the browser app or a
+                # package carries these with no style block, and was reopened linear
+                "x_scale", "y_scale", "x_tick_format", "y_tick_format",
+                "x_minor_ticks", "y_minor_ticks", "x_min", "x_max", "y_min", "y_max"))
             has_colorbar = any(k in mapping for k in ("colorbar_location", "colorbar_pad",
                                                       "colorbar_shrink"))
             if (style or has_layout_geometry or has_colorbar) and getattr(self, "_style_box", None):
@@ -1349,6 +1366,16 @@ class MainWindow(QMainWindow):
                                ("show_x_label", self.chk_xlabel),
                                ("show_y_label", self.chk_ylabel)):
                     w.setChecked(layout.get(key, True) is not False)
+                for _axis, _w in getattr(self, "_axis_scale_widgets", {}).items():
+                    for _key, _combo_ in ((f"{_axis}_scale", _w["scale"]), (f"{_axis}_tick_format", _w["fmt"]),
+                                          (f"{_axis}_minor_ticks", _w["minor"])):
+                        _v = layout.get(_key)
+                        if _v == "log":
+                            _v = "log10"
+                        _j = _combo_.findData(_v) if _v is not None else 0
+                        _combo_.setCurrentIndex(_j if _j >= 0 else 0)
+                    for _key, _ed in ((f"{_axis}_min", _w["lo"]), (f"{_axis}_max", _w["hi"])):
+                        _ed.setText("" if layout.get(_key) is None else f"{float(layout[_key]):g}")
                 self.chk_autofix.setChecked(bool(layout.get("auto_fix_layout", False)))
                 # colorbar geometry rides in the mapping
                 if "colorbar_location" in mapping:
@@ -1507,6 +1534,60 @@ class MainWindow(QMainWindow):
         af.addRow("Title padding", self.sp_titlepad)
         outer.addWidget(axesb)
 
+        # ③b Axis scale & range. DISPLAY only: a log10 axis draws 1, 10, 100 at
+        # equal spacing while the values, the statistics and every export still
+        # hold 1, 10, 100. Transforming the values themselves is Data ▸ Prepare
+        # table. Shown only on plots whose axis carries a positive magnitude
+        # (styles.capabilities.AXIS_SCALE_AXES); every control left alone writes
+        # nothing into the spec.
+        self._axis_scale_widgets = {}
+        self._axis_scale_visible = {"x": False, "y": False}
+        scaleb = QGroupBox("Axis scale && range (display only)")
+        sf = QFormLayout(scaleb)
+        for _axis in ("x", "y"):
+            _A = _axis.upper()
+            _sc, _fm, _mi = QComboBox(), QComboBox(), QComboBox()
+            for _lab, _val in (("Linear (default)", None), ("Log10", "log10"), ("Log2", "log2"),
+                               ("Natural log (ln)", "ln")):
+                _sc.addItem(_lab, _val)
+            for _lab, _val in (("Automatic", None), ("Plain numbers (1, 10, 1,000)", "plain"),
+                               ("Powers (10⁰, 10¹, 10²)", "power"), ("Scientific (×10ⁿ)", "scientific")):
+                _fm.addItem(_lab, _val)
+            for _lab, _val in (("Automatic", None), ("On", True), ("Off", False)):
+                _mi.addItem(_lab, _val)
+            _sc.setToolTip(f"Draw the {_axis} axis on a logarithmic scale. The data are NOT changed: "
+                           "statistics and exported tables keep the original values. Refused, with a "
+                           "message, if any plotted value is 0 or negative.")
+            _fm.setToolTip("How tick labels are written. Plain: 1, 10, 1,000. Powers: 10⁰, 10¹ (log "
+                           "axes). Scientific: 1, 2, 3 with ×10⁶ at the end of a linear axis - "
+                           "notation only, not a log scale.")
+            _mi.setToolTip("Small unlabelled ticks between the labelled ones.")
+            _lo, _hi = QLineEdit(), QLineEdit()
+            for _ed, _which in ((_lo, "minimum"), (_hi, "maximum")):
+                _val_ = QDoubleValidator(_ed)
+                _val_.setNotation(QDoubleValidator.ScientificNotation)
+                # C locale: on a comma-decimal system "1,5" was accepted and then
+                # read as 15. A point is the decimal separator, a comma is refused.
+                _c = QLocale.c()
+                _c.setNumberOptions(QLocale.RejectGroupSeparator)
+                _val_.setLocale(_c)
+                _ed.setValidator(_val_)
+                _ed.setPlaceholderText("auto")
+                _ed.setToolTip(f"{_A}-axis {_which}. Leave empty for automatic. A range that would hide "
+                               "a plotted value is refused with a message, never applied.")
+                _ed.editingFinished.connect(self._schedule_render)
+            for _c in (_sc, _fm, _mi):
+                _c.currentIndexChanged.connect(self._schedule_render)
+            sf.addRow(f"{_A} axis scale", _sc)
+            sf.addRow(f"{_A} tick labels", _fm)
+            sf.addRow(f"{_A} minor ticks", _mi)
+            sf.addRow(f"{_A} minimum", _lo)
+            sf.addRow(f"{_A} maximum", _hi)
+            self._axis_scale_widgets[_axis] = {"scale": _sc, "fmt": _fm, "minor": _mi, "lo": _lo, "hi": _hi}
+        self._axis_scale_form = sf
+        self._axis_scale_group = scaleb
+        outer.addWidget(scaleb)
+
         # ④ Legend
         self.cmb_legloc = _combo(["auto", "inside upper right", "inside upper left",
                                   "inside lower right", "inside lower left", "outside right",
@@ -1658,6 +1739,21 @@ class MainWindow(QMainWindow):
                 index = combo.findData(keep)
                 combo.setCurrentIndex(index if index >= 0 else 0)
                 combo.blockSignals(False)
+        try:
+            from make_my_figure_core.styles.capabilities import axis_scale_support
+
+            for _axis, _w in getattr(self, "_axis_scale_widgets", {}).items():
+                _ok = axis_scale_support(plot_type, _axis)[0]
+                self._axis_scale_visible[_axis] = _ok
+                for _widget in _w.values():
+                    try:
+                        self._axis_scale_form.setRowVisible(_widget, _ok)
+                    except (AttributeError, TypeError):   # pragma: no cover - older Qt
+                        _widget.setVisible(_ok)
+            if getattr(self, "_axis_scale_group", None) is not None:
+                self._axis_scale_group.setVisible(any(self._axis_scale_visible.values()))
+        except Exception:  # noqa: BLE001 - never block the panel on a lookup
+            pass
         for form, widget, flag in getattr(self, "_capability_rows", ()):
             visible = bool(getattr(caps, flag, True))
             try:
@@ -1715,6 +1811,23 @@ class MainWindow(QMainWindow):
                        ("show_y_label", self.chk_ylabel)):
             if not w.isChecked():
                 lay[key] = False
+        for _axis, _w in getattr(self, "_axis_scale_widgets", {}).items():
+            if not self._axis_scale_visible.get(_axis):
+                continue
+            if _w["scale"].currentData():
+                lay[f"{_axis}_scale"] = _w["scale"].currentData()
+            if _w["fmt"].currentData():
+                lay[f"{_axis}_tick_format"] = _w["fmt"].currentData()
+            if _w["minor"].currentData() is not None:
+                lay[f"{_axis}_minor_ticks"] = bool(_w["minor"].currentData())
+            for _key, _ed in (("min", _w["lo"]), ("max", _w["hi"])):
+                _txt = _ed.text().strip()
+                if _txt:
+                    try:
+                        lay[f"{_axis}_{_key}"] = float(_txt)
+                    except ValueError:
+                        self._show_warning(f"{_axis.upper()} {_key}imum {_txt!r} is not a number "
+                                           "(use a point for decimals: 1.5); it was not applied.")
         if self.chk_autofix.isChecked():
             lay["auto_fix_layout"] = True
         cb = {}
@@ -1783,6 +1896,11 @@ class MainWindow(QMainWindow):
         for _chk in (self.chk_xticklabels, self.chk_yticklabels,
                      self.chk_xlabel, self.chk_ylabel):
             _chk.setChecked(True)
+        for _w in getattr(self, "_axis_scale_widgets", {}).values():
+            for _c in (_w["scale"], _w["fmt"], _w["minor"]):
+                _c.setCurrentIndex(0)
+            _w["lo"].clear()
+            _w["hi"].clear()
 
     def reset_plot_styling(self) -> None:
         """Return every PLOT-LOCAL setting to its default. A new plot starts here.
@@ -1867,6 +1985,9 @@ class MainWindow(QMainWindow):
         a_save_pkg.setToolTip(ARTIFACT_DESCRIPTIONS["figure_package"])
         a_save_pkg.triggered.connect(self.action_save_package)
         filem.addAction(a_save_pkg)
+        a_export_tbl = QAction("Export table with derived columns…", self)
+        a_export_tbl.triggered.connect(self.action_export_table)
+        filem.addAction(a_export_tbl)
 
         ex_menu = filem.addMenu("Open example")
         for pt, label in self.controller.plot_types():
@@ -2119,7 +2240,18 @@ class MainWindow(QMainWindow):
 
     # --- reproducible figure packages (.mmfpackage) -------------------------
     def _matrix_context(self):
-        """MatrixContext for the current plot when it came from the Matrix Workflow (else None)."""
+        """MatrixContext for the current plot when it came from the Matrix Workflow (else None).
+
+        Also carries the general-table workflow: a table derived by recorded
+        transformations is packaged with its raw table and the record, exactly
+        like a preprocessed matrix, so reopening never depends on the source file."""
+        ctx = getattr(self.data, "table_context", None) if self.data is not None else None
+        if ctx and ctx.get("record") is not None:
+            raw = ctx["raw"]
+            return MatrixContext(
+                source_dataframe=raw.info.dataframe, source_name=raw.table_name,
+                source_path=None if raw.is_example else raw.source_path, source_sheet=raw.sheet_name,
+                source_provenance=raw.source_provenance(), preprocessing_spec=ctx["record"])
         dlg = getattr(self, "_matrix_dialog", None)
         from_matrix = bool((self._handoff_provenance or {}).get("source_workflow") == "matrix")
         if dlg is not None and getattr(dlg, "matrix_spec", None) is not None and (from_matrix or dlg.data is self.data):
@@ -2455,6 +2587,60 @@ class MainWindow(QMainWindow):
         self._data_before_transform = original
         if hasattr(self, "revert_btn"):
             self.revert_btn.setVisible(original is not None)
+
+    def action_table_workflow(self):
+        """Roles, recorded transformations and factorial analysis for an ordinary table."""
+        if self.data is None:
+            self._show_warning("Load a data file first, then prepare the table.")
+            return
+        from PySide6.QtWidgets import QDialog
+
+        from apps.desktop_app.table_workflow import TableWorkflowDialog
+
+        dlg = TableWorkflowDialog(self.controller, self.data, self)
+        if dlg.exec() != QDialog.Accepted or dlg.result_data is None:
+            return
+        new = dlg.result_data
+        raw = self.controller.raw_of(new)
+        req = dlg.plot_request
+        if req:
+            current = self.plot_combo.currentData()
+            fields = set(self.controller.column_fields(current)) if current else set()
+            if not {"x", "y"} <= fields:
+                prev = self._suppress_change
+                self._suppress_change = True
+                self.plot_combo.setCurrentIndex(self.plot_combo.findData("boxplot_or_violin_with_points"))
+                self._suppress_change = prev
+            g = req.get("group")
+            self._handoff_mapping = {k: v for k, v in {"x": req.get("x"), "y": req.get("y"), "hue": g,
+                                                         "group": g, "color": g}.items() if v}
+        self._set_data(new)
+        self._handoff_mapping = {}
+        if raw is not new:
+            self._data_before_transform = raw
+            self.revert_btn.setVisible(True)
+            record = new.table_context["record"]
+            self.statusBar().showMessage(
+                f"Derived table: {len(record.derived_columns)} new column(s) "
+                f"({', '.join(record.derived_columns)}); the original table is unchanged.", 10000)
+
+    def action_export_table(self):
+        """Save the current table, with the actual values of any derived columns."""
+        if self.data is None:
+            self._show_warning("Load a data file first.")
+            return
+        base = os.path.splitext(str(self.data.table_name).split(" [")[0])[0] or "table"
+        path, _ = QFileDialog.getSaveFileName(
+            self, "Export table", f"{base}.csv",
+            "CSV (*.csv);;Tab-separated (*.tsv);;Excel workbook (*.xlsx)")
+        if not path:
+            return
+        try:
+            written = self.controller.export_derived_table(self.data, path)
+        except Exception as exc:  # noqa: BLE001
+            QMessageBox.warning(self, "Export failed", str(exc))
+            return
+        self.statusBar().showMessage("Wrote " + ", ".join(os.path.basename(w) for w in written), 8000)
 
     def action_revert_data(self):
         """Restore the data as it was before the last reshape/group/differential."""
@@ -3929,6 +4115,20 @@ def _selftest() -> int:
         r2 = ctrl.render(s2, _mk_loaded(gb))
         assert r2.stats_report is not None and len(r2.stats_report.results) >= 3
         stats_ok.append("two-way ANOVA (statsmodels+patsy)")
+        # (c) general-table workflow: a recorded log10 column, a three-way
+        # factorial ANOVA on it, and a log axis on the raw column
+        from make_my_figure_core.statistics.factorial import factorial_anova
+        from make_my_figure_core.tabular import TableTransform
+
+        tbl = _pd.DataFrame([{"a": a, "b": b, "c": c, "y": float(10 ** rng.normal(3 + (a == "x"), 0.2))}
+                             for a in "xy" for b in "pq" for c in "rs" for _ in range(3)])
+        der = ctrl.derive_table(_mk_loaded(tbl), [TableTransform("y", "log10")])
+        res3 = factorial_anova(der.info.dataframe, "log10(y)", ["a", "b", "c"])
+        assert len(res3) == 7 and all(r.df2 == 16 for r in res3)
+        s3 = ctrl.build_spec("dot_strip_plot", "publication", "t.csv", {"x": "a", "y": "y"})
+        s3["layout"] = {"y_scale": "log10", "y_tick_format": "plain"}
+        assert ctrl.render(s3, _mk_loaded(tbl)).figure.axes[0].get_yscale() == "log"
+        stats_ok.append("table transform + three-way ANOVA + log axis")
     except Exception as exc:  # noqa: BLE001
         failures.append(f"statistics: {exc}")
 

@@ -316,3 +316,74 @@ def applicable_controls(plot_type: str, control_keys: List[str]) -> List[Tuple[s
     return [(k, _supported(caps, k),
              "" if _supported(caps, k) else caps.unsupported_controls_reason)
             for k in control_keys]
+
+
+# --- axis display scaling (log axes, tick notation) -------------------------
+# Hand-maintained, NOT generated: whether an axis may be drawn on a log scale is
+# a scientific judgement about what the axis means, which the source-scanning
+# generator cannot make. An axis qualifies only when it carries a positive
+# numeric magnitude whose log scale is meaningful. Everything else gets the
+# reason, which the GUI shows instead of the control and the render path
+# reports if a spec asks anyway.
+AXIS_SCALE_AXES: Dict[str, Tuple[bool, bool]] = {
+    "barplot_with_error_bar": (False, True),
+    "grouped_barplot_with_error_bar": (False, True),
+    "scatterplot_with_regression": (True, True),
+    "boxplot_or_violin_with_points": (False, True),
+    "lineplot_timecourse_with_error_band": (True, True),
+    "dot_strip_plot": (False, True),
+    "paired_slopegraph": (False, True),
+}
+_CATEGORICAL_X = "the x axis shows categories, not numbers"
+AXIS_SCALE_REASONS: Dict[str, str] = {
+    "heatmap_clustered_matrix": "a heatmap has no numeric axes; transform the values instead",
+    "volcano_plot": "its axes are already log2 fold change and -log10 P; a log axis would log them twice",
+    "ma_plot": "its axes are already log-scale quantities; a log axis would log them twice",
+    "manhattan_plot": "its y axis is already -log10 P",
+    "qq_plot": "its axes are already -log10 P quantiles",
+    "enrichment_dotplot": "its x axis is already a ratio or -log10 P and its y axis lists terms",
+    "kaplan_meier_survival_curve": "survival probability and follow-up time keep their linear meaning",
+    "stacked_bar_composition": "composition bars are proportions of a whole",
+    "waterfall_plot": "waterfall bars are signed changes around zero",
+    "pca_scatter_from_matrix": "principal-component scores are signed coordinates",
+    "embedding_scatter": "embedding coordinates are positions, not magnitudes",
+    "oncoprint_mutation_heatmap": "an oncoprint has no numeric axes",
+    "lollipop_mutation_plot": "its axes are protein positions and counts per position",
+    "roc_curve": "ROC axes are rates on [0, 1]",
+    "precision_recall_curve": "precision and recall are rates on [0, 1]",
+    "calibration_plot": "calibration axes are probabilities on [0, 1]",
+    "confusion_matrix": "a confusion matrix has no numeric axes",
+    "forest_plot": "use the forest plot's own 'Logarithmic axis' option (for ratio estimates)",
+    "histogram_distribution": "use the histogram's own 'Logarithmic Y axis' option; a log x axis needs "
+                              "log-spaced bins — transform the values instead",
+    "ridge_or_density_plot": "densities are estimated on the linear scale — transform the values instead",
+    "raincloud_plot": "the density cloud is estimated on the linear scale — transform the values instead",
+    "beeswarm_plot": "points are spread apart on the linear scale — transform the values instead",
+    "dose_response_curve": "dose is already on a log axis and the fitted curve is defined on a linear response",
+    "bland_altman_plot": "differences between methods are signed values around zero",
+    "hierarchical_dendrogram": "dendrogram heights are merge distances, not magnitudes",
+    "hierarchical_clustering": "clustering axes are not magnitudes",
+    "upset_plot": "an UpSet plot shows set intersections",
+    "swimmer_plot": "swimmer bars are durations from a common start",
+    "spider_plot": "spider plots show signed change from baseline",
+    "sankey_plot": "a Sankey diagram has no numeric axes",
+    "network_graph": "a network diagram has no axes",
+    "chord_diagram": "a chord diagram has no axes",
+    "spatial_categorical_map": "spatial coordinates must keep their geometry",
+    "spatial_feature_map": "spatial coordinates must keep their geometry",
+    "spatial_transcript_map": "spatial coordinates must keep their geometry",
+    "spatial_roi_map": "spatial coordinates must keep their geometry",
+    "spatial_composition_map": "spatial coordinates must keep their geometry",
+    "neighborhood_enrichment_matrix": "an enrichment matrix has no numeric axes",
+}
+
+
+def axis_scale_support(plot_type: str, axis: str) -> Tuple[bool, str]:
+    """``(supported, reason_if_not)`` for a log scale / tick notation on ``axis`` ("x" | "y")."""
+    x_ok, y_ok = AXIS_SCALE_AXES.get(plot_type, (False, False))
+    ok = x_ok if axis == "x" else y_ok
+    if ok:
+        return True, ""
+    if plot_type in AXIS_SCALE_AXES:
+        return False, _CATEGORICAL_X if axis == "x" else "this axis does not carry a magnitude"
+    return False, AXIS_SCALE_REASONS.get(plot_type, "this plot type does not support it")

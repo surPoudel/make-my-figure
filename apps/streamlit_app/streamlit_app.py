@@ -581,6 +581,12 @@ if "_grouped_df" in st.session_state:
                f"({table_info.n_rows} rows × {len(table_info.columns)} columns). "
                "Map its columns below; use Reset to return to the original.")
 
+# General-table workflow: recorded transformations (derived columns beside the
+# originals) and a factorial design check. Same engine as the desktop dialog.
+from apps.streamlit_app.table_tools import render_table_tools as _render_table_tools  # noqa: E402
+
+table_info, table_name, _table_record, _table_raw_df = _render_table_tools(table_info, table_name)
+
 
 # --- Recommended figures (intelligent suggestions) --------------------------
 from make_my_figure_core.recommendations import recommend_for_table as _recommend_for_table
@@ -1145,6 +1151,43 @@ with st.sidebar.expander("③ Axes & labels", expanded=False):
     y_label = st.text_input("Y label (blank = auto)", key="lab_y")
     _xr = st.selectbox("X tick angle", ["auto", "0", "45", "90"], key="lay_xrot")
     _yr = st.selectbox("Y tick angle", ["auto", "0", "45", "90"], key="lay_yrot")
+    # Axis scale & range - display only (values, statistics and exports keep the
+    # original numbers). Offered only where the axis carries a positive magnitude.
+    _axis_layout = {}
+    try:
+        from make_my_figure_core.styles.capabilities import axis_scale_support as _ass
+
+        for _ax in ("x", "y"):
+            if plot_type == PLOT_TYPE_PLACEHOLDER or not _ass(plot_type, _ax)[0]:
+                continue
+            _A = _ax.upper()
+            _sc = st.selectbox(f"{_A} axis scale (display only)", ["linear", "log10", "log2", "ln"],
+                               key=f"lay_{_ax}scale",
+                               help="Draws the axis on a log scale; the data are not changed. Refused, "
+                                    "with a message, if a plotted value is 0 or negative.")
+            _fm = st.selectbox(f"{_A} tick labels", ["auto", "plain", "power", "scientific"],
+                               key=f"lay_{_ax}fmt",
+                               format_func=lambda v: {"auto": "Automatic", "plain": "Plain (1, 10, 1,000)",
+                                                      "power": "Powers (10⁰, 10¹)",
+                                                      "scientific": "Scientific (×10ⁿ)"}[v])
+            _mi = st.selectbox(f"{_A} minor ticks", ["auto", "on", "off"], key=f"lay_{_ax}minor")
+            _lo = st.text_input(f"{_A} minimum (blank = auto)", key=f"lay_{_ax}min")
+            _hi = st.text_input(f"{_A} maximum (blank = auto)", key=f"lay_{_ax}max")
+            if _sc != "linear":
+                _axis_layout[f"{_ax}_scale"] = _sc
+            if _fm != "auto":
+                _axis_layout[f"{_ax}_tick_format"] = _fm
+            if _mi != "auto":
+                _axis_layout[f"{_ax}_minor_ticks"] = _mi == "on"
+            for _k, _v in (("min", _lo), ("max", _hi)):
+                try:
+                    if str(_v).strip():
+                        _axis_layout[f"{_ax}_{_k}"] = float(str(_v).strip())
+                except ValueError:
+                    st.warning(f"{_A} {_k} must be a number, with a point for decimals (1.5); "
+                               "it was not applied.")
+    except Exception as _exc:  # noqa: BLE001
+        st.caption(f"Axis scale controls unavailable: {_exc}")
     _xpad = st.slider("X label padding", 0.0, 30.0, step=1.0, key="lay_xpad")
     _ypad = st.slider("Y label padding", 0.0, 30.0, step=1.0, key="lay_ypad")
     _tpad = st.slider("Title padding", 0.0, 30.0, step=1.0, key="lay_tpad")
@@ -1184,6 +1227,7 @@ if _tpad > 0:
     _layout_controls["title_pad"] = _tpad
 if _autofix:
     _layout_controls["auto_fix_layout"] = True
+_layout_controls.update(_axis_layout)
 # Colorbar controls are read from the mapping by colorbar-capable renderers.
 if _cbloc != "default":
     mapping["colorbar_location"] = _cbloc
@@ -1485,6 +1529,9 @@ try:
             matrix_spec=st.session_state.get("mw_processed_spec") or st.session_state.get("mw_raw_matrix_spec"),
             sample_metadata_spec=st.session_state.get("mw_meta_spec"),
             preprocessing_spec=st.session_state.get("mw_prep_spec"))
+    if _mc is None and _table_record is not None:
+        _mc = _MatrixContext(source_dataframe=_table_raw_df, source_name=table_name.replace(" (derived)", ""),
+                             source_provenance=_prov or None, preprocessing_spec=_table_record)
     _pkg_spec = json.loads(json.dumps(spec))
     _pkg_spec["source"] = {**(_pkg_spec.get("source") or {}),
                            "source_table_sha256": _table_digest(table_info.dataframe),
@@ -1492,7 +1539,8 @@ try:
     try:
         _content = _content_single(_pkg_spec, table_info.dataframe, result, table_name=table_name,
                                    aux=render_aux, provenance=_prov or None, matrix=_mc, name=base, preview_dpi=dpi)
-        if _upload_raw is not None and _content.tables and _content.tables[0].role == "source_table" and _mc is None:
+        if _upload_raw is not None and _content.tables and _content.tables[0].role == "source_table" and (
+                _mc is None or _table_record is not None):
             _content.tables[0].original_bytes = _upload_raw
             _content.tables[0].original_filename = _upload_name
             _content.tables[0].sheet_name = (_prov or {}).get("source_sheet_name")

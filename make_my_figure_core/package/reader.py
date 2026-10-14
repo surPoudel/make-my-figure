@@ -423,6 +423,32 @@ def verify_statistics(stored_payload: Optional[Dict[str, Any]], report: Any) -> 
     return problems
 
 
+def _verify_table_record(ps: Dict[str, Any], raw, derived) -> Dict[str, Any]:
+    """Replay a general-table transformation record on the frozen raw table."""
+    try:
+        from make_my_figure_core.tabular import replay, table_sha256
+
+        if ps.get("source_table_digest") and table_sha256(raw) != ps["source_table_digest"]:
+            return {"status": "differs", "detail": "the frozen raw table is not the table the record was made from"}
+        again = replay(raw, ps)
+        if list(again.columns) != list(derived.columns) or again.shape != derived.shape:
+            return {"status": "differs", "detail": f"shape/columns differ: {again.shape} vs {derived.shape}"}
+        for c in again.columns:
+            a, b = again[c], derived[c]
+            if a.dtype.kind in "fiu" and b.dtype.kind in "fiu":
+                import numpy as np
+
+                if not np.array_equal(a.to_numpy(float), b.to_numpy(float), equal_nan=True):
+                    return {"status": "differs", "detail": f"column {c!r} differs"}
+            elif not a.astype(str).equals(b.astype(str)):
+                return {"status": "differs", "detail": f"column {c!r} differs"}
+        return {"status": "identical",
+                "detail": "re-running the recorded transformations on the frozen raw table reproduces "
+                          "the frozen derived table exactly"}
+    except Exception as exc:  # noqa: BLE001
+        return {"status": "error", "detail": f"could not re-run the transformation record: {exc}"}
+
+
 def verify_preprocessing(pkg: FigurePackage, *, max_cells: int = 5_000_000) -> Dict[str, Any]:
     """Re-run the stored PreprocessingSpec on the frozen source table and compare with
     the frozen derived table. Returns ``{"status": ..., "detail": ...}``.
@@ -434,6 +460,8 @@ def verify_preprocessing(pkg: FigurePackage, *, max_cells: int = 5_000_000) -> D
     ps = pkg.preprocessing_spec
     src = pkg.source_table()
     der = pkg.derived_table()
+    if ps and ps.get("workflow") == "table" and src is not None and der is not None:
+        return _verify_table_record(ps, src.dataframe, der.dataframe)
     if not ps or src is None or der is None or not pkg.matrix_spec:
         return {"status": "skipped", "detail": "no preprocessing record to verify"}
     if src.dataframe.size > max_cells:

@@ -59,6 +59,9 @@ class LoadedData:
     # Multi-sheet Excel context (None for CSV/TSV/single-table/example sources).
     workbook: Optional["workbook_io.WorkbookInfo"] = None
     sheet_name: Optional[str] = None
+    # General-table workflow: {"raw": LoadedData, "record": TablePreprocessingSpec}
+    # when this table was derived from ``raw`` by recorded transformations.
+    table_context: Optional[Dict[str, Any]] = None
 
     @property
     def is_workbook(self) -> bool:
@@ -210,6 +213,63 @@ class DesktopController:
         df = apply_transform(data.info.dataframe, transform["name"], transform.get("params"))
         name = transform.get("output_filename") or f"{data.table_name}.transformed.csv"
         return self.loaded_from_dataframe(df, name)
+
+    # --- general-table workflow (roles, recorded transformations) ----------
+    @staticmethod
+    def raw_of(data: "LoadedData") -> "LoadedData":
+        """The original table behind ``data`` (``data`` itself when nothing was derived)."""
+        ctx = getattr(data, "table_context", None) or {}
+        return ctx.get("raw") or data
+
+    def derive_table(self, data: "LoadedData", transforms, *, roles=None) -> "LoadedData":
+        """Apply ``transforms`` to the ORIGINAL table behind ``data``; wrap the result.
+
+        Always recomputed from the raw table, so a derived column is never
+        transformed again by accident, and the raw table is never modified.
+        """
+        from make_my_figure_core.tabular import apply_table_transforms, file_sha256
+
+        raw = self.raw_of(data)
+        sha = file_sha256(raw.source_path) if raw.source_path and not raw.is_example else None
+        derived, record = apply_table_transforms(
+            raw.info.dataframe, list(transforms), source_name=raw.table_name,
+            source_sha256=sha, source_sheet=raw.sheet_name)
+        if roles is not None:
+            record.column_roles = roles.to_dict() if hasattr(roles, "to_dict") else dict(roles)
+        if not record.transforms:
+            return raw
+        base = os.path.splitext(str(raw.table_name).split(" [")[0])[0]
+        out = self.loaded_from_dataframe(derived, f"{base} (derived)")
+        out.sheet_name = raw.sheet_name
+        out.table_context = {"raw": raw, "record": record}
+        return out
+
+    def export_derived_table(self, data: "LoadedData", path: str) -> List[str]:
+        """Write the table with its transformed values (CSV, TSV or XLSX) plus, when it
+        was derived, the transformation record as ``<name>.transformations.json``."""
+        import json
+
+        df = data.info.dataframe
+        low = path.lower()
+        if low.endswith(".xlsx"):
+            df.to_excel(path, index=False)
+        elif low.endswith((".tsv", ".txt")):
+            df.to_csv(path, index=False, sep="\t")
+        else:
+            df.to_csv(path, index=False)
+        written = [path]
+        record = (getattr(data, "table_context", None) or {}).get("record")
+        if record is not None:
+            side = os.path.splitext(path)[0] + ".transformations.json"
+            payload = record.to_dict()
+            from make_my_figure_core.tabular import table_sha256
+
+            payload["exported_file"] = os.path.basename(path)
+            payload["exported_table_digest"] = table_sha256(df)
+            with open(side, "w", encoding="utf-8") as fh:
+                json.dump(payload, fh, indent=2, default=str)
+            written.append(side)
+        return written
 
     def save_table(self, df, path: str) -> str:
         """Write a DataFrame to CSV (used to persist a transform's output)."""
@@ -574,6 +634,13 @@ class DesktopController:
         spec, df, aux = single_plot_inputs(pkg)
         aux_info = {k: table_info_from_dataframe(v, k) for k, v in (aux or {}).items()}
         loaded = self.loaded_from_dataframe(df, spec.get("input_table") or pkg.name, aux=aux_info)
+        ps = pkg.preprocessing_spec or {}
+        src = pkg.source_table()
+        if ps.get("workflow") == "table" and src is not None:
+            from make_my_figure_core.tabular import TablePreprocessingSpec
+
+            raw = self.loaded_from_dataframe(src.dataframe, src.display_name or "original table")
+            loaded.table_context = {"raw": raw, "record": TablePreprocessingSpec.from_dict(ps)}
         # keep worksheet provenance recorded in the spec (the table itself is frozen)
         return loaded, spec
 

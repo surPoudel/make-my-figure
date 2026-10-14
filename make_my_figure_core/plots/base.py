@@ -452,6 +452,12 @@ def fit_content_to_canvas(figure, *, may_grow_x: bool = True,
 
     end_w, end_h = (float(v) for v in figure.get_size_inches())
     wider, taller = end_w - start_w > 0.01, end_h - start_h > 0.01
+    # Say what was overhanging. It is usually a legend placed outside the axes,
+    # but a log axis labelled 10,000,000 overhangs too, and pointing someone at
+    # a legend on a figure that has none sends them looking for nothing.
+    _has_legend = bool(getattr(figure, "legends", None)) or any(
+        a.get_legend() is not None for a in figure.axes)
+    _what_fits = "the legend fits" if _has_legend else "every label fits"
     if wider or taller:
         # Name the dimension that actually changed. Saying "widened" when only the
         # height moved sent people looking for a width problem that was not there,
@@ -460,11 +466,11 @@ def fit_content_to_canvas(figure, *, may_grow_x: bool = True,
         what = ("widened and made taller" if wider and taller
                 else "widened" if wider else "made taller")
         notes.append(
-            f"The figure was {what} to {end_w:.2f} x {end_h:.2f} in so the legend "
-            f"fits on the canvas. Set a figure size explicitly to keep it fixed.")
+            f"The figure was {what} to {end_w:.2f} x {end_h:.2f} in so {_what_fits} "
+            f"on the canvas. Set a figure size explicitly to keep it fixed.")
     elif max(remaining) <= FIT_TOLERANCE_IN:
         notes.append(
-            "The plot area was reduced slightly so the legend fits inside the "
+            f"The plot area was reduced slightly so {_what_fits} inside the "
             "figure size you set.")
     elif max(remaining) > FIT_TOLERANCE_IN:
         notes.append(
@@ -916,7 +922,20 @@ def apply_axis_overrides(ax, spec: Dict[str, Any], *, axis_min: float = None,
                 return float(finite.min()), float(finite.max())
         return None
     mapping = spec.get("mapping", {}) or {}
-    layout = spec.get("layout", {}) or {}
+    layout = dict(spec.get("layout", {}) or {})
+    # A layout-level range on an axis that takes a display scale belongs to
+    # plots.axis_scale, which applies it after the scale is set: on a log axis a
+    # bar's base at 0 is not data, and checking the range here, on the linear
+    # axis, refused every positive minimum.
+    try:
+        from make_my_figure_core.styles.capabilities import axis_scale_support
+
+        for _axis in ("x", "y"):
+            if axis_scale_support(str(spec.get("plot_type")), _axis)[0]:
+                layout.pop(f"{_axis}_min", None)
+                layout.pop(f"{_axis}_max", None)
+    except Exception:  # noqa: BLE001
+        pass
 
     def _opt(key):
         value = mapping.get(key, layout.get(key))
@@ -2025,31 +2044,9 @@ def apply_publication_layout(fig, ax, spec: Dict[str, Any],
         except (TypeError, ValueError):
             return None
 
-    # Axis scales (``linear`` | ``log`` | ``symlog``). Applied before tick handling
-    # so rotated/padded ticks are computed for the final scale. A log axis is
-    # skipped when the data include non-positive values (matplotlib would drop them).
-    for axis_name, key in (("x", "x_scale"), ("y", "y_scale")):
-        scale = layout.get(key)
-        if scale is None or str(scale).lower() in ("", "linear", "auto"):
-            continue
-        scale = str(scale).lower()
-        if scale not in ("log", "symlog"):
-            continue
-        try:
-            if scale == "log":
-                lo = (ax.get_xlim() if axis_name == "x" else ax.get_ylim())[0]
-                data_min = None
-                for line in ax.get_lines():
-                    d = line.get_xdata() if axis_name == "x" else line.get_ydata()
-                    d = np.asarray(d, dtype=float)
-                    d = d[np.isfinite(d)]
-                    if d.size:
-                        data_min = d.min() if data_min is None else min(data_min, d.min())
-                if data_min is not None and data_min <= 0:
-                    continue
-            (ax.set_xscale if axis_name == "x" else ax.set_yscale)(scale)
-        except (TypeError, ValueError):
-            pass
+    # Axis scales and tick notation (x_scale / y_scale / *_tick_format / *_minor_ticks)
+    # are applied earlier, by plots.axis_scale.apply_axis_scales, straight after the
+    # renderer draws - so the label and canvas fitting passes see the final ticks.
 
     # Tick rotation + alignment.
     xr = layout.get("x_tick_rotation")

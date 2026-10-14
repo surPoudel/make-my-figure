@@ -1,0 +1,91 @@
+plot_type,axis,supported,reason,audit,pass
+barplot_with_error_bar,x,False,"the x axis shows categories, not numbers","request reported, axis untouched",True
+barplot_with_error_bar,y,True,,9/9 scale x format combinations pass,True
+grouped_barplot_with_error_bar,x,False,"the x axis shows categories, not numbers","request reported, axis untouched",True
+grouped_barplot_with_error_bar,y,True,,9/9 scale x format combinations pass,True
+heatmap_clustered_matrix,x,False,a heatmap has no numeric axes; transform the values instead,"request reported, axis untouched",True
+heatmap_clustered_matrix,y,False,a heatmap has no numeric axes; transform the values instead,"request reported, axis untouched",True
+volcano_plot,x,False,its axes are already log2 fold change and -log10 P; a log axis would log them twice,"request reported, axis untouched",True
+volcano_plot,y,False,its axes are already log2 fold change and -log10 P; a log axis would log them twice,"request reported, axis untouched",True
+scatterplot_with_regression,x,True,,9/9 scale x format combinations pass,True
+scatterplot_with_regression,y,True,,9/9 scale x format combinations pass,True
+boxplot_or_violin_with_points,x,False,"the x axis shows categories, not numbers","request reported, axis untouched",True
+boxplot_or_violin_with_points,y,True,,9/9 scale x format combinations pass,True
+lineplot_timecourse_with_error_band,x,True,,9/9 scale x format combinations pass,True
+lineplot_timecourse_with_error_band,y,True,,9/9 scale x format combinations pass,True
+ridge_or_density_plot,x,False,densities are estimated on the linear scale — transform the values instead,"request reported, axis untouched",True
+ridge_or_density_plot,y,False,densities are estimated on the linear scale — transform the values instead,"request reported, axis untouched",True
+histogram_distribution,x,False,use the histogram's own 'Logarithmic Y axis' option; a log x axis needs log-spaced bins — transform the values instead,"request reported, axis untouched",True
+histogram_distribution,y,False,use the histogram's own 'Logarithmic Y axis' option; a log x axis needs log-spaced bins — transform the values instead,"request reported, axis untouched",True
+enrichment_dotplot,x,False,its x axis is already a ratio or -log10 P and its y axis lists terms,"request reported, axis untouched",True
+enrichment_dotplot,y,False,its x axis is already a ratio or -log10 P and its y axis lists terms,"request reported, axis untouched",True
+kaplan_meier_survival_curve,x,False,survival probability and follow-up time keep their linear meaning,"request reported, axis untouched",True
+kaplan_meier_survival_curve,y,False,survival probability and follow-up time keep their linear meaning,"request reported, axis untouched",True
+stacked_bar_composition,x,False,composition bars are proportions of a whole,"request reported, axis untouched",True
+stacked_bar_composition,y,False,composition bars are proportions of a whole,"request reported, axis untouched",True
+waterfall_plot,x,False,waterfall bars are signed changes around zero,"request reported, axis untouched",True
+waterfall_plot,y,False,waterfall bars are signed changes around zero,"request reported, axis untouched",True
+pca_scatter_from_matrix,x,False,principal-component scores are signed coordinates,"request reported, axis untouched",True
+pca_scatter_from_matrix,y,False,principal-component scores are signed coordinates,"request reported, axis untouched",True
+oncoprint_mutation_heatmap,x,False,an oncoprint has no numeric axes,"request reported, axis untouched",True
+oncoprint_mutation_heatmap,y,False,an oncoprint has no numeric axes,"request reported, axis untouched",True
+lollipop_mutation_plot,x,False,its axes are protein positions and counts per position,"request reported, axis untouched",True
+lollipop_mutation_plot,y,False,its axes are protein positions and counts per position,"request reported, axis untouched",True
+roc_curve,x,False,"ROC axes are rates on [0, 1]","request reported, axis untouched",True
+roc_curve,y,False,"ROC axes are rates on [0, 1]","request reported, axis untouched",True
+forest_plot,x,False,use the forest plot's own 'Logarithmic axis' option (for ratio estimates),"request reported, axis untouched",True
+forest_plot,y,False,use the forest plot's own 'Logarithmic axis' option (for ratio estimates),"request reported, axis untouched",True
+dot_strip_plot,x,False,"the x axis shows categories, not numbers","request reported, axis untouched",True
+dot_strip_plot,y,True,,9/9 scale x format combinations pass,True
+beeswarm_plot,x,False,points are spread apart on the linear scale — transform the values instead,"request reported, axis untouched",True
+beeswarm_plot,y,False,points are spread apart on the linear scale — transform the values instead,"request reported, axis untouched",True
+paired_slopegraph,x,False,"the x axis shows categories, not numbers","request reported, axis untouched",True
+paired_slopegraph,y,True,,9/9 scale x format combinations pass,True
+raincloud_plot,x,False,the density cloud is estimated on the linear scale — transform the values instead,"request reported, axis untouched",True
+raincloud_plot,y,False,the density cloud is estimated on the linear scale — transform the values instead,"request reported, axis untouched",True
+hierarchical_dendrogram,x,False,"dendrogram heights are merge distances, not magnitudes","request reported, axis untouched",True
+hierarchical_dendrogram,y,False,"dendrogram heights are merge distances, not magnitudes","request reported, axis untouched",True
+ma_plot,x,False,its axes are already log-scale quantities; a log axis would log them twice,"request reported, axis untouched",True
+ma_plot,y,False,its axes are already log-scale quantities; a log axis would log them twice,"request reported, axis untouched",True
+manhattan_plot,x,False,its y axis is already -log10 P,"request reported, axis untouched",True
+manhattan_plot,y,False,its y axis is already -log10 P,"request reported, axis untouched",True
+qq_plot,x,False,its axes are already -log10 P quantiles,"request reported, axis untouched",True
+qq_plot,y,False,its axes are already -log10 P quantiles,"request reported, axis untouched",True
+bland_altman_plot,x,False,differences between methods are signed values around zero,"request reported, axis untouched",True
+bland_altman_plot,y,False,differences between methods are signed values around zero,"request reported, axis untouched",True
+precision_recall_curve,x,False,"precision and recall are rates on [0, 1]","request reported, axis untouched",True
+precision_recall_curve,y,False,"precision and recall are rates on [0, 1]","request reported, axis untouched",True
+confusion_matrix,x,False,a confusion matrix has no numeric axes,"request reported, axis untouched",True
+confusion_matrix,y,False,a confusion matrix has no numeric axes,"request reported, axis untouched",True
+calibration_plot,x,False,"calibration axes are probabilities on [0, 1]","request reported, axis untouched",True
+calibration_plot,y,False,"calibration axes are probabilities on [0, 1]","request reported, axis untouched",True
+dose_response_curve,x,False,dose is already on a log axis and the fitted curve is defined on a linear response,"request reported, axis untouched",True
+dose_response_curve,y,False,dose is already on a log axis and the fitted curve is defined on a linear response,"request reported, axis untouched",True
+upset_plot,x,False,an UpSet plot shows set intersections,"request reported, axis untouched",True
+upset_plot,y,False,an UpSet plot shows set intersections,"request reported, axis untouched",True
+swimmer_plot,x,False,swimmer bars are durations from a common start,"request reported, axis untouched",True
+swimmer_plot,y,False,swimmer bars are durations from a common start,"request reported, axis untouched",True
+spider_plot,x,False,spider plots show signed change from baseline,"request reported, axis untouched",True
+spider_plot,y,False,spider plots show signed change from baseline,"request reported, axis untouched",True
+sankey_plot,x,False,a Sankey diagram has no numeric axes,"request reported, axis untouched",True
+sankey_plot,y,False,a Sankey diagram has no numeric axes,"request reported, axis untouched",True
+embedding_scatter,x,False,"embedding coordinates are positions, not magnitudes","request reported, axis untouched",True
+embedding_scatter,y,False,"embedding coordinates are positions, not magnitudes","request reported, axis untouched",True
+hierarchical_clustering,x,False,clustering axes are not magnitudes,"request reported, axis untouched",True
+hierarchical_clustering,y,False,clustering axes are not magnitudes,"request reported, axis untouched",True
+network_graph,x,False,a network diagram has no axes,"request reported, axis untouched",True
+network_graph,y,False,a network diagram has no axes,"request reported, axis untouched",True
+chord_diagram,x,False,a chord diagram has no axes,"request reported, axis untouched",True
+chord_diagram,y,False,a chord diagram has no axes,"request reported, axis untouched",True
+spatial_categorical_map,x,False,spatial coordinates must keep their geometry,"request reported, axis untouched",True
+spatial_categorical_map,y,False,spatial coordinates must keep their geometry,"request reported, axis untouched",True
+spatial_feature_map,x,False,spatial coordinates must keep their geometry,"request reported, axis untouched",True
+spatial_feature_map,y,False,spatial coordinates must keep their geometry,"request reported, axis untouched",True
+spatial_transcript_map,x,False,spatial coordinates must keep their geometry,"request reported, axis untouched",True
+spatial_transcript_map,y,False,spatial coordinates must keep their geometry,"request reported, axis untouched",True
+spatial_roi_map,x,False,spatial coordinates must keep their geometry,"request reported, axis untouched",True
+spatial_roi_map,y,False,spatial coordinates must keep their geometry,"request reported, axis untouched",True
+spatial_composition_map,x,False,spatial coordinates must keep their geometry,"request reported, axis untouched",True
+spatial_composition_map,y,False,spatial coordinates must keep their geometry,"request reported, axis untouched",True
+neighborhood_enrichment_matrix,x,False,an enrichment matrix has no numeric axes,"request reported, axis untouched",True
+neighborhood_enrichment_matrix,y,False,an enrichment matrix has no numeric axes,"request reported, axis untouched",True

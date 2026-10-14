@@ -275,7 +275,7 @@ def _test_short(r: StatResult) -> str:
     short = {
         "students_t": "Student's", "welch_t": "Welch", "mann_whitney": "Mann-Whitney",
         "paired_t": "paired", "wilcoxon": "Wilcoxon", "one_way_anova": "one-way ANOVA",
-        "two_way_anova": "two-way ANOVA", "rm_anova": "RM-ANOVA",
+        "two_way_anova": "two-way ANOVA", "factorial_anova": "factorial ANOVA", "rm_anova": "RM-ANOVA",
         "kruskal_wallis": "Kruskal-Wallis", "dunn": "Dunn", "chi_square": "chi-square",
         "fishers_exact": "Fisher's exact", "logrank": "log-rank", "cox_ph": "Cox",
         "pearson": "Pearson", "spearman": "Spearman", "linear_regression": "OLS",

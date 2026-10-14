@@ -118,15 +118,17 @@ def content_for_single_plot(
     prov = dict(provenance or {})
     display = table_name or spec.get("input_table") or "table"
     derived = matrix is not None and matrix.source_dataframe is not None and not _same_frame(matrix.source_dataframe, df)
+    is_table = matrix is not None and (_to_dict(matrix.preprocessing_spec) or {}).get("workflow") == "table"
+    src_id, der_id = ("source_table", "derived_table") if is_table else ("source_matrix", "derived_matrix")
     if derived:
-        tables.append(TableSource("source_matrix", matrix.source_dataframe, role="source_table",
+        tables.append(TableSource(src_id, matrix.source_dataframe, role="source_table",
                                   display_name=matrix.source_name or display,
                                   original_path=matrix.source_path or source_path, sheet_name=matrix.source_sheet or sheet_name,
                                   header_row=(matrix.source_provenance or prov).get("source_header_row"),
                                   provenance=matrix.source_provenance or prov))
-        tables.append(TableSource("derived_matrix", df, role="derived_table", display_name=display,
-                                  derived_from="source_matrix", include_original_file=False))
-        plot_table_id = "derived_matrix"
+        tables.append(TableSource(der_id, df, role="derived_table", display_name=display,
+                                  derived_from=src_id, include_original_file=False))
+        plot_table_id = der_id
     else:
         tables.append(TableSource("source", df, role="source_table", display_name=display,
                                   original_path=source_path, sheet_name=sheet_name,

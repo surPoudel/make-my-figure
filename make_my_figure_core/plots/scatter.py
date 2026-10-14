@@ -126,6 +126,48 @@ _STATS_CORNERS = {
 }
 
 
+def _keep_legend_off_box(ax, text) -> None:
+    """Move a loc="best" legend that landed on the statistics box.
+
+    matplotlib's "best" scores overlapping a text box like covering one point, so
+    on a busy axes (a log axis spreads points into every corner) it settles on the
+    box. Only when that happens, the legend is pinned to the standard location
+    that covers the fewest points without touching the box. A legend that does
+    not overlap the box is left exactly where it is.
+    """
+    legend = ax.get_legend()
+    if legend is None or getattr(legend, "_loc", None) != 0 or not legend.get_visible():
+        return
+    figure = ax.figure
+    try:
+        figure.canvas.draw()
+        renderer = figure.canvas.get_renderer()
+
+        def overlaps(a, b):
+            return not (a.x1 < b.x0 or a.x0 > b.x1 or a.y1 < b.y0 or a.y0 > b.y1)
+
+        box = text.get_window_extent(renderer)
+        if not overlaps(legend.get_window_extent(renderer), box):
+            return
+        pts = [ax.transData.transform(p) for c in ax.collections for p in c.get_offsets()]
+        best, best_n = None, None
+        for code in (1, 2, 3, 4, 9, 8, 7, 6):     # corners first, then edge centres
+            legend.set_loc(code)
+            figure.canvas.draw()
+            lb = legend.get_window_extent(renderer)
+            if overlaps(lb, box):
+                continue
+            n = sum(1 for px, py in pts if lb.x0 <= px <= lb.x1 and lb.y0 <= py <= lb.y1)
+            if best_n is None or n < best_n:
+                best, best_n = code, n
+        legend.set_loc(best if best is not None else 0)
+    except Exception:  # noqa: BLE001 - placement nicety, never break a render
+        try:
+            legend.set_loc(0)
+        except Exception:  # noqa: BLE001
+            pass
+
+
 def _emptiest_corner(ax, text) -> str:
     """The corner whose box covers the least drawn content.
 
@@ -170,6 +212,12 @@ def _emptiest_corner(ax, text) -> str:
 
     blocked = []
     legend = ax.get_legend()
+    # A legend left on loc="best" is re-placed at every draw and avoids text
+    # boxes, so it will move out of this box's way. Treating its current spot as
+    # forbidden deadlocked on a log axis: the legend took the one empty corner and
+    # the statistics were pushed onto 11-19 of 60 points. It now costs only a
+    # tie-break - a corner free of both data and legend still wins.
+    movable_legend = legend is not None and getattr(legend, "_loc", None) == 0
     if legend is not None and legend.get_visible():
         try:
             lb = legend.get_window_extent(renderer)
@@ -188,7 +236,8 @@ def _emptiest_corner(ax, text) -> str:
         score = sum(1 for px, py in points if x0 <= px <= x1 and y0 <= py <= y1)
         for bx0, by0, bx1, by1 in blocked:
             if not (x1 < bx0 or x0 > bx1 or y1 < by0 or y0 > by1):
-                score += max(len(points), 1)     # never trade the data for the key
+                # never trade the data for a fixed key; a movable one only breaks ties
+                score += 0.5 if movable_legend else max(len(points), 1)
         if best_score is None or score < best_score:
             best, best_score = name, score
     return best
@@ -320,6 +369,7 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
                         t.set_ha(cha)
                         t.set_va(cva)
                         _fit_annotation_to_axes(a, t)
+                        _keep_legend_off_box(a, t)
 
                 _place()
                 register_refit(ax.figure, _place)

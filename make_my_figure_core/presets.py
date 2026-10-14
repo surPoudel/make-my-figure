@@ -81,9 +81,14 @@ LAYOUT_STYLE_KEYS = frozenset({
     "legend_labelspacing", "legend_handlelength", "legend_columnspacing",
     "show_x_tick_labels", "show_y_tick_labels", "show_x_label", "show_y_label",
     "colorbar_location", "colorbar_pad", "colorbar_shrink", "colorbar_fraction",
+    # how tick labels are written is appearance, whatever the data
+    "x_tick_format", "y_tick_format", "x_minor_ticks", "y_minor_ticks",
 })
-# layout keys that are text about the data - full configuration only
-LAYOUT_CONFIG_KEYS = frozenset({"title", "x_label", "y_label"})
+# layout keys that are about the data - full configuration only. An axis scale or
+# range chosen for one dataset must not ride a style preset onto the next figure:
+# a log axis there is a scientific choice about those values, and a range is theirs.
+LAYOUT_CONFIG_KEYS = frozenset({"title", "x_label", "y_label",
+                                "x_scale", "y_scale", "x_min", "x_max", "y_min", "y_max"})
 
 # mapping keys that are neither roles nor registered options but are still data-bound
 # (click-to-label picks and their offsets, UpSet's set list, colorbar geometry is style)

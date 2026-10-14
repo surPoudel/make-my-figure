@@ -1,5 +1,10 @@
 # Matrix transformations
 
+> For an ordinary experimental table (one row per observation, with factors and
+> responses), use the general-table transformations instead:
+> [GENERAL_TABULAR_DATA.md](GENERAL_TABULAR_DATA.md). To only *draw* raw values on a
+> log scale, see [AXIS_SCALING.md](AXIS_SCALING.md).
+
 `make_my_figure_core.matrix_workflow.transformations` — reproducible, named
 transformations over a confirmed `MatrixSpec`. Each returns a **new** derived
 frame plus a `TransformationSpec` (`transformation_type`, `parameters`,
