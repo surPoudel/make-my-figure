@@ -6,8 +6,14 @@ with any journal.
 
 ## Unreleased
 
-_Development builds of this work are labelled **1.4.0.dev1** so they cannot be mistaken
-for v1.3.0. This is not a release: there is no tag or published installer._
+_Nothing yet._
+
+## [1.3.1] — Experimental tables, log axes, factorial ANOVA, and the macOS crash fix
+
+Released 2026-10-14. Fixes the v1.3.0 macOS crash (a defective bundled Qt binding) and a
+desktop title box that lost the keyboard while typing, and adds a workflow for
+ordinary experimental tables. Development builds of this work were labelled
+1.4.0.dev1.
 
 ### Added — ordinary experimental tables: roles, recorded transformations, factorial ANOVA
 
@@ -134,8 +140,10 @@ shiboken's `mainThreadDeletionHandler` under a PySide6 signal callback.
   CI runs on every built installer, measures reference-count drift through the
   bundled PySide6 and fails the build if it is not zero — so a future defective
   release fails CI rather than reaching users, whatever version pip picks.
-- Not reproduced on macOS hardware here; the defect and the fix were measured on
-  Linux with the same PySide6 versions. See `tests/test_qt_binding_refcounts.py`.
+- The defect and the fix were measured on Linux with the same PySide6 versions
+  (`tests/test_qt_binding_refcounts.py`). On macOS, a build with the fix was checked on
+  the reporter's MacBook Pro (M4 Pro, macOS 27.0.1), and the app no longer quit. The
+  reporter's full crash log was not available.
 
 ## [1.3.0] — Legend positioning, colour control, and a Figure Builder that lines up
 
