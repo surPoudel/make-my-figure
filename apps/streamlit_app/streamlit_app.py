@@ -1509,6 +1509,56 @@ try:
         st.info("Statistics enabled but no results were produced. Check the group/column "
                 "selection and the advisory notes above.")
 
+    # --- Model diagnostics (R's plot(lm) panels) -----------------------------
+    if (spec.get("mapping") or {}).get("y"):
+        with st.expander("🔍 Model diagnostics — residual plots (R's plot(lm))", expanded=False):
+            from make_my_figure_core.statistics.diagnostics import (
+                DiagnosticsError as _DErr,
+                diagnostic_figure as _dfig,
+                diagnostics_for_plot as _dfor,
+                panel_choices as _dpanels,
+            )
+
+            st.caption("Residuals vs Fitted (no pattern, even band) · Normal Q-Q (points on the line) · "
+                       "Scale-Location (a flat line: equal variances; rising: variance grows with the mean) · "
+                       "Residuals vs Leverage (nothing beyond Cook's distance 0.5 / 1). Numbers are table rows.")
+            import pandas as _pdd
+
+            _df_diag = table_info.dataframe
+            _nums = [c for c in _df_diag.columns if _pdd.api.types.is_numeric_dtype(_df_diag[c])]
+            _y0 = spec["mapping"]["y"]
+            _dc1, _dc2 = st.columns(2)
+            _panel = _dc1.selectbox("Panel", _dpanels(_df_diag, spec), key="diag_panel")
+            _resp = _dc2.selectbox("Response", ([_y0] if _y0 in _nums else []) + [c for c in _nums if c != _y0],
+                                   key="diag_response")
+            # Drawn on request: Streamlit reruns the whole script on every change, and the model fit,
+            # the four panels and a 300-dpi PNG on each rerun pushed the sample-plot smoke run past
+            # its 300 s limit.
+            _show_diag = st.checkbox("Draw the residual plots", value=False, key="diag_show")
+            try:
+                if not _show_diag:
+                    raise StopIteration
+                _diag = _dfor(_df_diag, spec, panel=_panel, response=_resp)
+                _fig_d = _dfig(_diag)
+                st.pyplot(_fig_d)
+                from make_my_figure_core.statistics.diagnostics import summary_text as _dsum
+
+                st.markdown(_dsum(_diag), unsafe_allow_html=True)
+                import io as _io
+
+                _buf = _io.BytesIO()
+                _fig_d.savefig(_buf, format="png", dpi=300)
+                _e1, _e2 = st.columns(2)
+                _e1.download_button("Download diagnostic plots (PNG)", _buf.getvalue(),
+                                    file_name="model_diagnostics.png", mime="image/png", key="diag_png")
+                _e2.download_button("Download diagnostic values (CSV)",
+                                    _diag.table().to_csv(index=False).encode("utf-8"),
+                                    file_name="model_diagnostics.csv", mime="text/csv", key="diag_csv")
+            except StopIteration:
+                pass
+            except _DErr as _exc:
+                st.error(str(_exc))
+
     with st.expander("Render metadata"):
         st.json(result.metadata)
 

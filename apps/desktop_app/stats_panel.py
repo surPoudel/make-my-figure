@@ -105,6 +105,7 @@ class StatisticsPanel(QGroupBox):
 
     changed = Signal()
     runRequested = Signal()
+    diagnosticsRequested = Signal()
 
     def __init__(self, controller, parent=None):
         super().__init__("6. Statistics", parent)
@@ -236,6 +237,13 @@ class StatisticsPanel(QGroupBox):
         for b in (self.run_btn, self.clear_btn, self.reset_btn):
             btn_row.addWidget(b)
         outer.addLayout(btn_row)
+        self.diag_btn = QPushButton("Model diagnostics (residual plots)…")
+        self.diag_btn.setToolTip("R's four plot(lm) panels for the model behind the statistics: Residuals vs "
+                                 "Fitted, Normal Q-Q, Scale-Location (equal variances) and Residuals vs "
+                                 "Leverage (Cook's distance). Look before and after the test, and after a "
+                                 "transformation.")
+        self.diag_btn.clicked.connect(self.diagnosticsRequested.emit)
+        outer.addWidget(self.diag_btn)
 
         self.suggest_label = QLabel("")
         self.suggest_label.setWordWrap(True)

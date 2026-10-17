@@ -217,3 +217,17 @@ The table is now the long table of step 11 — the same 240 values — and
 `mock_plant_growth_wide_long.csv` (plus its `.transformations.json` record) has been
 saved beside the wide file, which is unchanged. Make the faceted box plot of step 11
 from it; **Revert to original data** returns to the wide table.
+
+## 13. Look at the residuals before and after a transformation
+
+With the faceted box plot of step 11 and **Factorial ANOVA** selected in the Statistics
+panel, the results table lists the assumption checks for each panel: the residuals are
+normal, but **Levene - equal variances** reads **NOT met**. Click **Model diagnostics
+(residual plots)…** and choose the panel *Age = Young*: the **Scale-Location** line
+rises (by 0.63) - the spread of growth increases with its mean, the funnel that
+Levene's test detected (P = 9.5 × 10⁻⁵).
+
+In *Prepare table* add `log10(Growth_cm)`, then in the diagnostics window set
+**Response** to `log10(Growth_cm)`: the line is flat (−0.02) and Levene's P is 0.96.
+Map **y** to `log10(Growth_cm)` and run the ANOVA on the log scale; save the plots with
+**Save figure…** for the supplementary material.

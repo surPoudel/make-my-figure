@@ -698,6 +698,7 @@ class MainWindow(QMainWindow):
         self.stats_panel = StatisticsPanel(self.controller)
         self.stats_panel.changed.connect(self.render_preview)
         self.stats_panel.runRequested.connect(self.render_preview)
+        self.stats_panel.diagnosticsRequested.connect(self.action_model_diagnostics)
         cv.addWidget(self.stats_panel)
         self._saved_panels: list = []
 
@@ -2650,6 +2651,29 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage(
                 f"Derived table: {len(record.derived_columns)} new column(s) "
                 f"({', '.join(record.derived_columns)}); the original table is unchanged.", 10000)
+
+    def action_model_diagnostics(self):
+        """R's plot(lm) panels for the model behind the current figure's statistics."""
+        if self.data is None:
+            self._show_warning("Load a data file first.")
+            return
+        try:
+            spec = self._build_spec()
+        except Exception as exc:  # noqa: BLE001
+            self._show_warning(f"Map the columns first: {exc}")
+            return
+        if not (spec.get("mapping") or {}).get("y"):
+            self._show_warning("Map a response (y) column first.")
+            return
+        from apps.desktop_app.diagnostics_dialog import DiagnosticsDialog
+
+        style = None
+        try:
+            result = getattr(self, "_current_result", None)
+            style = getattr(result, "style", None)
+        except Exception:  # noqa: BLE001
+            style = None
+        DiagnosticsDialog(self.data, spec, style, self).exec()
 
     def action_reshape_wide(self):
         """Gather a wide table's repeated-measurement columns into long form (recorded, revertible)."""

@@ -19,6 +19,7 @@ effect size, and (where applicable) a confidence interval.
 - [Supported tests](#supported-tests)
 - [When to use each test](#when-to-use-each-test)
 - [Assumption checks](#assumption-checks)
+- [Model diagnostics (residual plots)](#model-diagnostics-residual-plots)
 - [Required columns](#required-columns)
 - [Paired vs unpaired](#paired-vs-unpaired)
 - [Multiple-testing correction](#multiple-testing-correction)
@@ -130,6 +131,39 @@ the others, and the whole-grid model has its own check.
 Validated against base R 4.5.3 (`quality_audit/assumption_checks/validate_assumptions.R`:
 `shapiro.test`, Levene from its definition): 11 checks, worst relative difference
 8.7 × 10⁻⁹ (`tests/test_assumption_checks.py`).
+
+## Model diagnostics (residual plots)
+
+**Model diagnostics (residual plots)…** (Statistics panel; browser: the **🔍 Model
+diagnostics** expander) draws R's four `plot(lm)` panels for the model behind the
+statistics - the ANOVA / ANCOVA's factors and covariates, the group means behind a
+t-test or Kruskal-Wallis comparison (both grouping columns on a grouped plot), `y ~ x`
+for a correlation or regression:
+
+| panel | look for | what a problem looks like |
+|---|---|---|
+| Residuals vs Fitted (+ lowess) | no pattern, an even band about 0 | a curve (a missing term), a funnel |
+| Normal Q-Q (standardized residuals) | points on the quartile line | S-shape or heavy tails (non-normal errors) |
+| Scale-Location (√\|standardized residuals\| + lowess) | a flat line | a rising line: the variance grows with the mean (heteroscedasticity) |
+| Residuals vs Leverage (Cook's distance 0.5, 1) | no point beyond the dashed lines | an influential observation |
+
+When every observation has the same leverage (any balanced ANOVA) the last panel is
+**Constant Leverage: Residuals vs Factor Levels**, as in R. The three most extreme
+points are numbered with their row in the table (R's `id.n = 3`). Below the plots:
+the Shapiro-Wilk and Levene results for the same model and the largest Cook's
+distance. **Panel** picks a facet panel or the whole grid; **Response** redraws the
+model on another column - a transformed one from *Prepare table* - to see whether it
+helps. **Save figure…** (PNG / PDF / SVG, 300 dpi) and **Save values (CSV)** (fitted,
+residual, standardized residual, leverage, Cook's distance per row).
+
+On the mock plant data (Young panel, `Growth_cm ~ Month * Nitrogen`) the Scale-Location
+line rises by 0.63 and Levene's test fails (P = 9.5 × 10⁻⁵): growth spreads as plants
+grow. With `log10(Growth_cm)` the line is flat (−0.02) and Levene's P is 0.96.
+
+Computed as R computes them (`rstandard`, `hatvalues`, `cooks.distance`, `lowess(f =
+2/3, iter = 3)`, `qqnorm`'s `ppoints`); validated against base R 4.5.3
+(`quality_audit/assumption_checks/validate_diagnostics.R`): every per-observation value
+to 1e-9 relative, the smoothers to 1e-8 (`tests/test_model_diagnostics.py`).
 
 ## Required columns
 

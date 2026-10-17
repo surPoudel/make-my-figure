@@ -139,3 +139,18 @@ def test_browser_wide_to_long_reshapes_records_and_offers_the_new_columns():
     _by_label(at.button, "Use the wide table").click()
     at.run()
     assert "batch" in _by_label(at.sidebar.selectbox, "x").options
+
+
+def test_browser_model_diagnostics_expander_draws_the_residual_plots():
+    at = _app()
+    assert not at.exception
+    labels = [e.label for e in at.expander]
+    assert any(lbl.startswith("🔍 Model diagnostics") for lbl in labels)
+    assert "Panel" in [w.label for w in at.selectbox] and "Response" in [w.label for w in at.selectbox]
+    assert "Download diagnostic plots (PNG)" not in [b.label for b in at.get("download_button")]  # on request
+    _by_label(at.checkbox, "Draw the residual plots").check()
+    at.run()
+    assert not at.exception
+    downloads = [b.label for b in at.get("download_button")]
+    assert "Download diagnostic plots (PNG)" in downloads and "Download diagnostic values (CSV)" in downloads
+    assert not any("No residual" in e.value for e in at.error)

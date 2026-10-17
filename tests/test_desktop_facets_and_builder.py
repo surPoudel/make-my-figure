@@ -246,3 +246,34 @@ def test_assumption_action_is_offered_for_parametric_tests_and_round_trips(app):
     assert "Shapiro-Wilk - normality" in tests and "Levene (median-centred) - equal variances" in tests
     assert notes[tests.index("Shapiro-Wilk - normality")] == "met"
     assert notes[tests.index("Levene (median-centred) - equal variances")] == "NOT met"   # P = 9.5e-5
+
+
+def test_model_diagnostics_window_shows_the_four_panels_and_saves(app, tmp_path, monkeypatch):
+    from PySide6.QtWidgets import QFileDialog
+
+    from apps.desktop_app.diagnostics_dialog import DiagnosticsDialog
+
+    win = MainWindow()
+    win.load_path(str(CSV))
+    win.plot_combo.setCurrentIndex(win.plot_combo.findData("boxplot_or_violin_with_points"))
+    QApplication.processEvents()
+    for f, col in (("x", "Month"), ("y", "Growth_cm"), ("hue", "Nitrogen_Concentration"), ("facet_col", "Age")):
+        win._mapping_widgets[f].setCurrentText(col)
+    dlg = DiagnosticsDialog(win.data, win._build_spec(), None, win)
+    panels = [dlg.panel_combo.itemData(i) for i in range(dlg.panel_combo.count())]
+    assert panels[:2] == ["Age = Young", "Age = Old"] and panels[-1].startswith("whole grid")
+    assert [ax.get_title() for ax in dlg.canvas.figure.axes][:3] == ["Residuals vs Fitted", "Normal Q-Q",
+                                                                      "Scale-Location"]
+    assert "NOT met" in dlg.summary.text()                    # Levene within an age, P = 9.5e-5
+    png, csv = tmp_path / "d.png", tmp_path / "d.csv"
+    monkeypatch.setattr(QFileDialog, "getSaveFileName", lambda *a, **k: (str(png), ""))
+    dlg._save_figure()
+    monkeypatch.setattr(QFileDialog, "getSaveFileName", lambda *a, **k: (str(csv), ""))
+    dlg._save_values()
+    assert png.stat().st_size > 10_000
+    vals = pd.read_csv(csv)
+    assert len(vals) == 120 and {"fitted", "standardized_residual", "leverage", "cooks_distance"} <= set(vals.columns)
+    dlg.panel_combo.setCurrentIndex(dlg.panel_combo.count() - 1)
+    assert dlg.diag.n == 240
+    dlg.close()
+    win.close()

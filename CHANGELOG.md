@@ -43,6 +43,21 @@ Map **facet rows** and/or **facet columns** on `boxplot_or_violin_with_points` o
   a shared axis (115 where 107 is needed) - all fixed, each with a regression test
   (`tests/test_facet_grids.py`, 29 tests). Records: `quality_audit/facet_grids/`.
 
+### Added — model diagnostics: R's four residual plots
+
+There were no residual plots, so homogeneity of variance and influential observations
+could be judged only from a Levene P value. **Model diagnostics (residual plots)…**
+(Statistics panel; browser expander) draws R's `plot(lm)` panels for the model behind
+the statistics: Residuals vs Fitted, Normal Q-Q, Scale-Location and Residuals vs
+Leverage with Cook's distance contours (Constant Leverage: Residuals vs Factor Levels
+for a balanced design, as R), the three most extreme rows numbered, with the
+Shapiro-Wilk / Levene results and the largest Cook's distance below. A **Panel** choice
+(each facet panel or the whole grid) and a **Response** choice (to compare a
+transformed column) - on the plant data the Scale-Location rise falls from 0.63 to
+−0.02 and Levene's P rises from 9.5 × 10⁻⁵ to 0.96 with `log10(Growth_cm)`. Save as
+PNG / PDF / SVG and the per-row values as CSV. Every value matches base R 4.5.3 to 1e-9
+(smoothers 1e-8). Tutorial step 13.
+
 ### Added — assumption checks before every parametric test (Shapiro-Wilk, Levene)
 
 No assumption was ever tested: each result listed `assumptions_checked` ("approximately
