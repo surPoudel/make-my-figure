@@ -161,6 +161,14 @@ def run_statistics(df: pd.DataFrame, stats_spec: Dict[str, Any], *,
             return StatsReport(config=stats_spec, warnings=[str(exc)],
                                software_versions=software_versions())
 
+    # Assumptions first: a parametric test is checked for normality (and equal variances where it
+    # assumes them) before it runs; the non-parametric alternative is used only when asked.
+    from make_my_figure_core.statistics.assumptions import check_assumptions
+
+    assumption_report = check_assumptions(test, df, cols, stats_spec, mode=mode)
+    if assumption_report is not None and assumption_report.used_test:
+        test = assumption_report.used_test
+
     try:
         results = _dispatch(test, df, cols, plot_type, mode, reference, selected,
                             alternative, alpha, posthoc, stats_spec)
@@ -184,11 +192,17 @@ def run_statistics(df: pd.DataFrame, stats_spec: Dict[str, Any], *,
         warnings.extend([w for w in r.warnings if w not in warnings])
 
     used_correction = correction if corr_family else "none"
+    paragraph = report.methods_paragraph(results, used_correction)
+    if assumption_report is not None:
+        if assumption_report.sentence:
+            paragraph = f"{paragraph} {assumption_report.sentence}".strip()
+        warnings.extend(w for w in assumption_report.warnings if w not in warnings)
     rep = StatsReport(
         results=results, correction_method=used_correction,
-        method_paragraph=report.methods_paragraph(results, used_correction),
+        method_paragraph=paragraph,
         legend_sentence=report.legend_sentence(results, used_correction),
         warnings=warnings, config=stats_spec, software_versions=software_versions(),
+        assumptions=assumption_report.to_dict() if assumption_report is not None else None,
     )
     return rep
 

@@ -200,3 +200,20 @@ draws mean ± SE as capped bars instead of a band.
 
 Both are ordinary plots: log axes, Figure Packages, the Figure Builder and presets work
 as for any other figure.
+
+## 12. Start from a wide table
+
+The same data is often kept wide: one row per plant and one column per sampling month.
+`data/mock_plant_growth_wide.csv` holds it that way (60 rows: `Species, Age,
+Nitrogen_Concentration, Replicate, Month_4, Month_6, Month_8, Month_10`).
+
+Open it. The **↕ Wide → long…** button reads *(suggested)*: the four month columns
+look like one measurement repeated over time. Click it; the dialog opens with
+`Month_4 … Month_10` ticked, **Column names go to** `Month`, **Remove prefix**
+`Month_`. Type `Growth_cm` in **Values go to**; the preview shows `60 rows → 240 rows`.
+Click **Reshape and use**.
+
+The table is now the long table of step 11 — the same 240 values — and
+`mock_plant_growth_wide_long.csv` (plus its `.transformations.json` record) has been
+saved beside the wide file, which is unchanged. Make the faceted box plot of step 11
+from it; **Revert to original data** returns to the wide table.

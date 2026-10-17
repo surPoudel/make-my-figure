@@ -43,6 +43,59 @@ Map **facet rows** and/or **facet columns** on `boxplot_or_violin_with_points` o
   a shared axis (115 where 107 is needed) - all fixed, each with a regression test
   (`tests/test_facet_grids.py`, 29 tests). Records: `quality_audit/facet_grids/`.
 
+### Added — assumption checks before every parametric test (Shapiro-Wilk, Levene)
+
+No assumption was ever tested: each result listed `assumptions_checked` ("approximately
+normal residuals", "equal variances across groups") as text only, and a t-test or ANOVA
+ran on any data. Now, before a parametric test:
+
+- **Normality, Shapiro-Wilk**: on each group for a t-test, on the paired differences
+  for a paired t-test, on the **model residuals** for one-way, two-way and factorial
+  ANOVA / ANCOVA, on each variable for Pearson.
+- **Equal variances, Levene (median-centred)**: where the test assumes them (Student's
+  t, ANOVA).
+- Listed in the statistics table (verdict met / NOT met / not tested, failures in red),
+  the method sentence, the exported table and the StatsSpec; a failed check is a
+  warning naming the alternative.
+- **If assumptions fail** (both apps): keep the chosen test and report it (default), or
+  use the non-parametric alternative (Mann-Whitney, Wilcoxon, Kruskal-Wallis + Dunn,
+  Spearman; Welch's t when only Student's equal variances fail). Two-way / factorial
+  ANOVA has no rank-based equivalent here and is never replaced: the warning
+  recommends a log or square-root transformation.
+- Facet grids check every panel and summarise them ("met in 3 of 4 panels; not met in
+  …"); the whole-grid model is checked on its own.
+- On the mock plant data (Month × Nitrogen) the residuals are normal (Shapiro-Wilk
+  W = 0.992, P = 0.249, n = 240) and the variances pass pooled over ages (Levene
+  F(11, 228) = 1.55, P = 0.116), but not within each age (Young F = 3.89, P = 9.5 × 10⁻⁵;
+  Old F = 4.42, P = 1.8 × 10⁻⁵): growth spreads as plants grow.
+- Validated against base R 4.5.3: 11 checks agree to 8.7 × 10⁻⁹. The figure and every
+  test result are unchanged unless the alternative is chosen.
+
+### Added — wide tables reshape to long form (Wide → long)
+
+A wide table (one row per plant, one column per sampling month) could not make the
+box, line or facet plots: the only reshape on offer, the "per-column distributions"
+recommendation, turned the 60-row wide plant table into 300 rows of `[column, value]`,
+gathering `Replicate` as a measurement and dropping Species, Age and Nitrogen.
+
+- **↕ Wide → long…** (desktop, beside *Prepare table*; browser expander) gathers the
+  chosen columns into a name column and a value column and repeats every other column
+  on each row: the wide plant table gives exactly the 240-row long table (all values
+  identical), and the faceted box plot and per-panel ANOVA from it equal those from
+  the original long file (F and P to 1e-12).
+- Suggested when numeric columns share a name with a number after it (`Month_4`):
+  prefix removed, levels as numbers. Names holding several factors split at a
+  separator (`A_Young` → Species, Age). Empty cells are left out and counted, or kept.
+  Impossible reshapes are refused with the reason before anything is applied.
+- The wide table is never modified. The desktop app saves `<name>_long.csv` and its
+  record beside the wide file, never overwriting (` (2)`, ` (3)`, …); the browser
+  offers downloads; **Revert to original data** returns to it.
+- The reshape is the first step of the table record (`TablePreprocessingSpec.reshape`):
+  later column transformations act on the long table; a Figure Package stores the
+  wide and long tables and the replay verifies as `identical`.
+- New tutorial data `tutorial/general_tabular_data/data/mock_plant_growth_wide.csv`
+  (step 12).
+
 ### Added — Type I sums of squares; Fixed — ANOVA annotations follow the statistics controls
 
 Reported from the faceted plant-growth figure on macOS (factorial ANOVA, `Age` facets).

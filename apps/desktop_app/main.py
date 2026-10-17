@@ -493,6 +493,13 @@ class MainWindow(QMainWindow):
                                    "generate publication plots.")
         self.matrix_btn.clicked.connect(self.action_matrix_wizard)
         nav_row.addWidget(self.matrix_btn)
+        self.reshape_btn = QPushButton("\u2195  Wide → long…")
+        self.reshape_btn.setToolTip("For a wide table (one row per plant/animal, one column per repeated "
+                                    "measurement such as Month_4, Month_6, …): gather those columns into "
+                                    "one row per observation, as the box, line and facet plots need. The "
+                                    "wide table is not changed; the long table is saved beside it.")
+        self.reshape_btn.clicked.connect(self.action_reshape_wide)
+        nav_row.addWidget(self.reshape_btn)
         self.table_btn = QPushButton("\U0001F4CB  Prepare table (roles, transform, ANOVA)…")
         self.table_btn.setToolTip("For an ordinary experimental table (one row per observation): "
                                   "say which columns are response, factors, covariates and subject; "
@@ -2505,6 +2512,7 @@ class MainWindow(QMainWindow):
         self._populate_table()
         self._rebuild_mapping_and_options()
         self.statusBar().showMessage(self._source_status(data))
+        self._suggest_reshape(data)
         self.render_preview()
         if getattr(self, "_auto_recommend", True):
             self._refresh_recommendations()
@@ -2582,6 +2590,25 @@ class MainWindow(QMainWindow):
                 pass
         self._set_data(new_data)
 
+    def _suggest_reshape(self, data) -> None:
+        """Point at Wide → long when the table looks wide (advisory; nothing is changed)."""
+        if not hasattr(self, "reshape_btn"):
+            return
+        label = "\u2195  Wide → long…"
+        try:
+            from make_my_figure_core.tabular import suggest_wide_to_long
+
+            already = self.controller.reshape_of(data) is not None
+            sug = None if already else suggest_wide_to_long(data.info.dataframe)
+        except Exception:  # noqa: BLE001 - a suggestion must never break loading
+            sug = None
+        if sug is not None:
+            self.reshape_btn.setText(label + " (suggested)")
+            self.statusBar().showMessage(f"{self._source_status(data)}  ·  This table looks wide: {sug.reason} "
+                                         "Use Wide → long to reshape it.", 15000)
+        else:
+            self.reshape_btn.setText(label)
+
     def _mark_reshaped(self, original: "LoadedData | None") -> None:
         """Remember the pre-reshape data and show the Revert button."""
         self._data_before_transform = original
@@ -2623,6 +2650,60 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage(
                 f"Derived table: {len(record.derived_columns)} new column(s) "
                 f"({', '.join(record.derived_columns)}); the original table is unchanged.", 10000)
+
+    def action_reshape_wide(self):
+        """Gather a wide table's repeated-measurement columns into long form (recorded, revertible)."""
+        if self.data is None:
+            self._show_warning("Load a data file first, then reshape it.")
+            return
+        from PySide6.QtWidgets import QDialog
+
+        from apps.desktop_app.reshape_dialog import ReshapeDialog
+        from make_my_figure_core.tabular import TransformError
+
+        dlg = ReshapeDialog(self.controller, self.data, self)
+        if dlg.exec() != QDialog.Accepted:
+            return
+        raw = self.controller.raw_of(self.data)
+        record = (getattr(self.data, "table_context", None) or {}).get("record")
+        old = list(record.transform_objects) if record is not None else []
+        spec = None if dlg.removed else dlg.result_spec
+        # Column transformations recorded before survive when their column still exists.
+        if spec is not None:
+            from make_my_figure_core.tabular import preview_wide_to_long
+
+            keep_cols = set(preview_wide_to_long(raw.info.dataframe, spec).id_columns) | {spec.values_to}
+        else:
+            keep_cols = set(raw.info.dataframe.columns)
+        transforms = [t for t in old if t.column in keep_cols]
+        dropped = [t.target for t in old if t not in transforms]
+        try:
+            new = self.controller.derive_table(raw, transforms, reshape=spec)
+        except TransformError as exc:
+            QMessageBox.warning(self, "Reshape not applied", str(exc))
+            return
+        self._set_data(new)
+        if new is not raw:
+            self._data_before_transform = raw
+            self.revert_btn.setVisible(True)
+        msg = []
+        if spec is not None:
+            written = []
+            try:
+                written = self.controller.save_long_copy(new)
+            except Exception as exc:  # noqa: BLE001 - saving a copy must not lose the reshape
+                msg.append(f"The long table could not be saved: {exc}")
+            n_in, n_out = len(raw.info.dataframe), len(new.info.dataframe)
+            msg.insert(0, f"Reshaped to long form: {n_in} → {n_out} rows; the wide table is unchanged.")
+            if written:
+                msg.append("Saved " + ", ".join(os.path.basename(w) for w in written) + " beside it.")
+            elif raw.source_path is None or raw.is_example:
+                msg.append("Not saved (no file behind this table); use Export table to save it.")
+        else:
+            msg.append("Back to the wide table.")
+        if dropped:
+            msg.append(f"Removed transformation(s) of columns that no longer exist: {', '.join(dropped)}.")
+        self.statusBar().showMessage(" ".join(msg), 15000)
 
     def action_export_table(self):
         """Save the current table, with the actual values of any derived columns."""

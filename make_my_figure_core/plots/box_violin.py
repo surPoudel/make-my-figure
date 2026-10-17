@@ -559,15 +559,47 @@ def _grid_method_paragraph(reports, row, col) -> str:
     """The per-panel sentence, plus the whole-grid report's own sentence when there is one."""
     panel = [r for r in reports if not any(x.extra.get("facet") == "whole grid" for x in r.results)]
     grid = [r for r in reports if r not in panel]
-    text = (panel[0].method_paragraph if panel else grid[0].method_paragraph).strip()
+
+    def without_checks(rep) -> str:
+        # each panel's own assumption sentence is replaced by the grid summary below
+        text = rep.method_paragraph
+        sentence = (rep.assumptions or {}).get("sentence")
+        return text.replace(sentence, "").strip() if sentence else text.strip()
+
+    text = without_checks(panel[0] if panel else grid[0])
     if panel:
         text += (" Comparisons were made within each panel "
                  f"({' × '.join(v for v in (row, col) if v)}), and P values were adjusted within each panel.")
+        text += _grid_assumption_sentence(panel)
     for g in grid:
         extra = g.method_paragraph.split("This model was fitted once", 1)
         if len(extra) == 2:
             text += " This model was fitted once" + extra[1]
+        if (g.assumptions or {}).get("sentence"):
+            text += " For the whole-grid model: " + g.assumptions["sentence"][0].lower() + g.assumptions["sentence"][1:]
     return text.strip()
+
+
+def _grid_assumption_sentence(panel_reports) -> str:
+    """One sentence for the checks run in every panel: how many met them, which did not."""
+    checked = [(r.results[0].extra.get("facet") if r.results else "?", r.assumptions)
+               for r in panel_reports if r.assumptions and r.assumptions.get("checks")]
+    if not checked:
+        return ""
+    methods = sorted({f"{c['method']} ({c['assumption']})" for _, a in checked for c in a["checks"]
+                      if c.get("passed") is not None})
+    bad = [(label, a) for label, a in checked if a.get("normality_failed") or a.get("variances_failed")]
+    out = (f" Assumptions were checked in each panel ({'; '.join(methods)}; α = {checked[0][1].get('alpha', 0.05):g}):"
+           f" met in {len(checked) - len(bad)} of {len(checked)} panels")
+    if bad:
+        def which(a):
+            return " and ".join(w for w, k in (("normality", "normality_failed"),
+                                               ("equal variances", "variances_failed")) if a.get(k))
+        out += "; not met in " + "; ".join(f"{label} ({which(a)})" for label, a in bad)
+        switched = {a.get("used_test") for _, a in bad if a.get("used_test") != a.get("test")}
+        if switched:
+            out += f", where the non-parametric alternative was used"
+    return out + "."
 
 
 def _whole_grid_statistics(spec, stats_spec, work, style, x, hue, row, col):
@@ -882,7 +914,9 @@ def _render_facets(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResul
             method_paragraph=_grid_method_paragraph(reports, row, col),
             legend_sentence=reports[0].legend_sentence,
             warnings=list(dict.fromkeys(w for rep in reports for w in rep.warnings)),
-            config=reports[0].config, software_versions=reports[0].software_versions)
+            config=reports[0].config, software_versions=reports[0].software_versions,
+            assumptions=[{**rep.assumptions, "panel": (rep.results[0].extra or {}).get("facet") if rep.results
+                          else None} for rep in reports if rep.assumptions] or None)
 
     meta = base_metadata(spec, style, work, used_columns=[x, y, hue, row, col])
     meta["kind"] = kind

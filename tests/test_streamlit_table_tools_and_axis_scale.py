@@ -119,3 +119,23 @@ def test_browser_whole_grid_statistics_option_appears_with_facets_and_runs():
     at.run()
     assert not at.exception
     assert not any("Could not render" in e.value or "Unexpected error" in e.value for e in at.error)
+
+
+def test_browser_wide_to_long_reshapes_records_and_offers_the_new_columns():
+    at = _app()
+    _by_label(at.multiselect, "Columns to gather").set_value(["batch", "sex"])
+    _by_label(at.text_input, "Column names go to").set_value("field")
+    _by_label(at.text_input, "Values go to").set_value("level")
+    at.run()
+    assert not at.exception and not at.error
+    assert any("rows →" in m.value for m in at.markdown)
+    _by_label(at.button, "Reshape and use").click()
+    at.run()
+    assert not at.exception
+    x = _by_label(at.sidebar.selectbox, "x")
+    assert "field" in x.options and "level" in x.options and "batch" not in x.options
+    downloads = [b.label for b in at.get("download_button")]
+    assert "Download long table (CSV)" in downloads and "Download transformation record (JSON)" in downloads
+    _by_label(at.button, "Use the wide table").click()
+    at.run()
+    assert "batch" in _by_label(at.sidebar.selectbox, "x").options

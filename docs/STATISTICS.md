@@ -18,6 +18,7 @@ effect size, and (where applicable) a confidence interval.
 
 - [Supported tests](#supported-tests)
 - [When to use each test](#when-to-use-each-test)
+- [Assumption checks](#assumption-checks)
 - [Required columns](#required-columns)
 - [Paired vs unpaired](#paired-vs-unpaired)
 - [Multiple-testing correction](#multiple-testing-correction)
@@ -94,6 +95,41 @@ depend on lifelines or scikit-posthocs.
 
 **Volcano:** p-values come from the input; the app does **not** recompute
 differential statistics. Only thresholds and labels are annotated.
+
+## Assumption checks
+
+A parametric test is checked **before** it runs, and the checks are listed with the
+results (table rows *Shapiro-Wilk - normality* / *Levene (median-centred) - equal
+variances*, verdict **met** / **NOT met** / *not tested*), in the method sentence, and
+as a warning when one fails. What is checked is what the test assumes:
+
+| test | normality (Shapiro-Wilk) | equal variances (Levene, median-centred) | alternative when normality fails |
+|---|---|---|---|
+| Student's t | each group compared | yes | Mann-Whitney U (Welch's t when only variances fail) |
+| Welch's t | each group compared | not assumed | Mann-Whitney U |
+| paired t | the paired differences | — | Wilcoxon signed-rank |
+| one-way ANOVA | residuals (value − group mean) | across groups | Kruskal-Wallis (+ Dunn post-hoc) |
+| two-way / factorial ANOVA, ANCOVA | **model residuals** | across factor combinations | none: reported with a recommendation (log / square-root transform in *Prepare table*) |
+| Pearson | each variable | — | Spearman |
+
+An ANOVA assumes normal **errors**, so its residuals are tested, not the pooled raw
+values (a factor with a large effect makes those bimodal however normal each group
+is). Levene's test is the median-centred (Brown-Forsythe) form, the default of
+`car::leveneTest`. Both use α = 0.05 (`statistics.assumption_alpha`). Fewer than three
+observations cannot be tested and say so; above 5000 the Shapiro-Wilk P is
+approximate and even negligible departures are significant (judge from a Q-Q plot).
+With many groups, about 5 % of Shapiro-Wilk tests fail by chance alone.
+
+**If assumptions fail** (Statistics panel, both apps) decides what happens:
+*Report it and keep the chosen test* (default; nothing is switched) or *Use the
+non-parametric alternative* (`statistics.assumption_action = "switch"`), which runs the
+alternative above and says so in the method sentence. On a facet grid the checks run
+in every panel; the method sentence says in how many panels they were met and names
+the others, and the whole-grid model has its own check.
+
+Validated against base R 4.5.3 (`quality_audit/assumption_checks/validate_assumptions.R`:
+`shapiro.test`, Levene from its definition): 11 checks, worst relative difference
+8.7 × 10⁻⁹ (`tests/test_assumption_checks.py`).
 
 ## Required columns
 

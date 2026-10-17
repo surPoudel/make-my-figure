@@ -173,3 +173,76 @@ def test_anova_terms_as_stars_checkbox_is_opt_in_and_round_trips(app):
     p.annotation_combo.setCurrentIndex(p.annotation_combo.findData("stars"))
     p.test_combo.setCurrentIndex(p.test_combo.findData("welch_t"))
     assert not p._form.isRowVisible(p.omnibus_stars_cb)                  # no ANOVA terms
+
+
+def test_wide_table_is_reshaped_in_the_window_saved_beside_and_revertible(app, tmp_path, monkeypatch):
+    import hashlib
+
+    from PySide6.QtWidgets import QDialog
+
+    from apps.desktop_app import reshape_dialog
+
+    wide = tmp_path / "plants_wide.csv"
+    wide.write_bytes((Path(__file__).parent / "fixtures" / "plant_growth_wide.csv").read_bytes())
+    digest = hashlib.sha256(wide.read_bytes()).hexdigest()
+    win = MainWindow()
+    win.load_path(str(wide))
+    QApplication.processEvents()
+    assert win.reshape_btn.text().endswith("(suggested)")
+
+    def drive(dlg):
+        # the suggestion is pre-filled: Month_4 ... Month_10 into Month; name the values
+        assert dlg.btn_apply.isEnabled() and "60 rows → 240 rows" in dlg.status.text()
+        dlg.values_to.setText("Growth_cm")
+        dlg._accept()
+        return QDialog.Accepted
+
+    monkeypatch.setattr(reshape_dialog.ReshapeDialog, "exec", drive)
+    win.action_reshape_wide()
+    df = win.data.info.dataframe
+    assert df.shape == (240, 6) and list(df.columns)[-2:] == ["Month", "Growth_cm"]
+    assert (tmp_path / "plants_wide_long.csv").exists()
+    assert (tmp_path / "plants_wide_long.transformations.json").exists()
+    assert hashlib.sha256(wide.read_bytes()).hexdigest() == digest
+    assert win.revert_btn.isVisibleTo(win) and not win.reshape_btn.text().endswith("(suggested)")
+    win.plot_combo.setCurrentIndex(win.plot_combo.findData("boxplot_or_violin_with_points"))
+    QApplication.processEvents()
+    for f, col in (("x", "Month"), ("y", "Growth_cm"), ("hue", "Nitrogen_Concentration"),
+                   ("facet_row", "Age"), ("facet_col", "Species")):
+        win._mapping_widgets[f].setCurrentText(col)
+    win.render_preview()
+    assert len(facet_axes(win._canvas.figure)) == 4
+    win.action_revert_data()
+    assert win.data.info.dataframe.shape == (60, 8)
+    win.close()
+
+
+def test_assumption_action_is_offered_for_parametric_tests_and_round_trips(app):
+    from apps.desktop_app.stats_panel import StatisticsPanel
+
+    p = StatisticsPanel(C)
+    p.show()
+    p.setChecked(True)
+    p.enable_cb.setChecked(True)
+    assert p._form.isRowVisible(p.assumption_combo)                      # Auto-suggest may pick one
+    assert "assumption_action" not in p.stats_spec()                     # untouched: writes nothing
+    p.test_combo.setCurrentIndex(p.test_combo.findData("mann_whitney"))
+    assert not p._form.isRowVisible(p.assumption_combo)                  # nothing to check
+    p.test_combo.setCurrentIndex(p.test_combo.findData("welch_t"))
+    p.assumption_combo.setCurrentIndex(p.assumption_combo.findData("switch"))
+    spec = p.stats_spec()
+    assert spec["assumption_action"] == "switch"
+    q = StatisticsPanel(C)
+    q.load_spec(spec)
+    assert q.assumption_combo.currentData() == "switch"
+    # the results table lists the checks with a verdict
+    young = DF[DF.Age == "Young"]
+    s = C.build_spec("boxplot_or_violin_with_points", "publication", "t.csv",
+                     {"x": "Month", "y": "Growth_cm", "hue": "Nitrogen_Concentration"}, width="default",
+                     statistics={"enabled": True, "test": "factorial_anova"})
+    p.show_report(C.render(s, C.loaded_from_dataframe(young, "t.csv")).stats_report)
+    tests = [p.table.item(i, 1).text() for i in range(p.table.rowCount())]
+    notes = [p.table.item(i, 6).text() for i in range(p.table.rowCount())]
+    assert "Shapiro-Wilk - normality" in tests and "Levene (median-centred) - equal variances" in tests
+    assert notes[tests.index("Shapiro-Wilk - normality")] == "met"
+    assert notes[tests.index("Levene (median-centred) - equal variances")] == "NOT met"   # P = 9.5e-5

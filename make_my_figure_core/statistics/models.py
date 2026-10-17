@@ -118,9 +118,13 @@ class StatsReport:
     warnings: List[str] = field(default_factory=list)
     config: Dict[str, Any] = field(default_factory=dict)
     software_versions: Dict[str, str] = field(default_factory=dict)
+    # Normality / equal-variance checks run before a parametric test
+    # (statistics.assumptions.AssumptionReport.to_dict()); a list on a facet grid.
+    assumptions: Optional[Any] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return {
+            **({"assumptions": _clean(self.assumptions)} if self.assumptions else {}),
             "results": [r.to_dict() for r in self.results],
             "correction_method": self.correction_method,
             "method_paragraph": self.method_paragraph,
@@ -140,6 +144,7 @@ class StatsReport:
             warnings=list(data.get("warnings", [])),
             config=data.get("config", {}) or {},
             software_versions=data.get("software_versions", {}) or {},
+            assumptions=data.get("assumptions"),
         )
 
 

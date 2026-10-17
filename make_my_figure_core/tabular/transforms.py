@@ -285,6 +285,7 @@ class TablePreprocessingSpec:
     source_table_digest: Optional[str] = None       # checksum of the raw table as loaded
     input_shape: Optional[List[int]] = None
     transforms: List[Dict[str, Any]] = field(default_factory=list)    # TableTransform dicts
+    reshape: Optional[Dict[str, Any]] = None        # WideToLong dict: applied first, wide -> long
     preprocessing_steps: List[PreprocessingStep] = field(default_factory=list)
     derived_columns: List[str] = field(default_factory=list)
     column_roles: Optional[Dict[str, Any]] = None   # ColumnRoles.to_dict(), when assigned
@@ -314,12 +315,19 @@ class TablePreprocessingSpec:
     def transform_objects(self) -> List[TableTransform]:
         return [TableTransform.from_dict(t) for t in self.transforms]
 
+    @property
+    def reshape_object(self):
+        from make_my_figure_core.tabular.reshape import WideToLong
+
+        return WideToLong.from_dict(self.reshape) if self.reshape else None
+
 
 def apply_table_transforms(df: pd.DataFrame, transforms: Sequence[TableTransform], *,
                            source_name: Optional[str] = None, source_sha256: Optional[str] = None,
                            source_sheet: Optional[str] = None,
                            stamp_time: bool = True,
-                           with_checksums: bool = True) -> Tuple[pd.DataFrame, TablePreprocessingSpec]:
+                           with_checksums: bool = True,
+                           reshape=None) -> Tuple[pd.DataFrame, TablePreprocessingSpec]:
     """Return ``(derived_table, record)``. ``df`` is never modified.
 
     The derived table is the raw table with one new column per transformation,
@@ -328,13 +336,35 @@ def apply_table_transforms(df: pd.DataFrame, transforms: Sequence[TableTransform
     skips the two table digests (1.4 s each for a million rows) for a working copy
     that is not being recorded - the dialog's analysis tab, a live preview.
     """
-    derived = df.copy()
+    sentences: List[str] = []
+    reshape_step = None
+    if reshape is not None:
+        # A wide table is first gathered to long form (one row per observation);
+        # column transformations then act on the long table.
+        from make_my_figure_core.tabular.reshape import ReshapeError, wide_to_long
+
+        try:
+            derived, rpv = wide_to_long(df, reshape)
+        except ReshapeError as exc:
+            raise TransformError(str(exc)) from exc
+        reshape_step = PreprocessingStep(
+            step_id="wide_to_long", step_type="reshape", method_name="wide_to_long",
+            parameters={**reshape.to_dict(), "id_columns_kept": rpv.id_columns, "levels": rpv.levels,
+                        "n_rows_in": rpv.n_rows_in, "n_rows_out": rpv.n_rows_out,
+                        "n_missing_dropped": rpv.n_missing_dropped},
+            user_parameters=reshape.to_dict(), warnings=list(rpv.notes), user_confirmed=True)
+        sentences.append(rpv.sentence)
+    else:
+        derived = df.copy()
     spec = TablePreprocessingSpec(
         source_name=source_name, source_sha256=source_sha256, source_sheet=source_sheet,
         source_table_digest=table_sha256(df) if with_checksums else None, input_shape=[int(df.shape[0]), int(df.shape[1])],
         created_at=datetime.now(timezone.utc).isoformat(timespec="seconds") if stamp_time else None)
+    if reshape_step is not None:
+        spec.reshape = reshape.to_dict()
+        spec.preprocessing_steps.append(reshape_step)
+        spec.warnings.extend(reshape_step.warnings)
     logged: List[str] = []
-    sentences: List[str] = []
     for t in transforms:
         if t.column in spec.derived_columns:
             raise TransformError(f"{t.column!r} is a derived column; transform the original column instead.")
@@ -370,7 +400,8 @@ def apply_table_transforms(df: pd.DataFrame, transforms: Sequence[TableTransform
 def replay(raw: pd.DataFrame, record: Dict[str, Any]) -> pd.DataFrame:
     """Re-run a stored :class:`TablePreprocessingSpec` on the raw table."""
     spec = TablePreprocessingSpec.from_dict(record)
-    derived, _ = apply_table_transforms(raw, spec.transform_objects, stamp_time=False)
+    derived, _ = apply_table_transforms(raw, spec.transform_objects, stamp_time=False,
+                                        reshape=spec.reshape_object)
     return derived
 
 

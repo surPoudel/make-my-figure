@@ -70,6 +70,8 @@ SS_TYPE_CHOICES = [
 ]
 # Tests whose result is an omnibus table: without post-hoc pairs nothing is bracketed, so the
 # placement control has nothing to place.
+PARAMETRIC_TESTS = {"students_t", "welch_t", "paired_t", "one_way_anova", "two_way_anova", "factorial_anova",
+                    "pearson"}
 TWO_GROUP_TESTS = {"students_t", "welch_t", "mann_whitney", "paired_t", "wilcoxon"}
 OMNIBUS_TESTS = {"one_way_anova", "kruskal_wallis", "two_way_anova", "factorial_anova", "rm_anova"}
 
@@ -130,6 +132,21 @@ class StatisticsPanel(QGroupBox):
             "and the order matters; Type III tests each term adjusted for all others, interactions "
             "included.")
         form.addRow("Sums of squares", self.ss_combo)
+        # Normality / equal variances are checked before every parametric test (reported in the
+        # table and method sentence). What to do when they fail is the user's decision.
+        self.assumption_combo = self._combo([
+            ("report", "Report it and keep the chosen test"),
+            ("switch", "Use the non-parametric alternative"),
+        ])
+        self.assumption_combo.setToolTip(
+            "Before a parametric test the data are checked: Shapiro-Wilk for normality (each group for a "
+            "t-test; the model residuals for an ANOVA) and Levene's test (median-centred) for equal "
+            "variances where the test assumes them. Both are listed in the results table.\n\n"
+            "If a check fails: keep the chosen test and report it, or use the non-parametric alternative "
+            "(Mann-Whitney, Wilcoxon, Kruskal-Wallis, Spearman; Welch's t when only Student's equal "
+            "variances fail). Two-way / factorial ANOVA has no rank-based equivalent here: it is reported "
+            "with a recommendation instead.")
+        form.addRow("If assumptions fail", self.assumption_combo)
         self.mode_combo = self._combo(MODE_CHOICES)
         form.addRow("Comparison", self.mode_combo)
 
@@ -226,8 +243,8 @@ class StatisticsPanel(QGroupBox):
         outer.addWidget(self.suggest_label)
 
         # Results table + method text.
-        self.table = QTableWidget(0, 6)
-        self.table.setHorizontalHeaderLabels(["Comparison", "Test", "p", "adj p", "effect", "n"])
+        self.table = QTableWidget(0, 7)
+        self.table.setHorizontalHeaderLabels(["Comparison", "Test", "p", "adj p", "effect", "n", "notes"])
         self.table.horizontalHeader().setStretchLastSection(True)
         self.table.setMinimumHeight(120)
         outer.addWidget(self.table)
@@ -312,6 +329,7 @@ class StatisticsPanel(QGroupBox):
         bracket placement when some comparison will be bracketed."""
         test = self.test_combo.currentData()
         self._set_row_visible(self.ss_combo, test == "factorial_anova")
+        self._set_row_visible(self.assumption_combo, test == "auto" or test in PARAMETRIC_TESTS)
         self._set_row_visible(self.placement_combo,
                               test not in OMNIBUS_TESTS or self.posthoc_cb.isChecked())
         self._set_row_visible(self.omnibus_stars_cb, self.annotation_combo.currentData() == "stars"
@@ -350,6 +368,7 @@ class StatisticsPanel(QGroupBox):
             "comparison_mode": self.mode_combo.currentData(),
             "correction": self.correction_combo.currentData(),
             "posthoc": self.posthoc_cb.isChecked(),
+            **({"assumption_action": "switch"} if self.assumption_combo.currentData() == "switch" else {}),
             **({"ss_type": int(self.ss_combo.currentData())}
                if (self.test_combo.currentData() == "factorial_anova" and self.ss_combo.currentData() != 2)
                else {}),
@@ -388,6 +407,7 @@ class StatisticsPanel(QGroupBox):
         _set(self.correction_combo, stats.get("correction"))
         self.posthoc_cb.setChecked(bool(stats.get("posthoc", False)))
         _set(self.ss_combo, int(stats.get("ss_type", 2) or 2))
+        _set(self.assumption_combo, stats.get("assumption_action", "report") or "report")
         self.facet_scope_cb.setChecked(str(stats.get("facet_scope", "panel")) == "figure")
         _set(self.group_combo, stats.get("group_column"))
         _set(self.subgroup_combo, stats.get("subgroup_column"))
@@ -422,9 +442,14 @@ class StatisticsPanel(QGroupBox):
             return
         rows = self.controller.stats_table_rows(report)
         self.table.setRowCount(len(rows))
+        from PySide6.QtGui import QColor
+
         for i, row in enumerate(rows):
-            for j, key in enumerate(["comparison", "test", "p_value", "adjusted_p", "effect_size", "n"]):
-                self.table.setItem(i, j, QTableWidgetItem(str(row.get(key, ""))))
+            for j, key in enumerate(["comparison", "test", "p_value", "adjusted_p", "effect_size", "n", "warning"]):
+                item = QTableWidgetItem(str(row.get(key, "")))
+                if str(row.get("warning", "")).startswith("NOT met"):
+                    item.setForeground(QColor("#b00020"))       # a failed assumption check
+                self.table.setItem(i, j, item)
         text = report.method_paragraph or ""
         if report.warnings:
             text += "\n\nWarnings: " + " | ".join(report.warnings)
@@ -451,6 +476,7 @@ class StatisticsPanel(QGroupBox):
         self.facet_scope_cb.setChecked(False)
         self.ss_combo.setCurrentIndex(0)
         self.omnibus_stars_cb.setChecked(False)
+        self.assumption_combo.setCurrentIndex(0)
         self.changed.emit()
 
     def _on_export_table(self) -> None:

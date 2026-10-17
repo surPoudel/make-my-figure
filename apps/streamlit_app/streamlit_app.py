@@ -1330,6 +1330,15 @@ with st.sidebar.expander("Statistical tests & annotations", expanded=False):
         help="Identical when every combination has the same n.") if test == "factorial_anova" else 2
     comparison_mode = st.selectbox(
         "Comparison", ["auto", "all_pairs", "vs_control", "within_x", "omnibus"])
+    _parametric = ("students_t", "welch_t", "paired_t", "one_way_anova", "two_way_anova", "factorial_anova",
+                   "pearson")
+    assumption_action = st.selectbox(
+        "If assumptions fail", ["report", "switch"],
+        format_func=lambda v: {"report": "Report it and keep the chosen test",
+                               "switch": "Use the non-parametric alternative"}[v],
+        help="Normality (Shapiro-Wilk: each group for a t-test, the model residuals for an ANOVA) and equal "
+             "variances (Levene, median-centred) are checked before a parametric test and listed with the "
+             "results.") if (test == "auto" or test in _parametric) else "report"
     correction = st.selectbox(
         "Correction", ["benjamini_hochberg", "bonferroni", "holm", "none"])
     ann_mode = st.selectbox("Annotation", ["stars", "p", "both"])
@@ -1363,6 +1372,7 @@ with st.sidebar.expander("Statistical tests & annotations", expanded=False):
             "enabled": True, "test": test, "comparison_mode": comparison_mode,
             "correction": correction, "posthoc": posthoc,
             **({"ss_type": int(ss_type)} if test == "factorial_anova" and int(ss_type) != 2 else {}),
+            **({"assumption_action": "switch"} if assumption_action == "switch" else {}),
             **({"facet_scope": "figure"} if facet_scope else {}),
             "group_column": None if group_column == _none else group_column,
             "subgroup_column": None if subgroup_column == _none else subgroup_column,

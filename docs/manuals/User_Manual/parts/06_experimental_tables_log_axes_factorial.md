@@ -84,3 +84,16 @@ as bars instead of a band. Tutorial step 11 and `docs/GROUP_COMPARISON_PLOTS.md`
 give the details.
 
 ![A faceted box plot of the mock plant-growth design.](../../assets/screenshots/tabular_10_faceted_boxplot.png)
+
+### 82. Wide tables: reshape to long form
+
+A wide table (one row per plant, one column per sampling month: `Month_4 … Month_10`)
+is reshaped with **↕ Wide → long…** beside *Prepare table* (browser: the **↕ Wide →
+long** expander). When columns share a name with a number after it the button reads
+*(suggested)* and opens with them ticked, the prefix removed and the months as numbers;
+every other column (Species, Age, Nitrogen, Replicate) is repeated on each row, so
+60 wide rows become 240 long ones. Problems — a new column named like an existing one,
+gathered columns mixing numbers and text — are shown before anything is applied. The
+wide file is never changed: the long table is saved beside it as `<name>_long.csv`
+with its record, **Revert to original data** goes back, and a Figure Package keeps
+both tables and replays the reshape. Details: `docs/GENERAL_TABULAR_DATA.md`.
