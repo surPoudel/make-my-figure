@@ -64,3 +64,23 @@ SE, t, P, 95 % CI) with readable names; each table has its own CSV export.
 
 See `docs/GENERAL_TABULAR_DATA.md`, `docs/AXIS_SCALING.md`, `docs/STATISTICS_FACTORIAL.md`
 and the step-by-step tutorial in `tutorial/general_tabular_data/`.
+
+### 81. Facet grids: one panel per factor combination
+
+On the box/violin plot and the line/time-course plot, map **facet_row** and/or
+**facet_col** to split the figure into a grid of panels, one per level of each
+column: a 2 species × 2 ages × 3 nitrogen × 4 months design reads as
+`facet_row = Age`, `facet_col = Species`, `x = Month`, `hue` (or `color`) =
+nitrogen. Every panel keeps the same category order, the same colour per level and
+one shared value axis (**Facets share the value axis** turns the last off and labels
+every panel); strip labels read `Species: Species_A` (or the value alone with
+**Facet labels**); only the outer panels carry tick labels. The title, axis labels and
+legend are shared, so the legend, axis, palette, colour-override and typography
+controls act on the whole grid; a legend below or above the grid is laid out in one
+row. Statistics run within each panel; **Also test across the whole grid** in the
+statistics panel fits one ANOVA with the facet variables as factors
+(`Growth ~ Month × Age × Species`). The line plot's **Error display** draws mean ± SE
+as bars instead of a band. Tutorial step 11 and `docs/GROUP_COMPARISON_PLOTS.md`
+give the details.
+
+![A faceted box plot of the mock plant-growth design.](../../assets/screenshots/tabular_10_faceted_boxplot.png)

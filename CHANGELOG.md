@@ -6,7 +6,49 @@ with any journal.
 
 ## Unreleased
 
-_Nothing yet._
+### Added — facet grids on the box/violin and line plots
+
+A 2 × 2 × 3 design measured over time (species × initial age × nitrogen, four
+sampling months, n = 5 per cell) is read as small multiples: one panel per species
+and age, nitrogen as colour, months along x — ggplot's `facet_grid(Age ~ Species)`.
+Map **facet rows** and/or **facet columns** on `boxplot_or_violin_with_points` or
+`lineplot_timecourse_with_error_band`; the grid is built by one shared module
+(`plots/facets.py`), so both plots behave alike:
+
+- the same category order, the same colour per level and one value axis in every
+  panel (`Facets share the value axis` turns the last off); strip labels
+  `Species: Species_A` (or the value alone); only the outer panels carry tick labels;
+- one shared x label, y label, title and legend for the grid, so every existing
+  control acts on it: legend location (a key below or above the grid lays out in one
+  row), legend outside and geometry, tick angle and visibility, axis-label padding
+  and visibility, palette, colour overrides, typography, figure size, log axes and
+  axis range (fitted to all panels that share the axis), statistics (brackets within
+  each panel, P values adjusted within each panel; **Also test across the whole
+  grid** fits one model over every panel with the facet variables as ANOVA factors,
+  e.g. `Growth ~ Month * Age * Species`, through the R-validated factorial engine);
+- a panel with no observations is kept, and says so.
+- The line plot can draw its error as **bars with caps** (`Error display`) as well as
+  a band; the numbers are the same (mean ± SE/SD/CI).
+- Facet options appear only once a facet column is chosen (new `Option.requires`),
+  in both apps. A figure without facets renders byte-identically to before: 48 of 48
+  default renders unchanged.
+- Spec JSON and Figure Package round trips render byte-identically; the Figure
+  Builder reproduces the grid; a style preset does not carry facet columns (they name
+  data), a full preset does.
+- Two independent visual reviews of the grids (72 and 60 rendered cases, measured)
+  found 19 defects before commit - inside legends hidden behind the panels, 19 of 240
+  points cropped on a horizontal grid with free scales, free scales without tick
+  labels, outside legends over the shared labels by up to 50 pt, strip text
+  overflowing by 220 pt, a 26.9 in automatic figure, bracket stacks compounding on
+  a shared axis (115 where 107 is needed) - all fixed, each with a regression test
+  (`tests/test_facet_grids.py`, 29 tests). Records: `quality_audit/facet_grids/`.
+
+### Fixed — a colour override by name now reaches a line plot's error band and bars
+
+`color_overrides {"High N": "#d62728"}` recoloured the line and its markers but left
+the SE band palette-coloured, and (new error bars) the bar lines and caps too;
+bands and bars are tagged with their series and recoloured with it. A legend built
+from proxy handles (a facet grid's) is recoloured in place.
 
 ## [1.3.1] — Experimental tables, log axes, factorial ANOVA, and the macOS crash fix
 

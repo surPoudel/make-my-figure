@@ -3296,10 +3296,13 @@ class MainWindow(QMainWindow):
         # options
         self._clear_form(self.options_form)
         self._option_widgets = {}
+        self._option_requires = {}
         for opt in self.controller.options(pt):
             w = self._make_option_widget(opt)
             self.options_form.addRow(opt.label, w)
             self._option_widgets[opt.key] = w
+            if getattr(opt, "requires", ()):
+                self._option_requires[opt.key] = tuple(opt.requires)
         self._refresh_preset_list()
 
         # Apply a Matrix-Workflow handoff's suggested option defaults (e.g. volcano
@@ -3397,7 +3400,22 @@ class MainWindow(QMainWindow):
             picked = [i.text() for i in widget.selectedItems()]
             if picked:
                 mapping[field] = picked
+        # The statistics panel offers whole-grid statistics only on a facet grid.
+        _stats = getattr(self, "stats_panel", None)
+        if _stats is not None and hasattr(_stats, "set_facets"):
+            _stats.set_facets(any(mapping.get(f) not in (None, "", "(none)") for f in ("facet_row", "facet_col")))
         for key, w in self._option_widgets.items():
+            # An option that needs a mapping field (a facet option needs a facet
+            # column) is hidden and writes nothing until that field is chosen.
+            needs = (getattr(self, "_option_requires", None) or {}).get(key)
+            if needs:
+                active = any(mapping.get(f) not in (None, "", "(none)") for f in needs)
+                try:
+                    self.options_form.setRowVisible(w, active)
+                except (AttributeError, TypeError):   # pragma: no cover - older Qt
+                    w.setVisible(active)
+                if not active:
+                    continue
             if isinstance(w, QCheckBox):
                 mapping[key] = w.isChecked()
             elif isinstance(w, QComboBox):
@@ -4129,6 +4147,13 @@ def _selftest() -> int:
         s3["layout"] = {"y_scale": "log10", "y_tick_format": "plain"}
         assert ctrl.render(s3, _mk_loaded(tbl)).figure.axes[0].get_yscale() == "log"
         stats_ok.append("table transform + three-way ANOVA + log axis")
+        # (d) facet grid: one panel per level of two factors, shared legend on the host
+        from make_my_figure_core.plots.facets import facet_axes
+
+        s4 = ctrl.build_spec("boxplot_or_violin_with_points", "publication", "t.csv",
+                             {"x": "c", "y": "y", "hue": "b", "facet_col": "a"})
+        assert len(facet_axes(ctrl.render(s4, _mk_loaded(tbl)).figure)) == 2
+        stats_ok.append("facet grid")
     except Exception as exc:  # noqa: BLE001
         failures.append(f"statistics: {exc}")
 

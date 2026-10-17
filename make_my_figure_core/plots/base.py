@@ -426,7 +426,7 @@ def fit_content_to_canvas(figure, *, may_grow_x: bool = True,
             break
 
     remaining = content_overflow_inches(figure)
-    if max(remaining) > FIT_TOLERANCE_IN:
+    if max(remaining) > FIT_TOLERANCE_IN and getattr(figure, "_mmf_facets", None) is None:
         # Axes placed by a divider (a colourbar appended beside the plot) ignore
         # subplotpars entirely, so the loop above cannot move them. tight_layout
         # with a reserved rect can.
@@ -1705,11 +1705,20 @@ def apply_named_color_overrides(figure, style) -> List[str]:
     for ax in figure.axes:
         for artist in list(ax.collections) + list(ax.lines) + list(ax.patches):
             label = str(getattr(artist, "get_label", lambda: "")() or "")
+            if not label or label.startswith("_"):
+                # a band or error bar is not a legend entry, but it belongs to a
+                # group: lineplot tags it with the series it was drawn for
+                label = str(getattr(artist, "_mmf_group", "") or "")
             colour = overrides.get(label)
             if not colour or label.startswith("_"):
                 continue
             try:
-                if hasattr(artist, "set_facecolor") and hasattr(artist, "set_edgecolor"):
+                from matplotlib.collections import LineCollection
+
+                if isinstance(artist, LineCollection):
+                    # an error bar's colour is its edge; its face is empty
+                    artist.set_color(colour)
+                elif hasattr(artist, "set_facecolor") and hasattr(artist, "set_edgecolor"):
                     artist.set_facecolor(colour)
                 elif hasattr(artist, "set_color"):
                     artist.set_color(colour)
@@ -1720,6 +1729,24 @@ def apply_named_color_overrides(figure, style) -> List[str]:
         leg = ax.get_legend()
         if leg is not None and applied:
             handles, labels = ax.get_legend_handles_labels()
+            if not handles:
+                # A key built from proxy handles (a facet grid's host) is not
+                # rebuilt from the axes; recolour its own handles in place.
+                for handle, text in zip(getattr(leg, "legend_handles", []), leg.get_texts()):
+                    colour = overrides.get(text.get_text())
+                    if not colour:
+                        continue
+                    try:
+                        if hasattr(handle, "set_markerfacecolor"):
+                            handle.set_color(colour)
+                            handle.set_markerfacecolor(colour)
+                            handle.set_markeredgecolor(colour)
+                        elif hasattr(handle, "set_facecolor"):
+                            handle.set_facecolor(colour)
+                        elif hasattr(handle, "set_color"):
+                            handle.set_color(colour)
+                    except Exception:  # noqa: BLE001
+                        continue
             if handles:
                 title = leg.get_title().get_text() or None
                 loc, bbox = current_legend_placement(ax, leg)
@@ -1882,6 +1909,12 @@ def place_legend(ax, style, *, title=None, handles=None, labels=None,
 
     if location is not None:
         lloc, bbox, side = location
+        # A key above or below a facet grid reads along the grid: one row, as in
+        # ggplot's bottom legend. Only the facet host; every other legend keeps
+        # the profile's column count.
+        if side in ("top", "bottom") and str(ax.get_label()) == "<facet-host>" and kw["ncol"] == 1:
+            n_entries = len(handles) if handles is not None else len(ax.get_legend_handles_labels()[0])
+            kw["ncol"] = max(1, min(int(n_entries), 8))
         if bbox is not None:
             leg = ax.legend(*args, loc=lloc, bbox_to_anchor=bbox, **kw)
         else:
@@ -1889,8 +1922,16 @@ def place_legend(ax, style, *, title=None, handles=None, labels=None,
         # Reserve room for an outside legend so it isn't clipped on export. A
         # side the user chose explicitly is honoured whatever it costs; only the
         # width is measured rather than guessed.
+        if str(ax.get_label()) == "<facet-host>":
+            from make_my_figure_core.plots.facets import anchor_host_legend
+
+            anchor_host_legend(ax, leg, side)
         if side in ("right", "left"):
             _reserve_for_outside_legend(ax, leg, side)
+            if str(ax.get_label()) == "<facet-host>":
+                from make_my_figure_core.plots.facets import reserve_host_extra
+
+                reserve_host_extra(ax, side)
         else:
             reserve = {"top": {"top": 0.82}, "bottom": {"bottom": 0.22}}.get(side)
             if reserve:
@@ -1898,6 +1939,10 @@ def place_legend(ax, style, *, title=None, handles=None, labels=None,
                     ax.figure.subplots_adjust(**reserve)
                 except Exception:  # noqa: BLE001
                     pass
+            if str(ax.get_label()) == "<facet-host>":
+                from make_my_figure_core.plots.facets import reserve_host_extra
+
+                reserve_host_extra(ax, side)
         offset_legend(ax, leg, geometry, side)
         return leg
 

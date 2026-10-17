@@ -149,6 +149,18 @@ class StatisticsPanel(QGroupBox):
         self.posthoc_cb = QCheckBox("Post-hoc pairwise after omnibus")
         self.posthoc_cb.stateChanged.connect(lambda _=None: self.changed.emit())
         form.addRow(self.posthoc_cb)
+        # Facet grids only (shown when a facet column is mapped): one model across
+        # every panel, with the facet variables as extra ANOVA factors.
+        self.facet_scope_cb = QCheckBox("Also test across the whole grid (facet variables as factors)")
+        self.facet_scope_cb.setToolTip(
+            "In addition to the per-panel statistics drawn on the figure, fit the chosen test once "
+            "over all panels: an ANOVA gains the facet variables as factors (e.g. Species x Age x "
+            "Nitrogen; at most three), a pairwise or one-way test pools the panels. Reported in the "
+            "statistics table, not drawn (a bracket cannot span panels).")
+        self.facet_scope_cb.stateChanged.connect(lambda _=None: self.changed.emit())
+        self._facet_scope_row = form.rowCount()
+        form.addRow(self.facet_scope_cb)
+        self.set_facets(False)
 
         self.digits_spin = QSpinBox()
         self.digits_spin.setRange(1, 6)
@@ -254,6 +266,14 @@ class StatisticsPanel(QGroupBox):
         self.template_edit.setVisible(self.annotation_combo.currentData() == "custom")
         self.changed.emit()
 
+    def set_facets(self, active: bool) -> None:
+        """Offer the whole-grid option only when the plot has facets."""
+        try:
+            self.facet_scope_cb.parentWidget().layout().setRowVisible(self.facet_scope_cb, bool(active))
+        except (AttributeError, TypeError):   # pragma: no cover - older Qt
+            self.facet_scope_cb.setVisible(bool(active))
+        self._facets_active = bool(active)
+
     def stats_spec(self) -> Dict[str, Any]:
         content = self.annotation_combo.currentData()
         ann = default_annotation()
@@ -277,6 +297,8 @@ class StatisticsPanel(QGroupBox):
             "comparison_mode": self.mode_combo.currentData(),
             "correction": self.correction_combo.currentData(),
             "posthoc": self.posthoc_cb.isChecked(),
+            **({"facet_scope": "figure"} if (getattr(self, "_facets_active", False)
+                                            and self.facet_scope_cb.isChecked()) else {}),
             "group_column": _val(self.group_combo),
             "subgroup_column": _val(self.subgroup_combo),
             "subject_column": _val(self.subject_combo),
@@ -309,6 +331,7 @@ class StatisticsPanel(QGroupBox):
         _set(self.mode_combo, stats.get("comparison_mode"))
         _set(self.correction_combo, stats.get("correction"))
         self.posthoc_cb.setChecked(bool(stats.get("posthoc", False)))
+        self.facet_scope_cb.setChecked(str(stats.get("facet_scope", "panel")) == "figure")
         _set(self.group_combo, stats.get("group_column"))
         _set(self.subgroup_combo, stats.get("subgroup_column"))
         _set(self.subject_combo, stats.get("subject_column"))
@@ -367,6 +390,7 @@ class StatisticsPanel(QGroupBox):
         self.show_effect_cb.setChecked(False)
         self.hide_ns_cb.setChecked(False)
         self.posthoc_cb.setChecked(False)
+        self.facet_scope_cb.setChecked(False)
         self.changed.emit()
 
     def _on_export_table(self) -> None:

@@ -422,7 +422,10 @@ def render(
         from make_my_figure_core.plots.axis_scale import apply_axis_scales
 
         if getattr(result, "figure", None) is not None and result.figure.axes:
-            for _note in apply_axis_scales(result.figure, result.figure.axes[0], spec, plot_type):
+            from make_my_figure_core.plots.facets import facet_axes
+
+            for _note in apply_axis_scales(result.figure, result.figure.axes[0], spec, plot_type,
+                                           panels=facet_axes(result.figure)):
                 if _note not in result.warnings:
                     result.warnings.append(_note)
     except Exception as _exc:  # noqa: BLE001
@@ -508,7 +511,13 @@ def render(
             resolve_x_tick_rotation_option(spec) is not None)
         if (_have_layout and getattr(result, "figure", None) is not None
                 and result.figure.axes):
-            apply_publication_layout(result.figure, result.figure.axes[0], spec, style)
+            from make_my_figure_core.plots.facets import apply_facet_layout, facet_axes
+
+            if facet_axes(result.figure):
+                # Ticks act on every panel; labels and title on the grid's shared ones.
+                apply_facet_layout(result.figure, spec, style)
+            else:
+                apply_publication_layout(result.figure, result.figure.axes[0], spec, style)
             from make_my_figure_core.plots.base import drain_layout_notes
 
             for _note in drain_layout_notes():
@@ -574,6 +583,18 @@ def render(
                                          geometry=_geometry)
     except Exception as _exc:  # noqa: BLE001
         result.warnings.append(f"Legend placement skipped: {_exc}")
+
+    # A facet grid's strip labels are fitted to their panels; re-fit them after
+    # the legend pass above, which can narrow the panels. Guarded.
+    try:
+        from make_my_figure_core.plots.facets import refit_strips
+
+        if getattr(result, "figure", None) is not None:
+            for _note in refit_strips(result.figure):
+                if _note not in result.warnings:
+                    result.warnings.append(_note)
+    except Exception:  # noqa: BLE001
+        pass
 
     # Per-category colours named by the author, applied to whichever artists
     # carry that name. Guarded; a styling choice must never break a render.

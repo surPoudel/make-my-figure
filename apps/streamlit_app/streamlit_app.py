@@ -1258,7 +1258,11 @@ _OPTIONS_OWNED_ELSEWHERE = {
     "colorbar_location", "colorbar_pad", "colorbar_shrink",      # ⑤ Colorbar
 }
 _generic_opts = [o for o in ui_hints.options(plot_type)
-                 if o.key not in mapping and o.key not in _OPTIONS_OWNED_ELSEWHERE]
+                 if o.key not in mapping and o.key not in _OPTIONS_OWNED_ELSEWHERE
+                 # an option that needs a mapping field (a facet option needs a facet
+                 # column) is offered only once that field is chosen
+                 and (not getattr(o, "requires", ()) or any(
+                     mapping.get(_f) not in (None, "", "(none)") for _f in o.requires))]
 if _generic_opts:
     for _o in _generic_opts:
         _label = _o.label or _o.key
@@ -1332,6 +1336,11 @@ with st.sidebar.expander("Statistical tests & annotations", expanded=False):
              "the bars. Needs a control group; anything it cannot place falls back to a bracket.")
     show_effect = st.checkbox("Show effect size on figure", value=False)
     posthoc = st.checkbox("Post-hoc pairwise after omnibus", value=False)
+    _has_facets = any(mapping.get(_f) not in (None, "", "(none)") for _f in ("facet_row", "facet_col"))
+    facet_scope = st.checkbox("Also test across the whole grid (facet variables as factors)", value=False,
+                              help="An ANOVA gains the facet variables as factors (at most three); a pairwise "
+                                   "or one-way test pools the panels. Reported in the table, not drawn.") \
+        if _has_facets else False
     _none = "(none)"
     group_column = st.selectbox("Group column", [_none] + _cols)
     subgroup_column = st.selectbox("Subgroup column", [_none] + _cols)
@@ -1341,6 +1350,7 @@ with st.sidebar.expander("Statistical tests & annotations", expanded=False):
         stats_spec = {
             "enabled": True, "test": test, "comparison_mode": comparison_mode,
             "correction": correction, "posthoc": posthoc,
+            **({"facet_scope": "figure"} if facet_scope else {}),
             "group_column": None if group_column == _none else group_column,
             "subgroup_column": None if subgroup_column == _none else subgroup_column,
             "subject_column": None if subject_column == _none else subject_column,

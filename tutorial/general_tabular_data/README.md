@@ -172,3 +172,31 @@ fails its integrity check.
 * At most three factors.
 * A log axis is offered only on plots whose axis carries a positive magnitude
   (7 plot types); see `docs/AXIS_SCALING.md` for the list and the reasons.
+
+## 11. Facet grids: one panel per factor combination
+
+`data/mock_plant_growth.csv` is a mock 2 × 2 × 3 design measured over time: species ×
+initial plant age × nitrogen concentration, growth recorded at 4, 6, 8 and 10 months,
+five replicates per cell (240 rows). The usual way to show it is a grid: one panel per
+species and age, nitrogen as colour, months along x.
+
+Open the CSV, choose **Box / violin plot with points**, and map **x** = `Month`,
+**y** = `Growth_cm`, **hue** = `Nitrogen_Concentration`, **facet_row** = `Age`,
+**facet_col** = `Species`. Two options appear once a facet column is chosen: **Facet
+labels** (`Species: Species_A` or just `Species_A`) and **Facets share the value axis**.
+
+![Faceted box plot](screenshots/10_faceted_boxplot.png)
+
+Every panel uses the same category order, the same colour per nitrogen level and the
+same y axis, so panels can be compared directly. The title, axis labels and legend are
+shared; the legend controls, axis controls, palette, colour overrides, typography and
+statistics all act on the whole grid.
+
+For the mean trajectory, switch to **Line / time-course with error band** with
+**color** = `Nitrogen_Concentration` and the same facets; **Error display ▸ bars**
+draws mean ± SE as capped bars instead of a band.
+
+![Faceted line plot](screenshots/11_faceted_lineplot.png)
+
+Both are ordinary plots: log axes, Figure Packages, the Figure Builder and presets work
+as for any other figure.

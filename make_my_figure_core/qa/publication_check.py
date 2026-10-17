@@ -77,10 +77,18 @@ def check_publication_readiness(fig) -> PublicationCheckResult:
         except Exception:
             pass
 
+    # A facet grid carries its x/y labels on one shared host axes; the panels
+    # deliberately have none, and the strips are labels themselves.
+    grid = getattr(fig, "_mmf_facets", None)
+    facet_host = getattr(grid, "host", None)
+    facet_strips = set(id(a) for a in getattr(grid, "strips", ()))
     for ax in fig.axes:
+        if id(ax) in facet_strips:
+            continue
         # Missing axis labels (skip colorbars, which have no meaningful xlabel).
+        label_ax = facet_host if (facet_host is not None and ax is not facet_host) else ax
         if not getattr(ax, "_colorbar", None) and not _is_frameless(ax):
-            if not ax.get_xlabel().strip() and not ax.get_ylabel().strip():
+            if not label_ax.get_xlabel().strip() and not label_ax.get_ylabel().strip():
                 warnings.append("Axes are missing x/y labels")
 
         # Small axis-label font.

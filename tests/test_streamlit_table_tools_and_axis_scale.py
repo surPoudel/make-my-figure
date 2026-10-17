@@ -93,3 +93,29 @@ def test_coefficient_table_is_shown_for_an_estimable_design():
     assert not at.exception
     assert any("Coefficients" in m.value for m in at.markdown)
     assert "Download coefficients (CSV)" in [b.label for b in at.get("download_button")]
+
+
+def test_browser_facets_offer_options_only_once_a_facet_column_is_chosen():
+    at = _app()
+    labels = [w.label for w in at.sidebar.selectbox]
+    assert "facet_row" in labels and "facet_col" in labels
+    assert "Facet labels" not in labels
+    _by_label(at.sidebar.selectbox, "facet_col").set_value("sex")
+    at.run()
+    assert not at.exception
+    assert "Facet labels" in [w.label for w in at.sidebar.selectbox]
+    assert not any("Could not render" in e.value for e in at.error)
+
+
+def test_browser_whole_grid_statistics_option_appears_with_facets_and_runs():
+    at = _app()
+    label = "Also test across the whole grid (facet variables as factors)"
+    assert label not in [w.label for w in at.sidebar.checkbox]
+    _by_label(at.sidebar.selectbox, "facet_col").set_value("sex")
+    at.run()
+    assert label in [w.label for w in at.sidebar.checkbox]
+    _by_label(at.sidebar.checkbox, "Enable statistics").check()
+    _by_label(at.sidebar.checkbox, label).check()
+    at.run()
+    assert not at.exception
+    assert not any("Could not render" in e.value or "Unexpected error" in e.value for e in at.error)
