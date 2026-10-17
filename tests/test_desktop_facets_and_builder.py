@@ -121,3 +121,55 @@ def test_statistics_panel_offers_whole_grid_option_only_on_a_grid(app):
     assert win.stats_panel._facets_active
     assert spec["statistics"].get("facet_scope") == "figure"
     win.close()
+
+
+def test_sums_of_squares_shown_for_factorial_anova_only_and_placement_only_when_bracketed(app):
+    from apps.desktop_app.stats_panel import StatisticsPanel
+
+    p = StatisticsPanel(C)
+    p.show()
+    form = p._form
+
+    def shown(w):
+        return form.isRowVisible(w)
+
+    p.setChecked(True)
+    p.enable_cb.setChecked(True)
+    assert not shown(p.ss_combo) and shown(p.placement_combo)          # Auto-suggest
+    p.test_combo.setCurrentIndex(p.test_combo.findData("factorial_anova"))
+    assert shown(p.ss_combo) and not shown(p.placement_combo)          # nothing to bracket
+    assert "ss_type" not in p.stats_spec()                              # untouched: writes nothing
+    p.posthoc_cb.setChecked(True)
+    assert shown(p.placement_combo)                                     # post-hoc pairs are bracketed
+    p.ss_combo.setCurrentIndex(p.ss_combo.findData(1))
+    spec = p.stats_spec()
+    assert spec["ss_type"] == 1
+    q = StatisticsPanel(C)
+    q.load_spec(spec)
+    assert q.ss_combo.currentData() == 1 and q.stats_spec()["ss_type"] == 1
+    p.test_combo.setCurrentIndex(p.test_combo.findData("welch_t"))
+    assert not shown(p.ss_combo) and "ss_type" not in p.stats_spec()
+
+
+def test_anova_terms_as_stars_checkbox_is_opt_in_and_round_trips(app):
+    from apps.desktop_app.stats_panel import StatisticsPanel
+
+    p = StatisticsPanel(C)
+    p.show()
+    p.setChecked(True)
+    p.enable_cb.setChecked(True)
+    p.test_combo.setCurrentIndex(p.test_combo.findData("factorial_anova"))
+    assert p._form.isRowVisible(p.omnibus_stars_cb)                      # Stars only + ANOVA
+    assert "omnibus_stars" not in p.stats_spec()["annotation"]           # untouched: writes nothing
+    p.omnibus_stars_cb.setChecked(True)
+    spec = p.stats_spec()
+    assert spec["annotation"]["omnibus_stars"] is True
+    q = StatisticsPanel(C)
+    q.load_spec(spec)
+    assert q.omnibus_stars_cb.isChecked()
+    p.annotation_combo.setCurrentIndex(p.annotation_combo.findData("p"))
+    assert not p._form.isRowVisible(p.omnibus_stars_cb)                  # acts only under Stars only
+    assert "omnibus_stars" not in p.stats_spec()["annotation"]
+    p.annotation_combo.setCurrentIndex(p.annotation_combo.findData("stars"))
+    p.test_combo.setCurrentIndex(p.test_combo.findData("welch_t"))
+    assert not p._form.isRowVisible(p.omnibus_stars_cb)                  # no ANOVA terms

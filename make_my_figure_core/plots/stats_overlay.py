@@ -417,19 +417,62 @@ def _fit_corner_panel(ax, text) -> None:
     except Exception:  # noqa: BLE001
         return
 
+    # A facet panel is narrower than the figure: a box fitted to the figure ran
+    # 233 px past the "Age: Young" panel into its neighbour (110 dpi, 2 panels).
+    in_grid = getattr(figure, "_mmf_facets", None) is not None and ax.get_label() not in (
+        "<facet-host>", "<facet-strip>")
+
     def overflow() -> float:
         try:
             box = text.get_window_extent(renderer)
         except Exception:  # noqa: BLE001
             return 0.0
+        if in_grid:
+            frame = ax.get_window_extent(renderer)
+            return max(0.0, frame.x0 - box.x0, box.x1 - frame.x1, frame.y0 - box.y0, box.y1 - frame.y1)
         return max(0.0, -box.x0, box.x1 - figure.bbox.width,
                    -box.y0, box.y1 - figure.bbox.height)
 
     if overflow() <= 0.5:
         return
+    if in_grid:
+        # Only the lines that do not fit are broken: after a term's name first
+        # ("Month × Nitrogen:" / "F(6, 108) = 20.4"), then between values, never
+        # inside "F(6, 108)".
+        import re
+
+        from matplotlib.text import Text
+
+        frame = ax.get_window_extent(renderer)
+        box = text.get_window_extent(renderer)
+        pad = max(0.0, (box.x1 - box.x0) - max(
+            (Text(0, 0, ln, fontproperties=text.get_fontproperties(), figure=figure)
+             .get_window_extent(renderer).width for ln in text.get_text().split("\n")), default=0.0))
+        room = frame.x1 - box.x0 - pad - 2.0
+
+        def width(line: str) -> float:
+            return Text(0, 0, line, fontproperties=text.get_fontproperties(),
+                        figure=figure).get_window_extent(renderer).width
+
+        def wrap(line: str) -> str:
+            if width(line) <= room:
+                return line
+            out = re.sub(r"^(  [^\n]*?): ", r"\1:\n    ", line)
+            if all(width(x) <= room for x in out.split("\n")):
+                return out
+            return re.sub(r"(\)|\d|\*|\.s\.), (?=[^\d])", r"\1\n    ", out)
+
+        text.set_text("\n".join(wrap(ln) for ln in text.get_text().split("\n")))
+        try:
+            figure.canvas.draw()
+            renderer = figure.canvas.get_renderer()
+        except Exception:  # noqa: BLE001
+            return
+        if overflow() <= 0.5:
+            return
     # Wrap at ", " before shrinking: a statistic stays readable on two lines and
     # stops being a statistic at four points.
-    if ", " in text.get_text():
+    if ", " in text.get_text() and not in_grid:
         text.set_text(text.get_text().replace(", ", "\n"))
         try:
             figure.canvas.draw()

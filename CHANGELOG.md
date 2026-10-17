@@ -43,6 +43,38 @@ Map **facet rows** and/or **facet columns** on `boxplot_or_violin_with_points` o
   a shared axis (115 where 107 is needed) - all fixed, each with a regression test
   (`tests/test_facet_grids.py`, 29 tests). Records: `quality_audit/facet_grids/`.
 
+### Added — Type I sums of squares; Fixed — ANOVA annotations follow the statistics controls
+
+Reported from the faceted plant-growth figure on macOS (factorial ANOVA, `Age` facets).
+
+- **Sums of squares** is now chosen in the Statistics panel when the test is Factorial
+  ANOVA (both apps; hidden for every other test; nothing is written to the spec unless
+  it is changed from Type II). **Type I** (sequential, R's `anova(lm)`) joins Type II
+  (default) and Type III, also in *Prepare table > Factorial analysis*. Type I is
+  computed from nested fits in R's term order (main effects, covariates, then
+  interactions): statsmodels' `typ=1` puts a covariate after the interactions and gave
+  SS 0.0463 where R gives 0.0975. Six new R validation cases (27 terms, 81 quantities)
+  agree to 1e-12. On a balanced design all three types are identical (plant data:
+  F equal to 1e-9).
+- The ANOVA text box on a facet panel is fitted to its panel, not the figure: it ran
+  233 px past the "Age: Young" panel at 110 dpi. Lines that do not fit break after the
+  term name, never inside "F(3, 108)". Single plots are fitted as before.
+- **Annotation shows**, **Show effect size** and **Hide non-significant** act on ANOVA
+  terms (p only, statistic, partial η², …; non-significant terms dropped). The default,
+  *Stars only*, keeps the full "F = 77.9, p < 0.001" so saved figures do not change;
+  the new opt-in **ANOVA terms as stars too** (shown under *Stars only* when the test
+  can give ANOVA terms) turns them into "Month: ****".
+  **Show effect size** also acts on brackets under every preset (it acted only under
+  *Custom (checkboxes)*).
+- **Post-hoc pairwise after omnibus** runs after a two-way or factorial ANOVA (it ran
+  after a one-way ANOVA only): the hue levels within each x category, with the chosen
+  correction. Not run for the whole-grid model, whose pairs would cross panels.
+- The ANOVA text box is measured against the bracket labels and the axis raised until
+  it clears them (it sat over "****, g = -2.7"); a grid whose bracket labels overlap
+  or leave their panel says so (16 of 24 labels with effect sizes at 2.2 in panels).
+- **Annotation placement** is hidden for an ANOVA / Kruskal-Wallis without post-hoc
+  pairs, where there is no bracket to place.
+
 ### Fixed — a colour override by name now reaches a line plot's error band and bars
 
 `color_overrides {"High N": "#d62728"}` recoloured the line and its markers but left

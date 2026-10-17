@@ -69,12 +69,83 @@ def build_pairwise_annotations(results: List[StatResult], annotation_cfg: Dict[s
     return items
 
 
+def _omnibus_value(r: StatResult, cfg: Dict[str, Any], digits: int) -> str:
+    """The text after an omnibus term's name, as the "Annotation shows" control asks.
+
+    Before, an ANOVA always printed "F(3, 108) = 242, p < 0.001" whatever the
+    control said, and "Show effect size" and "Hide non-significant" did nothing
+    to it. Returns "" when the term is to be hidden.
+    """
+    if cfg.get("hide_nonsignificant") and not bool(r.reject_null):
+        return ""
+    sn = r.statistic_name or "stat"
+    has_df2 = r.df is not None and r.df2 is not None and r.df == r.df and r.df2 == r.df2
+    stat = (f"{sn}({r.df:g}, {r.df2:g}) = {r.statistic:.3g}" if has_df2 and r.test_id == "factorial_anova"
+            else f"{sn} = {r.statistic:.3g}") if r.statistic == r.statistic and r.statistic is not None else ""
+    p = report.format_p(r.display_p, digits=digits)
+    tok = report.annotation_tokens(r, cfg)
+    stars = tok["stars"]
+    effect = (f"{tok['effect_symbol']} = {r.effect_size:.2f}"
+              if r.effect_size is not None and r.effect_size == r.effect_size else "")
+    content = cfg.get("content") or {"stars": "stars", "p": "p", "both": "p_stars"}.get(
+        cfg.get("mode", "stars"), "stars")
+    if content == "custom":
+        try:
+            return (cfg.get("template") or "{stars}").format(**tok).strip()
+        except Exception:  # noqa: BLE001
+            return stars
+    if content == "flags":
+        parts = [b for flag, b in (("show_stat", stat), ("show_effect", effect), ("show_p", p),
+                                   ("show_p_adj", p), ("show_stars", stars)) if cfg.get(flag) and b]
+        return ", ".join(dict.fromkeys(parts)) or stars
+    parts = {"stars": [stars] if cfg.get("omnibus_stars") else [stat, p], "p": [p], "p_adj": [p], "p_stars": [f"{p} ({stars})"],
+             "stat": [stat or stars], "effect": [effect or stars], "p_stat": [stat, p],
+             "p_effect": [effect, p], "full": [stat, effect, p]}.get(content, [stars])
+    if cfg.get("show_effect") and effect and effect not in parts:
+        parts.append(effect)
+    return ", ".join(b for b in parts if b)
+
+
+def _omnibus_follows_cfg(cfg: Optional[Dict[str, Any]]) -> bool:
+    """Whether omnibus lines take their form from the annotation settings.
+
+    Not under the default "Stars only": an ANOVA is reported with its statistic,
+    and every figure saved with default statistics shows "F = 77.9, p < 0.001",
+    which must not turn into "****". Any other content choice, the effect size,
+    hiding non-significant terms or ``omnibus_stars`` (stars for ANOVA terms too,
+    opt-in) is an explicit request and is honoured.
+    """
+    if cfg is None:
+        return False
+    content = cfg.get("content") or {"stars": "stars", "p": "p", "both": "p_stars"}.get(
+        cfg.get("mode", "stars"), "stars")
+    return (content != "stars" or bool(cfg.get("show_effect")) or bool(cfg.get("hide_nonsignificant"))
+            or bool(cfg.get("omnibus_stars")))
+
+
 def stat_text_panel(results: List[StatResult], *, digits: int = 3,
-                    show_ci: bool = True) -> List[str]:
-    """Lines of text for corner/panel annotations (correlation, survival, omnibus)."""
+                    show_ci: bool = True, cfg: Optional[Dict[str, Any]] = None) -> List[str]:
+    """Lines of text for corner/panel annotations (correlation, survival, omnibus).
+
+    With ``cfg`` (the StatsSpec annotation block) omnibus lines follow its
+    content, effect-size and hide-non-significant settings; without it they keep
+    the fixed "statistic, p" form.
+    """
     lines: List[str] = []
     for r in results:
         if r.comparison_type == "two_group":
+            continue
+        if r.comparison_type == "omnibus" and _omnibus_follows_cfg(cfg):
+            value = _omnibus_value(r, cfg, digits)
+            if not value:
+                continue
+            if r.test_id in ("two_way_anova", "factorial_anova"):
+                head = "Two-way ANOVA:" if r.test_id == "two_way_anova" else f"{r.test_name}:"
+                if head not in lines:
+                    lines.append(head)
+                lines.append(f"  {r.group_a or 'term'}: {value}")
+            else:
+                lines.append(f"{r.test_name}: {value}")
             continue
         if r.comparison_type == "correlation":
             label = "r" if r.test_id == "pearson" else "rho"

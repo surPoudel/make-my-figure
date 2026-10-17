@@ -129,7 +129,10 @@ def render_table_tools(table_info, table_name: str) -> Tuple[Any, str, Optional[
             subject = b2.selectbox("Subject / colony", ["(none)"] + cols, key="tbl_subject")
             inter = b3.radio("Model", ["full", "main"], key="tbl_inter",
                              format_func=lambda v: "Full factorial" if v == "full" else "Main effects")
-            ss = b4.radio("Sums of squares", [2, 3], key="tbl_ss", format_func=lambda v: f"Type {'II' if v == 2 else 'III'}")
+            ss = b4.radio("Sums of squares", [2, 1, 3], key="tbl_ss",
+                          format_func=lambda v: f"Type {({1: 'I', 2: 'II', 3: 'III'})[v]}",
+                          help="Identical when every combination has the same n. Type I is sequential "
+                               "(factor order matters); Type II is the default.")
             if st.button("Check design and run", key="tbl_run"):
                 subj = None if subject == "(none)" else subject
                 rep = check_design(frame, response, factors, covariates=covs, subject=subj, interactions=inter)

@@ -60,11 +60,27 @@ remains available for a complete, balanced within-subject design.
 | Model | ordinary least squares (statsmodels `ols`); factors as categorical terms |
 | Default sums of squares | **Type II**: each term adjusted for every term that does not contain it (the default of `car::Anova`) |
 | Type III | on request, **always with sum-to-zero contrasts**; Type III with treatment contrasts tests reference-level-dependent hypotheses and is not offered |
+| Type I | on request: **sequential** (R's `anova(lm)`); each term adjusted only for the terms before it, in R's order (factors as listed, then covariates, then interactions by degree), so the factor order changes the answer when cell sizes differ |
 | Coefficients | sum-to-zero (deviation) coding: level *i* of a factor is its deviation from the grand mean; the last level is minus the sum of the others |
 | Covariates | main effects only (ANCOVA with parallel slopes) |
 | Effect size | partial η² = SS_term / (SS_term + SS_residual) |
 | Interactions | `full` (all) or `main` (main effects only) |
 | Factors | 1–3 |
+
+### Which sums of squares
+
+With the **same number of observations in every combination** (a balanced design,
+such as the plant-growth example: n = 5 in each of 48 cells) Types I, II and III
+give identical sums of squares, F and P. The choice matters only when cell sizes
+differ, for example after lost samples:
+
+| | tests | use when |
+|---|---|---|
+| **Type II** (default) | each main effect adjusted for the other main effects; the interaction adjusted for both | the usual choice, and the more powerful one for main effects when the interaction is negligible (`car::Anova` default) |
+| **Type I** | sequential: the first factor unadjusted, the second adjusted for the first, … | the factors have a natural order (a blocking factor or covariate first); R's `anova(lm)`. Reordering the factors changes the answer |
+| **Type III** | every term adjusted for every other, interactions included | the interaction is real and main effects must still be reported (SPSS / SAS default); always with sum-to-zero contrasts here |
+
+Report which type was used; the method sentence and the statistics table record it.
 
 ### Correction in this release: the two-way ANOVA effect size
 
@@ -81,6 +97,8 @@ The reference is base R 4.5.3 (`quality_audit/general_tabular_workflow/r_validat
 which shares no code with the Python implementation:
 
 * Type II SS from nested-model comparisons computed explicitly;
+* Type I SS from `anova(fit)` (cases F1–F6: 27 terms, 81 quantities, worst relative
+  difference 1e-12);
 * Type III SS from `drop1(fit, . ~ ., test = "F")` under `contr.sum`;
 * coefficients, standard errors, t, P and 95 % CIs from `summary(lm)` and `confint`;
 * estimability from aliased coefficients, residual df, constant response, complete

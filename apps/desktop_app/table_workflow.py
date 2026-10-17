@@ -330,6 +330,7 @@ class TableWorkflowDialog(QDialog):
         self.an_inter.addItem("Main effects only", "main")
         self.an_ss = QComboBox()
         self.an_ss.addItem("Type II sums of squares (default)", 2)
+        self.an_ss.addItem("Type I (sequential; factor order matters)", 1)
         self.an_ss.addItem("Type III (sum-to-zero contrasts)", 3)
         form.addRow("Response", self.an_response)
         for i, cb in enumerate(self.an_factors):

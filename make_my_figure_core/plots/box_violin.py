@@ -258,7 +258,7 @@ def _corner_panel(ax, spec: Dict[str, Any], report, style) -> None:
         prefix = f"{item.x_level}: " if item.within_x and item.x_level else ""
         lines.append(f"{prefix}{item.group_a} vs {item.group_b}: {item.text}".replace("\n", ", "))
     lines += stat_text_panel([r for r in report.results if r.comparison_type != "two_group"],
-                             digits=int(ann_cfg.get("digits", 3)))
+                             digits=int(ann_cfg.get("digits", 3)), cfg=ann_cfg)
     if not lines:
         return
     lo, hi = ax.get_xlim()
@@ -531,6 +531,30 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
 # axis in every panel. Reached only when a facet column is mapped; the single-plot path above
 # is untouched, so a figure without facets renders exactly as before.
 # --------------------------------------------------------------------------------------------
+def _crowded_bracket_labels(grid) -> int:
+    """Bracket labels (z-order 7) that overlap another label or leave their panel, in pixels.
+
+    Twelve post-hoc pairs labelled "****, g = -4.8" on a 2.2 in panel overlapped
+    each other and ran 20-40 px into the next panel; the grid said nothing.
+    """
+    fig = grid.fig
+    try:
+        fig.canvas.draw()
+        r = fig.canvas.get_renderer()
+    except Exception:  # noqa: BLE001
+        return 0
+    bad = 0
+    for panel in grid.panels:
+        frame = panel.ax.get_window_extent(r)
+        boxes = [t.get_window_extent(r) for t in panel.ax.texts if t.get_zorder() == 7 and t.get_text()]
+        for i, b in enumerate(boxes):
+            outside = b.x0 < frame.x0 - 1 or b.x1 > frame.x1 + 1
+            clash = any(b.x0 < o.x1 - 1 and o.x0 < b.x1 - 1 and b.y0 < o.y1 - 1 and o.y0 < b.y1 - 1
+                        for j, o in enumerate(boxes) if j != i)
+            bad += int(outside or clash)
+    return bad
+
+
 def _grid_method_paragraph(reports, row, col) -> str:
     """The per-panel sentence, plus the whole-grid report's own sentence when there is one."""
     panel = [r for r in reports if not any(x.extra.get("facet") == "whole grid" for x in r.results)]
@@ -569,7 +593,9 @@ def _whole_grid_statistics(spec, stats_spec, work, style, x, hue, row, col):
             return None, (f"Whole-grid ANOVA not run: {len(factors)} factors ({', '.join(factors)}) exceed the "
                           "three the factorial engine supports. Drop hue or facet one variable fewer, or run "
                           "the model in Prepare table > Factorial analysis.")
-        st.update({"test": "factorial_anova", "factors": factors, "annotate": False})
+        # Post-hoc pairs are drawn panel by panel; pooled across the grid they would
+        # compare boxes from different panels, so the whole-grid model is the ANOVA alone.
+        st.update({"test": "factorial_anova", "factors": factors, "annotate": False, "posthoc": False})
     else:
         st["annotate"] = False
     scoped["statistics"] = st
@@ -825,6 +851,12 @@ def _render_facets(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResul
                     needed.append(get_lim(panel.ax))
             if base_lim is not None and needed:
                 set_lim(grid.panels[0].ax, min(min(l) for l in needed), max(max(l) for l in needed))
+            crowded = _crowded_bracket_labels(grid)
+            if crowded:
+                warnings.append(
+                    f"{crowded} significance label(s) overlap another label or run past their panel at this "
+                    "panel width. Use 'Stars only' without the effect size, 'Hide non-significant', fewer "
+                    "comparisons (Compare to control), or a wider figure.")
 
         # Whole-grid statistics: the facet variables become factors of one model
         # across every panel (Species x Age x Nitrogen), on request. Nothing is

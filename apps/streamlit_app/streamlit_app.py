@@ -1323,19 +1323,31 @@ with st.sidebar.expander("Statistical tests & annotations", expanded=False):
     except Exception:
         pass
     test = st.selectbox("Test", _test_ids, format_func=lambda t: _test_labels.get(t, t))
+    ss_type = st.selectbox(
+        "Sums of squares", [2, 1, 3], format_func=lambda v: {
+            2: "Type II (default)", 1: "Type I (sequential; factor order matters)",
+            3: "Type III (sum-to-zero contrasts)"}[v],
+        help="Identical when every combination has the same n.") if test == "factorial_anova" else 2
     comparison_mode = st.selectbox(
         "Comparison", ["auto", "all_pairs", "vs_control", "within_x", "omnibus"])
     correction = st.selectbox(
         "Correction", ["benjamini_hochberg", "bonferroni", "holm", "none"])
     ann_mode = st.selectbox("Annotation", ["stars", "p", "both"])
-    ann_placement = st.selectbox(
+    omnibus_stars = st.checkbox(
+        "ANOVA terms as stars too", value=False,
+        help="ANOVA / Kruskal-Wallis terms normally keep 'F(3, 108) = 242, p < 0.001' under stars; "
+             "tick to show stars only. The values stay in the statistics table.") \
+        if ann_mode == "stars" and test not in ("students_t", "welch_t", "mann_whitney", "paired_t",
+                                                 "wilcoxon") else False
+    _omnibus_only = test in ("one_way_anova", "kruskal_wallis", "two_way_anova", "factorial_anova", "rm_anova")
+    ann_placement = "bracket" if _omnibus_only and not st.session_state.get("stats_posthoc") else st.selectbox(
         "Annotation placement", ["bracket", "above_bar"],
         help="'bracket' spans the two compared categories. 'above_bar' puts one label over each "
              "compared bar and leaves the control bar unmarked — the usual convention when every "
              "condition is tested against one control, where brackets would stack up and squeeze "
              "the bars. Needs a control group; anything it cannot place falls back to a bracket.")
     show_effect = st.checkbox("Show effect size on figure", value=False)
-    posthoc = st.checkbox("Post-hoc pairwise after omnibus", value=False)
+    posthoc = st.checkbox("Post-hoc pairwise after omnibus", value=False, key="stats_posthoc")
     _has_facets = any(mapping.get(_f) not in (None, "", "(none)") for _f in ("facet_row", "facet_col"))
     facet_scope = st.checkbox("Also test across the whole grid (facet variables as factors)", value=False,
                               help="An ANOVA gains the facet variables as factors (at most three); a pairwise "
@@ -1350,6 +1362,7 @@ with st.sidebar.expander("Statistical tests & annotations", expanded=False):
         stats_spec = {
             "enabled": True, "test": test, "comparison_mode": comparison_mode,
             "correction": correction, "posthoc": posthoc,
+            **({"ss_type": int(ss_type)} if test == "factorial_anova" and int(ss_type) != 2 else {}),
             **({"facet_scope": "figure"} if facet_scope else {}),
             "group_column": None if group_column == _none else group_column,
             "subgroup_column": None if subgroup_column == _none else subgroup_column,
@@ -1357,7 +1370,7 @@ with st.sidebar.expander("Statistical tests & annotations", expanded=False):
             "reference_group": reference_group or None,
             "annotate": True,
             "annotation": {"mode": ann_mode, "show_effect": show_effect,
-                           "placement": ann_placement},
+                           "placement": ann_placement, **({"omnibus_stars": True} if omnibus_stars else {})},
         }
 
 # No plot chosen yet: show the empty-state and stop before building a spec (parity

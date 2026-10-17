@@ -26,6 +26,51 @@ from make_my_figure_core.statistics.runner import run_statistics
 from make_my_figure_core.statistics.schemas import normalize_stats_spec
 
 
+def _clear_corner_panel(ax, gap_px: float = 3.0, max_rounds: int = 8) -> None:
+    """Raise the value axis until the omnibus text panel clears every bracket and label.
+
+    The headroom above was a guess (8.5 % of the range per line). Bracket labels
+    with an effect size, or a panel wrapped onto more lines in a narrow facet,
+    outgrew it: the ANOVA panel sat over the "****, g = -2.7" labels of a
+    two-way ANOVA with post-hoc pairs. Measured here instead, in display pixels.
+    """
+    fig = ax.figure
+    panel = next((t for t in reversed(ax.texts) if t.get_zorder() == 8 and t.get_transform() == ax.transAxes),
+                 None)
+    if panel is None:
+        return
+    for _ in range(max_rounds):
+        try:
+            fig.canvas.draw()
+            r = fig.canvas.get_renderer()
+            box = panel.get_window_extent(r)
+            if panel.get_bbox_patch() is not None:
+                box = panel.get_bbox_patch().get_window_extent(r)
+        except Exception:  # noqa: BLE001
+            return
+        top = -float("inf")
+        for a in list(ax.texts) + list(ax.lines) + list(ax.collections):
+            if a is panel or not a.get_visible():
+                continue
+            try:
+                bb = a.get_window_extent(r)
+            except Exception:  # noqa: BLE001
+                continue
+            if bb.width <= 0 and bb.height <= 0:
+                continue
+            if bb.x1 < box.x0 or bb.x0 > box.x1 or bb.y0 > box.y1:
+                continue
+            top = max(top, bb.y1)
+        overlap = top + gap_px - box.y0
+        if overlap <= 0.5:
+            return
+        frame = ax.get_window_extent(r)
+        span = max(1.0, box.y0 - frame.y0)
+        y0, y1 = ax.get_ylim()
+        # Data heights scale by (y1 - y0): shrink them until the tallest mark ends at the panel.
+        ax.set_ylim(y0, y0 + (y1 - y0) * (top - frame.y0 + gap_px) / span)
+
+
 def run_and_annotate(
     spec: Dict[str, Any],
     df,
@@ -121,15 +166,16 @@ def run_and_annotate(
         # a user who selects (or auto-gets) an ANOVA sees nothing on the figure.
         panel_lines = stat_text_panel(
             [r for r in report.results if r.comparison_type != "two_group"],
-            digits=int(ann_cfg.get("digits", 3)))
+            digits=int(ann_cfg.get("digits", 3)), cfg=ann_cfg)
         if panel_lines:
             # Reserve headroom so the panel sits above the data rather than over it.
             y0, y1 = ax.get_ylim()
             ax.set_ylim(y0, y1 + (0.085 * len(panel_lines) + 0.04) * (y1 - y0))
             stats_overlay.annotate_corner(ax, panel_lines, style=style, loc="upper left",
                                           cfg=ann_cfg)
+            _clear_corner_panel(ax)
     elif mode == "corner":
-        lines = stat_text_panel(report.results, digits=int(ann_cfg.get("digits", 3)))
+        lines = stat_text_panel(report.results, digits=int(ann_cfg.get("digits", 3)), cfg=ann_cfg)
         stats_overlay.annotate_corner(ax, lines, style=style, loc=corner_loc, cfg=ann_cfg)
     elif mode == "survival":
         lines = stat_text_panel(report.results, digits=int(ann_cfg.get("digits", 3)))

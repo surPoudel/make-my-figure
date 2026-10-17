@@ -188,7 +188,7 @@ def effect_symbol(name: Optional[str]) -> str:
         "Cohen's d": "d", "Cohen's dz": "dz", "Hedges' g": "g",
         "rank-biserial": "r", "Cliff's delta (rank-biserial)": r"$\delta$",
         "Cliff's delta": r"$\delta$",
-        "eta-squared": r"$\eta^2$", "omega-squared": r"$\omega^2$",
+        "eta-squared": r"$\eta^2$", "partial eta-squared": r"$\eta_p^2$", "omega-squared": r"$\omega^2$",
         "epsilon-squared": r"$\epsilon^2$", "R-squared": r"$R^2$",
         "Cramer's V": "V", "odds ratio": "OR", "hazard ratio": "HR",
         "Spearman rho": r"$\rho$", "Pearson r": "r",
@@ -288,9 +288,22 @@ def render_annotation(r: StatResult, cfg: Optional[dict] = None) -> str:
 
     Honors ``cfg['content']`` (see ANNOTATION_CONTENTS) or a custom template
     ``cfg['template']``. Returns "" when the annotation should be hidden
-    (nonsignificant + hide_nonsignificant).
+    (nonsignificant + hide_nonsignificant). ``cfg['show_effect']`` adds the
+    effect size to a preset that does not already show it; it used to act only
+    under ``content = "flags"``, so the "Show effect size on figure" box did
+    nothing with "Stars only" selected.
     """
     cfg = cfg or {}
+    text = _render_annotation(r, cfg)
+    content = cfg.get("content") or "stars"
+    if (text and cfg.get("show_effect") and content not in ("flags", "custom", "effect", "p_effect", "full")
+            and _is_num(r.effect_size)):
+        tok = annotation_tokens(r, cfg)
+        text = f"{text}, {tok['effect_symbol']} = {tok['effect']}"
+    return text
+
+
+def _render_annotation(r: StatResult, cfg: dict) -> str:
     content = cfg.get("content") or {"stars": "stars", "p": "p", "both": "p_stars"}.get(
         cfg.get("mode", "stars"), "stars")
     if cfg.get("hide_nonsignificant") and not bool(r.reject_null):
@@ -362,7 +375,7 @@ def annotation_text(r: StatResult, *, mode: str = "stars", digits: int = 3,
     if cfg is not None:
         return render_annotation(r, cfg)
     base = {"mode": mode, "content": {"stars": "stars", "p": "p", "both": "p_stars"}.get(mode, "stars"),
-            "digits": digits, "sci_threshold": sci_threshold, "show_effect": show_effect}
+            "digits": digits, "sci_threshold": sci_threshold}   # effect appended below, once
     text = render_annotation(r, base)
     if show_effect and _is_num(r.effect_size):
         text += f", {effect_symbol(r.effect_size_name)} = {r.effect_size:.2g}"

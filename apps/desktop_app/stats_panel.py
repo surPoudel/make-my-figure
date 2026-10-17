@@ -61,6 +61,17 @@ CORRECTION_CHOICES = [
     ("none", "None"),
 ]
 ANNOTATION_MODES = [("stars", "Stars (*, **)"), ("p", "Exact p-values"), ("both", "Stars + p")]
+# Sums of squares for a factorial ANOVA. Identical when every combination has the same n
+# (balanced); they differ only when cell sizes differ.
+SS_TYPE_CHOICES = [
+    (2, "Type II (default; each term adjusted for the others)"),
+    (1, "Type I (sequential; order of the factors matters)"),
+    (3, "Type III (sum-to-zero contrasts)"),
+]
+# Tests whose result is an omnibus table: without post-hoc pairs nothing is bracketed, so the
+# placement control has nothing to place.
+TWO_GROUP_TESTS = {"students_t", "welch_t", "mann_whitney", "paired_t", "wilcoxon"}
+OMNIBUS_TESTS = {"one_way_anova", "kruskal_wallis", "two_way_anova", "factorial_anova", "rm_anova"}
 
 # Rich annotation content selector (Part 2).
 # Where the annotation sits. "bracket" spans the two compared categories; "above_bar" puts one
@@ -110,6 +121,15 @@ class StatisticsPanel(QGroupBox):
 
         self.test_combo = self._combo(TEST_CHOICES)
         form.addRow("Test", self.test_combo)
+        self.ss_combo = self._combo(SS_TYPE_CHOICES)
+        self.ss_combo.setToolTip(
+            "How the factorial ANOVA splits the variation between terms. With the same number of "
+            "observations in every combination all three give identical F and P. With unequal "
+            "numbers: Type II (default, car::Anova) tests each main effect adjusted for the other "
+            "main effects; Type I (R's anova()) is sequential, so the first factor is unadjusted "
+            "and the order matters; Type III tests each term adjusted for all others, interactions "
+            "included.")
+        form.addRow("Sums of squares", self.ss_combo)
         self.mode_combo = self._combo(MODE_CHOICES)
         form.addRow("Comparison", self.mode_combo)
 
@@ -140,6 +160,15 @@ class StatisticsPanel(QGroupBox):
         self.template_edit.setVisible(False)
         form.addRow("Custom template", self.template_edit)
         self.annotation_combo.currentIndexChanged.connect(self._on_content_changed)
+        # Opt-in: under "Stars only" an ANOVA term keeps "F(3, 108) = 242, p < 0.001" unless
+        # this is ticked, so figures saved before it existed render as they did.
+        self.omnibus_stars_cb = QCheckBox("ANOVA terms as stars too")
+        self.omnibus_stars_cb.setToolTip(
+            "With 'Stars only', ANOVA / Kruskal-Wallis terms normally keep their statistic and P "
+            "value (e.g. 'Month: F(3, 108) = 242, p < 0.001'). Tick to show stars only "
+            "('Month: ****'). The full values stay in the statistics table and method sentence.")
+        self.omnibus_stars_cb.stateChanged.connect(lambda _=None: self.changed.emit())
+        form.addRow(self.omnibus_stars_cb)
         self.show_effect_cb = QCheckBox("Show effect size on figure")
         self.show_effect_cb.stateChanged.connect(lambda _=None: self.changed.emit())
         form.addRow(self.show_effect_cb)
@@ -149,6 +178,9 @@ class StatisticsPanel(QGroupBox):
         self.posthoc_cb = QCheckBox("Post-hoc pairwise after omnibus")
         self.posthoc_cb.stateChanged.connect(lambda _=None: self.changed.emit())
         form.addRow(self.posthoc_cb)
+        self._form = form
+        self.test_combo.currentIndexChanged.connect(self._sync_rows)
+        self.posthoc_cb.stateChanged.connect(self._sync_rows)
         # Facet grids only (shown when a facet column is mapped): one model across
         # every panel, with the facet variables as extra ANOVA factors.
         self.facet_scope_cb = QCheckBox("Also test across the whole grid (facet variables as factors)")
@@ -174,6 +206,7 @@ class StatisticsPanel(QGroupBox):
         self.fontsize_spin.valueChanged.connect(lambda _=None: self.changed.emit())
         form.addRow("Annotation font pt", self.fontsize_spin)
         outer.addLayout(form)
+        self._sync_rows()
 
         # Buttons.
         btn_row = QHBoxLayout()
@@ -264,7 +297,25 @@ class StatisticsPanel(QGroupBox):
 
     def _on_content_changed(self) -> None:
         self.template_edit.setVisible(self.annotation_combo.currentData() == "custom")
+        if hasattr(self, "_form"):
+            self._sync_rows()
         self.changed.emit()
+
+    def _set_row_visible(self, widget, visible: bool) -> None:
+        try:
+            self._form.setRowVisible(widget, bool(visible))
+        except (AttributeError, TypeError):   # pragma: no cover - older Qt
+            widget.setVisible(bool(visible))
+
+    def _sync_rows(self, *_args) -> None:
+        """Show a control only where it acts: sums of squares for a factorial ANOVA,
+        bracket placement when some comparison will be bracketed."""
+        test = self.test_combo.currentData()
+        self._set_row_visible(self.ss_combo, test == "factorial_anova")
+        self._set_row_visible(self.placement_combo,
+                              test not in OMNIBUS_TESTS or self.posthoc_cb.isChecked())
+        self._set_row_visible(self.omnibus_stars_cb, self.annotation_combo.currentData() == "stars"
+                              and test not in TWO_GROUP_TESTS)
 
     def set_facets(self, active: bool) -> None:
         """Offer the whole-grid option only when the plot has facets."""
@@ -286,6 +337,8 @@ class StatisticsPanel(QGroupBox):
             "font_size": self.fontsize_spin.value(),
             "placement": self.placement_combo.currentData(),
         })
+        if content == "stars" and self.omnibus_stars_cb.isChecked():
+            ann["omnibus_stars"] = True
 
         def _val(combo):
             v = combo.currentData()
@@ -297,6 +350,9 @@ class StatisticsPanel(QGroupBox):
             "comparison_mode": self.mode_combo.currentData(),
             "correction": self.correction_combo.currentData(),
             "posthoc": self.posthoc_cb.isChecked(),
+            **({"ss_type": int(self.ss_combo.currentData())}
+               if (self.test_combo.currentData() == "factorial_anova" and self.ss_combo.currentData() != 2)
+               else {}),
             **({"facet_scope": "figure"} if (getattr(self, "_facets_active", False)
                                             and self.facet_scope_cb.isChecked()) else {}),
             "group_column": _val(self.group_combo),
@@ -331,6 +387,7 @@ class StatisticsPanel(QGroupBox):
         _set(self.mode_combo, stats.get("comparison_mode"))
         _set(self.correction_combo, stats.get("correction"))
         self.posthoc_cb.setChecked(bool(stats.get("posthoc", False)))
+        _set(self.ss_combo, int(stats.get("ss_type", 2) or 2))
         self.facet_scope_cb.setChecked(str(stats.get("facet_scope", "panel")) == "figure")
         _set(self.group_combo, stats.get("group_column"))
         _set(self.subgroup_combo, stats.get("subgroup_column"))
@@ -353,6 +410,7 @@ class StatisticsPanel(QGroupBox):
         _set(self.placement_combo, ann.get("placement") or "bracket")
         self.show_effect_cb.setChecked(bool(ann.get("show_effect", False)))
         self.hide_ns_cb.setChecked(bool(ann.get("hide_nonsignificant", False)))
+        self.omnibus_stars_cb.setChecked(bool(ann.get("omnibus_stars", False)))
         self._on_content_changed()
 
     def show_report(self, report) -> None:
@@ -391,6 +449,8 @@ class StatisticsPanel(QGroupBox):
         self.hide_ns_cb.setChecked(False)
         self.posthoc_cb.setChecked(False)
         self.facet_scope_cb.setChecked(False)
+        self.ss_combo.setCurrentIndex(0)
+        self.omnibus_stars_cb.setChecked(False)
         self.changed.emit()
 
     def _on_export_table(self) -> None:

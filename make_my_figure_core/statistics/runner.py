@@ -235,7 +235,9 @@ def _dispatch(test: str, df: pd.DataFrame, cols: Dict[str, Any], plot_type: Opti
     if test == "two_way_anova":
         if not (value_col and group_col and subgroup_col):
             raise StatsError("Two-way ANOVA needs a value column and two factors.")
-        return anova.two_way_anova(df, value_col, group_col, subgroup_col, alpha=alpha)
+        out = anova.two_way_anova(df, value_col, group_col, subgroup_col, alpha=alpha)
+        return out + _factorial_posthoc(df, value_col, group_col, subgroup_col, subject_col, mode, reference,
+                                        selected, alternative, alpha, posthoc, stats_spec)
 
     # --- factorial ANOVA / ANCOVA (1-3 factors, estimability checked) ------
     if test == "factorial_anova":
@@ -244,10 +246,12 @@ def _dispatch(test: str, df: pd.DataFrame, cols: Dict[str, Any], plot_type: Opti
             raise StatsError("Factorial ANOVA needs a response column and at least one factor.")
         from make_my_figure_core.statistics.factorial import factorial_anova
 
-        return factorial_anova(df, value_col, factors, covariates=stats_spec.get("covariates") or [],
-                               subject=stats_spec.get("subject_column") or subject_col,
-                               interactions=stats_spec.get("interactions", "full"),
-                               ss_type=int(stats_spec.get("ss_type", 2)))
+        out = factorial_anova(df, value_col, factors, covariates=stats_spec.get("covariates") or [],
+                              subject=stats_spec.get("subject_column") or subject_col,
+                              interactions=stats_spec.get("interactions", "full"),
+                              ss_type=int(stats_spec.get("ss_type", 2)))
+        return out + _factorial_posthoc(df, value_col, group_col, subgroup_col, subject_col, mode, reference,
+                                        selected, alternative, alpha, posthoc, stats_spec)
 
     # --- repeated-measures ANOVA ------------------------------------------
     if test == "rm_anova":
@@ -291,6 +295,27 @@ def _dispatch(test: str, df: pd.DataFrame, cols: Dict[str, Any], plot_type: Opti
                                     mode, reference, selected, alternative, alpha)
 
     raise StatsError(f"Test '{test}' is not supported in this context.")
+
+
+def _factorial_posthoc(df, value_col, group_col, subgroup_col, subject_col, mode, reference, selected,
+                       alternative, alpha, posthoc, stats_spec) -> List[StatResult]:
+    """Pairwise comparisons after a two-way / factorial ANOVA, when asked for.
+
+    "Post-hoc pairwise after omnibus" used to act after a one-way ANOVA only;
+    after a two-way or factorial ANOVA it was ignored and no bracket appeared.
+    The comparisons are the ones a grouped plot draws: the subgroups within each
+    x category (or, with an explicit all-pairs / vs-control mode or no subgroup,
+    the x categories), with the chosen post-hoc test and the family-wide
+    correction applied by the caller.
+    """
+    if not posthoc or mode == "omnibus" or not (value_col and group_col):
+        return []
+    pair_test = stats_spec.get("posthoc_test", "welch_t")
+    if subgroup_col and subgroup_col != group_col and mode in ("within_x", "auto"):
+        return _run_within_x(pair_test, df, value_col, group_col, subgroup_col, subject_col,
+                             reference, selected, alternative, alpha)
+    return _run_pairwise_family(pair_test, df, value_col, group_col, _levels(df, group_col), subject_col,
+                                mode, reference, selected, alternative, alpha)
 
 
 def _run_pairwise_family(test: str, df, value_col, group_col, levels, subject_col,
