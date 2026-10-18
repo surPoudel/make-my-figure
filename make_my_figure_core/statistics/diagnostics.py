@@ -359,6 +359,19 @@ def panel_choices(df: pd.DataFrame, spec: Dict[str, Any]) -> List[str]:
 def diagnostics_for_plot(df: pd.DataFrame, spec: Dict[str, Any], *, panel: Optional[str] = None,
                          response: Optional[str] = None) -> ModelDiagnostics:
     """Diagnostics of the model behind a plot's statistics, for one facet panel or the whole grid."""
+    sub, stats_spec, title = panel_subset(df, spec, panel)
+    mapping = (spec or {}).get("mapping", {}) or {}
+    plot_type = (spec or {}).get("plot_type")
+    diag = model_for_statistics(sub, stats_spec, plot_type=plot_type, mapping=mapping, response=response)
+    diag.title = f"{diag.formula}" + (f"   [{title}]" if title else "")
+    return diag
+
+
+def panel_subset(df: pd.DataFrame, spec: Dict[str, Any], panel: Optional[str] = None
+                 ) -> Tuple[pd.DataFrame, Dict[str, Any], str]:
+    """``(rows, statistics spec, title)`` for one facet panel, the whole grid or the whole table.
+
+    The whole grid adds the facet variables to the model's factors."""
     stats_spec = dict((spec or {}).get("statistics") or {})
     mapping = (spec or {}).get("mapping", {}) or {}
     plot_type = (spec or {}).get("plot_type")
@@ -380,9 +393,7 @@ def diagnostics_for_plot(df: pd.DataFrame, spec: Dict[str, Any], *, panel: Optio
             mask &= df[col].astype(str) == val
         sub = df[mask]
         title = panel
-    diag = model_for_statistics(sub, stats_spec, plot_type=plot_type, mapping=mapping, response=response)
-    diag.title = f"{diag.formula}" + (f"   [{title}]" if title else "")
-    return diag
+    return sub, stats_spec, title
 
 
 def summary_text(diag: ModelDiagnostics) -> str:

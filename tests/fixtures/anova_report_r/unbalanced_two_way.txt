@@ -1,0 +1,29 @@
+               Df Sum Sq Mean Sq F value   Pr(>F)    
+treatment       1 112.52  112.52  135.78 4.87e-15 ***
+time            1  33.69   33.69   40.66 9.42e-08 ***
+treatment:time  1  22.72   22.72   27.42 4.40e-06 ***
+Residuals      44  36.46    0.83                     
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = quantity ~ treatment * time, data = u)
+
+$treatment
+                    diff      lwr      upr p adj
+exposed-control 3.064738 2.534673 3.594804     0
+
+$time
+              diff      lwr      upr p adj
+day4-day2 1.688887 1.155095 2.222679 1e-07
+
+$`treatment:time`
+                                diff        lwr        upr     p adj
+exposed:day2-control:day2  1.5111064  0.4491321  2.5730806 0.0024118
+control:day4-control:day2  0.2409546 -0.7813797  1.2632889 0.9220693
+exposed:day4-control:day2  4.5286486  3.5223143  5.5349829 0.0000000
+control:day4-exposed:day2 -1.2701517 -2.2658742 -0.2744293 0.0074721
+exposed:day4-exposed:day2  3.0175422  2.0382545  3.9968300 0.0000000
+exposed:day4-control:day4  4.2876940  3.3515409  5.2238470 0.0000000
+

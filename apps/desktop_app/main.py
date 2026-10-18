@@ -2652,8 +2652,8 @@ class MainWindow(QMainWindow):
                 f"Derived table: {len(record.derived_columns)} new column(s) "
                 f"({', '.join(record.derived_columns)}); the original table is unchanged.", 10000)
 
-    def action_model_diagnostics(self):
-        """R's plot(lm) panels for the model behind the current figure's statistics."""
+    def action_model_diagnostics(self, tab: int = 1):
+        """R's summary(aov) / TukeyHSD report (tab 0) and plot(lm) panels (tab 1) for the figure's model."""
         if self.data is None:
             self._show_warning("Load a data file first.")
             return
@@ -2673,7 +2673,7 @@ class MainWindow(QMainWindow):
             style = getattr(result, "style", None)
         except Exception:  # noqa: BLE001
             style = None
-        DiagnosticsDialog(self.data, spec, style, self).exec()
+        DiagnosticsDialog(self.data, spec, style, self, start_tab=int(tab or 0)).exec()
 
     def action_reshape_wide(self):
         """Gather a wide table's repeated-measurement columns into long form (recorded, revertible)."""

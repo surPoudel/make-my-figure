@@ -277,3 +277,24 @@ def test_model_diagnostics_window_shows_the_four_panels_and_saves(app, tmp_path,
     assert dlg.diag.n == 240
     dlg.close()
     win.close()
+
+
+def test_statistics_report_tab_reads_like_r_and_saves(app, tmp_path, monkeypatch):
+    from PySide6.QtWidgets import QFileDialog
+
+    from apps.desktop_app.diagnostics_dialog import DiagnosticsDialog
+
+    s = C.build_spec("boxplot_or_violin_with_points", "publication", "plants.csv",
+                     {"x": "Month", "y": "Growth_cm", "hue": "Nitrogen_Concentration", "facet_col": "Age"},
+                     width="default", statistics={"enabled": True, "test": "factorial_anova"})
+    dlg = DiagnosticsDialog(C.loaded_from_dataframe(DF, "plants.csv"), s, None, None,
+                            start_tab=DiagnosticsDialog.REPORT_TAB)
+    assert dlg.tabs.currentIndex() == 0
+    text = dlg.report_text.toPlainText()
+    assert "> summary(model)" in text and "Df Sum Sq Mean Sq F value" in text
+    assert "$`Month:Nitrogen_Concentration`" in text and "Age = Young" in text
+    out = tmp_path / "report.txt"
+    monkeypatch.setattr(QFileDialog, "getSaveFileName", lambda *a, **k: (str(out), ""))
+    dlg._save_report()
+    assert out.read_text(encoding="utf-8").startswith("Statistics report - Age = Young")
+    dlg.close()

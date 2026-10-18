@@ -43,6 +43,27 @@ Map **facet rows** and/or **facet columns** on `boxplot_or_violin_with_points` o
   a shared axis (115 where 107 is needed) - all fixed, each with a regression test
   (`tests/test_facet_grids.py`, 29 tests). Records: `quality_audit/facet_grids/`.
 
+### Added — R-style statistics report: summary(aov) and TukeyHSD
+
+**Statistics report (R-style summary(aov), TukeyHSD)…** (desktop Statistics panel; a
+tab beside the residual plots; browser on request) prints the ANOVA table and Tukey HSD
+comparisons for the figure's model exactly as R's console does - identical text, line
+for line, on five reference models from base R 4.5.3 (one-, two- and three-way, a
+48-mean interaction, balanced and unbalanced, factor order reversed) - followed by the
+Shapiro-Wilk / Levene checks and software versions. Copy, save as .txt, or download.
+
+- Type I (sequential) sums of squares, as `summary(aov)`; the report notes when unequal
+  group sizes make the order matter and when the figure's Type II table differs.
+- Tukey means are the model's adjusted means with unequal group sizes, as
+  `model.tables` gives them; R's averaging within the full interaction cell is
+  reproduced (averaging per sub-term gave 1.5023 where R has 1.5111).
+- The studentized range distribution is a port of R's `ptukey` / `qtukey`: scipy's
+  integral differed from R's in the 8th digit of a 48-mean interval and took 6 s for
+  1128 comparisons; the port agrees to 1e-12 (quantiles) / 1e-13 (tails) and the
+  three-way report takes 2.2 s with its checks.
+- R's number formatting is ported (`formatReal`, `format.pval`, `printCoefmat`,
+  `print.TukeyHSD`, R >= 4.4's `zapsmall`).
+
 ### Added — model diagnostics: R's four residual plots
 
 There were no residual plots, so homogeneity of variance and influential observations

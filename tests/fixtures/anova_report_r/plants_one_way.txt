@@ -1,0 +1,16 @@
+                        Df Sum Sq Mean Sq F value Pr(>F)    
+Nitrogen_Concentration   2   4327    2164   47.09 <2e-16 ***
+Residuals              237  10891      46                   
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = Growth_cm ~ Nitrogen_Concentration, data = plants)
+
+$Nitrogen_Concentration
+                      diff        lwr       upr     p adj
+Low N-High N    -10.351875 -12.879835 -7.823915 0.0000000
+Medium N-High N  -6.051875  -8.579835 -3.523915 0.0000001
+Medium N-Low N    4.300000   1.772040  6.827960 0.0002378
+

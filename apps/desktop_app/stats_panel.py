@@ -105,7 +105,7 @@ class StatisticsPanel(QGroupBox):
 
     changed = Signal()
     runRequested = Signal()
-    diagnosticsRequested = Signal()
+    diagnosticsRequested = Signal(int)      # which tab: 0 report, 1 residual plots
 
     def __init__(self, controller, parent=None):
         super().__init__("6. Statistics", parent)
@@ -242,8 +242,16 @@ class StatisticsPanel(QGroupBox):
                                  "Fitted, Normal Q-Q, Scale-Location (equal variances) and Residuals vs "
                                  "Leverage (Cook's distance). Look before and after the test, and after a "
                                  "transformation.")
-        self.diag_btn.clicked.connect(self.diagnosticsRequested.emit)
-        outer.addWidget(self.diag_btn)
+        self.diag_btn.clicked.connect(lambda: self.diagnosticsRequested.emit(1))
+        self.report_btn = QPushButton("Statistics report (R-style summary(aov), TukeyHSD)…")
+        self.report_btn.setToolTip("The model's ANOVA table and Tukey HSD comparisons laid out as R prints "
+                                   "summary(aov(...)) and TukeyHSD(...), with the assumption checks - to "
+                                   "copy into a notebook or supplement.")
+        self.report_btn.clicked.connect(lambda: self.diagnosticsRequested.emit(0))
+        diag_row = QHBoxLayout()
+        diag_row.addWidget(self.report_btn)
+        diag_row.addWidget(self.diag_btn)
+        outer.addLayout(diag_row)
 
         self.suggest_label = QLabel("")
         self.suggest_label.setWordWrap(True)

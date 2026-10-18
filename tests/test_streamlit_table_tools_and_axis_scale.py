@@ -154,3 +154,14 @@ def test_browser_model_diagnostics_expander_draws_the_residual_plots():
     downloads = [b.label for b in at.get("download_button")]
     assert "Download diagnostic plots (PNG)" in downloads and "Download diagnostic values (CSV)" in downloads
     assert not any("No residual" in e.value for e in at.error)
+
+
+def test_browser_statistics_report_is_shown_on_request():
+    at = _app()
+    label = "Show the statistics report (R-style summary(aov), TukeyHSD)"
+    _by_label(at.checkbox, label).check()
+    at.run()
+    assert not at.exception
+    text = " ".join(c.value for c in at.code)
+    assert "Df Sum Sq Mean Sq F value" in text and "Tukey multiple comparisons of means" in text
+    assert "Download statistics report (.txt)" in [b.label for b in at.get("download_button")]

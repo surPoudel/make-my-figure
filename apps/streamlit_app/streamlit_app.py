@@ -1511,7 +1511,7 @@ try:
 
     # --- Model diagnostics (R's plot(lm) panels) -----------------------------
     if (spec.get("mapping") or {}).get("y"):
-        with st.expander("🔍 Model diagnostics — residual plots (R's plot(lm))", expanded=False):
+        with st.expander("🔍 Model diagnostics — R-style report and residual plots", expanded=False):
             from make_my_figure_core.statistics.diagnostics import (
                 DiagnosticsError as _DErr,
                 diagnostic_figure as _dfig,
@@ -1534,6 +1534,18 @@ try:
             # Drawn on request: Streamlit reruns the whole script on every change, and the model fit,
             # the four panels and a 300-dpi PNG on each rerun pushed the sample-plot smoke run past
             # its 300 s limit.
+            if st.checkbox("Show the statistics report (R-style summary(aov), TukeyHSD)", value=False,
+                           key="diag_report"):
+                from make_my_figure_core.statistics.anova_report import ReportError as _RErr
+                from make_my_figure_core.statistics.anova_report import report_for_plot as _rfor
+
+                try:
+                    _rep_txt = _rfor(_df_diag, spec, panel=_panel, response=_resp).text()
+                    st.code(_rep_txt, language=None)
+                    st.download_button("Download statistics report (.txt)", _rep_txt.encode("utf-8"),
+                                       file_name="statistics_report.txt", mime="text/plain", key="diag_txt")
+                except (_RErr, _DErr, ValueError) as _exc:
+                    st.info(f"No report for this model: {_exc}")
             _show_diag = st.checkbox("Draw the residual plots", value=False, key="diag_show")
             try:
                 if not _show_diag:

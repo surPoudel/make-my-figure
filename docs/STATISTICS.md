@@ -20,6 +20,7 @@ effect size, and (where applicable) a confidence interval.
 - [When to use each test](#when-to-use-each-test)
 - [Assumption checks](#assumption-checks)
 - [Model diagnostics (residual plots)](#model-diagnostics-residual-plots)
+- [R-style statistics report](#r-style-statistics-report)
 - [Required columns](#required-columns)
 - [Paired vs unpaired](#paired-vs-unpaired)
 - [Multiple-testing correction](#multiple-testing-correction)
@@ -164,6 +165,39 @@ Computed as R computes them (`rstandard`, `hatvalues`, `cooks.distance`, `lowess
 2/3, iter = 3)`, `qqnorm`'s `ppoints`); validated against base R 4.5.3
 (`quality_audit/assumption_checks/validate_diagnostics.R`): every per-observation value
 to 1e-9 relative, the smoothers to 1e-8 (`tests/test_model_diagnostics.py`).
+
+## R-style statistics report
+
+**Statistics report (R-style summary(aov), TukeyHSD)…** (Statistics panel; browser:
+*Show the statistics report* in the 🔍 Model diagnostics expander) prints, for the
+model behind the figure, what R prints for
+
+```r
+model <- aov(Growth_cm ~ Species * Treatment, data = plant)
+summary(model)
+TukeyHSD(model)
+```
+
+- the same rows, columns, factor-level order (sorted; numbers numerically), pair
+  order, significance codes and number formatting - **identical to R 4.5.3's console
+  text, line for line**, on five models (one-, two- and three-way, balanced and
+  unbalanced; `tests/test_anova_report.py`);
+- then the assumption checks on the same model (Shapiro-Wilk on `residuals(model)`,
+  Levene), notes (rows left out, unequal group sizes) and the software versions.
+
+`summary(aov)` is a **Type I (sequential)** table: with unequal group sizes the order
+of the factors changes the sums of squares, and the report says so. The figure's
+ANOVA uses the *Sums of squares* setting (Type II by default); with equal group sizes
+the two are identical, otherwise the report notes the difference (choose Type I to
+match R). `TukeyHSD` compares the means of every term, which with unequal group sizes
+are the model's adjusted means (`model.tables(model, "means")`), as in R. The
+studentized range distribution is a port of R's own `ptukey` / `qtukey`
+(`statistics/_tukey_dist.py`; quantiles agree to 1e-12, tail probabilities to 1e-13).
+
+**Copy report** / **Save report (.txt)** in the desktop window, a download in the
+browser. Models with covariates (ANCOVA) and correlation / regression tests are not
+`aov` tables and say so; their results are in the statistics table and *Prepare
+table ▸ Factorial analysis*.
 
 ## Required columns
 
