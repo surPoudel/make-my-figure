@@ -16,6 +16,17 @@ parametric test, R's four residual plots, and a statistics report that reads exa
 as R's `summary(aov)` and `TukeyHSD`. Fixes ANOVA annotations that ignored the
 statistics controls.
 
+### Fixed — the bundled-Qt check rejected the sound binding on Linux under an X server
+
+The installer self-test that guards against the PySide6 6.12.0 crash measured each
+binding operation once and divided by the number of calls. Run under an X server, the
+Linux build released 165 references to `None` once during that measurement, which read
+as a drift of −0.825 per call (165 / 200) for PySide6 6.11.2 - the binding that
+measures 0.000 everywhere else - and CI refused to publish the Linux installers. The
+check now lets pending work settle, measures five rounds and takes the median: a
+one-time release reads 0.000, while the 6.12.0 pattern (one reference lost per call)
+still reads −1.000 and fails the build. Both are regression tests.
+
 ### Added — facet grids on the box/violin and line plots
 
 A 2 × 2 × 3 design measured over time (species × initial age × nitrogen, four

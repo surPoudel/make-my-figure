@@ -93,6 +93,14 @@ that differs from the figure's ANOVA.
 - **Sums of squares** can be chosen for a factorial ANOVA: Type II (default), Type I
   (sequential, R's `anova(lm)`) or Type III. Type I agrees with R to 10⁻¹².
 
+## Installers on every platform
+
+The check each installer runs on its bundled Qt binding (added after the v1.3.0 macOS
+crash) rejected the sound PySide6 6.11.2 on Linux when run under an X server: a single
+release of 165 references during the measurement was read as a per-call drift. It now
+measures five rounds and takes the median, so one-time events no longer count while a
+genuinely defective binding still fails the build.
+
 ## Checks
 
 - Full test suite at the released code: 4639 passed, 13 skipped, 0 failed

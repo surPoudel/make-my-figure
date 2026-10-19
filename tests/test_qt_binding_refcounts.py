@@ -57,3 +57,56 @@ def test_the_probe_leaves_an_application_that_can_create_widgets():
     assert isinstance(QCoreApplication.instance(), QApplication)
     w = QWidget()
     w.deleteLater()
+
+
+def test_a_one_time_release_during_the_probe_is_not_a_per_call_drift():
+    """v1.3.2's Linux build under an X server: 165 references to None released once
+    during the measurement read as -0.825 per call (165 / 200) for the sound 6.11.2."""
+    from PySide6.QtCore import QTimer
+
+    held = [[None] for _ in range(165)]
+
+    def release():
+        held.clear()
+
+    # lands inside the singleShot measurement, as the X server's pending work did
+    QTimer.singleShot(0, lambda: QTimer.singleShot(0, release))
+    drift = binding_refcount_drift(calls=200)
+    assert abs(drift["singleShot:None"]) < DRIFT_LIMIT, drift
+
+
+def test_a_genuine_per_call_leak_is_still_caught(monkeypatch):
+    """The 6.12.0 defect pattern - one reference to None lost per singleShot - must fail."""
+    import ctypes
+    import sys
+
+    from PySide6.QtCore import QTimer
+
+    from apps.desktop_app import binding_check
+
+    real = QTimer.singleShot
+    lost = []
+
+    def leaky(msec, fn):
+        def wrapped():
+            ctypes.pythonapi.Py_DecRef(ctypes.py_object(None))    # what the defective binding did
+            lost.append(1)
+            fn()
+        real(msec, wrapped)
+
+    def give_back():
+        while lost:
+            lost.pop()
+            ctypes.pythonapi.Py_IncRef(ctypes.py_object(None))
+
+    before = sys.getrefcount(None)
+    monkeypatch.setattr(QTimer, "singleShot", staticmethod(leaky))
+    try:
+        drift = binding_check.binding_refcount_drift(calls=200, rounds=3)
+        with pytest.raises(RuntimeError, match="miscounts Python references"):
+            binding_check.assert_binding_refcounts_sound(calls=100, rounds=3)
+    finally:
+        monkeypatch.undo()
+        give_back()
+    assert drift["singleShot:None"] == pytest.approx(-1.0, abs=0.05), drift
+    assert abs(sys.getrefcount(None) - before) < 50

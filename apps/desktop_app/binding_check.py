@@ -30,8 +30,22 @@ class _Arg:
     """A fresh, non-immortal object to pass through a signal."""
 
 
-def binding_refcount_drift(calls: int = 200) -> dict[str, float]:
-    """Return the per-call reference-count drift for each probed operation."""
+def binding_refcount_drift(calls: int = 200, rounds: int = 5) -> dict[str, float]:
+    """Return the per-call reference-count drift for each probed operation.
+
+    Each operation is measured in ``rounds`` rounds of ``calls`` calls and the
+    **median** per-call drift is reported. A defective binding loses a reference
+    on every call, so every round reads about -1. Anything else the process does
+    meanwhile (a widget freed by a pending event, a figure redrawn) changes the
+    counts once, in one round only. With a single round that one-time change was
+    divided by the call count and read as a per-call drift: the v1.3.2 Linux
+    build, run under an X server, released 165 references to ``None`` once during
+    the measurement and reported -0.825 (165 / 200) for PySide6 6.11.2, the
+    binding that measures 0.000 everywhere else.
+    """
+    import gc
+    import statistics
+
     from PySide6.QtCore import QCoreApplication, QObject, QTimer, Signal
 
     # Create the full QApplication when none exists. A bare QCoreApplication made
@@ -47,6 +61,13 @@ def binding_refcount_drift(calls: int = 200) -> dict[str, float]:
         except Exception:  # noqa: BLE001 - no widget support: the core probe still works
             app = QCoreApplication(sys.argv[:1])
 
+    def settle():
+        # Let what is already queued (deferred deletions, pending redraws) run, and
+        # collect garbage, before a count is taken.
+        for _ in range(3):
+            app.processEvents()
+            gc.collect()
+
     class _Emitter(QObject):
         sig = Signal(object)
 
@@ -61,30 +82,41 @@ def binding_refcount_drift(calls: int = 200) -> dict[str, float]:
             "argument": sys.getrefcount(arg),
         }
 
-    arg = _Arg()
-    before = counts(arg)
-    for _ in range(calls):
-        emitter.sig.emit(arg)
-    received.clear()
-    app.processEvents()
-    after = counts(arg)
-    drift = {f"emit:{k}": (after[k] - before[k]) / calls for k in before}
-
-    fired = []
-    before = counts(arg)
-    for _ in range(calls):
-        QTimer.singleShot(0, lambda: fired.append(1))
-    while len(fired) < calls:
+    def emit_round(arg):
+        before = counts(arg)
+        for _ in range(calls):
+            emitter.sig.emit(arg)
+        received.clear()
         app.processEvents()
-    fired.clear()
-    after = counts(arg)
-    drift.update({f"singleShot:{k}": (after[k] - before[k]) / calls for k in before})
+        after = counts(arg)
+        return {k: (after[k] - before[k]) / calls for k in before}
+
+    def single_shot_round(arg):
+        fired = []
+        before = counts(arg)
+        for _ in range(calls):
+            QTimer.singleShot(0, lambda: fired.append(1))
+        while len(fired) < calls:
+            app.processEvents()
+        fired.clear()
+        after = counts(arg)
+        return {k: (after[k] - before[k]) / calls for k in before}
+
+    arg = _Arg()
+    settle()
+    drift: dict[str, float] = {}
+    for name, one_round in (("emit", emit_round), ("singleShot", single_shot_round)):
+        per_round = []
+        for _ in range(max(1, rounds)):
+            per_round.append(one_round(arg))
+        for key in per_round[0]:
+            drift[f"{name}:{key}"] = float(statistics.median(r[key] for r in per_round))
     return drift
 
 
-def assert_binding_refcounts_sound(calls: int = 200) -> dict[str, float]:
+def assert_binding_refcounts_sound(calls: int = 200, rounds: int = 5) -> dict[str, float]:
     """Raise ``RuntimeError`` naming the binding if any operation drifts."""
-    drift = binding_refcount_drift(calls)
+    drift = binding_refcount_drift(calls, rounds)
     bad = {k: v for k, v in drift.items() if abs(v) >= DRIFT_LIMIT}
     if bad:
         import PySide6
