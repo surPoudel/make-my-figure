@@ -1258,7 +1258,11 @@ _OPTIONS_OWNED_ELSEWHERE = {
     "colorbar_location", "colorbar_pad", "colorbar_shrink",      # ⑤ Colorbar
 }
 _generic_opts = [o for o in ui_hints.options(plot_type)
-                 if o.key not in mapping and o.key not in _OPTIONS_OWNED_ELSEWHERE]
+                 if o.key not in mapping and o.key not in _OPTIONS_OWNED_ELSEWHERE
+                 # an option that needs a mapping field (a facet option needs a facet
+                 # column) is offered only once that field is chosen
+                 and (not getattr(o, "requires", ()) or any(
+                     mapping.get(_f) not in (None, "", "(none)") for _f in o.requires))]
 if _generic_opts:
     for _o in _generic_opts:
         _label = _o.label or _o.key
@@ -1319,19 +1323,45 @@ with st.sidebar.expander("Statistical tests & annotations", expanded=False):
     except Exception:
         pass
     test = st.selectbox("Test", _test_ids, format_func=lambda t: _test_labels.get(t, t))
+    ss_type = st.selectbox(
+        "Sums of squares", [2, 1, 3], format_func=lambda v: {
+            2: "Type II (default)", 1: "Type I (sequential; factor order matters)",
+            3: "Type III (sum-to-zero contrasts)"}[v],
+        help="Identical when every combination has the same n.") if test == "factorial_anova" else 2
     comparison_mode = st.selectbox(
         "Comparison", ["auto", "all_pairs", "vs_control", "within_x", "omnibus"])
+    _parametric = ("students_t", "welch_t", "paired_t", "one_way_anova", "two_way_anova", "factorial_anova",
+                   "pearson")
+    assumption_action = st.selectbox(
+        "If assumptions fail", ["report", "switch"],
+        format_func=lambda v: {"report": "Report it and keep the chosen test",
+                               "switch": "Use the non-parametric alternative"}[v],
+        help="Normality (Shapiro-Wilk: each group for a t-test, the model residuals for an ANOVA) and equal "
+             "variances (Levene, median-centred) are checked before a parametric test and listed with the "
+             "results.") if (test == "auto" or test in _parametric) else "report"
     correction = st.selectbox(
         "Correction", ["benjamini_hochberg", "bonferroni", "holm", "none"])
     ann_mode = st.selectbox("Annotation", ["stars", "p", "both"])
-    ann_placement = st.selectbox(
+    omnibus_stars = st.checkbox(
+        "ANOVA terms as stars too", value=False,
+        help="ANOVA / Kruskal-Wallis terms normally keep 'F(3, 108) = 242, p < 0.001' under stars; "
+             "tick to show stars only. The values stay in the statistics table.") \
+        if ann_mode == "stars" and test not in ("students_t", "welch_t", "mann_whitney", "paired_t",
+                                                 "wilcoxon") else False
+    _omnibus_only = test in ("one_way_anova", "kruskal_wallis", "two_way_anova", "factorial_anova", "rm_anova")
+    ann_placement = "bracket" if _omnibus_only and not st.session_state.get("stats_posthoc") else st.selectbox(
         "Annotation placement", ["bracket", "above_bar"],
         help="'bracket' spans the two compared categories. 'above_bar' puts one label over each "
              "compared bar and leaves the control bar unmarked — the usual convention when every "
              "condition is tested against one control, where brackets would stack up and squeeze "
              "the bars. Needs a control group; anything it cannot place falls back to a bracket.")
     show_effect = st.checkbox("Show effect size on figure", value=False)
-    posthoc = st.checkbox("Post-hoc pairwise after omnibus", value=False)
+    posthoc = st.checkbox("Post-hoc pairwise after omnibus", value=False, key="stats_posthoc")
+    _has_facets = any(mapping.get(_f) not in (None, "", "(none)") for _f in ("facet_row", "facet_col"))
+    facet_scope = st.checkbox("Also test across the whole grid (facet variables as factors)", value=False,
+                              help="An ANOVA gains the facet variables as factors (at most three); a pairwise "
+                                   "or one-way test pools the panels. Reported in the table, not drawn.") \
+        if _has_facets else False
     _none = "(none)"
     group_column = st.selectbox("Group column", [_none] + _cols)
     subgroup_column = st.selectbox("Subgroup column", [_none] + _cols)
@@ -1341,13 +1371,16 @@ with st.sidebar.expander("Statistical tests & annotations", expanded=False):
         stats_spec = {
             "enabled": True, "test": test, "comparison_mode": comparison_mode,
             "correction": correction, "posthoc": posthoc,
+            **({"ss_type": int(ss_type)} if test == "factorial_anova" and int(ss_type) != 2 else {}),
+            **({"assumption_action": "switch"} if assumption_action == "switch" else {}),
+            **({"facet_scope": "figure"} if facet_scope else {}),
             "group_column": None if group_column == _none else group_column,
             "subgroup_column": None if subgroup_column == _none else subgroup_column,
             "subject_column": None if subject_column == _none else subject_column,
             "reference_group": reference_group or None,
             "annotate": True,
             "annotation": {"mode": ann_mode, "show_effect": show_effect,
-                           "placement": ann_placement},
+                           "placement": ann_placement, **({"omnibus_stars": True} if omnibus_stars else {})},
         }
 
 # No plot chosen yet: show the empty-state and stop before building a spec (parity
@@ -1475,6 +1508,68 @@ try:
     elif stats_spec.get("enabled"):
         st.info("Statistics enabled but no results were produced. Check the group/column "
                 "selection and the advisory notes above.")
+
+    # --- Model diagnostics (R's plot(lm) panels) -----------------------------
+    if (spec.get("mapping") or {}).get("y"):
+        with st.expander("🔍 Model diagnostics — R-style report and residual plots", expanded=False):
+            from make_my_figure_core.statistics.diagnostics import (
+                DiagnosticsError as _DErr,
+                diagnostic_figure as _dfig,
+                diagnostics_for_plot as _dfor,
+                panel_choices as _dpanels,
+            )
+
+            st.caption("Residuals vs Fitted (no pattern, even band) · Normal Q-Q (points on the line) · "
+                       "Scale-Location (a flat line: equal variances; rising: variance grows with the mean) · "
+                       "Residuals vs Leverage (nothing beyond Cook's distance 0.5 / 1). Numbers are table rows.")
+            import pandas as _pdd
+
+            _df_diag = table_info.dataframe
+            _nums = [c for c in _df_diag.columns if _pdd.api.types.is_numeric_dtype(_df_diag[c])]
+            _y0 = spec["mapping"]["y"]
+            _dc1, _dc2 = st.columns(2)
+            _panel = _dc1.selectbox("Panel", _dpanels(_df_diag, spec), key="diag_panel")
+            _resp = _dc2.selectbox("Response", ([_y0] if _y0 in _nums else []) + [c for c in _nums if c != _y0],
+                                   key="diag_response")
+            # Drawn on request: Streamlit reruns the whole script on every change, and the model fit,
+            # the four panels and a 300-dpi PNG on each rerun pushed the sample-plot smoke run past
+            # its 300 s limit.
+            if st.checkbox("Show the statistics report (R-style summary(aov), TukeyHSD)", value=False,
+                           key="diag_report"):
+                from make_my_figure_core.statistics.anova_report import ReportError as _RErr
+                from make_my_figure_core.statistics.anova_report import report_for_plot as _rfor
+
+                try:
+                    _rep_txt = _rfor(_df_diag, spec, panel=_panel, response=_resp).text()
+                    st.code(_rep_txt, language=None)
+                    st.download_button("Download statistics report (.txt)", _rep_txt.encode("utf-8"),
+                                       file_name="statistics_report.txt", mime="text/plain", key="diag_txt")
+                except (_RErr, _DErr, ValueError) as _exc:
+                    st.info(f"No report for this model: {_exc}")
+            _show_diag = st.checkbox("Draw the residual plots", value=False, key="diag_show")
+            try:
+                if not _show_diag:
+                    raise StopIteration
+                _diag = _dfor(_df_diag, spec, panel=_panel, response=_resp)
+                _fig_d = _dfig(_diag)
+                st.pyplot(_fig_d)
+                from make_my_figure_core.statistics.diagnostics import summary_text as _dsum
+
+                st.markdown(_dsum(_diag), unsafe_allow_html=True)
+                import io as _io
+
+                _buf = _io.BytesIO()
+                _fig_d.savefig(_buf, format="png", dpi=300)
+                _e1, _e2 = st.columns(2)
+                _e1.download_button("Download diagnostic plots (PNG)", _buf.getvalue(),
+                                    file_name="model_diagnostics.png", mime="image/png", key="diag_png")
+                _e2.download_button("Download diagnostic values (CSV)",
+                                    _diag.table().to_csv(index=False).encode("utf-8"),
+                                    file_name="model_diagnostics.csv", mime="text/csv", key="diag_csv")
+            except StopIteration:
+                pass
+            except _DErr as _exc:
+                st.error(str(_exc))
 
     with st.expander("Render metadata"):
         st.json(result.metadata)

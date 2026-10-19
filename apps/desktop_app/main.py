@@ -493,6 +493,13 @@ class MainWindow(QMainWindow):
                                    "generate publication plots.")
         self.matrix_btn.clicked.connect(self.action_matrix_wizard)
         nav_row.addWidget(self.matrix_btn)
+        self.reshape_btn = QPushButton("\u2195  Wide → long…")
+        self.reshape_btn.setToolTip("For a wide table (one row per plant/animal, one column per repeated "
+                                    "measurement such as Month_4, Month_6, …): gather those columns into "
+                                    "one row per observation, as the box, line and facet plots need. The "
+                                    "wide table is not changed; the long table is saved beside it.")
+        self.reshape_btn.clicked.connect(self.action_reshape_wide)
+        nav_row.addWidget(self.reshape_btn)
         self.table_btn = QPushButton("\U0001F4CB  Prepare table (roles, transform, ANOVA)…")
         self.table_btn.setToolTip("For an ordinary experimental table (one row per observation): "
                                   "say which columns are response, factors, covariates and subject; "
@@ -691,6 +698,7 @@ class MainWindow(QMainWindow):
         self.stats_panel = StatisticsPanel(self.controller)
         self.stats_panel.changed.connect(self.render_preview)
         self.stats_panel.runRequested.connect(self.render_preview)
+        self.stats_panel.diagnosticsRequested.connect(self.action_model_diagnostics)
         cv.addWidget(self.stats_panel)
         self._saved_panels: list = []
 
@@ -2505,6 +2513,7 @@ class MainWindow(QMainWindow):
         self._populate_table()
         self._rebuild_mapping_and_options()
         self.statusBar().showMessage(self._source_status(data))
+        self._suggest_reshape(data)
         self.render_preview()
         if getattr(self, "_auto_recommend", True):
             self._refresh_recommendations()
@@ -2582,6 +2591,25 @@ class MainWindow(QMainWindow):
                 pass
         self._set_data(new_data)
 
+    def _suggest_reshape(self, data) -> None:
+        """Point at Wide → long when the table looks wide (advisory; nothing is changed)."""
+        if not hasattr(self, "reshape_btn"):
+            return
+        label = "\u2195  Wide → long…"
+        try:
+            from make_my_figure_core.tabular import suggest_wide_to_long
+
+            already = self.controller.reshape_of(data) is not None
+            sug = None if already else suggest_wide_to_long(data.info.dataframe)
+        except Exception:  # noqa: BLE001 - a suggestion must never break loading
+            sug = None
+        if sug is not None:
+            self.reshape_btn.setText(label + " (suggested)")
+            self.statusBar().showMessage(f"{self._source_status(data)}  ·  This table looks wide: {sug.reason} "
+                                         "Use Wide → long to reshape it.", 15000)
+        else:
+            self.reshape_btn.setText(label)
+
     def _mark_reshaped(self, original: "LoadedData | None") -> None:
         """Remember the pre-reshape data and show the Revert button."""
         self._data_before_transform = original
@@ -2623,6 +2651,83 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage(
                 f"Derived table: {len(record.derived_columns)} new column(s) "
                 f"({', '.join(record.derived_columns)}); the original table is unchanged.", 10000)
+
+    def action_model_diagnostics(self, tab: int = 1):
+        """R's summary(aov) / TukeyHSD report (tab 0) and plot(lm) panels (tab 1) for the figure's model."""
+        if self.data is None:
+            self._show_warning("Load a data file first.")
+            return
+        try:
+            spec = self._build_spec()
+        except Exception as exc:  # noqa: BLE001
+            self._show_warning(f"Map the columns first: {exc}")
+            return
+        if not (spec.get("mapping") or {}).get("y"):
+            self._show_warning("Map a response (y) column first.")
+            return
+        from apps.desktop_app.diagnostics_dialog import DiagnosticsDialog
+
+        style = None
+        try:
+            result = getattr(self, "_current_result", None)
+            style = getattr(result, "style", None)
+        except Exception:  # noqa: BLE001
+            style = None
+        DiagnosticsDialog(self.data, spec, style, self, start_tab=int(tab or 0)).exec()
+
+    def action_reshape_wide(self):
+        """Gather a wide table's repeated-measurement columns into long form (recorded, revertible)."""
+        if self.data is None:
+            self._show_warning("Load a data file first, then reshape it.")
+            return
+        from PySide6.QtWidgets import QDialog
+
+        from apps.desktop_app.reshape_dialog import ReshapeDialog
+        from make_my_figure_core.tabular import TransformError
+
+        dlg = ReshapeDialog(self.controller, self.data, self)
+        if dlg.exec() != QDialog.Accepted:
+            return
+        raw = self.controller.raw_of(self.data)
+        record = (getattr(self.data, "table_context", None) or {}).get("record")
+        old = list(record.transform_objects) if record is not None else []
+        spec = None if dlg.removed else dlg.result_spec
+        # Column transformations recorded before survive when their column still exists.
+        if spec is not None:
+            from make_my_figure_core.tabular import preview_wide_to_long
+
+            keep_cols = set(preview_wide_to_long(raw.info.dataframe, spec).id_columns) | {spec.values_to}
+        else:
+            keep_cols = set(raw.info.dataframe.columns)
+        transforms = [t for t in old if t.column in keep_cols]
+        dropped = [t.target for t in old if t not in transforms]
+        try:
+            new = self.controller.derive_table(raw, transforms, reshape=spec)
+        except TransformError as exc:
+            QMessageBox.warning(self, "Reshape not applied", str(exc))
+            return
+        self._set_data(new)
+        if new is not raw:
+            self._data_before_transform = raw
+            self.revert_btn.setVisible(True)
+        msg = []
+        if spec is not None:
+            written = []
+            try:
+                written = self.controller.save_long_copy(new)
+            except Exception as exc:  # noqa: BLE001 - saving a copy must not lose the reshape
+                msg.append(f"The long table could not be saved: {exc}")
+            n_in, n_out = len(raw.info.dataframe), len(new.info.dataframe)
+            msg.insert(0, f"Reshaped to long form: {n_in} → {n_out} rows; the wide table is unchanged.")
+            if written:
+                msg.append("Saved " + ", ".join(os.path.basename(w) for w in written) + " beside it.")
+            elif raw.source_path is None or raw.is_example:
+                msg.append("Not saved (no file behind this table); use Export table to save it.")
+        else:
+            msg.append("Back to the wide table.")
+        if dropped:
+            msg.append(f"Removed transformation(s) of columns that no longer exist: {', '.join(dropped)}.")
+        self.statusBar().showMessage(" ".join(msg), 15000)
 
     def action_export_table(self):
         """Save the current table, with the actual values of any derived columns."""
@@ -3296,10 +3401,13 @@ class MainWindow(QMainWindow):
         # options
         self._clear_form(self.options_form)
         self._option_widgets = {}
+        self._option_requires = {}
         for opt in self.controller.options(pt):
             w = self._make_option_widget(opt)
             self.options_form.addRow(opt.label, w)
             self._option_widgets[opt.key] = w
+            if getattr(opt, "requires", ()):
+                self._option_requires[opt.key] = tuple(opt.requires)
         self._refresh_preset_list()
 
         # Apply a Matrix-Workflow handoff's suggested option defaults (e.g. volcano
@@ -3397,7 +3505,22 @@ class MainWindow(QMainWindow):
             picked = [i.text() for i in widget.selectedItems()]
             if picked:
                 mapping[field] = picked
+        # The statistics panel offers whole-grid statistics only on a facet grid.
+        _stats = getattr(self, "stats_panel", None)
+        if _stats is not None and hasattr(_stats, "set_facets"):
+            _stats.set_facets(any(mapping.get(f) not in (None, "", "(none)") for f in ("facet_row", "facet_col")))
         for key, w in self._option_widgets.items():
+            # An option that needs a mapping field (a facet option needs a facet
+            # column) is hidden and writes nothing until that field is chosen.
+            needs = (getattr(self, "_option_requires", None) or {}).get(key)
+            if needs:
+                active = any(mapping.get(f) not in (None, "", "(none)") for f in needs)
+                try:
+                    self.options_form.setRowVisible(w, active)
+                except (AttributeError, TypeError):   # pragma: no cover - older Qt
+                    w.setVisible(active)
+                if not active:
+                    continue
             if isinstance(w, QCheckBox):
                 mapping[key] = w.isChecked()
             elif isinstance(w, QComboBox):
@@ -4129,6 +4252,13 @@ def _selftest() -> int:
         s3["layout"] = {"y_scale": "log10", "y_tick_format": "plain"}
         assert ctrl.render(s3, _mk_loaded(tbl)).figure.axes[0].get_yscale() == "log"
         stats_ok.append("table transform + three-way ANOVA + log axis")
+        # (d) facet grid: one panel per level of two factors, shared legend on the host
+        from make_my_figure_core.plots.facets import facet_axes
+
+        s4 = ctrl.build_spec("boxplot_or_violin_with_points", "publication", "t.csv",
+                             {"x": "c", "y": "y", "hue": "b", "facet_col": "a"})
+        assert len(facet_axes(ctrl.render(s4, _mk_loaded(tbl)).figure)) == 2
+        stats_ok.append("facet grid")
     except Exception as exc:  # noqa: BLE001
         failures.append(f"statistics: {exc}")
 

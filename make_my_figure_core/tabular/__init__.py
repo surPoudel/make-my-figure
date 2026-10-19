@@ -1,4 +1,4 @@
-"""General tabular-data workflow: column roles and recorded transformations.
+"""General tabular-data workflow: column roles, wide → long reshaping and recorded transformations.
 
 For ordinary experimental tables (ecology, entomology, agriculture, physiology,
 ...), as opposed to the feature-matrix workflow in ``matrix_workflow``. Nothing
@@ -13,6 +13,15 @@ from make_my_figure_core.tabular.roles import (  # noqa: F401
     roles_from_suggestions,
     suggest_roles,
     validate_roles,
+)
+from make_my_figure_core.tabular.reshape import (  # noqa: F401
+    ReshapeError,
+    ReshapePreview,
+    ReshapeSuggestion,
+    WideToLong,
+    preview_wide_to_long,
+    suggest_wide_to_long,
+    wide_to_long,
 )
 from make_my_figure_core.tabular.transforms import (  # noqa: F401
     LOG_METHODS,

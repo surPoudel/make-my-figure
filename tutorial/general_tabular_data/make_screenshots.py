@@ -154,8 +154,31 @@ def main():
     win2.show()
     win2.load_path(pkg)
     grab(win2, "09_reopened_figure_package.png")
-    win.close()
     win2.close()
+
+    # 10-11. facet grids on the mock plant-growth design (2 species x 2 ages x 3 N x 4 months)
+    win.load_path(os.path.join(HERE, "data", "mock_plant_growth.csv"))
+    win.plot_combo.setCurrentIndex(win.plot_combo.findData("boxplot_or_violin_with_points"))
+    for f, col in (("x", "Month"), ("y", "Growth_cm"), ("hue", "Nitrogen_Concentration"),
+                   ("facet_row", "Age"), ("facet_col", "Species")):
+        win._mapping_widgets[f].setCurrentText(col)
+    win.title_edit.setText("Distribution of Plant Growth Over Time")
+    win.ylabel_edit.setText("Growth (cm)")
+    win._style_box.setChecked(True)
+    win.cmb_legloc.setCurrentText("outside bottom")
+    win.render_preview()
+    grab(win, "10_faceted_boxplot.png")
+    win.plot_combo.setCurrentIndex(win.plot_combo.findData("lineplot_timecourse_with_error_band"))
+    for f, col in (("x", "Month"), ("y", "Growth_cm"), ("color", "Nitrogen_Concentration"),
+                   ("facet_row", "Age"), ("facet_col", "Species")):
+        win._mapping_widgets[f].setCurrentText(col)
+    win._option_widgets["error_display"].setCurrentText("bars")
+    win.title_edit.setText("Plant Growth Trajectory Over Time")
+    win.ylabel_edit.setText("Mean Growth (cm) ± SE")
+    win.xlabel_edit.setText("Time (Months)")
+    win.render_preview()
+    grab(win, "11_faceted_lineplot.png")
+    win.close()
     app.processEvents()
 
 

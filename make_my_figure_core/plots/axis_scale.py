@@ -232,7 +232,8 @@ def _user_limits(layout: Dict[str, Any], mapping: Dict[str, Any], axis: str):
 
 
 def _apply_one(ax, axis: str, scale: Optional[str], fmt: Optional[str], minor: Optional[bool],
-               notes: List[str], *, values: np.ndarray, limits: Tuple[Optional[float], Optional[float]]) -> None:
+               notes: List[str], *, values: np.ndarray, limits: Tuple[Optional[float], Optional[float]],
+               linear_values: Optional[np.ndarray] = None) -> None:
     from matplotlib import ticker
 
     axobj = ax.xaxis if axis == "x" else ax.yaxis
@@ -261,7 +262,12 @@ def _apply_one(ax, axis: str, scale: Optional[str], fmt: Optional[str], minor: O
         cur_lo, cur_hi = get_lim()
         new_lo = cur_lo if lo is None else lo
         new_hi = cur_hi if hi is None else hi
-        shown = values if (is_log and values.size) else plotted_values(ax, axis, include_bar_base=not is_log)
+        # The range is checked against every axes that shares it: on a facet grid a
+        # y_max of 40 checked on the first panel alone cut points off panels 2 and 4.
+        if is_log:
+            shown = values if values.size else plotted_values(ax, axis)
+        else:
+            shown = linear_values if linear_values is not None else plotted_values(ax, axis, include_bar_base=True)
         if new_hi <= new_lo:
             notes.append(f"{name}-axis range not applied: the maximum ({new_hi:g}) must be greater than the "
                          f"minimum ({new_lo:g}).")
@@ -291,8 +297,39 @@ def _apply_one(ax, axis: str, scale: Optional[str], fmt: Optional[str], minor: O
         axobj.set_minor_locator(ticker.AutoMinorLocator() if minor else ticker.NullLocator())
 
 
-def apply_axis_scales(fig, ax, spec: Dict[str, Any], plot_type: str) -> List[str]:
-    """Apply the requested axis scale, range and tick notation; return notes for the user."""
+def apply_axis_scales(fig, ax, spec: Dict[str, Any], plot_type: str, *, panels=None) -> List[str]:
+    """Apply the requested axis scale, range and tick notation; return notes for the user.
+
+    ``panels`` - the data axes of a facet grid. Every panel gets the scale; the
+    limits are fitted to the values of all panels that share that axis (a shared
+    axis fitted to the first panel alone cropped the others), or to each panel's
+    own values when the panels do not share it.
+    """
+    if panels:
+        notes: List[str] = []
+        for axis in ("x", "y"):
+            groups: List[List[Any]] = []
+            for p in panels:
+                shared = p.get_shared_y_axes() if axis == "y" else p.get_shared_x_axes()
+                for g in groups:
+                    if shared.joined(g[0], p):
+                        g.append(p)
+                        break
+                else:
+                    groups.append([p])
+            axis_spec = {**spec, "layout": {k: v for k, v in ((spec or {}).get("layout") or {}).items()
+                                            if not k.startswith("x_" if axis == "y" else "y_")}}
+            for g in groups:
+                for note in _apply_scales_to(fig, g, axis_spec, plot_type):
+                    if note not in notes:
+                        notes.append(note)
+        return notes
+    return _apply_scales_to(fig, [ax], spec, plot_type)
+
+
+def _apply_scales_to(fig, targets, spec: Dict[str, Any], plot_type: str) -> List[str]:
+    """``apply_axis_scales`` for a list of axes that share their limits."""
+    ax = targets[0]
     layout = (spec or {}).get("layout") or {}
     if not any(k in layout for k in AXIS_KEYS + LIMIT_KEYS):
         return []
@@ -324,7 +361,9 @@ def apply_axis_scales(fig, ax, spec: Dict[str, Any], plot_type: str) -> List[str
         if scale not in (None, "linear", "symlog") and scale not in SCALE_BASES:
             notes.append(f"{name}-axis scale {scale!r} is not recognised; use linear, log10, log2 or ln.")
             scale = None
-        values = plotted_values(ax, axis)
+        values = np.concatenate([plotted_values(t, axis) for t in targets]) if len(targets) > 1 \
+            else plotted_values(ax, axis)
+        linear_values = np.concatenate([plotted_values(t, axis, include_bar_base=True) for t in targets])
         limits = _user_limits(layout, mapping, axis)
         if scale in SCALE_BASES:
             column = next((mapping.get(k) for k in _AXIS_COLUMN_KEYS[axis] if mapping.get(k)), None)
@@ -342,8 +381,9 @@ def apply_axis_scales(fig, ax, spec: Dict[str, Any], plot_type: str) -> List[str
                              "Keep a linear axis, or transform the data with an explicit offset you can "
                              "justify (Data ▸ Prepare table).")
                 scale = None
-        _apply_one(ax, axis, scale, fmt, minor, notes, values=values,
-                   limits=limits if has_layout_limits else (None, None))
+        for t in targets:
+            _apply_one(t, axis, scale, fmt, minor, notes if t is ax else [], values=values,
+                       limits=limits if has_layout_limits else (None, None), linear_values=linear_values)
         if scale in SCALE_BASES and axis == "y" and plot_type in _BAR_PLOTS:
             notes.append("Bars on a logarithmic axis: a bar's length depends on where the axis starts, "
                          "not on zero, so compare bar tops rather than bar lengths. A dot, strip or box "

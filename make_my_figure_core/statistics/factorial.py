@@ -15,7 +15,9 @@ Conventions (see ``docs/STATISTICS_FACTORIAL.md``):
 
 * Ordinary least squares via statsmodels; factors as categorical terms.
 * Type II sums of squares by default (each term adjusted for every term that
-  does not contain it; the default of ``car::Anova``). Type III on request,
+  does not contain it; the default of ``car::Anova``). Type I (sequential, R's
+  ``anova(lm)``: each term adjusted only for the terms before it, so the factor
+  order matters when cell sizes differ) and Type III on request; Type III is
   always with sum-to-zero contrasts — Type III with treatment contrasts tests
   hypotheses that depend on the reference level and is not offered.
 * Covariates enter as main effects (ANCOVA with parallel slopes).
@@ -268,6 +270,52 @@ def _fit(work: pd.DataFrame, response: str, factors, covariates, interactions):
     return smf.ols(formula, data=frame).fit(), fmap, cmap, formula
 
 
+def _sequential_table(model) -> pd.DataFrame:
+    """Type I (sequential) ANOVA table in R's term order.
+
+    Each term's SS is the drop in residual SS when it joins the terms before it.
+    R orders terms main effects first (factors, then covariates), then
+    interactions by degree. Patsy groups a covariate after every categorical
+    interaction, and sequential SS depend on the order: ``anova_lm(typ=1)`` gave
+    the covariate of validation case F6 SS = 0.0463 where R's ``anova(lm)``
+    gives 0.0975, so the table is built here from nested least-squares fits.
+    """
+    from scipy import stats as sps
+
+    info = model.model.data.design_info
+    X = np.asarray(model.model.exog, float)
+    y = np.asarray(model.model.endog, float)
+    terms = [t for t in info.terms if t.factors]
+    terms.sort(key=lambda t: len(t.factors))          # stable: keeps main-effect order
+    intercept = [info.slice(t) for t in info.terms if not t.factors]
+
+    def rss(cols):
+        if not cols:
+            return float(np.sum((y - y.mean()) ** 2)) if intercept else float(np.sum(y ** 2))
+        A = X[:, cols]
+        beta, *_ = np.linalg.lstsq(A, y, rcond=None)
+        return float(np.sum((y - A @ beta) ** 2))
+
+    used = [i for sl in intercept for i in range(X.shape[1])[sl]]
+    prev = rss(used) if used else rss([])
+    df_res = float(model.df_resid)
+    rss_full = float(model.ssr)
+    rows, names = [], []
+    for t in terms:
+        cols = list(range(X.shape[1])[info.slice(t)])
+        used += cols
+        cur = rss(used)
+        ss = prev - cur
+        df = float(len(cols))
+        F = (ss / df) / (rss_full / df_res)
+        rows.append({"df": df, "sum_sq": ss, "F": F, "PR(>F)": float(sps.f.sf(F, df, df_res))})
+        names.append(info.term_names[info.terms.index(t)])
+        prev = cur
+    rows.append({"df": df_res, "sum_sq": rss_full, "F": np.nan, "PR(>F)": np.nan})
+    names.append("Residual")
+    return pd.DataFrame(rows, index=names)
+
+
 def factorial_anova(df: pd.DataFrame, response: str, factors: Sequence[str], *,
                     covariates: Sequence[str] = (), subject: Optional[str] = None,
                     interactions: str = "full", ss_type: int = 2) -> List[StatResult]:
@@ -277,21 +325,21 @@ def factorial_anova(df: pd.DataFrame, response: str, factors: Sequence[str], *,
         import statsmodels.api as sm
     except Exception as exc:  # pragma: no cover
         raise StatsError(f"Factorial ANOVA requires statsmodels ({exc}).")
-    if ss_type not in (2, 3):
-        raise StatsError("ss_type must be 2 or 3.")
+    if ss_type not in (1, 2, 3):
+        raise StatsError("ss_type must be 1, 2 or 3.")
     rep = check_design(df, response, factors, covariates=covariates, subject=subject, interactions=interactions)
     if not rep.estimable:
         raise StatsError(rep.explanation())
     work = _prepare(df, response, list(factors), list(covariates), subject, DesignReport(
         response, list(factors), list(covariates), subject, interactions))
     model, fmap, cmap, formula = _fit(work, response, list(factors), list(covariates), interactions)
-    table = sm.stats.anova_lm(model, typ=ss_type)
+    table = _sequential_table(model) if ss_type == 1 else sm.stats.anova_lm(model, typ=ss_type)
     ss_res = float(table.loc["Residual", "sum_sq"])
     df_res = float(table.loc["Residual", "df"])
     k = len(factors)
     name = {1: "One-way", 2: "Two-way", 3: "Three-way"}[k] if not covariates else f"{k}-factor ANCOVA"
     name = f"{name} ANOVA" if not covariates else name
-    roman = "II" if ss_type == 2 else "III"
+    roman = {1: "I", 2: "II", 3: "III"}[ss_type]
     results: List[StatResult] = []
     for term in table.index:
         if term in ("Residual", "Intercept"):

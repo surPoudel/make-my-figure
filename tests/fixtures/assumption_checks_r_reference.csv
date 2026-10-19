@@ -1,0 +1,12 @@
+"case","method","statistic","p_value","df1","df2"
+"young_factorial_residuals","shapiro",0.995376137694467,0.965184700120322,NA,NA
+"young_factorial_levene","levene",3.8904895130098,9.51489749839506e-05,11,108
+"all_three_way_residuals","shapiro",0.995606174617907,0.729240221152853,NA,NA
+"all_three_way_levene","levene",3.95623535801536,3.8485020764138e-08,23,216
+"oneway_residuals","shapiro",0.995989263373082,0.794556972345699,NA,NA
+"oneway_levene","levene",32.2015919148994,4.25265823757026e-13,2,237
+"m10_group_Low N","shapiro",0.94731775797553,0.328202158460894,NA,NA
+"m10_group_Medium N","shapiro",0.963449989221973,0.614823813183542,NA,NA
+"m10_group_High N","shapiro",0.969920546962013,0.753195004494722,NA,NA
+"unbalanced_residuals","shapiro",0.979583638444953,0.561481154157995,NA,NA
+"unbalanced_levene","levene",2.71106262170978,0.0563945868323333,3,44

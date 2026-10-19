@@ -18,3 +18,9 @@ E3,confounded,quantity,treatment;time,,main,2,not_estimable
 E4,one_per_cell,quantity,treatment;social;time,,full,2,not_estimable
 E5,constant_response,quantity,treatment;social,,full,2,not_estimable
 E6,repeated_colony,quantity,treatment;time,,full,2,not_estimable_subject
+F1,unbalanced,quantity,treatment;social;time,,full,1,estimable
+F2,unbalanced,quantity,treatment;time,,full,1,estimable
+F3,unbalanced,quantity,time;treatment,,full,1,estimable
+F4,balanced_interaction,quantity,treatment;social;time,,full,1,estimable
+F5,missing_values,quantity,treatment;social;time,,main,1,estimable
+F6,unbalanced,quantity,treatment;social,body_size_mm,full,1,estimable

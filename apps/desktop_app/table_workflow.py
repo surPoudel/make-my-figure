@@ -75,7 +75,15 @@ class TableWorkflowDialog(QDialog):
         self.resize(1040, 820)
         self.controller = controller
         self.raw = controller.raw_of(data)
-        self.rawdf: pd.DataFrame = self.raw.info.dataframe
+        # A wide table reshaped to long form: roles, transformations and analysis act on
+        # the long table, rebuilt from the untouched wide one through the recorded reshape.
+        self.reshape = controller.reshape_of(data)
+        if self.reshape is not None:
+            from make_my_figure_core.tabular import wide_to_long
+
+            self.rawdf: pd.DataFrame = wide_to_long(self.raw.info.dataframe, self.reshape)[0]
+        else:
+            self.rawdf = self.raw.info.dataframe
         ctx = getattr(data, "table_context", None) or {}
         record = ctx.get("record")
         self.transforms: List[TableTransform] = list(record.transform_objects) if record else []
@@ -87,7 +95,9 @@ class TableWorkflowDialog(QDialog):
 
         v = QVBoxLayout(self)
         intro = QLabel(
-            f"<b>{self.raw.table_name}</b> — {len(self.rawdf)} rows × {self.rawdf.shape[1]} columns. "
+            f"<b>{self.raw.table_name}</b>"
+            + (" (reshaped to long form)" if self.reshape is not None else "")
+            + f" — {len(self.rawdf)} rows × {self.rawdf.shape[1]} columns. "
             "The original table is never modified: transformations add new columns beside the original "
             "ones, and every step is recorded and saved with the figure.")
         intro.setWordWrap(True)
@@ -330,6 +340,7 @@ class TableWorkflowDialog(QDialog):
         self.an_inter.addItem("Main effects only", "main")
         self.an_ss = QComboBox()
         self.an_ss.addItem("Type II sums of squares (default)", 2)
+        self.an_ss.addItem("Type I (sequential; factor order matters)", 1)
         self.an_ss.addItem("Type III (sum-to-zero contrasts)", 3)
         form.addRow("Response", self.an_response)
         for i, cb in enumerate(self.an_factors):
@@ -549,7 +560,8 @@ class TableWorkflowDialog(QDialog):
 
     def _apply(self):
         try:
-            self.result_data = self.controller.derive_table(self.raw, self.transforms, roles=self.roles)
+            self.result_data = self.controller.derive_table(self.raw, self.transforms, roles=self.roles,
+                                                            reshape=self.reshape)
         except TransformError as exc:
             QMessageBox.warning(self, "Transformation not applied", str(exc))
             return

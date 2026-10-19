@@ -48,6 +48,37 @@ Box/violin (`boxplot_or_violin_with_points`): `kind` (`box`, `violin`, `box+viol
 role that dodges boxes within each category (statistics then run within each category through the
 existing StatsSpec `subgroup_column`).
 
+### Facet grids (`facet_row`, `facet_col`)
+
+On `boxplot_or_violin_with_points` and `lineplot_timecourse_with_error_band`, two optional
+column roles split the figure into a grid of panels - one per level of the row column, one
+per level of the column column, both at once for a grid (ggplot's `facet_grid(row ~ col)`).
+A 2 species x 2 ages x 3 nitrogen x 4 months design reads as `facet_row = Age`,
+`facet_col = Species`, `x = Month`, `hue`/`color` = nitrogen. Built once for both plots by
+`plots/facets.py`:
+
+| what | behaviour |
+|---|---|
+| categories, colours | one category order (`category_order`) and one colour per hue level across every panel |
+| value axis | shared across panels and fitted to all of them; `facet_share_y` (style) = false gives each panel its own |
+| strips | `Species: Species_A` above columns and beside rows; `facet_labels` (style) = `value` drops the column name |
+| tick labels | outer panels only (shared axes); `show_*_tick_labels` and tick angle act on every panel |
+| x / y label, title, legend | one of each for the grid, carried by an invisible host axes (label `<facet-host>`) that spans the panels, so legend location/outside/geometry, label padding and visibility and title padding act on the grid exactly as on a single plot; a key above or below the grid is laid out in one row |
+| log axes, axis range | applied to every panel; limits fitted to the values of all panels sharing the axis |
+| statistics | run within each panel (brackets drawn per panel; each result records its panel in `extra["facet"]`; P values adjusted within the panel). With the statistics panel's **Also test across the whole grid** (`statistics.facet_scope = "figure"`), the test also runs once over every panel: an ANOVA gains the facet variables as factors - `Growth ~ Month * Age * Species` - through the validated factorial engine (at most three factors; four is explained, not computed); a pairwise or one-way test pools the panels. Reported in the statistics table and method sentence, not drawn (a bracket cannot span panels) |
+| ANOVA on a panel | the term table is fitted to its own panel (lines break after the term name). *Annotation shows* (the default *Stars only* keeps the statistic and P unless **ANOVA terms as stars too** is ticked), *Show effect size* (partial η²) and *Hide non-significant* act on the terms; *Post-hoc pairwise after omnibus* adds the hue pairs within each x category, bracketed. *Sums of squares* (Type II default, I, III) applies to every panel and to the whole-grid model; on a balanced design the three are identical. Bracket labels that overlap or leave their panel are reported |
+| bracket headroom | brackets are stacked per panel from the same starting limits (stacking them on the shared axis one panel after another compounded: 115 where 107 is needed). A panel is shorter than a single plot, so a stack of all-pairs brackets takes more of its range; prefer `within_x` comparisons or a taller figure |
+| strip labels | wrapped to two lines, then shrunk (to 70 % of the tick size) to fit the panel; still too long is reported |
+| automatic size | panels grow the figure up to 10 x 10 in, then shrink instead, with a note once a panel is narrower than 1.3 in |
+| empty combination | the panel is kept and reads "no observations" |
+| limits | at most 12 levels per direction; a facet column equal to the x or hue column is allowed but warned |
+
+Facet options are shown only once a facet column is mapped (`Option.requires`). A figure with
+no facet column never reaches this code and renders exactly as before. Line plots can also draw
+the error as `error_display = bars` (mean +/- SE/SD/CI as capped bars) instead of a band.
+Example data: `tests/fixtures/plant_growth_facets.csv` (mock plant growth, 240 rows). Tests:
+`tests/test_facet_grids.py`, `tests/test_desktop_facets_and_builder.py`.
+
 Bars (`barplot_with_error_bar`, `grouped_barplot_with_error_bar`): `summary` (config), `error`
 (config), `bar_width`, `bar_fill` (`filled`/`outline`), `bar_edge_width`, `bar_alpha`, `error_cap`,
 `show_n`, `orientation`; the `color` role now colours bars by a second column.

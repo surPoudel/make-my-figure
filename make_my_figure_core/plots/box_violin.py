@@ -258,7 +258,7 @@ def _corner_panel(ax, spec: Dict[str, Any], report, style) -> None:
         prefix = f"{item.x_level}: " if item.within_x and item.x_level else ""
         lines.append(f"{prefix}{item.group_a} vs {item.group_b}: {item.text}".replace("\n", ", "))
     lines += stat_text_panel([r for r in report.results if r.comparison_type != "two_group"],
-                             digits=int(ann_cfg.get("digits", 3)))
+                             digits=int(ann_cfg.get("digits", 3)), cfg=ann_cfg)
     if not lines:
         return
     lo, hi = ax.get_xlim()
@@ -271,6 +271,10 @@ def _corner_panel(ax, spec: Dict[str, Any], report, style) -> None:
 # --- renderer -------------------------------------------------------------------------------
 
 def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
+    from make_my_figure_core.plots.facets import wants_facets
+
+    if wants_facets(spec):
+        return _render_facets(spec, df, style)
     mapping = spec.get("mapping", {}) or {}
     layout = spec.get("layout", {}) or {}
     x = get_mapping(spec, "x", required=True, context=PLOT_TYPE)
@@ -520,3 +524,418 @@ def render(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
         meta["statistics_report"] = stats_report.to_dict()
         meta["statistics_annotation"] = stats_mode
     return RenderResult(figure=fig, metadata=meta, warnings=warnings, stats_report=stats_report)
+
+
+# --------------------------------------------------------------------------------------------
+# Facet grid (facet_row / facet_col): one panel per level, same categories, colours and value
+# axis in every panel. Reached only when a facet column is mapped; the single-plot path above
+# is untouched, so a figure without facets renders exactly as before.
+# --------------------------------------------------------------------------------------------
+def _crowded_bracket_labels(grid) -> int:
+    """Bracket labels (z-order 7) that overlap another label or leave their panel, in pixels.
+
+    Twelve post-hoc pairs labelled "****, g = -4.8" on a 2.2 in panel overlapped
+    each other and ran 20-40 px into the next panel; the grid said nothing.
+    """
+    fig = grid.fig
+    try:
+        fig.canvas.draw()
+        r = fig.canvas.get_renderer()
+    except Exception:  # noqa: BLE001
+        return 0
+    bad = 0
+    for panel in grid.panels:
+        frame = panel.ax.get_window_extent(r)
+        boxes = [t.get_window_extent(r) for t in panel.ax.texts if t.get_zorder() == 7 and t.get_text()]
+        for i, b in enumerate(boxes):
+            outside = b.x0 < frame.x0 - 1 or b.x1 > frame.x1 + 1
+            clash = any(b.x0 < o.x1 - 1 and o.x0 < b.x1 - 1 and b.y0 < o.y1 - 1 and o.y0 < b.y1 - 1
+                        for j, o in enumerate(boxes) if j != i)
+            bad += int(outside or clash)
+    return bad
+
+
+def _grid_method_paragraph(reports, row, col) -> str:
+    """The per-panel sentence, plus the whole-grid report's own sentence when there is one."""
+    panel = [r for r in reports if not any(x.extra.get("facet") == "whole grid" for x in r.results)]
+    grid = [r for r in reports if r not in panel]
+
+    def without_checks(rep) -> str:
+        # each panel's own assumption sentence is replaced by the grid summary below
+        text = rep.method_paragraph
+        sentence = (rep.assumptions or {}).get("sentence")
+        return text.replace(sentence, "").strip() if sentence else text.strip()
+
+    text = without_checks(panel[0] if panel else grid[0])
+    if panel:
+        text += (" Comparisons were made within each panel "
+                 f"({' × '.join(v for v in (row, col) if v)}), and P values were adjusted within each panel.")
+        text += _grid_assumption_sentence(panel)
+    for g in grid:
+        extra = g.method_paragraph.split("This model was fitted once", 1)
+        if len(extra) == 2:
+            text += " This model was fitted once" + extra[1]
+        if (g.assumptions or {}).get("sentence"):
+            text += " For the whole-grid model: " + g.assumptions["sentence"][0].lower() + g.assumptions["sentence"][1:]
+    return text.strip()
+
+
+def _grid_assumption_sentence(panel_reports) -> str:
+    """One sentence for the checks run in every panel: how many met them, which did not."""
+    checked = [(r.results[0].extra.get("facet") if r.results else "?", r.assumptions)
+               for r in panel_reports if r.assumptions and r.assumptions.get("checks")]
+    if not checked:
+        return ""
+    methods = sorted({f"{c['method']} ({c['assumption']})" for _, a in checked for c in a["checks"]
+                      if c.get("passed") is not None})
+    bad = [(label, a) for label, a in checked if a.get("normality_failed") or a.get("variances_failed")]
+    out = (f" Assumptions were checked in each panel ({'; '.join(methods)}; α = {checked[0][1].get('alpha', 0.05):g}):"
+           f" met in {len(checked) - len(bad)} of {len(checked)} panels")
+    if bad:
+        def which(a):
+            return " and ".join(w for w, k in (("normality", "normality_failed"),
+                                               ("equal variances", "variances_failed")) if a.get(k))
+        out += "; not met in " + "; ".join(f"{label} ({which(a)})" for label, a in bad)
+        switched = {a.get("used_test") for _, a in bad if a.get("used_test") != a.get("test")}
+        if switched:
+            out += f", where the non-parametric alternative was used"
+    return out + "."
+
+
+def _whole_grid_statistics(spec, stats_spec, work, style, x, hue, row, col):
+    """Run the chosen test once over the whole grid.
+
+    For an ANOVA the factors are x, hue and the facet variables (at most 3, the
+    limit of the factorial engine); a pairwise or one-way test pools the panels
+    and compares the x categories. Returns ``(report_or_None, note_or_None)``.
+    """
+    import copy
+
+    from make_my_figure_core.plots.stats_integration import run_and_annotate
+
+    test = str(stats_spec.get("test", "auto"))
+    scoped = copy.deepcopy(spec)
+    st = dict(stats_spec)
+    st.pop("facet_scope", None)
+    facet_vars = [v for v in (row, col) if v]
+    if test in ("two_way_anova", "factorial_anova", "auto"):
+        factors = list(st.get("factors") or [v for v in (x, hue) if v])
+        factors += [v for v in facet_vars if v not in factors]
+        if len(factors) > 3:
+            return None, (f"Whole-grid ANOVA not run: {len(factors)} factors ({', '.join(factors)}) exceed the "
+                          "three the factorial engine supports. Drop hue or facet one variable fewer, or run "
+                          "the model in Prepare table > Factorial analysis.")
+        # Post-hoc pairs are drawn panel by panel; pooled across the grid they would
+        # compare boxes from different panels, so the whole-grid model is the ANOVA alone.
+        st.update({"test": "factorial_anova", "factors": factors, "annotate": False, "posthoc": False})
+    else:
+        st["annotate"] = False
+    scoped["statistics"] = st
+    try:
+        rep = run_and_annotate(scoped, work, style, PLOT_TYPE, ax=None)
+    except Exception as exc:  # noqa: BLE001
+        return None, f"Whole-grid statistics not run: {exc}"
+    if rep is not None:
+        rep.method_paragraph = (rep.method_paragraph + " This model was fitted once across the whole grid, "
+                                f"with {', '.join(st.get('factors') or [x])} as factors.").strip()
+    return rep, None
+
+
+def _render_facets(spec: Dict[str, Any], df, style: StyleProfile) -> RenderResult:
+    from make_my_figure_core.plots.facets import (
+        empty_panel_note, facet_columns, facet_metadata, finish_facet_grid, make_facet_grid)
+    from make_my_figure_core.plots.stats_integration import run_and_annotate
+    from make_my_figure_core.statistics.models import StatsReport
+    from make_my_figure_core.statistics.schemas import normalize_stats_spec
+
+    mapping = spec.get("mapping", {}) or {}
+    layout = spec.get("layout", {}) or {}
+    x = get_mapping(spec, "x", required=True, context=PLOT_TYPE)
+    y = get_mapping(spec, "y", required=True, context=PLOT_TYPE)
+    hue = get_mapping(spec, "hue") or None
+    warnings: List[str] = []
+    if hue is not None and str(hue) == str(x):
+        warnings.append("The hue column is the same as the x column; it was ignored.")
+        hue = None
+    row, col = facet_columns(spec, df)
+    for name, var in (("facet rows", row), ("facet columns", col)):
+        if var is not None and var in (x, hue):
+            warnings.append(f"{var!r} is mapped to both {name} and {'x' if var == x else 'hue'}; "
+                            "each panel then holds a single level of it.")
+
+    kind = _choice(get_mapping(spec, "kind", "box"), KINDS, "box")
+    show_points = bool(get_mapping(spec, "points", True))
+    obs = ObservationStyle.from_mapping(mapping)
+    box_width = _number(mapping.get("box_width"), 0.5, 0.2, 0.9)
+    box_fill = _choice(mapping.get("box_fill"), BOX_FILLS, "light")
+    box_lw = _number(mapping.get("box_line_width"), 0.0, 0.0, None) or float(style.spine_width_pt)
+    median_lw = _number(mapping.get("median_line_width"), 0.0, 0.0, None) or float(style.line_width_pt)
+    cap_frac = _number(mapping.get("whisker_cap_width"), 0.5, 0.0, 1.0)
+    raw_outliers = mapping.get("show_outliers")
+    show_outliers = (not show_points) if raw_outliers in (None, "") else bool(raw_outliers)
+    violin_alpha = _number(mapping.get("violin_alpha"), 0.45, 0.05, 1.0)
+    orientation = _choice(mapping.get("orientation"), ORIENTATIONS, "vertical")
+    horizontal = orientation == "horizontal"
+    group_spacing = _number(mapping.get("group_spacing"), 1.0, 0.5, 2.0)
+    order = _choice(mapping.get("category_order"), CATEGORY_ORDERS, "data")
+    show_n = _choice(mapping.get("show_n"), SHOW_N, "none")
+    share_y = bool(get_mapping(spec, "facet_share_y", True))
+
+    require_columns(df, [x, y] + ([hue] if hue else []), context=PLOT_TYPE)
+    work = df.copy()
+    work[y] = coerce_numeric(work, y, context=PLOT_TYPE)
+
+    # One category order and one colour per hue level for the whole grid.
+    x_levels: List[Any] = list(dict.fromkeys(work[x].tolist()))
+    medians = {}
+    for g in x_levels:
+        vals = work.loc[work[x] == g, y].dropna().to_numpy(dtype=float)
+        medians[g] = float(np.median(vals)) if len(vals) else float("nan")
+    x_levels = _order_levels(x_levels, medians, order)
+    hue_levels: List[Any] = list(dict.fromkeys(work[hue].tolist())) if hue else []
+    centres = [1.0 + i * group_spacing for i in range(len(x_levels))]
+    cat_lo = min(centres) - 0.5 * group_spacing if centres else 0.5
+    cat_hi = max(centres) + 0.5 * group_spacing if centres else 1.5
+    labels = [str(g) for g in x_levels]
+    rng = np.random.default_rng(obs.seed)
+    stats_enabled = bool(normalize_stats_spec(spec.get("statistics")).get("enabled", False))
+
+    all_elements: List[_Element] = []
+    reports = []
+    panel_meta = []
+    with style.apply():
+        # The value axis is y when vertical and x when horizontal; the category
+        # axis is always shared. Sharing the wrong one cropped 19 of 240 points on
+        # a horizontal grid with free scales.
+        grid = make_facet_grid(spec, work, style, row=row, col=col, aspect=0.8,
+                               share_x=(share_y if horizontal else True),
+                               share_y=(True if horizontal else share_y))
+        warnings.extend(w for w in grid.warnings if w not in warnings)
+        v_lo, v_hi = float("inf"), float("-inf")
+        for panel in grid.panels:
+            ax, sub = panel.ax, panel.data
+            elements: List[_Element] = []
+            if hue:
+                # When hue is also a facet variable each panel holds one level of
+                # it; slots are laid out for the levels present so the single box
+                # sits on its tick, while the colour stays the level's grid colour.
+                local = [h for h in hue_levels if (sub[hue] == h).any()] if hue in (row, col) else hue_levels
+                k = max(len(local), 1)
+                slot = _HUE_CLUSTER_WIDTH * group_spacing / k
+                width = slot * min(0.92, box_width * 1.6)
+                for xi, xl in enumerate(x_levels):
+                    for h in local:
+                        hi_ = hue_levels.index(h)
+                        vals = sub.loc[(sub[x] == xl) & (sub[hue] == h), y].dropna().to_numpy(dtype=float)
+                        pos = centres[xi] + (local.index(h) - (k - 1) / 2.0) * slot
+                        elements.append(_Element(xl, h, pos, width, style.color_for(hi_), vals,
+                                                 (str(xl), str(h))))
+            else:
+                for xi, xl in enumerate(x_levels):
+                    vals = sub.loc[sub[x] == xl, y].dropna().to_numpy(dtype=float)
+                    elements.append(_Element(xl, None, centres[xi], box_width, style.color_for(xi), vals,
+                                             str(xl)))
+            drawn = [e for e in elements if e.n > 0]
+            if not drawn:
+                empty_panel_note(ax, style)
+            for e in drawn:
+                e.stats = _box_stats(e.values)
+                vmin, vmax = float(e.values.min()), float(e.values.max())
+                if kind == "summary":
+                    e.bottom, e.top = e.stats["q1"], e.stats["q3"]
+                elif kind == "box":
+                    e.bottom, e.top = e.stats["whisker_lo"], e.stats["whisker_hi"]
+                else:
+                    e.bottom, e.top = vmin, vmax
+                if show_points or (show_outliers and kind in ("box", "box+violin")):
+                    e.bottom, e.top = min(e.bottom, vmin), max(e.top, vmax)
+            if kind in ("violin", "box+violin"):
+                _draw_violins(ax, drawn, orientation=orientation, alpha=violin_alpha, box_lw=box_lw,
+                              median_lw=median_lw, show_medians=(kind == "violin"), warnings=warnings)
+            if kind in ("box", "box+violin"):
+                _draw_boxes(ax, drawn, orientation=orientation, box_fill=box_fill, box_lw=box_lw,
+                            median_lw=median_lw, cap_frac=cap_frac, show_outliers=show_outliers,
+                            inner=(kind == "box+violin"))
+            if kind == "summary":
+                _draw_summary(ax, drawn, orientation=orientation, box_fill=box_fill, box_lw=box_lw,
+                              median_lw=median_lw)
+            if show_points:
+                for e in drawn:
+                    info = draw_observations(ax, e.position, e.values, color=e.color, style=style, obs=obs,
+                                             orientation=orientation, rng=rng, base_size=style.marker_size)
+                    e.top = max(e.top, info["max"])
+                    e.bottom = min(e.bottom, info["min"])
+                    if info.get("suggestion") and info["suggestion"] not in warnings:
+                        warnings.append(info["suggestion"])
+            if horizontal:
+                ax.set_ylim(cat_lo, cat_hi)
+                ax.set_yticks(centres)
+                ax.set_yticklabels(labels)
+            else:
+                ax.set_xlim(cat_lo, cat_hi)
+                ax.set_xticks(centres)
+                ax.set_xticklabels(labels)
+            for e in drawn:
+                if np.isfinite(e.top):
+                    v_hi = max(v_hi, e.top)
+                if np.isfinite(e.bottom):
+                    v_lo = min(v_lo, e.bottom)
+            if show_n in ("below", "above") and drawn:
+                add_n_labels(ax, [e.position for e in drawn], [e.n for e in drawn], where=show_n,
+                             style=style, orientation=orientation, tops=[e.top for e in drawn])
+            all_elements.extend(elements)
+            panel_meta.append((panel, elements))
+
+        # One value axis for the grid (or one per panel when not shared): never crop a mark.
+        def _fit(ax, lo, hi):
+            if np.isfinite(lo) and np.isfinite(hi):
+                pad = _VALUE_PAD_FRACTION * ((hi - lo) or abs(hi) or 1.0)
+                (ax.set_xlim if horizontal else ax.set_ylim)(lo - pad, hi + pad)
+
+        if share_y:
+            for panel in grid.panels:
+                _fit(panel.ax, v_lo, v_hi)
+        else:
+            for panel, elements in panel_meta:
+                tops = [e.top for e in elements if e.n and np.isfinite(e.top)]
+                bottoms = [e.bottom for e in elements if e.n and np.isfinite(e.bottom)]
+                if tops and bottoms:
+                    _fit(panel.ax, min(bottoms), max(tops))
+        value_extent = (v_lo, v_hi) if np.isfinite(v_lo) and np.isfinite(v_hi) else None
+        axis_applied = {}
+        for panel in grid.panels:
+            axis_applied = apply_axis_overrides(
+                panel.ax, spec,
+                x_extent=value_extent if horizontal else (cat_lo, cat_hi),
+                y_extent=(cat_lo, cat_hi) if horizontal else value_extent)
+            if horizontal:
+                lo, hi = sorted(panel.ax.get_ylim())
+                panel.ax.set_ylim(hi, lo)        # first category at the top
+        if not horizontal:
+            for panel in grid.panels:
+                autorotate_xticklabels(panel.ax, style, rotation=get_mapping(spec, "x_tick_rotation", "auto"))
+
+        x_label = layout.get("x_label", x)
+        y_label = layout.get("y_label", y)
+        finish_facet_grid(grid, spec, style, x_label=(y_label if horizontal else x_label),
+                          y_label=(x_label if horizontal else y_label))
+
+        # Legend for the whole grid, on the host so every legend control acts on it.
+        location = resolve_legend_location(spec, style)
+        if not str(layout.get("legend_location", "")).strip():
+            location = LEGEND_LOCATIONS["outside right"]
+        if hue:
+            n_by_hue = {h: sum(e.n for e in all_elements if e.hue == h) for h in hue_levels}
+            leg_labels = [f"{h} (n = {n_by_hue[h]})" if show_n == "legend" else str(h) for h in hue_levels]
+            handles = [_legend_handle(style.color_for(i), box_fill, kind, violin_alpha)
+                       for i in range(len(hue_levels))]
+            place_legend(grid.host, style, title=str(hue), handles=handles, labels=leg_labels,
+                         location=location)
+        from make_my_figure_core.plots.facets import refit_strips
+
+        grid._mmf_reported = list(grid.warnings)
+        refit_strips(grid.fig)      # the legend's margin narrowed the panels
+
+        # Statistics: within each panel (the same comparisons, panel by panel).
+        if stats_enabled:
+            if horizontal:
+                warnings.append("Significance brackets are drawn for the vertical orientation only; "
+                                "facet statistics are reported in the table, not on the figure.")
+            # Brackets are stacked from the axis range at the time they are drawn.
+            # On a shared value axis each panel's stack stretched the range the
+            # next panel then built on: four panels reached y = 115 where the
+            # single plot needs 74. Every panel starts from the same limits; the
+            # union is applied afterwards.
+            get_lim = (lambda a: a.get_xlim()) if horizontal else (lambda a: a.get_ylim())
+            set_lim = (lambda a, lo, hi: a.set_xlim(lo, hi)) if horizontal else (lambda a, lo, hi: a.set_ylim(lo, hi))
+            shared_value = not grid.free_axes.get("x" if horizontal else "y", False)
+            base_lim = get_lim(grid.panels[0].ax) if shared_value else None
+            needed = []
+            for panel, elements in panel_meta:
+                if panel.data.empty:
+                    continue
+                if base_lim is not None:
+                    set_lim(panel.ax, *base_lim)
+                positions_map: Dict[Any, float] = {}
+                tops_map: Dict[Any, float] = {}
+                for xi, xl in enumerate(x_levels):
+                    positions_map[str(xl)] = centres[xi]
+                    cluster = [e.top for e in elements if e.x_level == xl and np.isfinite(e.top)]
+                    tops_map[str(xl)] = max(cluster) if cluster else float("nan")
+                if hue:
+                    for e in elements:
+                        positions_map[e.key] = e.position
+                        if np.isfinite(e.top):
+                            tops_map[e.key] = e.top
+                try:
+                    rep = run_and_annotate(spec, panel.data, style, PLOT_TYPE,
+                                           ax=None if horizontal else panel.ax,
+                                           positions=positions_map, tops=tops_map, mode="bracket")
+                except Exception as exc:  # noqa: BLE001 - one panel's design must not lose the others
+                    warnings.append(f"Statistics skipped for {panel.label}: {exc}")
+                    continue
+                if rep is not None:
+                    for r in rep.results:
+                        r.extra = {**(r.extra or {}), "facet": panel.label}
+                        r.group_a = f"{panel.label} · {r.group_a}" if r.group_a else panel.label
+                    reports.append(rep)
+                if base_lim is not None:
+                    needed.append(get_lim(panel.ax))
+            if base_lim is not None and needed:
+                set_lim(grid.panels[0].ax, min(min(l) for l in needed), max(max(l) for l in needed))
+            crowded = _crowded_bracket_labels(grid)
+            if crowded:
+                warnings.append(
+                    f"{crowded} significance label(s) overlap another label or run past their panel at this "
+                    "panel width. Use 'Stars only' without the effect size, 'Hide non-significant', fewer "
+                    "comparisons (Compare to control), or a wider figure.")
+
+        # Whole-grid statistics: the facet variables become factors of one model
+        # across every panel (Species x Age x Nitrogen), on request. Nothing is
+        # drawn for it - a bracket cannot span panels - so it is reported in the
+        # statistics table and the method sentence.
+        stats_spec_n = normalize_stats_spec(spec.get("statistics"))
+        if stats_enabled and str(stats_spec_n.get("facet_scope", "panel")) == "figure":
+            grid_rep, note = _whole_grid_statistics(spec, stats_spec_n, work, style, x, hue, row, col)
+            if note:
+                warnings.append(note)
+            if grid_rep is not None:
+                for r in grid_rep.results:
+                    r.extra = {**(r.extra or {}), "facet": "whole grid"}
+                    r.group_a = f"whole grid · {r.group_a}" if r.group_a else "whole grid"
+                reports.append(grid_rep)
+        warnings.extend(w for w in grid.warnings if w not in warnings)
+
+    stats_report = None
+    if reports:
+        stats_report = StatsReport(
+            results=[r for rep in reports for r in rep.results],
+            correction_method=reports[0].correction_method,
+            method_paragraph=_grid_method_paragraph(reports, row, col),
+            legend_sentence=reports[0].legend_sentence,
+            warnings=list(dict.fromkeys(w for rep in reports for w in rep.warnings)),
+            config=reports[0].config, software_versions=reports[0].software_versions,
+            assumptions=[{**rep.assumptions, "panel": (rep.results[0].extra or {}).get("facet") if rep.results
+                          else None} for rep in reports if rep.assumptions] or None)
+
+    meta = base_metadata(spec, style, work, used_columns=[x, y, hue, row, col])
+    meta["kind"] = kind
+    meta["orientation"] = orientation
+    meta["groups"] = [str(g) for g in x_levels]
+    meta["group_n"] = {str(g): int(sum(e.n for e in all_elements if e.x_level == g)) for g in x_levels}
+    meta["category_order"] = order
+    meta["facets"] = facet_metadata(grid)
+    if hue:
+        meta["hue"] = str(hue)
+        meta["hue_levels"] = [str(h) for h in hue_levels]
+    meta["style"] = {"points": show_points, "box_width": box_width, "box_fill": box_fill,
+                     "box_line_width_pt": box_lw, "median_line_width_pt": median_lw,
+                     "whisker_cap_width": cap_frac, "show_outliers": show_outliers,
+                     "violin_alpha": violin_alpha, "group_spacing": group_spacing, "show_n": show_n,
+                     "observations": asdict(obs)}
+    if axis_applied:
+        meta["axis_overrides"] = axis_applied
+    if stats_report is not None:
+        meta["statistics_report"] = stats_report.to_dict()
+        meta["statistics_annotation"] = "bracket per panel"
+    return RenderResult(figure=grid.fig, metadata=meta, warnings=warnings, stats_report=stats_report)

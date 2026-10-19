@@ -6,7 +6,170 @@ with any journal.
 
 ## Unreleased
 
-_Nothing yet._
+### Added — facet grids on the box/violin and line plots
+
+A 2 × 2 × 3 design measured over time (species × initial age × nitrogen, four
+sampling months, n = 5 per cell) is read as small multiples: one panel per species
+and age, nitrogen as colour, months along x — ggplot's `facet_grid(Age ~ Species)`.
+Map **facet rows** and/or **facet columns** on `boxplot_or_violin_with_points` or
+`lineplot_timecourse_with_error_band`; the grid is built by one shared module
+(`plots/facets.py`), so both plots behave alike:
+
+- the same category order, the same colour per level and one value axis in every
+  panel (`Facets share the value axis` turns the last off); strip labels
+  `Species: Species_A` (or the value alone); only the outer panels carry tick labels;
+- one shared x label, y label, title and legend for the grid, so every existing
+  control acts on it: legend location (a key below or above the grid lays out in one
+  row), legend outside and geometry, tick angle and visibility, axis-label padding
+  and visibility, palette, colour overrides, typography, figure size, log axes and
+  axis range (fitted to all panels that share the axis), statistics (brackets within
+  each panel, P values adjusted within each panel; **Also test across the whole
+  grid** fits one model over every panel with the facet variables as ANOVA factors,
+  e.g. `Growth ~ Month * Age * Species`, through the R-validated factorial engine);
+- a panel with no observations is kept, and says so.
+- The line plot can draw its error as **bars with caps** (`Error display`) as well as
+  a band; the numbers are the same (mean ± SE/SD/CI).
+- Facet options appear only once a facet column is chosen (new `Option.requires`),
+  in both apps. A figure without facets renders byte-identically to before: 48 of 48
+  default renders unchanged.
+- Spec JSON and Figure Package round trips render byte-identically; the Figure
+  Builder reproduces the grid; a style preset does not carry facet columns (they name
+  data), a full preset does.
+- Two independent visual reviews of the grids (72 and 60 rendered cases, measured)
+  found 19 defects before commit - inside legends hidden behind the panels, 19 of 240
+  points cropped on a horizontal grid with free scales, free scales without tick
+  labels, outside legends over the shared labels by up to 50 pt, strip text
+  overflowing by 220 pt, a 26.9 in automatic figure, bracket stacks compounding on
+  a shared axis (115 where 107 is needed) - all fixed, each with a regression test
+  (`tests/test_facet_grids.py`, 29 tests). Records: `quality_audit/facet_grids/`.
+
+### Added — R-style statistics report: summary(aov) and TukeyHSD
+
+**Statistics report (R-style summary(aov), TukeyHSD)…** (desktop Statistics panel; a
+tab beside the residual plots; browser on request) prints the ANOVA table and Tukey HSD
+comparisons for the figure's model exactly as R's console does - identical text, line
+for line, on five reference models from base R 4.5.3 (one-, two- and three-way, a
+48-mean interaction, balanced and unbalanced, factor order reversed) - followed by the
+Shapiro-Wilk / Levene checks and software versions. Copy, save as .txt, or download.
+
+- Type I (sequential) sums of squares, as `summary(aov)`; the report notes when unequal
+  group sizes make the order matter and when the figure's Type II table differs.
+- Tukey means are the model's adjusted means with unequal group sizes, as
+  `model.tables` gives them; R's averaging within the full interaction cell is
+  reproduced (averaging per sub-term gave 1.5023 where R has 1.5111).
+- The studentized range distribution is a port of R's `ptukey` / `qtukey`: scipy's
+  integral differed from R's in the 8th digit of a 48-mean interval and took 6 s for
+  1128 comparisons; the port agrees to 1e-12 (quantiles) / 1e-13 (tails) and the
+  three-way report takes 2.2 s with its checks.
+- R's number formatting is ported (`formatReal`, `format.pval`, `printCoefmat`,
+  `print.TukeyHSD`, R >= 4.4's `zapsmall`).
+
+### Added — model diagnostics: R's four residual plots
+
+There were no residual plots, so homogeneity of variance and influential observations
+could be judged only from a Levene P value. **Model diagnostics (residual plots)…**
+(Statistics panel; browser expander) draws R's `plot(lm)` panels for the model behind
+the statistics: Residuals vs Fitted, Normal Q-Q, Scale-Location and Residuals vs
+Leverage with Cook's distance contours (Constant Leverage: Residuals vs Factor Levels
+for a balanced design, as R), the three most extreme rows numbered, with the
+Shapiro-Wilk / Levene results and the largest Cook's distance below. A **Panel** choice
+(each facet panel or the whole grid) and a **Response** choice (to compare a
+transformed column) - on the plant data the Scale-Location rise falls from 0.63 to
+−0.02 and Levene's P rises from 9.5 × 10⁻⁵ to 0.96 with `log10(Growth_cm)`. Save as
+PNG / PDF / SVG and the per-row values as CSV. Every value matches base R 4.5.3 to 1e-9
+(smoothers 1e-8). Tutorial step 13.
+
+### Added — assumption checks before every parametric test (Shapiro-Wilk, Levene)
+
+No assumption was ever tested: each result listed `assumptions_checked` ("approximately
+normal residuals", "equal variances across groups") as text only, and a t-test or ANOVA
+ran on any data. Now, before a parametric test:
+
+- **Normality, Shapiro-Wilk**: on each group for a t-test, on the paired differences
+  for a paired t-test, on the **model residuals** for one-way, two-way and factorial
+  ANOVA / ANCOVA, on each variable for Pearson.
+- **Equal variances, Levene (median-centred)**: where the test assumes them (Student's
+  t, ANOVA).
+- Listed in the statistics table (verdict met / NOT met / not tested, failures in red),
+  the method sentence, the exported table and the StatsSpec; a failed check is a
+  warning naming the alternative.
+- **If assumptions fail** (both apps): keep the chosen test and report it (default), or
+  use the non-parametric alternative (Mann-Whitney, Wilcoxon, Kruskal-Wallis + Dunn,
+  Spearman; Welch's t when only Student's equal variances fail). Two-way / factorial
+  ANOVA has no rank-based equivalent here and is never replaced: the warning
+  recommends a log or square-root transformation.
+- Facet grids check every panel and summarise them ("met in 3 of 4 panels; not met in
+  …"); the whole-grid model is checked on its own.
+- On the mock plant data (Month × Nitrogen) the residuals are normal (Shapiro-Wilk
+  W = 0.992, P = 0.249, n = 240) and the variances pass pooled over ages (Levene
+  F(11, 228) = 1.55, P = 0.116), but not within each age (Young F = 3.89, P = 9.5 × 10⁻⁵;
+  Old F = 4.42, P = 1.8 × 10⁻⁵): growth spreads as plants grow.
+- Validated against base R 4.5.3: 11 checks agree to 8.7 × 10⁻⁹. The figure and every
+  test result are unchanged unless the alternative is chosen.
+
+### Added — wide tables reshape to long form (Wide → long)
+
+A wide table (one row per plant, one column per sampling month) could not make the
+box, line or facet plots: the only reshape on offer, the "per-column distributions"
+recommendation, turned the 60-row wide plant table into 300 rows of `[column, value]`,
+gathering `Replicate` as a measurement and dropping Species, Age and Nitrogen.
+
+- **↕ Wide → long…** (desktop, beside *Prepare table*; browser expander) gathers the
+  chosen columns into a name column and a value column and repeats every other column
+  on each row: the wide plant table gives exactly the 240-row long table (all values
+  identical), and the faceted box plot and per-panel ANOVA from it equal those from
+  the original long file (F and P to 1e-12).
+- Suggested when numeric columns share a name with a number after it (`Month_4`):
+  prefix removed, levels as numbers. Names holding several factors split at a
+  separator (`A_Young` → Species, Age). Empty cells are left out and counted, or kept.
+  Impossible reshapes are refused with the reason before anything is applied.
+- The wide table is never modified. The desktop app saves `<name>_long.csv` and its
+  record beside the wide file, never overwriting (` (2)`, ` (3)`, …); the browser
+  offers downloads; **Revert to original data** returns to it.
+- The reshape is the first step of the table record (`TablePreprocessingSpec.reshape`):
+  later column transformations act on the long table; a Figure Package stores the
+  wide and long tables and the replay verifies as `identical`.
+- New tutorial data `tutorial/general_tabular_data/data/mock_plant_growth_wide.csv`
+  (step 12).
+
+### Added — Type I sums of squares; Fixed — ANOVA annotations follow the statistics controls
+
+Reported from the faceted plant-growth figure on macOS (factorial ANOVA, `Age` facets).
+
+- **Sums of squares** is now chosen in the Statistics panel when the test is Factorial
+  ANOVA (both apps; hidden for every other test; nothing is written to the spec unless
+  it is changed from Type II). **Type I** (sequential, R's `anova(lm)`) joins Type II
+  (default) and Type III, also in *Prepare table > Factorial analysis*. Type I is
+  computed from nested fits in R's term order (main effects, covariates, then
+  interactions): statsmodels' `typ=1` puts a covariate after the interactions and gave
+  SS 0.0463 where R gives 0.0975. Six new R validation cases (27 terms, 81 quantities)
+  agree to 1e-12. On a balanced design all three types are identical (plant data:
+  F equal to 1e-9).
+- The ANOVA text box on a facet panel is fitted to its panel, not the figure: it ran
+  233 px past the "Age: Young" panel at 110 dpi. Lines that do not fit break after the
+  term name, never inside "F(3, 108)". Single plots are fitted as before.
+- **Annotation shows**, **Show effect size** and **Hide non-significant** act on ANOVA
+  terms (p only, statistic, partial η², …; non-significant terms dropped). The default,
+  *Stars only*, keeps the full "F = 77.9, p < 0.001" so saved figures do not change;
+  the new opt-in **ANOVA terms as stars too** (shown under *Stars only* when the test
+  can give ANOVA terms) turns them into "Month: ****".
+  **Show effect size** also acts on brackets under every preset (it acted only under
+  *Custom (checkboxes)*).
+- **Post-hoc pairwise after omnibus** runs after a two-way or factorial ANOVA (it ran
+  after a one-way ANOVA only): the hue levels within each x category, with the chosen
+  correction. Not run for the whole-grid model, whose pairs would cross panels.
+- The ANOVA text box is measured against the bracket labels and the axis raised until
+  it clears them (it sat over "****, g = -2.7"); a grid whose bracket labels overlap
+  or leave their panel says so (16 of 24 labels with effect sizes at 2.2 in panels).
+- **Annotation placement** is hidden for an ANOVA / Kruskal-Wallis without post-hoc
+  pairs, where there is no bracket to place.
+
+### Fixed — a colour override by name now reaches a line plot's error band and bars
+
+`color_overrides {"High N": "#d62728"}` recoloured the line and its markers but left
+the SE band palette-coloured, and (new error bars) the bar lines and caps too;
+bands and bars are tagged with their series and recoloured with it. A legend built
+from proxy handles (a facet grid's) is recoloured in place.
 
 ## [1.3.1] — Experimental tables, log axes, factorial ANOVA, and the macOS crash fix
 

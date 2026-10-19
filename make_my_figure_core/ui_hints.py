@@ -6,7 +6,7 @@ this so plot configuration is never hard-coded inside a GUI.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any, Dict, List, Optional
+from typing import Tuple, Any, Dict, List, Optional
 
 # Mapping keys that should be presented as *column choosers* per plot type.
 COLUMN_FIELDS: Dict[str, List[str]] = {
@@ -16,8 +16,8 @@ COLUMN_FIELDS: Dict[str, List[str]] = {
     "volcano_plot": ["x", "p", "label", "id_col"],
     "scatterplot_with_regression": ["x", "y", "color", "label"],
     # "hue" is an optional second grouping: dodged boxes/violins per hue level within each x category.
-    "boxplot_or_violin_with_points": ["x", "y", "hue"],
-    "lineplot_timecourse_with_error_band": ["x", "y", "color", "style_by"],
+    "boxplot_or_violin_with_points": ["x", "y", "hue", "facet_row", "facet_col"],
+    "lineplot_timecourse_with_error_band": ["x", "y", "color", "style_by", "facet_row", "facet_col"],
     "ridge_or_density_plot": ["x", "group"],
     # "x"/"group" is the long form; "value_columns" is the wide form (one column per group).
     "histogram_distribution": ["x", "group", "value_columns"],
@@ -92,6 +92,10 @@ class Option:
     step: Optional[float] = None
     decimals: int = 3
     scope: str = "config"           # "style" | "config" - see OPTION_SCOPES
+    # Shown (and written to the spec) only when at least one of these mapping
+    # fields is set: a facet option is meaningless without a facet column, and a
+    # control that cannot act is hidden rather than shown and ignored.
+    requires: Tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if self.scope not in OPTION_SCOPES:
@@ -103,6 +107,14 @@ class Option:
 # style presets: a lab's shared "Default Barplot" style must not be able to turn
 # a colleague's SD bars into SEM on the way past. (Both are drawn identically;
 # only the number changes, which is exactly what makes the swap dangerous.)
+_FACET_FIELDS = ("facet_row", "facet_col")
+# Facet-grid options (plots.facets). Shown only once a facet column is chosen.
+_FACET_OPTIONS = (
+    Option("facet_labels", "Facet labels", "choice", "column: value", ["column: value", "value"],
+           scope="style", requires=_FACET_FIELDS),
+    Option("facet_share_y", "Facets share the value axis", "bool", True, scope="style",
+           requires=_FACET_FIELDS),
+)
 _ERROR_CHOICES = ["sem", "sd", "ci95", "none"]
 # Line plot bands add median-centred order statistics for replicate measurements.
 _BAND_CHOICES = ["sem", "sd", "ci95", "iqr", "range", "none"]
@@ -478,8 +490,13 @@ OPTIONS: Dict[str, List[Option]] = {
         Option("show_n", "Sample-size labels", "choice", "none", ["none", "below", "above", "legend"],
                scope="style"),
         _X_TICK_ROTATION,
+        *_FACET_OPTIONS,
     ],
-    "lineplot_timecourse_with_error_band": [Option("error", "Error band", "choice", "sem", _BAND_CHOICES)],
+    "lineplot_timecourse_with_error_band": [
+        Option("error", "Error band", "choice", "sem", _BAND_CHOICES),
+        Option("error_display", "Error display", "choice", "band", ["band", "bars"], scope="style"),
+        *_FACET_OPTIONS,
+    ],
     "ridge_or_density_plot": [
         Option("density_mode", "Density mode", "choice", "ridge", ["ridge", "overlay"], scope="style"),
         Option("overlap", "Ridge overlap", "number", 0.7, minimum=0.0, maximum=0.95, step=0.05, decimals=2, scope="style"),

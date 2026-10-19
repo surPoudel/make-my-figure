@@ -221,25 +221,37 @@ class DesktopController:
         ctx = getattr(data, "table_context", None) or {}
         return ctx.get("raw") or data
 
-    def derive_table(self, data: "LoadedData", transforms, *, roles=None) -> "LoadedData":
+    @staticmethod
+    def reshape_of(data: "LoadedData"):
+        """The recorded wide -> long reshape behind ``data`` (``None`` when there is none)."""
+        record = (getattr(data, "table_context", None) or {}).get("record")
+        return record.reshape_object if record is not None else None
+
+    def derive_table(self, data: "LoadedData", transforms, *, roles=None, reshape="keep") -> "LoadedData":
         """Apply ``transforms`` to the ORIGINAL table behind ``data``; wrap the result.
 
         Always recomputed from the raw table, so a derived column is never
         transformed again by accident, and the raw table is never modified.
+        ``reshape`` (a :class:`~make_my_figure_core.tabular.WideToLong`) gathers a
+        wide table to long form first; ``"keep"`` keeps the one already recorded
+        for ``data``, ``None`` removes it.
         """
+        if isinstance(reshape, str) and reshape == "keep":
+            reshape = self.reshape_of(data)
         from make_my_figure_core.tabular import apply_table_transforms, file_sha256
 
         raw = self.raw_of(data)
         sha = file_sha256(raw.source_path) if raw.source_path and not raw.is_example else None
         derived, record = apply_table_transforms(
             raw.info.dataframe, list(transforms), source_name=raw.table_name,
-            source_sha256=sha, source_sheet=raw.sheet_name)
+            source_sha256=sha, source_sheet=raw.sheet_name, reshape=reshape)
         if roles is not None:
             record.column_roles = roles.to_dict() if hasattr(roles, "to_dict") else dict(roles)
-        if not record.transforms:
+        if not record.transforms and not record.reshape:
             return raw
         base = os.path.splitext(str(raw.table_name).split(" [")[0])[0]
-        out = self.loaded_from_dataframe(derived, f"{base} (derived)")
+        out = self.loaded_from_dataframe(derived, f"{base} (long)" if record.reshape and not record.transforms
+                                         else f"{base} (derived)")
         out.sheet_name = raw.sheet_name
         out.table_context = {"raw": raw, "record": record}
         return out
@@ -275,6 +287,33 @@ class DesktopController:
         """Write a DataFrame to CSV (used to persist a transform's output)."""
         df.to_csv(path, index=False)
         return path
+
+    def save_long_copy(self, data: "LoadedData") -> List[str]:
+        """Write a reshaped (long) table beside the wide file it came from.
+
+        ``<wide name>_long.csv`` plus ``<wide name>_long.transformations.json`` (the
+        replayable record). The wide file is never written to, and an existing file
+        is never overwritten: the name gains " (2)", " (3)", ... instead. Returns the
+        paths written; ``[]`` when the wide table has no file (an example or a
+        package), in which case nothing is saved.
+        """
+        raw = self.raw_of(data)
+        src = getattr(raw, "source_path", None)
+        if not src or getattr(raw, "is_example", False) or not os.path.isfile(src):
+            return []
+        stem = os.path.splitext(os.path.basename(src))[0]
+        sheet = getattr(raw, "sheet_name", None)
+        if sheet:
+            stem = f"{stem}_{sheet}"
+        folder = os.path.dirname(os.path.abspath(src))
+        path = os.path.join(folder, f"{stem}_long.csv")
+        k = 2
+        while os.path.exists(path) or os.path.exists(os.path.splitext(path)[0] + ".transformations.json"):
+            path = os.path.join(folder, f"{stem}_long ({k}).csv")
+            k += 1
+        if os.path.abspath(path) == os.path.abspath(src):     # pragma: no cover - defensive
+            return []
+        return self.export_derived_table(data, path)
 
     # --- in-app differential screen (normalized matrix; NOT count-based DE) ---
     def differential_test_choices(self) -> List[Tuple[str, str]]:
@@ -464,6 +503,23 @@ class DesktopController:
                 "n": "" if r.n_total is None else str(r.n_total),
                 "warning": "; ".join(r.warnings),
             })
+        # Assumption checks run before the test (Shapiro-Wilk, Levene), one row each.
+        blocks = report.assumptions or []
+        for block in ([blocks] if isinstance(blocks, dict) else blocks):
+            panel = block.get("panel")
+            for c in block.get("checks", []):
+                verdict = ("met" if c.get("passed") else "NOT met") if c.get("passed") is not None else "not tested"
+                df_txt = f" ({c['df']:g}, {c['df2']:g})" if c.get("df") is not None else ""
+                rows.append({
+                    "comparison": (f"{panel} · " if panel else "") + str(c.get("target", "")),
+                    "test": f"{c.get('method')} - {c.get('assumption')}",
+                    "statistic": "" if c.get("statistic") is None
+                    else f"{c.get('statistic_name', '')}{df_txt} = {c['statistic']:.3g}",
+                    "p_value": "" if c.get("p_value") is None else f"{c['p_value']:.4g}",
+                    "adjusted_p": "", "effect_size": "", "ci": "",
+                    "n": str(c.get("n", "")),
+                    "warning": verdict + (f" ({c['note']})" if c.get("note") else ""),
+                })
         return rows
 
     def export_stats_table(self, report, path: str, *, sep: str = ",") -> str:

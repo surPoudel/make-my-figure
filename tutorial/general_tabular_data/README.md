@@ -172,3 +172,62 @@ fails its integrity check.
 * At most three factors.
 * A log axis is offered only on plots whose axis carries a positive magnitude
   (7 plot types); see `docs/AXIS_SCALING.md` for the list and the reasons.
+
+## 11. Facet grids: one panel per factor combination
+
+`data/mock_plant_growth.csv` is a mock 2 × 2 × 3 design measured over time: species ×
+initial plant age × nitrogen concentration, growth recorded at 4, 6, 8 and 10 months,
+five replicates per cell (240 rows). The usual way to show it is a grid: one panel per
+species and age, nitrogen as colour, months along x.
+
+Open the CSV, choose **Box / violin plot with points**, and map **x** = `Month`,
+**y** = `Growth_cm`, **hue** = `Nitrogen_Concentration`, **facet_row** = `Age`,
+**facet_col** = `Species`. Two options appear once a facet column is chosen: **Facet
+labels** (`Species: Species_A` or just `Species_A`) and **Facets share the value axis**.
+
+![Faceted box plot](screenshots/10_faceted_boxplot.png)
+
+Every panel uses the same category order, the same colour per nitrogen level and the
+same y axis, so panels can be compared directly. The title, axis labels and legend are
+shared; the legend controls, axis controls, palette, colour overrides, typography and
+statistics all act on the whole grid.
+
+For the mean trajectory, switch to **Line / time-course with error band** with
+**color** = `Nitrogen_Concentration` and the same facets; **Error display ▸ bars**
+draws mean ± SE as capped bars instead of a band.
+
+![Faceted line plot](screenshots/11_faceted_lineplot.png)
+
+Both are ordinary plots: log axes, Figure Packages, the Figure Builder and presets work
+as for any other figure.
+
+## 12. Start from a wide table
+
+The same data is often kept wide: one row per plant and one column per sampling month.
+`data/mock_plant_growth_wide.csv` holds it that way (60 rows: `Species, Age,
+Nitrogen_Concentration, Replicate, Month_4, Month_6, Month_8, Month_10`).
+
+Open it. The **↕ Wide → long…** button reads *(suggested)*: the four month columns
+look like one measurement repeated over time. Click it; the dialog opens with
+`Month_4 … Month_10` ticked, **Column names go to** `Month`, **Remove prefix**
+`Month_`. Type `Growth_cm` in **Values go to**; the preview shows `60 rows → 240 rows`.
+Click **Reshape and use**.
+
+The table is now the long table of step 11 — the same 240 values — and
+`mock_plant_growth_wide_long.csv` (plus its `.transformations.json` record) has been
+saved beside the wide file, which is unchanged. Make the faceted box plot of step 11
+from it; **Revert to original data** returns to the wide table.
+
+## 13. Look at the residuals before and after a transformation
+
+With the faceted box plot of step 11 and **Factorial ANOVA** selected in the Statistics
+panel, the results table lists the assumption checks for each panel: the residuals are
+normal, but **Levene - equal variances** reads **NOT met**. Click **Model diagnostics
+(residual plots)…** and choose the panel *Age = Young*: the **Scale-Location** line
+rises (by 0.63) - the spread of growth increases with its mean, the funnel that
+Levene's test detected (P = 9.5 × 10⁻⁵).
+
+In *Prepare table* add `log10(Growth_cm)`, then in the diagnostics window set
+**Response** to `log10(Growth_cm)`: the line is flat (−0.02) and Levene's P is 0.96.
+Map **y** to `log10(Growth_cm)` and run the ANOVA on the log scale; save the plots with
+**Save figure…** for the supplementary material.

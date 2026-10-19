@@ -123,7 +123,9 @@ def _can_resize(panel: Panel) -> bool:
 # Axes that are decoration rather than a plotting frame. A colourbar is part of
 # the panel's picture but it is not the thing that has to line up with the bar
 # chart next door - it belongs in the margin, like a legend.
-_DECORATION_AXES_LABELS = ("<colorbar>",)
+# Axes that frame the plots rather than hold data: colour bars, and a facet grid's
+# strip labels and its host (shared labels, title, legend), which spans the panels.
+_DECORATION_AXES_LABELS = ("<colorbar>", "<facet-host>", "<facet-strip>")
 
 
 def _is_decoration_axes(ax: Any) -> bool:

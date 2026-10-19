@@ -18,6 +18,9 @@ effect size, and (where applicable) a confidence interval.
 
 - [Supported tests](#supported-tests)
 - [When to use each test](#when-to-use-each-test)
+- [Assumption checks](#assumption-checks)
+- [Model diagnostics (residual plots)](#model-diagnostics-residual-plots)
+- [R-style statistics report](#r-style-statistics-report)
 - [Required columns](#required-columns)
 - [Paired vs unpaired](#paired-vs-unpaired)
 - [Multiple-testing correction](#multiple-testing-correction)
@@ -94,6 +97,107 @@ depend on lifelines or scikit-posthocs.
 
 **Volcano:** p-values come from the input; the app does **not** recompute
 differential statistics. Only thresholds and labels are annotated.
+
+## Assumption checks
+
+A parametric test is checked **before** it runs, and the checks are listed with the
+results (table rows *Shapiro-Wilk - normality* / *Levene (median-centred) - equal
+variances*, verdict **met** / **NOT met** / *not tested*), in the method sentence, and
+as a warning when one fails. What is checked is what the test assumes:
+
+| test | normality (Shapiro-Wilk) | equal variances (Levene, median-centred) | alternative when normality fails |
+|---|---|---|---|
+| Student's t | each group compared | yes | Mann-Whitney U (Welch's t when only variances fail) |
+| Welch's t | each group compared | not assumed | Mann-Whitney U |
+| paired t | the paired differences | — | Wilcoxon signed-rank |
+| one-way ANOVA | residuals (value − group mean) | across groups | Kruskal-Wallis (+ Dunn post-hoc) |
+| two-way / factorial ANOVA, ANCOVA | **model residuals** | across factor combinations | none: reported with a recommendation (log / square-root transform in *Prepare table*) |
+| Pearson | each variable | — | Spearman |
+
+An ANOVA assumes normal **errors**, so its residuals are tested, not the pooled raw
+values (a factor with a large effect makes those bimodal however normal each group
+is). Levene's test is the median-centred (Brown-Forsythe) form, the default of
+`car::leveneTest`. Both use α = 0.05 (`statistics.assumption_alpha`). Fewer than three
+observations cannot be tested and say so; above 5000 the Shapiro-Wilk P is
+approximate and even negligible departures are significant (judge from a Q-Q plot).
+With many groups, about 5 % of Shapiro-Wilk tests fail by chance alone.
+
+**If assumptions fail** (Statistics panel, both apps) decides what happens:
+*Report it and keep the chosen test* (default; nothing is switched) or *Use the
+non-parametric alternative* (`statistics.assumption_action = "switch"`), which runs the
+alternative above and says so in the method sentence. On a facet grid the checks run
+in every panel; the method sentence says in how many panels they were met and names
+the others, and the whole-grid model has its own check.
+
+Validated against base R 4.5.3 (`quality_audit/assumption_checks/validate_assumptions.R`:
+`shapiro.test`, Levene from its definition): 11 checks, worst relative difference
+8.7 × 10⁻⁹ (`tests/test_assumption_checks.py`).
+
+## Model diagnostics (residual plots)
+
+**Model diagnostics (residual plots)…** (Statistics panel; browser: the **🔍 Model
+diagnostics** expander) draws R's four `plot(lm)` panels for the model behind the
+statistics - the ANOVA / ANCOVA's factors and covariates, the group means behind a
+t-test or Kruskal-Wallis comparison (both grouping columns on a grouped plot), `y ~ x`
+for a correlation or regression:
+
+| panel | look for | what a problem looks like |
+|---|---|---|
+| Residuals vs Fitted (+ lowess) | no pattern, an even band about 0 | a curve (a missing term), a funnel |
+| Normal Q-Q (standardized residuals) | points on the quartile line | S-shape or heavy tails (non-normal errors) |
+| Scale-Location (√\|standardized residuals\| + lowess) | a flat line | a rising line: the variance grows with the mean (heteroscedasticity) |
+| Residuals vs Leverage (Cook's distance 0.5, 1) | no point beyond the dashed lines | an influential observation |
+
+When every observation has the same leverage (any balanced ANOVA) the last panel is
+**Constant Leverage: Residuals vs Factor Levels**, as in R. The three most extreme
+points are numbered with their row in the table (R's `id.n = 3`). Below the plots:
+the Shapiro-Wilk and Levene results for the same model and the largest Cook's
+distance. **Panel** picks a facet panel or the whole grid; **Response** redraws the
+model on another column - a transformed one from *Prepare table* - to see whether it
+helps. **Save figure…** (PNG / PDF / SVG, 300 dpi) and **Save values (CSV)** (fitted,
+residual, standardized residual, leverage, Cook's distance per row).
+
+On the mock plant data (Young panel, `Growth_cm ~ Month * Nitrogen`) the Scale-Location
+line rises by 0.63 and Levene's test fails (P = 9.5 × 10⁻⁵): growth spreads as plants
+grow. With `log10(Growth_cm)` the line is flat (−0.02) and Levene's P is 0.96.
+
+Computed as R computes them (`rstandard`, `hatvalues`, `cooks.distance`, `lowess(f =
+2/3, iter = 3)`, `qqnorm`'s `ppoints`); validated against base R 4.5.3
+(`quality_audit/assumption_checks/validate_diagnostics.R`): every per-observation value
+to 1e-9 relative, the smoothers to 1e-8 (`tests/test_model_diagnostics.py`).
+
+## R-style statistics report
+
+**Statistics report (R-style summary(aov), TukeyHSD)…** (Statistics panel; browser:
+*Show the statistics report* in the 🔍 Model diagnostics expander) prints, for the
+model behind the figure, what R prints for
+
+```r
+model <- aov(Growth_cm ~ Species * Treatment, data = plant)
+summary(model)
+TukeyHSD(model)
+```
+
+- the same rows, columns, factor-level order (sorted; numbers numerically), pair
+  order, significance codes and number formatting - **identical to R 4.5.3's console
+  text, line for line**, on five models (one-, two- and three-way, balanced and
+  unbalanced; `tests/test_anova_report.py`);
+- then the assumption checks on the same model (Shapiro-Wilk on `residuals(model)`,
+  Levene), notes (rows left out, unequal group sizes) and the software versions.
+
+`summary(aov)` is a **Type I (sequential)** table: with unequal group sizes the order
+of the factors changes the sums of squares, and the report says so. The figure's
+ANOVA uses the *Sums of squares* setting (Type II by default); with equal group sizes
+the two are identical, otherwise the report notes the difference (choose Type I to
+match R). `TukeyHSD` compares the means of every term, which with unequal group sizes
+are the model's adjusted means (`model.tables(model, "means")`), as in R. The
+studentized range distribution is a port of R's own `ptukey` / `qtukey`
+(`statistics/_tukey_dist.py`; quantiles agree to 1e-12, tail probabilities to 1e-13).
+
+**Copy report** / **Save report (.txt)** in the desktop window, a download in the
+browser. Models with covariates (ANCOVA) and correlation / regression tests are not
+`aov` tables and say so; their results are in the statistics table and *Prepare
+table ▸ Factorial analysis*.
 
 ## Required columns
 

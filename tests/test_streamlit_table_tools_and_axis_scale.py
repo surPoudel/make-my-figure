@@ -93,3 +93,75 @@ def test_coefficient_table_is_shown_for_an_estimable_design():
     assert not at.exception
     assert any("Coefficients" in m.value for m in at.markdown)
     assert "Download coefficients (CSV)" in [b.label for b in at.get("download_button")]
+
+
+def test_browser_facets_offer_options_only_once_a_facet_column_is_chosen():
+    at = _app()
+    labels = [w.label for w in at.sidebar.selectbox]
+    assert "facet_row" in labels and "facet_col" in labels
+    assert "Facet labels" not in labels
+    _by_label(at.sidebar.selectbox, "facet_col").set_value("sex")
+    at.run()
+    assert not at.exception
+    assert "Facet labels" in [w.label for w in at.sidebar.selectbox]
+    assert not any("Could not render" in e.value for e in at.error)
+
+
+def test_browser_whole_grid_statistics_option_appears_with_facets_and_runs():
+    at = _app()
+    label = "Also test across the whole grid (facet variables as factors)"
+    assert label not in [w.label for w in at.sidebar.checkbox]
+    _by_label(at.sidebar.selectbox, "facet_col").set_value("sex")
+    at.run()
+    assert label in [w.label for w in at.sidebar.checkbox]
+    _by_label(at.sidebar.checkbox, "Enable statistics").check()
+    _by_label(at.sidebar.checkbox, label).check()
+    at.run()
+    assert not at.exception
+    assert not any("Could not render" in e.value or "Unexpected error" in e.value for e in at.error)
+
+
+def test_browser_wide_to_long_reshapes_records_and_offers_the_new_columns():
+    at = _app()
+    _by_label(at.multiselect, "Columns to gather").set_value(["batch", "sex"])
+    _by_label(at.text_input, "Column names go to").set_value("field")
+    _by_label(at.text_input, "Values go to").set_value("level")
+    at.run()
+    assert not at.exception and not at.error
+    assert any("rows →" in m.value for m in at.markdown)
+    _by_label(at.button, "Reshape and use").click()
+    at.run()
+    assert not at.exception
+    x = _by_label(at.sidebar.selectbox, "x")
+    assert "field" in x.options and "level" in x.options and "batch" not in x.options
+    downloads = [b.label for b in at.get("download_button")]
+    assert "Download long table (CSV)" in downloads and "Download transformation record (JSON)" in downloads
+    _by_label(at.button, "Use the wide table").click()
+    at.run()
+    assert "batch" in _by_label(at.sidebar.selectbox, "x").options
+
+
+def test_browser_model_diagnostics_expander_draws_the_residual_plots():
+    at = _app()
+    assert not at.exception
+    labels = [e.label for e in at.expander]
+    assert any(lbl.startswith("🔍 Model diagnostics") for lbl in labels)
+    assert "Panel" in [w.label for w in at.selectbox] and "Response" in [w.label for w in at.selectbox]
+    assert "Download diagnostic plots (PNG)" not in [b.label for b in at.get("download_button")]  # on request
+    _by_label(at.checkbox, "Draw the residual plots").check()
+    at.run()
+    assert not at.exception
+    downloads = [b.label for b in at.get("download_button")]
+    assert "Download diagnostic plots (PNG)" in downloads and "Download diagnostic values (CSV)" in downloads
+    assert not any("No residual" in e.value for e in at.error)
+
+
+def test_browser_statistics_report_is_shown_on_request():
+    at = _app()
+    label = "Show the statistics report (R-style summary(aov), TukeyHSD)"
+    _by_label(at.checkbox, label).check()
+    at.run()
+    assert not at.exception
+    text = " ".join(c.value for c in at.code)
+    assert "Df Sum Sq Mean Sq F value" in text and "Tukey multiple comparisons of means" in text
+    assert "Download statistics report (.txt)" in [b.label for b in at.get("download_button")]

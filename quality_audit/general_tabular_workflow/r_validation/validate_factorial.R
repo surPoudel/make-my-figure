@@ -4,6 +4,8 @@
 #   * Type II SS: computed from first principles as nested-model comparisons —
 #     SS(T) = RSS(all terms not containing T) - RSS(that model + T)
 #     (the definition car::Anova(type = 2) implements).
+#   * Type I SS: anova(fit) — sequential, each term adjusted only for the terms
+#     before it in R's term order (the same order the Python model uses).
 #   * Type III SS: drop1(fit, . ~ ., test = "F") on a fit with sum-to-zero
 #     contrasts (options(contrasts = c("contr.sum", "contr.poly"))).
 #   * Coefficients / SE / t / P / 95% CI: summary(lm) and confint(lm), sum contrasts.
@@ -48,7 +50,14 @@ for (i in seq_len(nrow(cases))) {
   rss_full <- deviance(fit); df_res <- fit$df.residual
   parts <- lapply(labs, function(t) strsplit(t, ":", fixed = TRUE)[[1]])
   contains <- function(big, small) all(small %in% big)
-  if (cs$ss_type == 2) {
+  if (cs$ss_type == 1) {
+    at <- anova(fit)
+    for (t in labs) {
+      anova_rows[[length(anova_rows) + 1]] <- data.frame(
+        case_id = cs$case_id, term = t, df = at[t, "Df"], sum_sq = at[t, "Sum Sq"],
+        F = at[t, "F value"], p_value = at[t, "Pr(>F)"], residual_df = df_res)
+    }
+  } else if (cs$ss_type == 2) {
     for (k in seq_along(labs)) {
       keep <- labs[!vapply(parts, contains, logical(1), small = parts[[k]])]
       f0 <- if (length(keep)) reformulate(keep, response = cs$response) else

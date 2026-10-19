@@ -59,6 +59,41 @@ offset, valid / invalid / missing counts, and the range before and after. **Appl
 builds the derived table, **Cancel** leaves everything as it was, and **Reset** clears
 the list. **↩ Revert to original data** in the editor goes back to the raw table.
 
+## 2a. Wide tables: reshape to long form
+
+A **wide** table keeps one row per plant (animal, plot, colony) and one column per
+repeated measurement — `Month_4, Month_6, Month_8, Month_10`. The box/violin, line and
+facet plots and the statistics need one row per observation. **↕ Wide → long…**
+(desktop, beside *Prepare table*; browser: the **↕ Wide → long** expander) gathers the
+chosen columns into two new ones:
+
+| wide | long |
+|---|---|
+| `Species, Age, Nitrogen, Replicate, Month_4 … Month_10` (60 rows) | `Species, Age, Nitrogen, Replicate, Month, Growth_cm` (240 rows) |
+
+* **Suggested automatically.** When numeric columns share a name with a number after
+  it (`Month_4`, `Day1`, `week.2`), the button reads *(suggested)* and the dialog opens
+  with those columns ticked, the prefix (`Month_`) removed and the levels turned into
+  numbers (4, 6, 8, 10). Nothing is changed until **Reshape and use**.
+* **Every other column is kept** and repeated on each row (Species, Age, Nitrogen,
+  Replicate) — those are what the facets, colours and statistics use.
+* **Names that hold several factors** (`A_Young`, `B_Old`) split into several columns:
+  *Column names go to* `Species, Age`, *Split names at* `_`.
+* **Empty cells** are left out (no observation) and counted, or kept as missing.
+* **Refused, with the reason:** a new column named like a kept one, gathered columns
+  that mix numbers and text, names that do not split into the requested parts, two
+  columns that give the same level.
+
+The wide table is never modified. The desktop app saves the long table **beside the
+wide file** as `<name>_long.csv` with `<name>_long.transformations.json` (never
+overwriting: an existing name gains ` (2)`, ` (3)`, …); the browser offers both as
+downloads. **Revert to original data** returns to the wide table. The reshape is the
+first step of the table record: column transformations added afterwards act on the
+long table, and a Figure Package stores the wide table, the long table and the
+record, and replays the reshape to verify it (`identical`). Engine:
+`make_my_figure_core.tabular.reshape` (`WideToLong`, `suggest_wide_to_long`,
+`preview_wide_to_long`, `wide_to_long`). Tests: `tests/test_wide_to_long.py`.
+
 ## 3. Saving derived data
 
 **Export table with derived columns…** (button and File menu) writes the table **with
