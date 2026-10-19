@@ -97,3 +97,38 @@ gathered columns mixing numbers and text — are shown before anything is applie
 wide file is never changed: the long table is saved beside it as `<name>_long.csv`
 with its record, **Revert to original data** goes back, and a Figure Package keeps
 both tables and replays the reshape. Details: `docs/GENERAL_TABULAR_DATA.md`.
+
+### 83. Assumption checks before a parametric test
+
+Before a t-test, ANOVA or Pearson correlation runs, its assumptions are tested and the
+results listed in the statistics table (verdict **met**, **NOT met** in red, or *not
+tested*), in the method sentence and as a warning when one fails:
+**Shapiro-Wilk** for normality (each group for a t-test, the paired differences for a
+paired t-test, the **model residuals** for an ANOVA) and **Levene's test**
+(median-centred) for equal variances where the test assumes them. **If assumptions
+fail** in the Statistics panel decides what happens: keep the chosen test and report
+it (default), or use the non-parametric alternative (Mann-Whitney, Wilcoxon,
+Kruskal-Wallis with Dunn, Spearman; Welch's t when only Student's equal variances
+fail). A two-way or factorial ANOVA is never replaced: the warning recommends a log or
+square-root transformation instead. On a facet grid every panel is checked.
+
+### 84. Residual plots (model diagnostics)
+
+**Model diagnostics (residual plots)…** in the Statistics panel draws R's four
+`plot(lm)` panels for the model behind the test: Residuals vs Fitted, Normal Q-Q,
+Scale-Location (a rising line means the variance grows with the mean) and Residuals vs
+Leverage with Cook's distance (for a balanced design, residuals by factor level, as in
+R). The three most extreme rows are numbered. Choose a facet **Panel** or the whole
+grid, and another **Response** - a transformed column from *Prepare table* - to see
+whether a transformation helps. Save the figure (PNG, PDF, SVG) or the values (CSV).
+In the browser: the 🔍 Model diagnostics expander, *Draw the residual plots*.
+
+### 85. Statistics report in R's format
+
+**Statistics report (R-style summary(aov), TukeyHSD)…** prints the model's ANOVA table
+and Tukey HSD comparisons exactly as R's console prints `summary(aov(...))` and
+`TukeyHSD(...)`, followed by the assumption checks and the software versions. Copy it
+or save it as a text file for a lab notebook or a supplement. The table uses Type I
+(sequential) sums of squares, as R does; with equal group sizes this equals the
+figure's ANOVA, and with unequal sizes the report says how they differ.
+
