@@ -1,8 +1,8 @@
 # Make My Figure — Quick Start
 
-**MakeMyFigure version:** 1.3.1  
-**Documentation generated from commit:** `765c260`  
-**Date:** 2026-10-14
+**MakeMyFigure version:** 1.3.2  
+**Documentation generated from commit:** `7841f0e`  
+**Date:** 2026-10-19
 
 This manual describes the application exactly as built at the commit above. Where the packaged installers of an earlier release differ, the text says so.
 

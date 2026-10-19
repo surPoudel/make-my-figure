@@ -6,6 +6,16 @@ with any journal.
 
 ## Unreleased
 
+_Nothing yet._
+
+## [1.3.2] — Facet grids, wide tables, assumption checks, residual diagnostics and an R-style report
+
+Released 2026-10-19. Adds ggplot-style facet grids to the box/violin and line plots,
+reshaping of wide tables to long form, Shapiro-Wilk and Levene checks before every
+parametric test, R's four residual plots, and a statistics report that reads exactly
+as R's `summary(aov)` and `TukeyHSD`. Fixes ANOVA annotations that ignored the
+statistics controls.
+
 ### Added — facet grids on the box/violin and line plots
 
 A 2 × 2 × 3 design measured over time (species × initial age × nitrogen, four
